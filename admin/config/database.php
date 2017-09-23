@@ -1,5 +1,12 @@
 <?php
 
+if (file_exists('local/dbconf.php')) {
+    require_once('local/dbconf.php');
+}
+else if (file_exists('global/dbconf.php')) {
+    require_once('global/dbconf.php');
+}
+
 return [
 
     /*
@@ -54,11 +61,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_HOST', $db_host),
+            'port' => env('DB_PORT', $db_port),
+            'database' => env('DB_DATABASE', $db_name),
+            'username' => env('DB_USERNAME', $db_user),
+            'password' => env('DB_PASSWORD', $db_pass),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
