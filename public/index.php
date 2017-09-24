@@ -1,2 +1,2 @@
 <?php
-echo "here should be hybrid app";
+include('ci/index.html');
