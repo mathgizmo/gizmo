@@ -33,7 +33,7 @@ require __DIR__.'/../../laravel/bootstrap/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../../laravel/bootstrap/admin-app.php';
+$app = require_once __DIR__.'/../../laravel/bootstrap/api-app.php';
 
 /*
 |--------------------------------------------------------------------------
