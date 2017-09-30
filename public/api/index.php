@@ -1,5 +1,5 @@
 <?php
-
+$_ENV["app"] = 'api';
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
@@ -33,7 +33,7 @@ require __DIR__.'/../../laravel/bootstrap/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../../laravel/bootstrap/api-app.php';
+$app = require_once __DIR__.'/../../laravel/bootstrap/app.php';
 
 /*
 |--------------------------------------------------------------------------
