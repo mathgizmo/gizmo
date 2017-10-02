@@ -23,15 +23,13 @@ class JSON
         }
         else if ($response instanceof \Illuminate\Http\Response) {
             return response()->json([
-                'response' => $response->original,
-                'status' => 200,
-                'API_version' => '1.0'
+                'message' => $response->original,
+                'status_code' => 200
             ], 200);
         }
         return response()->json([
-            'response' => 'Something went wrong',
-            'status' => 500,
-            'API_version' => '1.0'
+            'message' => 'Something went wrong',
+            'status_code' => 500
         ], 500);
     }
 }

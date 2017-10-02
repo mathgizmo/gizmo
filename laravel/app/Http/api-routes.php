@@ -11,16 +11,5 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::auth();
-
-Route::get('/home', 'HomeController@index');
-Route::resource('level_views', 'LevelController');
-Route::resource('unit_views', 'UnitController');
-Route::resource('topic_views', 'TopicController');
-Route::resource('lesson_views', 'LessonController');
-Route::resource('question_views', 'QuestionController');
+$api->get('/' , 'App\Http\APIControllers\HomeController@index');
 

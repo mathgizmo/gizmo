@@ -53,10 +53,9 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(Router $router)
     {
         if (isset($_ENV['app']) && $_ENV['app'] == 'api') {
-            $router->group([
-                'namespace' => $this->namespace, 'middleware' => 'api',
-            ], function ($router) {
-                require app_path('Http/routes.php');
+            $api = app('Dingo\Api\Routing\Router');
+            $api->version('v1', ['middleware' => 'api'], function ($api) {
+                require app_path('Http/api-routes.php');
             });
         }
         else {
