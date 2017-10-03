@@ -1,20 +1,29 @@
 <?php
 
-namespace App\API\APIControllers;
+namespace App\Http\APIControllers;
 
-use App\API\Requests;
 use Illuminate\Http\Request;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return array()
-     */
-    public function login(Request $request)
+    public function authenticate(Request $request)
     {
-        $json = $request->input();
-        return $json;
+        // grab credentials from the request
+        $credentials = $request->only('email', 'password');
+
+        try {
+            // attempt to verify the credentials and create a token for the user
+            if (! $token = JWTAuth::attempt($credentials)) {
+                throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException('','invalid_credentials');
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            throw new \Symfony\Component\HttpKernel\Exception\HttpException(500, 'could_not_create_token');
+        }
+
+        // all good so return the token
+        return response()->json(compact('token'));
     }
 }

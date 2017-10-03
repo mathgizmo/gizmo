@@ -22,6 +22,9 @@ class JSON
             return $response;
         }
         else if ($response instanceof \Illuminate\Http\Response) {
+            if (isset($response->original['message']) && isset($response->original['status_code'])) {
+                return $response;
+            }
             return response()->json([
                 'message' => $response->original,
                 'status_code' => 200
