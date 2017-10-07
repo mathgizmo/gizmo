@@ -14,6 +14,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return $this->response->array('this is API');
+        return $this->success('this is API');
     }
 }
