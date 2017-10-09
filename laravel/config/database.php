@@ -1,10 +1,9 @@
 <?php
-
-if (file_exists('local/dbconf.php')) {
-    require_once('local/dbconf.php');
+if (file_exists(dirname(__FILE__) .'/local/dbconf.php')) {
+    require_once(dirname(__FILE__) .'/local/dbconf.php');
 }
-else if (file_exists('global/dbconf.php')) {
-    require_once('global/dbconf.php');
+else if (file_exists(dirname(__FILE__) .'/global/dbconf.php')) {
+    require_once(dirname(__FILE__) .'/global/dbconf.php');
 }
 
 return [
