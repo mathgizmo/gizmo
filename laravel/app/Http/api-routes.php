@@ -12,5 +12,5 @@
 */
 
 $api->get('/' , 'App\Http\APIControllers\HomeController@index');
-$api->any('/auth/login' , 'App\Http\APIControllers\AuthController@authenticate');
+$api->any('/authenticate' , 'App\Http\APIControllers\AuthController@authenticate');
 

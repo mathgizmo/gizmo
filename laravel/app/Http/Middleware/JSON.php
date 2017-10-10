@@ -21,31 +21,26 @@ class JSON
         $response = $next($request);
         //error_log(var_dump($response));
         if ($response instanceof \Illuminate\Http\JsonResponse) {
-            return $response;
+            //do nothing
+            //return $response;
         }
-        else if ($response instanceof \Dingo\Api\Http\Response) {
+        else if ($response instanceof \Illuminate\Http\Response || $response instanceof \Dingo\Api\Http\Response) {
             if (isset($response->original['message']) && isset($response->original['status_code'])) {
-                return $response->original;
-            }
-            return response()->json([
-                'success' => true,
-                'message' => $response->original,
-                'status_code' => 200
-            ], 200);
-        }
-        else if ($response instanceof \Illuminate\Http\Response) {
-            if (isset($response->original['message']) && isset($response->original['status_code'])) {
-                return response()->json([
+                $response = response()->json([
                     'success' => isset($response->original['success'])?$response->original['success']:$response->original['status_code']==200?true:false,
                     'message' => $response->original['message'],
                     'status_code' => $response->original['status_code']
                 ], $response->original['status_code']);
             }
+        } else {
+            $response = response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+                'status_code' => 500
+            ], 500);
         }
-        return response()->json([
-            'success' => false,
-            'message' => 'Something went wrong',
-            'status_code' => 500
-        ], 500);
+        
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        return $response;
     }
 }
