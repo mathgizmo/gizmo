@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class TopicController extends Controller
 {
     /**
-     * Show the application dashboard.
+     * return tree of levels/units/topics.
      *
      * @return array
      */
@@ -38,5 +38,28 @@ class TopicController extends Controller
         }
         DB::connection()->setFetchMode($mode);
         return $this->success($response);
+    }
+
+    /**
+     * return tree of lessons for given topics.
+     *
+     * @return array
+     */
+    public function get($id)
+    {
+        if(!$id || !is_numeric($id)) {
+            return $this->error('id must be integer');
+        }
+
+        $mode = DB::connection()->getFetchMode();
+        DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
+        $topic = DB::table('topic')->where('id',$id)->first();
+        if(!$topic) {
+            return $this->error('topic not found');
+        }
+        $topic['lessons'] = DB::table('lesson')->where('topic_id',$id)->get();
+
+        DB::connection()->setFetchMode($mode);
+        return $this->success($topic);
     }
 }
