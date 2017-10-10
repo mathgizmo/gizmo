@@ -19,7 +19,7 @@ class JSON
     public function handle($request, Closure $next, $guard = null)
     {
         $response = $next($request);
-        error_log(print_r($response, true));
+        //error_log(var_dump($response));
         if ($response instanceof \Illuminate\Http\JsonResponse) {
             return $response;
         }
@@ -32,6 +32,15 @@ class JSON
                 'message' => $response->original,
                 'status_code' => 200
             ], 200);
+        }
+        else if ($response instanceof \Illuminate\Http\Response) {
+            if (isset($response->original['message']) && isset($response->original['status_code'])) {
+                return response()->json([
+                    'success' => isset($response->original['success'])?$response->original['success']:$response->original['status_code']==200?true:false,
+                    'message' => $response->original['message'],
+                    'status_code' => $response->original['status_code']
+                ], $response->original['status_code']);
+            }
         }
         return response()->json([
             'success' => false,
