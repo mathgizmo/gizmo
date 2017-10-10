@@ -21,4 +21,6 @@ v6.11.3
 
 Also install angular cli https://angular.io/guide/quickstart
 Run *npm install* into ci folder to install required npm modules
+Copy ci/src/app/globals.ts.distr to ci/src/app/globals.ts and set you variables there
 Use *ng build --prod* into ci folder to build angular app and see your changes under apache
+
