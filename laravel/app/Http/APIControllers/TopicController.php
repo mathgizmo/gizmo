@@ -57,9 +57,42 @@ class TopicController extends Controller
         if(!$topic) {
             return $this->error('topic not found');
         }
-        $topic['lessons'] = DB::table('lesson')->where('topic_id',$id)->get();
+        $topic['lessons'] = DB::table('lesson')->where('topic_id',$id)->orderBy('id')->get();
 
         DB::connection()->setFetchMode($mode);
         return $this->success($topic);
+    }
+
+    /**
+     * return tree of questions for given lesson.
+     *
+     * @return array
+     */
+    public function getLesson($id, $lesson_id)
+    {
+        if(!$id || !is_numeric($id)) {
+            return $this->error('id must be integer');
+        }
+
+        if(!$lesson_id || !is_numeric($lesson_id)) {
+            return $this->error('lesson_id must be integer');
+        }
+
+        $mode = DB::connection()->getFetchMode();
+        DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
+        $topic = DB::table('topic')->where('id',$id)->first();
+        if(!$topic) {
+            return $this->error('topic not found');
+        }
+
+        $lesson = DB::table('lesson')->where('id',$lesson_id)->where('topic_id', $id)->orderBy('id')->first();
+        if(!$lesson) {
+            return $this->error('lesson not found');
+        }
+        $lesson['questions'] = DB::table('question')->where('lesson_id',$lesson_id)->get();
+        $lesson['topic'] = $topic;
+
+        DB::connection()->setFetchMode($mode);
+        return $this->success($lesson);
     }
 }
