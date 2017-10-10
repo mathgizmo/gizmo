@@ -1,0 +1,10 @@
+//
+// ===== File globals.ts    
+//please copy this to globals.ts, and set your variables there.
+//
+'use strict';
+
+export const GlobalVariable = Object.freeze({
+    BASE_API_URL: 'path to your api',
+    //... more of your variables
+});

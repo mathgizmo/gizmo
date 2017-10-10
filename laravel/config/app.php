@@ -34,6 +34,7 @@ $providers = [
     App\Providers\RouteServiceProvider::class,
     Dingo\Api\Provider\LaravelServiceProvider::class,
     'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
+    Barryvdh\Cors\ServiceProvider::class,
 ];
 
 

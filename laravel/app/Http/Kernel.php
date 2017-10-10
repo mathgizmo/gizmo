@@ -14,6 +14,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        \Barryvdh\Cors\HandleCors::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
     ];
 
@@ -33,7 +34,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             \App\Http\Middleware\JSON::class,
-            'throttle:60,1',
+            //'throttle:60,1',
             //'bindings'
         ],
     ];
