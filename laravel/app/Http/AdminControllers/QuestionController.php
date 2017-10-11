@@ -15,6 +15,7 @@ class QuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request)
 	{
 		$levels = DB::select('select * from level');
@@ -81,13 +82,17 @@ class QuestionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
-    {	$levels = DB::select('select * from level');
+    {
+		static $test;
+		$levels = DB::select('select * from level');
+
 	    if($request->ajax()){
 		$output= '<option value="" selected>Select From ...</option>';
 		$toutput= '<option value="" selected>Select From ...</option>';
 		$loutput= '<option value="" selected>Select From ...</option>';
 	    $coutput= '<option value="" selected>No Related Data ...</option>';
 		$lid = $request->level_id;
+		$request->session()->put('slid', $lid);
 		$units = DB::table('unit')->select('id', 'title')->where('level_id', $lid)->get();
        if($units){
 
@@ -126,13 +131,16 @@ class QuestionController extends Controller
 				}
 
 	}; // request ajax if close
-		$lid = "";
+
+	    $lid = $request->session()->get('slid');
 		$uid = "";
 		$tid = "";
 		$lsnid = "";
-	    $units = DB::table('unit')->select('id', 'title')->where('level_id','1')->get();
-		$topics = DB::table('topic')->select('id', 'title')->where('unit_id','1')->get();
-		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id','1')->get();
+	    //$units = DB::table('unit')->select('id', 'title')->where('level_id', $lid)->get();
+		$units = DB::table('unit')->select('id', 'title')->get();
+		$topics = DB::table('topic')->select('id', 'title')->get();
+
+		$lessons = DB::table('lesson')->select('id', 'title')->get();
 		$qtypes = DB::select('select * from question_type');
 		$qrmodes = DB::select('select * from reply_mode');
 		return view('question_views.create',['levels' => $levels,'qtypes' => $qtypes,
