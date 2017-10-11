@@ -2,3 +2,35 @@
 .help-block {
     font-size: 12px;
 }
+
+.circle-icon {
+    background: #ffc0c0;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 100px;
+    vertical-align: middle;
+    padding: 20px 30px 20px 30px;
+}
+.icon-red {
+    color: #ffc0c0;
+}
+
+.icon-dark-red {
+    color: #c04040;
+}
+
+.icon-green {
+    color: #c0ffc0;
+}
+
+.icon-dark-green {
+    color: #40c040;
+}
+
+.circle-icon2 {
+    background: #ffc0c0;
+    padding:30px;
+    border-radius: 50%;
+}

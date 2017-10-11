@@ -1,23 +1,23 @@
 ﻿import { Component, OnInit } from '@angular/core';
 
-import { User } from '../_models/index';
-import { UserService } from '../_services/index';
+import { TopicService } from '../_services/index';
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'home.component.html'
+    templateUrl: 'home.component.html',
+    providers: [TopicService]
 })
 
 export class HomeComponent implements OnInit {
-    users: User[] = [];
+    topicsTree: any = [];
 
-    constructor(private userService: UserService) { }
+    constructor(private topicService: TopicService) { }
 
     ngOnInit() {
-        // get users from secure api end point
-        this.userService.getUsers()
-            .subscribe(users => {
-                this.users = users;
+        // get topics tree from API
+        this.topicService.getTopics()
+            .subscribe(topicsTree => {
+                this.topicsTree = topicsTree;
             });
     }
 

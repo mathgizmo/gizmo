@@ -1,11 +1,28 @@
-﻿<div class="col-md-6 col-md-offset-3">
-    <h1>Home</h1>
-    <p>You're logged in with JWT!!</p>
-    <div>
-        Users from secure api end point:
-        <ul>
-            <li *ngFor="let user of users">{{user.firstName}} {{user.lastName}}</li>
-        </ul>
+﻿<div class="text-center">
+    <div ng-if="topicsTree.length">
+        <div *ngFor="let level of topicsTree; let levelIndex = index">
+            <div *ngIf="level.units.length">
+                <h3>{{level.title}}</h3>
+                <div *ngFor="let unit of level.units; let unitIndex = index">
+                    <h4>{{unit.title}}</h4>
+                    <div *ngFor="let topic of unit.topics; let topicIndex = index">
+
+                        <span *ngIf="topicIndex >= 3" class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x icon-red"></i>
+                            <i class="fa fa-circle-thin fa-stack-2x icon-dark-red"></i>
+                            <i class="fa fa-lock fa-stack-1x"></i>
+                        </span>
+                        <span *ngIf="topicIndex < 3" class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x icon-green"></i>
+                            <i class="fa fa-circle-thin fa-stack-2x icon-dark-green"></i>
+                            <i class="fa fa-unlock fa-stack-1x"></i>
+                        </span>
+                        <div>{{topic.title}}</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <p><a [routerLink]="['/login']">Logout</a></p>
 </div>
