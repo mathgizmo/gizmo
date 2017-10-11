@@ -12,7 +12,7 @@ import { AppComponent }  from './app.component';
 import { routing }        from './app.routing';
 
 import { AuthGuard } from './_guards/index';
-import { AuthenticationService, UserService } from './_services/index';
+import { AuthenticationService, ServerService } from './_services/index';
 import { LoginComponent } from './login/index';
 import { HomeComponent } from './home/index';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
@@ -34,7 +34,7 @@ import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawe
     providers: [
         AuthGuard,
         AuthenticationService,
-        UserService,
+        ServerService,
 
         // providers used to create fake backend
         //fakeBackendProvider,
