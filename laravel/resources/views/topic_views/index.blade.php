@@ -78,6 +78,8 @@
 									<table class="table table-striped">
 										<thead>
 											<tr>
+												<th class="col-md">Image</th>
+												<th class="col-md">Order No</th>
 												<th class="col-md">Topic ID</th>
 												<th class="col-md">Topic Title</th>
 												<th class="col-md">Dependency</th>
@@ -89,6 +91,8 @@
 						<tbody>
 							@foreach($topics as $topic)
 								<tr>
+									<td><img id="show-img" class="{{$topic->image_id}}" src="{{ URL::asset('images/img_trans.gif') }}" /></td>
+									<td>{{$topic->order_no}}</td>
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
 									<td>{{$topic->dependency}}</td>

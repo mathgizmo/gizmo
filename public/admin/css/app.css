@@ -1,0 +1,98 @@
+#addImageModal ul {
+  list-style-type: none;
+}
+
+#addImageModal ul li {
+  display: inline-block;
+}
+
+#addImageModal input[type="checkbox"][id^="cb"] {
+  display: none;
+}
+
+#addImageModal label {
+  border: 1px solid #fff;
+  padding: 10px;
+  display: block;
+  position: relative;
+  margin: 10px;
+  cursor: pointer;
+}
+
+#addImageModal label:before {
+  background-color: white;
+  color: white;
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  border: 1px solid grey;
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  text-align: center;
+  line-height: 28px;
+  transition-duration: 0.4s;
+  transform: scale(0);
+}
+
+#addImageModal label img {
+  transition-duration: 0.2s;
+  transform-origin: 50% 50%;
+}
+
+#addImageModal input:checked + label {
+  border-color: #ddd;
+}
+
+#addImageModal input:checked + label:before {
+  content: "✓";
+  background-color: grey;
+  transform: scale(1);
+  z-index: 5;
+}
+
+#addImageModal input:checked + label img {
+  transform: scale(0.9);
+  box-shadow: 0 0 5px #333;
+  z-index: -99;
+}
+
+form#create-topic label#change-image {
+	display: none;
+}
+
+img#show-img.cb0-img {
+    width: 81px;
+    height: 81px;
+    background: url(../images/no_image.png) 0 0;
+}
+
+img#show-img.cb1-img,
+#addImageModal #cb1-img {
+    width: 81px;
+    height: 81px;
+    background: url(../images/courses.jpg) -23px -20px;
+}
+
+img#show-img.cb2-img,
+#addImageModal #cb2-img {
+    width: 81px;
+    height: 81px;
+    background: url(../images/courses.jpg) -102px -20px;
+}
+
+img#show-img.cb3-img,
+#addImageModal #cb3-img {
+    width: 81px;
+    height: 81px;
+    background: url(../images/courses.jpg) -184px -20px;
+}
+
+img#show-img.cb4-img,
+#addImageModal #cb4-img {
+    width: 81px;
+    height: 81px;
+    background: url(../images/courses.jpg) -266px -20px;
+}

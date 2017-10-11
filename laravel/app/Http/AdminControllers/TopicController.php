@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Topic;
 use App\Http\Requests;
 
 class TopicController extends Controller
@@ -34,8 +34,17 @@ class TopicController extends Controller
 		$levels = DB::select('select * from level');
 		$units = DB::select('select * from unit');
 		$topics = DB::table('topic')->where('unit_id',$uid)->get();
-		return view('topic_views.create',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid]); 
+		$total_topic = Topic::all()->count();
+		return view('topic_views.create',array(
+			'levels' => $levels,
+			'units' => $units,
+			'topics' => $topics,
+			'lid' => $lid,
+			'uid' => $uid,
+			'total_topic' => $total_topic
+		)); 
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -50,26 +59,32 @@ class TopicController extends Controller
 		$uid = $request->unit_id;
 		//$tid = $request->topic_id;
 		$this->validate($request, [
-		 'level_id'	=> 'required',
-		 'unit_id'	=> 'required',
-		 'topic_title'=> 'required',
-		 'dependency'=> 'required',
-		 ]);
+			'image_id'	=> 'required',
+			'short_name'	=> 'required',
+			'level_id'	=> 'required',
+			'unit_id'	=> 'required',
+			'topic_title'=> 'required',
+			'dependency'=> 'required',
+		]);
 		 
-		 DB::table('topic')->insert([
-		 'title' => $request['topic_title'], 
-		 'dependency' => $request['dependency'],
-		 'unit_id' => $request['unit_id'],
-		 'created_at' => date('Y-m-d H:i:s'),
-		 'modified_at' => date('Y-m-d H:i:s')
+		DB::table('topic')->insert([
+			'image_id' => $request['image_id'], 
+			'short_name' => $request['short_name'], 
+			'order_no' => $request['order_no'], 
+			'title' => $request['topic_title'], 
+			'dependency' => $request['dependency'],
+			'unit_id' => $request['unit_id'],
+			'created_at' => date('Y-m-d H:i:s'),
+			'modified_at' => date('Y-m-d H:i:s')
 		]);
 		
 		$levels = DB::select('select * from level');
 		$units = DB::select('select * from unit');
 		$topics = DB::table('topic')->where('unit_id',$uid)->get();
+		$total_topic = Topic::all()->count();
 		//$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
 		\Session::flash('flash_message','successfully saved.');
-		return view('topic_views.create',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid]); 
+		return view('topic_views.create',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid,'total_topic'=>$total_topic]); 
     }
 
     /**
