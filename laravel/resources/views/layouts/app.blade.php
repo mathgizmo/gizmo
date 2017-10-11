@@ -14,7 +14,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
+    <link href="{{ URL::asset('css/app.css') }}" rel="stylesheet">
 
     <style>
         body {
@@ -700,17 +700,43 @@
 			});
 			
 	$('#topic_id').on('change',function(){
-			$value=$(this).val();
-			$.ajax({
-				type : 'get',
-				url  : '{{URL:: to('/question_views/create')}}',
-				data : {'topic_id':$value},
-				success: function(data){
-					//alert(data);
-					$('#lesson_id').html(data);
-					}
-				});
-			});
+		$value=$(this).val();
+		$.ajax({
+			type : 'get',
+			url  : '{{URL:: to('/question_views/create')}}',
+			data : {'topic_id':$value},
+			success: function(data){
+				//alert(data);
+				$('#lesson_id').html(data);
+			}
+		});
+	});
+
+	$(function () {
+	    $("#addImageModal button#save-image").on('click', function() {
+	        $('#addImageModal').modal('hide');
+	        $('form#create-topic label#change-image img').removeClass();
+
+	        $('form#create-topic label#add-image').hide();
+	        $('form#create-topic label#change-image').show();
+
+	        var intVal = $('#addImageModal input[type=checkbox]:checked').val();
+	        $('form#create-topic label#change-image img').addClass(intVal);
+	        $('form#create-topic input[name=image_id').val(intVal);
+
+	    });
+
+	    $( "#addImageModal input[type=checkbox]" ).on( "click", function() {
+	    	$('#addImageModal input[type=checkbox]').prop('checked', false);	
+	    	$(this).prop('checked', true);	
+	    });
+
+	  /*  if( $('#addImageModal').hasClass('img.cb1-img0') ) {
+
+	    	$("#addImageModal label[id=change-image]").hide();
+
+	    }*/
+	});
 	</script>
 	
 	@yield('scripts')
