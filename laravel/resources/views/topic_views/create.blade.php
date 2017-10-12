@@ -12,7 +12,7 @@
 						<em> {!! session('flash_message') !!}</em>
 					</div>
 					@endif
-					<form id="create-topic" class="form-horizontal" role="form" action="{{ route('topic_views.store') }}" method="POST">
+					<form id="topic" class="form-horizontal create-topic" role="form" action="{{ route('topic_views.store') }}" method="POST">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 				        <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
@@ -119,25 +119,25 @@
 					</div>
 
 					<div class="form-group{{ $errors->has('order_no') ? ' has-error' : '' }}">
-                            <label for="order_no" class="col-md-4 control-label">Order No</label>
+                        <label for="order_no" class="col-md-4 control-label">Order No</label>
 
-                            <div class="col-md-6">
-							      <select class="form-control" name="order_no" id="order_no">
-									<option value="1">1</option>
-								    @if ($total_topic > 0)
-									  	@for($count = 2; $count <= $total_topic + 1; $count++)
-											<option <?php echo ($count > $total_topic) ? 'selected="selected"' : ''; ?> value="{{$count}}">{{$count}}</option>
-										@endfor
-								  	@endif
-									</select>
-                                
-                                @if ($errors->has('order_no'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('order_no') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                        <div class="col-md-6">
+						      <select class="form-control" name="order_no" id="order_no">
+								<option value="1">1</option>
+							    @if ($total_topic > 0)
+								  	@for($count = 2; $count <= $total_topic + 1; $count++)
+										<option <?php echo ($count > $total_topic) ? 'selected="selected"' : ''; ?> value="{{$count}}">{{$count}}</option>
+									@endfor
+							  	@endif
+								</select>
+                            
+                            @if ($errors->has('order_no'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('order_no') }}</strong>
+                                </span>
+                            @endif
                         </div>
+                    </div>
 
 					<div class="form-group">
 						<div class="col-md-6 col-md-offset-4">
@@ -155,8 +155,9 @@
 								<tr>
 									<th class="col-md">Image</th>
 									<th class="col-md">Order No</th>
-									<th class="col-md">Topic ID</th>
-									<th class="col-md">Topic Title</th>
+									<th class="col-md">ID</th>
+									<th class="col-md">Title</th>
+									<th class="col-md">Short Name</th>
 									<th class="col-md">Dependency</th>
 									<th class="col-md-3">OPTIONS</th>
 								</tr>
@@ -169,10 +170,11 @@
 									<td>{{$topic->order_no}}</td>
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
+									<td>{{$topic->short_name}}</td>
 									<td>{{$topic->dependency}}</td>
-									<td class="text-right">
+									<td class="text-center">
 
-											<a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a>
+											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
 											<a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
 											<form action="{{ route('topic_views.destroy', $topic->id) }}" 
 												method="POST" style="display: inline;" 

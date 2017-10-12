@@ -95,8 +95,9 @@
 									<table class="table table-striped">
 										<thead>
 											<tr>
-												<th class="col-md">Lesson ID</th>
-												<th class="col-md">Lesson Title</th>
+												<th class="col-md">ID</th>
+												<th class="col-md">Order No</th>
+												<th class="col-md">Title</th>
 												<th class="col-md">Dependency</th>
 												<th class="col-md-3">OPTIONS</th>
 											</tr>
@@ -107,19 +108,19 @@
 							@foreach($lessons as $lesson)
 								<tr>
 									<td>{{$lesson->id}}</td>
+									<td>{{$lesson->order_no}}</td>
 									<td>{{$lesson->title}}</td>
 									<td>{{$lesson->dependency}}</td>
 									<td class="text-right">
-
-											<a class="btn btn-primary disabled" href="{{ route('lesson_views.show', $lesson->id) }}">View</a>
-											<a class="btn btn-warning" href="{{ route('lesson_views.edit', $lesson->id) }}">Edit</a>
-											<form action="{{ route('lesson_views.destroy', $lesson->id) }}" 
-												method="POST" style="display: inline;" 
-												onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-												<input type="hidden" name="_method" value="DELETE">
-												<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
-												<button class="btn btn-danger" type="submit">Delete</button>
-												</form>
+										<!-- <a class="btn btn-primary disabled" href="{{ route('lesson_views.show', $lesson->id) }}">View</a> -->
+										<a class="btn btn-warning" href="{{ route('lesson_views.edit', $lesson->id) }}">Edit</a>
+										<form action="{{ route('lesson_views.destroy', $lesson->id) }}" 
+											method="POST" style="display: inline;" 
+											onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+											<input type="hidden" name="_method" value="DELETE">
+											<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
+											<button class="btn btn-danger" type="submit">Delete</button>
+											</form>
 									</td>
 								</tr>
 							@endforeach

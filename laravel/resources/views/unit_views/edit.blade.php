@@ -61,14 +61,11 @@
 						<label for="type" class="col-md-4 control-label">Dependency</label>
 
                             <div class="col-md-6 radio"> 
-								@if ( "Yes" == $unit->dependency)
-								<label for="type" class="col-md-3"> <input type="radio" name="dependency" checked="checked" value="Yes">Yes</label>
-								<label for="type" class="col-md-3"> <input type="radio" name="dependency" value="No"> No</label>
-								@endif
-								@if ( "No" == $unit->dependency)
-								<label for="type" class="col-md-3"> <input type="radio" name="dependency"  value="Yes">Yes</label>
-								<label for="type" class="col-md-3"> <input type="radio" name="dependency" checked="checked" value="No"> No</label>
-								@endif
+								
+								<label for="type" class="col-md-3"> <input type="radio" name="dependency" <?php echo ( "Yes" == $unit->dependency) ? 'checked="checked"' : ''; ?> value="Yes">Yes</label>
+								
+								<label for="type" class="col-md-3"> <input type="radio" name="dependency" <?php echo ( "No" == $unit->dependency) ? 'checked="checked"' : ''; ?> value="No"> No</label>
+							
 
                                 @if ($errors->has('dependency'))
                                     <span class="help-block">
@@ -76,17 +73,39 @@
                                     </span>
                                 @endif
                             </div>
-					</div>
-<div class="form-group">
-			<div class="col-md-6 col-md-offset-4">
-            <a class="btn btn-default" href="{{ route('unit_views.create') }}">Back</a>
-            <button class="btn btn-primary" type="submit" >Update</button>
-			
-			</div>
-		</div>
-            </form>
-        </div>
-    </div>
+					   </div>
+
+                       <div class="form-group{{ $errors->has('order_no') ? ' has-error' : '' }}">
+                            <label for="order_no" class="col-md-4 control-label">Order No</label>
+
+                            <div class="col-md-6">
+                                  <select class="form-control" name="order_no" id="order_no">
+                                    <option value="1">1</option>
+                                    @if ($total_unit > 0)
+                                        @for($count = 2; $count <= $total_unit + 1; $count++)
+                                            <option <?php echo ($count == $unit->order_no) ? 'selected="selected"' : ''; ?> value="{{$count}}">{{$count}}</option>
+                                        @endfor
+                                    @endif
+                                    </select>
+                                
+                                @if ($errors->has('order_no'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('order_no') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                			<div class="col-md-6 col-md-offset-4">
+                            <a class="btn btn-default" href="{{ route('unit_views.create') }}">Back</a>
+                            <button class="btn btn-primary" type="submit" >Update</button>
+                			
+                			</div>
+                		</div>
+                            </form>
+                        </div>
+                    </div>
 	
 	          </div>
             </div>

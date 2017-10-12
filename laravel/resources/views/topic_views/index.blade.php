@@ -80,8 +80,9 @@
 											<tr>
 												<th class="col-md">Image</th>
 												<th class="col-md">Order No</th>
-												<th class="col-md">Topic ID</th>
-												<th class="col-md">Topic Title</th>
+												<th class="col-md">ID</th>
+												<th class="col-md">Title</th>
+												<th class="col-md">Short Name</th>
 												<th class="col-md">Dependency</th>
 												<th class="col-md-3">OPTIONS</th>
 											</tr>
@@ -95,10 +96,11 @@
 									<td>{{$topic->order_no}}</td>
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
+									<td>{{$topic->short_name}}</td>
 									<td>{{$topic->dependency}}</td>
-									<td class="text-right">
+									<td class="text-center">
 
-											<a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a>
+											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
 											<a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
 											<form action="{{ route('topic_views.destroy', $topic->id) }}" 
 												method="POST" style="display: inline;" 
