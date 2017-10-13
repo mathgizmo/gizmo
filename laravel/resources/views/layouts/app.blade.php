@@ -713,17 +713,17 @@
 	});
 
 	$(function () {
+
 	    $("#addImageModal button#save-image").on('click', function() {
 	        $('#addImageModal').modal('hide');
-	        $('form#create-topic label#change-image img').removeClass();
+	        $('form#topic label#change-image img').removeClass();
 
-	        $('form#create-topic label#add-image').hide();
-	        $('form#create-topic label#change-image').show();
+	        $('form#topic label#add-image').hide();
+	        $('form#topic label#change-image').show();
 
 	        var intVal = $('#addImageModal input[type=checkbox]:checked').val();
-	        $('form#create-topic label#change-image img').addClass(intVal);
-	        $('form#create-topic input[name=image_id').val(intVal);
-
+	        $('form#topic label#change-image img').addClass(intVal);
+	        $('form#topic input[name=image_id').val(intVal);
 	    });
 
 	    $( "#addImageModal input[type=checkbox]" ).on( "click", function() {
@@ -731,11 +731,6 @@
 	    	$(this).prop('checked', true);	
 	    });
 
-	  /*  if( $('#addImageModal').hasClass('img.cb1-img0') ) {
-
-	    	$("#addImageModal label[id=change-image]").hide();
-
-	    }*/
 	});
 	</script>
 	

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Unit;
 use App\Http\Requests;
 
 class UnitController extends Controller
@@ -32,7 +32,14 @@ class UnitController extends Controller
 		$lid = "";
 		$levels = DB::select('select * from level');
 		$units = DB::table('unit')->where('level_id',$lid)->get();
-		return view('unit_views.create',['levels'=>$levels,'units'=>$units,'lid'=>$lid]); 
+        $total_unit = Unit::all()->count();
+
+		return view('unit_views.create',[
+            'levels' => $levels,
+            'units' => $units,
+            'lid' => $lid,
+            'total_unit' => $total_unit,
+        ]); 
     }
 
     /**
@@ -56,15 +63,23 @@ class UnitController extends Controller
 		 DB::table('unit')->insert([
 		 'title' => $request['unit_title'], 
 		 'dependency' => $request['dependency'],
-		 'level_id' => $request['level_id'],
+         'level_id' => $request['level_id'],
+		 'order_no' => $request['order_no'],
 		 'created_at' => date('Y-m-d H:i:s'),
 		 'modified_at' => date('Y-m-d H:i:s')
 		]);
 		
 		$levels = DB::select('select * from level');
 		$units = DB::table('unit')->where('level_id',$lid)->get();
+        $total_unit = Unit::all()->count();
+
 		\Session::flash('flash_message','successfully saved.');
-		return view('unit_views.create',['levels'=>$levels,'units'=>$units,'lid'=>$lid]); 
+		return view('unit_views.create',[
+            'levels' => $levels,
+            'units' => $units,
+            'lid' => $lid,
+            'total_unit' => $total_unit,
+        ]); 
     }
 
     /**
@@ -92,9 +107,13 @@ class UnitController extends Controller
 			->select('unit.*', 'level.title as ltitle','level.id as lid')
 			->where('unit.id', '=', $id)->first();
 		$levels = DB::table('level')->select('id', 'title')->where('id', $unit->lid)->get();
-		//print_r($qtypes);
-		return view('unit_views.edit', ['levels'=>$levels,
-		'unit'=>$unit]);
+		$total_unit = Unit::all()->count();
+
+		return view('unit_views.edit', [
+            'levels'=>$levels,
+            'unit'=>$unit,
+		    'total_unit'=>$total_unit,
+        ]);
     }
 
     /**
@@ -111,25 +130,31 @@ class UnitController extends Controller
 		//$uid = $request->unit_id;
 		//$tid = $request->topic_id;
 		$this->validate($request, [
-		 'level_id'	=> 'required',
-		 //'unit_id'	=> 'required',
-		 'unit_title'=> 'required',
-		 'dependency'=> 'required',
-		 ]);
+    		'level_id'	=> 'required',
+    		 //'unit_id'	=> 'required',
+    		'unit_title'=> 'required',
+    		'dependency'=> 'required',
+		]);
 		 
-		 DB::table('unit')->where('id',$id)->update([
-		 'title' => $request['unit_title'], 
-		 'dependency' => $request['dependency'],
-		 'level_id' => $request['level_id'],
-		 'created_at' => date('Y-m-d H:i:s'),
-		 'modified_at' => date('Y-m-d H:i:s')
+		DB::table('unit')->where('id',$id)->update([
+    		'title' => $request['unit_title'], 
+    		'dependency' => $request['dependency'],
+            'level_id' => $request['level_id'],
+    		'order_no' => $request['order_no'],
+    		'created_at' => date('Y-m-d H:i:s'),
+    		'modified_at' => date('Y-m-d H:i:s')
 		]);
 		
 		$levels = DB::select('select * from level');
 		$units = DB::table('unit')->where('level_id',$request->level_id)->get();
-//		\Session::flash('flash_message','successfully saved.');
+        $total_unit = Unit::all()->count();
 
-		return view('unit_views.create',['levels'=>$levels,'units'=>$units,'lid'=>$lid]); 
+		return view('unit_views.create',[
+            'levels' => $levels,
+            'units' => $units,
+            'lid' => $lid,
+            'total_unit' => $total_unit
+        ]); 
     }
 
     /**

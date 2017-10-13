@@ -3,3 +3,13 @@ ALTER TABLE `topic` ADD `order_no` INT(10) NOT NULL AFTER `id`;
 ALTER TABLE `topic` ADD `image_id` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'cb0-img' AFTER `order_no`;
 
 ALTER TABLE `topic` ADD `short_name` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `title`;
+
+12.10.2017......
+
+ALTER TABLE `lesson` ADD `order_no` INT UNSIGNED NOT NULL AFTER `id`;
+
+ALTER TABLE `lesson` CHANGE `careated_at` `created_at` TIMESTAMP NULL DEFAULT NULL;
+
+ALTER TABLE `unit` ADD `order_no` INT UNSIGNED NOT NULL AFTER `id`;
+
+ALTER TABLE `level` ADD `order_no` INT UNSIGNED NOT NULL AFTER `id`;

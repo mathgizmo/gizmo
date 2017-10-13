@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Level;
 
 use App\Http\Requests;
 
@@ -18,7 +18,7 @@ class LevelController extends Controller
     public function index()
     {
         //
-		$levels = DB::select('select * from level');
+		$levels = Level::All();
 		//$units = DB::table('unit')->where('level_id',$request->level_id)->get();
 		//$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
 		return view('level_views.index',['levels'=>$levels]);
@@ -31,7 +31,12 @@ class LevelController extends Controller
      */
     public function create()
     {
-        //
+        $total_level = Level::all()->count();
+        $levels = Level::All();
+        return view('level_views.create',array(
+            'levels' => $levels,
+            'total_level' => $total_level
+        )); 
     }
 
     /**
@@ -47,13 +52,14 @@ class LevelController extends Controller
 		//$uid = $request->unit_id;
 		//$tid = $request->topic_id;
 		$this->validate($request, [
-		 'level_title'=> 'required',
+		 'title'=> 'required',
 		 ]);
 		 
 		 DB::table('level')->insert([
-		 'title' => $request['level_title'], 
+         'title' => $request['title'], 
+		 'order_no' => $request['order_no'], 
 		 'created_at' => date('Y-m-d H:i:s'),
-		 'modified_at' => date('Y-m-d H:i:s')
+		 'updated_at' => date('Y-m-d H:i:s')
 		]);
 		
 		$levels = DB::select('select * from level');
@@ -81,8 +87,13 @@ class LevelController extends Controller
      */
     public function edit($id)
     {
-        //
-		return "Under Construction";
+        $level = Level::find($id);
+        $total_level = Level::all()->count();
+
+        return view('level_views.edit', [
+            'level'=>$level,
+            'total_level'=>$total_level,
+        ]);
     }
 
     /**
@@ -94,8 +105,19 @@ class LevelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-		return "Under Construction";
+   
+        $this->validate($request, [
+            'title'  => 'required',
+        ]);
+         
+        DB::table('level')->where('id',$id)->update([
+            'title' => $request['title'], 
+            'order_no' => $request['order_no'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect('/level_views')->with( array('message'=> 'Updated successfully') );
     }
 
     /**

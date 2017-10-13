@@ -58,6 +58,7 @@
 										<thead>
 											<tr>
 												<th class="col-md">Unit ID</th>
+												<th class="col-md">Order No</th>
 												<th class="col-md">Unit Title</th>
 												<th class="col-md">Dependency</th>
 												<th class="col-md-3">OPTIONS</th>
@@ -69,11 +70,12 @@
 							@foreach($units as $unit)
 								<tr>
 									<td>{{$unit->id}}</td>
+									<td>{{$unit->order_no}}</td>
 									<td>{{$unit->title}}</td>
 									<td>{{$unit->dependency}}</td>
 									<td class="text-right">
 
-											<a class="btn btn-primary" href="{{ route('unit_views.show', $unit->id) }}">View</a>
+											<!-- <a class="btn btn-primary" href="{{ route('unit_views.show', $unit->id) }}">View</a> -->
 											<a class="btn btn-warning" href="{{ route('unit_views.edit', $unit->id) }}">Edit</a>
 											<form action="{{ route('unit_views.destroy', $unit->id) }}" 
 												method="POST" style="display: inline;" 

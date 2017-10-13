@@ -50,9 +50,9 @@
                                     </span>
                                 @endif
                             </div>
-				      </div>
+				      	</div>
 			
-				<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
+						<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
                             <label for="type" class="col-md-4 control-label">Dependency</label>
 
                             <div class="col-md-6 radio"> 
@@ -65,60 +65,83 @@
                                     </span>
                                 @endif
                             </div>
-					</div>
+						</div>
+
+						<div class="form-group{{ $errors->has('order_no') ? ' has-error' : '' }}">
+	                        <label for="order_no" class="col-md-4 control-label">Order No</label>
+
+	                        <div class="col-md-6">
+							      <select class="form-control" name="order_no" id="order_no">
+									<option value="1">1</option>
+								    @if ($total_unit > 0)
+									  	@for($count = 2; $count <= $total_unit + 1; $count++)
+											<option <?php echo ($count > $total_unit) ? 'selected="selected"' : ''; ?> value="{{$count}}">{{$count}}</option>
+										@endfor
+								  	@endif
+									</select>
+	                            
+	                            @if ($errors->has('order_no'))
+	                                <span class="help-block">
+	                                    <strong>{{ $errors->first('order_no') }}</strong>
+	                                </span>
+	                            @endif
+	                        </div>
+	                    </div>
 
 
 
-		<div class="form-group">
-			<div class="col-md-6 col-md-offset-4">
-               <a class="btn btn-default" href="{{ route('unit_views.index') }}">Back</a>
-                  <button class="btn btn-primary" type="submit" >Submit</button>
-		     </div>
-		</div>
+						<div class="form-group">
+							<div class="col-md-6 col-md-offset-4">
+				               <a class="btn btn-default" href="{{ route('unit_views.index') }}">Back</a>
+				                  <button class="btn btn-primary" type="submit" >Submit</button>
+						     </div>
+						</div>
             </form>
 			@if (count($units) > 0)
 			<div class="row">
-							<div class="col.md.12">
-								<div class="table-responsive">
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th class="col-md">Unit ID</th>
-												<th class="col-md">Unit Title</th>
-												<th class="col-md">Dependency</th>
-												<th class="col-md-3">OPTIONS</th>
-											</tr>
-										</thead>
+				<div class="col.md.12">
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th class="col-md">ID</th>
+								<th class="col-md">Order No</th>
+								<th class="col-md">Title</th>
+								<th class="col-md">Dependency</th>
+								<th class="col-md-3">OPTIONS</th>
+							</tr>
+						</thead>
 
 
 						<tbody>
 							@foreach($units as $unit)
 								<tr>
 									<td>{{$unit->id}}</td>
+									<td>{{$unit->order_no}}</td>
 									<td>{{$unit->title}}</td>
 									<td>{{$unit->dependency}}</td>
 									<td class="text-right">
 
-											<a class="btn btn-primary" href="{{ route('unit_views.show', $unit->id) }}">View</a>
-											<a class="btn btn-warning" href="{{ route('unit_views.edit', $unit->id) }}">Edit</a>
-											<form action="{{ route('unit_views.destroy', $unit->id) }}" 
-												method="POST" style="display: inline;" 
-												onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-												<input type="hidden" name="_method" value="DELETE">
-												<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
-												<button class="btn btn-danger" type="submit">Delete</button>
-												</form>
-									</td>
-								</tr>
-							@endforeach
-						</tbody>
-					</table>
+										<!-- <a class="btn btn-primary" href="{{ route('unit_views.show', $unit->id) }}">View</a> -->
+										<a class="btn btn-warning" href="{{ route('unit_views.edit', $unit->id) }}">Edit</a>
+										<form action="{{ route('unit_views.destroy', $unit->id) }}" 
+											method="POST" style="display: inline;" 
+											onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+											<input type="hidden" name="_method" value="DELETE">
+											<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
+											<button class="btn btn-danger" type="submit">Delete</button>
+											</form>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+								
+					</div>
 							
 				</div>
-						
 			</div>
-		</div>
-		@endif
+			@endif
 
               </div>
             </div>

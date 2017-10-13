@@ -90,17 +90,17 @@
                             <label for="lesson_title" class="col-md-4 control-label">Lesson Title</label>
 
                             <div class="col-md-6">
-                                <textarea id="lesson_title" class="form-control"  name="lesson_title" placeholder="Enter question text.."> {{ old('lesson_title') }}</textarea>
-
+                            	<input type="text" id="lesson_title" class="form-control"  name="lesson_title" placeholder="Enter question text.." value="{{ old('lesson_title') }}">
+                             
                                 @if ($errors->has('lesson_title'))
                                     <span class="help-block"> 
                                         <strong>{{ $errors->first('lesson_title') }}</strong>
                                     </span>
                                 @endif
                             </div>
-				      </div>
+				      	</div>
 			
-				<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
+						<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
                             <label for="type" class="col-md-4 control-label">Dependency</label>
 
                             <div class="col-md-6 radio"> 
@@ -113,26 +113,48 @@
                                     </span>
                                 @endif
                             </div>
-					</div>
+						</div>
 
+						<div class="form-group{{ $errors->has('order_no') ? ' has-error' : '' }}">
+	                        <label for="order_no" class="col-md-4 control-label">Order No</label>
 
+	                        <div class="col-md-6">
+							      <select class="form-control" name="order_no" id="order_no">
+									<option value="1">1</option>
+								    @if ($total_lesson > 0)
+									  	@for($count = 2; $count <= $total_lesson + 1; $count++)
+											<option <?php echo ($count > $total_lesson) ? 'selected="selected"' : ''; ?> value="{{$count}}">{{$count}}</option>
+										@endfor
+								  	@endif
+									</select>
+	                            
+	                            @if ($errors->has('order_no'))
+	                                <span class="help-block">
+	                                    <strong>{{ $errors->first('order_no') }}</strong>
+	                                </span>
+	                            @endif
+	                        </div>
+	                    </div>
 
-		<div class="form-group">
-			<div class="col-md-6 col-md-offset-4">
-               <a class="btn btn-default" href="{{ route('lesson_views.index') }}">Back</a>
-                  <button class="btn btn-primary" type="submit" >Submit</button>
-		     </div>
-		</div>
-            </form>
-			@if (count($lessons) > 0)
-			<div class="row">
+	
+
+						<div class="form-group">
+							<div class="col-md-6 col-md-offset-4">
+				               <a class="btn btn-default" href="{{ route('lesson_views.index') }}">Back</a>
+				                  <button class="btn btn-primary" type="submit" >Submit</button>
+						     </div>
+						</div>
+				        </form>
+							@if (count($lessons) > 0)
+							<div class="row">
 							<div class="col.md.12">
 								<div class="table-responsive">
 									<table class="table table-striped">
 										<thead>
 											<tr>
-												<th class="col-md">Lesson ID</th>
-												<th class="col-md">Lesson Title</th>
+												<th class="col-md">ID</th>
+												<th class="col-md">Order No</th>
+												<th class="col-md">Title</th>
 												<th class="col-md">Dependency</th>
 												<th class="col-md-3">OPTIONS</th>
 											</tr>
@@ -143,11 +165,12 @@
 							@foreach($lessons as $lesson)
 								<tr>
 									<td>{{$lesson->id}}</td>
+									<td>{{$lesson->order_no}}</td>
 									<td>{{$lesson->title}}</td>
 									<td>{{$lesson->dependency}}</td>
 									<td class="text-right">
 
-											<a class="btn btn-primary disabled" href="{{ route('lesson_views.show', $lesson->id) }}">View</a>
+											<!-- <a class="btn btn-primary disabled" href="{{ route('lesson_views.show', $lesson->id) }}">View</a> -->
 											<a class="btn btn-warning" href="{{ route('lesson_views.edit', $lesson->id) }}">Edit</a>
 											<form action="{{ route('lesson_views.destroy', $lesson->id) }}" 
 												method="POST" style="display: inline;" 

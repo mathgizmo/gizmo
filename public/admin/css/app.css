@@ -59,7 +59,7 @@
   z-index: -99;
 }
 
-form#create-topic label#change-image {
+form.create-topic label#change-image {
 	display: none;
 }
 
