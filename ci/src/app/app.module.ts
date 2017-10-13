@@ -15,6 +15,7 @@ import { AuthGuard } from './_guards/index';
 import { AuthenticationService, ServerService } from './_services/index';
 import { LoginComponent } from './login/index';
 import { HomeComponent } from './home/index';
+import { TopicComponent } from './topic/index';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
 
 
@@ -29,7 +30,8 @@ import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawe
     declarations: [
         AppComponent,
         LoginComponent,
-        HomeComponent
+        HomeComponent,
+        TopicComponent
     ],
     providers: [
         AuthGuard,

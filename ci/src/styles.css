@@ -66,3 +66,8 @@
     margin: 17px;
     border-radius: 50%;
 }
+.greenButton {
+	border: 2px solid;
+	border-color: #40c040;
+    border-radius: 25px;
+}

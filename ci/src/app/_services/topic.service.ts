@@ -12,8 +12,14 @@ export class TopicService {
     }
 
     getTopics() {
-        // get users from api
+        // get topic from api
         return this.serverService.get('/topic')
+            .map((response: Response) => response);
+    }
+
+    getTopic(id) {
+        // get topic from api
+        return this.serverService.get('/topic/'+id)
             .map((response: Response) => response);
     }
 }

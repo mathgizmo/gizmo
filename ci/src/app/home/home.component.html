@@ -14,10 +14,12 @@
                             <i class="fa fa-lock fa-stack-1x"></i>
                         </span>
                         <span *ngIf="topicIndex < 4" class="fa-stack fa-4x">
-                            <i class="fa fa-circle fa-stack-2x icon-green"></i>
-                            <i class="fa fa-circle-thin fa-stack-2x icon-dark-green"></i>
-                            <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-unlock fa-stack-1x"></i>
-                            <i *ngIf="topic.image_id" class="fa  fa-stack-1x {{topic.image_id}}"></i>
+                            <a routerLink="/topic/{{topic.id}}" routerLinkActive="active">
+                                <i class="fa fa-circle fa-stack-2x icon-green"></i>
+                                <i class="fa fa-circle-thin fa-stack-2x icon-dark-green"></i>
+                                <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-unlock fa-stack-1x"></i>
+                                <i *ngIf="topic.image_id" class="fa  fa-stack-1x {{topic.image_id}}"></i>
+                            </a>
                         </span>
                         <div *ngIf="!topic.short_name">{{topic.title}}</div>
                         <div *ngIf="topic.short_name">{{topic.short_name}}</div>
