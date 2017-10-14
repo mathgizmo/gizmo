@@ -128,7 +128,7 @@ class LevelController extends Controller
      */
     public function destroy($id)
     {
-        //
-		return "Under Construction";
+        Level::where('id', $id)->delete();
+		return redirect('/level_views')->with( array('message'=> 'Deleted successfully') );
     }
 }

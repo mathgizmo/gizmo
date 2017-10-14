@@ -15,7 +15,7 @@
 	</div>
 
 		<div class="panel-body">
-		
+
 			<div class="row">
 				<div class="col-md-12">
 					<form class="form-horizontal" role="form" action="{{ route('topic_views.index') }}" method="GET">
@@ -30,7 +30,7 @@
 								  @if (count($levels) > 0)
 									  <option value="">Select From ...</option>
 										@foreach($levels as $level)
-											<option value="{{$level->id}}" 
+											<option <?php echo ($level_id == $level->id) ? 'selected="selected"' : ''; ?> value="{{$level->id}}" 
 											>{{$level->title}}</option>
 										@endforeach
 								 @endif
@@ -52,7 +52,7 @@
 									<select class="form-control" name="unit_id" id="unit_id">
 								@if (count($units) > 0)
 									@foreach($units as $unit)
-											<option value="{{$unit->id}}" 
+											<option <?php echo ($unit_id == $unit->id) ? 'selected="selected"' : ''; ?> value="{{$unit->id}}" 
 											>{{$unit->title}}</option>
 										@endforeach
 								@endif
@@ -73,7 +73,13 @@
 						</form>
 						
 						<div class="row">
-							<div class="col.md.12">
+							@if(Session::has('message'))
+							<div id="successMessage" class="alert alert-success">
+								<span class="glyphicon glyphicon-ok"></span>
+								<em> {!! session('message') !!}</em>
+							</div>
+							@endif
+							<div class="col-md-12">
 								<div class="table-responsive">
 									<table class="table table-striped">
 										<thead>
@@ -107,6 +113,8 @@
 												onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
 												<input type="hidden" name="_method" value="DELETE">
 												<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
+												<input type="hidden" name="level_id" value="{{ $level_id }}"> 
+												<input type="hidden" name="unit_id" value="{{ $unit_id }}"> 
 												<button class="btn btn-danger" type="submit">Delete</button>
 												</form>
 									</td>
