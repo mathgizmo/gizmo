@@ -23,4 +23,6 @@ Route::resource('unit_views', 'UnitController');
 Route::resource('topic_views', 'TopicController');
 Route::resource('lesson_views', 'LessonController');
 Route::resource('question_views', 'QuestionController');
+Route::resource('answer_views', 'AnswerController');
+Route::get('/create-answer/questions-bank', 'AnswerController@insertAnswerFromQuestions');
 
