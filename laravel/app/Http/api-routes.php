@@ -13,6 +13,7 @@
 
 $api->get('/' , 'App\Http\APIControllers\HomeController@index');
 $api->any('/authenticate' , 'App\Http\APIControllers\AuthController@authenticate');
+$api->any('/register' , 'App\Http\APIControllers\AuthController@register');
 $api->any('/topic' , 'App\Http\APIControllers\TopicController@index');
 $api->any('/topic/{id}' , 'App\Http\APIControllers\TopicController@get');
 $api->any('/topic/{id}/lesson/{lesson_id}' , 'App\Http\APIControllers\TopicController@getLesson');
