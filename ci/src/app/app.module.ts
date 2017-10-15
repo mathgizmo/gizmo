@@ -3,9 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }    from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-// used to create fake backend
-//import { fakeBackendProvider } from './_helpers/index';
-//import { MockBackend, MockConnection } from '@angular/http/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule } from '@angular/material';
+
 import { BaseRequestOptions } from '@angular/http';
 
 import { AppComponent }  from './app.component';
@@ -16,7 +16,8 @@ import { AuthenticationService, ServerService } from './_services/index';
 import { LoginComponent } from './login/index';
 import { HomeComponent } from './home/index';
 import { TopicComponent } from './topic/index';
-import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome'
+import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 
 @NgModule({
@@ -25,7 +26,14 @@ import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawe
         FormsModule,
         HttpModule,
         routing,
-        Angular2FontawesomeModule
+        Angular2FontawesomeModule,
+        BrowserAnimationsModule,
+        MatInputModule, 
+        MatButtonModule,
+        MatSelectModule,
+        MatIconModule,
+        MatMenuModule,
+        FlexLayoutModule
     ],
     declarations: [
         AppComponent,

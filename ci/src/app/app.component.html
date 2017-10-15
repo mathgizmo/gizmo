@@ -2,15 +2,21 @@
 <div class="jumbotron">
     <div class="container">
         <div class="col-sm-8 col-sm-offset-2">
-            <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
-                <div *ngIf="showMenu" class="container">
-                    <ul class="nav navbar-nav" routerLinkActive="active">
-                        <li class="nav-item"><a class="nav-link" routerLink="home">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="home">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="login">Logout</a></li>
-                    </ul>
-                </div>
-            </nav>
+            <div *ngIf="showMenu">
+                <md-toolbar color="primary">
+                    <!-- This fills the remaining space of the current row -->
+                    <span class="fill-remaining-space"></span>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>menu</mat-icon>
+                    </button>
+                </md-toolbar>
+                <mat-menu #menu="matMenu">
+                    <br />
+                    <a mat-menu-item routerLink="home">Home</a>
+                    <a mat-menu-item routerLink="home">Profile</a>
+                    <a mat-menu-item routerLink="login">Logout</a>
+                </mat-menu>
+            </div>
             <router-outlet></router-outlet>
         </div>
     </div>

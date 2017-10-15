@@ -280,7 +280,7 @@ var _a;
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!-- main app container -->\n<div class=\"jumbotron\">\n    <div class=\"container\">\n        <div class=\"col-sm-8 col-sm-offset-2\">\n            <nav class=\"navbar navbar-fixed-top navbar-dark bg-inverse\">\n                <div *ngIf=\"showMenu\" class=\"container\">\n                    <ul class=\"nav navbar-nav\" routerLinkActive=\"active\">\n                        <li class=\"nav-item\"><a class=\"nav-link\" routerLink=\"home\">Home</a></li>\n                        <li class=\"nav-item\"><a class=\"nav-link\" routerLink=\"home\">Profile</a></li>\n                        <li class=\"nav-item\"><a class=\"nav-link\" routerLink=\"login\">Logout</a></li>\n                    </ul>\n                </div>\n            </nav>\n            <router-outlet></router-outlet>\n        </div>\n    </div>\n</div>"
+module.exports = "<!-- main app container -->\n<div class=\"jumbotron\">\n    <div class=\"container\">\n        <div class=\"col-sm-8 col-sm-offset-2\">\n            <div *ngIf=\"showMenu\">\n                <md-toolbar color=\"primary\">\n                    <!-- This fills the remaining space of the current row -->\n                    <span class=\"fill-remaining-space\"></span>\n                    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                        <mat-icon>menu</mat-icon>\n                    </button>\n                </md-toolbar>\n                <mat-menu #menu=\"matMenu\">\n                    <br />\n                    <a mat-menu-item routerLink=\"home\">Home</a>\n                    <a mat-menu-item routerLink=\"home\">Profile</a>\n                    <a mat-menu-item routerLink=\"login\">Logout</a>\n                </mat-menu>\n            </div>\n            <router-outlet></router-outlet>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -351,15 +351,18 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__("../../../platform-browser/@angular/platform-browser.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_routing__ = __webpack_require__("../../../../../src/app/app.routing.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__guards_index__ = __webpack_require__("../../../../../src/app/_guards/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__login_index__ = __webpack_require__("../../../../../src/app/login/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__home_index__ = __webpack_require__("../../../../../src/app/home/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__topic_index__ = __webpack_require__("../../../../../src/app/topic/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_angular2_fontawesome_angular2_fontawesome__ = __webpack_require__("../../../../angular2-fontawesome/angular2-fontawesome.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_angular2_fontawesome_angular2_fontawesome__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__ = __webpack_require__("../../../platform-browser/@angular/platform-browser/animations.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__app_routing__ = __webpack_require__("../../../../../src/app/app.routing.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__guards_index__ = __webpack_require__("../../../../../src/app/_guards/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__login_index__ = __webpack_require__("../../../../../src/app/login/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__home_index__ = __webpack_require__("../../../../../src/app/home/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__topic_index__ = __webpack_require__("../../../../../src/app/topic/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome__ = __webpack_require__("../../../../angular2-fontawesome/angular2-fontawesome.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -370,9 +373,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-// used to create fake backend
-//import { fakeBackendProvider } from './_helpers/index';
-//import { MockBackend, MockConnection } from '@angular/http/testing';
+
+
+
 
 
 
@@ -391,27 +394,34 @@ AppModule = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["a" /* BrowserModule */],
-            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
+            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_http__["d" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_5__app_routing__["a" /* routing */],
-            __WEBPACK_IMPORTED_MODULE_11_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"]
+            __WEBPACK_IMPORTED_MODULE_7__app_routing__["a" /* routing */],
+            __WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"],
+            __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["c" /* MatInputModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["a" /* MatButtonModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MatIconModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MatMenuModule */],
+            __WEBPACK_IMPORTED_MODULE_14__angular_flex_layout__["a" /* FlexLayoutModule */]
         ],
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_8__login_index__["a" /* LoginComponent */],
-            __WEBPACK_IMPORTED_MODULE_9__home_index__["a" /* HomeComponent */],
-            __WEBPACK_IMPORTED_MODULE_10__topic_index__["a" /* TopicComponent */]
+            __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_10__login_index__["a" /* LoginComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__home_index__["a" /* HomeComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__topic_index__["a" /* TopicComponent */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_6__guards_index__["a" /* AuthGuard */],
-            __WEBPACK_IMPORTED_MODULE_7__services_index__["a" /* AuthenticationService */],
-            __WEBPACK_IMPORTED_MODULE_7__services_index__["b" /* ServerService */],
+            __WEBPACK_IMPORTED_MODULE_8__guards_index__["a" /* AuthGuard */],
+            __WEBPACK_IMPORTED_MODULE_9__services_index__["a" /* AuthenticationService */],
+            __WEBPACK_IMPORTED_MODULE_9__services_index__["b" /* ServerService */],
             // providers used to create fake backend
             //fakeBackendProvider,
             //MockBackend,
             __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* BaseRequestOptions */]
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_4__app_component__["a" /* AppComponent */]]
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */]]
     })
 ], AppModule);
 
