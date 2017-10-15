@@ -96,3 +96,6 @@ img#show-img.cb4-img,
     height: 81px;
     background: url(../images/courses.jpg) -266px -20px;
 }
+.backButton {
+    float:left;
+}

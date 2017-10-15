@@ -31,7 +31,7 @@ class TopicController extends Controller
             $units[$unit['id']] = array(count($response[$l_element_id]['units']), $l_element_id);
             $response[$l_element_id]['units'][] = $unit;
         }
-        foreach (DB::select('select * from topic order by id asc') as $topic) {
+        foreach (DB::select('select * from topic order by order_no, id asc') as $topic) {
             list($u_element_id, $l_element_id) = $units[$topic['unit_id']];
             $topic['order_id'] = floor(count($response[$l_element_id]['units'][$u_element_id]['topics'])/2);
             $response[$l_element_id]['units'][$u_element_id]['topics'][] = $topic;

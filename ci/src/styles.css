@@ -34,3 +34,40 @@
     padding:30px;
     border-radius: 50%;
 }
+
+.cb1-img {
+    width: 77px !important;
+    height: 77px !important;
+    background: url(/assets/images/courses.jpg) -26px -22px;
+    margin: 17px;
+    border-radius: 50%;
+}
+
+.cb2-img {
+    width: 77px !important;
+    height: 77px !important;
+    background: url(/assets/images/courses.jpg) -106px -22px;
+    margin: 17px;
+    border-radius: 50%;
+}
+
+.cb3-img {
+    width: 77px !important;
+    height: 77px !important;
+    background: url(/assets/images/courses.jpg) -186px -22px;
+    margin: 17px;
+    border-radius: 50%;
+}
+
+.cb4-img {
+    width: 77px !important;
+    height: 77px !important;
+    background: url(/assets/images/courses.jpg) -266px -22px;
+    margin: 17px;
+    border-radius: 50%;
+}
+.greenButton {
+	border: 2px solid;
+	border-color: #40c040;
+    border-radius: 25px;
+}
