@@ -19,7 +19,7 @@ class UnitController extends Controller
 		$levels = DB::select('select * from level');
 		$units = DB::table('unit')->where('level_id',$request->level_id)->get();
 		//$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-		return view('unit_views.index',['levels'=>$levels,'units'=>$units]); 
+		return view( 'unit_views.index',['levels'=>$levels,'units'=>$units, 'level_id' => $request->level_id] ); 
     }
 
     /**
@@ -163,9 +163,10 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
-		return "Under Construction";
+        $level_id = $request->input('level_id');
+        Unit::where('id', $id)->delete();
+        return redirect('/unit_views?level_id='. $level_id)->with( array('message'=> 'Deleted successfully') );
     }
 }
