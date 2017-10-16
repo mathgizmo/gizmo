@@ -89,8 +89,8 @@ h1, h2, h3, h4 {
     border-radius: 50%;
 }
 .greenButton {
-	border: 2px solid;
-	border-color: #40c040;
+    border: 2px solid;
+    border-color: #40c040;
     border-radius: 25px;
 }
 
@@ -98,4 +98,16 @@ h1, h2, h3, h4 {
   // This fills the remaining space, by using flexbox. 
   // Every toolbar row uses a flexbox row layout.
   flex: 1 1 auto;
+}
+.radio-group {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.radio-button {
+    margin: 5px;
+}
+
+.selected-value {
+    margin: 15px 0;
 }

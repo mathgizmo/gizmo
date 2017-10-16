@@ -1,0 +1,19 @@
+﻿<a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
+<div class="text-center">
+    <div *ngIf="question !== null">
+        <h2>{{question.question}}</h2>
+        <div *ngIf="question.answer_mode=='radio'">
+            <mat-radio-group class="radio-group" [(ngModel)]="answer">
+                <mat-radio-button class="radio-button" *ngFor="let answer of question.answers; let answerIndex = index" value="{{answerIndex}}">
+                    {{answer.value}}
+                </mat-radio-button>
+            </mat-radio-group>
+            <div class="example-selected-value">Your answer is: {{answer}}</div>
+        </div>
+        <button (click)="checkAnswer()" >Continue</button>
+    </div>
+    <div *ngIf="question === null">
+        <h2>Congratulation!</h2>
+        <h3>You have finish this lesson.</h3>
+    </div>
+</div>

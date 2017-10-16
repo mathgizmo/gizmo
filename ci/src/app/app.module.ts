@@ -4,8 +4,7 @@ import { FormsModule }    from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule } from '@angular/material';
-
+import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule, MatRadioModule} from '@angular/material';
 import { BaseRequestOptions } from '@angular/http';
 
 import { AppComponent }  from './app.component';
@@ -16,6 +15,7 @@ import { AuthenticationService, ServerService } from './_services/index';
 import { LoginComponent } from './login/index';
 import { HomeComponent } from './home/index';
 import { TopicComponent } from './topic/index';
+import { LessonComponent } from './lesson/index';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
 
@@ -33,13 +33,15 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         MatSelectModule,
         MatIconModule,
         MatMenuModule,
+        MatRadioModule,
         FlexLayoutModule
     ],
     declarations: [
         AppComponent,
         LoginComponent,
         HomeComponent,
-        TopicComponent
+        TopicComponent,
+        LessonComponent
     ],
     providers: [
         AuthGuard,
