@@ -33,7 +33,7 @@ class TopicController extends Controller
         }
         foreach (DB::select('select * from topic order by order_no, id asc') as $topic) {
             list($u_element_id, $l_element_id) = $units[$topic['unit_id']];
-            $topic['order_id'] = floor(count($response[$l_element_id]['units'][$u_element_id]['topics'])/2);
+            $topic['order_id'] = $topic['order_no']?:floor(count($response[$l_element_id]['units'][$u_element_id]['topics'])/2);
             $response[$l_element_id]['units'][$u_element_id]['topics'][] = $topic;
         }
         DB::connection()->setFetchMode($mode);
@@ -90,6 +90,16 @@ class TopicController extends Controller
             return $this->error('lesson not found');
         }
         $lesson['questions'] = DB::table('question')->where('lesson_id',$lesson_id)->get();
+        $questions = [];
+        foreach($lesson['questions'] as $id=>$question) {
+            $questions[$question['id']] = $id;
+            $lesson['questions'][$id]['answers'] = [];
+        }
+
+        foreach(DB::table('answers')->whereIn('question_id',array_keys($questions))->get() as $answer) {
+            $lesson['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
+        }
+
         $lesson['topic'] = $topic;
 
         DB::connection()->setFetchMode($mode);
