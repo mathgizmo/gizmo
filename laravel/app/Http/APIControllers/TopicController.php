@@ -96,7 +96,7 @@ class TopicController extends Controller
             $lesson['questions'][$id]['answers'] = [];
         }
 
-        foreach(DB::table('answers')->whereIn('question_id',array_keys($questions))->get() as $answer) {
+        foreach(DB::table('answer')->whereIn('question_id',array_keys($questions))->get() as $answer) {
             $lesson['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
         }
 

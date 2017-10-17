@@ -11,6 +11,7 @@ It consist of 3 main modules admin, API, and hybrid app
 
 For admin part we use composer, so go to admin folder and run composer install
 Also change copy config/global/dbconf.php file into config/local folder and set you db credential there. Do not save real credential in global folders. 
+To update your DB to current version go to laravel folder and run "php artisan migrate"
 Make sure that apache has access to write into laravel/bootstrap/cache and laravel/storage folders. Run php artisan key:generate to generate app key. If you get eny error on key generation, create file '.env' and put 'APP_KEY=' in it, then rerun command. Check .env file if key actually bin generated.Run php artisan jwt:generate to generate secret for API.
 
 For Client App we use Angular2 which require nodejs version 6 at least. Verify that you are running at least node 6.9.x and npm 3.x.x by running node -v and npm -v in a terminal/console window. Older versions produce errors, but newer versions are fine. https://nodejs.org/
