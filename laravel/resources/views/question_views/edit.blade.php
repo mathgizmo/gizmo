@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
- 
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -22,17 +22,17 @@
 
                             <div class="col-md-6">
 							      <select class="form-control" name="level_id" id="level_id">
-								  
+
 								  @if (count($levels) > 0)
 									  <option value="">Select From ...</option>
 										@foreach($levels as $level)
-											<option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $question->lid) selected="selected" 
-											@endif 
+											<option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $question->lid) selected="selected"
+											@endif
 											>{{$level->title}}</option>
 										@endforeach
 								 @endif
 									</select>
-                                
+
                                 @if ($errors->has('level_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('level_id') }}</strong>
@@ -40,7 +40,7 @@
                                 @endif
                             </div>
                         </div>
-						
+
 						<div id="unit_options"> </div>
 						<div class="form-group{{ $errors->has('unit_id') ? ' has-error' : '' }}">
                             <label for="unit_id" class="col-md-4 control-label">Unit</label>
@@ -49,13 +49,13 @@
 							      <select class="form-control" name="unit_id" id="unit_id">
 								   @if (count($units) > 0)
 								  @foreach($units as $unit)
-											<option value="{{$unit->id}}" @if ( $unit->id == $question->uid) selected="selected" 
-											@endif 
+											<option value="{{$unit->id}}" @if ( $unit->id == $question->uid) selected="selected"
+											@endif
 											>{{$unit->title}}</option>
 										@endforeach
 								  @endif
 									</select>
-                                
+
                                 @if ($errors->has('unit_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('unit_id') }}</strong>
@@ -63,23 +63,23 @@
                                 @endif
                             </div>
                         </div>
-						
+
 						<div class="form-group{{ $errors->has('topic_id') ? ' has-error' : '' }}">
                             <label for="topic_id" class="col-md-4 control-label">Topic</label>
 
                             <div class="col-md-6">
 							      <select class="form-control" name="topic_id" id="topic_id">
-								  
+
 								  @if (count($topics) > 0)
 								  @foreach($topics as $topic)
-											<option value="{{$topic->id}}" @if ( $topic->id == $question->tid) selected="selected" 
-											@endif 
+											<option value="{{$topic->id}}" @if ( $topic->id == $question->tid) selected="selected"
+											@endif
 											>{{$topic->title}}</option>
 										@endforeach
 								  @endif
 
 									</select>
-                                
+
                                 @if ($errors->has('topic_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('topic_id') }}</strong>
@@ -87,22 +87,22 @@
                                 @endif
                             </div>
                         </div>
-						
+
 						<div class="form-group{{ $errors->has('lesson_id') ? ' has-error' : '' }}">
                             <label for="lesson_id" class="col-md-4 control-label">Lesson</label>
 
                             <div class="col-md-6">
 							      <select class="form-control" name="lesson_id" id="lesson_id">
-									
+
 									@if (count($lessons) > 0)
 								  @foreach($lessons as $lesson)
-											<option value="{{$lesson->id}}" @if ( $lesson->id == $question->lesson_id) selected="selected" 
-											@endif 
+											<option value="{{$lesson->id}}" @if ( $lesson->id == $question->lesson_id) selected="selected"
+											@endif
 											>{{$lesson->title}}</option>
 										@endforeach
 								  @endif
 									</select>
-                                
+
                                 @if ($errors->has('lesson_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('lesson_id') }}</strong>
@@ -110,7 +110,7 @@
                                 @endif
                             </div>
                         </div>
-						
+
 						 <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
                             <label for="type" class="col-md-4 control-label">Type</label>
 
@@ -124,7 +124,7 @@
 										@endif
 										@endforeach
 									</select>
-                                
+
                                 @if ($errors->has('type'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('type') }}</strong>
@@ -139,13 +139,13 @@
                                 <textarea id="question" class="form-control"  name="question"> {{$question->question}}</textarea>
 
                                 @if ($errors->has('question'))
-                                    <span class="help-block"> 
+                                    <span class="help-block">
                                         <strong>{{ $errors->first('question') }}</strong>
                                     </span>
                                 @endif
                             </div>
 				      </div>
-					  
+
 						<div class="form-group{{ $errors->has('reply_mode') ? ' has-error' : '' }}">
                             <label for="reply_mode" class="col-md-4 control-label">REPLY MODE</label>
 
@@ -154,13 +154,13 @@
 										 @foreach($qrmodes as $qrmode)
 												@if (old('reply_mode') == $qrmode->code || $question->reply_mode == $qrmode->code)
 											        <option value="{{$qrmode->code}}" selected>{{$qrmode->mode}}</option>
-												@else 
+												@else
 													<option value="{{$qrmode->code}}">{{$qrmode->mode}}</option>
 												@endif
 
 										@endforeach
 									</select>
-                                
+
                                 @if ($errors->has('reply_mode'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('reply_mode') }}</strong>
@@ -168,30 +168,6 @@
                                 @endif
                             </div>
                         </div>
-				
-				<div class="form-group{{ $errors->has('mandatoriness') ? ' has-error' : '' }}">
-						<label for="type" class="col-md-4 control-label">Mandatoriness</label>
-
-                            <div class="col-md-6 radio"> 
-								@if ( "Yes" == $question->mandatoriness)
-								<label for="type" class="col-md-3"> <input type="radio" name="mandatoriness" checked="checked" value="Yes">Mandatory</label>
-								<label for="type" class="col-md-3"> <input type="radio" name="mandatoriness" value="No"> Optional</label>
-								@endif
-								@if ( "No" == $question->mandatoriness)
-								<label for="type" class="col-md-3"> <input type="radio" name="mandatoriness"  value="Yes">Mandatory</label>
-								<label for="type" class="col-md-3"> <input type="radio" name="mandatoriness" checked="checked" value="No"> Optional</label>
-								@endif
-
-                                @if ($errors->has('mandatoriness'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('mandatoriness') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-					</div>
-					
-					
-					
 					<div id="imageShow" class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
                             <label for="image" class="col-md-4 control-label">Question Image</label>
 
@@ -217,7 +193,7 @@
 										<option value="circle">Circle</option>
 										<option value="blob">Random Looking Blob</option>
 									</select>
-                                
+
                                 @if ($errors->has('shape'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('shape') }}</strong>
@@ -278,85 +254,6 @@
                             </div>
 				</div>
 		</div>
-				<div id="mcq1Show" class="form-group{{ $errors->has('mcq1') ? ' has-error' : '' }}">
-                            <label for="mcq1" class="col-md-4 control-label">MCQ-1</label>
-
-                            <div class="col-md-6">
-                                <input id="mcq1" type="text" class="form-control"  name="mcq1" value="{{$question->mcq1}}">
-
-                                @if ($errors->has('mcq1'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('mcq1') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div id="mcq2Show" class="form-group{{ $errors->has('mcq2') ? ' has-error' : '' }}">
-                            <label for="mcq2" class="col-md-4 control-label">MCQ-2</label>
-
-                            <div class="col-md-6">
-                                <input id="mcq2" type="text" class="form-control"  name="mcq2" value="{{$question->mcq2}}">
-
-                                @if ($errors->has('mcq2'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('mcq2') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div id="mcq3Show" class="form-group{{ $errors->has('mcq3') ? ' has-error' : '' }}">
-                            <label for="mcq3" class="col-md-4 control-label">MCQ-3</label>
-
-                            <div class="col-md-6">
-                                <input id="mcq3" type="text" class="form-control"  name="mcq3" value="{{$question->mcq3}}">
-
-                                @if ($errors->has('mcq3'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('mcq3') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div id="mcq4Show" class="form-group{{ $errors->has('mcq4') ? ' has-error' : '' }}">
-                            <label for="mcq4" class="col-md-4 control-label">MCQ-4</label>
-
-                            <div class="col-md-6">
-                                <input id="mcq4" type="text" class="form-control"  name="mcq4" value="{{$question->mcq4}}">
-
-                                @if ($errors->has('mcq4'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('mcq4') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div id="mcq5Show" class="form-group{{ $errors->has('mcq5') ? ' has-error' : '' }}">
-                            <label for="mcq5" class="col-md-4 control-label">MCQ-5</label>
-
-                            <div class="col-md-6">
-                                <input id="mcq5" type="text" class="form-control"  name="mcq5" value="{{$question->mcq5}}">
-
-                                @if ($errors->has('mcq5'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('mcq5') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div id="mcq6Show" class="form-group{{ $errors->has('mcq6') ? ' has-error' : '' }}">
-                            <label for="mcq6" class="col-md-4 control-label">MCQ-6</label>
-
-                            <div class="col-md-6">
-                                <input id="mcq6" type="text" class="form-control"  name="mcq6" value="{{$question->mcq6}}">
-
-                                @if ($errors->has('mcq6'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('mcq6') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				
 				<div class="form-group{{ $errors->has('answer') ? ' has-error' : '' }}">
                             <label for="answer" class="col-md-4 control-label">Answer</label>
 
@@ -370,8 +267,8 @@
                                 @endif
                             </div>
 				</div>
-				
-									  
+
+
 					  <div class="form-group{{ $errors->has('feedback') ? ' has-error' : '' }}">
                             <label for="feedback" class="col-md-4 control-label">Feedback</label>
 
@@ -385,7 +282,7 @@
                                 @endif
                             </div>
 				      </div>
-					  
+
 					  <div class="form-group{{ $errors->has('explanation') ? ' has-error' : '' }}">
                             <label for="explanation" class="col-md-4 control-label">Explanation</label>
 
@@ -398,7 +295,7 @@
                                     </span>
                                 @endif
                             </div>
-				      </div> 
+				      </div>
 
 
 
@@ -407,7 +304,7 @@
             </form>
         </div>
     </div>
-	
+
 	          </div>
             </div>
         </div>
