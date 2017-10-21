@@ -332,6 +332,20 @@ ALTER TABLE `topic`
 ALTER TABLE `unit`
   ADD CONSTRAINT `level_id` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Fill predefined options
+--
+INSERT INTO `question_type` VALUES (1,'text','Plain Text Question Only',NULL,NULL),(2,'draw','Dynamic Drawing',NULL,NULL),(3,'image','Image Type',NULL,NULL);
+INSERT INTO `reply_mode` VALUES (1,'general','General',NULL,NULL),
+(2,'FB','Fill In The Blank',NULL,NULL),
+(3,'TF','True or False',NULL,NULL),
+(4,'mcq3','Multiple Choice 3',NULL,NULL),
+(5,'mcq4','Multiple Choice 4',NULL,NULL),
+(6,'mcq5','Multiple Choice 5',NULL,NULL),
+(7,'mcq6','Multiple Choice 6',NULL,NULL),
+(8,'ascending','Ascending Order',NULL,NULL),
+(9,'descending','Descending Order',NULL,NULL);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

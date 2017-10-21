@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-//use Illuminate\Support\Facades\Input; 
+//use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
 
@@ -72,7 +72,7 @@ class QuestionController extends Controller
             ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
             ->orderBy('question.id', 'desc')->paginate(10);
         return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
-		
+
 		}
     }
 
@@ -101,7 +101,7 @@ class QuestionController extends Controller
 				$output.='<option value="'.$unit->id.'">'.$unit->title.'</option>';
 				}
 			return response()->json($output);
-			
+
 			}
 		$uid = $request->unit_id;
 		$topics = DB::table('topic')->select('id', 'title')->where('unit_id', $uid)->get();
@@ -112,9 +112,9 @@ class QuestionController extends Controller
 				}
 			return response()->json($toutput);
 			//return response($uid);
-			
+
 			}
-			
+
 		$tid = $request->topic_id;
 		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $tid)->get();
 		if($lessons){
@@ -124,7 +124,7 @@ class QuestionController extends Controller
 				}
 			return response()->json($loutput);
 			//return response($uid);
-			
+
 			}
 				else{
 				return response()->json($coutput);
@@ -159,7 +159,7 @@ class QuestionController extends Controller
 	  $uid = $request->unit_id;
 	  $tid = $request->topic_id;
 	  $lesson_id = $request->lesson_id;
-	  
+
 	  $this->validate($request, [
 		 'level_id'	=> 'required',
 		 'unit_id'	=> 'required',
@@ -193,7 +193,7 @@ class QuestionController extends Controller
 		 'mcq4'			=> 'required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
 		 'mcq5'			=> 'required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
 		 'mcq6'			=> 'required_if:reply_mode,mcq6',
-		 
+
     ]);
 		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],
 		'mandatoriness' => $request['mandatoriness'], 'type' => $request['type'], 'reply_mode' => $request['reply_mode'],
@@ -203,7 +203,7 @@ class QuestionController extends Controller
 		'size' => $request['answer_size'],
 		'answer2' => $request['answer2'],'answer3' => $request['answer3'],'answer4' => $request['answer4'],
 		'answer5' => $request['answer5'],'answer6' => $request['answer6']]);
-		
+
 		$qtype = $collectionQuestion->get('type');
 		switch ($qtype) {
 			case "draw":
@@ -217,9 +217,9 @@ class QuestionController extends Controller
 				$collectionQuestion = $collectionQuestion->merge(['image' => $request['image']]);
 				break;
 			default:
-			
+
 		}
-		
+
 		$rmode = $collectionQuestion->get('reply_mode');
 		switch ($rmode) {
 			case "mcq3":
@@ -265,9 +265,9 @@ class QuestionController extends Controller
 											'option_text' => "option",
 											'option_size' => "1"
 											]);
-				break;      
+				break;
 			default:
-			
+
 		}
 		$collectionQuestion = $collectionQuestion->merge(['answer' => $request['answer'],
 									'explanation' => $request['explanation'],
@@ -318,7 +318,7 @@ class QuestionController extends Controller
      */
     public function edit($id)
     {
-		
+
 		$question = DB::table('question')
 			->join('lesson', 'question.lesson_id', '=', 'lesson.id')
 			->join('topic', 'lesson.topic_id', '=', 'topic.id')
@@ -333,8 +333,8 @@ class QuestionController extends Controller
 		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $question->tid)->get();
 		$qtypes = DB::select('select * from question_type');
 		$qrmodes = DB::select('select * from reply_mode');
-		//print_r($qrmodes);
-		//print_r($qtypes);
+
+
 		return view('question_views.edit', ['question'=>$question,'levels'=>$levels,
 		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'qtypes'=>$qtypes,'qrmodes'=>$qrmodes]);
     }
@@ -363,28 +363,22 @@ class QuestionController extends Controller
 		 'question'		=> 'required',
 		 'type'			=> 'required',
 		 'reply_mode'	=> 'required',
-		 'answer'		=> 'required',
+		 'answers'		=> 'required|array|between:1,6',
 		 'image'		=> 'required_if:type,image',
 		 'shape'		=> 'required_if:type,draw',
 		 'min_value'	=> 'required_if:type,draw',
 		 'max_value'	=> 'required_if:type,draw',
 		 'ini_position'=> 'required_if:type,draw',
-		 'step_value'	=> 'required_if:type,draw',
-		 'mcq1'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq2'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq3'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq4'			=> 'required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq5'			=> 'required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq6'			=> 'required_if:reply_mode,mcq6',
-		 
+		 'step_value'	=> 'required_if:type,draw'
+
     ]);
-	
+
 		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],
 		'mandatoriness' => $request['mandatoriness'],
 		'type' => $request['type'],
 		'reply_mode' => $request['reply_mode'],
 		'question' => $request['question']]);
-		
+
 		$qtype = $collectionQuestion->get('type');
 		switch ($qtype) {
 			case "draw":
@@ -398,9 +392,9 @@ class QuestionController extends Controller
 				$collectionQuestion = $collectionQuestion->merge(['image' => $request['image']]);
 				break;
 			default:
-			
+
 		}
-		
+
 		$rmode = $collectionQuestion->get('reply_mode');
 		switch ($rmode) {
 			case "mcq3":
@@ -446,9 +440,9 @@ class QuestionController extends Controller
 											'option_text' => "option",
 											'option_size' => "1"
 											]);
-				break; 
+				break;
 			default:
-			
+
 		}
 		$collectionQuestion = $collectionQuestion->merge(['answer' => $request['answer'],
 									'explanation' => $request['explanation'],
@@ -456,9 +450,9 @@ class QuestionController extends Controller
 									'created_at' => date('Y-m-d H:i:s'),
 									'modified_at' => date('Y-m-d H:i:s')
 									]);
-		
+
 		DB::table('question')->where('id', $id)->update($collectionQuestion->all());
-		
+
 		$questions = DB::table('question')
             ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')

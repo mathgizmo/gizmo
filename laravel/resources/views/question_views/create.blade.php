@@ -255,21 +255,6 @@
                             </div>
 				</div>
 		</div>
-
-				<div  id="answerShow" class="form-group{{ $errors->has('answer') ? ' has-error' : '' }}">
-                            <label for="answer" class="col-md-4 control-label">Answer</label>
-
-                            <div class="col-md-6">
-                                <input id="answer" type="text" class="form-control"  name="answer" value="{{ old('answer') }}" placeholder="single / 1st answer ">
-
-                                @if ($errors->has('answer'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('answer') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-
 					  <div class="form-group{{ $errors->has('feedback') ? ' has-error' : '' }}">
                             <label for="feedback" class="col-md-4 control-label">Feedback</label>
 

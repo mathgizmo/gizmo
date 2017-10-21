@@ -153,17 +153,6 @@
 									<p class="form-control-static"> {{$question->image}}</p>
 							</div>
 						</div>
-						<div class="row bg-success">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">Answer</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->answer}}</p>
-							</div>
-						</div>
 						<div class="row bg-info">
 							<div class="col-md-2">
 							<div class="form-group">
