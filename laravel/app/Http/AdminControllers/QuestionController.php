@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Answer;
+use App\Question;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -167,42 +169,41 @@ class QuestionController extends Controller
 		 'lesson_id'	=> 'required',
 		 'type'			=> 'required',
 		 'reply_mode'	=> 'required',
-		 'answer_size'	=> 'required',
+//		 'answer_size'	=> 'required',
 		 'question'		=> 'required_unless:reply_mode,FB',
-		 'question_fp1'=> 'required_if:reply_mode,FB',
-		 'question_fp2'=> 'required_if:reply_mode,FB',
-		 'question_fp3'=> 'required_if:reply_mode,FB, & answer_size,2 ',
+//		 'question_fp1'=> 'required_if:reply_mode,FB',
+//		 'question_fp2'=> 'required_if:reply_mode,FB',
+//		 'question_fp3'=> 'required_if:reply_mode,FB, & answer_size,2 ',
 		 //'question_fp4'=> 'required_if:reply_mode,FB|required_if: answer_size,3',
 		 //'question_fp5'=> 'required_with_all:reply_mode,FB,answer_size,4',
 		 //'question_fp6'=> 'required_with_all:reply_mode,FB,answer_size,5',
 		 //'question_fp7'=> 'required_with_all:reply_mode,FB,answer_size,6',
-		 'answer'		=> 'required',
-		 'answer2'		=> 'required_if:answer_size,2|required_if:answer_size,3|required_if:answer_size,4|required_if:answer_size,5',
-		 'answer3'		=> 'required_if:answer_size,3|required_if:answer_size,4|required_if:answer_size,5',
-		 'answer4'		=> 'required_if:answer_size,4|required_if:answer_size,5',
-		 'answer5'		=> 'required_if:answer_size,5',
+//		 'answer'		=> 'required',
+//		 'answer2'		=> 'required_if:answer_size,2|required_if:answer_size,3|required_if:answer_size,4|required_if:answer_size,5',
+//		 'answer3'		=> 'required_if:answer_size,3|required_if:answer_size,4|required_if:answer_size,5',
+//		 'answer4'		=> 'required_if:answer_size,4|required_if:answer_size,5',
+//		 'answer5'		=> 'required_if:answer_size,5',
 		 'image'		=> 'required_if:type,image',
 		 'shape'		=> 'required_if:type,draw',
 		 'min_value'	=> 'required_if:type,draw',
 		 'max_value'	=> 'required_if:type,draw',
 		 'ini_position'=> 'required_if:type,draw',
 		 'step_value'	=> 'required_if:type,draw',
-		 'mcq1'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq2'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq3'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq4'			=> 'required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq5'			=> 'required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
-		 'mcq6'			=> 'required_if:reply_mode,mcq6',
+//		 'mcq1'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
+//		 'mcq2'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
+//		 'mcq3'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
+//		 'mcq4'			=> 'required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
+//		 'mcq5'			=> 'required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
+//		 'mcq6'			=> 'required_if:reply_mode,mcq6',
 
     ]);
-		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],
-		'mandatoriness' => $request['mandatoriness'], 'type' => $request['type'], 'reply_mode' => $request['reply_mode'],
-		'question' => $request['question'],'question_fp1' => $request['question_fp1'],
-		'question_fp2' => $request['question_fp2'],'question_fp3' => $request['question_fp3'],'question_fp4' => $request['question_fp4'],
-		'question_fp5' => $request['question_fp5'],'question_fp6' => $request['question_fp6'],'question_fp7' => $request['question_fp7'],
-		'size' => $request['answer_size'],
-		'answer2' => $request['answer2'],'answer3' => $request['answer3'],'answer4' => $request['answer4'],
-		'answer5' => $request['answer5'],'answer6' => $request['answer6']]);
+	  foreach ($request->answer as $key => $answer) {
+	      if (empty($answer)) {
+	          return back()->withErrors(['answer' => 'Answer can\'t be empty']);
+          }
+      }
+		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'], 'type' => $request['type'], 'reply_mode' => $request['reply_mode'],
+		'question' => $request['question']]);
 
 		$qtype = $collectionQuestion->get('type');
 		switch ($qtype) {
@@ -220,64 +221,24 @@ class QuestionController extends Controller
 
 		}
 
-		$rmode = $collectionQuestion->get('reply_mode');
-		switch ($rmode) {
-			case "mcq3":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'option_text' => "option",
-											'option_size' => "3"
-											]);
-				break;
-			case "mcq4":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'mcq4' => $request['mcq4'],
-											'option_text' => "option",
-											'option_size' => "4"
-											]);
-				break;
-			case "mcq5":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'mcq4' => $request['mcq4'],
-											'mcq5' => $request['mcq5'],
-											'option_text' => "option",
-											'option_size' => "5"
-											]);
-				break;
-			case "mcq6":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'mcq4' => $request['mcq4'],
-											'mcq5' => $request['mcq5'],
-											'mcq6' => $request['mcq6'],
-											'option_text' => "option",
-											'option_size' => "6"
-											]);
-				break;
-			case "TF":
-				$collectionQuestion = $collectionQuestion->merge([
-											'option_text' => "option",
-											'option_size' => "1"
-											]);
-				break;
-			default:
-
-		}
-		$collectionQuestion = $collectionQuestion->merge(['answer' => $request['answer'],
-									'explanation' => $request['explanation'],
+		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],
 									'created_at' => date('Y-m-d H:i:s'),
 									'modified_at' => date('Y-m-d H:i:s')
 									]);
+		$question = Question::create($collectionQuestion->all());
 
-		DB::table('question')->insert($collectionQuestion->all());
-
+        $type = $request['reply_mode'];
+        $iterations = str_replace(['general', 'FB', 'TF', 'mcq3', 'mcq4', 'mcq5', 'mcq6', 'ascending', 'descending'], [1, 6, 1, 6, 6, 6, 6, 6, 6],  $type);
+		for ($i = 0;$i < ($iterations>count($request->answer) ? count($request->answer) :  $iterations) ; $i++) {
+            $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
+            Answer::create([
+                'question_id' => $question->id,
+                'value' => $request->answer[$i],
+                'answer_order' => $i,
+                'is_correct' => $is_correct,
+            ]);
+        }
 		$levels = DB::select('select * from level');
 		$units = DB::table('unit')->select('id', 'title')->where('level_id', $lid)->get();
 		$topics = DB::table('topic')->select('id', 'title')->where('unit_id', $uid)->get();
@@ -306,7 +267,9 @@ class QuestionController extends Controller
             ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
             ->where('question.id', '=', $id)->first();
 	 //    print_r($question);
-		return view('question_views.show', ['question'=>$question]);
+
+        $answers = DB::select('select * from answer where question_id = ' . $id);
+		return view('question_views.show', ['question'=>$question, 'answers' => $answers]);
         //
     }
 
@@ -327,6 +290,7 @@ class QuestionController extends Controller
 			->select('question.*', 'lesson.title','topic.title as ttitle',
 			'topic.id as tid','unit.title as utitle','unit.id as uid','level.title as ltitle','level.id as lid')
 			->where('question.id', '=', $id)->first();
+		$answers = DB::select('select * from answer where question_id = ' . $id);
 		$levels = DB::select('select * from level');
 		$units = DB::table('unit')->select('id', 'title')->where('level_id', $question->lid)->get();
 		$topics = DB::table('topic')->select('id', 'title')->where('unit_id', $question->uid)->get();
@@ -336,7 +300,7 @@ class QuestionController extends Controller
 
 
 		return view('question_views.edit', ['question'=>$question,'levels'=>$levels,
-		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'qtypes'=>$qtypes,'qrmodes'=>$qrmodes]);
+		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'qtypes'=>$qtypes,'qrmodes'=>$qrmodes,'answers'=>$answers]);
     }
 
     /**
@@ -363,7 +327,6 @@ class QuestionController extends Controller
 		 'question'		=> 'required',
 		 'type'			=> 'required',
 		 'reply_mode'	=> 'required',
-		 'answers'		=> 'required|array|between:1,6',
 		 'image'		=> 'required_if:type,image',
 		 'shape'		=> 'required_if:type,draw',
 		 'min_value'	=> 'required_if:type,draw',
@@ -374,7 +337,6 @@ class QuestionController extends Controller
     ]);
 
 		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],
-		'mandatoriness' => $request['mandatoriness'],
 		'type' => $request['type'],
 		'reply_mode' => $request['reply_mode'],
 		'question' => $request['question']]);
@@ -395,63 +357,25 @@ class QuestionController extends Controller
 
 		}
 
-		$rmode = $collectionQuestion->get('reply_mode');
-		switch ($rmode) {
-			case "mcq3":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'option_text' => "option",
-											'option_size' => "3"
-											]);
-				break;
-			case "mcq4":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'mcq4' => $request['mcq4'],
-											'option_text' => "option",
-											'option_size' => "4"
-											]);
-				break;
-			case "mcq5":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'mcq4' => $request['mcq4'],
-											'mcq5' => $request['mcq5'],
-											'option_text' => "option",
-											'option_size' => "5"
-											]);
-				break;
-			case "mcq6":
-				$collectionQuestion = $collectionQuestion->merge(['mcq1' => $request['mcq1'],
-											'mcq2' => $request['mcq2'],
-											'mcq3' => $request['mcq3'],
-											'mcq4' => $request['mcq4'],
-											'mcq5' => $request['mcq5'],
-											'mcq6' => $request['mcq6'],
-											'option_text' => "option",
-											'option_size' => "6"
-											]);
-				break;
-				case "TF":
-				$collectionQuestion = $collectionQuestion->merge([
-											'option_text' => "option",
-											'option_size' => "1"
-											]);
-				break;
-			default:
-
-		}
-		$collectionQuestion = $collectionQuestion->merge(['answer' => $request['answer'],
-									'explanation' => $request['explanation'],
+		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],
 									'created_at' => date('Y-m-d H:i:s'),
 									'modified_at' => date('Y-m-d H:i:s')
 									]);
 
 		DB::table('question')->where('id', $id)->update($collectionQuestion->all());
+        Question::find($id)->answers()->delete();
+        $type = $request['reply_mode'];
+        $iterations = str_replace(['general', 'FB', 'TF', 'mcq3', 'mcq4', 'mcq5', 'mcq6', 'ascending', 'descending'], [1, 6, 1, 6, 6, 6, 6, 6, 6],  $type);
+        for ($i = 0;$i < ($iterations>count($request->answer) ? count($request->answer) :  $iterations) ; $i++) {
+            $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
+            Answer::create([
+                'question_id' => $id,
+                'value' => $request->answer[$i],
+                'answer_order' => $i,
+                'is_correct' => $is_correct,
+            ]);
+        }
 
 		$questions = DB::table('question')
             ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
