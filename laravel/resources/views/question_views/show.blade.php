@@ -87,6 +87,19 @@
 									<p class="form-control-static"> {{$question->reply_mode}}</p>
 							</div>
 						</div>
+						@foreach($answers as $key => $answer)
+							<div class="row bg-info">
+								<div class="col-md-2">
+									<div class="form-group">
+										<label for="name">Answer</label>
+									</div>
+								</div>
+
+								<div class="col-md-10">
+									<p class="form-control-static"> {{$answer->value}} {!! $answer->is_correct ? '<b>Correct</b>' : ''!!}</p>
+								</div>
+							</div>
+						@endforeach
 						<div class="row bg-success">
 							<div class="col-md-2">
 							<div class="form-group">

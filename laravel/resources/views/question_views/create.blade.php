@@ -1,12 +1,16 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
+
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
                 <div class="panel-heading">Question / Create </div>
 
 				 <div class="panel-body">
+                     @foreach($errors->all() as $error)
+                         <div class="alert alert-danger">{{ $error }}</div>
+                     @endforeach
 					@if(Session::has('flash_message'))
 						<div id="successMessage" class="alert alert-success">
 							<span class="glyphicon glyphicon-ok"></span>
@@ -168,6 +172,34 @@
                                 @endif
                             </div>
 						</div>
+                        <div class="answers_block">
+                            <div class="form-group answer">
+                                <label for="answer" class="col-md-4 control-label">Answer</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" name="answer[]">
+                                    @if ($errors->has('answer'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('reply_mode') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="is_correct" value="0" checked>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group add_answer_block" style="display: none;">
+                            <label for="answer" class="col-md-6 control-label"></label>
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-info pull-right add_answer">+ add answer</button>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
 
 					<div id="imageShow" class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
                             <label for="image" class="col-md-4 control-label">Question Image</label>
@@ -289,6 +321,7 @@
                   <button class="btn btn-primary" type="submit" >Submit</button>
 		     </div>
 		</div>
+                        <input type="hidden" name="correct_answer" value="1">
             </form>
 
               </div>
@@ -304,9 +337,100 @@
 <script>
 $(document).ready(function(){
         setTimeout(function() {
+            $('#reply_mode').trigger('change');
+        }, 0);
+        setTimeout(function() {
           $('#successMessage').fadeOut('fast');
         }, 4000); // <-- time in milliseconds
+
+        $('.add_answer').on('click', function() {
+            add_answer(1);
+            $('#reply_mode').trigger('change');
+        });
+
+        $(document).on('click', '.delete_line', function() {
+            $(this).closest('.answer').remove();
+            $('.add_answer_block').show();
+            $('.answer [type="radio"]').each(function(index, element) {
+                $(element).val(index);
+            });
+        });
+
+        $('#reply_mode').on('change', function() {
+            var val = $(this).val();
+            if (val == 'general') {
+                manage_answer(1, 1);
+            }
+            if (val == 'FB') {
+                manage_answer(1, 6);
+            }
+            if (val == 'TF') {
+                manage_answer(1, 1);
+            }
+            if (val == 'mcq3') {
+                manage_answer(2, 6);
+            }
+            if (val == 'mcq4') {
+                manage_answer(2, 6);
+            }
+            if (val == 'mcq5') {
+                manage_answer(2, 6);
+            }
+            if (val == 'mcq6') {
+                manage_answer(2, 6);
+            }
+            if (val == 'ascending') {
+                manage_answer(2, 6);
+            }
+            if (val == 'descending') {
+                manage_answer(2, 6);
+            }
+        });
     });
+
+    function manage_answer(min, max) {
+        if ($('.answers_block .answer').length < min) {
+            add_answer(0);
+        }
+        $.each($('.answers_block').find('.answer'), function(key, value){
+            if ((key+1) <= min) {
+                $(this).find('.delete_line').hide();
+            }
+            if ((key+1) > max) {
+                $(this).remove();
+            }
+        });
+        if ($('.answers_block .answer').length == max) {
+            $('.add_answer_block').hide();
+        } else {
+            $('.add_answer_block').show();
+        }
+    }
+
+    function add_answer(remove) {
+        var block_remove;
+        if (remove == 1) {
+            block_remove = '                                <div class="col-md-1">\n' +
+                '                                    <button type="button" class="btn btn-danger delete_line">X</button>' +
+                '                                </div>\n';
+        } else {
+            block_remove = '';
+        }
+        $('.answers_block').append('<div class="form-group answer">\n' +
+            '                                <label for="answer" class="col-md-4 control-label"></label>\n' +
+            '                                <div class="col-md-4">\n' +
+            '                                    <input class="form-control" name="answer[]">\n' +
+            '                                </div>\n' +
+            '                                <div class="col-md-1">\n' +
+            '                                    <div class="radio">\n' +
+            '                                        <label>\n' +
+            '                                            <input type="radio" name="is_correct" value="' + $('.answers_block .answer').length + '">\n' +
+            '                                        </label>\n' +
+            '                                    </div>\n' +
+            '                                </div>\n' +
+            block_remove      +
+            '                            </div>');
+    }
 </script>
 
 @endsection
