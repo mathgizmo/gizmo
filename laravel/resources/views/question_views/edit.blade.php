@@ -181,7 +181,7 @@
                                 <div class="col-md-1">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="is_correct" value="{{ $key }}"{{ $answer->is_correct ? ' checked' : ''}}>
+                                            <input type="checkbox" name="is_correct[]" value="{{ $key }}"{{ $answer->is_correct ? ' checked' : ''}}>
                                         </label>
                                     </div>
                                 </div>
@@ -346,6 +346,52 @@
                 $('#reply_mode').trigger('change');
             });
 
+            $(document).on('change', '[name="is_correct[]"]', function () {
+                var val = $('#reply_mode').val();
+                var el = $(this);
+                if (val == 'general') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'FB') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'TF') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'mcq3') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'mcq4') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'mcq5') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'mcq6') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'ascending') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'descending') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+            });
+
             $(document).on('click', '.delete_line', function() {
                 $(this).closest('.answer').remove();
                 $('.add_answer_block').show();
@@ -403,6 +449,11 @@
             } else {
                 $('.add_answer_block').show();
             }
+            if ($('[name="is_correct[]"]:checked').length) {
+                $('[name="is_correct[]"]:checked').trigger('change');
+            } else {
+                $('[name="is_correct[]"]').trigger('change');
+            }
         }
 
         function add_answer(remove) {
@@ -422,12 +473,13 @@
                 '                                <div class="col-md-1">\n' +
                 '                                    <div class="radio">\n' +
                 '                                        <label>\n' +
-                '                                            <input type="radio" name="is_correct" value="' + $('.answers_block .answer').length + '">\n' +
+                '                                            <input type="checkbox" name="is_correct[]" value="' + $('.answers_block .answer').length + '" checked>\n' +
                 '                                        </label>\n' +
                 '                                    </div>\n' +
                 '                                </div>\n' +
                 block_remove      +
                 '                            </div>');
+            $('[name="is_correct[]"]').trigger('change');
         }
     </script>
 

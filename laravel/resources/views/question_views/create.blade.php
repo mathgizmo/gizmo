@@ -186,7 +186,7 @@
                                 <div class="col-md-1">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="is_correct" value="0" checked>
+                                            <input type="checkbox" name="is_correct[]" value="0" checked>
                                         </label>
                                     </div>
                                 </div>
@@ -333,104 +333,155 @@
 @endsection
 
 @section('scripts')
+    <script>
+        $(document).ready(function(){
+            setTimeout(function() {
+                $('#reply_mode').trigger('change');
+            }, 0);
+            setTimeout(function() {
+                $('#successMessage').fadeOut('fast');
+            }, 4000); // <-- time in milliseconds
 
-<script>
-$(document).ready(function(){
-        setTimeout(function() {
-            $('#reply_mode').trigger('change');
-        }, 0);
-        setTimeout(function() {
-          $('#successMessage').fadeOut('fast');
-        }, 4000); // <-- time in milliseconds
+            $('.add_answer').on('click', function() {
+                add_answer(1);
+                $('#reply_mode').trigger('change');
+            });
 
-        $('.add_answer').on('click', function() {
-            add_answer(1);
-            $('#reply_mode').trigger('change');
-        });
+            $(document).on('change', '[name="is_correct[]"]', function () {
+                var val = $('#reply_mode').val();
+                var el = $(this);
+                if (val == 'general') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'FB') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'TF') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'mcq3') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'mcq4') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'mcq5') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'mcq6') {
+                    $('[name="is_correct[]"]:checked').prop('checked', false);
+                    el.prop('checked', true);
+                }
+                if (val == 'ascending') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+                if (val == 'descending') {
+                    $('[name="is_correct[]"]').each(function(index, element) {
+                        $(element).prop('checked', true);
+                    });
+                }
+            });
 
-        $(document).on('click', '.delete_line', function() {
-            $(this).closest('.answer').remove();
-            $('.add_answer_block').show();
-            $('.answer [type="radio"]').each(function(index, element) {
-                $(element).val(index);
+            $(document).on('click', '.delete_line', function() {
+                $(this).closest('.answer').remove();
+                $('.add_answer_block').show();
+                $('.answer [type="radio"]').each(function(index, element) {
+                    $(element).val(index);
+                });
+            });
+
+            $('#reply_mode').on('change', function() {
+                var val = $(this).val();
+                if (val == 'general') {
+                    manage_answer(1, 1);
+                }
+                if (val == 'FB') {
+                    manage_answer(1, 6);
+                }
+                if (val == 'TF') {
+                    manage_answer(1, 1);
+                }
+                if (val == 'mcq3') {
+                    manage_answer(2, 6);
+                }
+                if (val == 'mcq4') {
+                    manage_answer(2, 6);
+                }
+                if (val == 'mcq5') {
+                    manage_answer(2, 6);
+                }
+                if (val == 'mcq6') {
+                    manage_answer(2, 6);
+                }
+                if (val == 'ascending') {
+                    manage_answer(2, 6);
+                }
+                if (val == 'descending') {
+                    manage_answer(2, 6);
+                }
             });
         });
 
-        $('#reply_mode').on('change', function() {
-            var val = $(this).val();
-            if (val == 'general') {
-                manage_answer(1, 1);
+        function manage_answer(min, max) {
+            if ($('.answers_block .answer').length < min) {
+                add_answer(0);
             }
-            if (val == 'FB') {
-                manage_answer(1, 6);
+            $.each($('.answers_block').find('.answer'), function(key, value){
+                if ((key+1) <= min) {
+                    $(this).find('.delete_line').hide();
+                }
+                if ((key+1) > max) {
+                    $(this).remove();
+                }
+            });
+            if ($('.answers_block .answer').length == max) {
+                $('.add_answer_block').hide();
+            } else {
+                $('.add_answer_block').show();
             }
-            if (val == 'TF') {
-                manage_answer(1, 1);
+            if ($('[name="is_correct[]"]:checked').length) {
+                $('[name="is_correct[]"]:checked').trigger('change');
+            } else {
+                $('[name="is_correct[]"]').trigger('change');
             }
-            if (val == 'mcq3') {
-                manage_answer(2, 6);
-            }
-            if (val == 'mcq4') {
-                manage_answer(2, 6);
-            }
-            if (val == 'mcq5') {
-                manage_answer(2, 6);
-            }
-            if (val == 'mcq6') {
-                manage_answer(2, 6);
-            }
-            if (val == 'ascending') {
-                manage_answer(2, 6);
-            }
-            if (val == 'descending') {
-                manage_answer(2, 6);
-            }
-        });
-    });
+        }
 
-    function manage_answer(min, max) {
-        if ($('.answers_block .answer').length < min) {
-            add_answer(0);
-        }
-        $.each($('.answers_block').find('.answer'), function(key, value){
-            if ((key+1) <= min) {
-                $(this).find('.delete_line').hide();
+        function add_answer(remove) {
+            var block_remove;
+            if (remove == 1) {
+                block_remove = '                                <div class="col-md-1">\n' +
+                    '                                    <button type="button" class="btn btn-danger delete_line">X</button>' +
+                    '                                </div>\n';
+            } else {
+                block_remove = '';
             }
-            if ((key+1) > max) {
-                $(this).remove();
-            }
-        });
-        if ($('.answers_block .answer').length == max) {
-            $('.add_answer_block').hide();
-        } else {
-            $('.add_answer_block').show();
+            $('.answers_block').append('<div class="form-group answer">\n' +
+                '                                <label for="answer" class="col-md-4 control-label"></label>\n' +
+                '                                <div class="col-md-4">\n' +
+                '                                    <input class="form-control" name="answer[]">\n' +
+                '                                </div>\n' +
+                '                                <div class="col-md-1">\n' +
+                '                                    <div class="radio">\n' +
+                '                                        <label>\n' +
+                '                                            <input type="checkbox" name="is_correct[]" value="' + $('.answers_block .answer').length + '" checked>\n' +
+                '                                        </label>\n' +
+                '                                    </div>\n' +
+                '                                </div>\n' +
+                block_remove      +
+                '                            </div>');
+            $('[name="is_correct[]"]').trigger('change');
         }
-    }
-
-    function add_answer(remove) {
-        var block_remove;
-        if (remove == 1) {
-            block_remove = '                                <div class="col-md-1">\n' +
-                '                                    <button type="button" class="btn btn-danger delete_line">X</button>' +
-                '                                </div>\n';
-        } else {
-            block_remove = '';
-        }
-        $('.answers_block').append('<div class="form-group answer">\n' +
-            '                                <label for="answer" class="col-md-4 control-label"></label>\n' +
-            '                                <div class="col-md-4">\n' +
-            '                                    <input class="form-control" name="answer[]">\n' +
-            '                                </div>\n' +
-            '                                <div class="col-md-1">\n' +
-            '                                    <div class="radio">\n' +
-            '                                        <label>\n' +
-            '                                            <input type="radio" name="is_correct" value="' + $('.answers_block .answer').length + '">\n' +
-            '                                        </label>\n' +
-            '                                    </div>\n' +
-            '                                </div>\n' +
-            block_remove      +
-            '                            </div>');
-    }
-</script>
+    </script>
 
 @endsection
