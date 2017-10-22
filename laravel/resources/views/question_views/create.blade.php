@@ -8,9 +8,6 @@
                 <div class="panel-heading">Question / Create </div>
 
 				 <div class="panel-body">
-                     @foreach($errors->all() as $error)
-                         <div class="alert alert-danger">{{ $error }}</div>
-                     @endforeach
 					@if(Session::has('flash_message'))
 						<div id="successMessage" class="alert alert-success">
 							<span class="glyphicon glyphicon-ok"></span>
@@ -52,6 +49,7 @@
                             <div class="col-md-6">
 							      <select class="form-control" name="unit_id" id="unit_id">
 								   @if (count($units) > 0)
+                                          <option value="">Select From ...</option>
 								  @foreach($units as $unit)
 											<option value="{{$unit->id}}" @if (old("unit_id") == $unit->id) selected="selected" @endif  @if ( $unit->id == $uid) selected="selected"
 											@endif
@@ -75,6 +73,7 @@
 							      <select class="form-control" name="topic_id" id="topic_id">
 
 								  @if (count($topics) > 0)
+                                          <option value="">Select From ...</option>
 								  @foreach($topics as $topic)
 											<option value="{{$topic->id}}" @if (old("topic_id") == $topic->id) selected="selected" @endif  @if ( $topic->id == $tid) selected="selected"
 											@endif
@@ -99,6 +98,7 @@
 							      <select class="form-control" name="lesson_id" id="lesson_id">
 
 									@if (count($lessons) > 0)
+                                          <option value="">Select From ...</option>
 								  @foreach($lessons as $lesson)
 											<option value="{{$lesson->id}}" @if (old("lesson_id") == $lesson->id) selected="selected" @endif  @if ( $lesson->id == $lsnid) selected="selected"
 											@endif
@@ -173,24 +173,49 @@
                             </div>
 						</div>
                         <div class="answers_block">
-                            <div class="form-group answer">
+                            <div class="form-group answer{{ $errors->has('answer.0') ? ' has-error' : '' }}">
                                 <label for="answer" class="col-md-4 control-label">Answer</label>
                                 <div class="col-md-4">
-                                    <input class="form-control" name="answer[]">
-                                    @if ($errors->has('answer'))
+                                    <input class="form-control" name="answer[]" value="{{ old('answer.0') }}">
+                                    @if ($errors->has('answer.0'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('reply_mode') }}</strong>
-                                    </span>
+                                            <strong>Answer can't be empty.</strong>
+                                        </span>
                                     @endif
                                 </div>
                                 <div class="col-md-1">
                                     <div class="radio">
                                         <label>
-                                            <input type="checkbox" name="is_correct[]" value="0" checked>
+                                            <input type="checkbox" name="is_correct[]" value="0" {{ old('is_correct') == 0 ? ' checked' : '' }}>
                                         </label>
                                     </div>
                                 </div>
                             </div>
+                            @for ($i = 1; $i <= 6; $i++)
+                                @if ($errors->has('answer.' . $i) || old('answer.' . $i) != '' )
+                                    <div class="form-group answer{{ $errors->has('answer.' . $i) ? ' has-error' : '' }}">
+                                        <label for="answer" class="col-md-4 control-label">Answer</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control" name="answer[]" value="{{ old('answer.' . $i) }}">
+                                            @if ($errors->has('answer.' . $i))
+                                                <span class="help-block">
+                                                    <strong>Answer can't be empty.</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="checkbox" name="is_correct[]" value="{{ $i }}"{{ old('is_correct') == $i ? ' checked' : '' }}>
+                                                </label>
+                                            </div>
+                                        </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-danger delete_line">X</button>
+                                            </div>
+                                    </div>
+                                @endif
+                            @endfor
                         </div>
 
                         <div class="form-group add_answer_block" style="display: none;">

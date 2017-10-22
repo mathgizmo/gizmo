@@ -189,6 +189,8 @@ class QuestionController extends Controller
 		 'max_value'	=> 'required_if:type,draw',
 		 'ini_position'=> 'required_if:type,draw',
 		 'step_value'	=> 'required_if:type,draw',
+          'answer'  => 'required|array|min:1|max:6',
+          'answer.*'=>'required|string',
 //		 'mcq1'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
 //		 'mcq2'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
 //		 'mcq3'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
@@ -197,11 +199,6 @@ class QuestionController extends Controller
 //		 'mcq6'			=> 'required_if:reply_mode,mcq6',
 
     ]);
-	  foreach ($request->answer as $key => $answer) {
-	      if (empty($answer)) {
-	          return back()->withErrors(['answer' => 'Answer can\'t be empty']);
-          }
-      }
 		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'], 'type' => $request['type'], 'reply_mode' => $request['reply_mode'],
 		'question' => $request['question']]);
 
@@ -332,8 +329,9 @@ class QuestionController extends Controller
 		 'min_value'	=> 'required_if:type,draw',
 		 'max_value'	=> 'required_if:type,draw',
 		 'ini_position'=> 'required_if:type,draw',
-		 'step_value'	=> 'required_if:type,draw'
-
+		 'step_value'	=> 'required_if:type,draw',
+          'answer'  => 'required|array|min:1|max:6',
+          'answer.*'=>'required|string',
     ]);
 
 		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],

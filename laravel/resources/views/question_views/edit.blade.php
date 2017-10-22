@@ -9,9 +9,6 @@
                 <div class="panel-heading">Question / Edit</div>
 
                 <div class="panel-body">
-                    @foreach($errors->all() as $error)
-                        <div class="alert alert-danger">{{ $error }}</div>
-                    @endforeach
 
     <div class="row">
         <div class="col-md-12">
@@ -51,6 +48,7 @@
                             <div class="col-md-6">
 							      <select class="form-control" name="unit_id" id="unit_id">
 								   @if (count($units) > 0)
+                                          <option value="">Select From ...</option>
 								  @foreach($units as $unit)
 											<option value="{{$unit->id}}" @if ( $unit->id == $question->uid) selected="selected"
 											@endif
@@ -74,6 +72,7 @@
 							      <select class="form-control" name="topic_id" id="topic_id">
 
 								  @if (count($topics) > 0)
+                                          <option value="">Select From ...</option>
 								  @foreach($topics as $topic)
 											<option value="{{$topic->id}}" @if ( $topic->id == $question->tid) selected="selected"
 											@endif
@@ -98,6 +97,7 @@
 							      <select class="form-control" name="lesson_id" id="lesson_id">
 
 									@if (count($lessons) > 0)
+                                          <option value="">Select From ...</option>
 								  @foreach($lessons as $lesson)
 											<option value="{{$lesson->id}}" @if ( $lesson->id == $question->lesson_id) selected="selected"
 											@endif
@@ -173,10 +173,15 @@
                         </div>
                     <div class="answers_block">
                         @foreach($answers as $key => $answer)
-                            <div class="form-group answer">
+                            <div class="form-group answer{{ $errors->has('answer.' . $key) ? ' has-error' : '' }}">
                                 <label for="answer" class="col-md-4 control-label">Answer</label>
                                 <div class="col-md-4">
-                                    <input class="form-control" name="answer[]" value="{{ $answer->value }}">
+                                    <input class="form-control" name="answer[]" value="{{ old('answer.' . $key) ?? $answer->value }}">
+                                    @if ($errors->has('answer.' . $key))
+                                        <span class="help-block">
+                                                    <strong>Answer can't be empty.</strong>
+                                                </span>
+                                    @endif
                                 </div>
                                 <div class="col-md-1">
                                     <div class="radio">
@@ -190,6 +195,31 @@
                                 </div>
                             </div>
                         @endforeach
+                            @for ($i = $key; $i <= 6; $i++)
+                                @if ($errors->has('answer.' . $i) || old('answer.' . $i) != '' )
+                                    <div class="form-group answer{{ $errors->has('answer.' . $i) ? ' has-error' : '' }}">
+                                        <label for="answer" class="col-md-4 control-label">Answer</label>
+                                        <div class="col-md-4">
+                                            <input class="form-control" name="answer[]" value="{{ old('answer.' . $i) }}">
+                                            @if ($errors->has('answer.' . $i))
+                                                <span class="help-block">
+                                                    <strong>Answer can't be empty.</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="checkbox" name="is_correct[]" value="{{ $i }}"{{ old('is_correct') == $i ? ' checked' : '' }}>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-danger delete_line">X</button>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endfor
                     </div>
 
                     <div class="form-group add_answer_block" style="display: none;">
@@ -328,8 +358,6 @@
     </div>
 </div>
 
-
-@endsection
 
 @section('scripts')
     <script>
