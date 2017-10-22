@@ -17,12 +17,13 @@ Route::get('/', function () {
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
-Route::resource('level_views', 'LevelController');
-Route::resource('unit_views', 'UnitController');
-Route::resource('topic_views', 'TopicController');
-Route::resource('lesson_views', 'LessonController');
-Route::resource('question_views', 'QuestionController');
-Route::resource('answer_views', 'AnswerController');
-Route::get('/create-answer/questions-bank', 'AnswerController@insertAnswerFromQuestions');
-
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/home', 'HomeController@index');
+    Route::resource('level_views', 'LevelController');
+    Route::resource('unit_views', 'UnitController');
+    Route::resource('topic_views', 'TopicController');
+    Route::resource('lesson_views', 'LessonController');
+    Route::resource('question_views', 'QuestionController');
+    Route::resource('answer_views', 'AnswerController');
+    Route::get('/create-answer/questions-bank', 'AnswerController@insertAnswerFromQuestions');
+});
