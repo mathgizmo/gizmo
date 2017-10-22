@@ -217,7 +217,12 @@
                                 @endif
                             @endfor
                         </div>
-
+                        <div class="form-group">
+                            <label for="question" class="col-md-4 control-label">Preview</label>
+                            <div class="col-md-6">
+                                <div class="preview"></div>
+                            </div>
+                        </div>
                         <div class="form-group add_answer_block" style="display: none;">
                             <label for="answer" class="col-md-6 control-label"></label>
                             <div class="col-md-4">
@@ -358,6 +363,7 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ URL::asset('js/jquery.jslatex.packed.js') }}"></script>
     <script>
         $(document).ready(function(){
             setTimeout(function() {
@@ -456,7 +462,28 @@
                     manage_answer(2, 6);
                 }
             });
+
+            $('[name="question"]').on('keyup', function() {
+                latex_generate();
+            });
+
+            $(document).on('keyup', '[name="answer[]"]', function() {
+                latex_generate();
+            });
         });
+
+        function latex_generate() {
+            $('.preview').text('');
+            if ($('[name="reply_mode"]').val() != 'FB') {
+                $.each($('[name="question"]'), function() {
+                    $('.preview').append('<label>Question</label><div class="latex">' + $(this).val() + '</div>');
+                });
+            }
+            $.each($('[name="answer[]"]'), function(key) {
+                $('.preview').append('<label>Answer ' + (key+1) + '</label><div class="latex">' + $(this).val() + '</div>');
+            });
+            $('.latex').latex();
+        }
 
         function manage_answer(min, max) {
             if ($('.answers_block .answer').length < min) {
@@ -480,6 +507,7 @@
             } else {
                 $('[name="is_correct[]"]').trigger('change');
             }
+            latex_generate();
         }
 
         function add_answer(remove) {
@@ -506,6 +534,7 @@
                 block_remove      +
                 '                            </div>');
             $('[name="is_correct[]"]').trigger('change');
+            latex_generate()
         }
     </script>
 
