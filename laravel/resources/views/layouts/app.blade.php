@@ -47,22 +47,23 @@
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
-					<li><a href="{{ Route('question_views.create') }}">Create Question</a></li>
-					<li><a href="{{ url('/question_views') }}">Manage Questions</a></li>
-					<li><a href="{{ url('/level_views') }}">Manage Levels</a></li>
-					<li><a href="{{ url('/unit_views') }}">Manage Units</a></li>
-					<li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
-					<li><a href="{{ url('/lesson_views') }}">Manage Lessons</a></li>
-                </ul>
+                @if(auth()->check())
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ url('/home') }}">Home</a></li>
+                        <li><a href="{{ Route('question_views.create') }}">Create Question</a></li>
+                        <li><a href="{{ url('/question_views') }}">Manage Questions</a></li>
+                        <li><a href="{{ url('/level_views') }}">Manage Levels</a></li>
+                        <li><a href="{{ url('/unit_views') }}">Manage Units</a></li>
+                        <li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
+                        <li><a href="{{ url('/lesson_views') }}">Manage Lessons</a></li>
+                    </ul>
+                @endif
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
