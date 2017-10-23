@@ -9,7 +9,12 @@
 			</div>
 		@endif
 		<div class="panel panel-default">
-			<div class="panel-heading">Users</div>
+			<div class="panel-heading">
+				Users
+				<div class="pull-right">
+					<a href="{{ route('users.create') }}" class="btn btn-info btn-sm" style="margin-top: -5px;">+ add user</a>
+				</div>
+			</div>
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-12">
