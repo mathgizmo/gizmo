@@ -49,7 +49,6 @@
                 <!-- Left Side Of Navbar -->
                 @if(auth()->check())
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/home') }}">Home</a></li>
                         <li><a href="{{ Route('question_views.create') }}">Create Question</a></li>
                         <li><a href="{{ url('/question_views') }}">Manage Questions</a></li>
                         <li><a href="{{ url('/level_views') }}">Manage Levels</a></li>
@@ -59,6 +58,7 @@
                         @if(auth()->user()->is_admin)
                             <li><a href="{{ route('users.index') }}">Manage Users</a></li>
                         @endif
+                        <li><a href="{{ route('students.index') }}">Students</a></li>
                     </ul>
                 @endif
 
