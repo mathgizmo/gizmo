@@ -213,7 +213,7 @@ class QuestionController extends Controller
 		$question = Question::create($collectionQuestion->all());
 
         $type = $request['reply_mode'];
-        $iterations = str_replace(['general', 'FB', 'TF', 'mcq3', 'mcq4', 'mcq5', 'mcq6', 'ascending', 'descending'], [1, 6, 1, 6, 6, 6, 6, 6, 6],  $type);
+        $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'], [1, 6, 1, 6, 6, 6],  $type);
 		for ($i = 0;$i < ($iterations>count($request->answer) ? count($request->answer) :  $iterations) ; $i++) {
             $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
             Answer::create([
@@ -351,7 +351,7 @@ class QuestionController extends Controller
 		DB::table('question')->where('id', $id)->update($collectionQuestion->all());
         Question::find($id)->answers()->delete();
         $type = $request['reply_mode'];
-        $iterations = str_replace(['general', 'FB', 'TF', 'mcq3', 'mcq4', 'mcq5', 'mcq6', 'ascending', 'descending'], [1, 6, 1, 6, 6, 6, 6, 6, 6],  $type);
+        $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'], [1, 6, 1, 6, 6, 6],  $type);
         for ($i = 0;$i < ($iterations>count($request->answer) ? count($request->answer) :  $iterations) ; $i++) {
             $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
             Answer::create([
