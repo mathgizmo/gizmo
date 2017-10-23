@@ -21,6 +21,7 @@ class QuestionController extends Controller
     public function index(Request $request)
     {
         $levels = DB::select('select * from level');
+        $reply_modes = DB::select('select * from reply_mode');
         //$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
         //$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
         $units = DB::table('unit')->where('level_id',$request->level_id)->get();
@@ -61,8 +62,24 @@ class QuestionController extends Controller
         } else {
             $lesson_id = '';
         }
-        $questions = $query->orderBy('question.id', 'desc')->paginate(10)->appends(Input::except('page'));
-        return view('question_views.index', compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes'));
+        if ($request->has('question')) {
+            $query = $query->where('question', 'like', '%' . $request->question . '%');
+        }
+        if ($request->has('type')) {
+            $query = $query->where('type', 'like', '%' . $request->type . '%');
+        }
+        if ($request->has('reply_mode')) {
+            $query = $query->where('reply_mode', $request->reply_mode);
+        }
+        if ($request->has('sort') and $request->has('order')) {
+            $query = $query->orderBy($request->sort, $request->order);
+        } else {
+            $query = $query->orderBy('question.id', 'desc');
+        }
+
+        $questions = $query->paginate(10)->appends(Input::except('page'));
+
+        return view('question_views.index', compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes', 'reply_modes'));
     }
 
     /**
@@ -303,6 +320,7 @@ class QuestionController extends Controller
 		$units = DB::table('unit')->where('level_id',$request->level_id)->get();
 		$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
 		$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+
 	$this->validate($request, [
 		 'level_id'	=> 'required',
 		 'unit_id'	=> 'required',
@@ -369,8 +387,8 @@ class QuestionController extends Controller
 			->join('level', 'unit.level_id', '=', 'level.id')
             ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
             ->orderBy('question.id', 'desc')->paginate(10);
-        return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
 
+        return redirect(route('question_views.index'));
     }
 
     /**
