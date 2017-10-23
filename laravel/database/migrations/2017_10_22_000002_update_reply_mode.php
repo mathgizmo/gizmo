@@ -32,6 +32,6 @@ SQL
         DB::unprepared(<<<SQL
 UPDATE `reply_mode` SET `mode`='General' WHERE `id`='1';
 SQL
-            );
+    );
     }
 }
