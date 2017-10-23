@@ -30,11 +30,11 @@ INSERT INTO `reply_mode` VALUES
 SQL
     );
         DB::unprepared(<<<SQL
-UPDATE question set reply_mode = 10 WHERE reply_mode in (4,5,6,7);
+UPDATE question set reply_mode = 'mcq' WHERE reply_mode in ('mcq3','mcq4','mcq5','mcq6');
 SQL
     );
         DB::unprepared(<<<SQL
-UPDATE question set reply_mode = 11 WHERE reply_mode in (8,9);
+UPDATE question set reply_mode = 'order' WHERE reply_mode in ('ascending','descending');
 SQL
         );
     }
@@ -66,11 +66,11 @@ DELETE FROM `reply_mode` WHERE `id`>9;
 SQL
         );
         DB::unprepared(<<<SQL
-UPDATE question set reply_mode = 7 WHERE reply_mode = 10;
+UPDATE question set reply_mode = 'mcq6' WHERE reply_mode = 'mcq';
 SQL
         );
         DB::unprepared(<<<SQL
-UPDATE question set reply_mode = 8 WHERE reply_mode = 11;
+UPDATE question set reply_mode = 'ascending' WHERE reply_mode = 'order';
 SQL
         );
     }
