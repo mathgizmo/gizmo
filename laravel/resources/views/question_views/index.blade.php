@@ -18,16 +18,16 @@
                             <label for="level_id" class="col-md-4 control-label">Level</label>
 
                             <div class="col-md-6">
-							      <select class="form-control" name="level_id" id="level_id">
+                                <select class="form-control" name="level_id" id="level_id">
 
-								  @if (count($levels) > 0)
-									  <option value="">Select From ...</option>
-										@foreach($levels as $level)
-											<option value="{{$level->id}}"
-											>{{$level->title}}</option>
-										@endforeach
-								 @endif
-									</select>
+                                    @if (count($levels) > 0)
+                                        <option value="">Select From ...</option>
+                                        @foreach($levels as $level)
+                                            <option value="{{$level->id}}" <?php echo ($level->id == $level_id) ? 'selected' : ''; ?>
+                                            >{{$level->title}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
 
                                 @if ($errors->has('level_id'))
                                     <span class="help-block">
@@ -47,7 +47,7 @@
 								@if (count($units) > 0)
 
 									@foreach($units as $unit)
-											<option value="{{$unit->id}}"
+											<option value="{{$unit->id}}" <?php echo ($unit->id == $unit_id) ? 'selected' : ''; ?>
 											>{{$unit->title}}</option>
 										@endforeach
 								@endif
@@ -66,7 +66,7 @@
 									<option value="">Select From ...</option>
 								@if (count($topics) > 0)
 										@foreach($topics as $topic)
-											<option value="{{$topic->id}}"
+											<option value="{{$topic->id}}" <?php echo ($topic->id == $topic_id) ? 'selected' : ''; ?>
 											>{{$topic->title}}</option>
 										@endforeach
 								@endif
@@ -87,7 +87,7 @@
 									<option value="">Select From ...</option>
 									@if (count($lessons) > 0)
 								  @foreach($lessons as $lesson)
-											<option value="{{$lesson->id}}"
+											<option value="{{$lesson->id}}" <?php echo ($lesson->id == $lesson_id) ? 'selected' : ''; ?>
 											>{{$lesson->title}}</option>
 										@endforeach
 								  @endif
