@@ -135,19 +135,6 @@
                                 @endif
                             </div>
                         </div>
-						<div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
-                            <label for="question" class="col-md-4 control-label">Question</label>
-
-                            <div class="col-md-6">
-                                <textarea id="question" class="form-control"  name="question"> {{$question->question}}</textarea>
-
-                                @if ($errors->has('question'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('question') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				      </div>
 
 						<div class="form-group{{ $errors->has('reply_mode') ? ' has-error' : '' }}">
                             <label for="reply_mode" class="col-md-4 control-label">REPLY MODE</label>
@@ -171,8 +158,21 @@
                                 @endif
                             </div>
                         </div>
+                <div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
+                    <label for="question" class="col-md-4 control-label">Question</label>
+
+                    <div class="col-md-6">
+                        <textarea id="question" class="form-control"  name="question"> {{$question->question}}</textarea>
+
+                        @if ($errors->has('question'))
+                            <span class="help-block">
+                                        <strong>{{ $errors->first('question') }}</strong>
+                                    </span>
+                        @endif
+                    </div>
+                </div>
                     <div class="answers_block">
-                    <?php $key =1 ;?>
+		    	<?php $key = 1; ?>
                         @foreach($answers as $key => $answer)
                             <div class="form-group answer{{ $errors->has('answer.' . $key) ? ' has-error' : '' }}">
                                 <label for="answer" class="col-md-4 control-label">Answer</label>
@@ -364,7 +364,7 @@
         </div>
     </div>
 </div>
-
+@endsection
 
 @section('scripts')
     <script src="{{ URL::asset('js/jquery.jslatex.packed.js') }}"></script>

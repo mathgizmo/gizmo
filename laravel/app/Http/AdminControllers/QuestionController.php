@@ -157,7 +157,7 @@ class QuestionController extends Controller
 		 'type'			=> 'required',
 		 'reply_mode'	=> 'required',
 //		 'answer_size'	=> 'required',
-		 'question'		=> 'required_unless:reply_mode,FB',
+		 'question'		=> 'required',
 //		 'question_fp1'=> 'required_if:reply_mode,FB',
 //		 'question_fp2'=> 'required_if:reply_mode,FB',
 //		 'question_fp3'=> 'required_if:reply_mode,FB, & answer_size,2 ',
