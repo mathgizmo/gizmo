@@ -159,7 +159,7 @@
                                 @endif
                             </div>
                         </div>
-						<div id="questionShow" class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
+						<div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
                             <label for="question" class="col-md-4 control-label">Question</label>
 
                             <div class="col-md-6">
