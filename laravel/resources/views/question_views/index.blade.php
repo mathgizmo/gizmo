@@ -143,8 +143,8 @@
 
 						<tbody>
 							@foreach($questions as $question)
-								<tr>
-                                    <td class="text-right">
+                                <tr style="height:40px; overflow:hidden">
+                                    <td class="text-right" style="width:200px">
 
                                             <a class="btn btn-primary" href="{{ route('question_views.show', $question->id) }}">View</a>
                                             <a class="btn btn-warning" href="{{ route('question_views.edit', $question->id) }}">Edit</a>
