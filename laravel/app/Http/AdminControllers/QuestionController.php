@@ -6,7 +6,7 @@ use App\Question;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-//use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
 
@@ -19,63 +19,46 @@ class QuestionController extends Controller
      */
 
     public function index(Request $request)
-	{
-		$levels = DB::select('select * from level');
-		//$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
-		//$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
-		$units = DB::table('unit')->where('level_id',$request->level_id)->get();
-		$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-		$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
-		if($request->has(['level_id','unit_id','topic_id','lesson_id'])){
-				$questions = DB::table('question')
-					->join('lesson', 'question.lesson_id', '=', 'lesson.id')
-					->join('topic', 'lesson.topic_id', '=', 'topic.id')
-					->join('unit', 'topic.unit_id', '=', 'unit.id')
-					->join('level', 'unit.level_id', '=', 'level.id')
-					->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
-					->where('lesson_id',$request->lesson_id)->orderBy('question.id', 'desc')->paginate(10);
-				return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
-		}
-		elseif($request->has(['level_id','unit_id','topic_id'])){
-			$questions = DB::table('question')
-					->join('lesson', 'question.lesson_id', '=', 'lesson.id')
-					->join('topic', 'lesson.topic_id', '=', 'topic.id')
-					->join('unit', 'topic.unit_id', '=', 'unit.id')
-					->join('level', 'unit.level_id', '=', 'level.id')
-					->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
-					->where('topic_id',$request->topic_id)->orderBy('question.id', 'desc')->paginate(10);
-				return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
-		}
-		elseif($request->has(['level_id','unit_id'])){
-			$questions = DB::table('question')
-					->join('lesson', 'question.lesson_id', '=', 'lesson.id')
-					->join('topic', 'lesson.topic_id', '=', 'topic.id')
-					->join('unit', 'topic.unit_id', '=', 'unit.id')
-					->join('level', 'unit.level_id', '=', 'level.id')
-					->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
-					->where('unit_id',$request->unit_id)->orderBy('question.id', 'desc')->paginate(10);
-				return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
-		}
-		elseif($request->has('level_id')){
-			$questions = DB::table('question')
-					->join('lesson', 'question.lesson_id', '=', 'lesson.id')
-					->join('topic', 'lesson.topic_id', '=', 'topic.id')
-					->join('unit', 'topic.unit_id', '=', 'unit.id')
-					->join('level', 'unit.level_id', '=', 'level.id')
-					->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
-					->where('level_id',$request->level_id)->orderBy('question.id', 'desc')->paginate(10);
-				return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
-		}else{
-		$questions = DB::table('question')
+    {
+        $levels = DB::select('select * from level');
+        //$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
+        //$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
+        $units = DB::table('unit')->where('level_id',$request->level_id)->get();
+        $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
+        $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+
+        $query = DB::table('question')
             ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
-			->join('unit', 'topic.unit_id', '=', 'unit.id')
-			->join('level', 'unit.level_id', '=', 'level.id')
-            ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
-            ->orderBy('question.id', 'desc')->paginate(10);
-        return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
-
-		}
+            ->join('unit', 'topic.unit_id', '=', 'unit.id')
+            ->join('level', 'unit.level_id', '=', 'level.id')
+            ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle');
+        if ($request->has('level_id')) {
+            $level_id = $request->level_id;
+            $query = $query->where('level_id',$request->level_id);
+        } else {
+            $level_id = '';
+        }
+        if ($request->has('unit_id')) {
+            $unit_id = $request->unit_id;
+            $query = $query->where('unit_id',$request->unit_id);
+        } else {
+            $unit_id = '';
+        }
+        if ($request->has('topic_id')) {
+            $topic_id = $request->topic_id;
+            $query = $query->where('topic_id',$request->topic_id);
+        } else {
+            $topic_id = '';
+        }
+        if ($request->has('lesson_id')) {
+            $lesson_id = $request->lesson_id;
+            $query = $query->where('lesson_id',$request->lesson_id);
+        } else {
+            $lesson_id = '';
+        }
+        $questions = $query->orderBy('question.id', 'desc')->paginate(10)->appends(Input::except('page'));
+        return view('question_views.index', compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id'));
     }
 
     /**
