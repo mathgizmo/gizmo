@@ -172,6 +172,7 @@
                     </div>
                 </div>
                     <div class="answers_block">
+		    	<?php $key = 1; ?>
                         @foreach($answers as $key => $answer)
                             <div class="form-group answer{{ $errors->has('answer.' . $key) ? ' has-error' : '' }}">
                                 <label for="answer" class="col-md-4 control-label">Answer</label>
@@ -478,10 +479,10 @@
         function latex_generate() {
             $('.preview').text('');
             $.each($('[name="question"]'), function() {
-                $('.preview').append('<label>Question</label><div class="latex">' + $(this).val() + '</div>');
+                $('.preview').append('<label>Question</label><div lang="latex">' + $(this).val() + '</div>');
             });
             $.each($('[name="answer[]"]'), function(key) {
-                $('.preview').append('<label>Answer ' + (key+1) + '</label><div class="latex">' + $(this).val() + '</div>');
+                $('.preview').append('<label>Answer ' + (key+1) + '</label><div lang="latex">' + $(this).val() + '</div>');
             });
             $('.latex').latex();
         }
