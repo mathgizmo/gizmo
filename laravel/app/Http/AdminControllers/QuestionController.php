@@ -26,6 +26,10 @@ class QuestionController extends Controller
         $units = DB::table('unit')->where('level_id',$request->level_id)->get();
         $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
         $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+        $qrmodes = [];
+        foreach (DB::select('select * from reply_mode') as $reply_mode) {
+            $qrmodes[$reply_mode->code] = $reply_mode->mode;
+        }
 
         $query = DB::table('question')
             ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
@@ -58,7 +62,7 @@ class QuestionController extends Controller
             $lesson_id = '';
         }
         $questions = $query->orderBy('question.id', 'desc')->paginate(10)->appends(Input::except('page'));
-        return view('question_views.index', compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id'));
+        return view('question_views.index', compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes'));
     }
 
     /**

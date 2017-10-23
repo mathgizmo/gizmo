@@ -160,9 +160,9 @@
 									<td>{{$question->utitle}}</td>
 									<td>{{$question->ttitle}}</td>
 									<td>{{$question->title}}</td>
-									<td>{{ $question->question }}</td>
+									<td>{{$question->question}}</td>
 									<td>{{$question->type}}</td>
-									<td>{{$question->reply_mode}}</td>
+									<td>{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
 								</tr>
 							@endforeach
 						</tbody>
