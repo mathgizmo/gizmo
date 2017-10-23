@@ -135,6 +135,19 @@
                                 @endif
                             </div>
                         </div>
+						<div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
+                            <label for="question" class="col-md-4 control-label">Question</label>
+
+                            <div class="col-md-6">
+                                <textarea id="question" class="form-control"  name="question"> {{$question->question}}</textarea>
+
+                                @if ($errors->has('question'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('question') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+				      </div>
 
 						<div class="form-group{{ $errors->has('reply_mode') ? ' has-error' : '' }}">
                             <label for="reply_mode" class="col-md-4 control-label">REPLY MODE</label>
@@ -158,19 +171,6 @@
                                 @endif
                             </div>
                         </div>
-                <div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
-                    <label for="question" class="col-md-4 control-label">Question</label>
-
-                    <div class="col-md-6">
-                        <textarea id="question" class="form-control"  name="question"> {{$question->question}}</textarea>
-
-                        @if ($errors->has('question'))
-                            <span class="help-block">
-                                        <strong>{{ $errors->first('question') }}</strong>
-                                    </span>
-                        @endif
-                    </div>
-                </div>
                     <div class="answers_block">
                         @foreach($answers as $key => $answer)
                             <div class="form-group answer{{ $errors->has('answer.' . $key) ? ' has-error' : '' }}">
@@ -399,28 +399,16 @@
                         $(element).prop('checked', true);
                     });
                 }
-                if (val == 'mcq3') {
+                if (val == 'mcq') {
                     $('[name="is_correct[]"]:checked').prop('checked', false);
                     el.prop('checked', true);
                 }
-                if (val == 'mcq4') {
-                    $('[name="is_correct[]"]:checked').prop('checked', false);
-                    el.prop('checked', true);
+                if (val == 'mcqms') {
+                    if ($('[name="is_correct[]"]:checked').length == 0) {
+                        el.prop('checked', true);
+                    }
                 }
-                if (val == 'mcq5') {
-                    $('[name="is_correct[]"]:checked').prop('checked', false);
-                    el.prop('checked', true);
-                }
-                if (val == 'mcq6') {
-                    $('[name="is_correct[]"]:checked').prop('checked', false);
-                    el.prop('checked', true);
-                }
-                if (val == 'ascending') {
-                    $('[name="is_correct[]"]').each(function(index, element) {
-                        $(element).prop('checked', true);
-                    });
-                }
-                if (val == 'descending') {
+                if (val == 'order') {
                     $('[name="is_correct[]"]').each(function(index, element) {
                         $(element).prop('checked', true);
                     });
@@ -433,6 +421,7 @@
                 $('.answer [type="radio"]').each(function(index, element) {
                     $(element).val(index);
                 });
+                latex_generate();
             });
 
             $('#reply_mode').on('change', function() {
@@ -446,22 +435,13 @@
                 if (val == 'TF') {
                     manage_answer(1, 1);
                 }
-                if (val == 'mcq3') {
+                if (val == 'mcq') {
                     manage_answer(2, 6);
                 }
-                if (val == 'mcq4') {
+                if (val == 'mcqms') {
                     manage_answer(2, 6);
                 }
-                if (val == 'mcq5') {
-                    manage_answer(2, 6);
-                }
-                if (val == 'mcq6') {
-                    manage_answer(2, 6);
-                }
-                if (val == 'ascending') {
-                    manage_answer(2, 6);
-                }
-                if (val == 'descending') {
+                if (val == 'order') {
                     manage_answer(2, 6);
                 }
             });
