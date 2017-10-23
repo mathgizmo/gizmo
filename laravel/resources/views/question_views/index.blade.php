@@ -137,14 +137,6 @@
 								<th class="col-md">Question</th>
 								<th class="col-md">Type</th>
 								<th class="col-md">ReplyMode</th>
-								<th class="col-md">Shape</th>
-								<th class="col-md">MinValue</th>
-								<th class="col-md">MaxValue</th>
-								<th class="col-md">IniPosition</th>
-								<th class="col-md">StepValue</th>
-								<th class="col-md">Image</th>
-								<th class="col-md">Feedback</th>
-								<th class="col-md">Explanation</th>
 							</tr>
 						</thead>
 
@@ -171,14 +163,6 @@
 									<td>{{ $question->question }}</td>
 									<td>{{$question->type}}</td>
 									<td>{{$question->reply_mode}}</td>
-									<td>{{$question->shape}}</td>
-									<td>{{$question->min_value}}</td>
-									<td>{{$question->max_value}}</td>
-									<td>{{$question->initial_position}}</td>
-									<td>{{$question->step_value}}</td>
-									<td>{{$question->image}}</td>
-									<td>{{$question->feedback}}</td>
-									<td>{{$question->explanation}}</td>
 								</tr>
 							@endforeach
 						</tbody>
