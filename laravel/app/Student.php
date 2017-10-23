@@ -24,4 +24,20 @@ class Student extends Authenticatable
     protected $hidden = [
         'password'
     ];
+
+    public function scopeFilter($query, $filters = [])
+    {
+        if (!empty($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+
+        if (!empty($filters['email'])) {
+            $query->where('email', 'like', '%' . $filters['email'] . '%');
+        }
+    }
+
+    public function students_tracking()
+    {
+        return $this->hasMany(StudentsTracking::class, 'user_id', 'id');
+    }
 }
