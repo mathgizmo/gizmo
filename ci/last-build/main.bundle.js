@@ -265,6 +265,11 @@ var TopicService = (function () {
         return this.serverService.get('/topic/' + id)
             .map(function (response) { return response; });
     };
+    TopicService.prototype.getLesson = function (topic_id, lesson_id) {
+        // get lesson from api
+        return this.serverService.get('/topic/' + topic_id + '/lesson/' + lesson_id)
+            .map(function (response) { return response; });
+    };
     return TopicService;
 }());
 TopicService = __decorate([
@@ -360,15 +365,17 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__login_index__ = __webpack_require__("../../../../../src/app/login/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__home_index__ = __webpack_require__("../../../../../src/app/home/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__topic_index__ = __webpack_require__("../../../../../src/app/topic/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome__ = __webpack_require__("../../../../angular2-fontawesome/angular2-fontawesome.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__lesson_index__ = __webpack_require__("../../../../../src/app/lesson/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_angular2_fontawesome_angular2_fontawesome__ = __webpack_require__("../../../../angular2-fontawesome/angular2-fontawesome.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14_angular2_fontawesome_angular2_fontawesome__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -397,20 +404,22 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_http__["d" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_7__app_routing__["a" /* routing */],
-            __WEBPACK_IMPORTED_MODULE_13_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"],
+            __WEBPACK_IMPORTED_MODULE_14_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"],
             __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["c" /* MatInputModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["a" /* MatButtonModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["f" /* MatSelectModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MatIconModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MatMenuModule */],
-            __WEBPACK_IMPORTED_MODULE_14__angular_flex_layout__["a" /* FlexLayoutModule */]
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatRadioModule */],
+            __WEBPACK_IMPORTED_MODULE_15__angular_flex_layout__["a" /* FlexLayoutModule */]
         ],
         declarations: [
             __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */],
             __WEBPACK_IMPORTED_MODULE_10__login_index__["a" /* LoginComponent */],
             __WEBPACK_IMPORTED_MODULE_11__home_index__["a" /* HomeComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__topic_index__["a" /* TopicComponent */]
+            __WEBPACK_IMPORTED_MODULE_12__topic_index__["a" /* TopicComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__lesson_index__["a" /* LessonComponent */]
         ],
         providers: [
             __WEBPACK_IMPORTED_MODULE_8__guards_index__["a" /* AuthGuard */],
@@ -438,7 +447,9 @@ AppModule = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__login_index__ = __webpack_require__("../../../../../src/app/login/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__home_index__ = __webpack_require__("../../../../../src/app/home/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__topic_index__ = __webpack_require__("../../../../../src/app/topic/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__guards_index__ = __webpack_require__("../../../../../src/app/_guards/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lesson_index__ = __webpack_require__("../../../../../src/app/lesson/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__guards_index__ = __webpack_require__("../../../../../src/app/_guards/index.ts");
+
 
 
 
@@ -446,8 +457,9 @@ AppModule = __decorate([
 
 var appRoutes = [
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_1__login_index__["a" /* LoginComponent */] },
-    { path: '', component: __WEBPACK_IMPORTED_MODULE_2__home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_4__guards_index__["a" /* AuthGuard */]] },
-    { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_3__topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_4__guards_index__["a" /* AuthGuard */]] },
+    { path: '', component: __WEBPACK_IMPORTED_MODULE_2__home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_5__guards_index__["a" /* AuthGuard */]] },
+    { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_3__topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_5__guards_index__["a" /* AuthGuard */]] },
+    { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_4__lesson_index__["a" /* LessonComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_5__guards_index__["a" /* AuthGuard */]] },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];
@@ -533,6 +545,119 @@ var _a;
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__home_component__["a"]; });
 
 //# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/lesson/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lesson_component__ = __webpack_require__("../../../../../src/app/lesson/lesson.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["a"]; });
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/lesson/lesson.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2>{{question.question}}</h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answer\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n            <div class=\"example-selected-value\">Your answer is: {{answer}}</div>\n        </div>\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <h2>Congratulation!</h2>\n        <h3>You have finish this lesson.</h3>\n    </div>\n</div>"
+
+/***/ }),
+
+/***/ "../../../../../src/app/lesson/lesson.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LessonComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var LessonComponent = (function () {
+    function LessonComponent(topicService, route) {
+        this.topicService = topicService;
+        this.route = route;
+        this.lessonTree = [];
+        this.question = null;
+        this.answer = '';
+    }
+    LessonComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.sub = this.route.params.subscribe(function (params) {
+            _this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
+            _this.lesson_id = +params['lesson_id']; // (+) converts string 'id' to a number
+            // In a real app: dispatch action to load the details here.
+            // get lesson tree from API
+            _this.topicService.getLesson(_this.topic_id, _this.lesson_id)
+                .subscribe(function (lessonTree) {
+                _this.lessonTree = lessonTree;
+                console.log(lessonTree);
+                if (lessonTree['questions'].length) {
+                    _this.setUpQuestion(lessonTree['questions'][0]);
+                }
+            });
+        });
+    };
+    LessonComponent.prototype.setUpQuestion = function (question) {
+        if (['mcq3', 'mcq4', 'mcq6'].indexOf(question.reply_mode) >= 0) {
+            question.answer_mode = 'radio';
+        }
+        else {
+            question.answer_mode = 'input';
+        }
+        this.question = question;
+    };
+    LessonComponent.prototype.checkAnswer = function () {
+        if (this.isCorrect(this.question, this.answer)) {
+            console.log('good');
+        }
+        else {
+            console.log('bad');
+        }
+    };
+    LessonComponent.prototype.isCorrect = function (question, answer) {
+        if (answer == '')
+            return false;
+        if (question.answer_mode == 'radio') {
+            answer = +answer;
+            if (answer < 0 || answer >= question.answers.length)
+                return false;
+            if (question.answers[answer].is_correct) {
+                return true;
+            }
+        }
+        else {
+            if (question.answers[0].value = answer) {
+                return true;
+            }
+        }
+        return false;
+    };
+    return LessonComponent;
+}());
+LessonComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        template: __webpack_require__("../../../../../src/app/lesson/lesson.component.html"),
+        providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
+], LessonComponent);
+
+var _a, _b;
+//# sourceMappingURL=lesson.component.js.map
 
 /***/ }),
 
