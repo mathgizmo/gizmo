@@ -160,8 +160,10 @@
                         </div>
 						<div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
                             <label for="question" class="col-md-4 control-label">Question</label>
-                            <span>For LaTeX please use next format &lt;span class="latex"&gt;latext here&lt;/span&gt;</span>
                             <div class="col-md-6">
+                                <span>For LaTeX please use next format &lt;span class="latex"&gt;latext here&lt;/span&gt;</span>
+                                <br />
+                                <span>Use __BLANK__ as placeholder in Fill in the blank questions</span>
                                 <textarea id="question" class="form-control"  name="question" placeholder="Enter question text.."> {{ old('question') }}</textarea>
 
                                 @if ($errors->has('question'))
