@@ -455,10 +455,10 @@
         function latex_generate() {
             $('.preview').text('');
             $.each($('[name="question"]'), function() {
-                $('.preview').append('<label>Question</label><div class="latex">' + $(this).val() + '</div>');
+                $('.preview').append('<label>Question</label><div lang="latex">' + $(this).val() + '</div>');
             });
             $.each($('[name="answer[]"]'), function(key) {
-                $('.preview').append('<label>Answer ' + (key+1) + '</label><div class="latex">' + $(this).val() + '</div>');
+                $('.preview').append('<label>Answer ' + (key+1) + '</label><div lang="latex">' + $(this).val() + '</div>');
             });
             $('.latex').latex();
         }
