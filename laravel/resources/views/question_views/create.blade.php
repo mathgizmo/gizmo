@@ -139,7 +139,6 @@
 
 						<div class="form-group{{ $errors->has('reply_mode') ? ' has-error' : '' }}">
                             <label for="reply_mode" class="col-md-4 control-label">REPLY MODE</label>
-
                             <div class="col-md-6">
 							      <select class="form-control" name="reply_mode" id="reply_mode">
 										 @foreach($qrmodes as $qrmode)
@@ -161,7 +160,7 @@
                         </div>
 						<div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
                             <label for="question" class="col-md-4 control-label">Question</label>
-
+                            <span>For LaTeX please use next format &lt;span class="latex"&gt;latext here&lt;/span&gt;</span>
                             <div class="col-md-6">
                                 <textarea id="question" class="form-control"  name="question" placeholder="Enter question text.."> {{ old('question') }}</textarea>
 
@@ -455,10 +454,10 @@
         function latex_generate() {
             $('.preview').text('');
             $.each($('[name="question"]'), function() {
-                $('.preview').append('<label>Question</label><div lang="latex">' + $(this).val() + '</div>');
+                $('.preview').append('<label>Question</label><div>' + $(this).val() + '</div>');
             });
             $.each($('[name="answer[]"]'), function(key) {
-                $('.preview').append('<label>Answer ' + (key+1) + '</label><div lang="latex">' + $(this).val() + '</div>');
+                $('.preview').append('<label>Answer ' + (key+1) + '</label><div>' + $(this).val() + '</div>');
             });
             $('.latex').latex();
         }

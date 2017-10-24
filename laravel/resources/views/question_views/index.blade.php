@@ -183,7 +183,7 @@
 										<td>{{$question->utitle}}</td>
 										<td>{{$question->ttitle}}</td>
 										<td>{{$question->title}}</td>
-										<td>{{$question->question}}</td>
+										<td>{!!$question->question!!}</td>
 										<td>{{$question->type}}</td>
 										<td>{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
 									</tr>
@@ -202,4 +202,14 @@
 		</div>
 	</div>
 
+@endsection
+
+@section('scripts')
+    <script src="{{ URL::asset('js/jquery.jslatex.packed.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $('td span').css("display", "inline-block");
+            $('.latex').latex();
+        });
+    </script>
 @endsection
