@@ -1,6 +1,7 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TopicService } from '../_services/index';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
     moduleId: module.id,
@@ -14,11 +15,13 @@ export class LessonComponent implements OnInit {
     lesson_id: number;
     question: any = null;
     answer: string = '';
+    answers: string[];
     private sub: any;
 
     constructor(
             private topicService: TopicService,
-            private route: ActivatedRoute
+            private route: ActivatedRoute,
+            public dialog: MatDialog
             ) { }
 
     ngOnInit() {
@@ -31,46 +34,142 @@ export class LessonComponent implements OnInit {
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
                     this.lessonTree = lessonTree;
-                    console.log(lessonTree);
                     if (lessonTree['questions'].length) {
-                        this.setUpQuestion(lessonTree['questions'][0]);
+                        this.nextQuestion();
                     }
                 });
          });
 
     }
 
-    setUpQuestion(question) {
-        if (['mcq3', 'mcq4', 'mcq6'].indexOf(question.reply_mode) >= 0) {
-            question.answer_mode = 'radio';
+    nextQuestion() {
+        this.answers = [];
+        this.question = this.lessonTree['questions'].shift();
+        if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
+            for (var i = 0; i < this.question.answers.length; i++) {
+                this.answers.push('');
+            }
+            this.question.answer_mode = 'checkbox';
+        } else if (['mcq'].indexOf(this.question.reply_mode) >= 0) {
+            this.answers.push('');
+            this.question.answer_mode = 'radio';
+        } else if (['TF'].indexOf(this.question.reply_mode) >= 0) {
+            this.answers.push('');
+            this.question.answer_mode = 'TF';
         } else {
-            question.answer_mode = 'input';
+            for (var i = 0; i < this.question.answers.length; i++) {
+                this.answers.push('');
+            }
+            this.question.answer_mode = 'input';
         }
-        this.question = question;
     }
     
     checkAnswer() {
-        if (this.isCorrect(this.question, this.answer)) {
-            console.log('good');
+        if (this.isCorrect()) {
+            let dialogRef = this.dialog.open(GoodDialogComponent, {
+                width: '250px',
+                data: { }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (this.lessonTree['questions'].length) {
+                    this.nextQuestion();
+                } else {
+                    this.question = null;
+                }
+            });
         } else {
-            console.log('bad');
+            this.lessonTree['questions'].push(this.question);
+            let dialogRef = this.dialog.open(BadDialogComponent, {
+                width: '250px',
+                data: { data: this.question.answers.filter(function(answer){
+                    if (answer.is_correct == 1) return true;
+                    return false;
+                    })
+                }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (this.lessonTree['questions'].length) {
+                    this.nextQuestion();
+                } else {
+                    this.question = null;
+                }
+            });
         }
     }
     
-    isCorrect(question, answer) {
-        if (answer == '') return false;
-        if (question.answer_mode == 'radio') {
-            answer = +answer;
-            if (answer < 0 || answer >= question.answers.length) return false;
-            if (question.answers[answer].is_correct) {
+    isCorrect() {
+        if (this.question.answer_mode == 'radio') {
+            if (this.answers[0] === "") return false;
+            let answer = +this.answers[0];
+            if (answer < 0 || answer >= this.question.answers.length) return false;
+            if (this.question.answers[answer].is_correct) {
                 return true;
             }
         } else {
-            if (question.answers[0].value = answer) {
-                return true;
+            if (this.answers.length < this.question.answers.length) {
+                return false;
             }
+            for (var i = 0; i < this.question.answers.length; i++) {
+                if (this.answers[i] === "") return false;
+                if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
+                    return false;
+                }
+            }
+            return true;
         }
         return false;
     }
+}
 
+@Component({
+    selector: 'good-dialog',
+    template: `<h2 mat-dialog-title>Good</h2>
+        <mat-dialog-content>Congratulation</mat-dialog-content>
+        <mat-dialog-actions>
+          <button mat-button [mat-dialog-close]="true">Continue</button>
+        </mat-dialog-actions>`
+})
+export class GoodDialogComponent {
+    constructor(
+        public dialogRef: MatDialogRef<GoodDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any) {
+
+    }
+
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
+}
+
+@Component({
+    selector: 'bad-dialog',
+    template: `<h2 mat-dialog-title>Bad</h2>
+        <mat-dialog-content>
+            <div *ngIf="answers.length == 1">
+                Correct answer is: {{answers[0].value}}
+            </div>
+            <div *ngIf="answers.length != 1">
+                Correct answers are: <ul>
+                <li *ngFor="let answer of answers; let answerIndex = index">{{answer.value}}</li>
+                </ul>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+          <button mat-button [mat-dialog-close]="true">Continue</button>
+        </mat-dialog-actions>`
+})
+export class BadDialogComponent {
+    answers: string[];
+
+    constructor(
+        public dialogRef: MatDialogRef<BadDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.answers = data.data;
+    }
+
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
 }

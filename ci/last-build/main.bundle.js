@@ -406,12 +406,13 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_7__app_routing__["a" /* routing */],
             __WEBPACK_IMPORTED_MODULE_14_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"],
             __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["c" /* MatInputModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["a" /* MatButtonModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["f" /* MatSelectModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MatIconModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MatMenuModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatRadioModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["g" /* MatInputModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MatButtonModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["j" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["f" /* MatIconModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["h" /* MatMenuModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["i" /* MatRadioModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MatDialogModule */],
             __WEBPACK_IMPORTED_MODULE_15__angular_flex_layout__["a" /* FlexLayoutModule */]
         ],
         declarations: [
@@ -419,7 +420,13 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_10__login_index__["a" /* LoginComponent */],
             __WEBPACK_IMPORTED_MODULE_11__home_index__["a" /* HomeComponent */],
             __WEBPACK_IMPORTED_MODULE_12__topic_index__["a" /* TopicComponent */],
-            __WEBPACK_IMPORTED_MODULE_13__lesson_index__["a" /* LessonComponent */]
+            __WEBPACK_IMPORTED_MODULE_13__lesson_index__["c" /* LessonComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__lesson_index__["b" /* GoodDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__lesson_index__["a" /* BadDialogComponent */]
+        ],
+        entryComponents: [
+            __WEBPACK_IMPORTED_MODULE_13__lesson_index__["b" /* GoodDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__lesson_index__["a" /* BadDialogComponent */]
         ],
         providers: [
             __WEBPACK_IMPORTED_MODULE_8__guards_index__["a" /* AuthGuard */],
@@ -459,7 +466,7 @@ var appRoutes = [
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_1__login_index__["a" /* LoginComponent */] },
     { path: '', component: __WEBPACK_IMPORTED_MODULE_2__home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_5__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_3__topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_5__guards_index__["a" /* AuthGuard */]] },
-    { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_4__lesson_index__["a" /* LessonComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_5__guards_index__["a" /* AuthGuard */]] },
+    { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_4__lesson_index__["c" /* LessonComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_5__guards_index__["a" /* AuthGuard */]] },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];
@@ -478,7 +485,8 @@ var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["d" /* RouterModule 
 //
 
 var GlobalVariable = Object.freeze({
-    BASE_API_URL: 'http://gizmo.local/api',
+    //BASE_API_URL: 'http://gizmo.local/api',
+    BASE_API_URL: 'http://itisshe.com/api',
 });
 //# sourceMappingURL=globals.js.map
 
@@ -554,6 +562,8 @@ var _a;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lesson_component__ = __webpack_require__("../../../../../src/app/lesson/lesson.component.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["b"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["c"]; });
 
 //# sourceMappingURL=index.js.map
 
@@ -562,7 +572,7 @@ var _a;
 /***/ "../../../../../src/app/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2>{{question.question}}</h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answer\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n            <div class=\"example-selected-value\">Your answer is: {{answer}}</div>\n        </div>\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <h2>Congratulation!</h2>\n        <h3>You have finish this lesson.</h3>\n    </div>\n</div>"
+module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2>{{question.question}}</h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <mat-checkbox *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                {{answer.value}}\n            </mat-checkbox>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <h2>Congratulation!</h2>\n        <h3>You have finish this lesson.</h3>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -570,10 +580,13 @@ module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"activ
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LessonComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return LessonComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return GoodDialogComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BadDialogComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -583,13 +596,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
 
 
 
 var LessonComponent = (function () {
-    function LessonComponent(topicService, route) {
+    function LessonComponent(topicService, route, dialog) {
         this.topicService = topicService;
         this.route = route;
+        this.dialog = dialog;
         this.lessonTree = [];
         this.question = null;
         this.answer = '';
@@ -604,45 +622,96 @@ var LessonComponent = (function () {
             _this.topicService.getLesson(_this.topic_id, _this.lesson_id)
                 .subscribe(function (lessonTree) {
                 _this.lessonTree = lessonTree;
-                console.log(lessonTree);
                 if (lessonTree['questions'].length) {
-                    _this.setUpQuestion(lessonTree['questions'][0]);
+                    _this.nextQuestion();
                 }
             });
         });
     };
-    LessonComponent.prototype.setUpQuestion = function (question) {
-        if (['mcq3', 'mcq4', 'mcq6'].indexOf(question.reply_mode) >= 0) {
-            question.answer_mode = 'radio';
+    LessonComponent.prototype.nextQuestion = function () {
+        this.answers = [];
+        this.question = this.lessonTree['questions'].shift();
+        if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
+            for (var i = 0; i < this.question.answers.length; i++) {
+                this.answers.push('');
+            }
+            this.question.answer_mode = 'checkbox';
+        }
+        else if (['mcq'].indexOf(this.question.reply_mode) >= 0) {
+            this.answers.push('');
+            this.question.answer_mode = 'radio';
+        }
+        else if (['TF'].indexOf(this.question.reply_mode) >= 0) {
+            this.answers.push('');
+            this.question.answer_mode = 'TF';
         }
         else {
-            question.answer_mode = 'input';
+            for (var i = 0; i < this.question.answers.length; i++) {
+                this.answers.push('');
+            }
+            this.question.answer_mode = 'input';
         }
-        this.question = question;
     };
     LessonComponent.prototype.checkAnswer = function () {
-        if (this.isCorrect(this.question, this.answer)) {
-            console.log('good');
+        var _this = this;
+        if (this.isCorrect()) {
+            var dialogRef = this.dialog.open(GoodDialogComponent, {
+                width: '250px',
+                data: {}
+            });
+            dialogRef.afterClosed().subscribe(function (result) {
+                if (_this.lessonTree['questions'].length) {
+                    _this.nextQuestion();
+                }
+                else {
+                    _this.question = null;
+                }
+            });
         }
         else {
-            console.log('bad');
+            this.lessonTree['questions'].push(this.question);
+            var dialogRef = this.dialog.open(BadDialogComponent, {
+                width: '250px',
+                data: { data: this.question.answers.filter(function (answer) {
+                        if (answer.is_correct == 1)
+                            return true;
+                        return false;
+                    })
+                }
+            });
+            dialogRef.afterClosed().subscribe(function (result) {
+                if (_this.lessonTree['questions'].length) {
+                    _this.nextQuestion();
+                }
+                else {
+                    _this.question = null;
+                }
+            });
         }
     };
-    LessonComponent.prototype.isCorrect = function (question, answer) {
-        if (answer == '')
-            return false;
-        if (question.answer_mode == 'radio') {
-            answer = +answer;
-            if (answer < 0 || answer >= question.answers.length)
+    LessonComponent.prototype.isCorrect = function () {
+        if (this.question.answer_mode == 'radio') {
+            if (this.answers[0] === "")
                 return false;
-            if (question.answers[answer].is_correct) {
+            var answer = +this.answers[0];
+            if (answer < 0 || answer >= this.question.answers.length)
+                return false;
+            if (this.question.answers[answer].is_correct) {
                 return true;
             }
         }
         else {
-            if (question.answers[0].value = answer) {
-                return true;
+            if (this.answers.length < this.question.answers.length) {
+                return false;
             }
+            for (var i = 0; i < this.question.answers.length; i++) {
+                if (this.answers[i] === "")
+                    return false;
+                if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
+                    return false;
+                }
+            }
+            return true;
         }
         return false;
     };
@@ -653,10 +722,49 @@ LessonComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/lesson/lesson.component.html"),
         providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */]) === "function" && _c || Object])
 ], LessonComponent);
 
-var _a, _b;
+var GoodDialogComponent = (function () {
+    function GoodDialogComponent(dialogRef, data) {
+        this.dialogRef = dialogRef;
+        this.data = data;
+    }
+    GoodDialogComponent.prototype.onNoClick = function () {
+        this.dialogRef.close();
+    };
+    return GoodDialogComponent;
+}());
+GoodDialogComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'good-dialog',
+        template: "<h2 mat-dialog-title>Good</h2>\n        <mat-dialog-content>Congratulation</mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
+    }),
+    __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
+    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _d || Object, Object])
+], GoodDialogComponent);
+
+var BadDialogComponent = (function () {
+    function BadDialogComponent(dialogRef, data) {
+        this.dialogRef = dialogRef;
+        this.data = data;
+        this.answers = data.data;
+    }
+    BadDialogComponent.prototype.onNoClick = function () {
+        this.dialogRef.close();
+    };
+    return BadDialogComponent;
+}());
+BadDialogComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'bad-dialog',
+        template: "<h2 mat-dialog-title>Bad</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"answers.length == 1\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"answers.length != 1\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
+    }),
+    __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
+    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _e || Object, Object])
+], BadDialogComponent);
+
+var _a, _b, _c, _d, _e;
 //# sourceMappingURL=lesson.component.js.map
 
 /***/ }),
@@ -675,7 +783,7 @@ var _a, _b;
 /***/ "../../../../../src/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-6 col-md-offset-3\">\n    <div class=\"alert alert-info\">\n        Username: test<br />\n        Password: test\n    </div>\n    <h2>Login</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && login()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Username</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Login</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n    </form>\n</div>\n"
+module.exports = "<div class=\"col-md-6 col-md-offset-3\">\n    <h2>Login</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && login()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Username</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Login</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n    </form>\n</div>\n"
 
 /***/ }),
 

@@ -4,7 +4,7 @@ import { FormsModule }    from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule, MatRadioModule} from '@angular/material';
+import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule, MatRadioModule, MatDialogModule} from '@angular/material';
 import { BaseRequestOptions } from '@angular/http';
 
 import { AppComponent }  from './app.component';
@@ -15,10 +15,9 @@ import { AuthenticationService, ServerService } from './_services/index';
 import { LoginComponent } from './login/index';
 import { HomeComponent } from './home/index';
 import { TopicComponent } from './topic/index';
-import { LessonComponent } from './lesson/index';
+import { LessonComponent, GoodDialogComponent, BadDialogComponent } from './lesson/index';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
-
 
 @NgModule({
     imports: [
@@ -34,6 +33,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         MatIconModule,
         MatMenuModule,
         MatRadioModule,
+        MatDialogModule,
         FlexLayoutModule
     ],
     declarations: [
@@ -41,7 +41,13 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         LoginComponent,
         HomeComponent,
         TopicComponent,
-        LessonComponent
+        LessonComponent,
+        GoodDialogComponent,
+        BadDialogComponent
+    ],
+    entryComponents: [
+        GoodDialogComponent,
+        BadDialogComponent
     ],
     providers: [
         AuthGuard,
