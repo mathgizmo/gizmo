@@ -40,6 +40,21 @@ export class AuthenticationService {
             });
     }
 
+    register(username: string, email: string, password: string): Observable<boolean> {
+        let request = JSON.stringify({ email: email, name: username, password: password });
+
+        let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options       = new RequestOptions({ headers: headers }); // Create a request option
+
+        return this.http.post(GlobalVariable.BASE_API_URL+'/register', request, options)
+            .map((response: Response) => {
+                // login successful if there's a jwt token in the response
+                let token = response.json() && response.json().message && response.json().message.token;
+
+                return response.json();
+            });
+    }
+
     logout(): void {
         // clear token remove user from local storage to log user out
         this.token = null;
