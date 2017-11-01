@@ -27,7 +27,6 @@ export class TopicComponent implements OnInit {
             this.topicService.getTopic(this.id)
                 .subscribe(topicTree => {
                     this.topicTree = topicTree;
-                    console.log(topicTree);
                 });
          });
 
