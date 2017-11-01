@@ -72,7 +72,7 @@
 										<td>{{ $student->id }}</td>
 										<td>{{ $student->name }}</td>
 										<td>{{ $student->email }}</td>
-										<td>{{ $student->created_at->format('H:i d.m.Y') }}</td>
+										<td>{{ $student->created_at? $student->created_at->format('H:i d.m.Y') : '' }}</td>
 										<td>{{ $student->date != null ? date('H:i d.m.Y', strtotime($student->date)) : 'Never' }}</td>
 										<td>
 											<div class="btn-group">
