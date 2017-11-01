@@ -35,7 +35,7 @@
 								</div>
 							</div>
 							<div class="col-md-10">
-								<p class="form-control-static"> {{ $student->created_at->format('H:i d.m.Y') }}</p>
+								<p class="form-control-static"> {{ $student->created_at? $student->created_at->format('Y/m/d H:i') : '' }}</p>
 							</div>
 						</div>
 						<div class="row">
