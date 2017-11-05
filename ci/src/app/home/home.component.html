@@ -7,13 +7,13 @@
                     <h4>{{unit.title}}</h4>
                     <div *ngFor="let topic of unit.topics; let topicIndex = index">
 
-                        <span *ngIf="topicIndex >= 4" class="fa-stack fa-4x">
+                        <span *ngIf="topicIndex >= 4000" class="fa-stack fa-4x">
                             <i class="fa fa-circle fa-stack-2x icon-red"></i>
                             <i class="fa fa-circle-thin fa-stack-2x icon-dark-red"></i>
                             <i *ngIf="topic.image_id" class="fa  fa-stack-1x {{topic.image_id}}"></i>
                             <i class="fa fa-lock fa-stack-1x"></i>
                         </span>
-                        <span *ngIf="topicIndex < 4" class="fa-stack fa-4x">
+                        <span *ngIf="topicIndex < 4000" class="fa-stack fa-4x">
                             <a routerLink="/topic/{{topic.id}}" routerLinkActive="active">
                                 <i class="fa fa-circle fa-stack-2x icon-green"></i>
                                 <i class="fa fa-circle-thin fa-stack-2x icon-dark-green"></i>
