@@ -502,7 +502,8 @@ var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["d" /* RouterModule 
 //
 
 var GlobalVariable = Object.freeze({
-    BASE_API_URL: 'http://gizmo.local/api',
+    //BASE_API_URL: 'http://gizmo.local/api',
+    BASE_API_URL: 'http://itisshe.com/api',
 });
 //# sourceMappingURL=globals.js.map
 
