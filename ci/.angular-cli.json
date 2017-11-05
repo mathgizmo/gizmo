@@ -22,7 +22,15 @@
         "styles.scss",
         "../node_modules/font-awesome/css/font-awesome.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/mathjax/MathJax.js",
+        "assets/js/mathjax/config/TeX-AMS_CHTML.js",
+        "assets/js/mathjax/jax/output/CommonHTML/jax.js",
+        "assets/js/mathjax/jax/output/CommonHTML/fonts/TeX/fontdata.js",
+        "../node_modules/mathjax/extensions/MathMenu.js",
+        "../node_modules/mathjax/extensions/MathZoom.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

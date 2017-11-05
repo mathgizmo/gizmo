@@ -39,7 +39,6 @@ export class LessonComponent implements OnInit {
                     }
                 });
          });
-
     }
 
     nextQuestion() {
@@ -62,6 +61,9 @@ export class LessonComponent implements OnInit {
             }
             this.question.answer_mode = 'input';
         }
+        setTimeout(function(){
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }, 300);
     }
     
     checkAnswer() {
