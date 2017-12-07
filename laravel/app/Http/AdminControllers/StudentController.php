@@ -10,7 +10,7 @@ class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking` WHERE students_tracking.user_id = students.id ORDER by id DESC LIMIT 1) as `date`'))
+        $students = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking` WHERE students_tracking.student_id = students.id ORDER by id DESC LIMIT 1) as `date`'))
             ->filter(request()->all())
             ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc')
             ->get();

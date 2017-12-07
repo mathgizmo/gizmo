@@ -2,7 +2,9 @@
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 import { GlobalVariable } from 'app/globals';
+import { Router } from '@angular/router';
 
 import { AuthenticationService } from './authentication.service';
 
@@ -12,6 +14,7 @@ export class ServerService {
 
     constructor(
         private http: Http,
+        private router: Router,
         private authenticationService: AuthenticationService) {
     }
 
@@ -27,7 +30,15 @@ export class ServerService {
 
         // post to api
         return this.http.post(GlobalVariable.BASE_API_URL+url, body, options)
-            .map((response: Response) => response.json().message);
+            .map((response: Response) => response.json().message)
+            .catch((response: Response) => {
+                var json = response.json();
+                if (json.status_code == 401) {
+                    this.authenticationService.logout();
+                    this.router.navigate(['login']);
+                }
+                return response.json().message;
+            });;
     }
 
     get(url: string, auth: boolean = true) {
@@ -42,6 +53,14 @@ export class ServerService {
 
         // get from api
         return this.http.get(GlobalVariable.BASE_API_URL+url, options)
-            .map((response: Response) => response.json().message);
+            .map((response: Response) => response.json().message)
+            .catch((response: Response) => {
+                var json = response.json();
+                if (json.status_code == 401) {
+                    this.authenticationService.logout();
+                    this.router.navigate(['login']);
+                }
+                return response.json().message;
+            });
     }
 }

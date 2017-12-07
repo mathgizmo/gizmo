@@ -1,14 +1,14 @@
 ﻿import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TopicService } from '../_services/index';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { TrackingService } from '../_services/index';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
     moduleId: module.id,
     templateUrl: 'lesson.component.html',
-    providers: [TopicService]
+    providers: [TopicService, TrackingService]
 })
-
 export class LessonComponent implements OnInit {
     lessonTree: any = [];
     topic_id: number;
@@ -16,10 +16,13 @@ export class LessonComponent implements OnInit {
     question: any = null;
     answer: string = '';
     answers: string[];
+    weak_questions: string[] = [];
+    start_time: any = '';
     private sub: any;
 
     constructor(
             private topicService: TopicService,
+            private trackingService: TrackingService,
             private route: ActivatedRoute,
             public dialog: MatDialog
             ) { }
@@ -36,6 +39,9 @@ export class LessonComponent implements OnInit {
                     this.lessonTree = lessonTree;
                     if (lessonTree['questions'].length) {
                         this.nextQuestion();
+                        this.trackingService.startLesson(this.lesson_id).subscribe(start_time => {
+                            this.start_time = start_time;
+                        });
                     }
                 });
          });
@@ -61,9 +67,9 @@ export class LessonComponent implements OnInit {
             }
             this.question.answer_mode = 'input';
         }
-        setTimeout(function(){
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }, 300);
+        setTimeout(function() {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }, 50);
     }
     
     checkAnswer() {
@@ -78,9 +84,13 @@ export class LessonComponent implements OnInit {
                     this.nextQuestion();
                 } else {
                     this.question = null;
+                    this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
         } else {
+            if (this.weak_questions.indexOf(this.question.id) === -1) {
+                this.weak_questions.push(this.question.id);
+            }
             this.lessonTree['questions'].push(this.question);
             let dialogRef = this.dialog.open(BadDialogComponent, {
                 width: '250px',
@@ -96,6 +106,7 @@ export class LessonComponent implements OnInit {
                     this.nextQuestion();
                 } else {
                     this.question = null;
+                    this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
         }
@@ -114,9 +125,16 @@ export class LessonComponent implements OnInit {
                 return false;
             }
             for (var i = 0; i < this.question.answers.length; i++) {
-                if (this.answers[i] === "") return false;
-                if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
-                    return false;
+                if (this.question.answer_mode == 'checkbox') {
+                    if (this.question.answers[i].is_correct && this.answers[i] === ""
+                        || !this.question.answers[i].is_correct && this.answers[i] !== "") {
+                        return false;
+                    }
+                } else {
+                    if (this.answers[i] === "") return false;
+                    if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
+                        return false;
+                    }
                 }
             }
             return true;

@@ -1,7 +1,7 @@
 ﻿<a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
 <div class="text-center">
     <div *ngIf="question !== null">
-        <h2>{{question.question}}</h2>
+        <h2 [innerHtml]="question.question"></h2>
         <div *ngIf="question.answer_mode=='radio'">
             <mat-radio-group class="radio-group" [(ngModel)]="answers[0]">
                 <mat-radio-button class="radio-button" *ngFor="let answer of question.answers; let answerIndex = index" value="{{answerIndex}}">
@@ -20,9 +20,9 @@
             </mat-radio-group>
         </div>
         <div *ngIf="question.answer_mode=='checkbox'">
-            <mat-checkbox *ngFor="let answer of question.answers; let answerIndex = index">
-                {{answer.value}}
-            </mat-checkbox>
+            <li *ngFor="let answer of question.answers; let answerIndex = index">
+                <input type="checkbox" [(ngModel)]="answers[answerIndex]"/> {{answer.value}}
+            </li>
         </div>
         <div *ngIf="question.answer_mode=='input'">
             <input *ngFor="let answer of question.answers; let answerIndex = index" [(ngModel)]="answers[answerIndex]" name="'answers[{{answerIndex}}]'"

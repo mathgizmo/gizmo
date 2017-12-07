@@ -162,6 +162,9 @@ var _a;
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__server_service__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__topic_service__ = __webpack_require__("../../../../../src/app/_services/topic.service.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__topic_service__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tracking_service__ = __webpack_require__("../../../../../src/app/_services/tracking.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_3__tracking_service__["a"]; });
+
 
 
 
@@ -178,8 +181,11 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_app_globals__ = __webpack_require__("../../../../../src/app/globals.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__authentication_service__ = __webpack_require__("../../../../../src/app/_services/authentication.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__("../../../../rxjs/add/operator/catch.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_app_globals__ = __webpack_require__("../../../../../src/app/globals.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__authentication_service__ = __webpack_require__("../../../../../src/app/_services/authentication.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -194,12 +200,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var ServerService = (function () {
-    function ServerService(http, authenticationService) {
+    function ServerService(http, router, authenticationService) {
         this.http = http;
+        this.router = router;
         this.authenticationService = authenticationService;
     }
     ServerService.prototype.post = function (url, body, auth) {
+        var _this = this;
         if (auth === void 0) { auth = true; }
         if (auth) {
             // add authorization header with jwt token
@@ -211,10 +221,20 @@ var ServerService = (function () {
         }
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({ headers: this.headers });
         // post to api
-        return this.http.post(__WEBPACK_IMPORTED_MODULE_3_app_globals__["a" /* GlobalVariable */].BASE_API_URL + url, body, options)
-            .map(function (response) { return response.json().message; });
+        return this.http.post(__WEBPACK_IMPORTED_MODULE_4_app_globals__["a" /* GlobalVariable */].BASE_API_URL + url, body, options)
+            .map(function (response) { return response.json().message; })
+            .catch(function (response) {
+            var json = response.json();
+            if (json.status_code == 401) {
+                _this.authenticationService.logout();
+                _this.router.navigate(['login']);
+            }
+            return response.json().message;
+        });
+        ;
     };
     ServerService.prototype.get = function (url, auth) {
+        var _this = this;
         if (auth === void 0) { auth = true; }
         if (auth) {
             // add authorization header with jwt token
@@ -226,17 +246,25 @@ var ServerService = (function () {
         }
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({ headers: this.headers });
         // get from api
-        return this.http.get(__WEBPACK_IMPORTED_MODULE_3_app_globals__["a" /* GlobalVariable */].BASE_API_URL + url, options)
-            .map(function (response) { return response.json().message; });
+        return this.http.get(__WEBPACK_IMPORTED_MODULE_4_app_globals__["a" /* GlobalVariable */].BASE_API_URL + url, options)
+            .map(function (response) { return response.json().message; })
+            .catch(function (response) {
+            var json = response.json();
+            if (json.status_code == 401) {
+                _this.authenticationService.logout();
+                _this.router.navigate(['login']);
+            }
+            return response.json().message;
+        });
     };
     return ServerService;
 }());
 ServerService = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__authentication_service__["a" /* AuthenticationService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__angular_router__["c" /* Router */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__authentication_service__["a" /* AuthenticationService */]) === "function" && _c || Object])
 ], ServerService);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=server.service.js.map
 
 /***/ }),
@@ -290,6 +318,54 @@ TopicService = __decorate([
 
 var _a;
 //# sourceMappingURL=topic.service.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/_services/tracking.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TrackingService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__server_service__ = __webpack_require__("../../../../../src/app/_services/server.service.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var TrackingService = (function () {
+    function TrackingService(serverService) {
+        this.serverService = serverService;
+    }
+    TrackingService.prototype.startLesson = function (lesson_id) {
+        // notify api about lesson start
+        return this.serverService.post('/lesson/' + lesson_id + '/start', '')
+            .map(function (response) { return response; });
+    };
+    TrackingService.prototype.doneLesson = function (lesson_id, start_datetime, weak_questions) {
+        // notify api about lesson done
+        var request = JSON.stringify({ start_datetime: start_datetime, weak_questions: weak_questions });
+        return this.serverService.post('/lesson/' + lesson_id + '/done', request)
+            .map(function (response) { return response; });
+    };
+    return TrackingService;
+}());
+TrackingService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__server_service__["a" /* ServerService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__server_service__["a" /* ServerService */]) === "function" && _a || Object])
+], TrackingService);
+
+var _a;
+//# sourceMappingURL=tracking.service.js.map
 
 /***/ }),
 
@@ -589,7 +665,7 @@ var _a;
 /***/ "../../../../../src/app/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2>{{question.question}}</h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <mat-checkbox *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                {{answer.value}}\n            </mat-checkbox>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <h2>Congratulation!</h2>\n        <h3>You have finish this lesson.</h3>\n    </div>\n</div>"
+module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\"></h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <h2>Congratulation!</h2>\n        <h3>You have finish this lesson.</h3>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -620,14 +696,18 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
 var LessonComponent = (function () {
-    function LessonComponent(topicService, route, dialog) {
+    function LessonComponent(topicService, trackingService, route, dialog) {
         this.topicService = topicService;
+        this.trackingService = trackingService;
         this.route = route;
         this.dialog = dialog;
         this.lessonTree = [];
         this.question = null;
         this.answer = '';
+        this.weak_questions = [];
+        this.start_time = '';
     }
     LessonComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -641,6 +721,9 @@ var LessonComponent = (function () {
                 _this.lessonTree = lessonTree;
                 if (lessonTree['questions'].length) {
                     _this.nextQuestion();
+                    _this.trackingService.startLesson(_this.lesson_id).subscribe(function (start_time) {
+                        _this.start_time = start_time;
+                    });
                 }
             });
         });
@@ -670,7 +753,7 @@ var LessonComponent = (function () {
         }
         setTimeout(function () {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }, 300);
+        }, 50);
     };
     LessonComponent.prototype.checkAnswer = function () {
         var _this = this;
@@ -685,10 +768,14 @@ var LessonComponent = (function () {
                 }
                 else {
                     _this.question = null;
+                    _this.trackingService.doneLesson(_this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
                 }
             });
         }
         else {
+            if (this.weak_questions.indexOf(this.question.id) === -1) {
+                this.weak_questions.push(this.question.id);
+            }
             this.lessonTree['questions'].push(this.question);
             var dialogRef = this.dialog.open(BadDialogComponent, {
                 width: '250px',
@@ -705,6 +792,7 @@ var LessonComponent = (function () {
                 }
                 else {
                     _this.question = null;
+                    _this.trackingService.doneLesson(_this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
                 }
             });
         }
@@ -725,10 +813,18 @@ var LessonComponent = (function () {
                 return false;
             }
             for (var i = 0; i < this.question.answers.length; i++) {
-                if (this.answers[i] === "")
-                    return false;
-                if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
-                    return false;
+                if (this.question.answer_mode == 'checkbox') {
+                    if (this.question.answers[i].is_correct && this.answers[i] === ""
+                        || !this.question.answers[i].is_correct && this.answers[i] !== "") {
+                        return false;
+                    }
+                }
+                else {
+                    if (this.answers[i] === "")
+                        return false;
+                    if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -740,9 +836,9 @@ var LessonComponent = (function () {
 LessonComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         template: __webpack_require__("../../../../../src/app/lesson/lesson.component.html"),
-        providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]]
+        providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */]) === "function" && _d || Object])
 ], LessonComponent);
 
 var GoodDialogComponent = (function () {
@@ -761,7 +857,7 @@ GoodDialogComponent = __decorate([
         template: "<h2 mat-dialog-title>Good</h2>\n        <mat-dialog-content>Congratulation</mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _d || Object, Object])
+    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _e || Object, Object])
 ], GoodDialogComponent);
 
 var BadDialogComponent = (function () {
@@ -781,10 +877,10 @@ BadDialogComponent = __decorate([
         template: "<h2 mat-dialog-title>Bad</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"answers.length == 1\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"answers.length != 1\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _e || Object, Object])
+    __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _f || Object, Object])
 ], BadDialogComponent);
 
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=lesson.component.js.map
 
 /***/ }),

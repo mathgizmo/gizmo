@@ -38,6 +38,6 @@ class Student extends Authenticatable
 
     public function students_tracking()
     {
-        return $this->hasMany(StudentsTracking::class, 'user_id', 'id');
+        return $this->hasMany(StudentsTracking::class, 'student_id', 'id');
     }
 }
