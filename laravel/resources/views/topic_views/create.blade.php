@@ -23,17 +23,17 @@
 								  @if (count($levels) > 0)
 								  	<option value="">Select From ...</option>
 									@foreach($levels as $level)
-									<option value="{{$level->id}}" 
-									@if (old("level_id") == $level->id) selected="selected" 
-									@endif  
-									@if ( $level->id == $lid) 
-										selected="selected" 
-									@endif 
+									<option value="{{$level->id}}"
+									@if (old("level_id") == $level->id) selected="selected"
+									@endif
+									@if ( $level->id == $lid)
+										selected="selected"
+									@endif
 										>{{$level->title}}</option>
 									@endforeach
 								 @endif
 								</select>
-                                
+
                                 @if ($errors->has('level_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('level_id') }}</strong>
@@ -41,7 +41,7 @@
                                 @endif
                             </div>
                         </div>
-						
+
 						<div id="unit_options"> </div>
 						<div class="form-group{{ $errors->has('unit_id') ? ' has-error' : '' }}">
                             <label for="unit_id" class="col-md-4 control-label">Unit</label>
@@ -50,13 +50,13 @@
 							      <select class="form-control" name="unit_id" id="unit_id">
 								   @if (count($units) > 0)
 								  @foreach($units as $unit)
-											<option value="{{$unit->id}}" @if ( $unit->id == $uid) selected="selected" 
-											@endif 
+											<option value="{{$unit->id}}" @if ( $unit->id == $uid) selected="selected"
+											@endif
 											>{{$unit->title}}</option>
 										@endforeach
 								  @endif
 									</select>
-                                
+
                                 @if ($errors->has('unit_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('unit_id') }}</strong>
@@ -70,9 +70,9 @@
 
                             <div class="col-md-6">
                             	<input id="topic_title" type="text" class="form-control"  name="topic_title" placeholder="Enter Topic text.." value="{{ old('topic_title') }}">
-                             
+
                                 @if ($errors->has('topic_title'))
-                                    <span class="help-block"> 
+                                    <span class="help-block">
                                         <strong>{{ $errors->first('topic_title') }}</strong>
                                     </span>
                                 @endif
@@ -84,34 +84,19 @@
 
                             <div class="col-md-6">
                             	<input id="short_name" type="text" class="form-control"  name="short_name" placeholder="Enter Short Name" value="{{ old('short_name') }}">
-                             
+
                                 @if ($errors->has('short_name'))
-                                    <span class="help-block"> 
+                                    <span class="help-block">
                                         <strong>{{ $errors->first('short_name') }}</strong>
                                     </span>
                                 @endif
                             </div>
 				      </div>
-			
-					<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
-	                    <label for="type" class="col-md-4 control-label">Dependency</label>
-
-	                    <div class="col-md-6 radio"> 
-							<label for="type" class="col-md-3"> <input checked="checked" type="radio" name="dependency" value="Yes">Yes</label>
-						    <label for="type" class="col-md-3"> <input type="radio" name="dependency" value="No"> No</label>
-
-	                        @if ($errors->has('dependency'))
-	                            <span class="help-block">
-	                                <strong>{{ $errors->first('dependency') }}</strong>
-	                            </span>
-	                        @endif
-	                    </div>
-					</div>
 
 					<div class="form-group{{ $errors->has('image_id') ? ' has-error' : '' }}">
 	                    <label for="image_id" class="col-md-4 control-label">Image</label>
 
-	                    <div class="col-md-6"> 
+	                    <div class="col-md-6">
 							<label id="add-image"><a href="#" class="btn" data-toggle="modal" data-target="#addImageModal">Add Image</a></label>
 							<label id="change-image"><img id="show-img" class="cb0-img" src="{{ URL::asset('images/img_trans.gif') }}" /><a href="#" class="btn" data-toggle="modal" data-target="#addImageModal">Change Image</a></label>
 							<input type="hidden" name="image_id" value="">
@@ -130,7 +115,7 @@
 									@endfor
 							  	@endif
 								</select>
-                            
+
                             @if ($errors->has('order_no'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('order_no') }}</strong>
@@ -158,7 +143,6 @@
 									<th class="col-md">ID</th>
 									<th class="col-md">Title</th>
 									<th class="col-md">Short Name</th>
-									<th class="col-md">Dependency</th>
 									<th class="col-md-3">OPTIONS</th>
 								</tr>
 							</thead>
@@ -171,16 +155,15 @@
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
 									<td>{{$topic->short_name}}</td>
-									<td>{{$topic->dependency}}</td>
 									<td class="text-center">
 
 											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
 											<a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
-											<form action="{{ route('topic_views.destroy', $topic->id) }}" 
-												method="POST" style="display: inline;" 
+											<form action="{{ route('topic_views.destroy', $topic->id) }}"
+												method="POST" style="display: inline;"
 												onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
 												<input type="hidden" name="_method" value="DELETE">
-												<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
+												<input type="hidden" name="_token" value="{{ csrf_token() }}">
 												<button class="btn btn-danger" type="submit">Delete</button>
 												</form>
 											</td>
@@ -188,9 +171,9 @@
 									@endforeach
 								</tbody>
 							</table>
-									
+
 						</div>
-								
+
 					</div>
 				</div>
 				@endif

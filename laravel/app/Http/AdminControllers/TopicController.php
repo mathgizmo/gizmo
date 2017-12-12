@@ -19,7 +19,7 @@ class TopicController extends Controller
 		$levels = DB::select('select * from level');
 		$units = DB::select('select * from unit');
 		$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-		return view('topic_views.index',['levels'=>$levels,'units'=>$units,'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]); 
+		return view('topic_views.index',['levels'=>$levels,'units'=>$units,'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
     }
 
     /**
@@ -42,7 +42,7 @@ class TopicController extends Controller
 			'lid' => $lid,
 			'uid' => $uid,
 			'total_topic' => $total_topic
-		)); 
+		));
     }
 
 
@@ -55,36 +55,32 @@ class TopicController extends Controller
     public function store(Request $request)
     {
         // Store topic title and unit_id into topic table
-		$lid = $request->level_id;
-		$uid = $request->unit_id;
-		//$tid = $request->topic_id;
-		$this->validate($request, [
-			'image_id'	=> 'required',
-			'short_name'	=> 'required',
-			'level_id'	=> 'required',
-			'unit_id'	=> 'required',
-			'topic_title'=> 'required',
-			'dependency'=> 'required',
-		]);
-		 
-		DB::table('topic')->insert([
-			'image_id' => $request['image_id'], 
-			'short_name' => $request['short_name'], 
-			'order_no' => $request['order_no'], 
-			'title' => $request['topic_title'], 
-			'dependency' => $request['dependency'],
-			'unit_id' => $request['unit_id'],
-			'created_at' => date('Y-m-d H:i:s'),
-			'modified_at' => date('Y-m-d H:i:s')
-		]);
-		
-		$levels = DB::select('select * from level');
-		$units = DB::select('select * from unit');
-		$topics = DB::table('topic')->where('unit_id',$uid)->get();
-		$total_topic = Topic::all()->count();
-		//$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
-		\Session::flash('flash_message','successfully saved.');
-		return view('topic_views.create',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid,'total_topic'=>$total_topic]); 
+        $lid = $request->level_id;
+        $uid = $request->unit_id;
+        //$tid = $request->topic_id;
+        $this->validate($request, [
+            'level_id'	=> 'required',
+            'unit_id'	=> 'required',
+            'topic_title'=> 'required'
+        ]);
+
+        DB::table('topic')->insert([
+            'image_id' => $request['image_id'],
+            'short_name' => $request['short_name'],
+            'order_no' => $request['order_no'],
+            'title' => $request['topic_title'],
+            'unit_id' => $request['unit_id'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'modified_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $levels = DB::select('select * from level');
+        $units = DB::select('select * from unit');
+        $topics = DB::table('topic')->where('unit_id',$uid)->get();
+        $total_topic = Topic::all()->count();
+        //$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+        \Session::flash('flash_message','successfully saved.');
+        return view('topic_views.create',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid,'total_topic'=>$total_topic]);
     }
 
     /**
@@ -107,22 +103,22 @@ class TopicController extends Controller
     public function edit($id)
     {
         $topic = DB::table('topic')
-			//->join('topic', 'lesson.topic_id', '=', 'topic.id')
-			->join('unit', 'topic.unit_id', '=', 'unit.id')
-			->join('level', 'unit.level_id', '=', 'level.id')
-			->select('topic.*', 'unit.title as utitle','unit.id as uid','level.title as ltitle','level.id as lid')
-			->where('topic.id', '=', $id)->first();
+            //->join('topic', 'lesson.topic_id', '=', 'topic.id')
+            ->join('unit', 'topic.unit_id', '=', 'unit.id')
+            ->join('level', 'unit.level_id', '=', 'level.id')
+            ->select('topic.*', 'unit.title as utitle','unit.id as uid','level.title as ltitle','level.id as lid')
+            ->where('topic.id', '=', $id)->first();
 
-		$levels = DB::select('select * from level');
-		$units = DB::table('unit')->select('id', 'title')->where('level_id', $topic->lid)->get();
-		$total_topic = Topic::all()->count();
+        $levels = DB::select('select * from level');
+        $units = DB::table('unit')->select('id', 'title')->where('level_id', $topic->lid)->get();
+        $total_topic = Topic::all()->count();
 
-		return view('topic_views.edit', [
-			'levels'=>$levels,
-			'units'=>$units,
-			'topic'=>$topic, 
-			'total_topic' => $total_topic
-		]);
+        return view('topic_views.edit', [
+            'levels'=>$levels,
+            'units'=>$units,
+            'topic'=>$topic,
+            'total_topic' => $total_topic
+        ]);
     }
 
     /**
@@ -135,42 +131,43 @@ class TopicController extends Controller
     public function update(Request $request, $id)
     {
         //
-		$lid = $request->level_id;
-		$uid = $request->unit_id;
-		//$tid = $request->topic_id;
-		$this->validate($request, [
-			'image_id'	=> 'required',
-			'short_name' => 'required',
-		 	'level_id'	=> 'required',
-		 	'unit_id'	=> 'required',
-		 	'topic_title'=> 'required',
-		 	'dependency'=> 'required',
-		]);
-		 
-		DB::table('topic')->where('id',$id)->update([
-		 	'image_id' => $request['image_id'], 
-			'short_name' => $request['short_name'], 
-			'order_no' => $request['order_no'],
-		 	'title' => $request['topic_title'], 
-		 	'dependency' => $request['dependency'],
-		 	'unit_id' => $request['unit_id'],
-		 	'created_at' => date('Y-m-d H:i:s'),
-		 	'modified_at' => date('Y-m-d H:i:s')
-		]);
-		
-		$levels = DB::select('select * from level');
-		$units = DB::select('select * from unit');
-		$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-		$total_topic = Topic::all()->count();
+        $lid = $request->level_id;
+        $uid = $request->unit_id;
+        //$tid = $request->topic_id;
+        $this->validate($request, [
+            'level_id'	=> 'required',
+            'unit_id'	=> 'required',
+            'topic_title'=> 'required'
+        ]);
 
-		return view('topic_views.create',[
-			'levels' => $levels,
-			'units' => $units,
-			'topics' => $topics,
-			'lid' => $lid,
-			'uid' => $uid,
-			'total_topic' => $total_topic
-		]); 
+        $update_array = [
+            'short_name' => $request['short_name'],
+            'order_no' => $request['order_no'],
+            'title' => $request['topic_title'],
+            'unit_id' => $request['unit_id'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'modified_at' => date('Y-m-d H:i:s')
+        ];
+
+        if (isset($request['image_id']) && $request['image_id']) {
+            $update_array['image_id'] = $request['image_id'];
+        }
+
+        DB::table('topic')->where('id',$id)->update($update_array);
+
+        $levels = DB::select('select * from level');
+        $units = DB::select('select * from unit');
+        $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
+        $total_topic = Topic::all()->count();
+
+        return view('topic_views.create',[
+            'levels' => $levels,
+            'units' => $units,
+            'topics' => $topics,
+            'lid' => $lid,
+            'uid' => $uid,
+            'total_topic' => $total_topic
+        ]);
     }
 
     /**

@@ -4,7 +4,7 @@
 
 <div class="container">
 	<div class="panel panel-default">
-		<div class="panel-heading clearfix"> 
+		<div class="panel-heading clearfix">
 			<div class="panel-title pull-left">
              Search and Create!
 			</div>
@@ -26,16 +26,16 @@
 
                             <div class="col-md-6">
 							      <select class="form-control" name="level_id" id="level_id">
-								  
+
 								  @if (count($levels) > 0)
 									  <option value="">Select From ...</option>
 										@foreach($levels as $level)
-											<option <?php echo ($level_id == $level->id) ? 'selected="selected"' : ''; ?> value="{{$level->id}}" 
+											<option <?php echo ($level_id == $level->id) ? 'selected="selected"' : ''; ?> value="{{$level->id}}"
 											>{{$level->title}}</option>
 										@endforeach
 								 @endif
 									</select>
-                                
+
                                 @if ($errors->has('level_id'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('level_id') }}</strong>
@@ -43,7 +43,7 @@
                                 @endif
                             </div>
                         </div>
-						
+
 						<div id="unit_options"> </div>
 						<div class="form-group{{ $errors->has('unit_id') ? ' has-error' : '' }}">
                             <label for="unit_id" class="col-md-4 control-label">Unit</label>
@@ -52,7 +52,7 @@
 									<select class="form-control" name="unit_id" id="unit_id">
 								@if (count($units) > 0)
 									@foreach($units as $unit)
-											<option <?php echo ($unit_id == $unit->id) ? 'selected="selected"' : ''; ?> value="{{$unit->id}}" 
+											<option <?php echo ($unit_id == $unit->id) ? 'selected="selected"' : ''; ?> value="{{$unit->id}}"
 											>{{$unit->title}}</option>
 										@endforeach
 								@endif
@@ -64,14 +64,14 @@
 								@endif
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button class="btn btn-primary" type="submit" >Search</button>
 							</div>
 						</div>
 						</form>
-						
+
 						<div class="row">
 							@if(Session::has('message'))
 							<div id="successMessage" class="alert alert-success">
@@ -89,7 +89,6 @@
 												<th class="col-md">ID</th>
 												<th class="col-md">Title</th>
 												<th class="col-md">Short Name</th>
-												<th class="col-md">Dependency</th>
 												<th class="col-md-3">OPTIONS</th>
 											</tr>
 										</thead>
@@ -103,18 +102,17 @@
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
 									<td>{{$topic->short_name}}</td>
-									<td>{{$topic->dependency}}</td>
 									<td class="text-center">
 
 											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
 											<a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
-											<form action="{{ route('topic_views.destroy', $topic->id) }}" 
-												method="POST" style="display: inline;" 
+											<form action="{{ route('topic_views.destroy', $topic->id) }}"
+												method="POST" style="display: inline;"
 												onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
 												<input type="hidden" name="_method" value="DELETE">
-												<input type="hidden" name="_token" value="{{ csrf_token() }}"> 
-												<input type="hidden" name="level_id" value="{{ $level_id }}"> 
-												<input type="hidden" name="unit_id" value="{{ $unit_id }}"> 
+												<input type="hidden" name="_token" value="{{ csrf_token() }}">
+												<input type="hidden" name="level_id" value="{{ $level_id }}">
+												<input type="hidden" name="unit_id" value="{{ $unit_id }}">
 												<button class="btn btn-danger" type="submit">Delete</button>
 												</form>
 									</td>
@@ -122,9 +120,9 @@
 							@endforeach
 						</tbody>
 					</table>
-							
+
 				</div>
-						
+
 			</div>
 		</div>
 			</div>
