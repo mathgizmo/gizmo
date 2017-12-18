@@ -16,7 +16,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'forms' },
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-		{ name: 'links' },
+		{ name: 'links' },		
 		{ name: 'insert' },
 		{ name: 'styles' },
 		{ name: 'colors' },
@@ -32,5 +32,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// Dialog windows are also simplified.
 	config.removeDialogTabs = 'link:advanced';
 	
-	config.mathJaxLib = '/admin/js/mathjax/MathJax.js?config=TeX-AMS_HTML';
+	config.mathJaxLib = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+	
+	config.extraPlugins = 'image';
 };

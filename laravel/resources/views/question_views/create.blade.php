@@ -365,6 +365,10 @@
 
 @section('scripts')
     <script src="{{ URL::asset('js/jquery.jslatex.packed.js') }}"></script>
+    <script src="{{ URL::asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script>
+        var question = CKEDITOR.replace( 'question' );
+    </script>
     <script>
         $(document).ready(function(){
             setTimeout(function() {
@@ -444,7 +448,7 @@
                 }
             });
 
-            $('[name="question"]').on('keyup', function() {
+            question.on('change', function() {
                 latex_generate();
             });
 
@@ -456,12 +460,13 @@
         function latex_generate() {
             $('.preview').text('');
             $.each($('[name="question"]'), function() {
-                $('.preview').append('<label>Question</label><div>' + $(this).val() + '</div>');
+                $('.preview').append('<label>Question</label><div>' + question.getData() + '</div>');
             });
             $.each($('[name="answer[]"]'), function(key) {
                 $('.preview').append('<label>Answer ' + (key+1) + '</label><div>' + $(this).val() + '</div>');
             });
             $('.latex').latex();
+            MathJax.Hub.Typeset();
         }
 
         function manage_answer(min, max) {
