@@ -62,7 +62,7 @@
 							</div>
 
 							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->question}}</p>
+									<p class="form-control-static"> {!!$question->question!!}</p>
 							</div>
 						</div>
 						<div class="row bg-success">
