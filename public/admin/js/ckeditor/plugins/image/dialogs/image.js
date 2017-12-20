@@ -1053,7 +1053,7 @@
 				},
 				{
 					id: 'Upload',
-					hidden: true,
+					hidden: false,
 					filebrowser: 'uploadButton',
 					label: editor.lang.image.upload,
 					elements: [ {

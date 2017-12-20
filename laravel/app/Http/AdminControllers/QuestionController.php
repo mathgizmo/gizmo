@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Storage;
 
 class QuestionController extends Controller
 {
@@ -89,7 +90,16 @@ class QuestionController extends Controller
      */
     public function create(Request $request)
     {
-		static $test;
+        if ($request->file('upload')) {
+            $path = Storage::put(
+                'public/uploads/' . $request->file('upload')->getClientOriginalName(),
+                file_get_contents($request->file('upload')->getRealPath())
+            );
+            return 'File successfully uploaded.';
+        }
+
+
+        static $test;
 		$levels = DB::select('select * from level');
 
 	    if($request->ajax()){

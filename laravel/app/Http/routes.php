@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('question_views', 'QuestionController');
     Route::resource('answer_views', 'AnswerController');
     Route::get('/create-answer/questions-bank', 'AnswerController@insertAnswerFromQuestions');
+    Route::any('question_views/create', 'QuestionController@create');
 
 
     Route::get('users','UserController@index')->name('users.index');
