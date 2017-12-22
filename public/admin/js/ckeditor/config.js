@@ -33,6 +33,8 @@ CKEDITOR.editorConfig = function( config ) {
 	config.removeDialogTabs = 'link:advanced';
 	
 	config.mathJaxLib = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
-	
-	config.extraPlugins = 'image';
+
+    config.extraPlugins = 'filebrowser,image,sourcedialog,dialog,dialogui';
+
+    config.filebrowserUploadUrl = '/admin/question_views/uploadImage';
 };

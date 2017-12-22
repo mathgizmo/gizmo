@@ -83,6 +83,21 @@ class QuestionController extends Controller
         return view('question_views.index', compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes', 'reply_modes'));
     }
 
+    public function uploadImage(Request $request)
+    {
+        if ($request->file('upload')) {
+            $funNum = $request->query->get('CKEditorFuncNum', 0);
+            $new_file_path = time() . '_' . $request->file('upload')->getClientOriginalName();
+            $path = Storage::put(
+                'public/uploads/' .$new_file_path,
+                file_get_contents($request->file('upload')->getRealPath())
+                );
+            return '<script type="text/javascript">
+            window.parent.CKEDITOR.tools.callFunction('.$funNum.', "'.url('/').'/uploads/'.$new_file_path.'");
+            </script>';
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -90,15 +105,6 @@ class QuestionController extends Controller
      */
     public function create(Request $request)
     {
-        if ($request->file('upload')) {
-            $path = Storage::put(
-                'public/uploads/' . $request->file('upload')->getClientOriginalName(),
-                file_get_contents($request->file('upload')->getRealPath())
-            );
-            return 'File successfully uploaded.';
-        }
-
-
         static $test;
 		$levels = DB::select('select * from level');
 
@@ -290,9 +296,8 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-
 		$question = DB::table('question')
 			->join('lesson', 'question.lesson_id', '=', 'lesson.id')
 			->join('topic', 'lesson.topic_id', '=', 'topic.id')
