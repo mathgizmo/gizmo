@@ -21,10 +21,17 @@ class QuestionController extends Controller
 
     public function index(Request $request)
     {
+        if (count($request->query)) {
+            $options = $request->query->all();
+            unset($options['_token']);
+            session(['options' => $options]);
+        }
+        else if (count(session('options'))) {
+            return redirect()->route('question_views.index', session('options'));
+        }
+
         $levels = DB::select('select * from level');
         $reply_modes = DB::select('select * from reply_mode');
-        //$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
-        //$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
         $units = DB::table('unit')->where('level_id',$request->level_id)->get();
         $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
         $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
@@ -429,6 +436,6 @@ class QuestionController extends Controller
 			->join('level', 'unit.level_id', '=', 'level.id')
 			->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
 			->orderBy('question.id', 'desc')->paginate(10);
-		return view('question_views.index',['questions'=>$questions,'levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
+        return redirect()->route('question_views.index');
     }
 }
