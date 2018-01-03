@@ -179,7 +179,7 @@
 										<td>{{$question->utitle}}</td>
 										<td>{{$question->ttitle}}</td>
 										<td>{{$question->title}}</td>
-										<td>{!!$question->question!!}</td>
+										<td>{{substr (strip_tags ($question->question), 0, 40)}}</td>
 										<td>{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
 									</tr>
 								@endforeach
