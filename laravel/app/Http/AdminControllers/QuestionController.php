@@ -170,9 +170,8 @@ class QuestionController extends Controller
 		$topics = DB::table('topic')->select('id', 'title')->get();
 
 		$lessons = DB::table('lesson')->select('id', 'title')->get();
-		$qtypes = DB::select('select * from question_type');
 		$qrmodes = DB::select('select * from reply_mode');
-		return view('question_views.create',['levels' => $levels,'qtypes' => $qtypes,
+		return view('question_views.create',['levels' => $levels,
 		'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lsnid]);
 	}
 
@@ -194,7 +193,7 @@ class QuestionController extends Controller
 		 'unit_id'	=> 'required',
 		 'topic_id'	=> 'required',
 		 'lesson_id'	=> 'required',
-		 'type'			=> 'required',
+//		 'type'			=> 'required',
 		 'reply_mode'	=> 'required',
 //		 'answer_size'	=> 'required',
 		 'question'		=> 'required',
@@ -210,12 +209,12 @@ class QuestionController extends Controller
 //		 'answer3'		=> 'required_if:answer_size,3|required_if:answer_size,4|required_if:answer_size,5',
 //		 'answer4'		=> 'required_if:answer_size,4|required_if:answer_size,5',
 //		 'answer5'		=> 'required_if:answer_size,5',
-		 'image'		=> 'required_if:type,image',
-		 'shape'		=> 'required_if:type,draw',
-		 'min_value'	=> 'required_if:type,draw',
-		 'max_value'	=> 'required_if:type,draw',
-		 'ini_position'=> 'required_if:type,draw',
-		 'step_value'	=> 'required_if:type,draw',
+//		 'image'		=> 'required_if:type,image',
+//		 'shape'		=> 'required_if:type,draw',
+//		 'min_value'	=> 'required_if:type,draw',
+//		 'max_value'	=> 'required_if:type,draw',
+//		 'ini_position'=> 'required_if:type,draw',
+//		 'step_value'	=> 'required_if:type,draw',
           'answer'  => 'required|array|min:1|max:6',
           'answer.*'=>'required|string',
 //		 'mcq1'			=> 'required_if:reply_mode,mcq3|required_if:reply_mode,mcq4|required_if:reply_mode,mcq5|required_if:reply_mode,mcq6',
@@ -226,24 +225,8 @@ class QuestionController extends Controller
 //		 'mcq6'			=> 'required_if:reply_mode,mcq6',
 
     ]);
-		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'], 'type' => $request['type'], 'reply_mode' => $request['reply_mode'],
+		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'], 'reply_mode' => $request['reply_mode'],
 		'question' => $request['question']]);
-
-		$qtype = $collectionQuestion->get('type');
-		switch ($qtype) {
-			case "draw":
-				$collectionQuestion = $collectionQuestion->merge(['shape' => $request['shape'],
-											'min_value' => $request['min_value'],
-											'max_value' => $request['max_value'],
-											'initial_position' => $request['ini_position'],
-											'step_value' => $request['step_value']]);
-				break;
-			case "image":
-				$collectionQuestion = $collectionQuestion->merge(['image' => $request['image']]);
-				break;
-			default:
-
-		}
 
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],
@@ -267,11 +250,10 @@ class QuestionController extends Controller
 		$units = DB::table('unit')->select('id', 'title')->where('level_id', $lid)->get();
 		$topics = DB::table('topic')->select('id', 'title')->where('unit_id', $uid)->get();
 		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $tid)->get();
-		$qtypes = DB::select('select * from question_type');
 		$qrmodes = DB::select('select * from reply_mode');
 		//$questions = DB::select('')
 		\Session::flash('flash_message','successfully saved.');
-		return view('question_views.create',[ 'levels' => $levels,'qtypes' => $qtypes,
+		return view('question_views.create',[ 'levels' => $levels,
         'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lesson_id])->withInput($request->all());
     }
 
@@ -318,12 +300,11 @@ class QuestionController extends Controller
 		$units = DB::table('unit')->select('id', 'title')->where('level_id', $question->lid)->get();
 		$topics = DB::table('topic')->select('id', 'title')->where('unit_id', $question->uid)->get();
 		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $question->tid)->get();
-		$qtypes = DB::select('select * from question_type');
 		$qrmodes = DB::select('select * from reply_mode');
 
 
 		return view('question_views.edit', ['question'=>$question,'levels'=>$levels,
-		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'qtypes'=>$qtypes,'qrmodes'=>$qrmodes,'answers'=>$answers]);
+		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers]);
     }
 
     /**
@@ -349,38 +330,14 @@ class QuestionController extends Controller
 		 'topic_id'	=> 'required',
 		 'lesson_id'	=> 'required',
 		 'question'		=> 'required',
-		 'type'			=> 'required',
 		 'reply_mode'	=> 'required',
-		 'image'		=> 'required_if:type,image',
-		 'shape'		=> 'required_if:type,draw',
-		 'min_value'	=> 'required_if:type,draw',
-		 'max_value'	=> 'required_if:type,draw',
-		 'ini_position'=> 'required_if:type,draw',
-		 'step_value'	=> 'required_if:type,draw',
           'answer'  => 'required|array|min:1|max:6',
           'answer.*'=>'required|string',
     ]);
 
 		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],
-		'type' => $request['type'],
 		'reply_mode' => $request['reply_mode'],
 		'question' => $request['question']]);
-
-		$qtype = $collectionQuestion->get('type');
-		switch ($qtype) {
-			case "draw":
-				$collectionQuestion = $collectionQuestion->merge(['shape' => $request['shape'],
-											'min_value' => $request['min_value'],
-											'max_value' => $request['max_value'],
-											'initial_position' => $request['ini_position'],
-											'step_value' => $request['step_value']]);
-				break;
-			case "image":
-				$collectionQuestion = $collectionQuestion->merge(['image' => $request['image']]);
-				break;
-			default:
-
-		}
 
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],

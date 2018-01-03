@@ -65,17 +65,6 @@
 									<p class="form-control-static"> {!!$question->question!!}</p>
 							</div>
 						</div>
-						<div class="row bg-success">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">Type</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->type}}</p>
-							</div>
-						</div>
 						<div class="row bg-info">
 							<div class="col-md-2">
 							<div class="form-group">
@@ -100,72 +89,6 @@
 								</div>
 							</div>
 						@endforeach
-						<div class="row bg-success">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">Shape</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->shape}}</p>
-							</div>
-						</div>
-						<div class="row bg-info">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">MinValue</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->min_value}}</p>
-							</div>
-						</div>
-						<div class="row bg-success">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">MaxValue</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->max_value}}</p>
-							</div>
-						</div>
-						<div class="row bg-info">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">IniPosition</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->initial_position}}</p>
-							</div>
-						</div>
-						<div class="row bg-success">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">StepValue</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->step_value}}</p>
-							</div>
-						</div>
-						<div class="row bg-info">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">Image</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->image}}</p>
-							</div>
-						</div>
 						<div class="row bg-info">
 							<div class="col-md-2">
 							<div class="form-group">

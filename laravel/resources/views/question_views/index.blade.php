@@ -153,10 +153,6 @@
 											<i class="fa fa-fw fa-sort{{ (request()->sort == 'question' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'question' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 										</a></th>
 									<th class="col-md">
-										Type <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'type', 'order' => ((request()->sort == 'type' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
-											<i class="fa fa-fw fa-sort{{ (request()->sort == 'type' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'type' && request()->order == 'desc') ? '-desc' : '' }}"></i>
-										</a></th>
-									<th class="col-md">
 										ReplyMode <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'reply_mode', 'order' => ((request()->sort == 'reply_mode' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
 											<i class="fa fa-fw fa-sort{{ (request()->sort == 'reply_mode' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'reply_mode' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 										</a></th>
@@ -184,7 +180,6 @@
 										<td>{{$question->ttitle}}</td>
 										<td>{{$question->title}}</td>
 										<td>{!!$question->question!!}</td>
-										<td>{{$question->type}}</td>
 										<td>{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
 									</tr>
 								@endforeach
