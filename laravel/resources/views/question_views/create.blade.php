@@ -115,28 +115,6 @@
                             </div>
                         </div>
 
-						 <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
-                            <label for="type" class="col-md-4 control-label">Type</label>
-
-                            <div class="col-md-6">
-								<select class="form-control" name="type" id="type">
-								  @foreach($qtypes as $qtype)
-										@if (old('type') == $qtype->code)
-											<option value="{{$qtype->code}}" selected>{{$qtype->type}}</option>
-										@else
-											<option value="{{$qtype->code}}" >{{$qtype->type}}</option>
-										@endif
-										@endforeach
-									</select>
-
-                                @if ($errors->has('type'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('type') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
 						<div class="form-group{{ $errors->has('reply_mode') ? ' has-error' : '' }}">
                             <label for="reply_mode" class="col-md-4 control-label">REPLY MODE</label>
                             <div class="col-md-6">
@@ -177,7 +155,11 @@
                             <div class="form-group answer{{ $errors->has('answer.0') ? ' has-error' : '' }}">
                                 <label for="answer" class="col-md-4 control-label">Answer</label>
                                 <div class="col-md-4">
-                                    <input class="form-control" name="answer[]" value="{{ old('answer.0') }}">
+                                    <input class="form-control answer-input" name="answer[]" value="{{ old('answer.0') }}" id = "answer1">
+                                    <select class ="form-control answer-TF" >
+                                        <option value="True">True</option>
+                                        <option value="False">False</option>
+                                    </select>
                                     @if ($errors->has('answer.0'))
                                         <span class="help-block">
                                             <strong>Answer can't be empty.</strong>
@@ -192,12 +174,12 @@
                                     </div>
                                 </div>
                             </div>
-                            @for ($i = 1; $i <= 6; $i++)
+                            @for ($i = 1; $i < 6; $i++)
                                 @if ($errors->has('answer.' . $i) || old('answer.' . $i) != '' )
                                     <div class="form-group answer{{ $errors->has('answer.' . $i) ? ' has-error' : '' }}">
                                         <label for="answer" class="col-md-4 control-label">Answer</label>
                                         <div class="col-md-4">
-                                            <input class="form-control" name="answer[]" value="{{ old('answer.' . $i) }}">
+                                            <input class="form-control answer-input" name="answer[]" value="{{ old('answer.' . $i) }}">
                                             @if ($errors->has('answer.' . $i))
                                                 <span class="help-block">
                                                     <strong>Answer can't be empty.</strong>
@@ -232,92 +214,6 @@
                             <div class="col-md-2"></div>
                         </div>
 
-					<div id="imageShow" class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
-                            <label for="image" class="col-md-4 control-label">Question Image</label>
-
-                            <div class="col-md-6">
-                                <input id="image" type="file" class="form-control"  name="image" accept="image/*">
-
-                                @if ($errors->has('image'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('image') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div id="shapeShow">
-						<div class="form-group{{ $errors->has('shape') ? ' has-error' : '' }}">
-                            <label for="shape" class="col-md-4 control-label">Shape</label>
-
-                            <div class="col-md-6">
-							      <select class="form-control" name="shape" id="shape">
-									   <option value="" selected>Select one shape from below</option>
-										<option value="rectangle">Rectangle</option>
-										<option value="slider">Slider</option>
-										<option value="circle">Circle</option>
-										<option value="blob">Random Looking Blob</option>
-									</select>
-
-                                @if ($errors->has('shape'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('shape') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-				<div class="form-group{{ $errors->has('min_value') ? ' has-error' : '' }}">
-                            <label for="min_value" class="col-md-4 control-label">Min Value</label>
-
-                            <div class="col-md-6">
-                                <input id="min_value" type="text" class="form-control"  name="min_value" placeholder="Minimul Value">
-
-                                @if ($errors->has('min_value'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('min_value') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div class="form-group{{ $errors->has('ini_position') ? ' has-error' : '' }}">
-                            <label for="ini_position" class="col-md-4 control-label">Initial Position</label>
-
-                            <div class="col-md-6">
-                                <input id="ini_position" type="text" class="form-control"  name="ini_position"  placeholder="ini_position">
-
-                                @if ($errors->has('ini_position'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('ini_position') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div class="form-group{{ $errors->has('step_value') ? ' has-error' : '' }}">
-                            <label for="step_value" class="col-md-4 control-label">Step Value</label>
-
-                            <div class="col-md-6">
-                                <input id="step_value" type="text" class="form-control"  name="step_value" placeholder="step_value">
-
-                                @if ($errors->has('step_value'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('step_value') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-				<div class="form-group{{ $errors->has('max_value') ? ' has-error' : '' }}">
-                            <label for="max_value" class="col-md-4 control-label">Max Value</label>
-
-                            <div class="col-md-6">
-                                <input id="max_value" type="text" class="form-control"  name="max_value" placeholder="max_value">
-
-                                @if ($errors->has('max_value'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('max_value') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-				</div>
-		</div>
 					  <div class="form-group{{ $errors->has('feedback') ? ' has-error' : '' }}">
                             <label for="feedback" class="col-md-4 control-label">Feedback</label>
 
