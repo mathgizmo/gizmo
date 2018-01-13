@@ -56,9 +56,9 @@
                         <li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
                         <li><a href="{{ url('/lesson_views') }}">Manage Lessons</a></li>
                         @if(auth()->user()->is_admin)
-                            <li><a href="{{ route('users.index') }}">Manage Users</a></li>
+                            <li><a href="{{ route('users.index') }}">Administrators</a></li>
                         @endif
-                        <li><a href="{{ route('students.index') }}">Students</a></li>
+                        <li><a href="{{ route('students.index') }}">Participants</a></li>
                     </ul>
                 @endif
 

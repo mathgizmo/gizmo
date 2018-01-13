@@ -5,7 +5,7 @@
                 <h3>{{level.title}}</h3>
                 <div *ngFor="let unit of level.units; let unitIndex = index">
                     <h4>{{unit.title}}</h4>
-                    <div *ngFor="let topic of unit.topics; let topicIndex = index">
+                    <div *ngFor="let topic of unit.topics; let topicIndex = index" style="float:left;width:33%">
 
                         <span *ngIf="topicIndex >= 4000" class="fa-stack fa-4x">
                             <i class="fa fa-circle fa-stack-2x icon-red"></i>
@@ -25,7 +25,9 @@
                         <div *ngIf="topic.short_name">{{topic.short_name}}</div>
 
                     </div>
+                    <div style="clear:both"><br /></div>
                 </div>
+                <div style="clear:both"><br /></div>
             </div>
         </div>
     </div>

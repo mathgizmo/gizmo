@@ -97,7 +97,7 @@ export class LessonComponent implements OnInit {
                 data: { data: this.question.answers.filter(function(answer){
                     if (answer.is_correct == 1) return true;
                     return false;
-                    })
+                    }) , explanation: this.question.explanation
                 }
             });
 
@@ -145,8 +145,8 @@ export class LessonComponent implements OnInit {
 
 @Component({
     selector: 'good-dialog',
-    template: `<h2 mat-dialog-title>Good</h2>
-        <mat-dialog-content>Congratulation</mat-dialog-content>
+    template: `<h2 mat-dialog-title>Correct!</h2>
+        <mat-dialog-content>Congratulations</mat-dialog-content>
         <mat-dialog-actions>
           <button mat-button [mat-dialog-close]="true">Continue</button>
         </mat-dialog-actions>`
@@ -165,7 +165,7 @@ export class GoodDialogComponent {
 
 @Component({
     selector: 'bad-dialog',
-    template: `<h2 mat-dialog-title>Bad</h2>
+    template: `<h2 mat-dialog-title>Incorrect :(</h2>
         <mat-dialog-content>
             <div *ngIf="answers.length == 1">
                 Correct answer is: {{answers[0].value}}
@@ -175,6 +175,9 @@ export class GoodDialogComponent {
                 <li *ngFor="let answer of answers; let answerIndex = index">{{answer.value}}</li>
                 </ul>
             </div>
+            <div *ngIf="explanation!=''">
+                {{explanation}}
+            </div>
         </mat-dialog-content>
         <mat-dialog-actions>
           <button mat-button [mat-dialog-close]="true">Continue</button>
@@ -182,11 +185,13 @@ export class GoodDialogComponent {
 })
 export class BadDialogComponent {
     answers: string[];
+    explanation: string;
 
     constructor(
         public dialogRef: MatDialogRef<BadDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         this.answers = data.data;
+        this.explanation = data.explanation;
     }
 
     onNoClick(): void {
