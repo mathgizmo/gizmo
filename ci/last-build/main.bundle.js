@@ -579,7 +579,7 @@ var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["d" /* RouterModule 
 
 var GlobalVariable = Object.freeze({
     //BASE_API_URL: 'http://gizmo.local/api',
-    BASE_API_URL: 'http://itisshe.com/api',
+    BASE_API_URL: 'http://http://healthnumeracyproject.com/api',
 });
 //# sourceMappingURL=globals.js.map
 
@@ -588,7 +588,7 @@ var GlobalVariable = Object.freeze({
 /***/ "../../../../../src/app/home/home.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"text-center\">\n    <div ng-if=\"topicsTree.length\">\n        <div *ngFor=\"let level of topicsTree; let levelIndex = index\">\n            <div *ngIf=\"level.units.length\">\n                <h3>{{level.title}}</h3>\n                <div *ngFor=\"let unit of level.units; let unitIndex = index\">\n                    <h4>{{unit.title}}</h4>\n                    <div *ngFor=\"let topic of unit.topics; let topicIndex = index\">\n\n                        <span *ngIf=\"topicIndex >= 4000\" class=\"fa-stack fa-4x\">\n                            <i class=\"fa fa-circle fa-stack-2x icon-red\"></i>\n                            <i class=\"fa fa-circle-thin fa-stack-2x icon-dark-red\"></i>\n                            <i *ngIf=\"topic.image_id\" class=\"fa  fa-stack-1x {{topic.image_id}}\"></i>\n                            <i class=\"fa fa-lock fa-stack-1x\"></i>\n                        </span>\n                        <span *ngIf=\"topicIndex < 4000\" class=\"fa-stack fa-4x\">\n                            <a routerLink=\"/topic/{{topic.id}}\" routerLinkActive=\"active\">\n                                <i class=\"fa fa-circle fa-stack-2x icon-green\"></i>\n                                <i class=\"fa fa-circle-thin fa-stack-2x icon-dark-green\"></i>\n                                <i *ngIf=\"!topic.image_id || topic.image_id=='cb0-img'\" class=\"fa fa-unlock fa-stack-1x\"></i>\n                                <i *ngIf=\"topic.image_id\" class=\"fa  fa-stack-1x {{topic.image_id}}\"></i>\n                            </a>\n                        </span>\n                        <div *ngIf=\"!topic.short_name\">{{topic.title}}</div>\n                        <div *ngIf=\"topic.short_name\">{{topic.short_name}}</div>\n\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<div class=\"text-center\">\n    <div ng-if=\"topicsTree.length\">\n        <div *ngFor=\"let level of topicsTree; let levelIndex = index\">\n            <div *ngIf=\"level.units.length\">\n                <h3>{{level.title}}</h3>\n                <div *ngFor=\"let unit of level.units; let unitIndex = index\">\n                    <h4>{{unit.title}}</h4>\n                    <div *ngFor=\"let topic of unit.topics; let topicIndex = index\" style=\"display: inline-block;width:33%;height:152px;vertical-align:top;\">\n                        <span *ngIf=\"topicIndex >= 4000\" class=\"fa-stack fa-4x\">\n                            <i class=\"fa fa-circle fa-stack-2x icon-red\"></i>\n                            <i class=\"fa fa-circle-thin fa-stack-2x icon-dark-red\"></i>\n                            <i *ngIf=\"topic.image_id\" class=\"fa  fa-stack-1x {{topic.image_id}}\"></i>\n                            <i class=\"fa fa-lock fa-stack-1x\"></i>\n                        </span>\n                        <span *ngIf=\"topicIndex < 4000\" class=\"fa-stack fa-4x\">\n                            <a routerLink=\"/topic/{{topic.id}}\" routerLinkActive=\"active\">\n                                <i class=\"fa fa-circle fa-stack-2x icon-green\"></i>\n                                <i class=\"fa fa-circle-thin fa-stack-2x icon-dark-green\"></i>\n                                <i *ngIf=\"!topic.image_id || topic.image_id=='cb0-img'\" class=\"fa fa-unlock fa-stack-1x\"></i>\n                                <i *ngIf=\"topic.image_id\" class=\"fa  fa-stack-1x {{topic.image_id}}\"></i>\n                            </a>\n                        </span>\n                        <div *ngIf=\"!topic.short_name\">{{topic.title}}</div>\n                        <div *ngIf=\"topic.short_name\">{{topic.short_name}}</div>\n\n                    </div>\n                    <div style=\"width:1%\"></div>\n                    <div style=\"clear:both\"><br /></div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -783,7 +783,7 @@ var LessonComponent = (function () {
                         if (answer.is_correct == 1)
                             return true;
                         return false;
-                    })
+                    }), explanation: this.question.explanation
                 }
             });
             dialogRef.afterClosed().subscribe(function (result) {
@@ -854,7 +854,7 @@ var GoodDialogComponent = (function () {
 GoodDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'good-dialog',
-        template: "<h2 mat-dialog-title>Good</h2>\n        <mat-dialog-content>Congratulation</mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
+        template: "<h2 mat-dialog-title>Correct!</h2>\n        <mat-dialog-content>Congratulations</mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _e || Object, Object])
@@ -865,6 +865,7 @@ var BadDialogComponent = (function () {
         this.dialogRef = dialogRef;
         this.data = data;
         this.answers = data.data;
+        this.explanation = data.explanation;
     }
     BadDialogComponent.prototype.onNoClick = function () {
         this.dialogRef.close();
@@ -874,7 +875,7 @@ var BadDialogComponent = (function () {
 BadDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'bad-dialog',
-        template: "<h2 mat-dialog-title>Bad</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"answers.length == 1\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"answers.length != 1\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
+        template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"answers.length == 1\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"answers.length != 1\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\">Continue</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _f || Object, Object])
