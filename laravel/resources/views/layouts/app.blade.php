@@ -59,6 +59,9 @@
                             <li><a href="{{ route('users.index') }}">Administrators</a></li>
                         @endif
                         <li><a href="{{ route('students.index') }}">Participants</a></li>
+                        @if(auth()->user()->is_admin)
+                            <li><a href="{{ route('settings.index') }}">Settings</a></li>
+                        @endif
                     </ul>
                 @endif
 
