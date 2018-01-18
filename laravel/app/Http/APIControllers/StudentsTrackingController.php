@@ -26,6 +26,7 @@ class StudentsTrackingController extends Controller
             'student_id' => $student->id,
             'lesson_id' => $lesson,
             'action' => 'start',
+            'date' => $now,
             'start_datetime' => $now,
             'weak_questions' => json_encode([]),
         ]);
@@ -53,6 +54,7 @@ class StudentsTrackingController extends Controller
             'student_id' => $student->id,
             'lesson_id' => $lesson,
             'action' => 'done',
+            'date' => date("Y-m-d H:i:s"),
             'start_datetime' => date("Y-m-d H:i:s", (request()->start_datetime ? strtotime(request()->start_datetime) : date('U'))),
             'weak_questions' => json_encode(request()->weak_questions ? request()->weak_questions : []),
         ]);
