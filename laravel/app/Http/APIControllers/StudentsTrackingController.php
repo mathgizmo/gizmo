@@ -29,6 +29,8 @@ class StudentsTrackingController extends Controller
             'date' => $now,
             'start_datetime' => $now,
             'weak_questions' => json_encode([]),
+            'ip' => request()->ip(),
+            'user_agent' => request()->server('HTTP_USER_AGENT'),
         ]);
 
         return $this->success($now);
