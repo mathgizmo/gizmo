@@ -59,6 +59,8 @@ class StudentsTrackingController extends Controller
             'date' => date("Y-m-d H:i:s"),
             'start_datetime' => date("Y-m-d H:i:s", (request()->start_datetime ? strtotime(request()->start_datetime) : date('U'))),
             'weak_questions' => json_encode(request()->weak_questions ? request()->weak_questions : []),
+            'ip' => request()->ip(),
+            'user_agent' => request()->server('HTTP_USER_AGENT'),
         ]);
 
         return $this->success('OK.');
