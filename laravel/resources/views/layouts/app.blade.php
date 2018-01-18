@@ -62,6 +62,7 @@
                         @if(auth()->user()->is_admin)
                             <li><a href="{{ route('settings.index') }}">Settings</a></li>
                         @endif
+                        <li><a href="{{ route('error_report.index', 'new') }}">Error Report</a></li>
                     </ul>
                 @endif
 
