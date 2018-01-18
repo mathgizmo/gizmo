@@ -59,6 +59,8 @@
 												<th class="col-md">Action</th>
 												<th class="col-md">Start_datetime</th>
 												<th class="col-md">Weak questions</th>
+												<th class="col-md">Ip address</th>
+												<th class="col-md">User-Agent</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -69,6 +71,8 @@
 													<td>{{ $students_tracking->action }}</td>
 													<td>{{ $students_tracking->start_datetime }}</td>
 													<td>{{ $students_tracking->weak_questions }}</td>
+													<td>{{ $students_tracking->ip }}</td>
+													<td>{{ $students_tracking->user_agent }}</td>
 												</tr>
 											@endforeach
 										</tbody>
