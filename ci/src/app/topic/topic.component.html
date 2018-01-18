@@ -2,7 +2,7 @@
 <div class="text-center">
     <h2>{{topicTree.title}}</h2>
     <div ng-if="topicTree.lessons.length">
-        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = index" class="col-xs-2">
+        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = index" class="greenButtonContainer">
             <a routerLink="/topic/{{topicTree.id}}/lesson/{{lesson.id}}" routerLinkActive="active">
                 <div class="greenButton">
                     <span>{{lesson.title}}</span>
