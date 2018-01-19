@@ -64,7 +64,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($student->students_tracking as $students_tracking)
+											@foreach($student->students_tracking->sortByDesc('id') as $students_tracking)
 												<tr>
 													<td>{{ $students_tracking->lesson_id }}</td>
 													<td>{{ date('H:i d.m.Y', strtotime($students_tracking->date)) }}</td>
