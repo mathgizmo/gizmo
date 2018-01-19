@@ -21,5 +21,7 @@ $api->group(['middleware' => 'api.auth'], function () use ($api) {
     $api->any('/topic/{id}/lesson/{lesson_id}' , 'App\Http\APIControllers\TopicController@getLesson');
     $api->post('/lesson/{lesson}/start', 'App\Http\APIControllers\StudentsTrackingController@start');
     $api->post('/lesson/{lesson}/done', 'App\Http\APIControllers\StudentsTrackingController@done');
+
+    $api->get('/report_error/{question}', 'App\Http\APIControllers\ReportErrorController@report');
 });
 
