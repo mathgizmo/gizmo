@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => $_ENV["app"] == 'api'?'api':'web',
         'passwords' => 'users',
     ],
 
