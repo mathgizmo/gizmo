@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod-build": "ng build --output-path=last-build/ --env=prod"
+    "prod-build": "ng build --output-path=last-build/ --env=prod --base-href /ci/"
   },
   "private": true,
   "dependencies": {
