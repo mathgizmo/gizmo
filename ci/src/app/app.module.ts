@@ -12,6 +12,7 @@ import { routing }        from './app.routing';
 
 import { AuthGuard } from './_guards/index';
 import { AuthenticationService, ServerService } from './_services/index';
+import { WelcomeComponent } from './welcome/index';
 import { LoginComponent } from './login/index';
 import { RegisterComponent } from './register/index';
 import { HomeComponent } from './home/index';
@@ -39,6 +40,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     ],
     declarations: [
         AppComponent,
+        WelcomeComponent,
         LoginComponent,
         RegisterComponent,
         HomeComponent,
