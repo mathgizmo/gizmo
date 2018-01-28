@@ -4,7 +4,7 @@
     <div ng-if="topicTree.lessons.length">
         <div *ngFor="let lesson of topicTree.lessons; let levelIndex = index" class="greenButtonContainer">
             <a routerLink="/topic/{{topicTree.id}}/lesson/{{lesson.id}}" routerLinkActive="active">
-                <div class="greenButton">
+                <div class="arrow">
                     <span>{{lesson.title}}</span>
                 </div>
             </a>

@@ -94,10 +94,15 @@ h1, h2, h3, h4 {
     border-radius: 25px;
     width:80px;
 }
+.arrow {
+
+}
 .greenButtonContainer {
     width:100px;
     display: inline-block;
     padding: 25px;
+    background: url(/assets/images/arrow.png);
+    background-size: 100% 100%;
 }
 
 .fill-remaining-space {

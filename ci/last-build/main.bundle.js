@@ -1066,7 +1066,7 @@ var _a, _b;
 /***/ "../../../../../src/app/topic/topic.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <h2>{{topicTree.title}}</h2>\n    <div ng-if=\"topicTree.lessons.length\">\n        <div *ngFor=\"let lesson of topicTree.lessons; let levelIndex = index\" class=\"greenButtonContainer\">\n            <a routerLink=\"/topic/{{topicTree.id}}/lesson/{{lesson.id}}\" routerLinkActive=\"active\">\n                <div class=\"greenButton\">\n                    <span>{{lesson.title}}</span>\n                </div>\n            </a>\n        </div>\n    </div>\n</div>"
+module.exports = "<a routerLink=\"/\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <h2>{{topicTree.title}}</h2>\n    <div ng-if=\"topicTree.lessons.length\">\n        <div *ngFor=\"let lesson of topicTree.lessons; let levelIndex = index\" class=\"greenButtonContainer\">\n            <a routerLink=\"/topic/{{topicTree.id}}/lesson/{{lesson.id}}\" routerLinkActive=\"active\">\n                <div class=\"arrow\">\n                    <span>{{lesson.title}}</span>\n                </div>\n            </a>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
