@@ -2,7 +2,7 @@
     <div ng-if="topicsTree.length">
         <div *ngFor="let level of topicsTree; let levelIndex = index">
             <div *ngIf="level.units.length">
-                <h3>{{level.title}}</h3>
+                <h3 style="font-weight: bold;">{{level.title}}</h3>
                 <div *ngFor="let unit of level.units; let unitIndex = index">
                     <h4>{{unit.title}}</h4>
                     <div *ngFor="let topic of unit.topics; let topicIndex = index" style="display: inline-block;width:33%;vertical-align:top;">
