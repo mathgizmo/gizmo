@@ -58,6 +58,41 @@ class TopicController extends Controller
             return $this->error('topic not found');
         }
         $topic['lessons'] = DB::table('lesson')->where('topic_id',$id)->orderBy('id')->get();
+        $lessons_ids = [];
+        $lessons_order = [];
+        foreach($topic['lessons'] as $id => $lesson) {
+            $lessons_ids[] = $lesson['id'];
+            $lessons_order[$lesson['order_no']][] = $lesson['id'];
+            $lessons_order_sort_id[$lesson['order_no']][] = $id;
+        }
+
+        $lessons_done = [];
+        foreach(DB::table('students_tracking')->select('lesson_id')->whereIn('lesson_id',$lessons_ids)->distinct()->get() as $id) {
+            $lessons_done[] = $id;
+        }
+        $active_flag = true;
+        foreach ($lessons_order as $sort_id => $order) {
+            //if all previous lessons with lower order_no not done, then lesson should be disabled
+            if(!$active_flag) {
+                foreach($lessons_order_sort_id[$sort_id] as $id) {
+                    $topic['lessons'][$id]['status'] = 0;
+                }
+            }
+            else {
+                foreach($order as $id => $lesson_id) {
+                    if(in_array($lesson_id, $lessons_done)) {
+                        $topic['lessons'][$lessons_order_sort_id[$sort_id][$id]]['status'] = 1;
+                    }
+                    else {
+                        $topic['lessons'][$lessons_order_sort_id[$sort_id][$id]]['status'] = 2;
+                        if($topic['lessons'][$lessons_order_sort_id[$sort_id][$id]]['dependency'] == 'yes') {
+                            $active_flag = false;
+                        }
+                    }
+                }
+            }
+        }
+
 
         DB::connection()->setFetchMode($mode);
         return $this->success($topic);
