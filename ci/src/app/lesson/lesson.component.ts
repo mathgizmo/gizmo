@@ -146,9 +146,9 @@ export class LessonComponent implements OnInit {
 @Component({
     selector: 'good-dialog',
     template: `<h2 mat-dialog-title>Correct!</h2>
-        <mat-dialog-content>Congratulations</mat-dialog-content>
+        <mat-dialog-content></mat-dialog-content>
         <mat-dialog-actions>
-          <button mat-button [mat-dialog-close]="true">Continue</button>
+          <button mat-button [mat-dialog-close]="true" style="background-color: yellow">Continue</button>
         </mat-dialog-actions>`
 })
 export class GoodDialogComponent {
@@ -180,7 +180,7 @@ export class GoodDialogComponent {
             </div>
         </mat-dialog-content>
         <mat-dialog-actions>
-          <button mat-button [mat-dialog-close]="true">Continue</button>
+          <button mat-button [mat-dialog-close]="true" style="background-color: yellow">Continue</button>
         </mat-dialog-actions>`
 })
 export class BadDialogComponent {
