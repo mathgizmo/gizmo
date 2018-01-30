@@ -18,6 +18,7 @@ export class LessonComponent implements OnInit {
     answers: string[];
     weak_questions: string[] = [];
     start_time: any = '';
+    initial_loading = 1;
     private sub: any;
 
     constructor(
@@ -37,6 +38,7 @@ export class LessonComponent implements OnInit {
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
                     this.lessonTree = lessonTree;
+                    this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
                         this.nextQuestion();
                         this.trackingService.startLesson(this.lesson_id).subscribe(start_time => {
