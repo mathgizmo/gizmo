@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => $_ENV["app"] == 'api'?'api':'web',
+        'guard' => (isset($_ENV["app"]) && $_ENV["app"] == 'api')?'api':'web',
         'passwords' => 'users',
     ],
 
