@@ -69,13 +69,12 @@ class LessonController extends Controller
 			'unit_id'	=> 'required',
 			'topic_id'	=> 'required',
 			'lesson_title'=> 'required',
-			'dependency'=> 'required',
 		]);
 		 
 		DB::table('lesson')->insert([
 			'title' => $request['lesson_title'], 
 			'order_no' => $request['order_no'], 
-			'dependency' => $request['dependency'],
+			'dependency' => $request['dependency'] ?: false,
 			'topic_id' => $request['topic_id'],
 			'created_at' => date('Y-m-d H:i:s'),
 			'modified_at' => date('Y-m-d H:i:s')
@@ -161,12 +160,11 @@ class LessonController extends Controller
 		 'unit_id'	=> 'required',
 		 'topic_id'	=> 'required',
 		 'lesson_title'=> 'required',
-		 'dependency'=> 'required',
 		 ]);
 		 
 		 DB::table('lesson')->where('id',$id)->update([
-		 'title' => $request['lesson_title'], 
-		 'dependency' => $request['dependency'],
+		 'title' => $request['lesson_title'],
+         'dependency' => $request['dependency'] ?: false,
 		 'topic_id' => $request['topic_id'],
 		 'order_no' => $request['order_no'],
 		 'created_at' => date('Y-m-d H:i:s'),

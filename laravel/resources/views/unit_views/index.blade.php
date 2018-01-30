@@ -78,7 +78,7 @@
 												<td>{{$unit->id}}</td>
 												<td>{{$unit->order_no}}</td>
 												<td>{{$unit->title}}</td>
-												<td>{{$unit->dependency}}</td>
+												<td>{{($unit->dependency == true) ? 'Yes' : 'No'}}</td>
 												<td class="text-right">
 
 													<!-- <a class="btn btn-primary" href="{{ route('unit_views.show', $unit->id) }}">View</a> -->

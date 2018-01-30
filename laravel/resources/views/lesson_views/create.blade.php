@@ -101,12 +101,10 @@
 				      	</div>
 			
 						<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
-                            <label for="type" class="col-md-4 control-label">Dependency</label>
+                            <label for="type" class="col-md-4 control-label">This should be finished to continue</label>
 
                             <div class="col-md-6 radio"> 
-								<label for="type" class="col-md-3"> <input checked="checked" type="radio" name="dependency" value="Yes">Yes</label>
-							    <label for="type" class="col-md-3"> <input type="radio" name="dependency" value="No"> No</label>
-
+								<label for="type" class="col-md-3"> <input checked="checked" type="checkbox" name="dependency" value="1"></label>
                                 @if ($errors->has('dependency'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('dependency') }}</strong>
@@ -167,7 +165,7 @@
 									<td>{{$lesson->id}}</td>
 									<td>{{$lesson->order_no}}</td>
 									<td>{{$lesson->title}}</td>
-									<td>{{$lesson->dependency}}</td>
+									<td>{{($lesson->dependency == true) ? 'Yes' : 'No'}}</td>
 									<td class="text-right">
 
 											<!-- <a class="btn btn-primary disabled" href="{{ route('lesson_views.show', $lesson->id) }}">View</a> -->

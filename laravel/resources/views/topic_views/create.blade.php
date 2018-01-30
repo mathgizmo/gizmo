@@ -123,6 +123,18 @@
                             @endif
                         </div>
                     </div>
+					<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
+						<label for="type" class="col-md-4 control-label">This should be finished to continue</label>
+
+						<div class="col-md-6 radio">
+							<label for="type" class="col-md-3"> <input checked="checked" type="checkbox" name="dependency" value="1"></label>
+							@if ($errors->has('dependency'))
+								<span class="help-block">
+									<strong>{{ $errors->first('dependency') }}</strong>
+								</span>
+							@endif
+						</div>
+					</div>
 
 					<div class="form-group">
 						<div class="col-md-6 col-md-offset-4">
@@ -143,6 +155,7 @@
 									<th class="col-md">ID</th>
 									<th class="col-md">Title</th>
 									<th class="col-md">Short Name</th>
+									<th class="col-md">Dependency</th>
 									<th class="col-md-3">OPTIONS</th>
 								</tr>
 							</thead>
@@ -155,6 +168,7 @@
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
 									<td>{{$topic->short_name}}</td>
+									<td>{{($topic->dependency == true) ? 'Yes' : 'No'}}</td>
 									<td class="text-center">
 
 											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
