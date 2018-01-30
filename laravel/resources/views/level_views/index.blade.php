@@ -35,6 +35,7 @@
 											<th class="col-md">ID</th>
 											<th class="col-md">Order No</th>
 											<th class="col-md">Title</th>
+											<th class="col-md">Dependency</th>
 											<th class="col-md-3">OPTIONS</th>
 										</tr>
 									</thead>
@@ -46,6 +47,7 @@
 											<td>{{$level->id}}</td>
 											<td>{{$level->order_no}}</td>
 											<td>{{$level->title}}</td>
+											<td>{{($level->dependency == true) ? 'Yes' : 'No'}}</td>
 											<td class="text-right">
 
 												<!-- <a class="btn btn-primary" href="{{ route('level_views.show', $level->id) }}">View</a> -->

@@ -102,24 +102,19 @@
                                 @endif
                             </div>
 				      </div>
-					  
 						<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
-							<label for="type" class="col-md-4 control-label">Dependency</label>
+							<label for="type" class="col-md-4 control-label">This should be finished to continue</label>
 
-                            <div class="col-md-6 radio"> 
-						
-								<label for="type" class="col-md-3"> <input type="radio" name="dependency" <?php echo ( "Yes" == $lesson->dependency) ? 'checked="checked"' : ''; ?> value="Yes">Yes</label>
-							
-								<label for="type" class="col-md-3"> <input type="radio" name="dependency" <?php echo ( "No" == $lesson->dependency) ? 'checked="checked"' : ''; ?> value="No"> No</label>
-								
-
-                                @if ($errors->has('dependency'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('dependency') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+							<div class="col-md-6 radio">
+								<label for="type" class="col-md-3"> <input {{ ($lesson->dependency == true) ? 'checked="checked"' : ''}} type="checkbox" name="dependency" value="1"></label>
+								@if ($errors->has('dependency'))
+									<span class="help-block">
+												<strong>{{ $errors->first('dependency') }}</strong>
+											</span>
+								@endif
+							</div>
 						</div>
+
 
 						<div class="form-group{{ $errors->has('order_no') ? ' has-error' : '' }}">
 	                        <label for="order_no" class="col-md-4 control-label">Order No</label>

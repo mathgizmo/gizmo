@@ -110,7 +110,7 @@
 									<td>{{$lesson->id}}</td>
 									<td>{{$lesson->order_no}}</td>
 									<td>{{$lesson->title}}</td>
-									<td>{{$lesson->dependency}}</td>
+									<td>{{($lesson->dependency == true) ? 'Yes' : 'No'}}</td>
 									<td class="text-right">
 										<!-- <a class="btn btn-primary disabled" href="{{ route('lesson_views.show', $lesson->id) }}">View</a> -->
 										<a class="btn btn-warning" href="{{ route('lesson_views.edit', $lesson->id) }}">Edit</a>

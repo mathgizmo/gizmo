@@ -56,7 +56,8 @@ class LevelController extends Controller
 		 ]);
 		 
 		 DB::table('level')->insert([
-         'title' => $request['title'], 
+         'title' => $request['title'],
+         'dependency' => $request['dependency'] ?: false,
 		 'order_no' => $request['order_no'], 
 		 'created_at' => date('Y-m-d H:i:s'),
 		 'updated_at' => date('Y-m-d H:i:s')
@@ -113,6 +114,7 @@ class LevelController extends Controller
         DB::table('level')->where('id',$id)->update([
             'title' => $request['title'], 
             'order_no' => $request['order_no'],
+            'dependency' => $request['dependency'] ?: false,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);

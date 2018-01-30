@@ -67,6 +67,7 @@ class TopicController extends Controller
         DB::table('topic')->insert([
             'image_id' => $request['image_id'],
             'short_name' => $request['short_name'],
+            'dependency' => $request['dependency'] ?: false,
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
             'unit_id' => $request['unit_id'],
@@ -144,6 +145,7 @@ class TopicController extends Controller
             'short_name' => $request['short_name'],
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
+            'dependency' => $request['dependency'] ?: false,
             'unit_id' => $request['unit_id'],
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')

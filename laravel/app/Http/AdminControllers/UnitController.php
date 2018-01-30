@@ -57,12 +57,11 @@ class UnitController extends Controller
 		$this->validate($request, [
 		 'level_id'	=> 'required',
 		 'unit_title'=> 'required',
-		 'dependency'=> 'required',
 		 ]);
 		 
 		 DB::table('unit')->insert([
-		 'title' => $request['unit_title'], 
-		 'dependency' => $request['dependency'],
+		 'title' => $request['unit_title'],
+         'dependency' => $request['dependency'] ?: false,
          'level_id' => $request['level_id'],
 		 'order_no' => $request['order_no'],
 		 'created_at' => date('Y-m-d H:i:s'),
@@ -133,12 +132,11 @@ class UnitController extends Controller
     		'level_id'	=> 'required',
     		 //'unit_id'	=> 'required',
     		'unit_title'=> 'required',
-    		'dependency'=> 'required',
 		]);
 		 
 		DB::table('unit')->where('id',$id)->update([
-    		'title' => $request['unit_title'], 
-    		'dependency' => $request['dependency'],
+    		'title' => $request['unit_title'],
+            'dependency' => $request['dependency'] ?: false,
             'level_id' => $request['level_id'],
     		'order_no' => $request['order_no'],
     		'created_at' => date('Y-m-d H:i:s'),

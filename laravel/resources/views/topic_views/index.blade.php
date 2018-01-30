@@ -89,6 +89,7 @@
 												<th class="col-md">ID</th>
 												<th class="col-md">Title</th>
 												<th class="col-md">Short Name</th>
+												<th class="col-md">Dependency</th>
 												<th class="col-md-3">OPTIONS</th>
 											</tr>
 										</thead>
@@ -102,6 +103,7 @@
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
 									<td>{{$topic->short_name}}</td>
+									<td>{{($topic->dependency == true) ? 'Yes' : 'No'}}</td>
 									<td class="text-center">
 
 											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
