@@ -2,7 +2,10 @@
 
 namespace App\Http\APIControllers;
 
+use App\Progress;
 use App\StudentsTracking;
+use App\Topic;
+use App\Unit;
 use JWTAuth;
 use App\Lesson;
 use App\Http\Requests;
@@ -62,6 +65,75 @@ class StudentsTrackingController extends Controller
             'ip' => request()->ip(),
             'user_agent' => request()->server('HTTP_USER_AGENT'),
         ]);
+
+        $progress_data = [
+            'student_id' => $student->id,
+            'entity_type' => 0,
+            'entity_id' => $lesson
+        ];
+        $progress = Progress::where($progress_data)->get();
+        if ($progress->count() == 0) {
+            Progress::create($progress_data);
+            $lessons = Lesson::where(['topic_id' => $model->topic_id, 'dependency' => 1])->get();
+            $check = true;
+            foreach ($lessons as $lesson) {
+                $progress_data['entity_id'] = $lesson->id;
+                $progress = Progress::where($progress_data)->get();
+                if ($progress->count() == 0) {
+                    $check = false;
+                    break;
+                }
+            }
+            if ($check == true) {
+                $progress_data['entity_id'] = $model->topic_id;
+                $progress_data['entity_type'] = 1;
+                $progress = Progress::where($progress_data)->get();
+                if ($progress->count() == 0) {
+                    Progress::create($progress_data);
+                }
+            }
+
+            $topic_model = Topic::find($model->topic_id)->first();
+            $topics = Topic::where(['unit_id' => $topic_model->unit_id, 'dependency' => 1])->get();
+            $check = true;
+            foreach ($topics as $topic) {
+                $progress_data['entity_id'] = $topic->id;
+                $progress = Progress::where($progress_data)->get();
+                if ($progress->count() == 0) {
+                    $check = false;
+                    break;
+                }
+            }
+            if ($check == true) {
+                $progress_data['entity_id'] = $topic_model->unit_id;
+                $progress_data['entity_type'] = 2;
+                $progress = Progress::where($progress_data)->get();
+                if ($progress->count() == 0) {
+                    Progress::create($progress_data);
+                }
+            }
+
+            $unit_model = Unit::find($topic_model->unit_id)->first();
+            $units = Unit::where(['level_id' => $unit_model->level_id, 'dependency' => 1])->get();
+            $check = true;
+            foreach ($units as $unit) {
+                $progress_data['entity_id'] = $unit->id;
+                $progress = Progress::where($progress_data)->get();
+                if ($progress->count() == 0) {
+                    $check = false;
+                    break;
+                }
+            }
+            if ($check == true) {
+                $progress_data['entity_id'] = $unit_model->level_id;
+                $progress_data['entity_type'] = 3;
+                $progress = Progress::where($progress_data)->get();
+                if ($progress->count() == 0) {
+                    Progress::create($progress_data);
+                }
+            }
+
+        }
 
         return $this->success('OK.');
     }
