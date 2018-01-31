@@ -25,3 +25,14 @@ Run *npm install* into ci folder to install required npm modules
 Copy ci/src/app/globals.ts.distr to ci/src/app/globals.ts and set you variables there
 Use *ng build --prod* into ci folder to build angular app and see your changes under apache
 
+###To set up backups to dropbox
+Go to backup folder. Copy .dropbox_uploader.distr into .dropbox_uploader
+ 1) Open the following URL in your Browser, and log in using your account: https://www.dropbox.com/developers/apps
+ 2) Click on "Create App", then select "Dropbox API app"
+ 3) Now go on with the configuration, choosing the app permissions and access restrictions to your DropBox folder
+ 4) Enter the "App Name" that you prefer (e.g. MyUploader3196922415454)
+
+ Now, click on the "Create App" button.
+
+ When your new App is successfully created, please click on the Generate button under the 'Generated access token' section, then copy and paste the new access token into corresponding variable in .dropbox_uploader file. Define your dropbox backups folder there.
+ Add backups/.do_backup.sh to your daily cron
