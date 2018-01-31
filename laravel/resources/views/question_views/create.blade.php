@@ -241,6 +241,30 @@
                                 @endif
                             </div>
 				      </div>
+                    <div class="form-group{{ $errors->has('rounding') ? ' has-error' : '' }}">
+                        <label for="type" class="col-md-4 control-label">Round user answer with same accuracy as correct answer</label>
+
+                        <div class="col-md-6 radio">
+                            <label for="type" class="col-md-3"> <input type="checkbox" name="rounding" value="1"></label>
+                            @if ($errors->has('rounding'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('rounding') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="form-group{{ $errors->has('conversion') ? ' has-error' : '' }}">
+                        <label for="type" class="col-md-4 control-label">Convert user answer to decimal value</label>
+
+                        <div class="col-md-6 radio">
+                            <label for="type" class="col-md-3"> <input type="checkbox" name="conversion" value="1"></label>
+                            @if ($errors->has('conversion'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('conversion') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
 
 		<div class="form-group">
 			<div class="col-md-6 col-md-offset-4">
