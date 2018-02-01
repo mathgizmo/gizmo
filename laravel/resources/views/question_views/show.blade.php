@@ -113,6 +113,30 @@
 							</div>
 						</div>
 
+						<div class="row bg-info">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="name">Convert user answer to decimal value</label>
+								</div>
+							</div>
+
+							<div class="col-md-10">
+								<p class="form-control-static"> {{ ($question->conversion == true) ? 'Yes' : 'No'}}</p>
+							</div>
+						</div>
+
+						<div class="row bg-success">
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="name">Round user answer with same accuracy as correct answer</label>
+								</div>
+							</div>
+
+							<div class="col-md-10">
+								<p class="form-control-static"> {{ ($question->rounding == true) ? 'Yes' : 'No'}}</p>
+							</div>
+						</div>
+
 						<div class="row">
 							<div class="col-md-12 text-right">
 									<a class="btn btn-default" href="{{ route('question_views.index') }}">Back</a>

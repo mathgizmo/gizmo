@@ -231,6 +231,8 @@ class QuestionController extends Controller
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],
 									'created_at' => date('Y-m-d H:i:s'),
+                                    'conversion' => $request['conversion'] ?: false,
+                                    'rounding' => $request['rounding'] ?: false,
 									'modified_at' => date('Y-m-d H:i:s')
 									]);
 		$question = Question::create($collectionQuestion->all());
@@ -341,6 +343,8 @@ class QuestionController extends Controller
 
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],
+                                    'conversion' => $request['conversion'] ?: false,
+                                    'rounding' => $request['rounding'] ?: false,
 									'created_at' => date('Y-m-d H:i:s'),
 									'modified_at' => date('Y-m-d H:i:s')
 									]);
