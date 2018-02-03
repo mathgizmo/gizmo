@@ -20,6 +20,20 @@ class TopicController extends Controller
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
 
+        $lessons_done = [];
+        foreach(DB::table('lesson')->select('topic_id', DB::raw("COUNT(lesson.id) as total"), DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done"))
+            ->leftJoin('progresses', function ($join) use ($student) {
+                $join->on('progresses.student_id', '=', DB::raw($student->id))
+                ->on('progresses.entity_type', '=', DB::raw(0))
+                ->on('progresses.entity_id', '=', 'lesson.id');
+            })
+            ->groupBy('topic_id')->get()as $topic) {
+            $lessons_done[$topic['topic_id']] = [
+                'total' => $topic['total'],
+                'done' => $topic['done']
+            ];
+        }
+
         $topics_done = [];
         $units_done = [];
         $levels_done = [];
@@ -114,6 +128,7 @@ class TopicController extends Controller
                     $topic['status'] = 0;
                 }
             }
+            $topic['progress'] = isset($lessons_done[$topic['id']])?$lessons_done[$topic['id']]: ['total' => 0, 'done' => 0];
             $response[$l_element_id]['units'][$u_element_id]['topics'][] = $topic;
         }
         DB::connection()->setFetchMode($mode);
