@@ -2,12 +2,28 @@
 <div class="text-center">
     <h2>{{topicTree.title}}</h2>
     <div ng-if="topicTree.lessons.length">
-        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = index" class="greenButtonContainer">
-            <a routerLink="/topic/{{topicTree.id}}/lesson/{{lesson.id}}" routerLinkActive="active">
-                <div class="arrow">
-                    <span>{{lesson.title}}</span>
-                </div>
-            </a>
+        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = index" class="arrowRowContainer">
+            <div *ngIf="lesson.status == 1" class="arrowButtonContainer greenout">
+                <a routerLink="/topic/{{topicTree.id}}/lesson/{{lesson.id}}" routerLinkActive="active">
+                    <div class="arrow">
+                        <span>{{lesson.title}}</span>
+                    </div>
+                </a>
+            </div>
+            <div *ngIf="lesson.status == 2" class="arrowButtonContainer yellowout">
+                <a routerLink="/topic/{{topicTree.id}}/lesson/{{lesson.id}}" routerLinkActive="active">
+                    <div class="arrow">
+                        <span>{{lesson.title}}</span>
+                    </div>
+                </a>
+            </div>
+            <div *ngIf="lesson.status == 0" class="arrowButtonContainer redout">
+                <a>
+                    <div class="arrow">
+                        <span>{{lesson.title}}</span>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </div>
