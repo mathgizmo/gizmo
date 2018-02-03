@@ -162,20 +162,13 @@
             </div>
             <div class="modal-body">
                 <div class="topic-images">
-                    <ul>
-                        <li><input type="checkbox" id="cb1" value="cb1-img" />
-                            <label for="cb1"><img id="cb1-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
-                        </li>
-                        <li><input type="checkbox" id="cb2" value="cb2-img" />
-                            <label for="cb2"><img id="cb2-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
-                        </li>
-                        <li><input type="checkbox" id="cb3" value="cb3-img" />
-                            <label for="cb3"><img id="cb3-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
-                        </li>
-                        <li><input type="checkbox" id="cb4" value="cb4-img" />
-                            <label for="cb4"><img id="cb4-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
-                        </li>
-                    </ul>
+	        		<ul>
+					  	@for ($i = 1; $i <= 20; $i++)
+					  	<li><input type="checkbox" id="cb{{ $i }}" value="cb{{ $i }}-img" />
+						    <label for="cb{{ $i }}"><img id="cb{{ $i }}-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
+						</li>
+                        @endfor
+					</ul>
                 </div>
             </div>
             <div class="modal-footer">
