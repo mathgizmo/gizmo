@@ -58,35 +58,166 @@ h1, h2, h3, h4 {
 }
 
 .cb1-img {
-    width: 77px !important;
-    height: 77px !important;
-    background: url(/assets/images/courses.jpg) -26px -22px;
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -51px -50px;
     margin: 17px;
-    border-radius: 50%;
+    border-radius: 8px;
 }
 
 .cb2-img {
-    width: 77px !important;
-    height: 77px !important;
-    background: url(/assets/images/courses.jpg) -106px -22px;
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -194px -50px;
     margin: 17px;
-    border-radius: 50%;
+    border-radius: 8px;
 }
 
 .cb3-img {
-    width: 77px !important;
-    height: 77px !important;
-    background: url(/assets/images/courses.jpg) -186px -22px;
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -338px -50px;
     margin: 17px;
-    border-radius: 50%;
+    border-radius: 8px;
 }
 
 .cb4-img {
-    width: 77px !important;
-    height: 77px !important;
-    background: url(/assets/images/courses.jpg) -266px -22px;
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -483px -50px;
     margin: 17px;
-    border-radius: 50%;
+    border-radius: 8px;
+}
+
+
+.cb5-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -49px -192px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb6-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -193px -192px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb7-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -337px -192px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb8-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -482px -194px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+
+.cb9-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -50px -336px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb10-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -193px -337px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb11-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -337px -338px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb12-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -482px -338px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+
+.cb13-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -50px -481px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb14-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -193px -481px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb15-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -337px -481px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb16-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -482px -482px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb17-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -50px -625px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb18-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -193px -626px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb19-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -337px -626px;
+    margin: 17px;
+    border-radius: 8px;
+}
+
+.cb20-img {
+    width: 79px !important;
+    height: 79px !important;
+    background: url(/assets/images/img_topics.jpg) -482px -626px;
+    margin: 17px;
+    border-radius: 8px;
 }
 .greenButton {
     border: 2px solid;
@@ -101,7 +232,22 @@ h1, h2, h3, h4 {
     width:100px;
     display: inline-block;
     padding: 25px;
-    background: url(/assets/images/arrow.png);
+    /*background:  url(/assets/images/arrow.png);*/
+    background: 
+    linear-gradient(
+      rgba(0, 128, 0, 0.50), 
+      rgba(0, 128, 0, 0.50)
+    ),
+    url(/assets/images/arrow.png);
+    background-size: 100% 100%;
+}
+.greenButtonContainer.yellow_fone {
+    background: 
+    linear-gradient(
+      rgba(255, 255, 0, 0.50), 
+      rgba(255, 255, 0, 0.50)
+    ),
+    url(/assets/images/arrow.png);
     background-size: 100% 100%;
 }
 
