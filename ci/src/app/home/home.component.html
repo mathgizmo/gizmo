@@ -14,8 +14,8 @@
                         </span>
                         <span *ngIf="topicIndex < 4000" class="fa-stack fa-4x">
                             <a routerLink="/topic/{{topic.id}}" routerLinkActive="active">
-                                <i class="fa fa-circle fa-stack-2x icon-green"></i>
-                                <i class="fa fa-circle-thin fa-stack-2x icon-dark-green"></i>
+                                <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-circle fa-stack-2x icon-green"></i>
+                                <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-circle-thin fa-stack-2x icon-dark-green"></i>
                                 <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-unlock fa-stack-1x"></i>
                                 <i *ngIf="topic.image_id" class="fa  fa-stack-1x {{topic.image_id}}"></i>
                             </a>
