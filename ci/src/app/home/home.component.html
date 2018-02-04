@@ -1,25 +1,22 @@
 ﻿<div class="text-center">
     <div ng-if="topicsTree.length">
         <div *ngFor="let level of topicsTree; let levelIndex = index">
-            <div *ngIf="level.units.length">
+            <div *ngIf="level.units.length" class="shadow">
                 <h3 style="font-weight: bold;">{{level.title}}</h3>
-                <div *ngFor="let unit of level.units; let unitIndex = index">
+                <div *ngFor="let unit of level.units; let unitIndex = index"  class="shadow">
                     <h4>{{unit.title}}</h4>
                     <div *ngFor="let topic of unit.topics; let topicIndex = index" style="display: inline-block;width:33%;vertical-align:top;">
-                        <span *ngIf="topicIndex >= 4000" class="fa-stack fa-4x">
-                            <i class="fa fa-circle fa-stack-2x icon-red"></i>
-                            <i class="fa fa-circle-thin fa-stack-2x icon-dark-red"></i>
-                            <i *ngIf="topic.image_id" class="fa  fa-stack-1x {{topic.image_id}}"></i>
-                            <i class="fa fa-lock fa-stack-1x"></i>
-                        </span>
-                        <span *ngIf="topicIndex < 4000" class="fa-stack fa-4x">
-                            <a routerLink="/topic/{{topic.id}}" routerLinkActive="active">
-                                <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-circle fa-stack-2x icon-green"></i>
-                                <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-circle-thin fa-stack-2x icon-dark-green"></i>
-                                <i *ngIf="!topic.image_id || topic.image_id=='cb0-img'" class="fa fa-unlock fa-stack-1x"></i>
-                                <i *ngIf="topic.image_id" class="fa  fa-stack-1x {{topic.image_id}}"></i>
+                        <span class="fa-stack fa-4x" >
+                            <a [routerLink]="topic.status == 0 ? '' : '/topic/'+topic.id" routerLinkActive="active" [class.disabled]="topic.status == 0 ? true : null">
+                                <div [ngClass]="topic.image_id ? topic.image_id : 'cb0-img'">
+                                    <div *ngIf="topic.status != 2" class="topicButton"  [ngClass]="topic.status == 1 ? 'greenout': 'redout'" ></div>
+                                    <div *ngIf="topic.status == 2" class="topicButton"  [ngClass]="'yellowout'" >
+                                        <div [ngStyle]="{'height.%' : topic.progress.percent}" class="bottom_progress" [ngClass]="'greenout'"></div>
+                                    </div>
+                                </div>
                             </a>
                         </span>
+                        <div> {{topic.progress.done}} of {{topic.progress.total}} done</div>
                         <div *ngIf="!topic.short_name">{{topic.title}}</div>
                         <div *ngIf="topic.short_name">{{topic.short_name}}</div>
 

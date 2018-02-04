@@ -28,10 +28,7 @@ class TopicController extends Controller
                 ->on('progresses.entity_id', '=', 'lesson.id');
             })
             ->groupBy('topic_id')->get()as $topic) {
-            $lessons_done[$topic['topic_id']] = [
-                'total' => $topic['total'],
-                'done' => $topic['done']
-            ];
+                $lessons_done[$topic['topic_id']] = $topic;
         }
 
         $topics_done = [];
@@ -128,7 +125,14 @@ class TopicController extends Controller
                     $topic['status'] = 0;
                 }
             }
-            $topic['progress'] = isset($lessons_done[$topic['id']])?$lessons_done[$topic['id']]: ['total' => 0, 'done' => 0];
+            $topic['progress'] = ['total' => 0, 'done' => 0, 'percent' => 0];
+            if (isset($lessons_done[$topic['id']])) {
+                $topic['progress'] = [
+                    'total' => $lessons_done[$topic['id']]['total'],
+                    'done' => $lessons_done[$topic['id']]['done'],
+                    'percent' => round(100*$lessons_done[$topic['id']]['done']/$lessons_done[$topic['id']]['total'])
+                ];
+            }
             $response[$l_element_id]['units'][$u_element_id]['topics'][] = $topic;
         }
         DB::connection()->setFetchMode($mode);
