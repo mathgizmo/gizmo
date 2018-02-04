@@ -22,4 +22,18 @@ class StudentController extends Controller
     {
         return view('student_view.show', compact('student'));
     }
+
+    public function superUpdate(Student $student)
+    {
+        $is_super = true;
+        if ($student->is_super) {
+            $is_super = false;
+
+        }
+        $student->update([
+            'is_super' => $is_super,
+        ]);
+
+        return back();
+    }
 }

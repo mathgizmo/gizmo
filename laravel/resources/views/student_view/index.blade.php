@@ -78,6 +78,11 @@
 											<div class="btn-group">
 												<a href="{{ route('students.show', $student->id) }}" class="btn btn-info">Show</a>
 											</div>
+											<form action="{{ route('students.super', $student->id) }}" method="POST" style="display: inline;">
+												<input type="hidden" name="_method" value="PATCH">
+												{{ csrf_field() }}
+												<button class="btn btn-warning" type="submit">{{ $student->is_super ? 'Revoke super access' : 'Add super access' }}</button>
+											</form>
 										</td>
 									</tr>
 								@endforeach
