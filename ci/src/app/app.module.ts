@@ -17,7 +17,7 @@ import { LoginComponent } from './login/index';
 import { RegisterComponent } from './register/index';
 import { HomeComponent } from './home/index';
 import { TopicComponent } from './topic/index';
-import { LessonComponent, GoodDialogComponent, BadDialogComponent } from './lesson/index';
+import { LessonComponent, GoodDialogComponent, BadDialogComponent, ReportDialogComponent } from './lesson/index';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
 
@@ -47,11 +47,13 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         TopicComponent,
         LessonComponent,
         GoodDialogComponent,
-        BadDialogComponent
+        BadDialogComponent,
+        ReportDialogComponent
     ],
     entryComponents: [
         GoodDialogComponent,
-        BadDialogComponent
+        BadDialogComponent,
+        ReportDialogComponent
     ],
     providers: [
         AuthGuard,

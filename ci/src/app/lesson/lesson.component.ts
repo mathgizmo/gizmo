@@ -77,7 +77,7 @@ export class LessonComponent implements OnInit {
     checkAnswer() {
         if (this.isCorrect()) {
             let dialogRef = this.dialog.open(GoodDialogComponent, {
-                width: '250px',
+                width: '300px',
                 data: { }
             });
 
@@ -95,7 +95,7 @@ export class LessonComponent implements OnInit {
             }
             this.lessonTree['questions'].push(this.question);
             let dialogRef = this.dialog.open(BadDialogComponent, {
-                width: '250px',
+                width: '300px',
                 data: { data: this.question.answers.filter(function(answer){
                     if (answer.is_correct == 1) return true;
                     return false;
@@ -104,6 +104,17 @@ export class LessonComponent implements OnInit {
             });
 
             dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    let reportDialogRef = this.dialog.open(ReportDialogComponent, {
+                        //width: '300px',
+                        data: {question_id: this.question.id, answers: this.answers}
+                    });
+                    
+                    reportDialogRef.afterClosed().subscribe(result => {
+                        console.log(result);
+                        this.topicService.reportError(result.question_id, result.answers, result.option, result.text).subscribe();
+                    });
+                }
                 if (this.lessonTree['questions'].length) {
                     this.nextQuestion();
                 } else {
@@ -182,7 +193,8 @@ export class GoodDialogComponent {
             </div>
         </mat-dialog-content>
         <mat-dialog-actions>
-          <button mat-button [mat-dialog-close]="true" style="background-color: yellow">Continue</button>
+            <button mat-button [mat-dialog-close]="false" style="background-color: yellow">Continue</button>
+            <button mat-button [mat-dialog-close]="true" style="background-color: red">Report Error!</button>
         </mat-dialog-actions>`
 })
 export class BadDialogComponent {
@@ -194,6 +206,50 @@ export class BadDialogComponent {
         @Inject(MAT_DIALOG_DATA) public data: any) {
         this.answers = data.data;
         this.explanation = data.explanation;
+    }
+
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
+}
+
+@Component({
+    selector: 'report-dialog',
+    template: `<h2 mat-dialog-title>Please specify reason</h2>
+        <mat-dialog-content>
+            <mat-radio-group class="radio-group" [(ngModel)]="selectedOption">
+              <mat-radio-button class="radio-button" *ngFor="let option of options; let optionIndex = index" [value]="optionIndex">
+                {{option}}
+              </mat-radio-button>
+            </mat-radio-group>
+        </mat-dialog-content>
+        <mat-form-field *ngIf="selectedOption == 3">
+            <input matInput [(ngModel)]="custom">
+        </mat-form-field>
+        <mat-dialog-actions>
+            <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" style="background-color: blue">Send</button>
+            <button mat-button [mat-dialog-close]="false" style="background-color: green">Cancel</button>
+        </mat-dialog-actions>`
+})
+export class ReportDialogComponent {
+    custom: string;
+    selectedOption: number;
+    answers: string[];
+    question_id: number;
+
+    options = [
+        'Wording of question is confusing or unclear',
+        'Answer is incorrect',
+        'question does not belong in this topic',
+        'other',
+      ];
+
+    constructor(
+        public dialogRef: MatDialogRef<ReportDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.custom = "";
+        this.answers = data.answers;
+        this.question_id = data.question_id;
     }
 
     onNoClick(): void {

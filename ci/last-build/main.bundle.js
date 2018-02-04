@@ -309,6 +309,13 @@ var TopicService = (function () {
         return this.serverService.get('/topic/' + topic_id + '/lesson/' + lesson_id)
             .map(function (response) { return response; });
     };
+    TopicService.prototype.reportError = function (question_id, answers, option, custom) {
+        // notify api about question error
+        var request = JSON.stringify({ answers: answers, options: option, comment: custom });
+        console.log(request);
+        return this.serverService.post('/report_error/' + question_id, request)
+            .map(function (response) { return response; });
+    };
     return TopicService;
 }());
 TopicService = __decorate([
@@ -515,11 +522,13 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_14__topic_index__["a" /* TopicComponent */],
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["c" /* LessonComponent */],
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["d" /* ReportDialogComponent */]
         ],
         entryComponents: [
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["d" /* ReportDialogComponent */]
         ],
         providers: [
             __WEBPACK_IMPORTED_MODULE_8__guards_index__["a" /* AuthGuard */],
@@ -663,6 +672,7 @@ var _a;
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["a"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["b"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["c"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["d"]; });
 
 //# sourceMappingURL=index.js.map
 
@@ -682,6 +692,7 @@ module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"activ
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return LessonComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return GoodDialogComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BadDialogComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return ReportDialogComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
@@ -767,7 +778,7 @@ var LessonComponent = (function () {
         var _this = this;
         if (this.isCorrect()) {
             var dialogRef = this.dialog.open(GoodDialogComponent, {
-                width: '250px',
+                width: '300px',
                 data: {}
             });
             dialogRef.afterClosed().subscribe(function (result) {
@@ -786,7 +797,7 @@ var LessonComponent = (function () {
             }
             this.lessonTree['questions'].push(this.question);
             var dialogRef = this.dialog.open(BadDialogComponent, {
-                width: '250px',
+                width: '300px',
                 data: { data: this.question.answers.filter(function (answer) {
                         if (answer.is_correct == 1)
                             return true;
@@ -795,6 +806,16 @@ var LessonComponent = (function () {
                 }
             });
             dialogRef.afterClosed().subscribe(function (result) {
+                if (result) {
+                    var reportDialogRef = _this.dialog.open(ReportDialogComponent, {
+                        //width: '300px',
+                        data: { question_id: _this.question.id, answers: _this.answers }
+                    });
+                    reportDialogRef.afterClosed().subscribe(function (result) {
+                        console.log(result);
+                        _this.topicService.reportError(result.question_id, result.answers, result.option, result.text).subscribe();
+                    });
+                }
                 if (_this.lessonTree['questions'].length) {
                     _this.nextQuestion();
                 }
@@ -883,13 +904,41 @@ var BadDialogComponent = (function () {
 BadDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'bad-dialog',
-        template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"answers.length == 1\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"answers.length != 1\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: yellow\">Continue</button>\n        </mat-dialog-actions>"
+        template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"answers.length == 1\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"answers.length != 1\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: yellow\">Continue</button>\n            <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: red\">Report Error!</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _f || Object, Object])
 ], BadDialogComponent);
 
-var _a, _b, _c, _d, _e, _f;
+var ReportDialogComponent = (function () {
+    function ReportDialogComponent(dialogRef, data) {
+        this.dialogRef = dialogRef;
+        this.data = data;
+        this.options = [
+            'Wording of question is confusing or unclear',
+            'Answer is incorrect',
+            'question does not belong in this topic',
+            'other',
+        ];
+        this.custom = "";
+        this.answers = data.answers;
+        this.question_id = data.question_id;
+    }
+    ReportDialogComponent.prototype.onNoClick = function () {
+        this.dialogRef.close();
+    };
+    return ReportDialogComponent;
+}());
+ReportDialogComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'report-dialog',
+        template: "<h2 mat-dialog-title>Please specify reason</h2>\n        <mat-dialog-content>\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"selectedOption\">\n              <mat-radio-button class=\"radio-button\" *ngFor=\"let option of options; let optionIndex = index\" [value]=\"optionIndex\">\n                {{option}}\n              </mat-radio-button>\n            </mat-radio-group>\n        </mat-dialog-content>\n        <mat-form-field *ngIf=\"selectedOption == 3\">\n            <input matInput [(ngModel)]=\"custom\">\n        </mat-form-field>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}\" style=\"background-color: blue\">Send</button>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: green\">Cancel</button>\n        </mat-dialog-actions>"
+    }),
+    __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
+    __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _g || Object, Object])
+], ReportDialogComponent);
+
+var _a, _b, _c, _d, _e, _f, _g;
 //# sourceMappingURL=lesson.component.js.map
 
 /***/ }),

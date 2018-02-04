@@ -22,7 +22,7 @@ $api->group(['middleware' => 'api.auth'], function () use ($api) {
     $api->post('/lesson/{lesson}/start', 'App\Http\APIControllers\StudentsTrackingController@start');
     $api->post('/lesson/{lesson}/done', 'App\Http\APIControllers\StudentsTrackingController@done');
 
-    $api->get('/report_error/{question}', 'App\Http\APIControllers\ReportErrorController@report');
+    $api->post('/report_error/{question}', 'App\Http\APIControllers\ReportErrorController@report');
 
     $api->get('/profile', 'App\Http\APIControllers\ProfileController@get');
     $api->post('/profile', 'App\Http\APIControllers\ProfileController@update');

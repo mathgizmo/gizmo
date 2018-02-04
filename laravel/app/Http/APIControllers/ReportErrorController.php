@@ -18,20 +18,30 @@ class ReportErrorController extends Controller
         }
 
         $student = JWTAuth::parseToken()->authenticate();
+        $answers = request('answers');
+        if (!is_array($answers)) {
+            $answers = [$answers];
+        }
 
         ReportError::create([
             'student_id' => $student->id,
             'question_id' => $question,
-            'answer_id' => request('answer_id'),
+            'answers' => implode(";", $answers),
             'options' => request('options'),
             'comment' => request('comment'),
         ]);
 
-        Mail::send('emails.report_error', [], function ($m) {
-            $m->from(Setting::getValueByKey('admin_email'), 'Gizmo');
+        if (Setting::getValueByKey('admin_email')) {
+            try {
+                Mail::send('emails.report_error', [], function ($m) {
+                    $m->from(Setting::getValueByKey('admin_email'), 'Gizmo');
 
-            $m->to(Setting::getValueByKey('admin_email'))->subject('New error report!');
-        });
+                    $m->to(Setting::getValueByKey('admin_email'))->subject('New error report!');
+                });
+            } catch (\Exception $e) {
+
+            }
+        }
 
         return $this->success('OK.');
     }

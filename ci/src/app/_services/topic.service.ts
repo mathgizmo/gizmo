@@ -28,4 +28,12 @@ export class TopicService {
         return this.serverService.get('/topic/'+topic_id+'/lesson/'+lesson_id)
             .map((response: Response) => response);
     }
+
+    reportError(question_id, answers, option, custom) {
+        // notify api about question error
+        let request = JSON.stringify({ answers: answers, options: option, comment: custom });
+        console.log(request);
+        return this.serverService.post('/report_error/'+question_id, request)
+            .map((response: Response) => response);
+    }
 }
