@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('students','StudentController@index')->name('students.index');
     Route::get('students/{student}','StudentController@show')->name('students.show');
+    Route::patch('students/super/{student}','StudentController@superUpdate')->name('students.super');
 
     Route::get('settings','SettingController@index')->name('settings.index');
     Route::patch('settings','SettingController@update')->name('settings.update');
