@@ -75,6 +75,7 @@ class LessonController extends Controller
 			'title' => $request['lesson_title'], 
 			'order_no' => $request['order_no'], 
 			'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
 			'topic_id' => $request['topic_id'],
 			'created_at' => date('Y-m-d H:i:s'),
 			'modified_at' => date('Y-m-d H:i:s')
@@ -165,6 +166,7 @@ class LessonController extends Controller
 		 DB::table('lesson')->where('id',$id)->update([
 		 'title' => $request['lesson_title'],
          'dependency' => $request['dependency'] ?: false,
+         'dev_mode' => $request['dev_mode'] ?: false,
 		 'topic_id' => $request['topic_id'],
 		 'order_no' => $request['order_no'],
 		 'created_at' => date('Y-m-d H:i:s'),
