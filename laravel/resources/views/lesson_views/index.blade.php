@@ -99,6 +99,7 @@
 												<th class="col-md">Order No</th>
 												<th class="col-md">Title</th>
 												<th class="col-md">Dependency</th>
+												<th class="col-md">Lesson in development</th>
 												<th class="col-md-3">OPTIONS</th>
 											</tr>
 										</thead>
@@ -111,6 +112,7 @@
 									<td>{{$lesson->order_no}}</td>
 									<td>{{$lesson->title}}</td>
 									<td>{{($lesson->dependency == true) ? 'Yes' : 'No'}}</td>
+									<td>{{($lesson->dev_mode == true) ? 'Yes' : 'No'}}</td>
 									<td class="text-right">
 										<!-- <a class="btn btn-primary disabled" href="{{ route('lesson_views.show', $lesson->id) }}">View</a> -->
 										<a class="btn btn-warning" href="{{ route('lesson_views.edit', $lesson->id) }}">Edit</a>
