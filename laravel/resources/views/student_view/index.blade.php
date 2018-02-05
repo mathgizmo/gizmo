@@ -83,6 +83,13 @@
 												{{ csrf_field() }}
 												<button class="btn btn-warning" type="submit">{{ $student->is_super ? 'Revoke super access' : 'Add super access' }}</button>
 											</form>
+                                            <form action="{{ route('students.reset', $student->id) }}"
+                                                  method="POST" style="display: inline;"
+                                                  onsubmit="if(confirm('This will remove all participant progress? Are you sure?')) { return true } else {return false };">
+                                                <input type="hidden" name="_method" value="POST">
+                                                {{ csrf_field() }}
+                                                <button class="btn btn-danger" type="submit">Delete</button>
+                                            </form>
 										</td>
 									</tr>
 								@endforeach

@@ -36,4 +36,11 @@ class StudentController extends Controller
 
         return back();
     }
+
+    public function resetProgress(Student $student)
+    {
+        DB::table('progresses')->where('student_id', $student->id)->delete();
+
+        return back();
+    }
 }
