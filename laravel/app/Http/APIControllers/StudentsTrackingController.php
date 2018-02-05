@@ -83,6 +83,7 @@ class StudentsTrackingController extends Controller
                 ->on('progresses.entity_id', '=', 'lesson.id');
                 })
                 ->where(['topic_id' => $model->topic_id, 'dependency' => 1])
+                ->where('dev_mode', 0)
                 ->whereNull('progresses.id')->get();
             //if all lessons done
             if (!count($lessons)) {

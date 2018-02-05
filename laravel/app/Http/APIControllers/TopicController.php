@@ -159,7 +159,11 @@ class TopicController extends Controller
         if(!$topic) {
             return $this->error('topic not found');
         }
-        $topic['lessons'] = DB::table('lesson')->where('topic_id',$id)->orderBy('id')->get();
+        $query = DB::table('lesson')->where('topic_id',$id);
+        if (!$student->is_admin()) {
+            $query->where('dev_mode', 0);
+        }
+        $topic['lessons'] = $query->orderBy('id')->get();
         $lessons_ids = [];
         foreach($topic['lessons'] as $id => $lesson) {
             $lessons_ids[] = $lesson['id'];
@@ -186,7 +190,7 @@ class TopicController extends Controller
                 }
                 else {
                     $topic['lessons'][$id]['status'] = 2;
-                    if($lesson['dependency'] == 1) {
+                    if($lesson['dependency'] == 1 && $lesson['dev_mode'] == 0) {
                         $last_active_order = $lesson['order_no'];
                         $active_flag = false;
                     }

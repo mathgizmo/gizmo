@@ -26,6 +26,9 @@ class AuthController extends Controller
             // something went wrong whilst attempting to encode the token
             throw new \Symfony\Component\HttpKernel\Exception\HttpException(500, 'could_not_create_token');
         }
+        //if user is admin update corresponding field
+        $student_id = JWTAuth::getPayload($token)->get('sub');
+        DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student_id);
 
         // all good so return the token
         return $this->success(compact('token'));

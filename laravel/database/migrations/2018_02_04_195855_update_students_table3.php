@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateLessonTable extends Migration
+class UpdateStudentsTable3 extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,8 @@ class UpdateLessonTable extends Migration
      */
     public function up()
     {
-        Schema::table('lesson', function ($table) {
-            $table->boolean('dev_mode')->default(false);
+        Schema::table('students', function (Blueprint $table) {
+            $table->boolean('is_admin')->default(false);
         });
     }
 
@@ -24,8 +24,8 @@ class UpdateLessonTable extends Migration
      */
     public function down()
     {
-        Schema::table('lesson', function ($table) {
-            $table->dropColumn('dev_mode');
+        Schema::table('students', function ($table) {
+            $table->dropColumn('is_admin');
         });
     }
 }

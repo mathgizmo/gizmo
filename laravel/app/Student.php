@@ -22,7 +22,7 @@ class Student extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password'
+        'password', 'is_admin'
     ];
 
     public function scopeFilter($query, $filters = [])
@@ -39,5 +39,10 @@ class Student extends Authenticatable
     public function students_tracking()
     {
         return $this->hasMany(StudentsTracking::class, 'student_id', 'id');
+    }
+
+    public function is_admin()
+    {
+        return $this->is_admin;
     }
 }
