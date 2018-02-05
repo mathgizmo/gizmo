@@ -88,7 +88,7 @@
                                                   onsubmit="if(confirm('This will remove all participant progress? Are you sure?')) { return true } else {return false };">
                                                 <input type="hidden" name="_method" value="POST">
                                                 {{ csrf_field() }}
-                                                <button class="btn btn-danger" type="submit">Delete</button>
+                                                <button class="btn btn-danger" type="submit">Reset Progress</button>
                                             </form>
 										</td>
 									</tr>
