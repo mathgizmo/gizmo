@@ -63,7 +63,7 @@ class TopicController extends Controller
             else {
                 if ($active_flag || $last_active_level_order == $level['order_no']) {
                     $level['status'] = 2;
-                    if ($level['dependency'] == 1) {
+                    if ($level['dependency'] == 1 && $student->is_super == 0) {
                         $active_flag = false;
                         $last_active_level_order = $level['order_no'];
                     }
@@ -91,7 +91,7 @@ class TopicController extends Controller
             else {
                 if ($response[$l_element_id]['active_flag'] || $response[$l_element_id]['last_active_order'] == $unit['order_no']) {
                     $unit['status'] = 2;
-                    if ($unit['dependency'] == 1) {
+                    if ($unit['dependency'] == 1 && $student->is_super == 0) {
                         $response[$l_element_id]['active_flag'] = false;
                         $response[$l_element_id]['last_active_order'] = $unit['order_no'];
                     }
@@ -116,7 +116,7 @@ class TopicController extends Controller
                 if ($response[$l_element_id]['units'][$u_element_id]['active_flag'] ||
                     $response[$l_element_id]['units'][$u_element_id]['last_active_order'] == $topic['order_no']) {
                     $topic['status'] = 2;
-                    if ($topic['dependency'] == 1) {
+                    if ($topic['dependency'] == 1 && $student->is_super == 0) {
                         $response[$l_element_id]['units'][$u_element_id]['active_flag'] = false;
                         $response[$l_element_id]['units'][$u_element_id]['last_active_order'] = $topic['order_no'];
                     }
@@ -190,7 +190,7 @@ class TopicController extends Controller
                 }
                 else {
                     $topic['lessons'][$id]['status'] = 2;
-                    if($lesson['dependency'] == 1 && $lesson['dev_mode'] == 0) {
+                    if($lesson['dependency'] == 1 && $lesson['dev_mode'] == 0 && $student->is_super == 0) {
                         $last_active_order = $lesson['order_no'];
                         $active_flag = false;
                     }
