@@ -3,7 +3,6 @@ import { Profile } from '../_models/profile';
 import { ProfileService } from '../_services/profile.service';
 import { AuthenticationService } from '../_services/authentication.service';
 
-
 @Component({
   selector: 'app-profle',
   templateUrl: './profile.component.html',
@@ -17,17 +16,17 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private profileService: ProfileService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
   ) {
     this.user = new Profile();
     this.passwordsMatch = true;
     this.profileService.getProfile()
-        .subscribe(res => {
-            this.user.userName = res.message.name;
-            this.user.email = res.message.email;
-            this.user.questionNum = res.message.question_num;
-            /*console.log(res.message);*/
-        });
+      .subscribe(res => {
+        //console.log(JSON.stringify(res));
+        this.user.userName = res['name'];
+        this.user.email = res['email'];
+        this.user.questionNum = res['question_num'];
+      });
   }
 
   ngOnInit() {
@@ -56,8 +55,9 @@ export class ProfileComponent implements OnInit {
       newPassword, confirmedPassword)
         .subscribe(res => {
         //console.log('Change Password Result: ' + res);
-        this.authenticationService.logout();
-        
+        //console.log("Old Token: " + JSON.parse(localStorage.getItem('currentUser')).token);
+        this.authenticationService.login(this.user.email, newPassword);
+          //.subscribe(() => console.log("New Token: " + JSON.parse(localStorage.getItem('currentUser')).token));
       }, error => {
         // error
       });
