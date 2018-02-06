@@ -1,0 +1,79 @@
+<div class="profile">
+  <mat-card id="profile-container">
+  	<span class="card-title">Change Profile Info:</span>
+    <form #changeProfile="ngForm" (ngSubmit)="onChangeProfile()">
+  		<mat-input-container>
+        <input matInput
+          name="userName"
+          pattern="[a-zA-Z0-9]{2,255}"
+          placeholder="Name"
+          [(ngModel)]="user.userName" />
+        </mat-input-container>
+        <mat-input-container>
+          <input matInput
+            name="email"
+            pattern="^\S+@\S+$"
+            placeholder="Email"
+            [(ngModel)]="user.email" />
+        </mat-input-container> 
+        <mat-input-container>
+          <label>Number of correct consequence answers to finish lesson(put 0 to answer all questions)</label>
+          <input matInput
+            name="question_num"
+            pattern="[0-9]"
+            [(ngModel)]="user.questionNum" />
+        </mat-input-container> 
+        <div class="button-container">
+          <button
+            mat-raised-button
+            type="submit">
+            <mat-icon>update</mat-icon>
+            <span>Update</span>
+          </button>
+      	</div>
+  	</form>
+  </mat-card>
+
+  <mat-card>
+    <span class="card-title">Change Password:</span>
+    <form #changePassword="ngForm" (ngSubmit)="onChangePassword(oldPassword.value, newPassword.value, confirmedPassword.value)">
+      <mat-input-container>
+        <input matInput
+          required="required"
+          pattern=".{6,30}"
+          type="password"
+          placeholder="Old Password"
+          #oldPassword />
+      </mat-input-container>
+      <mat-input-container>
+        <input matInput
+          required="required"
+          pattern=".{6,30}"
+          type="password"
+          placeholder="New Password"
+          #newPassword />
+      </mat-input-container>
+      <mat-input-container>
+        <input matInput
+          required="required"
+          pattern=".{6,30}"
+          type="password"
+          placeholder="Confirm Password"
+          #confirmedPassword />
+      </mat-input-container>
+      <div class="alert alert-danger" *ngIf="!passwordsMatch">
+         <mat-icon>warning</mat-icon>
+         {{warningMessage}}
+      </div>
+      <div class="button-container" >
+        <button id="change-password-button"
+          mat-raised-button
+          type="submit">
+          <mat-icon>update</mat-icon>
+          <span>Change Password</span>
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+</div>
