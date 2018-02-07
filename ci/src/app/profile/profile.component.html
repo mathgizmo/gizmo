@@ -4,10 +4,10 @@
     <form #changeProfile="ngForm" (ngSubmit)="onChangeProfile()">
   		<mat-input-container>
         <input matInput
-          name="userName"
+          name="username"
           pattern="[a-zA-Z0-9]{2,255}"
           placeholder="Name"
-          [(ngModel)]="user.userName" />
+          [(ngModel)]="user.username" />
         </mat-input-container>
         <mat-input-container>
           <input matInput
@@ -36,15 +36,7 @@
 
   <mat-card>
     <span class="card-title">Change Password:</span>
-    <form #changePassword="ngForm" (ngSubmit)="onChangePassword(oldPassword.value, newPassword.value, confirmedPassword.value)">
-      <mat-input-container>
-        <input matInput
-          required="required"
-          pattern=".{6,30}"
-          type="password"
-          placeholder="Old Password"
-          #oldPassword />
-      </mat-input-container>
+    <form #changePassword="ngForm" (ngSubmit)="onChangePassword(newPassword.value, confirmedPassword.value)">
       <mat-input-container>
         <input matInput
           required="required"

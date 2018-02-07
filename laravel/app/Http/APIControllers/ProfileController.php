@@ -58,13 +58,13 @@ class ProfileController extends Controller
 
         if (request()->has('question_num')) {
             $question_num = request('question_num');
-            if (!is_int($question_num)) {
+            if (!is_numeric($question_num)) {
                 return $this->error('question_num must be an integer');
             }
             if ($question_num < 0) {
                 $question_num = 0;
             }
-            $update['question_num'] = $question_num;
+            $update['question_num'] = (int)$question_num;
         }
 
         Student::find($student->id)->update($update);

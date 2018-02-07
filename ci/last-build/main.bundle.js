@@ -71,6 +71,21 @@ var _a;
 
 /***/ }),
 
+/***/ "../../../../../src/app/_models/user.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return User; });
+var User = (function () {
+    function User() {
+    }
+    return User;
+}());
+
+//# sourceMappingURL=user.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/_services/authentication.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -376,10 +391,81 @@ var _a;
 
 /***/ }),
 
+/***/ "../../../../../src/app/_services/user.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("../../../../rxjs/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__server_service__ = __webpack_require__("../../../../../src/app/_services/server.service.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var UserService = (function () {
+    function UserService(serverService) {
+        this.serverService = serverService;
+    }
+    UserService.prototype.getProfile = function () {
+        return this.serverService.get('/profile')
+            .map(function (res) { return res; })
+            .catch(function (error) {
+            throw Error(error);
+        });
+    };
+    UserService.prototype.changeProfile = function (user) {
+        var request = JSON.stringify({
+            name: user.username,
+            email: user.email,
+            question_num: user.questionNum
+        });
+        return this.serverService.post('/profile', request)
+            .map(function (res) { })
+            .catch(function (error) {
+            console.log(error);
+            throw Error(error);
+        });
+    };
+    UserService.prototype.changePassword = function (newPassword, confirmedPassword) {
+        var request = JSON.stringify({
+            password: newPassword,
+            confirm_password: confirmedPassword
+        });
+        return this.serverService.post('/profile', request)
+            .map(function (res) {
+            //console.log(res); 
+        })
+            .catch(function (error) {
+            console.log(error);
+            throw Error(error);
+        });
+    };
+    return UserService;
+}());
+UserService = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__server_service__["a" /* ServerService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__server_service__["a" /* ServerService */]) === "function" && _a || Object])
+], UserService);
+
+var _a;
+//# sourceMappingURL=user.service.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!-- main app container -->\n<div class=\"jumbotron\">\n    <div class=\"container\">\n        <div class=\"col-sm-8 col-sm-offset-2\">\n            <div *ngIf=\"showMenu\">\n                <md-toolbar color=\"primary\">\n                    <!-- This fills the remaining space of the current row -->\n                    <span class=\"fill-remaining-space\"></span>\n                    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                        <mat-icon>menu</mat-icon>\n                    </button>\n                </md-toolbar>\n                <mat-menu #menu=\"matMenu\">\n                    <br />\n                    <a mat-menu-item routerLink=\"home\">Home</a>\n                    <a mat-menu-item routerLink=\"home\">Profile</a>\n                    <a mat-menu-item routerLink=\"login\">Logout</a>\n                </mat-menu>\n            </div>\n            <router-outlet></router-outlet>\n        </div>\n    </div>\n</div>"
+module.exports = "<!-- main app container -->\n<div class=\"jumbotron\">\n    <div class=\"container\">\n        <div class=\"col-sm-8 col-sm-offset-2\">\n            <div *ngIf=\"showMenu\">\n                <md-toolbar color=\"primary\">\n                    <!-- This fills the remaining space of the current row -->\n                    <span class=\"fill-remaining-space\"></span>\n                    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                        <mat-icon>menu</mat-icon>\n                    </button>\n                </md-toolbar>\n                <mat-menu #menu=\"matMenu\">\n                    <br />\n                    <a mat-menu-item routerLink=\"\">Home</a>\n                    <a mat-menu-item routerLink=\"profile\">Profile</a>\n                    <a mat-menu-item routerLink=\"login\">Logout</a>\n                </mat-menu>\n            </div>\n            <router-outlet></router-outlet>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -465,12 +551,14 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome__ = __webpack_require__("../../../../angular2-fontawesome/angular2-fontawesome.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -523,7 +611,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["c" /* LessonComponent */],
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["d" /* ReportDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["d" /* ReportDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_18__profile_profile_component__["a" /* ProfileComponent */]
         ],
         entryComponents: [
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
@@ -560,6 +649,8 @@ AppModule = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__topic_index__ = __webpack_require__("../../../../../src/app/topic/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lesson_index__ = __webpack_require__("../../../../../src/app/lesson/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__guards_index__ = __webpack_require__("../../../../../src/app/_guards/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+
 
 
 
@@ -572,6 +663,7 @@ var appRoutes = [
     { path: 'welcome', component: __WEBPACK_IMPORTED_MODULE_1__welcome_index__["a" /* WelcomeComponent */] },
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_2__login_index__["a" /* LoginComponent */] },
     { path: 'register', component: __WEBPACK_IMPORTED_MODULE_3__register_index__["a" /* RegisterComponent */] },
+    { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_8__profile_profile_component__["a" /* ProfileComponent */] },
     { path: '', component: __WEBPACK_IMPORTED_MODULE_4__home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_5__topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_6__lesson_index__["c" /* LessonComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
@@ -1018,6 +1110,118 @@ LoginComponent = __decorate([
 
 var _a, _b;
 //# sourceMappingURL=login.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/profile.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".profile{\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  display: inline;\n}\n\nmat-card{\n  //background-color: #f9f9f9;\n  margin: 10px;\n  padding: 8px;\n}\n\nspan.card-title {\n  display: table;\n  white-space: nowrap;\n  padding: 8px;\n}\n\nspan.card-title:before, span.card-title:after {\n  border-top: 1px solid #3f51b5;\n  content: '';\n  display: table-cell;\n  position: relative;\n  top: 0.5em;\n  width: 45%;\n}\n\nspan.card-title:before {\n  right: 1.5%;\n}\n\nspan.card-title:after {\n  left: 1.5%; \n}\n\n mat-input-container {\n   width: 100%;\n }\n\n.button-container{\n  padding: 0; \n  margin: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;  \n  -webkit-box-align: center;  \n      -ms-flex-align: center;  \n          align-items: center; \n  -webkit-box-pack: center; \n      -ms-flex-pack: center; \n          justify-content: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;  \n}\n\nbutton {\n\tcolor: #fff;\n\tbackground-color: #337AB7;\n}\n\n/*@media screen and (max-width: 660px) {\n  .profile {\n    display: inline;\n  }\n  mat-card{\n    max-width: 620px;\n  } \n}*/", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/profile.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"profile\">\n  <mat-card id=\"profile-container\">\n  \t<span class=\"card-title\">Change Profile Info:</span>\n    <form #changeProfile=\"ngForm\" (ngSubmit)=\"onChangeProfile()\">\n  \t\t<mat-input-container>\n        <input matInput\n          name=\"username\"\n          pattern=\"[a-zA-Z0-9]{2,255}\"\n          placeholder=\"Name\"\n          [(ngModel)]=\"user.username\" />\n        </mat-input-container>\n        <mat-input-container>\n          <input matInput\n            name=\"email\"\n            pattern=\"^\\S+@\\S+$\"\n            placeholder=\"Email\"\n            [(ngModel)]=\"user.email\" />\n        </mat-input-container> \n        <mat-input-container>\n          <label>Number of correct consequence answers to finish lesson(put 0 to answer all questions)</label>\n          <input matInput\n            name=\"question_num\"\n            pattern=\"[0-9]\"\n            [(ngModel)]=\"user.questionNum\" />\n        </mat-input-container> \n        <div class=\"button-container\">\n          <button\n            mat-raised-button\n            type=\"submit\">\n            <mat-icon>update</mat-icon>\n            <span>Update</span>\n          </button>\n      \t</div>\n  \t</form>\n  </mat-card>\n\n  <mat-card>\n    <span class=\"card-title\">Change Password:</span>\n    <form #changePassword=\"ngForm\" (ngSubmit)=\"onChangePassword(newPassword.value, confirmedPassword.value)\">\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"New Password\"\n          #newPassword />\n      </mat-input-container>\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"Confirm Password\"\n          #confirmedPassword />\n      </mat-input-container>\n      <div class=\"alert alert-danger\" *ngIf=\"!passwordsMatch\">\n         <mat-icon>warning</mat-icon>\n         {{warningMessage}}\n      </div>\n      <div class=\"button-container\" >\n        <button id=\"change-password-button\"\n          mat-raised-button\n          type=\"submit\">\n          <mat-icon>update</mat-icon>\n          <span>Change Password</span>\n        </button>\n      </div>\n    </form>\n  </mat-card>\n\n</div>\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/profile/profile.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProfileComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_user__ = __webpack_require__("../../../../../src/app/_models/user.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__("../../../../../src/app/_services/user.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_authentication_service__ = __webpack_require__("../../../../../src/app/_services/authentication.service.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var ProfileComponent = (function () {
+    function ProfileComponent(userService, authenticationService) {
+        var _this = this;
+        this.userService = userService;
+        this.authenticationService = authenticationService;
+        this.user = new __WEBPACK_IMPORTED_MODULE_1__models_user__["a" /* User */]();
+        this.passwordsMatch = true;
+        this.userService.getProfile()
+            .subscribe(function (res) {
+            //console.log(JSON.stringify(res));
+            _this.user.username = res['name'];
+            _this.user.email = res['email'];
+            _this.user.questionNum = res['question_num'];
+        });
+    }
+    ProfileComponent.prototype.ngOnInit = function () {
+    };
+    ProfileComponent.prototype.onChangeProfile = function () {
+        this.userService.changeProfile(this.user)
+            .subscribe(function (res) {
+            //console.log('Update Result: ' + res);
+        });
+    };
+    ProfileComponent.prototype.onChangePassword = function (newPassword, confirmedPassword) {
+        var _this = this;
+        if (newPassword != confirmedPassword) {
+            this.passwordsMatch = false;
+            this.warningMessage = "Password does not match the confirm password!";
+            return;
+        }
+        else if (newPassword == "") {
+            this.passwordsMatch = false;
+            this.warningMessage = "You can't use empty passwords!";
+            return;
+        }
+        else {
+            this.passwordsMatch = true;
+            this.userService.changePassword(newPassword, confirmedPassword)
+                .subscribe(function (res) {
+                //console.log('Change Password Result: ' + res);
+                //console.log("Old Token: " + JSON.parse(localStorage.getItem('currentUser')).token);
+                _this.authenticationService.login(_this.user.email, newPassword);
+                //.subscribe(() => console.log("New Token: " + JSON.parse(localStorage.getItem('currentUser')).token));
+            }, function (error) {
+                // error
+            });
+        }
+    };
+    return ProfileComponent;
+}());
+ProfileComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-profle',
+        template: __webpack_require__("../../../../../src/app/profile/profile.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/profile/profile.component.css")],
+        providers: [__WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */]]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__services_authentication_service__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__services_authentication_service__["a" /* AuthenticationService */]) === "function" && _b || Object])
+], ProfileComponent);
+
+var _a, _b;
+//# sourceMappingURL=profile.component.js.map
 
 /***/ }),
 
