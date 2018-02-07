@@ -20,6 +20,7 @@ import { TopicComponent } from './topic/index';
 import { LessonComponent, GoodDialogComponent, BadDialogComponent, ReportDialogComponent } from './lesson/index';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import {FlexLayoutModule} from "@angular/flex-layout";
         LessonComponent,
         GoodDialogComponent,
         BadDialogComponent,
-        ReportDialogComponent
+        ReportDialogComponent,
+        ProfileComponent
     ],
     entryComponents: [
         GoodDialogComponent,
