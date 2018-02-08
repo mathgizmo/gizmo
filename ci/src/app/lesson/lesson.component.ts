@@ -1,13 +1,17 @@
-﻿import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TopicService } from '../_services/index';
 import { TrackingService } from '../_services/index';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatProgressBarModule } from '@angular/material';
+
+import { UserService } from '../_services/user.service'; // delete me after fix
 
 @Component({
     moduleId: module.id,
     templateUrl: 'lesson.component.html',
-    providers: [TopicService, TrackingService]
+    providers: [TopicService, TrackingService
+        ,UserService // delete me after fix
+    ]
 })
 export class LessonComponent implements OnInit {
     lessonTree: any = [];
@@ -21,14 +25,33 @@ export class LessonComponent implements OnInit {
     initial_loading = 1;
     private sub: any;
 
+    question_num : number;
+    correct_answers : number;
+    complete_percent : number;
+
     constructor(
+            private userService: UserService, // delete me after fix
             private topicService: TopicService,
             private trackingService: TrackingService,
             private route: ActivatedRoute,
             public dialog: MatDialog
-            ) { }
+            ) { 
+
+        /** todo: add question_num to login/register response body
+            becouse without it i must send request to get this variable from there
+        */
+        //this is crutch! Delete this piece of code when you fix server!
+        this.userService.getProfile()
+          .subscribe(res => {
+            localStorage.setItem('question_num', res['question_num']);
+            this.question_num = +localStorage.getItem('question_num');
+          });
+        // end of crutch
+
+    }
 
     ngOnInit() {
+        this.question_num = +localStorage.getItem('question_num');
         this.sub = this.route.params.subscribe(params => {
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
             this.lesson_id = +params['lesson_id']; // (+) converts string 'id' to a number
@@ -44,12 +67,25 @@ export class LessonComponent implements OnInit {
                         this.trackingService.startLesson(this.lesson_id).subscribe(start_time => {
                             this.start_time = start_time;
                         });
+                        if(this.question_num == 0)
+                            this.question_num = lessonTree['questions'].length;
+                        if(this.question_num >= this.lessonTree['questions'].length)
+                            this.question_num = this.lessonTree['questions'].length;
                     }
                 });
          });
+        this.correct_answers = 0;
     }
 
     nextQuestion() {
+        if(this.correct_answers == this.question_num 
+            && this.question_num != 0) {
+           this.lessonTree['questions'] = [];
+           this.question = null;
+           this.trackingService.doneLesson(
+               this.lesson_id, this.start_time, this.weak_questions).subscribe();
+           return;
+        }
         this.answers = [];
         this.question = this.lessonTree['questions'].shift();
         if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
@@ -89,6 +125,9 @@ export class LessonComponent implements OnInit {
                     this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
+            this.correct_answers++;
+            this.complete_percent = (this.correct_answers == 0) ? 0 
+                : this.correct_answers/this.question_num*100;
         } else {
             if (this.weak_questions.indexOf(this.question.id) === -1) {
                 this.weak_questions.push(this.question.id);
@@ -122,6 +161,10 @@ export class LessonComponent implements OnInit {
                     this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
+            this.correct_answers = this.complete_percent = 0;
+            if(+localStorage.getItem('question_num') == 0 ||
+              this.question_num >= this.lessonTree['questions'].length-1)
+                this.question_num = this.lessonTree['questions'].length-1;
         }
     }
     
