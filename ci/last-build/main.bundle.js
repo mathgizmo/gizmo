@@ -946,6 +946,25 @@ var LessonComponent = (function () {
                 else {
                     if (this.answers[i] === "")
                         return false;
+                    if (this.question.conversion) {
+                        this.answers[i] = this.answers[i].replace(/[^\d.-\/]/g, '');
+                        var temp = this.answers[i].split("/");
+                        if (temp[1] != undefined) {
+                            this.answers[i] = (Number(temp[0]) / Number(temp[1])) + "";
+                        }
+                        else {
+                            this.answers[i] = temp[0] + "";
+                        }
+                    }
+                    if (this.question.rounding) {
+                        this.answers[i] = this.answers[i].replace(/[^\d.-]/g, '');
+                        var temp = this.question.answers[i].value.split(".");
+                        var roundTo = 0;
+                        if (temp[1] != undefined) {
+                            roundTo = temp[1].length;
+                        }
+                        this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + "";
+                    }
                     if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
                         return false;
                     }

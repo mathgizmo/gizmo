@@ -163,7 +163,7 @@ class TopicController extends Controller
         if (!$student->is_admin()) {
             $query->where('dev_mode', 0);
         }
-        $topic['lessons'] = $query->orderBy('id')->get();
+        $topic['lessons'] = $query->orderBy('order_no')->orderBy('id')->get();
         $lessons_ids = [];
         foreach($topic['lessons'] as $id => $lesson) {
             $lessons_ids[] = $lesson['id'];
