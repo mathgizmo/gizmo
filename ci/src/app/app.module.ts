@@ -21,6 +21,7 @@ import { LessonComponent, GoodDialogComponent, BadDialogComponent, ReportDialogC
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { ProfileComponent } from './profile/profile.component';
+import { TryComponent } from './try/try.component';
 
 @NgModule({
     imports: [
@@ -50,7 +51,8 @@ import { ProfileComponent } from './profile/profile.component';
         GoodDialogComponent,
         BadDialogComponent,
         ReportDialogComponent,
-        ProfileComponent
+        ProfileComponent,
+        TryComponent
     ],
     entryComponents: [
         GoodDialogComponent,
