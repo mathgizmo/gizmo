@@ -552,12 +552,14 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__try_try_component__ = __webpack_require__("../../../../../src/app/try/try.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -612,7 +614,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */],
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["d" /* ReportDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__profile_profile_component__["a" /* ProfileComponent */]
+            __WEBPACK_IMPORTED_MODULE_18__profile_profile_component__["a" /* ProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__try_try_component__["a" /* TryComponent */]
         ],
         entryComponents: [
             __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
@@ -1384,6 +1387,89 @@ var _a, _b;
 
 /***/ }),
 
+/***/ "../../../../../src/app/try/try.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TryComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var TryComponent = (function () {
+    function TryComponent(authenticationService, router) {
+        this.authenticationService = authenticationService;
+        this.router = router;
+    }
+    TryComponent.prototype.ngOnInit = function () {
+        // reset login status
+        this.authenticationService.logout();
+    };
+    TryComponent.prototype.onClick = function () {
+        /* https://stackoverflow.com/questions/42538280/angular2-how-to-use-on-the-frontend-crypto-pbkdf2sync-function-from-node-js
+        let crypto;
+        try {
+          crypto = require('crypto');
+        } catch (err) {
+          console.log('crypto support is disabled!');
+        }
+        let id = crypto.randomBytes(20, (err, buf) => {
+          if (err) throw err;
+        }).toString('hex');
+        */
+        var _this = this;
+        var id = this.randomString();
+        var email = id + '@somemail.com';
+        var password = id;
+        var username = id;
+        this.authenticationService.register(username, email, password)
+            .subscribe(function (res) {
+            if (res['success'] === true) {
+                _this.authenticationService.login(email, password)
+                    .subscribe(function (res) {
+                    if (res == true) {
+                        _this.router.navigate(['/']);
+                    }
+                });
+            }
+        });
+    };
+    TryComponent.prototype.randomString = function () {
+        var length = 50; // max 64
+        var id = "";
+        var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < length; i++) {
+            id += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        }
+        return id;
+    };
+    return TryComponent;
+}());
+TryComponent = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-try',
+        template: '<div>Try without registration</div>',
+        host: { '(click)': 'onClick()' }
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__services_index__["a" /* AuthenticationService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__services_index__["a" /* AuthenticationService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === "function" && _b || Object])
+], TryComponent);
+
+var _a, _b;
+//# sourceMappingURL=try.component.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/welcome/index.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1398,7 +1484,7 @@ var _a, _b;
 /***/ "../../../../../src/app/welcome/welcome.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-6 col-md-offset-3\">\n    <h2>Welcome!</h2>\n    <div class=\"pull-right\">\n        <a routerLink=\"/register\" >Register account</a>\n    </div>\n    <div>\n        <a routerLink=\"/login\" >Login</a>\n    </div>\n</div>\n"
+module.exports = "<div class=\"col-md-6 col-md-offset-3\">\n    <h2 class=\"center\">Welcome!</h2>\n    <div class=\"pull-right\">\n        <a routerLink=\"/register\" class=\"btn btn-warning width150\">Register account</a>\n    </div>\n    <div>\n        <a routerLink=\"/login\" class=\"btn btn-info width150\">Login</a>\n    </div>\n    <br />\n    <div class=\"center\">\n        <app-try class=\"btn btn-success\"></app-try>\n    </div>\n</div>\n"
 
 /***/ }),
 
