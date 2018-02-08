@@ -176,11 +176,14 @@ export class LessonComponent implements OnInit {
                     this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
-            if(this.lesson_id != -1) 
+            if(this.lesson_id == -1) {
+              this.question_num--;
+            } else {
               this.correct_answers = this.complete_percent = 0;
-            if(+localStorage.getItem('question_num') == 0 ||
+              if(+localStorage.getItem('question_num') == 0 ||
               this.question_num >= this.lessonTree['questions'].length-1)
                 this.question_num = this.lessonTree['questions'].length-1;
+            }
         }
     }
     
