@@ -15,4 +15,16 @@
             </div>
         </div>
     </div>
+    <a 
+        class="button-container" 
+        routerLink="/topic/{{topicTree.id}}/lesson/testout" 
+        routerLinkActive="active"
+        *ngIf="!topicDone">
+        <button
+            mat-raised-button
+            style="margin: 16px; color: #000; background-color: #f5f5f5;">
+            <mat-icon>cancel</mat-icon>
+            <span>Test out to finish topic</span>
+        </button>   
+    </a>
 </div>
