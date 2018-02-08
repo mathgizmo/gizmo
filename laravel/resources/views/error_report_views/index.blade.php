@@ -45,7 +45,7 @@
 									@foreach($error_reports as $error_report)
 										<tr>
 											<td>{{ $error_report->id }}</td>
-											<td>{{ $error_report->question_id }}</td>
+											<td><a href="{{ route('question_views.show', $error_report->question_id) }}" target="_blank">{{ $error_report->question_id }}</a></td>
 											<td>{{ $error_report->answer_id }}</td>
 											<td>{{ $error_report->student_id }}</td>
 											<td>{{ $error_report->options }}</td>
