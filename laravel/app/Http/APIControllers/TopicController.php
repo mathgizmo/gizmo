@@ -177,6 +177,8 @@ class TopicController extends Controller
             ->whereIn('entity_id',$lessons_ids)->get() as $row) {
                 $lessons_done[] = $row['entity_id'];
         }
+        $topic['status'] = count(DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 1])
+            ->where('entity_id',$topic['id'])->get());
         $active_flag = true;
         $last_active_order = 0;
         foreach ($topic['lessons'] as $id => $lesson) {
@@ -294,6 +296,13 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
         foreach(DB::table('answer')->whereIn('question_id',array_keys($questions))->get() as $answer) {
             $topic['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
         }
+
+        $ids = collect(DB::select("SELECT t.id FROM topic t
+JOIN unit u ON t.unit_id = u.id
+JOIN level l ON u.level_id = l.id
+ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->toArray();
+        $topic_order_id = array_search($topic_id, $ids);
+        $topic['next_topic_id'] = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
 
         DB::connection()->setFetchMode($mode);
         return $this->success($topic);

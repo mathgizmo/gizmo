@@ -20,6 +20,7 @@ export class LessonComponent implements OnInit {
     weak_questions: string[] = [];
     start_time: any = '';
     initial_loading = 1;
+    next = 0;
     private sub: any;
 
     question_num : number;
@@ -68,6 +69,12 @@ export class LessonComponent implements OnInit {
                         this.trackingService.startLesson(this.lesson_id).subscribe(start_time => {
                             this.start_time = start_time;
                         });
+                    }
+                    if (this.lesson_id == -1) {
+                        this.next = lessonTree['next_topic_id'];
+                    }
+                    else {
+                        this.next = lessonTree['next_lesson_id'];
                     }
                 });
          });

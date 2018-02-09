@@ -40,10 +40,46 @@
         <div *ngIf="initial_loading == 0 && lesson_id != -1">
             <h2>Congratulation!</h2>
             <h3>You have finished this lesson.</h3>
+            <a
+                class="button-container"
+                routerLink="/topic/{{topic_id}}/lesson/{{next}}"
+                routerLinkActive="active"
+                *ngIf="next != 0">
+                <button
+                    mat-raised-button
+                    style="margin: 16px; color: #000; background-color: #f5f5f5;">
+                    <mat-icon>done all</mat-icon>
+                    <span>Go to next lesson</span>
+                </button>
+            </a>
+            <a
+                class="button-container"
+                routerLink="/topic/{{topic_id}}"
+                routerLinkActive="active"
+                *ngIf="next == 0">
+                <button
+                    mat-raised-button
+                    style="margin: 16px; color: #000; background-color: #f5f5f5;">
+                    <mat-icon>done all</mat-icon>
+                    <span>Go back to topic</span>
+                </button>
+            </a>
         </div>
         <div *ngIf="initial_loading == 0 && lesson_id == -1">
             <h2>Congratulation!</h2>
             <h3>You have finished this topic.</h3>
+            <a
+                class="button-container"
+                routerLink="/topic/{{topicTree.next_topic_id}}"
+                routerLinkActive="active"
+                *ngIf="next != 0">
+                <button
+                    mat-raised-button
+                    style="margin: 16px; color: #000; background-color: #f5f5f5;">
+                    <mat-icon>done all</mat-icon>
+                    <span>Go to next topic</span>
+                </button>
+            </a>
         </div>
     </div>
 </div>

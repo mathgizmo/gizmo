@@ -326,8 +326,14 @@ var TopicService = (function () {
     };
     TopicService.prototype.getLesson = function (topic_id, lesson_id) {
         // get lesson from api
-        return this.serverService.get('/topic/' + topic_id + '/lesson/' + lesson_id)
-            .map(function (response) { return response; });
+        if (lesson_id == -1) {
+            return this.serverService.get('/topic/' + topic_id + '/testout')
+                .map(function (response) { return response; });
+        }
+        else {
+            return this.serverService.get('/topic/' + topic_id + '/lesson/' + lesson_id)
+                .map(function (response) { return response; });
+        }
     };
     TopicService.prototype.reportError = function (question_id, answers, option, custom) {
         // notify api about question error
@@ -375,14 +381,27 @@ var TrackingService = (function () {
     }
     TrackingService.prototype.startLesson = function (lesson_id) {
         // notify api about lesson start
-        return this.serverService.post('/lesson/' + lesson_id + '/start', '')
-            .map(function (response) { return response; });
+        if (lesson_id == -1) {
+            // todo: change this request
+            return this.serverService.post('/lesson/116/start', '')
+                .map(function (response) { return response; });
+        }
+        else {
+            return this.serverService.post('/lesson/' + lesson_id + '/start', '')
+                .map(function (response) { return response; });
+        }
     };
-    TrackingService.prototype.doneLesson = function (lesson_id, start_datetime, weak_questions) {
+    TrackingService.prototype.doneLesson = function (topic_id, lesson_id, start_datetime, weak_questions) {
         // notify api about lesson done
         var request = JSON.stringify({ start_datetime: start_datetime, weak_questions: weak_questions });
-        return this.serverService.post('/lesson/' + lesson_id + '/done', request)
-            .map(function (response) { return response; });
+        if (lesson_id == -1) {
+            return this.serverService.post('/topic/' + topic_id + '/testoutdone', request)
+                .map(function (response) { return response; });
+        }
+        else {
+            return this.serverService.post('/lesson/' + lesson_id + '/done', request)
+                .map(function (response) { return response; });
+        }
     };
     return TrackingService;
 }());
@@ -782,7 +801,7 @@ var _a;
 /***/ "../../../../../src/app/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar mode=determinate value={{complete_percent}}></mat-progress-bar>\n<label style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\"></h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0\">\n            <h2>Congratulation!</h2>\n            <h3>You have finished this lesson.</h3>\n        </div>\n    </div>\n</div>"
+module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\"></h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulation!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a \n                class=\"button-container\" \n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\" \n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>   \n            </a>\n            <a \n                class=\"button-container\" \n                routerLink=\"/topic/{{topic_id}}\" \n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>   \n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulation!</h2>\n            <h3>You have finished this topic.</h3>\n            <a \n                class=\"button-container\" \n                routerLink=\"/topic/{{topicTree.next_topic_id}}\" \n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>   \n            </a>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -815,8 +834,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
 
 
+
 var LessonComponent = (function () {
-    function LessonComponent(topicService, trackingService, route, dialog) {
+    function LessonComponent(router, topicService, trackingService, route, dialog) {
+        this.router = router;
         this.topicService = topicService;
         this.trackingService = trackingService;
         this.route = route;
@@ -827,20 +848,26 @@ var LessonComponent = (function () {
         this.weak_questions = [];
         this.start_time = '';
         this.initial_loading = 1;
+        this.next = 0;
+        this.max_incorrect_answers = 1;
         if (localStorage.getItem('question_num') != undefined) {
             this.question_num = Number(localStorage.getItem('question_num'));
         }
         else {
             this.question_num = 4;
         }
-        console.log(this.question_num);
     }
     LessonComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.question_num = +localStorage.getItem('question_num');
+        this.incorrect_answers = 0;
         this.sub = this.route.params.subscribe(function (params) {
             _this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
-            _this.lesson_id = +params['lesson_id']; // (+) converts string 'id' to a number
-            // In a real app: dispatch action to load the details here.
+            _this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
+                +params['lesson_id']; // (+) converts string 'id' to a number
+            if (_this.lesson_id == -1) {
+                _this.question_num = 0;
+            }
             // get lesson tree from API
             _this.topicService.getLesson(_this.topic_id, _this.lesson_id)
                 .subscribe(function (lessonTree) {
@@ -853,6 +880,12 @@ var LessonComponent = (function () {
                     _this.trackingService.startLesson(_this.lesson_id).subscribe(function (start_time) {
                         _this.start_time = start_time;
                     });
+                }
+                if (_this.lesson_id == -1) {
+                    _this.next = lessonTree['next_topic_id'];
+                }
+                else {
+                    _this.next = lessonTree['next_lesson_id'];
                 }
             });
         });
@@ -906,7 +939,7 @@ var LessonComponent = (function () {
                 }
                 else {
                     _this.question = null;
-                    _this.trackingService.doneLesson(_this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
+                    _this.trackingService.doneLesson(_this.topic_id, _this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
                 }
             });
         }
@@ -914,14 +947,22 @@ var LessonComponent = (function () {
             if (this.weak_questions.indexOf(this.question.id) === -1) {
                 this.weak_questions.push(this.question.id);
             }
-            this.lessonTree['questions'].push(this.question);
+            this.incorrect_answers++;
+            if (this.lesson_id == -1 &&
+                this.incorrect_answers > this.max_incorrect_answers) {
+                this.router.navigate(['/topic/' + this.topic_id]);
+            }
+            else {
+                this.lessonTree['questions'].push(this.question);
+            }
             var dialogRef = this.dialog.open(BadDialogComponent, {
                 width: '300px',
                 data: { data: this.question.answers.filter(function (answer) {
                         if (answer.is_correct == 1)
                             return true;
                         return false;
-                    }), explanation: this.question.explanation
+                    }), explanation: this.question.explanation,
+                    showAnswers: (this.lesson_id == -1) ? false : true
                 }
             });
             dialogRef.afterClosed().subscribe(function (result) {
@@ -940,10 +981,15 @@ var LessonComponent = (function () {
                 }
                 else {
                     _this.question = null;
-                    _this.trackingService.doneLesson(_this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
+                    _this.trackingService.doneLesson(_this.topic_id, _this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
                 }
             });
-            this.correct_answers = this.complete_percent = 0;
+            if (this.lesson_id == -1) {
+                this.question_num--;
+            }
+            else {
+                this.correct_answers = this.complete_percent = 0;
+            }
         }
     };
     LessonComponent.prototype.isCorrect = function () {
@@ -1006,7 +1052,7 @@ LessonComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/lesson/lesson.component.html"),
         providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */]) === "function" && _d || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */]) === "function" && _e || Object])
 ], LessonComponent);
 
 var GoodDialogComponent = (function () {
@@ -1025,7 +1071,7 @@ GoodDialogComponent = __decorate([
         template: "<h2 mat-dialog-title>Correct!</h2>\n        <mat-dialog-content></mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: yellow\">Continue</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _e || Object, Object])
+    __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _f || Object, Object])
 ], GoodDialogComponent);
 
 var BadDialogComponent = (function () {
@@ -1034,6 +1080,7 @@ var BadDialogComponent = (function () {
         this.data = data;
         this.answers = data.data;
         this.explanation = data.explanation;
+        this.showAnswer = data.showAnswers;
     }
     BadDialogComponent.prototype.onNoClick = function () {
         this.dialogRef.close();
@@ -1043,10 +1090,10 @@ var BadDialogComponent = (function () {
 BadDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'bad-dialog',
-        template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"answers.length == 1\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"answers.length != 1\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: yellow\">Continue</button>\n            <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: red\">Report Error!</button>\n        </mat-dialog-actions>"
+        template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"(answers.length == 1) && showAnswer\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"(answers.length != 1) && showAnswer\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: yellow\">Continue</button>\n            <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: red\">Report Error!</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _f || Object, Object])
+    __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _g || Object, Object])
 ], BadDialogComponent);
 
 var ReportDialogComponent = (function () {
@@ -1074,10 +1121,10 @@ ReportDialogComponent = __decorate([
         template: "<h2 mat-dialog-title>Please specify reason</h2>\n        <mat-dialog-content>\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"selectedOption\">\n              <mat-radio-button class=\"radio-button\" *ngFor=\"let option of options; let optionIndex = index\" [value]=\"optionIndex\">\n                {{option}}\n              </mat-radio-button>\n            </mat-radio-group>\n        </mat-dialog-content>\n        <mat-form-field *ngIf=\"selectedOption == 3\">\n            <input matInput [(ngModel)]=\"custom\">\n        </mat-form-field>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}\" style=\"background-color: blue\">Send</button>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: green\">Cancel</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
-    __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _g || Object, Object])
+    __metadata("design:paramtypes", [typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _h || Object, Object])
 ], ReportDialogComponent);
 
-var _a, _b, _c, _d, _e, _f, _g;
+var _a, _b, _c, _d, _e, _f, _g, _h;
 //# sourceMappingURL=lesson.component.js.map
 
 /***/ }),
@@ -1377,7 +1424,7 @@ var _a, _b;
 /***/ "../../../../../src/app/topic/topic.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <h2>{{topicTree.title}}</h2>\n    <div ng-if=\"topicTree.lessons.length\">\n        <div *ngFor=\"let lesson of topicTree.lessons; let levelIndex = index\" class=\"arrowRowContainer\">\n            <div class=\"arrowButtonContainer\" [ngClass]=\"lesson.status == 1 ? 'greenout': (lesson.status == 2) ? 'yellowout' : 'redout'\">\n                <a *ngIf=\"lesson.status == 1 || lesson.status == 2\" routerLink=\"/topic/{{topicTree.id}}/lesson/{{lesson.id}}\" routerLinkActive=\"active\">\n                    <div class=\"arrow\">\n                        <span>{{lesson.title}}</span>\n                    </div>\n                </a>\n                <div *ngIf=\"lesson.status == 0\" class=\"arrow\">\n                    <span>{{lesson.title}}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>"
+module.exports = "<a routerLink=\"/\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <h2>{{topicTree.title}}</h2>\n    <div ng-if=\"topicTree.lessons.length\">\n        <div *ngFor=\"let lesson of topicTree.lessons; let levelIndex = index\" class=\"arrowRowContainer\">\n            <div class=\"arrowButtonContainer\" [ngClass]=\"lesson.status == 1 ? 'greenout': (lesson.status == 2) ? 'yellowout' : 'redout'\">\n                <a *ngIf=\"lesson.status == 1 || lesson.status == 2\" routerLink=\"/topic/{{topicTree.id}}/lesson/{{lesson.id}}\" routerLinkActive=\"active\">\n                    <div class=\"arrow\">\n                        <span>{{lesson.title}}</span>\n                    </div>\n                </a>\n                <div *ngIf=\"lesson.status == 0\" class=\"arrow\">\n                    <span>{{lesson.title}}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n    <a \n        class=\"button-container\" \n        routerLink=\"/topic/{{topicTree.id}}/lesson/testout\" \n        routerLinkActive=\"active\"\n        *ngIf=\"!topicDone\">\n        <button\n            mat-raised-button\n            style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n            <mat-icon>update</mat-icon>\n            <span>Test out to finish topic</span>\n        </button>   \n    </a>\n    <a \n        class=\"button-container\" \n        routerLink=\"/topic/{{topicTree.next_topic_id}}\" \n        routerLinkActive=\"active\"\n        *ngIf=\"topicDone && topicTree.next_topic_id != 0\">\n        <button\n            mat-raised-button\n            style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n            <mat-icon>done all</mat-icon>\n            <span>Go to next topic</span>\n        </button>   \n    </a>\n</div>"
 
 /***/ }),
 
@@ -1409,6 +1456,7 @@ var TopicComponent = (function () {
     }
     TopicComponent.prototype.ngOnInit = function () {
         var _this = this;
+        this.topicDone = false;
         this.sub = this.route.params.subscribe(function (params) {
             _this.id = +params['id']; // (+) converts string 'id' to a number
             // In a real app: dispatch action to load the details here.
@@ -1416,6 +1464,8 @@ var TopicComponent = (function () {
             _this.topicService.getTopic(_this.id)
                 .subscribe(function (topicTree) {
                 _this.topicTree = topicTree;
+                var lessons = _this.topicTree.lessons;
+                _this.topicDone = (_this.topicTree.status == 1);
             });
         });
     };
