@@ -30,12 +30,7 @@ export class TopicComponent implements OnInit {
                 .subscribe(topicTree => {
                     this.topicTree = topicTree;
                     let lessons = this.topicTree.lessons;
-                    let done = true;
-                    for(let i = 0; i < lessons.length; i++) {
-                        if(lessons[i].status != 1) 
-                            done = false;
-                    }
-                    this.topicDone = done;
+                    this.topicDone = (this.topicTree.status == 1);
                 });
          });
 

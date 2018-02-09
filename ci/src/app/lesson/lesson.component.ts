@@ -43,8 +43,6 @@ export class LessonComponent implements OnInit {
         else {
             this.question_num = 4;
         }
-        console.log(this.question_num);
-
     }
 
     ngOnInit() {
@@ -54,8 +52,10 @@ export class LessonComponent implements OnInit {
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
             this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
+            if (this.lesson_id == -1) {
+                this.question_num = 0;
+            }
 
-            // In a real app: dispatch action to load the details here.
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
@@ -119,7 +119,7 @@ export class LessonComponent implements OnInit {
                     this.nextQuestion();
                 } else {
                     this.question = null;
-                    this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
         } else {
@@ -159,7 +159,7 @@ export class LessonComponent implements OnInit {
                     this.nextQuestion();
                 } else {
                     this.question = null;
-                    this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
             if(this.lesson_id == -1) {

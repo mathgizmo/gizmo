@@ -25,13 +25,11 @@ export class TrackingService {
         }
     }
 
-    doneLesson(lesson_id, start_datetime, weak_questions) {
+    doneLesson(topic_id, lesson_id, start_datetime, weak_questions) {
         // notify api about lesson done
         let request = JSON.stringify({ start_datetime: start_datetime, weak_questions: weak_questions });
         if(lesson_id == -1) {
-          // todo: change this request
-          return this.serverService.post('/lesson/116/done', request)
-          //return this.serverService.post('/testoutdone', request)
+          return this.serverService.post('/topic/'+topic_id+'/testoutdone', request)
             .map((response: Response) => response); 
         }
         else {

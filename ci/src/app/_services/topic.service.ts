@@ -25,11 +25,10 @@ export class TopicService {
 
     getLesson(topic_id, lesson_id) {
         // get lesson from api
-        if(lesson_id == -1)
-          // todo: change this request
-          return this.serverService.get('/topic/'+topic_id+'/lesson/116')
-          //return this.serverService.get('/topic/'+topic_id+'/testout)
-            .map((response: Response) => response);  
+        if(lesson_id == -1) {
+            return this.serverService.get('/topic/'+topic_id+'/testout')
+                .map((response: Response) => response);
+        }
         else {
           return this.serverService.get('/topic/'+topic_id+'/lesson/'+lesson_id)
             .map((response: Response) => response);
