@@ -248,22 +248,37 @@ class TopicController extends Controller
         return $this->success($lesson);
     }
 
-    function testout($topic) {
-        if (($model = Topic::find($topic)) == null) {
+    function testout($topic_id) {
+        if (($model = Topic::find($topic_id)) == null) {
             return $this->error('Invalid topic.');
         }
+        $mode = DB::connection()->getFetchMode();
+        DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
 
+        $topic = $model->toArray();
+        $topic_id = $topic['id'];
 
-        $model['questions'] = DB::table('question')
+        $topic['questions'] = DB::table('question')
             ->select('question.*')
 
-            ->join(DB::raw('(SELECT id FROM lesson WHERE topic_id = ' . $topic . ' AND dependency = 1 ORDER BY order_no DESC, id DESC LIMIT 2) l'), function($join)
+            ->join(DB::raw('(SELECT id FROM lesson WHERE topic_id = ' . $topic_id . ' AND dependency = 1 ORDER BY order_no DESC, id DESC LIMIT 2) l'), function($join)
             {
                 $join->on('question.lesson_id', '=', 'l.id');
             })
             ->inRandomOrder()->take(4)->get();
 
-            return $this->success($model);
+        $questions = [];
+        foreach($topic['questions'] as $id=>$question) {
+            $questions[$question['id']] = $id;
+            $topic['questions'][$id]['answers'] = [];
+        }
+
+        foreach(DB::table('answer')->whereIn('question_id',array_keys($questions))->get() as $answer) {
+            $topic['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
+        }
+
+        DB::connection()->setFetchMode($mode);
+        return $this->success($topic);
     }
 
     function testoutdone($topic) {

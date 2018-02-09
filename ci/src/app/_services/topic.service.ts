@@ -25,8 +25,14 @@ export class TopicService {
 
     getLesson(topic_id, lesson_id) {
         // get lesson from api
-        return this.serverService.get('/topic/'+topic_id+'/lesson/'+lesson_id)
+        if(lesson_id == -1) {
+            return this.serverService.get('/topic/'+topic_id+'/testout')
+                .map((response: Response) => response);
+        }
+        else {
+          return this.serverService.get('/topic/'+topic_id+'/lesson/'+lesson_id)
             .map((response: Response) => response);
+        }
     }
 
     reportError(question_id, answers, option, custom) {
