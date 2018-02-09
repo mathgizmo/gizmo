@@ -20,22 +20,24 @@ export class ProfileComponent implements OnInit {
   ) {
     this.user = new User();
     this.passwordsMatch = true;
+  }
+
+  ngOnInit() {
     this.userService.getProfile()
       .subscribe(res => {
         //console.log(JSON.stringify(res));
         this.user.username = res['name'];
         this.user.email = res['email'];
         this.user.questionNum = res['question_num'];
+        localStorage.setItem('question_num', res['question_num']);
       });
-  }
-
-  ngOnInit() {
   }
 
   onChangeProfile() {
     this.userService.changeProfile(this.user)
         .subscribe( res => {
             //console.log('Update Result: ' + res);
+            localStorage.setItem('question_num', ""+this.user.questionNum);
         });
   }
 

@@ -4,7 +4,7 @@ import { FormsModule }    from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule, MatRadioModule, MatDialogModule} from '@angular/material';
+import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule, MatRadioModule, MatDialogModule, MatProgressBarModule} from '@angular/material';
 import { BaseRequestOptions } from '@angular/http';
 
 import { AppComponent }  from './app.component';
@@ -38,6 +38,7 @@ import { TryComponent } from './try/try.component';
         MatMenuModule,
         MatRadioModule,
         MatDialogModule,
+        MatProgressBarModule,
         FlexLayoutModule
     ],
     declarations: [

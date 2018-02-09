@@ -20,7 +20,7 @@
           <label>Number of correct consequence answers to finish lesson(put 0 to answer all questions)</label>
           <input matInput
             name="question_num"
-            pattern="[0-9]"
+            pattern="[0-9]{1,2}"
             [(ngModel)]="user.questionNum" />
         </mat-input-container> 
         <div class="button-container">
