@@ -19,6 +19,9 @@ $api->group(['middleware' => 'api.auth'], function () use ($api) {
     $api->any('/topic' , 'App\Http\APIControllers\TopicController@index');
     $api->any('/topic/{id}' , 'App\Http\APIControllers\TopicController@get');
     $api->any('/topic/{id}/lesson/{lesson_id}' , 'App\Http\APIControllers\TopicController@getLesson');
+    $api->any('/topic/{id}/testout' , 'App\Http\APIControllers\TopicController@testout');
+    $api->any('/topic/{id}/testoutdone' , 'App\Http\APIControllers\TopicController@testoutdone');
+
     $api->post('/lesson/{lesson}/start', 'App\Http\APIControllers\StudentsTrackingController@start');
     $api->post('/lesson/{lesson}/done', 'App\Http\APIControllers\StudentsTrackingController@done');
 

@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Http\Requests;
+use App\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use JWTAuth;
@@ -244,5 +245,41 @@ class TopicController extends Controller
 
         DB::connection()->setFetchMode($mode);
         return $this->success($lesson);
+    }
+
+    function testout($topic) {
+        if (($model = Topic::find($topic)) == null) {
+            return $this->error('Invalid topic.');
+        }
+
+
+        $questions = DB::table('question')
+            ->select('*')
+
+            ->join(DB::raw('(SELECT id FROM lesson WHERE topic_id = ' . $topic . ' AND dependency = 1 ORDER BY order_no DESC, id DESC LIMIT 2) l'), function($join)
+            {
+                $join->on('question.lesson_id', '=', 'l.id');
+            })
+            ->inRandomOrder()->take(4)->get();
+
+        return $this->success($questions);
+    }
+
+    function testoutdone($topic) {
+        if (($model = Topic::find($topic)) == null) {
+            return $this->error('Invalid topic.');
+        }
+
+        $student = JWTAuth::parseToken()->authenticate();
+
+        $progress_data = [
+            'student_id' => $student->id,
+            'entity_type' => 1,
+            'entity_id' => $topic
+        ];
+        $progress = Progress::where($progress_data)->get();
+        if ($progress->count() == 0) {
+            Progress::create($progress_data);
+        }
     }
 }
