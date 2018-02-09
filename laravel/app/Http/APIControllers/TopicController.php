@@ -199,6 +199,12 @@ class TopicController extends Controller
                 }
             }
         }
+        $ids = collect(DB::select("SELECT t.id FROM topic t
+JOIN unit u ON t.unit_id = u.id
+JOIN level l ON u.level_id = l.id
+ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->toArray();
+        $topic_order_id = array_search($topic['id'], $ids);
+        $topic['next_topic_id'] = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
 
 
         DB::connection()->setFetchMode($mode);
@@ -233,9 +239,9 @@ class TopicController extends Controller
         }
         $lesson['questions'] = DB::table('question')->where('lesson_id',$lesson_id)->get();
         $questions = [];
-        foreach($lesson['questions'] as $id=>$question) {
-            $questions[$question['id']] = $id;
-            $lesson['questions'][$id]['answers'] = [];
+        foreach($lesson['questions'] as $index => $question) {
+            $questions[$question['id']] = $index;
+            $lesson['questions'][$index]['answers'] = [];
         }
 
         foreach(DB::table('answer')->whereIn('question_id',array_keys($questions))->get() as $answer) {
@@ -243,6 +249,18 @@ class TopicController extends Controller
         }
 
         $lesson['topic'] = $topic;
+
+        $next = (DB::table('lesson')->where('id','!=', $lesson_id)
+            ->where('topic_id', $id)->where('dev_mode', '=', 0)->where(
+                function ($query) use ($lesson) {
+                    $query->where('order_no', '>', $lesson['order_no'])
+                    ->orWhere(function ($query) use ($lesson) {
+                        $query->where('order_no', '=', $lesson['order_no'])
+                        ->where('id', '>', $lesson['id']);
+                    });
+                })
+            ->first());
+        $lesson['next_lesson_id'] = isset($next['id']) ? $next['id'] : 0;
 
         DB::connection()->setFetchMode($mode);
         return $this->success($lesson);
