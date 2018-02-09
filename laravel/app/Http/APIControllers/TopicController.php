@@ -7,6 +7,7 @@ use App\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use JWTAuth;
+use App\Http\APIControllers\StudentsTrackingController;
 
 class TopicController extends Controller
 {
@@ -253,8 +254,8 @@ class TopicController extends Controller
         }
 
 
-        $questions = DB::table('question')
-            ->select('*')
+        $model['questions'] = DB::table('question')
+            ->select('question.*')
 
             ->join(DB::raw('(SELECT id FROM lesson WHERE topic_id = ' . $topic . ' AND dependency = 1 ORDER BY order_no DESC, id DESC LIMIT 2) l'), function($join)
             {
@@ -262,7 +263,7 @@ class TopicController extends Controller
             })
             ->inRandomOrder()->take(4)->get();
 
-        return $this->success($questions);
+            return $this->success($model);
     }
 
     function testoutdone($topic) {
@@ -272,14 +273,8 @@ class TopicController extends Controller
 
         $student = JWTAuth::parseToken()->authenticate();
 
-        $progress_data = [
-            'student_id' => $student->id,
-            'entity_type' => 1,
-            'entity_id' => $topic
-        ];
-        $progress = Progress::where($progress_data)->get();
-        if ($progress->count() == 0) {
-            Progress::create($progress_data);
-        }
+        StudentsTrackingController::topicProgressDone($model->id, $student);
+
+        return $this->success('OK.');
     }
 }
