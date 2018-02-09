@@ -130,6 +130,11 @@ var AuthenticationService = (function () {
                 _this.token = token;
                 // store username and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token }));
+                var question_num = 5;
+                if (response.json().message && response.json().message.question_num != undefined) {
+                    question_num = response.json().message.question_num;
+                }
+                localStorage.setItem('question_num', question_num + "");
                 // return true to indicate successful login
                 return true;
             }
@@ -596,11 +601,12 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["g" /* MatInputModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MatButtonModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["j" /* MatSelectModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["k" /* MatSelectModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["f" /* MatIconModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["h" /* MatMenuModule */],
-            __WEBPACK_IMPORTED_MODULE_5__angular_material__["i" /* MatRadioModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["j" /* MatRadioModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MatDialogModule */],
+            __WEBPACK_IMPORTED_MODULE_5__angular_material__["i" /* MatProgressBarModule */],
             __WEBPACK_IMPORTED_MODULE_17__angular_flex_layout__["a" /* FlexLayoutModule */]
         ],
         declarations: [
@@ -776,7 +782,7 @@ var _a;
 /***/ "../../../../../src/app/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\"></h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0\">\n            <h2>Congratulation!</h2>\n            <h3>You have finished this lesson.</h3>\n        </div>\n    </div>\n</div>"
+module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar mode=determinate value={{complete_percent}}></mat-progress-bar>\n<label style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\"></h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0\">\n            <h2>Congratulation!</h2>\n            <h3>You have finished this lesson.</h3>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -821,6 +827,13 @@ var LessonComponent = (function () {
         this.weak_questions = [];
         this.start_time = '';
         this.initial_loading = 1;
+        if (localStorage.getItem('question_num') != undefined) {
+            this.question_num = Number(localStorage.getItem('question_num'));
+        }
+        else {
+            this.question_num = 4;
+        }
+        console.log(this.question_num);
     }
     LessonComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -834,6 +847,8 @@ var LessonComponent = (function () {
                 _this.lessonTree = lessonTree;
                 _this.initial_loading = 0;
                 if (lessonTree['questions'].length) {
+                    if (_this.question_num >= _this.lessonTree['questions'].length)
+                        _this.question_num = _this.lessonTree['questions'].length;
                     _this.nextQuestion();
                     _this.trackingService.startLesson(_this.lesson_id).subscribe(function (start_time) {
                         _this.start_time = start_time;
@@ -841,6 +856,7 @@ var LessonComponent = (function () {
                 }
             });
         });
+        this.correct_answers = 0;
     };
     LessonComponent.prototype.nextQuestion = function () {
         this.answers = [];
@@ -872,6 +888,14 @@ var LessonComponent = (function () {
     LessonComponent.prototype.checkAnswer = function () {
         var _this = this;
         if (this.isCorrect()) {
+            this.correct_answers++;
+            this.complete_percent = (this.correct_answers == 0) ? 0
+                : this.correct_answers / this.question_num * 100;
+            //if we have enough correct responces just remove rest of the questions
+            if (this.correct_answers == this.question_num
+                && this.question_num != 0) {
+                this.lessonTree['questions'] = [];
+            }
             var dialogRef = this.dialog.open(GoodDialogComponent, {
                 width: '300px',
                 data: {}
@@ -919,6 +943,7 @@ var LessonComponent = (function () {
                     _this.trackingService.doneLesson(_this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
                 }
             });
+            this.correct_answers = this.complete_percent = 0;
         }
     };
     LessonComponent.prototype.isCorrect = function () {
@@ -1156,7 +1181,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/profile/profile.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"profile\">\n  <mat-card id=\"profile-container\">\n  \t<span class=\"card-title\">Change Profile Info:</span>\n    <form #changeProfile=\"ngForm\" (ngSubmit)=\"onChangeProfile()\">\n  \t\t<mat-input-container>\n        <input matInput\n          name=\"username\"\n          pattern=\"[a-zA-Z0-9]{2,255}\"\n          placeholder=\"Name\"\n          [(ngModel)]=\"user.username\" />\n        </mat-input-container>\n        <mat-input-container>\n          <input matInput\n            name=\"email\"\n            pattern=\"^\\S+@\\S+$\"\n            placeholder=\"Email\"\n            [(ngModel)]=\"user.email\" />\n        </mat-input-container> \n        <mat-input-container>\n          <label>Number of correct consequence answers to finish lesson(put 0 to answer all questions)</label>\n          <input matInput\n            name=\"question_num\"\n            pattern=\"[0-9]\"\n            [(ngModel)]=\"user.questionNum\" />\n        </mat-input-container> \n        <div class=\"button-container\">\n          <button\n            mat-raised-button\n            type=\"submit\">\n            <mat-icon>update</mat-icon>\n            <span>Update</span>\n          </button>\n      \t</div>\n  \t</form>\n  </mat-card>\n\n  <mat-card>\n    <span class=\"card-title\">Change Password:</span>\n    <form #changePassword=\"ngForm\" (ngSubmit)=\"onChangePassword(newPassword.value, confirmedPassword.value)\">\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"New Password\"\n          #newPassword />\n      </mat-input-container>\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"Confirm Password\"\n          #confirmedPassword />\n      </mat-input-container>\n      <div class=\"alert alert-danger\" *ngIf=\"!passwordsMatch\">\n         <mat-icon>warning</mat-icon>\n         {{warningMessage}}\n      </div>\n      <div class=\"button-container\" >\n        <button id=\"change-password-button\"\n          mat-raised-button\n          type=\"submit\">\n          <mat-icon>update</mat-icon>\n          <span>Change Password</span>\n        </button>\n      </div>\n    </form>\n  </mat-card>\n\n</div>\n"
+module.exports = "<div class=\"profile\">\n  <mat-card id=\"profile-container\">\n  \t<span class=\"card-title\">Change Profile Info:</span>\n    <form #changeProfile=\"ngForm\" (ngSubmit)=\"onChangeProfile()\">\n  \t\t<mat-input-container>\n        <input matInput\n          name=\"username\"\n          pattern=\"[a-zA-Z0-9]{2,255}\"\n          placeholder=\"Name\"\n          [(ngModel)]=\"user.username\" />\n        </mat-input-container>\n        <mat-input-container>\n          <input matInput\n            name=\"email\"\n            pattern=\"^\\S+@\\S+$\"\n            placeholder=\"Email\"\n            [(ngModel)]=\"user.email\" />\n        </mat-input-container> \n        <mat-input-container>\n          <label>Number of correct consequence answers to finish lesson(put 0 to answer all questions)</label>\n          <input matInput\n            name=\"question_num\"\n            pattern=\"[0-9]{1,2}\"\n            [(ngModel)]=\"user.questionNum\" />\n        </mat-input-container> \n        <div class=\"button-container\">\n          <button\n            mat-raised-button\n            type=\"submit\">\n            <mat-icon>update</mat-icon>\n            <span>Update</span>\n          </button>\n      \t</div>\n  \t</form>\n  </mat-card>\n\n  <mat-card>\n    <span class=\"card-title\">Change Password:</span>\n    <form #changePassword=\"ngForm\" (ngSubmit)=\"onChangePassword(newPassword.value, confirmedPassword.value)\">\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"New Password\"\n          #newPassword />\n      </mat-input-container>\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"Confirm Password\"\n          #confirmedPassword />\n      </mat-input-container>\n      <div class=\"alert alert-danger\" *ngIf=\"!passwordsMatch\">\n         <mat-icon>warning</mat-icon>\n         {{warningMessage}}\n      </div>\n      <div class=\"button-container\" >\n        <button id=\"change-password-button\"\n          mat-raised-button\n          type=\"submit\">\n          <mat-icon>update</mat-icon>\n          <span>Change Password</span>\n        </button>\n      </div>\n    </form>\n  </mat-card>\n\n</div>\n"
 
 /***/ }),
 
@@ -1184,25 +1209,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var ProfileComponent = (function () {
     function ProfileComponent(userService, authenticationService) {
-        var _this = this;
         this.userService = userService;
         this.authenticationService = authenticationService;
         this.user = new __WEBPACK_IMPORTED_MODULE_1__models_user__["a" /* User */]();
         this.passwordsMatch = true;
+    }
+    ProfileComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.userService.getProfile()
             .subscribe(function (res) {
             //console.log(JSON.stringify(res));
             _this.user.username = res['name'];
             _this.user.email = res['email'];
             _this.user.questionNum = res['question_num'];
+            localStorage.setItem('question_num', res['question_num']);
         });
-    }
-    ProfileComponent.prototype.ngOnInit = function () {
     };
     ProfileComponent.prototype.onChangeProfile = function () {
+        var _this = this;
         this.userService.changeProfile(this.user)
             .subscribe(function (res) {
             //console.log('Update Result: ' + res);
+            localStorage.setItem('question_num', "" + _this.user.questionNum);
         });
     };
     ProfileComponent.prototype.onChangePassword = function (newPassword, confirmedPassword) {

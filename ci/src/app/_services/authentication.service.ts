@@ -1,7 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/map';
 import { GlobalVariable } from 'app/globals';
 
 @Injectable()
@@ -30,6 +30,11 @@ export class AuthenticationService {
 
                     // store username and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token }));
+                    var question_num = 5;
+                    if (response.json().message && response.json().message.question_num != undefined) {
+                        question_num = response.json().message.question_num;
+                    }
+                    localStorage.setItem('question_num', question_num+"");
 
                     // return true to indicate successful login
                     return true;

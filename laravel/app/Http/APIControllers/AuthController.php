@@ -29,9 +29,11 @@ class AuthController extends Controller
         //if user is admin update corresponding field
         $student_id = JWTAuth::getPayload($token)->get('sub');
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student_id);
+        $student = Student::find($student_id);
+        $question_num = $student->question_num?:5;
 
         // all good so return the token
-        return $this->success(compact('token'));
+        return $this->success(compact('token', 'question_num'));
     }
 
     public function register(Request $request)
