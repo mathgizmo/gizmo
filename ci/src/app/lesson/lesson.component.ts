@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TopicService } from '../_services/index';
 import { TrackingService } from '../_services/index';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatProgressBarModule } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
     moduleId: module.id,
@@ -25,7 +26,11 @@ export class LessonComponent implements OnInit {
     correct_answers : number;
     complete_percent : number;
 
+    incorrect_answers: number;
+    max_incorrect_answers: number = 1;
+
     constructor(
+            private router: Router,
             private topicService: TopicService,
             private trackingService: TrackingService,
             private route: ActivatedRoute,
@@ -38,16 +43,19 @@ export class LessonComponent implements OnInit {
         else {
             this.question_num = 4;
         }
-        console.log(this.question_num);
-
     }
 
     ngOnInit() {
+        this.question_num = +localStorage.getItem('question_num');
+        this.incorrect_answers = 0;
         this.sub = this.route.params.subscribe(params => {
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
-            this.lesson_id = +params['lesson_id']; // (+) converts string 'id' to a number
+            this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
+                +params['lesson_id']; // (+) converts string 'id' to a number
+            if (this.lesson_id == -1) {
+                this.question_num = 0;
+            }
 
-            // In a real app: dispatch action to load the details here.
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
@@ -111,20 +119,27 @@ export class LessonComponent implements OnInit {
                     this.nextQuestion();
                 } else {
                     this.question = null;
-                    this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
         } else {
             if (this.weak_questions.indexOf(this.question.id) === -1) {
                 this.weak_questions.push(this.question.id);
             }
-            this.lessonTree['questions'].push(this.question);
+            this.incorrect_answers++;
+            if(this.lesson_id == -1 && 
+                this.incorrect_answers > this.max_incorrect_answers) {
+                  this.router.navigate(['/topic/'+this.topic_id]);
+            } else {
+                this.lessonTree['questions'].push(this.question);
+            }
             let dialogRef = this.dialog.open(BadDialogComponent, {
                 width: '300px',
                 data: { data: this.question.answers.filter(function(answer){
                     if (answer.is_correct == 1) return true;
                     return false;
-                    }) , explanation: this.question.explanation
+                    }) , explanation: this.question.explanation,
+                    showAnswers: (this.lesson_id == -1) ? false : true
                 }
             });
 
@@ -144,10 +159,14 @@ export class LessonComponent implements OnInit {
                     this.nextQuestion();
                 } else {
                     this.question = null;
-                    this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
-            this.correct_answers = this.complete_percent = 0;
+            if(this.lesson_id == -1) {
+              this.question_num--;
+            } else {
+              this.correct_answers = this.complete_percent = 0;
+            }
         }
     }
     
@@ -225,10 +244,10 @@ export class GoodDialogComponent {
     selector: 'bad-dialog',
     template: `<h2 mat-dialog-title>Incorrect :(</h2>
         <mat-dialog-content>
-            <div *ngIf="answers.length == 1">
+            <div *ngIf="(answers.length == 1) && showAnswer">
                 Correct answer is: {{answers[0].value}}
             </div>
-            <div *ngIf="answers.length != 1">
+            <div *ngIf="(answers.length != 1) && showAnswer">
                 Correct answers are: <ul>
                 <li *ngFor="let answer of answers; let answerIndex = index">{{answer.value}}</li>
                 </ul>
@@ -245,12 +264,14 @@ export class GoodDialogComponent {
 export class BadDialogComponent {
     answers: string[];
     explanation: string;
+    showAnswer: boolean;
 
     constructor(
         public dialogRef: MatDialogRef<BadDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         this.answers = data.data;
         this.explanation = data.explanation;
+        this.showAnswer = data.showAnswers;
     }
 
     onNoClick(): void {
