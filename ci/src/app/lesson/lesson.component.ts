@@ -5,14 +5,10 @@ import { TrackingService } from '../_services/index';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatProgressBarModule } from '@angular/material';
 import { Router } from '@angular/router';
 
-import { UserService } from '../_services/user.service'; // delete me after fix
-
 @Component({
     moduleId: module.id,
     templateUrl: 'lesson.component.html',
-    providers: [TopicService, TrackingService
-        ,UserService // delete me after fix
-    ]
+    providers: [TopicService, TrackingService]
 })
 export class LessonComponent implements OnInit {
     lessonTree: any = [];
@@ -34,7 +30,6 @@ export class LessonComponent implements OnInit {
     max_incorrect_answers: number = 1;
 
     constructor(
-            private userService: UserService, // delete me after fix
             private router: Router,
             private topicService: TopicService,
             private trackingService: TrackingService,
@@ -42,16 +37,13 @@ export class LessonComponent implements OnInit {
             public dialog: MatDialog
             ) { 
 
-        /** todo: add question_num to login/register response body
-            becouse without it i must send request to get this variable from there
-        */
-        //this is crutch! Delete this piece of code when you fix server!
-        this.userService.getProfile()
-          .subscribe(res => {
-            localStorage.setItem('question_num', res['question_num']);
-            this.question_num = +localStorage.getItem('question_num');
-          });
-        // end of crutch
+        if (localStorage.getItem('question_num') != undefined) {
+            this.question_num = Number(localStorage.getItem('question_num'));
+        }
+        else {
+            this.question_num = 4;
+        }
+        console.log(this.question_num);
 
     }
 
@@ -70,15 +62,12 @@ export class LessonComponent implements OnInit {
                     this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
+                        if(this.question_num >= this.lessonTree['questions'].length)
+                            this.question_num = this.lessonTree['questions'].length;
                         this.nextQuestion();
                         this.trackingService.startLesson(this.lesson_id).subscribe(start_time => {
                             this.start_time = start_time;
                         });
-                        if(this.question_num == 0)
-                            this.question_num = lessonTree['questions'].length;
-                        if(this.question_num >= this.lessonTree['questions'].length
-                          || this.lesson_id == -1)
-                            this.question_num = this.lessonTree['questions'].length;
                     }
                 });
          });
@@ -86,14 +75,6 @@ export class LessonComponent implements OnInit {
     }
 
     nextQuestion() {
-        if(this.correct_answers == this.question_num 
-            && this.question_num != 0) {
-           this.lessonTree['questions'] = [];
-           this.question = null;
-           this.trackingService.doneLesson(
-               this.lesson_id, this.start_time, this.weak_questions).subscribe();
-           return;
-        }
         this.answers = [];
         this.question = this.lessonTree['questions'].shift();
         if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
@@ -120,6 +101,14 @@ export class LessonComponent implements OnInit {
     
     checkAnswer() {
         if (this.isCorrect()) {
+            this.correct_answers++;
+            this.complete_percent = (this.correct_answers == 0) ? 0
+                : this.correct_answers/this.question_num*100;
+            //if we have enough correct responces just remove rest of the questions
+            if(this.correct_answers == this.question_num
+                    && this.question_num != 0) {
+               this.lessonTree['questions'] = [];
+            }
             let dialogRef = this.dialog.open(GoodDialogComponent, {
                 width: '300px',
                 data: { }
@@ -133,9 +122,6 @@ export class LessonComponent implements OnInit {
                     this.trackingService.doneLesson(this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
-            this.correct_answers++;
-            this.complete_percent = (this.correct_answers == 0) ? 0 
-                : this.correct_answers/this.question_num*100;
         } else {
             if (this.weak_questions.indexOf(this.question.id) === -1) {
                 this.weak_questions.push(this.question.id);
@@ -180,9 +166,6 @@ export class LessonComponent implements OnInit {
               this.question_num--;
             } else {
               this.correct_answers = this.complete_percent = 0;
-              if(+localStorage.getItem('question_num') == 0 ||
-              this.question_num >= this.lessonTree['questions'].length-1)
-                this.question_num = this.lessonTree['questions'].length-1;
             }
         }
     }
