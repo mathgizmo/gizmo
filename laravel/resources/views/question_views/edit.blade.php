@@ -257,7 +257,7 @@
                             </div>
 				      </div>
                 <div class="form-group{{ $errors->has('rounding') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-4 control-label">Round user answer with same accuracy as correct answer</label>
+                    <label for="type" class="col-md-4 control-label">Round user answer with same precision as correct answer</label>
 
                     <div class="col-md-6 radio">
                         <label for="type" class="col-md-3"> <input {{($question->rounding == true) ? 'checked="checked"' : ''}} type="checkbox" name="rounding" value="1"></label>

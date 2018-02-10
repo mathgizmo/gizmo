@@ -128,7 +128,7 @@
 						<div class="row bg-success">
 							<div class="col-md-2">
 								<div class="form-group">
-									<label for="name">Round user answer with same accuracy as correct answer</label>
+									<label for="name">Round user answer with same precision as correct answer</label>
 								</div>
 							</div>
 
