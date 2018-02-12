@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {
     this.user = new User();
     this.passwordsMatch = true;

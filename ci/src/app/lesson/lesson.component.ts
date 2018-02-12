@@ -36,7 +36,7 @@ export class LessonComponent implements OnInit {
             private topicService: TopicService,
             private trackingService: TrackingService,
             private route: ActivatedRoute,
-            public dialog: MatDialog,
+            public dialog: MatDialog
             ) { 
 
         if (localStorage.getItem('question_num') != undefined) {
@@ -77,9 +77,9 @@ export class LessonComponent implements OnInit {
                     else {
                         this.next = lessonTree['next_lesson_id'];
                     }
+                    this.correct_answers = this.complete_percent = 0;
                 });
          });
-        this.correct_answers = 0;
     }
 
     nextQuestion() {
