@@ -4,6 +4,9 @@
 <div class="text-center">
     <div *ngIf="question !== null">
         <h2 [innerHtml]="question.question"></h2>
+        <div *ngIf="question.answer_mode=='order'" [sortablejs]="answers" class="order-container">
+            <div *ngFor="let answer of question.answers" class="order-item">{{answer.value}}</div>
+        </div>
         <div *ngIf="question.answer_mode=='radio'">
             <mat-radio-group class="radio-group" [(ngModel)]="answers[0]">
                 <mat-radio-button class="radio-button" *ngFor="let answer of question.answers; let answerIndex = index" value="{{answerIndex}}">

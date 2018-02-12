@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 @Component({
     moduleId: module.id,
     templateUrl: 'lesson.component.html',
-    providers: [TopicService, TrackingService]
+    providers: [TopicService, TrackingService],
+    styleUrls: [ './lesson.component.css']
 })
 export class LessonComponent implements OnInit {
     lessonTree: any = [];
@@ -35,7 +36,7 @@ export class LessonComponent implements OnInit {
             private topicService: TopicService,
             private trackingService: TrackingService,
             private route: ActivatedRoute,
-            public dialog: MatDialog
+            public dialog: MatDialog,
             ) { 
 
         if (localStorage.getItem('question_num') != undefined) {
@@ -95,6 +96,11 @@ export class LessonComponent implements OnInit {
         } else if (['TF'].indexOf(this.question.reply_mode) >= 0) {
             this.answers.push('');
             this.question.answer_mode = 'TF';
+        } else if (['order'].indexOf(this.question.reply_mode) >= 0) {
+            for (var i = 0; i < this.question.answers.length; i++) {
+                this.answers.push(this.question.answers[i].value);
+            }
+            this.question.answer_mode = 'order';
         } else {
             for (var i = 0; i < this.question.answers.length; i++) {
                 this.answers.push('');
