@@ -256,7 +256,7 @@ export class LessonComponent implements OnInit {
     template: `<h2 mat-dialog-title>Correct!</h2>
         <mat-dialog-content></mat-dialog-content>
         <mat-dialog-actions>
-          <button mat-button [mat-dialog-close]="true" style="background-color: yellow">Continue</button>
+          <button mat-button [mat-dialog-close]="true" style="background-color: #fef65b">Continue</button>
         </mat-dialog-actions>`
 })
 export class GoodDialogComponent {
@@ -279,8 +279,11 @@ export class GoodDialogComponent {
                 Correct answer is: {{answers[0].value}}
             </div>
             <div *ngIf="(answers.length != 1) && showAnswer">
-                Correct answers are: <ul>
-                <li *ngFor="let answer of answers; let answerIndex = index">{{answer.value}}</li>
+                Correct answers are: 
+                <ul>
+                    <li *ngFor="let answer of answers; let answerIndex = index">
+                        {{answer.value}}
+                    </li>
                 </ul>
             </div>
             <div *ngIf="explanation!=''">
@@ -288,9 +291,12 @@ export class GoodDialogComponent {
             </div>
         </mat-dialog-content>
         <mat-dialog-actions>
-            <button mat-button [mat-dialog-close]="false" style="background-color: yellow">Continue</button>
-            <button mat-button [mat-dialog-close]="true" style="background-color: red">Report Error!</button>
-        </mat-dialog-actions>`
+            <button mat-button [mat-dialog-close]="false" style="background-color: #fef65b">Continue</button>
+            <button mat-button [mat-dialog-close]="true" style="background-color: #ff4444">Report Error!</button>
+        </mat-dialog-actions>`,
+    styles: [`
+        div { min-height: 40px; }
+    `]
 })
 export class BadDialogComponent {
     answers: string[];
@@ -303,6 +309,10 @@ export class BadDialogComponent {
         this.answers = data.data;
         this.explanation = data.explanation;
         this.showAnswer = data.showAnswers;
+        //this.answers[0]['value'] = "$$E=mc^2$$"; // test equation in LaTeX
+        setTimeout(function() {
+            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }, 50);
     }
 
     onNoClick(): void {
@@ -324,8 +334,8 @@ export class BadDialogComponent {
             <input matInput [(ngModel)]="custom">
         </mat-form-field>
         <mat-dialog-actions>
-            <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" style="background-color: blue">Send</button>
-            <button mat-button [mat-dialog-close]="false" style="background-color: green">Cancel</button>
+            <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" style="background-color: #31698a">Send</button>
+            <button mat-button [mat-dialog-close]="false" style="background-color: #6dc066">Cancel</button>
         </mat-dialog-actions>`
 })
 export class ReportDialogComponent {
