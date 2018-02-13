@@ -100,6 +100,7 @@ export class LessonComponent implements OnInit {
             for (var i = 0; i < this.question.answers.length; i++) {
                 this.answers.push(this.question.answers[i].value);
             }
+            this.answers = this.shuffle(this.answers);
             this.question.answer_mode = 'order';
         } else {
             for (var i = 0; i < this.question.answers.length; i++) {
@@ -231,6 +232,23 @@ export class LessonComponent implements OnInit {
         }
         return false;
     }
+
+    // function to shuffle answers in order
+    private shuffle(array) {
+      let currentIndex = array.length, temporaryValue, randomIndex;    
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {    
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;    
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }    
+      return array;
+    }
+
 }
 
 @Component({
