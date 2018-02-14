@@ -486,6 +486,24 @@ var _a;
 
 /***/ }),
 
+/***/ "../../../../../src/app/app.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "h1 {\n  color: #369;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 250%;\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
@@ -541,7 +559,8 @@ var AppComponent = (function () {
 AppComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-root',
-        template: __webpack_require__("../../../../../src/app/app.component.html")
+        template: __webpack_require__("../../../../../src/app/app.component.html"),
+        styles: [__webpack_require__("../../../../../src/app/app.component.css")]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _b || Object])
 ], AppComponent);
@@ -564,25 +583,28 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_material__ = __webpack_require__("../../../material/esm5/material.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__("../../../../../src/app/app.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__app_routing__ = __webpack_require__("../../../../../src/app/app.routing.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__guards_index__ = __webpack_require__("../../../../../src/app/_guards/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__welcome_index__ = __webpack_require__("../../../../../src/app/welcome/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__login_index__ = __webpack_require__("../../../../../src/app/login/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__register_index__ = __webpack_require__("../../../../../src/app/register/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__home_index__ = __webpack_require__("../../../../../src/app/home/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__topic_index__ = __webpack_require__("../../../../../src/app/topic/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__lesson_index__ = __webpack_require__("../../../../../src/app/lesson/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome__ = __webpack_require__("../../../../angular2-fontawesome/angular2-fontawesome.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__angular_flex_layout__ = __webpack_require__("../../../flex-layout/@angular/flex-layout.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__try_try_component__ = __webpack_require__("../../../../../src/app/try/try.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_angular_sortablejs__ = __webpack_require__("../../../../angular-sortablejs/dist/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_angular_sortablejs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_angular_sortablejs__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__guards_index__ = __webpack_require__("../../../../../src/app/_guards/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__services_index__ = __webpack_require__("../../../../../src/app/_services/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__welcome_index__ = __webpack_require__("../../../../../src/app/welcome/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__login_index__ = __webpack_require__("../../../../../src/app/login/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__register_index__ = __webpack_require__("../../../../../src/app/register/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__home_index__ = __webpack_require__("../../../../../src/app/home/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__topic_index__ = __webpack_require__("../../../../../src/app/topic/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__lesson_index__ = __webpack_require__("../../../../../src/app/lesson/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angular2_fontawesome_angular2_fontawesome__ = __webpack_require__("../../../../angular2-fontawesome/angular2-fontawesome.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17_angular2_fontawesome_angular2_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_17_angular2_fontawesome_angular2_fontawesome__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__angular_flex_layout__ = __webpack_require__("../../../flex-layout/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__profile_profile_component__ = __webpack_require__("../../../../../src/app/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__try_try_component__ = __webpack_require__("../../../../../src/app/try/try.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -616,7 +638,7 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormsModule */],
             __WEBPACK_IMPORTED_MODULE_3__angular_http__["d" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_7__app_routing__["a" /* routing */],
-            __WEBPACK_IMPORTED_MODULE_16_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"],
+            __WEBPACK_IMPORTED_MODULE_17_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"],
             __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["g" /* MatInputModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MatButtonModule */],
@@ -626,31 +648,32 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["j" /* MatRadioModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MatDialogModule */],
             __WEBPACK_IMPORTED_MODULE_5__angular_material__["i" /* MatProgressBarModule */],
-            __WEBPACK_IMPORTED_MODULE_17__angular_flex_layout__["a" /* FlexLayoutModule */]
+            __WEBPACK_IMPORTED_MODULE_18__angular_flex_layout__["FlexLayoutModule"],
+            __WEBPACK_IMPORTED_MODULE_8_angular_sortablejs__["SortablejsModule"].forRoot({ animation: 150 })
         ],
         declarations: [
             __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */],
-            __WEBPACK_IMPORTED_MODULE_10__welcome_index__["a" /* WelcomeComponent */],
-            __WEBPACK_IMPORTED_MODULE_11__login_index__["a" /* LoginComponent */],
-            __WEBPACK_IMPORTED_MODULE_12__register_index__["a" /* RegisterComponent */],
-            __WEBPACK_IMPORTED_MODULE_13__home_index__["a" /* HomeComponent */],
-            __WEBPACK_IMPORTED_MODULE_14__topic_index__["a" /* TopicComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["c" /* LessonComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["d" /* ReportDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_18__profile_profile_component__["a" /* ProfileComponent */],
-            __WEBPACK_IMPORTED_MODULE_19__try_try_component__["a" /* TryComponent */]
+            __WEBPACK_IMPORTED_MODULE_11__welcome_index__["a" /* WelcomeComponent */],
+            __WEBPACK_IMPORTED_MODULE_12__login_index__["a" /* LoginComponent */],
+            __WEBPACK_IMPORTED_MODULE_13__register_index__["a" /* RegisterComponent */],
+            __WEBPACK_IMPORTED_MODULE_14__home_index__["a" /* HomeComponent */],
+            __WEBPACK_IMPORTED_MODULE_15__topic_index__["a" /* TopicComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__lesson_index__["c" /* LessonComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__lesson_index__["b" /* GoodDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__lesson_index__["a" /* BadDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__lesson_index__["d" /* ReportDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_19__profile_profile_component__["a" /* ProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_20__try_try_component__["a" /* TryComponent */]
         ],
         entryComponents: [
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["b" /* GoodDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["a" /* BadDialogComponent */],
-            __WEBPACK_IMPORTED_MODULE_15__lesson_index__["d" /* ReportDialogComponent */]
+            __WEBPACK_IMPORTED_MODULE_16__lesson_index__["b" /* GoodDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__lesson_index__["a" /* BadDialogComponent */],
+            __WEBPACK_IMPORTED_MODULE_16__lesson_index__["d" /* ReportDialogComponent */]
         ],
         providers: [
-            __WEBPACK_IMPORTED_MODULE_8__guards_index__["a" /* AuthGuard */],
-            __WEBPACK_IMPORTED_MODULE_9__services_index__["a" /* AuthenticationService */],
-            __WEBPACK_IMPORTED_MODULE_9__services_index__["b" /* ServerService */],
+            __WEBPACK_IMPORTED_MODULE_9__guards_index__["a" /* AuthGuard */],
+            __WEBPACK_IMPORTED_MODULE_10__services_index__["a" /* AuthenticationService */],
+            __WEBPACK_IMPORTED_MODULE_10__services_index__["b" /* ServerService */],
             // providers used to create fake backend
             //fakeBackendProvider,
             //MockBackend,
@@ -798,10 +821,28 @@ var _a;
 
 /***/ }),
 
+/***/ "../../../../../src/app/lesson/lesson.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".order-container {\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\t-webkit-box-pack: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n}\n\n.order-item {\n  background-color: rgba(17, 17, 17, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-width: 50px;\n  width: 80%;\n  line-height: 35px;\n  margin: 4px;\n  color: #fff;\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
 /***/ "../../../../../src/app/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\"></h2>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>"
+module.exports = "<a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\"></h2>\n        <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n            <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n        </div>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\">\n                <mat-radio-button class=\"radio-button\" value=\"False\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\" >Continue</button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -887,9 +928,9 @@ var LessonComponent = (function () {
                 else {
                     _this.next = lessonTree['next_lesson_id'];
                 }
+                _this.correct_answers = _this.complete_percent = 0;
             });
         });
-        this.correct_answers = 0;
     };
     LessonComponent.prototype.nextQuestion = function () {
         this.answers = [];
@@ -907,6 +948,13 @@ var LessonComponent = (function () {
         else if (['TF'].indexOf(this.question.reply_mode) >= 0) {
             this.answers.push('');
             this.question.answer_mode = 'TF';
+        }
+        else if (['order'].indexOf(this.question.reply_mode) >= 0) {
+            for (var i = 0; i < this.question.answers.length; i++) {
+                this.answers.push(this.question.answers[i].value);
+            }
+            this.answers = this.shuffle(this.answers);
+            this.question.answer_mode = 'order';
         }
         else {
             for (var i = 0; i < this.question.answers.length; i++) {
@@ -1045,12 +1093,28 @@ var LessonComponent = (function () {
         }
         return false;
     };
+    // function to shuffle answers in order
+    LessonComponent.prototype.shuffle = function (array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
+    };
     return LessonComponent;
 }());
 LessonComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         template: __webpack_require__("../../../../../src/app/lesson/lesson.component.html"),
-        providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]]
+        providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]],
+        styles: [__webpack_require__("../../../../../src/app/lesson/lesson.component.css")]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["c" /* MatDialog */]) === "function" && _e || Object])
 ], LessonComponent);
@@ -1068,7 +1132,7 @@ var GoodDialogComponent = (function () {
 GoodDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'good-dialog',
-        template: "<h2 mat-dialog-title>Correct!</h2>\n        <mat-dialog-content></mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: yellow\">Continue</button>\n        </mat-dialog-actions>"
+        template: "<h2 mat-dialog-title>Correct!</h2>\n        <mat-dialog-content></mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: #fef65b\">Continue</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _f || Object, Object])
@@ -1081,6 +1145,10 @@ var BadDialogComponent = (function () {
         this.answers = data.data;
         this.explanation = data.explanation;
         this.showAnswer = data.showAnswers;
+        //this.answers[0]['value'] = "$$E=mc^2$$"; // test equation in LaTeX
+        setTimeout(function () {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }, 50);
     }
     BadDialogComponent.prototype.onNoClick = function () {
         this.dialogRef.close();
@@ -1090,7 +1158,8 @@ var BadDialogComponent = (function () {
 BadDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'bad-dialog',
-        template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"(answers.length == 1) && showAnswer\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"(answers.length != 1) && showAnswer\">\n                Correct answers are: <ul>\n                <li *ngFor=\"let answer of answers; let answerIndex = index\">{{answer.value}}</li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: yellow\">Continue</button>\n            <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: red\">Report Error!</button>\n        </mat-dialog-actions>"
+        template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"(answers.length == 1) && showAnswer\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"(answers.length != 1) && showAnswer\">\n                Correct answers are: \n                <ul>\n                    <li *ngFor=\"let answer of answers; let answerIndex = index\">\n                        {{answer.value}}\n                    </li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: #fef65b\">Continue</button>\n            <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: #ff4444\">Report Error!</button>\n        </mat-dialog-actions>",
+        styles: ["\n        div { min-height: 40px; }\n    "]
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _g || Object, Object])
@@ -1118,7 +1187,7 @@ var ReportDialogComponent = (function () {
 ReportDialogComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'report-dialog',
-        template: "<h2 mat-dialog-title>Please specify reason</h2>\n        <mat-dialog-content>\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"selectedOption\">\n              <mat-radio-button class=\"radio-button\" *ngFor=\"let option of options; let optionIndex = index\" [value]=\"optionIndex\">\n                {{option}}\n              </mat-radio-button>\n            </mat-radio-group>\n        </mat-dialog-content>\n        <mat-form-field *ngIf=\"selectedOption == 3\">\n            <input matInput [(ngModel)]=\"custom\">\n        </mat-form-field>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}\" style=\"background-color: blue\">Send</button>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: green\">Cancel</button>\n        </mat-dialog-actions>"
+        template: "<h2 mat-dialog-title>Please specify reason</h2>\n        <mat-dialog-content>\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"selectedOption\">\n              <mat-radio-button class=\"radio-button\" *ngFor=\"let option of options; let optionIndex = index\" [value]=\"optionIndex\">\n                {{option}}\n              </mat-radio-button>\n            </mat-radio-group>\n        </mat-dialog-content>\n        <mat-form-field *ngIf=\"selectedOption == 3\">\n            <input matInput [(ngModel)]=\"custom\">\n        </mat-form-field>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}\" style=\"background-color: #31698a\">Send</button>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: #6dc066\">Cancel</button>\n        </mat-dialog-actions>"
     }),
     __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_3__angular_material__["a" /* MAT_DIALOG_DATA */])),
     __metadata("design:paramtypes", [typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialogRef */]) === "function" && _h || Object, Object])
