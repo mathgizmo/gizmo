@@ -1,14 +1,16 @@
-﻿import { NgModule }      from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule }    from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule, MatRadioModule, MatDialogModule, MatProgressBarModule} from '@angular/material';
 import { BaseRequestOptions } from '@angular/http';
 
-import { AppComponent }  from './app.component';
-import { routing }        from './app.routing';
+import { AppComponent } from './app.component';
+import { routing } from './app.routing';
+
+import { SortablejsModule } from 'angular-sortablejs';
 
 import { AuthGuard } from './_guards/index';
 import { AuthenticationService, ServerService } from './_services/index';
@@ -39,7 +41,8 @@ import { TryComponent } from './try/try.component';
         MatRadioModule,
         MatDialogModule,
         MatProgressBarModule,
-        FlexLayoutModule
+        FlexLayoutModule,
+        SortablejsModule.forRoot({ animation: 150 })
     ],
     declarations: [
         AppComponent,

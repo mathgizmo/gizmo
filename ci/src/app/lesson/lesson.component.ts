@@ -8,7 +8,8 @@ import { Router } from '@angular/router';
 @Component({
     moduleId: module.id,
     templateUrl: 'lesson.component.html',
-    providers: [TopicService, TrackingService]
+    providers: [TopicService, TrackingService],
+    styleUrls: [ './lesson.component.css']
 })
 export class LessonComponent implements OnInit {
     lessonTree: any = [];
@@ -76,9 +77,9 @@ export class LessonComponent implements OnInit {
                     else {
                         this.next = lessonTree['next_lesson_id'];
                     }
+                    this.correct_answers = this.complete_percent = 0;
                 });
          });
-        this.correct_answers = 0;
     }
 
     nextQuestion() {
@@ -95,6 +96,12 @@ export class LessonComponent implements OnInit {
         } else if (['TF'].indexOf(this.question.reply_mode) >= 0) {
             this.answers.push('');
             this.question.answer_mode = 'TF';
+        } else if (['order'].indexOf(this.question.reply_mode) >= 0) {
+            for (var i = 0; i < this.question.answers.length; i++) {
+                this.answers.push(this.question.answers[i].value);
+            }
+            this.answers = this.shuffle(this.answers);
+            this.question.answer_mode = 'order';
         } else {
             for (var i = 0; i < this.question.answers.length; i++) {
                 this.answers.push('');
@@ -225,6 +232,23 @@ export class LessonComponent implements OnInit {
         }
         return false;
     }
+
+    // function to shuffle answers in order
+    private shuffle(array) {
+      let currentIndex = array.length, temporaryValue, randomIndex;    
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {    
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;    
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }    
+      return array;
+    }
+
 }
 
 @Component({
