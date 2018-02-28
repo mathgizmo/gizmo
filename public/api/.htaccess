@@ -6,6 +6,7 @@
     RewriteEngine On
 
     #Redirect to non www
+    RewriteBase /api/
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
