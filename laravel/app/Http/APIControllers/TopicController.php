@@ -81,6 +81,7 @@ class TopicController extends Controller
         }
 
         foreach (DB::select('select * from unit order by order_no, id asc') as $unit) {
+            if (!isset($levels[$unit['level_id']])) continue;
             $unit['topics'] = [];
             $l_element_id = $levels[$unit['level_id']];
             $units[$unit['id']] = array(count($response[$l_element_id]['units']), $l_element_id);
@@ -108,6 +109,7 @@ class TopicController extends Controller
         }
 
         foreach (DB::select('select * from topic order by order_no, id asc') as $topic) {
+            if (!isset($units[$topic['unit_id']])) continue;
             list($u_element_id, $l_element_id) = $units[$topic['unit_id']];
             $topic['order_id'] = $topic['order_no']?:floor(count($response[$l_element_id]['units'][$u_element_id]['topics'])/2);
 
