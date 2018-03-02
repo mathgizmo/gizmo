@@ -3,7 +3,8 @@
 <label *ngIf="question_num > 0" style="display: flex; justify-content: center;">{{correct_answers}}/{{question_num}}</label>
 <div class="text-center">
     <div *ngIf="question !== null">
-        <h2 [innerHtml]="question.question"></h2>
+        <h2 [innerHtml]="question.question" *ngIf="!is_chart" ></h2>
+        <div id="chart-container" *ngIf="is_chart" [innerHTML]="chart"></div>
         <div *ngIf="question.answer_mode=='order'" [sortablejs]="answers" class="order-container">
             <div *ngFor="let answer of answers" class="order-item">{{answer}}</div>
         </div>
@@ -34,7 +35,12 @@
             (keyup.enter) = "checkAnswer()">
         </div>
         <br />
-        <button (click)="checkAnswer()" >Continue</button>
+        <button (click)="checkAnswer()"
+            mat-raised-button
+            style="color: #000; background-color: #f5f5f5; ">
+            <!--<mat-icon>forward</mat-icon>-->
+            <span>Continue</span>
+        </button>
     </div>
     <div *ngIf="question === null">
         <div *ngIf="initial_loading == 1">

@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TopicService } from '../_services/index';
 import { TrackingService } from '../_services/index';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatProgressBarModule } from '@angular/material';
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
     providers: [TopicService, TrackingService],
     styleUrls: [ './lesson.component.css']
 })
-export class LessonComponent implements OnInit {
+export class LessonComponent implements OnInit, OnDestroy {
     lessonTree: any = [];
     topic_id: number;
     lesson_id: number;
@@ -31,12 +32,18 @@ export class LessonComponent implements OnInit {
     incorrect_answers: number;
     max_incorrect_answers: number = 1;
 
+    is_chart: boolean;
+    chart: SafeHtml;
+    chart_height: number = 250; // dimension of chart area in px
+    private bubleChartRebuildFunctionId; // id of function which rebuild buble chart
+
     constructor(
             private router: Router,
             private topicService: TopicService,
             private trackingService: TrackingService,
             private route: ActivatedRoute,
-            public dialog: MatDialog
+            public dialog: MatDialog,
+            private sanitizer: DomSanitizer
             ) { 
 
         if (localStorage.getItem('question_num') != undefined) {
@@ -45,6 +52,7 @@ export class LessonComponent implements OnInit {
         else {
             this.question_num = 4;
         }
+        this.is_chart = false;
     }
 
     ngOnInit() {
@@ -82,9 +90,19 @@ export class LessonComponent implements OnInit {
          });
     }
 
+    ngOnDestroy() {
+      this.destroyBubleChart();
+    }
+
     nextQuestion() {
         this.answers = [];
         this.question = this.lessonTree['questions'].shift();
+
+        this.is_chart = false;
+        if(this.question['question'].indexOf('%%chart{') >= 0){
+            this.buildChart();
+        }
+
         if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
             for (var i = 0; i < this.question.answers.length; i++) {
                 this.answers.push('');
@@ -114,74 +132,76 @@ export class LessonComponent implements OnInit {
     }
     
     checkAnswer() {
-        if (this.isCorrect()) {
-            this.correct_answers++;
-            this.complete_percent = (this.correct_answers == 0) ? 0
-                : this.correct_answers/this.question_num*100;
-            //if we have enough correct responces just remove rest of the questions
-            if(this.correct_answers == this.question_num
-                    && this.question_num != 0) {
-               this.lessonTree['questions'] = [];
-            }
-            let dialogRef = this.dialog.open(GoodDialogComponent, {
-                width: '300px',
-                data: { }
-            });
-
-            dialogRef.afterClosed().subscribe(result => {
-                if (this.lessonTree['questions'].length) {
-                    this.nextQuestion();
-                } else {
-                    this.question = null;
-                    this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
-                }
-            });
-        } else {
-            if (this.weak_questions.indexOf(this.question.id) === -1) {
-                this.weak_questions.push(this.question.id);
-            }
-            this.incorrect_answers++;
-            if(this.lesson_id == -1 && 
-                this.incorrect_answers > this.max_incorrect_answers) {
-                  this.router.navigate(['/topic/'+this.topic_id]);
-            } else {
-                this.lessonTree['questions'].push(this.question);
-            }
-            let dialogRef = this.dialog.open(BadDialogComponent, {
-                width: '300px',
-                data: { data: this.question.answers.filter(function(answer){
-                    if (answer.is_correct == 1) return true;
-                    return false;
-                    }) , explanation: this.question.explanation,
-                    showAnswers: (this.lesson_id == -1) ? false : true
-                }
-            });
-
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                    let reportDialogRef = this.dialog.open(ReportDialogComponent, {
-                        //width: '300px',
-                        data: {question_id: this.question.id, answers: this.answers}
-                    });
-                    
-                    reportDialogRef.afterClosed().subscribe(result => {
-                        console.log(result);
-                        this.topicService.reportError(result.question_id, result.answers, result.option, result.text).subscribe();
-                    });
-                }
-                if (this.lessonTree['questions'].length) {
-                    this.nextQuestion();
-                } else {
-                    this.question = null;
-                    this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
-                }
-            });
-            if(this.lesson_id == -1) {
-              this.question_num--;
-            } else {
-              this.correct_answers = this.complete_percent = 0;
-            }
+      this.destroyBubleChart();
+      if (this.isCorrect()) {
+        this.correct_answers++;
+        this.complete_percent = (this.correct_answers == 0) ? 0
+            : this.correct_answers/this.question_num*100;
+        //if we have enough correct responces just remove rest of the questions
+        if(this.correct_answers == this.question_num
+                && this.question_num != 0) {
+           this.lessonTree['questions'] = [];
         }
+        let dialogRef = this.dialog.open(GoodDialogComponent, {
+            width: '300px',
+            data: { }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (this.lessonTree['questions'].length) {
+                this.nextQuestion();
+            } else {
+                this.question = null;
+                this.trackingService.doneLesson(this.topic_id, 
+                  this.lesson_id, this.start_time, this.weak_questions).subscribe();
+            }
+        });
+      } else {
+          if (this.weak_questions.indexOf(this.question.id) === -1) {
+              this.weak_questions.push(this.question.id);
+          }
+          this.incorrect_answers++;
+          if(this.lesson_id == -1 && 
+              this.incorrect_answers > this.max_incorrect_answers) {
+                this.router.navigate(['/topic/'+this.topic_id]);
+          } else {
+              this.lessonTree['questions'].push(this.question);
+          }
+          let dialogRef = this.dialog.open(BadDialogComponent, {
+              width: '300px',
+              data: { data: this.question.answers.filter(function(answer){
+                  if (answer.is_correct == 1) return true;
+                  return false;
+                  }) , explanation: this.question.explanation,
+                  showAnswers: (this.lesson_id == -1) ? false : true
+              }
+          });
+
+          dialogRef.afterClosed().subscribe(result => {
+              if (result) {
+                  let reportDialogRef = this.dialog.open(ReportDialogComponent, {
+                      //width: '300px',
+                      data: {question_id: this.question.id, answers: this.answers}
+                  });
+                  
+                  reportDialogRef.afterClosed().subscribe(result => {
+                      console.log(result);
+                      this.topicService.reportError(result.question_id, result.answers, result.option, result.text).subscribe();
+                  });
+              }
+              if (this.lessonTree['questions'].length) {
+                  this.nextQuestion();
+              } else {
+                  this.question = null;
+                  this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
+              }
+          });
+          if(this.lesson_id == -1) {
+            this.question_num--;
+          } else {
+            this.correct_answers = this.complete_percent = 0;
+          }
+      }
     }
     
     isCorrect() {
@@ -247,6 +267,148 @@ export class LessonComponent implements OnInit {
         array[randomIndex] = temporaryValue;
       }    
       return array;
+    }
+
+    // function to build charts
+    /**
+      - type 1 (A1): 
+      %%chart{type:1; value:0.3}%% 
+
+      - type 2 (A4):
+      %%chart{type:2; value:0.3}%% 
+
+      - type 3 (A5):
+      %%chart{type:3; value:0.3; max: 10}%% 
+
+      value: percent fill (0-1)
+      max: max value
+    */
+    private buildChart() {
+      let chart = this.question['question'].match(/[^{}]+(?=\}%%)/g);
+      let chart_type = 
+        +chart['0'].match(/type:([0-9]+)(?=;)/g)['0'].replace('type:', '');
+      let chart_value, chart_max_value;
+      if (chart['0'].indexOf('max:') >= 0) {
+        chart_value = 
+          +chart['0'].match(/value:(.*)(?=;)/g)['0'].replace('value:', '');
+        chart_max_value = 
+          +chart['0'].match(/max:(.*)/g)['0'].replace('max:', '');
+      } else {
+        chart_value = 
+          +chart['0'].match(/value:(.*)/g)['0'].replace('value:', '');
+      }
+      let chartHtml = this.question['question']
+        .replace(/%%chart(.*)(?=%)%/g, "");
+      this.is_chart = true;
+      switch (chart_type) {
+        case 1:
+          // Chart (type 1 - rectangle)
+          chartHtml += '<svg style="height: '
+            + this.chart_height + '; width:' + this.chart_height + ';">';
+          chartHtml += '<rect id="rect2" style="height:'
+            + this.chart_height +' !important; width: 100%;"></rect>'
+          chartHtml += '<rect id="rect1" style="height:'+ 
+            chart_value*this.chart_height +' !important; width: 100%;"></rect>';
+          chartHtml += '</svg>';
+          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+          break;
+        case 2:
+          // Chart (type 2 - circle)
+          let radius = this.chart_height/2;
+          let angle = 2*Math.PI*chart_value;
+          let x = radius + radius*Math.sin(angle);
+          let  y = radius - radius*Math.cos(angle);
+          chartHtml += '<svg style="height: '
+            + this.chart_height + '; width:' + this.chart_height + ';">';
+          if(chart_value < 0.99999) {
+            chartHtml += '<circle id="circle2" style="r: ' + radius 
+              + ' !important; cx: '+ radius + ' !important; cy: ' 
+              + radius + ' !important;"/>';
+            chartHtml += '<path id="circle1" d="M'+ radius +','+ radius 
+              + ' L' + radius + ',0 A' + radius + ',' + radius;
+            if(chart_value <= 0.5){
+              chartHtml += ' 1 0,1';
+            } else {
+              chartHtml += ' 1 1,1';  
+            }
+            chartHtml += ' ' + x + ', ' + y +' z"></path>'; 
+          } else {
+            chartHtml += '<circle id="circle1" style="r: ' + radius 
+              + ' !important; cx: '+ radius + ' !important; cy: ' 
+              + radius + ' !important;"/>';
+          }
+          chartHtml += '</svg>';
+          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+          break;
+        case 3:
+          // Chart (type 3 - points)
+          document.getElementById('chart-container').innerHTML = chartHtml;
+          let canvas = document.createElement("canvas");
+          document.getElementById('chart-container').appendChild(canvas);
+          canvas.style.height = '100%';
+          canvas.style.width = '100%';
+          let ctx = canvas.getContext("2d"); 
+          let bubbles = [];
+          let bubleRadius = 4;
+          for(let i = 0; i < chart_max_value; i++) {
+            bubbles[i] = {
+              x: Math.random() * (canvas.width-bubleRadius*2),
+              y: Math.random() * (canvas.height-bubleRadius*2),
+              radius: bubleRadius
+            };
+          }
+          this.bubleChartRebuildFunctionId = setInterval(() => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            this.drawBublesChart(chart_value, chart_max_value, ctx, canvas, bubbles);
+          }, 200);
+          break;
+        default:
+          break;
+      }
+    }
+
+    // function to draw Bubles Chart
+    private drawBublesChart(bublesPercent: number, 
+      maxBublesNum: number, ctx: CanvasRenderingContext2D,
+      canvas: HTMLCanvasElement, bubles) {
+      let bublesNum = Math.round(maxBublesNum*bublesPercent);
+      for (let i = 0; i < bublesNum; i++) {
+        bubles[i] = this.drawBuble(2, ctx, canvas, bubles[i]);
+      }
+      for (let i = bublesNum; i < maxBublesNum; i++) {
+        bubles[i] = this.drawBuble(1, ctx, canvas, bubles[i]);
+      }
+    }
+
+    // function to draw one Buble
+    private drawBuble(type: number, ctx: CanvasRenderingContext2D,
+      canvas:HTMLCanvasElement, buble) {
+      if(type == 1) ctx.fillStyle = "#111";
+      if(type == 2) ctx.fillStyle = "#66cccc";
+      buble.x += Math.random() * 2 - 1;
+      buble.y += Math.random() * 2 - 1;
+
+      // Check if buble goes beyond the field
+      let bubleDiameter = buble.radius*2;
+      if(buble.x > canvas.width-bubleDiameter)
+        buble.x = canvas.width-bubleDiameter;
+      if(buble.x < bubleDiameter)
+        buble.x = bubleDiameter;
+      if(buble.y > canvas.height-bubleDiameter)
+        buble.y = canvas.height-bubleDiameter;
+      if(buble.y < bubleDiameter)
+        buble.y = bubleDiameter;
+
+      ctx.beginPath();
+      ctx.arc(buble.x, buble.y, buble.radius, 0, Math.PI*2, true);
+      ctx.fill();
+      return buble;
+    }
+
+    // remove buble chart rebuild function if it exists
+    private destroyBubleChart() {
+      if (this.bubleChartRebuildFunctionId)
+        clearInterval(this.bubleChartRebuildFunctionId); 
     }
 
 }
