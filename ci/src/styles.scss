@@ -320,3 +320,31 @@ h1, h2, h3, h4 {
 .width150 {
     width: 150px;
 }
+
+//** styles for lesson.component's charts
+
+// Chart 1
+#rect1 {
+  fill: #66cccc;
+  stroke: #111;
+  stroke-width: 1; 
+}
+#rect2 {
+  fill: #333;
+  stroke: #111;
+  stroke-width: 1;  
+}
+
+//Chart2
+#circle1 {
+  fill: #66cccc;
+  stroke: #111;
+  stroke-width: 1; 
+}
+#circle2 {
+  fill: #333;
+  stroke: #111;
+  stroke-width: 1; 
+}
+
+// end of styles for lesson.compinent's charts
