@@ -23,7 +23,7 @@ import { TryComponent } from './_components/welcome/try/try.component';
 import { HomeComponent } from './_components/home/index';
 import { TopicComponent } from './_components/topic/index';
 import { LessonComponent, GoodDialogComponent, BadDialogComponent, 
-    ReportDialogComponent } from './_components/topic/lesson/index';
+    ReportDialogComponent, QuestionWithChartComponent } from './_components/topic/lesson/index';
 import { ProfileComponent } from './_components/profile/profile.component';
 
 @NgModule({
@@ -56,6 +56,7 @@ import { ProfileComponent } from './_components/profile/profile.component';
         GoodDialogComponent,
         BadDialogComponent,
         ReportDialogComponent,
+        QuestionWithChartComponent,
         ProfileComponent,
         TryComponent
     ],

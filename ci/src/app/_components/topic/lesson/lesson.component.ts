@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TopicService } from '../../../_services/index';
 import { TrackingService } from '../../../_services/index';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, 
-  MatProgressBarModule } from '@angular/material';
+import { MatDialog, MatProgressBarModule } from '@angular/material';
 import { Router } from '@angular/router';
+
+import { GoodDialogComponent } from './good-dialog/good-dialog.component';
+import { BadDialogComponent} from './bad-dialog/bad-dialog.component';
+import { ReportDialogComponent } from './report-dialog/report-dialog.component';
 
 @Component({
     moduleId: module.id,
@@ -13,7 +15,7 @@ import { Router } from '@angular/router';
     providers: [TopicService, TrackingService],
     styleUrls: [ './lesson.component.css']
 })
-export class LessonComponent implements OnInit, OnDestroy {
+export class LessonComponent implements OnInit {
     lessonTree: any = [];
     topic_id: number;
     lesson_id: number;
@@ -34,17 +36,13 @@ export class LessonComponent implements OnInit, OnDestroy {
     max_incorrect_answers: number = 1;
 
     is_chart: boolean;
-    chart: SafeHtml;
-    chart_height: number = 250; // dimension of chart area in px
-    private bubleChartRebuildFunctionId; // id of function which rebuild buble chart
 
     constructor(
             private router: Router,
             private topicService: TopicService,
             private trackingService: TrackingService,
             private route: ActivatedRoute,
-            public dialog: MatDialog,
-            private sanitizer: DomSanitizer
+            public dialog: MatDialog
             ) { 
 
         if (localStorage.getItem('question_num') != undefined) {
@@ -91,17 +89,13 @@ export class LessonComponent implements OnInit, OnDestroy {
          });
     }
 
-    ngOnDestroy() {
-      this.destroyBubleChart();
-    }
-
     nextQuestion() {
         this.answers = [];
         this.question = this.lessonTree['questions'].shift();
 
         this.is_chart = false;
         if(this.question['question'].indexOf('%%chart{') >= 0){
-            this.buildChart();
+            this.is_chart = true;
         }
 
         if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
@@ -133,7 +127,6 @@ export class LessonComponent implements OnInit, OnDestroy {
     }
     
     checkAnswer() {
-      this.destroyBubleChart();
       if (this.isCorrect()) {
         this.correct_answers++;
         this.complete_percent = (this.correct_answers == 0) ? 0
@@ -270,263 +263,4 @@ export class LessonComponent implements OnInit, OnDestroy {
       return array;
     }
 
-    // function to build charts
-    /**
-      - type 1 (A1): 
-      %%chart{type:1; value:0.3}%% 
-
-      - type 2 (A4):
-      %%chart{type:2; value:0.3}%% 
-
-      - type 3 (A5):
-      %%chart{type:3; value:0.3; max: 10}%% 
-
-      value: percent fill (0-1)
-      max: max value
-    */
-    private buildChart() {
-      let chart = this.question['question'].match(/[^{}]+(?=\}%%)/g);
-      let chart_type = 
-        +chart['0'].match(/type:([0-9]+)(?=;)/g)['0'].replace('type:', '');
-      let chart_value, chart_max_value;
-      if (chart['0'].indexOf('max:') >= 0) {
-        chart_value = 
-          +chart['0'].match(/value:(.*)(?=;)/g)['0'].replace('value:', '');
-        chart_max_value = 
-          +chart['0'].match(/max:(.*)/g)['0'].replace('max:', '');
-      } else {
-        chart_value = 
-          +chart['0'].match(/value:(.*)/g)['0'].replace('value:', '');
-      }
-      let chartHtml = this.question['question']
-        .replace(/%%chart(.*)(?=%)%/g, "");
-      this.is_chart = true;
-      switch (chart_type) {
-        case 1:
-          // Chart (type 1 - rectangle)
-          chartHtml += '<svg style="height: '
-            + this.chart_height + '; width:' + this.chart_height + ';">';
-          chartHtml += '<rect id="rect2" style="height:'
-            + this.chart_height +' !important; width: 100%;"></rect>'
-          chartHtml += '<rect id="rect1" style="height:'+ 
-            chart_value*this.chart_height +' !important; width: 100%;"></rect>';
-          chartHtml += '</svg>';
-          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
-          break;
-        case 2:
-          // Chart (type 2 - circle)
-          let radius = this.chart_height/2;
-          let angle = 2*Math.PI*chart_value;
-          let x = radius + radius*Math.sin(angle);
-          let  y = radius - radius*Math.cos(angle);
-          chartHtml += '<svg style="height: '
-            + this.chart_height + '; width:' + this.chart_height + ';">';
-          if(chart_value < 0.99999) {
-            chartHtml += '<circle id="circle2" style="r: ' + radius 
-              + ' !important; cx: '+ radius + ' !important; cy: ' 
-              + radius + ' !important;"/>';
-            chartHtml += '<path id="circle1" d="M'+ radius +','+ radius 
-              + ' L' + radius + ',0 A' + radius + ',' + radius;
-            if(chart_value <= 0.5){
-              chartHtml += ' 1 0,1';
-            } else {
-              chartHtml += ' 1 1,1';  
-            }
-            chartHtml += ' ' + x + ', ' + y +' z"></path>'; 
-          } else {
-            chartHtml += '<circle id="circle1" style="r: ' + radius 
-              + ' !important; cx: '+ radius + ' !important; cy: ' 
-              + radius + ' !important;"/>';
-          }
-          chartHtml += '</svg>';
-          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
-          break;
-        case 3:
-          // Chart (type 3 - points)
-          document.getElementById('chart-container').innerHTML = chartHtml;
-          let canvas = document.createElement("canvas");
-          document.getElementById('chart-container').appendChild(canvas);
-          canvas.style.height = '100%';
-          canvas.style.width = '100%';
-          let ctx = canvas.getContext("2d"); 
-          let bubbles = [];
-          let bubleRadius = 4;
-          for(let i = 0; i < chart_max_value; i++) {
-            bubbles[i] = {
-              x: Math.random() * (canvas.width-bubleRadius*2),
-              y: Math.random() * (canvas.height-bubleRadius*2),
-              radius: bubleRadius
-            };
-          }
-          this.bubleChartRebuildFunctionId = setInterval(() => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            this.drawBublesChart(chart_value, chart_max_value, ctx, canvas, bubbles);
-          }, 200);
-          break;
-        default:
-          break;
-      }
-    }
-
-    // function to draw Bubles Chart
-    private drawBublesChart(bublesPercent: number, 
-      maxBublesNum: number, ctx: CanvasRenderingContext2D,
-      canvas: HTMLCanvasElement, bubles) {
-      let bublesNum = Math.round(maxBublesNum*bublesPercent);
-      for (let i = 0; i < bublesNum; i++) {
-        bubles[i] = this.drawBuble(2, ctx, canvas, bubles[i]);
-      }
-      for (let i = bublesNum; i < maxBublesNum; i++) {
-        bubles[i] = this.drawBuble(1, ctx, canvas, bubles[i]);
-      }
-    }
-
-    // function to draw one Buble
-    private drawBuble(type: number, ctx: CanvasRenderingContext2D,
-      canvas:HTMLCanvasElement, buble) {
-      if(type == 1) {
-        ctx.fillStyle = "#111";
-      }
-      if(type == 2) {
-        ctx.fillStyle = "#66cccc";
-      }
-      buble.x += Math.random() * 2 - 1;
-      buble.y += Math.random() * 2 - 1;
-
-      // Check if buble goes beyond the field
-      let bubleDiameter = buble.radius*2;
-      if(buble.x > canvas.width-bubleDiameter)
-        buble.x = canvas.width-bubleDiameter;
-      if(buble.x < bubleDiameter)
-        buble.x = bubleDiameter;
-      if(buble.y > canvas.height-bubleDiameter)
-        buble.y = canvas.height-bubleDiameter;
-      if(buble.y < bubleDiameter)
-        buble.y = bubleDiameter;
-
-      ctx.beginPath();
-      ctx.arc(buble.x, buble.y, buble.radius, 0, Math.PI*2, true);
-      ctx.fill();
-      return buble;
-    }
-
-    // remove buble chart rebuild function if it exists
-    private destroyBubleChart() {
-      if (this.bubleChartRebuildFunctionId)
-        clearInterval(this.bubleChartRebuildFunctionId); 
-    }
-
-}
-
-@Component({
-    selector: 'good-dialog',
-    template: `<h2 mat-dialog-title>Correct!</h2>
-        <mat-dialog-content></mat-dialog-content>
-        <mat-dialog-actions>
-          <button mat-button [mat-dialog-close]="true" style="background-color: #fef65b">Continue</button>
-        </mat-dialog-actions>`
-})
-export class GoodDialogComponent {
-    constructor(
-        public dialogRef: MatDialogRef<GoodDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
-
-    }
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-}
-
-@Component({
-    selector: 'bad-dialog',
-    template: `<h2 mat-dialog-title>Incorrect :(</h2>
-        <mat-dialog-content>
-            <div *ngIf="(answers.length == 1) && showAnswer">
-                Correct answer is: {{answers[0].value}}
-            </div>
-            <div *ngIf="(answers.length != 1) && showAnswer">
-                Correct answers are: 
-                <ul>
-                    <li *ngFor="let answer of answers; let answerIndex = index">
-                        {{answer.value}}
-                    </li>
-                </ul>
-            </div>
-            <div *ngIf="explanation!=''">
-                {{explanation}}
-            </div>
-        </mat-dialog-content>
-        <mat-dialog-actions>
-            <button mat-button [mat-dialog-close]="false" style="background-color: #fef65b">Continue</button>
-            <button mat-button [mat-dialog-close]="true" style="background-color: #ff4444">Report Error!</button>
-        </mat-dialog-actions>`,
-    styles: [`
-        div { min-height: 40px; }
-    `]
-})
-export class BadDialogComponent {
-    answers: string[];
-    explanation: string;
-    showAnswer: boolean;
-
-    constructor(
-        public dialogRef: MatDialogRef<BadDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.answers = data.data;
-        this.explanation = data.explanation;
-        this.showAnswer = data.showAnswers;
-        //this.answers[0]['value'] = "$$E=mc^2$$"; // test equation in LaTeX
-        setTimeout(function() {
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-        }, 50);
-    }
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-}
-
-@Component({
-    selector: 'report-dialog',
-    template: `<h2 mat-dialog-title>Please specify reason</h2>
-        <mat-dialog-content>
-            <mat-radio-group class="radio-group" [(ngModel)]="selectedOption">
-              <mat-radio-button class="radio-button" *ngFor="let option of options; let optionIndex = index" [value]="optionIndex">
-                {{option}}
-              </mat-radio-button>
-            </mat-radio-group>
-        </mat-dialog-content>
-        <mat-form-field *ngIf="selectedOption == 3">
-            <input matInput [(ngModel)]="custom">
-        </mat-form-field>
-        <mat-dialog-actions>
-            <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" style="background-color: #31698a">Send</button>
-            <button mat-button [mat-dialog-close]="false" style="background-color: #6dc066">Cancel</button>
-        </mat-dialog-actions>`
-})
-export class ReportDialogComponent {
-    custom: string;
-    selectedOption: number;
-    answers: string[];
-    question_id: number;
-
-    options = [
-        'Wording of question is confusing or unclear',
-        'Answer is incorrect',
-        'question does not belong in this topic',
-        'other',
-      ];
-
-    constructor(
-        public dialogRef: MatDialogRef<ReportDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.custom = "";
-        this.answers = data.answers;
-        this.question_id = data.question_id;
-    }
-
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
 }
