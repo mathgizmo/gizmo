@@ -2,28 +2,29 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatInputModule, MatButtonModule, MatSelectModule, MatIconModule, MatMenuModule, MatRadioModule, MatDialogModule, MatProgressBarModule} from '@angular/material';
+import { MatInputModule, MatButtonModule, MatSelectModule, 
+    MatIconModule, MatMenuModule, MatRadioModule, MatDialogModule, MatProgressBarModule} 
+    from '@angular/material';
 import { BaseRequestOptions } from '@angular/http';
-
-import { AppComponent } from './app.component';
-import { routing } from './app.routing';
-
-import { SortablejsModule } from 'angular-sortablejs';
-
-import { AuthGuard } from './_guards/index';
-import { AuthenticationService, ServerService } from './_services/index';
-import { WelcomeComponent } from './welcome/index';
-import { LoginComponent } from './login/index';
-import { RegisterComponent } from './register/index';
-import { HomeComponent } from './home/index';
-import { TopicComponent } from './topic/index';
-import { LessonComponent, GoodDialogComponent, BadDialogComponent, ReportDialogComponent } from './lesson/index';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
-import { ProfileComponent } from './profile/profile.component';
-import { TryComponent } from './try/try.component';
+import { SortablejsModule } from 'angular-sortablejs';
+
+import { routing } from './app.routing';
+import { AuthGuard } from './_guards/index';
+import { AuthenticationService, ServerService } from './_services/index';
+
+import { AppComponent } from './_components/app.component';
+import { WelcomeComponent } from './_components/welcome/index';
+import { LoginComponent } from './_components/welcome/login/index';
+import { RegisterComponent } from './_components/welcome/register/index';
+import { TryComponent } from './_components/welcome/try/try.component';
+import { HomeComponent } from './_components/home/index';
+import { TopicComponent } from './_components/topic/index';
+import { LessonComponent, GoodDialogComponent, BadDialogComponent, 
+    ReportDialogComponent, QuestionWithChartComponent } from './_components/topic/lesson/index';
+import { ProfileComponent } from './_components/profile/profile.component';
 
 @NgModule({
     imports: [
@@ -55,6 +56,7 @@ import { TryComponent } from './try/try.component';
         GoodDialogComponent,
         BadDialogComponent,
         ReportDialogComponent,
+        QuestionWithChartComponent,
         ProfileComponent,
         TryComponent
     ],

@@ -3,7 +3,7 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { GlobalVariable } from 'app/globals';
+import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from './authentication.service';
@@ -11,6 +11,7 @@ import { AuthenticationService } from './authentication.service';
 @Injectable()
 export class ServerService {
     private headers?: Headers;
+    private readonly apiUrl = environment.apiUrl;
 
     constructor(
         private http: Http,
@@ -29,7 +30,7 @@ export class ServerService {
         let options = new RequestOptions({ headers: this.headers });
 
         // post to api
-        return this.http.post(GlobalVariable.BASE_API_URL+url, body, options)
+        return this.http.post(this.apiUrl+url, body, options)
             .map((response: Response) => response.json().message)
             .catch((response: Response) => {
                 var json = response.json();
@@ -52,7 +53,7 @@ export class ServerService {
         let options = new RequestOptions({ headers: this.headers });
 
         // get from api
-        return this.http.get(GlobalVariable.BASE_API_URL+url, options)
+        return this.http.get(this.apiUrl+url, options)
             .map((response: Response) => response.json().message)
             .catch((response: Response) => {
                 var json = response.json();

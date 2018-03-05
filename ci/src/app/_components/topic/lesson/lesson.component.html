@@ -4,7 +4,7 @@
 <div class="text-center">
     <div *ngIf="question !== null">
         <h2 [innerHtml]="question.question" *ngIf="!is_chart" ></h2>
-        <div id="chart-container" *ngIf="is_chart" [innerHTML]="chart"></div>
+        <question-with-chart [question]="question['question']" *ngIf="is_chart" ></question-with-chart>
         <div *ngIf="question.answer_mode=='order'" [sortablejs]="answers" class="order-container">
             <div *ngFor="let answer of answers" class="order-item">{{answer}}</div>
         </div>

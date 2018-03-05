@@ -2,11 +2,12 @@
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { GlobalVariable } from 'app/globals';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthenticationService {
     public token: string;
+    private readonly apiUrl = environment.apiUrl;
 
     constructor(private http: Http) {
         // set token if saved in local storage
@@ -20,7 +21,7 @@ export class AuthenticationService {
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
 
-        return this.http.post(GlobalVariable.BASE_API_URL+'/authenticate', request, options)
+        return this.http.post(this.apiUrl+'/authenticate', request, options)
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
                 let token = response.json() && response.json().message && response.json().message.token;
@@ -51,7 +52,7 @@ export class AuthenticationService {
         let headers      = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options       = new RequestOptions({ headers: headers }); // Create a request option
 
-        return this.http.post(GlobalVariable.BASE_API_URL+'/register', request, options)
+        return this.http.post(this.apiUrl+'/register', request, options)
             .map((response: Response) => {
                 // login successful if there's a jwt token in the response
                 let token = response.json() && response.json().message && response.json().message.token;

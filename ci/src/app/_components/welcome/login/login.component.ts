@@ -1,14 +1,14 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from '../_services/index';
+import { AuthenticationService } from '../../../_services/index';
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'welcome.component.html'
+    templateUrl: 'login.component.html'
 })
 
-export class WelcomeComponent implements OnInit {
+export class LoginComponent implements OnInit {
     model: any = {};
     loading = false;
     error = '';
