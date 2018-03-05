@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://gizmo/api' // 'your_local_server_url/api/' //your local API URL here
+  apiUrl: 'your_local_server_url/api' //your local API URL here
   //... more of your variables
 };
