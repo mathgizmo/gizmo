@@ -1,5 +1,4 @@
 CKEDITOR.plugins.add( 'chart', {
-    icons: 'chart',
     init: function( editor ) {
         
         editor.addCommand( 'chartDialog', new CKEDITOR.dialogCommand( 'chartDialog' ) );
@@ -30,7 +29,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 label : 'Chose chart type',
                                 items : [ 
                                     [ 'Type 1 (Rectangle)', '1' ],
-                                    [ 'Type 2 (Pie)', '3' ],
+                                    [ 'Type 2 (Pie)', '2' ],
                                     [ 'Type 3 (Bubles)', '3' ]
                                 ],
                                 'default' : '1',
