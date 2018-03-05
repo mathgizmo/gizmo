@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../_models/user';
-import { UserService } from '../_services/user.service';
-import { AuthenticationService } from '../_services/authentication.service';
+import { User } from '../../_models/user';
+import { UserService } from '../../_services/user.service';
+import { AuthenticationService } from '../../_services/authentication.service';
 
 @Component({
   selector: 'app-profle',

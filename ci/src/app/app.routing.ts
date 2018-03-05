@@ -1,13 +1,13 @@
 ﻿import { Routes, RouterModule } from '@angular/router';
 
-import { WelcomeComponent } from './welcome/index';
-import { LoginComponent } from './login/index';
-import { RegisterComponent } from './register/index';
-import { HomeComponent } from './home/index';
-import { TopicComponent } from './topic/index';
-import { LessonComponent } from './lesson/index';
+import { WelcomeComponent } from './_components/welcome/index';
+import { LoginComponent } from './_components/welcome/login/index';
+import { RegisterComponent } from './_components/welcome/register/index';
+import { HomeComponent } from './_components/home/index';
+import { TopicComponent } from './_components/topic/index';
+import { LessonComponent } from './_components/topic/lesson/index';
 import { AuthGuard } from './_guards/index';
-import { ProfileComponent } from './profile/profile.component';
+import { ProfileComponent } from './_components/profile/profile.component';
 
 const appRoutes: Routes = [
     { path: 'welcome', component: WelcomeComponent },

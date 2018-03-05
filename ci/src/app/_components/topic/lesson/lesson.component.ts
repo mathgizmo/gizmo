@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { TopicService } from '../_services/index';
-import { TrackingService } from '../_services/index';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatProgressBarModule } from '@angular/material';
+import { TopicService } from '../../../_services/index';
+import { TrackingService } from '../../../_services/index';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, 
+  MatProgressBarModule } from '@angular/material';
 import { Router } from '@angular/router';
 
 @Component({
