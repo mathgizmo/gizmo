@@ -383,8 +383,12 @@ export class LessonComponent implements OnInit, OnDestroy {
     // function to draw one Buble
     private drawBuble(type: number, ctx: CanvasRenderingContext2D,
       canvas:HTMLCanvasElement, buble) {
-      if(type == 1) ctx.fillStyle = "#111";
-      if(type == 2) ctx.fillStyle = "#66cccc";
+      if(type == 1) {
+        ctx.fillStyle = "#111";
+      }
+      if(type == 2) {
+        ctx.fillStyle = "#66cccc";
+      }
       buble.x += Math.random() * 2 - 1;
       buble.y += Math.random() * 2 - 1;
 
