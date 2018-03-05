@@ -15,7 +15,7 @@ import { routing } from './app.routing';
 import { AuthGuard } from './_guards/index';
 import { AuthenticationService, ServerService } from './_services/index';
 
-import { AppComponent } from './app.component';
+import { AppComponent } from './_components/app.component';
 import { WelcomeComponent } from './_components/welcome/index';
 import { LoginComponent } from './_components/welcome/login/index';
 import { RegisterComponent } from './_components/welcome/register/index';
