@@ -1,5 +1,5 @@
 <div class="profile">
-  <mat-card id="profile-container" class="indigo-theme">
+  <mat-card id="profile-container" class="grey-theme">
   	<span class="card-title">Change Profile Info:</span>
     <form #changeProfile="ngForm" (ngSubmit)="onChangeProfile()">
   		<mat-input-container>
@@ -34,7 +34,7 @@
   	</form>
   </mat-card>
 
-  <mat-card>
+  <mat-card class="grey-theme">
     <span class="card-title">Change Password:</span>
     <form #changePassword="ngForm" (ngSubmit)="onChangePassword(newPassword.value, confirmedPassword.value)">
       <mat-input-container>

@@ -22,7 +22,7 @@ span.card-title {
 }
 
 span.card-title:before, span.card-title:after {
-  border-top: 1px solid #3f51b5;
+  border-top: 1px solid #616161;
   content: '';
   display: table-cell;
   position: relative;
