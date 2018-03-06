@@ -20,12 +20,29 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges {
     
     @Input() question: string;
+    @Input() mainColor: string;
+    @Input() selectedColor: string;
+    @Input() strokeColor: string;
+    @Input() chartHeight: number; // dimension of chart area in px
+    @Input() strokeWidth: number;
 
+    private bubleRadius: number = 4;
     chart: SafeHtml;
-    chart_height: number = 250; // dimension of chart area in px
     private bubleChartRebuildFunctionId; // id of function which rebuild buble chart
    
-    constructor(private sanitizer: DomSanitizer){}
+    constructor(private sanitizer: DomSanitizer){
+      // set default styles if styles are not defined
+      if(!this.chartHeight)
+        this.chartHeight=250; 
+      if(!this.mainColor)
+        this.mainColor="#f7f7f7";
+      if(!this.selectedColor)
+        this.selectedColor="#ff4444"; 
+      if(!this.strokeColor)
+        this.strokeColor="#111";
+      if(!this.strokeWidth)
+        this.strokeWidth=1;
+    }
 
     ngOnInit() {
       this.buildChart();
@@ -73,26 +90,34 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
         case 1:
           // Chart (type 1 - rectangle)
           chartHtml += '<svg style="height: '
-            + this.chart_height + '; width:' + this.chart_height + ';">';
+            + this.chartHeight + '; width:' + this.chartHeight + ';">';
           chartHtml += '<rect id="rect2" style="height:'
-            + this.chart_height +' !important; width: 100%;"></rect>'
+            + this.chartHeight +' !important; width: 100%;';
+          chartHtml += ' fill: ' + this.mainColor + '; stroke: ' + 
+            this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
+          chartHtml +=  '></rect>';
           chartHtml += '<rect id="rect1" style="height:'+ 
-            chart_value*this.chart_height +' !important; width: 100%;"></rect>';
+            chart_value*this.chartHeight +' !important; width: 100%;';
+          chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' + 
+          this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
+          chartHtml +=  '></rect>';
           chartHtml += '</svg>';
           this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
           break;
         case 2:
           // Chart (type 2 - circle)
-          let radius = this.chart_height/2;
+          let radius = this.chartHeight/2;
           let angle = 2*Math.PI*chart_value;
           let x = radius + radius*Math.sin(angle);
           let  y = radius - radius*Math.cos(angle);
           chartHtml += '<svg style="height: '
-            + this.chart_height + '; width:' + this.chart_height + ';">';
+            + this.chartHeight + '; width:' + this.chartHeight + ';">';
           if(chart_value < 0.99999) {
             chartHtml += '<circle id="circle2" style="r: ' + radius 
               + ' !important; cx: '+ radius + ' !important; cy: ' 
-              + radius + ' !important;"/>';
+              + radius + ' !important;';
+            chartHtml += ' fill: ' + this.mainColor + '; stroke: ' + 
+              this.strokeColor + '; stroke-width: '+ this.strokeWidth + '" />';
             chartHtml += '<path id="circle1" d="M'+ radius +','+ radius 
               + ' L' + radius + ',0 A' + radius + ',' + radius;
             if(chart_value <= 0.5){
@@ -100,7 +125,10 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
             } else {
               chartHtml += ' 1 1,1';  
             }
-            chartHtml += ' ' + x + ', ' + y +' z"></path>'; 
+            chartHtml += ' ' + x + ', ' + y +' z"';
+            chartHtml += 'style="fill: ' + this.selectedColor + '; stroke: ' + 
+              this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
+            chartHtml += '></path>'; 
           } else {
             chartHtml += '<circle id="circle1" style="r: ' + radius 
               + ' !important; cx: '+ radius + ' !important; cy: ' 
@@ -118,18 +146,17 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           canvas.style.width = '100%';
           let ctx = canvas.getContext("2d"); 
           let bubbles = [];
-          let bubleRadius = 4;
           for(let i = 0; i < chart_max_value; i++) {
             bubbles[i] = {
-              x: Math.random() * (canvas.width-bubleRadius*2),
-              y: Math.random() * (canvas.height-bubleRadius*2),
-              radius: bubleRadius
+              x: Math.random() * (canvas.width-this.bubleRadius*2),
+              y: Math.random() * (canvas.height-this.bubleRadius*2),
+              radius: this.bubleRadius
             };
           }
           this.bubleChartRebuildFunctionId = setInterval(() => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             this.drawBublesChart(chart_value, chart_max_value, ctx, canvas, bubbles);
-          }, 200);
+          }, 80);
           break;
         default:
           break;
@@ -152,11 +179,13 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     // function to draw one Buble
     private drawBuble(type: number, ctx: CanvasRenderingContext2D,
       canvas:HTMLCanvasElement, buble) {
+      ctx.strokeStyle = this.strokeColor;
+      ctx.lineWidth   = this.strokeWidth;
       if(type == 1) {
-        ctx.fillStyle = "#111";
+        ctx.fillStyle = this.selectedColor;
       }
       if(type == 2) {
-        ctx.fillStyle = "#66cccc";
+        ctx.fillStyle = this.mainColor;
       }
       buble.x += Math.random() * 2 - 1;
       buble.y += Math.random() * 2 - 1;
@@ -176,6 +205,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
       ctx.beginPath();
       ctx.arc(buble.x, buble.y, buble.radius, 0, Math.PI*2, true);
       ctx.fill();
+      ctx.stroke();
       return buble;
     }
 

@@ -4,7 +4,17 @@
 <div class="text-center">
     <div *ngIf="question !== null">
         <h2 [innerHtml]="question.question" *ngIf="!is_chart" ></h2>
-        <question-with-chart [question]="question['question']" *ngIf="is_chart" ></question-with-chart>
+        <question-with-chart *ngIf="is_chart" [question]="question['question']" >
+        </question-with-chart> 
+        <!-- example for question-with-chart with custom styles:
+        <question-with-chart *ngIf="is_chart" 
+            [question]="question['question']" 
+            chartHeight="250" 
+            mainColor="#f7f7f7" 
+            selectedColor="#ff4444" 
+            strokeColor="#111" 
+            strokeWidth="1">
+        </question-with-chart> -->
         <div *ngIf="question.answer_mode=='order'" [sortablejs]="answers" class="order-container">
             <div *ngFor="let answer of answers" class="order-item">{{answer}}</div>
         </div>
