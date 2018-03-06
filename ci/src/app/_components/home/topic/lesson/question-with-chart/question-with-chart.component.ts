@@ -1,15 +1,21 @@
 import { Component, Inject, OnInit, OnDestroy, 
     ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
     selector: 'question-with-chart',
     template: `
       <h2 id="chart-container" [innerHTML]="chart"></h2>
-      <mat-form-field id="controls" (change)="ngOnChanges()">
-        <input matInput placeholder="Value" [(ngModel)]="chartValue" 
-        type="number" step="0.1" max="1" min="0">
-      </mat-form-field>
+      <div id="controls" >
+        <p>Value</p>
+        <mat-form-field *ngIf="chartControl == 1" (change)="ngOnChanges()">
+          <input matInput [(ngModel)]="chartValue" 
+            type="number" step="0.1" max="1" min="0"/>
+        </mat-form-field>
+        <mat-slider *ngIf="chartControl == 2" (change)="ngOnChanges()"
+        [(ngModel)]="chartValue" step="0.02" max="1" min="0" style="min-width: 250px;"></mat-slider>
+      </div>
     `,
     styles: [`
         #chart-container{
@@ -21,7 +27,11 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
           padding: 0;
         }
         #controls {
-          margin: 5px;
+          margin-top: 8px;
+          padding: 0;
+        }
+        #controls > * {
+          margin: 0;
           padding: 0;
         }
     `],
@@ -43,8 +53,12 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     private chartType: number;
     private chartValue: number;
     private chartMaxValue: number;
+    private chartControl: number;
+
+    private bubbles;
    
     constructor(private sanitizer: DomSanitizer){
+      this.bubbles = [];
       // set default styles if styles are not defined
       if(!this.chartHeight)
         this.chartHeight=250; 
@@ -74,13 +88,13 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     // function to build charts
     /**
       - type 1 (A1): 
-      %%chart{type:1; value:0.3}%% 
+      %%chart{type:1; value:0.3; control: 1}%% 
 
       - type 2 (A4):
-      %%chart{type:2; value:0.3}%% 
+      %%chart{type:2; value:0.3; control: 1}%% 
 
       - type 3 (A5):
-      %%chart{type:3; value:0.3; max: 10}%% 
+      %%chart{type:3; value:0.3; max: 10; control: 1}%% 
 
       value: percent fill (0-1)
       max: max value
@@ -89,15 +103,14 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
       let chart = this.question.match(/[^{}]+(?=\}%%)/g);
       this.chartType = 
         +chart['0'].match(/type:([0-9]+)(?=;)/g)['0'].replace('type:', '');
-      if (chart['0'].indexOf('max:') >= 0) {
-        if(this.chartValue == undefined) this.chartValue = 
+      if(this.chartValue == undefined) this.chartValue = 
           +chart['0'].match(/value:(.*)(?=;)/g)['0'].replace('value:', '');
+      if (chart['0'].indexOf('max:') >= 0) {
         this.chartMaxValue = 
-          +chart['0'].match(/max:(.*)/g)['0'].replace('max:', '');
-      } else {
-        if(this.chartValue == undefined) this.chartValue = 
-          +chart['0'].match(/value:(.*)/g)['0'].replace('value:', '');
-      }
+          +chart['0'].match(/max:(.*)(?=;)/g)['0'].replace('max:', '');
+      } 
+      this.chartControl = +chart['0'].match(/control:([0-9]+)/g)['0']
+          .replace('control:', '');
       let chartHtml = this.question.replace(/%%chart(.*)(?=%)%/g, "");
       switch (this.chartType) {
         case 1:
@@ -154,23 +167,25 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           break;
         case 3:
           // Chart (type 3 - points)
-          document.getElementById('chart-container').innerHTML = chartHtml;
+          let chartContainer = document.getElementById('chart-container');
+          chartContainer.innerHTML = chartHtml;
           let canvas = document.createElement("canvas");
-          document.getElementById('chart-container').appendChild(canvas);
-          canvas.style.height = '100%';
-          canvas.style.width = '100%';
-          let ctx = canvas.getContext("2d"); 
-          let bubbles = [];
+          chartContainer.appendChild(canvas);
+          canvas.style.height = this.chartHeight+'px';
+          canvas.style.width = chartContainer.style.width;
+          let ctx = canvas.getContext("2d");
           for(let i = 0; i < this.chartMaxValue; i++) {
-            bubbles[i] = {
-              x: Math.random() * (canvas.width-this.bubleRadius*2),
-              y: Math.random() * (canvas.height-this.bubleRadius*2),
-              radius: this.bubleRadius
-            };
+            if(this.bubbles[i] == undefined){
+              this.bubbles[i] = {
+                x: Math.random() * (canvas.width-this.bubleRadius*2),
+                y: Math.random() * (canvas.height-this.bubleRadius*2),
+                radius: this.bubleRadius
+              };
+            }
           }
           this.bubleChartRebuildFunctionId = setInterval(() => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            this.drawBublesChart(this.chartValue, this.chartMaxValue, ctx, canvas, bubbles);
+            this.drawBublesChart(this.chartValue, this.chartMaxValue, ctx, canvas);
           }, 80);
           break;
         default:
@@ -181,13 +196,13 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     // function to draw Bubles Chart
     private drawBublesChart(bublesPercent: number, 
       maxBublesNum: number, ctx: CanvasRenderingContext2D,
-      canvas: HTMLCanvasElement, bubles) {
+      canvas: HTMLCanvasElement) {
       let bublesNum = Math.round(maxBublesNum*bublesPercent);
       for (let i = 0; i < bublesNum; i++) {
-        bubles[i] = this.drawBuble(2, ctx, canvas, bubles[i]);
+        this.bubbles[i] = this.drawBuble(2, ctx, canvas, this.bubbles[i]);
       }
       for (let i = bublesNum; i < maxBublesNum; i++) {
-        bubles[i] = this.drawBuble(1, ctx, canvas, bubles[i]);
+        this.bubbles[i] = this.drawBuble(1, ctx, canvas, this.bubbles[i]);
       }
     }
 

@@ -26,7 +26,7 @@ CKEDITOR.plugins.add( 'chart', {
                             {
                                 type : 'select',
                                 id : 'type',
-                                label : 'Chose chart type',
+                                label : 'Chart type',
                                 items : [ 
                                     [ 'Type 1 (Rectangle)', '1' ],
                                     [ 'Type 2 (Pie)', '2' ],
@@ -60,7 +60,22 @@ CKEDITOR.plugins.add( 'chart', {
                                 {
                                     data.max = this.getValue();
                                 }
-                            }
+                            },
+                            {
+                                type : 'select',
+                                id : 'control',
+                                label : 'Control type',
+                                items : [ 
+                                    [ 'Input', '1' ],
+                                    [ 'Slider', '2' ]
+                                ],
+                                'default' : '1',
+                                required : true,
+                                commit : function( data )
+                                {
+                                    data.control = this.getValue();
+                                }
+                            },
                         ]
                     }
                 ],
@@ -69,12 +84,12 @@ CKEDITOR.plugins.add( 'chart', {
                     var dialog = this,
                         data = {}
                     this.commitContent( data );
-                    let chartHtml = '%%chart{type:'+data.type+'; value:'+data.value;
+                    let chartHtml = '%%chart{type:'+data.type+'; value:'+data.value+'; ';
                     if (data.type == 3) {
                         if(data.max < 1) data.max = 1;
-                        chartHtml += '; max:'+data.max;
+                        chartHtml += 'max:'+data.max + '; ';
                     }
-                    chartHtml += '}%%';
+                    chartHtml += 'control: ' + data.control + '}%%';
                     editor.insertHtml(chartHtml);
                 }
             };
