@@ -5,7 +5,8 @@ import { TopicService } from '../../_services/index';
 @Component({
     moduleId: module.id,
     templateUrl: 'home.component.html',
-    providers: [TopicService]
+    providers: [TopicService],
+    styleUrls: ['home.component.css']
 })
 
 export class HomeComponent implements OnInit {

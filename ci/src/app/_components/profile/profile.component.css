@@ -1,13 +1,18 @@
 .profile{
   display: flex;
   justify-content: center;
-  display: inline;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
 }
 
 mat-card{
-  //background-color: #f9f9f9;
   margin: 10px;
-  padding: 8px;
+  padding: 16px;
+  min-width: 200px;
+  max-width: 600px;
 }
 
 span.card-title {
@@ -50,12 +55,3 @@ button {
 	color: #fff;
 	background-color: #337AB7;
 }
-
-/*@media screen and (max-width: 660px) {
-  .profile {
-    display: inline;
-  }
-  mat-card{
-    max-width: 620px;
-  } 
-}*/
