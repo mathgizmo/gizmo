@@ -4,8 +4,8 @@ import { WelcomeComponent } from './_components/welcome/index';
 import { LoginComponent } from './_components/welcome/login/index';
 import { RegisterComponent } from './_components/welcome/register/index';
 import { HomeComponent } from './_components/home/index';
-import { TopicComponent } from './_components/topic/index';
-import { LessonComponent } from './_components/topic/lesson/index';
+import { TopicComponent } from './_components/home/topic/index';
+import { LessonComponent } from './_components/home/topic/lesson/index';
 import { AuthGuard } from './_guards/index';
 import { ProfileComponent } from './_components/profile/profile.component';
 

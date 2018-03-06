@@ -4,7 +4,13 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'question-with-chart',
-    template: `<h2 id="chart-container" [innerHTML]="chart"></h2>`,
+    template: `
+      <h2 id="chart-container" [innerHTML]="chart"></h2>
+      <mat-form-field id="controls" (change)="ngOnChanges()">
+        <input matInput placeholder="Value" [(ngModel)]="chartValue" 
+        type="number" step="0.1" max="1" min="0">
+      </mat-form-field>
+    `,
     styles: [`
         #chart-container{
           display: flex;
@@ -12,6 +18,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
           justify-content: center;
           flex-direction: column;
           margin: 0;
+          padding: 0;
+        }
+        #controls {
+          margin: 5px;
           padding: 0;
         }
     `],
@@ -29,6 +39,10 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     private bubleRadius: number = 4;
     chart: SafeHtml;
     private bubleChartRebuildFunctionId; // id of function which rebuild buble chart
+
+    private chartType: number;
+    private chartValue: number;
+    private chartMaxValue: number;
    
     constructor(private sanitizer: DomSanitizer){
       // set default styles if styles are not defined
@@ -73,20 +87,19 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     */
     private buildChart() {
       let chart = this.question.match(/[^{}]+(?=\}%%)/g);
-      let chart_type = 
+      this.chartType = 
         +chart['0'].match(/type:([0-9]+)(?=;)/g)['0'].replace('type:', '');
-      let chart_value, chart_max_value;
       if (chart['0'].indexOf('max:') >= 0) {
-        chart_value = 
+        if(this.chartValue == undefined) this.chartValue = 
           +chart['0'].match(/value:(.*)(?=;)/g)['0'].replace('value:', '');
-        chart_max_value = 
+        this.chartMaxValue = 
           +chart['0'].match(/max:(.*)/g)['0'].replace('max:', '');
       } else {
-        chart_value = 
+        if(this.chartValue == undefined) this.chartValue = 
           +chart['0'].match(/value:(.*)/g)['0'].replace('value:', '');
       }
       let chartHtml = this.question.replace(/%%chart(.*)(?=%)%/g, "");
-      switch (chart_type) {
+      switch (this.chartType) {
         case 1:
           // Chart (type 1 - rectangle)
           chartHtml += '<svg style="height: '
@@ -97,7 +110,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
           chartHtml += '<rect id="rect1" style="height:'+ 
-            chart_value*this.chartHeight +' !important; width: 100%;';
+            this.chartValue*this.chartHeight +' !important; width: 100%;';
           chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' + 
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
@@ -107,12 +120,12 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
         case 2:
           // Chart (type 2 - circle)
           let radius = this.chartHeight/2;
-          let angle = 2*Math.PI*chart_value;
+          let angle = 2*Math.PI*this.chartValue;
           let x = radius + radius*Math.sin(angle);
           let  y = radius - radius*Math.cos(angle);
           chartHtml += '<svg style="height: '
             + this.chartHeight + '; width:' + this.chartHeight + ';">';
-          if(chart_value < 0.99999) {
+          if(this.chartValue <= 0.999) {
             chartHtml += '<circle id="circle2" style="r: ' + radius 
               + ' !important; cx: '+ radius + ' !important; cy: ' 
               + radius + ' !important;';
@@ -120,7 +133,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '" />';
             chartHtml += '<path id="circle1" d="M'+ radius +','+ radius 
               + ' L' + radius + ',0 A' + radius + ',' + radius;
-            if(chart_value <= 0.5){
+            if(this.chartValue <= 0.5){
               chartHtml += ' 1 0,1';
             } else {
               chartHtml += ' 1 1,1';  
@@ -132,7 +145,9 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           } else {
             chartHtml += '<circle id="circle1" style="r: ' + radius 
               + ' !important; cx: '+ radius + ' !important; cy: ' 
-              + radius + ' !important;"/>';
+              + radius + ' !important;'
+              chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' + 
+              this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
           chartHtml += '</svg>';
           this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
@@ -146,7 +161,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           canvas.style.width = '100%';
           let ctx = canvas.getContext("2d"); 
           let bubbles = [];
-          for(let i = 0; i < chart_max_value; i++) {
+          for(let i = 0; i < this.chartMaxValue; i++) {
             bubbles[i] = {
               x: Math.random() * (canvas.width-this.bubleRadius*2),
               y: Math.random() * (canvas.height-this.bubleRadius*2),
@@ -155,7 +170,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           }
           this.bubleChartRebuildFunctionId = setInterval(() => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            this.drawBublesChart(chart_value, chart_max_value, ctx, canvas, bubbles);
+            this.drawBublesChart(this.chartValue, this.chartMaxValue, ctx, canvas, bubbles);
           }, 80);
           break;
         default:
@@ -182,10 +197,10 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
       ctx.strokeStyle = this.strokeColor;
       ctx.lineWidth   = this.strokeWidth;
       if(type == 1) {
-        ctx.fillStyle = this.selectedColor;
+        ctx.fillStyle = this.mainColor;
       }
       if(type == 2) {
-        ctx.fillStyle = this.mainColor;
+        ctx.fillStyle = this.selectedColor;
       }
       buble.x += Math.random() * 2 - 1;
       buble.y += Math.random() * 2 - 1;

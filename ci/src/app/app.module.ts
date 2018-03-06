@@ -21,9 +21,9 @@ import { LoginComponent } from './_components/welcome/login/index';
 import { RegisterComponent } from './_components/welcome/register/index';
 import { TryComponent } from './_components/welcome/try/try.component';
 import { HomeComponent } from './_components/home/index';
-import { TopicComponent } from './_components/topic/index';
+import { TopicComponent } from './_components/home/topic/index';
 import { LessonComponent, GoodDialogComponent, BadDialogComponent, 
-    ReportDialogComponent, QuestionWithChartComponent } from './_components/topic/lesson/index';
+    ReportDialogComponent, QuestionWithChartComponent } from './_components/home/topic/lesson/index';
 import { ProfileComponent } from './_components/profile/profile.component';
 
 @NgModule({
