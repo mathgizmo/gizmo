@@ -13,7 +13,7 @@ import {MatSliderModule} from '@angular/material/slider';
           <input matInput [(ngModel)]="chartValue" 
             type="number" step="0.1" max="1" min="0"/>
         </mat-form-field>
-        <mat-slider *ngIf="chartControl == 2" (change)="ngOnChanges()"
+        <mat-slider *ngIf="chartControl == 2" (change)="ngOnChanges()" color="primary"
         [(ngModel)]="chartValue" step="0.02" max="1" min="0" style="min-width: 250px;"></mat-slider>
       </div>
     `,
