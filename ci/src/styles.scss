@@ -12,9 +12,22 @@ $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);
 
+
+// Define an alternate theme.
+$grey-primary: mat-palette($mat-grey, 700);
+$grey-accent:  mat-palette($mat-green, A400);
+$grey-theme:   mat-light-theme($grey-primary, $grey-accent, $warn);
+/* Include the alternative theme styles inside of a block with a CSS class. You can make this
+CSS class whatever you want. Any component inside of an element with
+.grey-theme class will be affected by this alternate theme instead of the default theme. */
+.grey-theme {
+  @include angular-material-theme($grey-theme);
+}
+
 body {
     font-family: $mat-font-family;
     font-weight: normal;
+    background-color: #eee;
 }
 
 h1, h2, h3, h4 {

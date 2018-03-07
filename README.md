@@ -16,7 +16,7 @@ It consist of 3 main modules admin, API, and hybrid app
 - Run `php artisan jwt:generate` to generate secret for API.
 
 #### Client
-- For Client App we use [Angular4](https://angular.io/) which require [NodeJS](https://nodejs.org/) version 6 at least. Verify that you are running at least node 6.9.x and npm 3.x.x by running `node -v` and `npm -v` in a terminal/console window. Older versions produce errors, but newer versions are fine. 
+- For Client App we use [Angular5](https://angular.io/) which require [NodeJS](https://nodejs.org/) version 6 at least. Verify that you are running at least node 6.9.x and npm 3.x.x by running `node -v` and `npm -v` in a terminal/console window. Older versions produce errors, but newer versions are fine. 
 `npm -v
 3.10.10
 node -v
@@ -24,7 +24,7 @@ v6.11.3`
 - Globally install [Angular CLI](https://angular.io/guide/quickstart) using command `npm install -g @angular/cli@latest`
 - Run `npm install` into `ci` folder to install required npm modules
 - Add URL to your local server API to `/ci/src/environments/environment.ts` 
-- Run `ng serve --open --base-href /ci/` for a dev server. The app will automatically reload if you change any of the source files.
+- Run `npm start` or `ng serve --open --base-href /ci/` for a dev server. The app will automatically reload if you change any of the source files.
 - Use `ng build --prod` into `ci` folder to build angular app and see your changes under apache (production build uses variables from `environment.prod.ts`, so set your globals there)
 - If you want to generate a new component run `ng generate component component-name`. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 

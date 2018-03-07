@@ -1,5 +1,6 @@
-﻿<a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
-<mat-progress-bar *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
+﻿<span class="grey-theme">
+ <a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
+<mat-progress-bar color="accent" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
 <label *ngIf="question_num > 0" style="display: flex; justify-content: center;">{{correct_answers}}/{{question_num}}</label>
 <div class="text-center">
     <div *ngIf="question !== null">
@@ -19,18 +20,18 @@
             <div *ngFor="let answer of answers" class="order-item">{{answer}}</div>
         </div>
         <div *ngIf="question.answer_mode=='radio'">
-            <mat-radio-group class="radio-group" [(ngModel)]="answers[0]">
-                <mat-radio-button class="radio-button" *ngFor="let answer of question.answers; let answerIndex = index" value="{{answerIndex}}">
+            <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >
+                <mat-radio-button class="radio-button" *ngFor="let answer of question.answers; let answerIndex = index" value="{{answerIndex}}" color="primary">
                     {{answer.value}}
                 </mat-radio-button>
             </mat-radio-group>
         </div>
         <div *ngIf="question.answer_mode=='TF'">
-            <mat-radio-group class="radio-group" [(ngModel)]="answers[0]">
-                <mat-radio-button class="radio-button" value="False">
+            <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >
+                <mat-radio-button class="radio-button" value="False" color="primary">
                     false
                 </mat-radio-button>
-                <mat-radio-button class="radio-button" value="True">
+                <mat-radio-button class="radio-button" value="True" color="primary">
                     true
                 </mat-radio-button>
             </mat-radio-group>
@@ -48,7 +49,6 @@
         <button (click)="checkAnswer()"
             mat-raised-button
             style="color: #000; background-color: #f5f5f5; ">
-            <!--<mat-icon>forward</mat-icon>-->
             <span>Continue</span>
         </button>
     </div>
@@ -101,4 +101,5 @@
             </a>
         </div>
     </div>
-</div>
+</div>   
+</span>
