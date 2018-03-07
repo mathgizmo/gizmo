@@ -11,10 +11,11 @@ import {MatSliderModule} from '@angular/material/slider';
         <p>Value</p>
         <mat-form-field *ngIf="chartControl == 1" (change)="ngOnChanges()">
           <input matInput [(ngModel)]="chartValue" 
-            type="number" step="0.1" max="1" min="0"/>
+            type="number" step="0.01" max="1" min="0"/>
         </mat-form-field>
         <mat-slider *ngIf="chartControl == 2" (change)="ngOnChanges()" color="primary"
-        [(ngModel)]="chartValue" step="0.02" max="1" min="0" style="min-width: 250px;"></mat-slider>
+        [(ngModel)]="chartValue" step="0.01" max="1" min="0" style="min-width: 250px;"></mat-slider>
+        <p *ngIf="chartControl == 2">{{chartValue.toFixed(2)}}</p>
       </div>
     `,
     styles: [`
@@ -50,10 +51,12 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     chart: SafeHtml;
     private bubleChartRebuildFunctionId; // id of function which rebuild buble chart
 
-    private chartType: number;
-    private chartValue: number;
-    private chartMaxValue: number;
-    private chartControl: number;
+    private chartType: number = 1;
+    private chartValue: number = 0.50;
+    private chartMaxValue: number = 100;
+    private chartControl: number = 1;
+    private initialized = false;
+    private oldQuestion: string;
 
     private bubbles;
    
@@ -73,7 +76,6 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     ngOnInit() {
-      this.buildChart();
     }
 
     ngOnDestroy() {
@@ -81,6 +83,10 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        if (this.oldQuestion != this.question) {
+            this.oldQuestion = this.question;
+            this.initialized = false;
+        }
         this.destroyBubleChart();
         this.buildChart();
     }
@@ -100,19 +106,26 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
       max: max value
     */
     private buildChart() {
-      let chart = this.question.match(/[^{}]+(?=\}%%)/g);
-      this.chartType = 
-        +chart['0'].match(/type:([0-9]+)(?=;)/g)['0'].replace('type:', '');
-      if(this.chartValue == undefined) this.chartValue = 
-          +chart['0'].match(/value:(.*)(?=;)/g)['0'].replace('value:', '');
-      if (chart['0'].indexOf('max:') >= 0) {
-        this.chartMaxValue = 
-          +chart['0'].match(/max:(.*)(?=;)/g)['0'].replace('max:', '');
-      } 
-      this.chartControl = +chart['0'].match(/control:([0-9]+)/g)['0']
-          .replace('control:', '');
-      let chartHtml = this.question.replace(/%%chart(.*)(?=%)%/g, "");
+      if ( !this.initialized ) {
+        let chart = this.question.match(new RegExp(/[^{}]+(?=\}%%)/g));
+        if (chart['0'].indexOf('type:') >= 0)
+          this.chartType =
+            parseFloat(chart['0'].match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0'].replace('type:', ''));
+        if (chart['0'].indexOf('value:') >= 0)
+          this.chartValue =
+            parseFloat(chart['0'].match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0'].replace('value:', ''));
+        if (chart['0'].indexOf('max:') >= 0) {
+          this.chartMaxValue =
+            parseFloat(chart['0'].match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0'].replace('max:', ''));
+        }
+        if (chart['0'].indexOf('value:') >= 0)
+          this.chartControl = parseFloat(chart['0'].match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
+            .replace('control:', ''));
+        this.initialized = true;
+      }
+      let chartHtml = this.question.replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
       switch (this.chartType) {
+        default:
         case 1:
           // Chart (type 1 - rectangle)
           chartHtml += '<svg style="height: '
@@ -122,7 +135,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           chartHtml += ' fill: ' + this.mainColor + '; stroke: ' + 
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
-          chartHtml += '<rect id="rect1" style="height:'+ 
+          chartHtml += '<rect id="rect1" style="y: '+(1 - this.chartValue)*this.chartHeight+'; height:'+
             this.chartValue*this.chartHeight +' !important; width: 100%;';
           chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' + 
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
@@ -166,11 +179,13 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
           break;
         case 3:
-          // Chart (type 3 - points)
+          // Chart (type 3 - dots)
           let chartContainer = document.getElementById('chart-container');
-          chartContainer.innerHTML = chartHtml;
           let canvas = document.createElement("canvas");
-          chartContainer.appendChild(canvas);
+          requestAnimationFrame(() => {
+            chartContainer.innerHTML = chartHtml;
+            chartContainer.appendChild(canvas);
+          });
           canvas.style.height = this.chartHeight+'px';
           canvas.style.width = chartContainer.style.width;
           let ctx = canvas.getContext("2d");
@@ -187,8 +202,6 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             this.drawBublesChart(this.chartValue, this.chartMaxValue, ctx, canvas);
           }, 80);
-          break;
-        default:
           break;
       }
     }
@@ -230,7 +243,6 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
         buble.y = canvas.height-bubleDiameter;
       if(buble.y < bubleDiameter)
         buble.y = bubleDiameter;
-      //console.log(buble);
 
       ctx.beginPath();
       ctx.arc(buble.x, buble.y, buble.radius, 0, Math.PI*2, true);
