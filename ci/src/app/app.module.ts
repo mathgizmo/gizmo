@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatSelectModule, 
-    MatIconModule, MatMenuModule, MatRadioModule, MatDialogModule, MatProgressBarModule} 
-    from '@angular/material';
+    MatIconModule, MatMenuModule, MatRadioModule, 
+    MatDialogModule, MatProgressBarModule, MatSliderModule} from '@angular/material';
 import { BaseRequestOptions } from '@angular/http';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -21,9 +21,9 @@ import { LoginComponent } from './_components/welcome/login/index';
 import { RegisterComponent } from './_components/welcome/register/index';
 import { TryComponent } from './_components/welcome/try/try.component';
 import { HomeComponent } from './_components/home/index';
-import { TopicComponent } from './_components/topic/index';
+import { TopicComponent } from './_components/home/topic/index';
 import { LessonComponent, GoodDialogComponent, BadDialogComponent, 
-    ReportDialogComponent, QuestionWithChartComponent } from './_components/topic/lesson/index';
+    ReportDialogComponent, QuestionWithChartComponent } from './_components/home/topic/lesson/index';
 import { ProfileComponent } from './_components/profile/profile.component';
 
 @NgModule({
@@ -42,6 +42,7 @@ import { ProfileComponent } from './_components/profile/profile.component';
         MatRadioModule,
         MatDialogModule,
         MatProgressBarModule,
+        MatSliderModule,
         FlexLayoutModule,
         SortablejsModule.forRoot({ animation: 150 })
     ],

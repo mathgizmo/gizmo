@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TopicService } from '../../../_services/index';
-import { TrackingService } from '../../../_services/index';
+import { TopicService } from '../../../../_services/index';
+import { TrackingService } from '../../../../_services/index';
 import { MatDialog, MatProgressBarModule } from '@angular/material';
 import { Router } from '@angular/router';
 
