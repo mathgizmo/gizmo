@@ -1,11 +1,15 @@
 <h2 id="chart-container" [innerHTML]="chart"></h2>
+<label *ngIf="displayFraction" class="center">{{valueWhenMaxExists}}/{{chartMaxValue}}</label>
 <div id="controls" *ngIf="chartControl > 0" >
   <p>Value</p>
   <mat-form-field *ngIf="chartControl == 1" (change)="ngOnChanges()">
     <input matInput [(ngModel)]="chartValue" 
       type="number" step="0.01" max="1" min="0"/>
+      <mat-progress-bar value={{chartValue*100}} class='progress'></mat-progress-bar>
   </mat-form-field>
   <mat-slider *ngIf="chartControl == 2" (change)="ngOnChanges()" color="primary"
   [(ngModel)]="chartValue" step="0.01" max="1" min="0" style="min-width: 250px;"></mat-slider>
-  <p *ngIf="chartControl == 2">{{chartValue.toFixed(2)}}</p>
+  <div  *ngIf="chartControl == 2" class="value-label-container">
+  	<label>{{percentValue}}%</label>
+  </div>
 </div>

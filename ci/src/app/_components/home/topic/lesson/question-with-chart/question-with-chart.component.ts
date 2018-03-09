@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, OnDestroy, 
-    ChangeDetectionStrategy, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnDestroy, ChangeDetectionStrategy, 
+    Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {MatSliderModule} from '@angular/material/slider';
 
@@ -9,7 +9,7 @@ import {MatSliderModule} from '@angular/material/slider';
     styleUrls: ['question-with-chart.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges {
+export class QuestionWithChartComponent implements OnDestroy, OnChanges {
     
     @Input() question: string;
     @Input() chartHeight: number; // dimension of chart area in px
@@ -19,31 +19,32 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     private strokeColor: string = "#111";
     
     private strokeWidth: number = 1;
-    private bubleRadius: number = 4;
-
-    chart: SafeHtml;
-    private bubleChartRebuildFunctionId; // id of function which rebuild buble chart
+    private dotRadius: number = 4;
 
     private chartType: number = 1;
     private chartValue: number = 0.50;
-    private chartMaxValue: number = 100;
+    private chartMaxValue: number = 0;
     private chartControl: number = 0;
+
     private initialized = false;
     private oldQuestion: string;
 
-    private bubbles;
+    private valueWhenMaxExists : number;
+    private percentValue: number;
+    private displayFraction: boolean = false;
+
+    chart: SafeHtml;
+    private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
+    private dots;
    
     constructor(private sanitizer: DomSanitizer){
-      this.bubbles = [];
+      this.dots = [];
       if(!this.chartHeight)
         this.chartHeight=250; 
     }
 
-    ngOnInit() {
-    }
-
     ngOnDestroy() {
-      this.destroyBubleChart();
+      this.destroyDotsChart();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -51,8 +52,11 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
             this.oldQuestion = this.question;
             this.initialized = false;
         }
-        this.destroyBubleChart();
+        this.destroyDotsChart();
         this.buildChart();
+        this.valueWhenMaxExists =  Math.round(
+          this.chartValue*this.chartMaxValue);
+        this.percentValue = Math.round(this.chartValue*100);
 
         // setup equation in LaTeX
         setTimeout(function() {
@@ -63,36 +67,49 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     // function to build charts
     private buildChart() {
       if ( !this.initialized ) {
-        let chart = this.question.match(new RegExp(/[^{}]+(?=\}%%)/g));
+        let chart = this.question
+          .match(new RegExp(/[^{}]+(?=\}%%)/g));
         if (chart['0'].indexOf('type:') >= 0)
-          this.chartType =
-            parseFloat(chart['0'].match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0'].replace('type:', ''));
+          this.chartType = parseFloat(chart['0']
+            .match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
+            .replace('type:', ''));
         if (chart['0'].indexOf('value:') >= 0)
-          this.chartValue =
-            parseFloat(chart['0'].match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0'].replace('value:', ''));
+          this.chartValue = parseFloat(chart['0']
+            .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
+            .replace('value:', ''));
         if (chart['0'].indexOf('max:') >= 0) {
-          this.chartMaxValue =
-            parseFloat(chart['0'].match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0'].replace('max:', ''));
+          this.chartMaxValue = parseFloat(chart['0']
+            .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
+            .replace('max:', ''));
         }
         if (chart['0'].indexOf('main-color:') >= 0) {
-          this.mainColor = chart['0'].match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0'].replace('main-color:', '');
+          this.mainColor = chart['0']
+            .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
+            .replace('main-color:', '');
         }
         if (chart['0'].indexOf('selected-color:') >= 0) {
-          this.selectedColor = chart['0'].match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0'].replace('selected-color:', '');
+          this.selectedColor = chart['0']
+            .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
+            .replace('selected-color:', '');
         }
         if (chart['0'].indexOf('stroke-color:') >= 0) {
-          this.strokeColor = chart['0'].match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0'].replace('stroke-color:', '');
+          this.strokeColor = chart['0']
+            .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
+            .replace('stroke-color:', '');
         }
         if (chart['0'].indexOf('control:') >= 0)
-          this.chartControl = parseFloat(chart['0'].match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
+          this.chartControl = parseFloat(chart['0']
+            .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', ''));
         this.initialized = true;
       }
-      let chartHtml = this.question.replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
+      let chartHtml = this.question
+        .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
       switch (this.chartType) {
         default:
         case 1:
           // Chart (type 1 - rectangle)
+          this.displayFraction = false;
           chartHtml += '<svg style="height: '
             + this.chartHeight + '; width:' + this.chartHeight + ';">';
           chartHtml += '<rect id="rect2" style="height:'
@@ -100,7 +117,8 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           chartHtml += ' fill: ' + this.mainColor + '; stroke: ' + 
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
-          chartHtml += '<rect id="rect1" style="y: '+(1 - this.chartValue)*this.chartHeight+'; height:'+
+          chartHtml += '<rect id="rect1" style="y: ' +
+            (1 - this.chartValue) * this.chartHeight + '; height:' +
             this.chartValue*this.chartHeight +' !important; width: 100%;';
           chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' + 
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
@@ -110,6 +128,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           break;
         case 2:
           // Chart (type 2 - circle)
+          this.displayFraction = false;
           let radius = this.chartHeight/2;
           let angle = 2*Math.PI*this.chartValue;
           let x = radius + radius*Math.sin(angle);
@@ -145,6 +164,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           break;
         case 3:
           // Chart (type 3 - dots)
+          this.displayFraction = true;
           let chartContainer = document.getElementById('chart-container');
           let canvas = document.createElement("canvas");
           requestAnimationFrame(() => {
@@ -155,38 +175,38 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           canvas.style.width = chartContainer.style.width;
           let ctx = canvas.getContext("2d");
           for(let i = 0; i < this.chartMaxValue; i++) {
-            if(this.bubbles[i] == undefined){
-              this.bubbles[i] = {
-                x: Math.random() * (canvas.width-this.bubleRadius*2),
-                y: Math.random() * (canvas.height-this.bubleRadius*2),
-                radius: this.bubleRadius
+            if(this.dots[i] == undefined){
+              this.dots[i] = {
+                x: Math.random() * (canvas.width-this.dotRadius*2),
+                y: Math.random() * (canvas.height-this.dotRadius*2),
+                radius: this.dotRadius
               };
             }
           }
-          this.bubleChartRebuildFunctionId = setInterval(() => {
+          this.dotsChartRebuildFunctionId = setInterval(() => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            this.drawBublesChart(this.chartValue, this.chartMaxValue, ctx, canvas);
+            this.drawDotsChart(this.chartValue, this.chartMaxValue, ctx, canvas);
           }, 80);
           break;
       }
     }
 
-    // function to draw Bubles Chart
-    private drawBublesChart(bublesPercent: number, 
-      maxBublesNum: number, ctx: CanvasRenderingContext2D,
+    // function to draw Dots Chart
+    private drawDotsChart(dotsPercent: number, 
+      maxDotsNum: number, ctx: CanvasRenderingContext2D,
       canvas: HTMLCanvasElement) {
-      let bublesNum = Math.round(maxBublesNum*bublesPercent);
-      for (let i = 0; i < bublesNum; i++) {
-        this.bubbles[i] = this.drawBuble(2, ctx, canvas, this.bubbles[i]);
+      let dotsNum = Math.round(maxDotsNum*dotsPercent);
+      for (let i = 0; i < dotsNum; i++) {
+        this.dots[i] = this.drawDot(2, ctx, canvas, this.dots[i]);
       }
-      for (let i = bublesNum; i < maxBublesNum; i++) {
-        this.bubbles[i] = this.drawBuble(1, ctx, canvas, this.bubbles[i]);
+      for (let i = dotsNum; i < maxDotsNum; i++) {
+        this.dots[i] = this.drawDot(1, ctx, canvas, this.dots[i]);
       }
     }
 
-    // function to draw one Buble
-    private drawBuble(type: number, ctx: CanvasRenderingContext2D,
-      canvas:HTMLCanvasElement, buble) {
+    // function to draw one Dot
+    private drawDot(type: number, ctx: CanvasRenderingContext2D,
+      canvas:HTMLCanvasElement, dot) {
       ctx.strokeStyle = this.strokeColor;
       ctx.lineWidth   = this.strokeWidth;
       if(type == 1) {
@@ -195,30 +215,30 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
       if(type == 2) {
         ctx.fillStyle = this.selectedColor;
       }
-      buble.x += Math.random() * 2 - 1;
-      buble.y += Math.random() * 2 - 1;
+      dot.x += Math.random() * 2 - 1;
+      dot.y += Math.random() * 2 - 1;
 
-      // Check if buble goes beyond the field
-      let bubleDiameter = buble.radius*2;
-      if(buble.x > canvas.width-bubleDiameter)
-        buble.x = canvas.width-bubleDiameter;
-      if(buble.x < bubleDiameter)
-        buble.x = bubleDiameter;
-      if(buble.y > canvas.height-bubleDiameter)
-        buble.y = canvas.height-bubleDiameter;
-      if(buble.y < bubleDiameter)
-        buble.y = bubleDiameter;
+      // Check if dot goes beyond the field
+      let dotDiameter = dot.radius*2;
+      if(dot.x > canvas.width-dotDiameter)
+        dot.x = canvas.width-dotDiameter;
+      if(dot.x < dotDiameter)
+        dot.x = dotDiameter;
+      if(dot.y > canvas.height-dotDiameter)
+        dot.y = canvas.height-dotDiameter;
+      if(dot.y < dotDiameter)
+        dot.y = dotDiameter;
 
       ctx.beginPath();
-      ctx.arc(buble.x, buble.y, buble.radius, 0, Math.PI*2, true);
+      ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI*2, true);
       ctx.fill();
       ctx.stroke();
-      return buble;
+      return dot;
     }
 
-    // remove buble chart rebuild function if it exists
-    private destroyBubleChart() {
-      if (this.bubleChartRebuildFunctionId)
-        clearInterval(this.bubleChartRebuildFunctionId); 
+    // remove dot chart rebuild function if it exists
+    private destroyDotsChart() {
+      if (this.dotsChartRebuildFunctionId)
+        clearInterval(this.dotsChartRebuildFunctionId); 
     }
 }
