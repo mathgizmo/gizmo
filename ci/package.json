@@ -4,12 +4,12 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open --base-href /ci/",
+    "start": "ng serve --open",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod-build": "ng build --output-path=last-build/ --env=prod --base-href /ci/"
+    "prod-build": "ng build --output-path=last-build/ --env=prod"
   },
   "private": true,
   "dependencies": {
