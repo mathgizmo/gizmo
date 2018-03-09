@@ -12,13 +12,15 @@ import {MatSliderModule} from '@angular/material/slider';
 export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges {
     
     @Input() question: string;
-    @Input() mainColor: string;
-    @Input() selectedColor: string;
-    @Input() strokeColor: string;
     @Input() chartHeight: number; // dimension of chart area in px
-    @Input() strokeWidth: number;
 
+    private mainColor: string = "#f7f7f7";
+    private selectedColor: string = "#ff4444";
+    private strokeColor: string = "#111";
+    
+    private strokeWidth: number = 1;
     private bubleRadius: number = 4;
+
     chart: SafeHtml;
     private bubleChartRebuildFunctionId; // id of function which rebuild buble chart
 
@@ -33,17 +35,8 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
    
     constructor(private sanitizer: DomSanitizer){
       this.bubbles = [];
-      // set default styles if styles are not defined
       if(!this.chartHeight)
         this.chartHeight=250; 
-      if(!this.mainColor)
-        this.mainColor="#f7f7f7";
-      if(!this.selectedColor)
-        this.selectedColor="#ff4444"; 
-      if(!this.strokeColor)
-        this.strokeColor="#111";
-      if(!this.strokeWidth)
-        this.strokeWidth=1;
     }
 
     ngOnInit() {
@@ -68,19 +61,6 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     }
 
     // function to build charts
-    /**
-      - type 1 (A1): 
-      %%chart{type:1; value:0.3; control: 1}%% 
-
-      - type 2 (A4):
-      %%chart{type:2; value:0.3; control: 1}%% 
-
-      - type 3 (A5):
-      %%chart{type:3; value:0.3; max: 10; control: 1}%% 
-
-      value: percent fill (0-1)
-      max: max value
-    */
     private buildChart() {
       if ( !this.initialized ) {
         let chart = this.question.match(new RegExp(/[^{}]+(?=\}%%)/g));
@@ -94,7 +74,16 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
           this.chartMaxValue =
             parseFloat(chart['0'].match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0'].replace('max:', ''));
         }
-        if (chart['0'].indexOf('value:') >= 0)
+        if (chart['0'].indexOf('main-color:') >= 0) {
+          this.mainColor = chart['0'].match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0'].replace('main-color:', '');
+        }
+        if (chart['0'].indexOf('selected-color:') >= 0) {
+          this.selectedColor = chart['0'].match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0'].replace('selected-color:', '');
+        }
+        if (chart['0'].indexOf('stroke-color:') >= 0) {
+          this.strokeColor = chart['0'].match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0'].replace('stroke-color:', '');
+        }
+        if (chart['0'].indexOf('control:') >= 0)
           this.chartControl = parseFloat(chart['0'].match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', ''));
         this.initialized = true;

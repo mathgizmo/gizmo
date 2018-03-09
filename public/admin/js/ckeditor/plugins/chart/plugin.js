@@ -20,7 +20,7 @@ CKEDITOR.plugins.add( 'chart', {
                 [
                     {
                         id : 'general',
-                        label : 'Settings',
+                        label : 'General settings',
                         elements :
                         [
                             {
@@ -43,6 +43,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 type : 'text',
                                 id : 'value',
                                 label : 'Percent fill (value between 0 and 1)',
+                                'default' : '0.5',
                                 validate : CKEDITOR.dialog.validate.regex( /^(0((\.|\,)\d+)?|1((\.|\,)0+)?)$/, "Percent fill must be a number between 0 and 1" ),
                                 required : true,
                                 commit : function( data )
@@ -76,7 +77,28 @@ CKEDITOR.plugins.add( 'chart', {
                                 {
                                     data.control = this.getValue();
                                 }
+                            }
+                        ]
+                    },
+                    {
+                        id: 'optional',
+                        label: 'Optional settings',
+                        elements: [
+                            {
+                                type : 'html',
+                                html: 'Main Color: <input class="jscolor" id="main-color" value="F7F7F7">',
+                                required : false,
                             },
+                            {
+                                type : 'html',
+                                html: 'Selected Color: <input class="jscolor" id="selected-color" value="FF4444">',
+                                required : false,
+                            },
+                            {
+                                type : 'html',
+                                html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="111">',
+                                required : false,
+                            }
                         ]
                     }
                 ],
@@ -90,10 +112,27 @@ CKEDITOR.plugins.add( 'chart', {
                         if(data.max < 1) data.max = 1;
                         chartHtml += 'max:'+data.max + '; ';
                     }
+
+                    data.mainColor = '#'  + 
+                        document.getElementById('main-color').value;
+                    chartHtml += 'main-color: ' + data.mainColor + '; '; 
+                    data.selectedColor = '#'  + 
+                        document.getElementById('selected-color').value;
+                    chartHtml += 'selected-color: ' + data.selectedColor + '; '; 
+                    data.strokeColor = '#'  + 
+                        document.getElementById('stroke-color').value;
+                    chartHtml += 'stroke-color: ' + data.strokeColor + '; '; 
+
                     chartHtml += 'control: ' + data.control + '}%%';
                     editor.insertHtml(chartHtml);
+                },
+                onShow : function() {
+                    // If redownload jscolor.js - change this.zIndex (in jscolor.js) 
+                    //to 12000 to show color picker over ckeditor dialog!!!
+                    CKEDITOR.scriptLoader.load( '../../js/jscolor.js' );
                 }
             };
         });
+
     }
 });
