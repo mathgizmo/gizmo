@@ -1,0 +1,16 @@
+ #chart-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+#controls {
+  margin-top: 8px;
+  padding: 0;
+}
+#controls > * {
+  margin: 0;
+  padding: 0;
+}

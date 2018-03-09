@@ -66,10 +66,11 @@ CKEDITOR.plugins.add( 'chart', {
                                 id : 'control',
                                 label : 'Control type',
                                 items : [ 
+                                    [ 'No Control', '0' ],
                                     [ 'Input', '1' ],
                                     [ 'Slider', '2' ]
                                 ],
-                                'default' : '1',
+                                'default' : '0',
                                 required : true,
                                 commit : function( data )
                                 {

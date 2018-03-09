@@ -5,37 +5,8 @@ import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
     selector: 'question-with-chart',
-    template: `
-      <h2 id="chart-container" [innerHTML]="chart"></h2>
-      <div id="controls" >
-        <p>Value</p>
-        <mat-form-field *ngIf="chartControl == 1" (change)="ngOnChanges()">
-          <input matInput [(ngModel)]="chartValue" 
-            type="number" step="0.01" max="1" min="0"/>
-        </mat-form-field>
-        <mat-slider *ngIf="chartControl == 2" (change)="ngOnChanges()" color="primary"
-        [(ngModel)]="chartValue" step="0.01" max="1" min="0" style="min-width: 250px;"></mat-slider>
-        <p *ngIf="chartControl == 2">{{chartValue.toFixed(2)}}</p>
-      </div>
-    `,
-    styles: [`
-        #chart-container{
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          margin: 0;
-          padding: 0;
-        }
-        #controls {
-          margin-top: 8px;
-          padding: 0;
-        }
-        #controls > * {
-          margin: 0;
-          padding: 0;
-        }
-    `],
+    templateUrl: 'question-with-chart.component.html' ,
+    styleUrls: ['question-with-chart.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges {
@@ -54,7 +25,7 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
     private chartType: number = 1;
     private chartValue: number = 0.50;
     private chartMaxValue: number = 100;
-    private chartControl: number = 1;
+    private chartControl: number = 0;
     private initialized = false;
     private oldQuestion: string;
 
@@ -89,6 +60,11 @@ export class QuestionWithChartComponent implements OnInit, OnDestroy, OnChanges 
         }
         this.destroyBubleChart();
         this.buildChart();
+
+        // setup equation in LaTeX
+        setTimeout(function() {
+          MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        }, 50);
     }
 
     // function to build charts
