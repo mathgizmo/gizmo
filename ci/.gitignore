@@ -5,7 +5,7 @@
 /src/environments/environment.ts
 
 # compiled output
-# /last-build/*
+/dist/*
 /tmp
 /out-tsc
 
