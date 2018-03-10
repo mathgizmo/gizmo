@@ -6,7 +6,7 @@ import {MatSliderModule} from '@angular/material/slider';
 @Component({
     selector: 'question-with-chart',
     templateUrl: 'question-with-chart.component.html' ,
-    styleUrls: ['question-with-chart.component.css'],
+    styleUrls: ['question-with-chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestionWithChartComponent implements OnDestroy, OnChanges {

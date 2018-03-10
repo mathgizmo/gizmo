@@ -2,7 +2,7 @@
 <div class="text-center">
     <h2>{{topicTree.title}}</h2>
     <div *ngIf="topicTree.lessons && topicTree.lessons.length">
-        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = index" class="arrowRowContainer">
+        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = 'index'" class="arrowRowContainer">
             <div class="arrowButtonContainer" [ngClass]="lesson.status == 1 ? 'greenout': (lesson.status == 2) ? 'yellowout' : 'redout'">
                 <a *ngIf="lesson.status == 1 || lesson.status == 2" routerLink="/topic/{{topicTree.id}}/lesson/{{lesson.id}}" routerLinkActive="active">
                     <div class="arrow">
@@ -26,9 +26,7 @@
         routerLink="/topic/{{topicTree.id}}/lesson/testout"
         routerLinkActive="active"
         *ngIf="topicTree.lessons && topicTree.lessons.length && !topicDone">
-        <button
-            mat-raised-button
-            style="margin: 16px; color: #000; background-color: #f5f5f5;">
+        <button mat-raised-button class="testout-button">
             <mat-icon>update</mat-icon>
             <span>Test out to finish topic</span>
         </button>
@@ -38,9 +36,7 @@
         routerLink="/topic/{{topicTree.next_topic_id}}"
         routerLinkActive="active"
         *ngIf="(topicTree.lessons == undefined || !topicTree.lessons.length || topicDone) && topicTree.next_topic_id != 0">
-        <button
-            mat-raised-button
-            style="margin: 16px; color: #000; background-color: #f5f5f5;">
+        <button mat-raised-button class="next-topic-button">
             <mat-icon>done all</mat-icon>
             <span>Go to next topic</span>
         </button>

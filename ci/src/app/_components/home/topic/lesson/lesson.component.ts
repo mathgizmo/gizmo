@@ -13,7 +13,7 @@ import { ReportDialogComponent } from './report-dialog/report-dialog.component';
     moduleId: module.id,
     templateUrl: 'lesson.component.html',
     providers: [TopicService, TrackingService],
-    styleUrls: [ './lesson.component.css']
+    styleUrls: [ './lesson.component.scss']
 })
 export class LessonComponent implements OnInit {
     lessonTree: any = [];
@@ -74,7 +74,8 @@ export class LessonComponent implements OnInit {
                         if(this.question_num >= this.lessonTree['questions'].length)
                             this.question_num = this.lessonTree['questions'].length;
                         this.nextQuestion();
-                        this.trackingService.startLesson(this.lesson_id).subscribe(start_time => {
+                        this.trackingService.startLesson(this.lesson_id)
+                          .subscribe(start_time => {
                             this.start_time = start_time;
                         });
                     }
@@ -180,14 +181,16 @@ export class LessonComponent implements OnInit {
                   
                   reportDialogRef.afterClosed().subscribe(result => {
                       console.log(result);
-                      this.topicService.reportError(result.question_id, result.answers, result.option, result.text).subscribe();
+                      this.topicService.reportError(result.question_id, 
+                        result.answers, result.option, result.text).subscribe();
                   });
               }
               if (this.lessonTree['questions'].length) {
                   this.nextQuestion();
               } else {
                   this.question = null;
-                  this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                  this.trackingService.doneLesson(this.topic_id, 
+                    this.lesson_id, this.start_time, this.weak_questions).subscribe();
               }
           });
           if(this.lesson_id == -1) {
@@ -237,7 +240,8 @@ export class LessonComponent implements OnInit {
                         }
                         this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + "";
                     }
-                    if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
+                    if (this.question.answers[i].is_correct && 
+                      this.question.answers[i].value != this.answers[i]) {
                         return false;
                     }
                 }
