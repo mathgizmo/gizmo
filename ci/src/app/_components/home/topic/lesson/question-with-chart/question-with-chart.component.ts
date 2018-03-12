@@ -226,7 +226,7 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
           chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
             + (width-indentation) + '" y2="10" style="stroke:' 
-            + this.strokeColor + '; stroke-width:'
+            + this.mainColor + '; stroke-width:'
             + this.strokeWidth + '" />';
           width -= indentation*2;
           chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
@@ -240,18 +240,18 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             let position = (i*width
               /(this.chartEndValue-this.chartStartValue))+indentation;
             chartHtml += '<text x="' + position
-              + '" y="35" fill="' + this.mainColor 
+              + '" y="35" fill="' + this.strokeColor 
               +'" font-size="16" text-anchor="middle">' 
               + (this.chartStartValue+i).toFixed(1) + '</text>';
             chartHtml += '<circle cx="' + position + '" cy="10" r="' 
-              + (circleDiameter/2) + '" fill="' + this.mainColor + '" />';
+              + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
           }
           chartHtml += '<text x="' + (width+indentation)
-            + '" y="35" fill="' + this.mainColor 
+            + '" y="35" fill="' + this.strokeColor 
             +'" font-size="16" text-anchor="middle">' 
             + this.chartEndValue.toFixed(1) + '</text>';
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
-            + (circleDiameter/2) + '" fill="' + this.mainColor + '" />';
+            + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
           chartHtml += '</svg>';
           this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
           break;
