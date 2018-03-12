@@ -152,6 +152,19 @@ CKEDITOR.plugins.add( 'chart', {
                                 type : 'html',
                                 html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="111">',
                                 required : false,
+                            },
+                            {
+                                type : 'text',
+                                id : 'stroke-width',
+                                label : 'Stroke Width:',
+                                validate : CKEDITOR.dialog.validate
+                                    .integer('Stroke Width must be a number'),
+                                required : false,
+                                'default': '',
+                                commit : function( data )
+                                {
+                                    data.strokeWidth = this.getValue();
+                                }
                             }
                         ]
                     }
@@ -187,6 +200,8 @@ CKEDITOR.plugins.add( 'chart', {
                     data.strokeColor = '#'  + 
                         document.getElementById('stroke-color').value;
                     chartHtml += 'stroke-color: ' + data.strokeColor + '; '; 
+                    if(data.strokeWidth > 0) 
+                        chartHtml += 'stroke-width:'+data.strokeWidth+'; ';
 
                     // set control
                     chartHtml += 'control: ' + data.control + '}%%';
@@ -197,16 +212,16 @@ CKEDITOR.plugins.add( 'chart', {
                     let load = CKEDITOR.scriptLoader.load( '../../js/jscolor.js' );
                     // load for create question
                     if(!load) CKEDITOR.scriptLoader.load( '../js/jscolor.js' );
-                    
+
                     // If redownload jscolor.js - change this.zIndex (in jscolor.js) 
                     //to 12000 to show color picker over ckeditor dialog!!!
                 },
                 onLoad : function() {
                     this.on('selectPage', function (e) {
                         let type = this.getContentElement('types', 'type').getValue();
-                        if(type != 3) {
-                            this.getContentElement('general', 'max').disable();
-                        } else this.getContentElement('general', 'max').enable();
+                        if(type == 3) {
+                            this.getContentElement('general', 'max').enable();
+                        } else this.getContentElement('general', 'max').disable();
                         if(type == 4) {
                             this.getContentElement('general', 'value').disable();
                             this.getContentElement('general', 'start-value').enable();

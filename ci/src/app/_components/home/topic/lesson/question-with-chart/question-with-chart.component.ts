@@ -17,8 +17,8 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
     private mainColor: string = "#f7f7f7";
     private selectedColor: string = "#ff4444";
     private strokeColor: string = "#111";
-    
     private strokeWidth: number = 1;
+
     private dotRadius: number = 4;
 
     private chartType: number = 1;
@@ -31,6 +31,8 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
 
     private initialized = false;
     private oldQuestion: string;
+
+    private chart4Value: number;
 
     private valueWhenMaxExists : number;
     private percentValue: number;
@@ -60,6 +62,8 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
         this.valueWhenMaxExists =  Math.round(
           this.chartValue*this.chartMaxValue);
         this.percentValue = Math.round(this.chartValue*100);
+        this.chart4Value = (this.chartValue-this.chartStartValue)
+          /(this.chartEndValue-this.chartStartValue);
 
         // setup equation in LaTeX
         setTimeout(function() {
@@ -115,10 +119,17 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-color:', '');
         }
+        if (chart['0'].indexOf('stroke-width:') >= 0) {
+          this.strokeWidth = chart['0']
+            .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
+            .replace('stroke-width:', '');
+        }
         if (chart['0'].indexOf('control:') >= 0)
           this.chartControl = parseFloat(chart['0']
             .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', ''));
+        if(this.chartType == 4) 
+          this.chartValue = this.chartStartValue;
         this.initialized = true;
       }
       let chartHtml = this.question
@@ -209,11 +220,39 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
         case 4:
           // Chart (type 4 - slider)
           this.displayFraction = false;
-
-          //TODO: ADD SLIDER CHART
-          console.log(this.chartStartValue + "  " + 
-            this.chartEndValue + "  " + this.chartStep);
-
+          let circleDiameter = 2*this.dotRadius;
+          let width  = document.getElementById('chart-container').offsetWidth;
+          let indentation = circleDiameter + 5;
+          chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
+          chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
+            + (width-indentation) + '" y2="10" style="stroke:' 
+            + this.strokeColor + '; stroke-width:'
+            + this.strokeWidth + '" />';
+          width -= indentation*2;
+          chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
+            + ((this.chartValue-this.chartStartValue)/(this.chartEndValue
+            -this.chartStartValue)*width + indentation) 
+            + '" y2="10" style="stroke:' 
+            + this.selectedColor + '; stroke-width:'
+            + this.strokeWidth + '" />';
+          for(let i = 0; i < (this.chartEndValue-this.chartStartValue); 
+            i+= this.chartStep) {
+            let position = (i*width
+              /(this.chartEndValue-this.chartStartValue))+indentation;
+            chartHtml += '<text x="' + position
+              + '" y="35" fill="' + this.mainColor 
+              +'" font-size="16" text-anchor="middle">' 
+              + (this.chartStartValue+i).toFixed(1) + '</text>';
+            chartHtml += '<circle cx="' + position + '" cy="10" r="' 
+              + (circleDiameter/2) + '" fill="' + this.mainColor + '" />';
+          }
+          chartHtml += '<text x="' + (width+indentation)
+            + '" y="35" fill="' + this.mainColor 
+            +'" font-size="16" text-anchor="middle">' 
+            + this.chartEndValue.toFixed(1) + '</text>';
+          chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
+            + (circleDiameter/2) + '" fill="' + this.mainColor + '" />';
+          chartHtml += '</svg>';
           this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
           break;
       }

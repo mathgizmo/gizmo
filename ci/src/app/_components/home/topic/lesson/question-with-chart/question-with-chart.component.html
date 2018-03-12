@@ -3,13 +3,31 @@
 <div id="controls" *ngIf="chartControl > 0" >
   <p>Value</p>
   <mat-form-field *ngIf="chartControl == 1" (change)="ngOnChanges()">
-    <input matInput [(ngModel)]="chartValue" 
-      type="number" step="0.01" max="1" min="0"/>
-      <mat-progress-bar value={{chartValue*100}} class='progress'></mat-progress-bar>
+    <input matInput *ngIf="chartType != 4" 
+      [(ngModel)]="chartValue" type="number" step="0.01" max="1" min="0"/>
+    <mat-progress-bar *ngIf="chartType != 4"
+      value={{chartValue*100}} class='progress'>
+    </mat-progress-bar>
+    <input matInput *ngIf="chartType == 4" 
+      [(ngModel)]="chartValue" type="number" 
+      [step]="chartStep" [max]="chartEndValue" [min]="chartStartValue"/>
+    <mat-progress-bar *ngIf="chartType == 4"
+      value={{chart4Value*100}} class='progress'>
+    </mat-progress-bar>
   </mat-form-field>
-  <mat-slider *ngIf="chartControl == 2" (change)="ngOnChanges()" color="primary"
-  [(ngModel)]="chartValue" step="0.01" max="1" min="0" class='slider-control'></mat-slider>
-  <div  *ngIf="chartControl == 2" class="value-label-container">
-  	<label>{{percentValue}}%</label>
-  </div>
+  <span *ngIf="chartControl == 2">
+    <mat-slider *ngIf="chartType != 4" 
+      (change)="ngOnChanges()" [(ngModel)]="chartValue"
+      step="0.01" max="1" min="0" color="primary" class='slider-control'>
+    </mat-slider>
+    <mat-slider *ngIf="chartType == 4" 
+      (change)="ngOnChanges()" [(ngModel)]="chartValue"
+      [step]="chartStep" [max]="chartEndValue" [min]="chartStartValue" 
+      color="primary" class='slider-control'>
+    </mat-slider>
+    <div class="value-label-container">
+      <label *ngIf="chartType != 4" >{{percentValue}}%</label>
+      <label *ngIf="chartType == 4" >{{chartValue.toFixed(1)}}</label>
+    </div> 
+  </span>
 </div>
