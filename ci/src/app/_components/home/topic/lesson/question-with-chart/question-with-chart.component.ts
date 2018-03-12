@@ -22,9 +22,12 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
     private dotRadius: number = 4;
 
     private chartType: number = 1;
+    private chartControl: number = 0;
     private chartValue: number = 0.50;
     private chartMaxValue: number = 0;
-    private chartControl: number = 0;
+    private chartStartValue: number = 0;
+    private chartEndValue: number = 3;
+    private chartStep: number = 0.5;
 
     private initialized = false;
     private oldQuestion: string;
@@ -81,6 +84,21 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           this.chartMaxValue = parseFloat(chart['0']
             .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
             .replace('max:', ''));
+        }
+        if (chart['0'].indexOf('start-value:') >= 0) {
+          this.chartStartValue = parseFloat(chart['0']
+            .match(new RegExp(/start-value:([^;]*)(?=(;|$))/g))['0']
+            .replace('start-value:', ''));
+        }
+        if (chart['0'].indexOf('end-value:') >= 0) {
+          this.chartEndValue = parseFloat(chart['0']
+            .match(new RegExp(/end-value:([^;]*)(?=(;|$))/g))['0']
+            .replace('end-value:', ''));
+        }
+        if (chart['0'].indexOf('step:') >= 0) {
+          this.chartStep = parseFloat(chart['0']
+            .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
+            .replace('step:', ''));
         }
         if (chart['0'].indexOf('main-color:') >= 0) {
           this.mainColor = chart['0']
@@ -187,6 +205,16 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             this.drawDotsChart(this.chartValue, this.chartMaxValue, ctx, canvas);
           }, 80);
+          break;
+        case 4:
+          // Chart (type 4 - slider)
+          this.displayFraction = false;
+
+          //TODO: ADD SLIDER CHART
+          console.log(this.chartStartValue + "  " + 
+            this.chartEndValue + "  " + this.chartStep);
+
+          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
           break;
       }
     }
