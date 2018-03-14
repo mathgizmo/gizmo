@@ -17,17 +17,17 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 
 /***/ }),
 
-/***/ "./src/app/_components/app.component.css":
-/***/ (function(module, exports) {
-
-module.exports = "h1 {\n  color: #369;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 250%;\n}\n.toolbar {\n\tbackground-color: transparent;\n}"
-
-/***/ }),
-
 /***/ "./src/app/_components/app.component.html":
 /***/ (function(module, exports) {
 
 module.exports = "<!-- main app container -->\n<div class=\"jumbotron\"> \n    <div class=\"container\">\n        <div class=\"col-sm-8 col-sm-offset-2\">\n            <div *ngIf=\"showMenu\" class=\"menu\">\n                <mat-toolbar class=\"toolbar\">\n                    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                        <mat-icon>menu</mat-icon>\n                    </button>\n                    <!-- This fills the remaining space of the current row -->\n                    <!-- <span class=\"fill-remaining-space\"></span> -->\n                </mat-toolbar>\n                <mat-menu #menu=\"matMenu\">\n                    <br />\n                    <a mat-menu-item routerLink=\"\">Home</a>\n                    <a mat-menu-item routerLink=\"profile\">Profile</a>\n                    <a mat-menu-item routerLink=\"login\">Logout</a>\n                </mat-menu>\n            </div>\n            <router-outlet></router-outlet>\n        </div>\n    </div>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/_components/app.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = "h1 {\n  color: #369;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 250%; }\n\n.toolbar {\n  background-color: transparent; }\n"
 
 /***/ }),
 
@@ -78,7 +78,7 @@ var AppComponent = (function () {
             moduleId: module.i,
             selector: 'app-root',
             template: __webpack_require__("./src/app/_components/app.component.html"),
-            styles: [__webpack_require__("./src/app/_components/app.component.css")]
+            styles: [__webpack_require__("./src/app/_components/app.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]])
@@ -90,17 +90,17 @@ var AppComponent = (function () {
 
 /***/ }),
 
-/***/ "./src/app/_components/home/home.component.css":
-/***/ (function(module, exports) {
-
-module.exports = ".level {\n\tmargin: 10px;\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\tbackground-color: #f3f3f3;\n}\n\n.level-title, .unit-title {\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n}\n\n.level-title {\n\tfont-weight: bold;\n}\n\n.unit {\n\tmargin: 10px;\n\twidth: 100%;\n\tbackground-color: #f9f9f9;\n}\n\n.topics-container {\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n\t-webkit-box-orient: horizontal;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: row;\n\t        flex-direction: row;\n\t-ms-flex-wrap: wrap;\n\t    flex-wrap: wrap;\n\t-webkit-box-align: start;\n\t    -ms-flex-align: start;\n\t        align-items: flex-start;\n}\n\n.topic {\n\tmargin: 10px;\n\twidth: 120px;\n\tpadding: 0;\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n\t-ms-flex-wrap: wrap;\n\t    flex-wrap: wrap;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n}\n\n.topic-title, .topic-progress, .topic-picture {\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-pack: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n\tpadding: 0;\n\tmargin: 0;\n}\n\n.topic-title, .topic-progress {\n\ttext-align: center;\n}"
-
-/***/ }),
-
 /***/ "./src/app/_components/home/home.component.html":
 /***/ (function(module, exports) {
 
 module.exports = "<div *ngIf=\"topicsTree.length\" class=\"topics\">\n  <div *ngFor=\"let level of topicsTree; let levelIndex = 'index'\" >\n    <mat-card *ngIf=\"level.units.length\" class=\"level\">\n      <h3 class=\"level-title\">{{level.title}}</h3>\n      <mat-card class=\"unit\" *ngFor=\"let unit of level.units; let unitIndex = 'index'\">\n        <h4 class=\"unit-title\">{{unit.title}}</h4>\n        <div class=\"topics-container\">\n          <div *ngFor=\"let topic of unit.topics; let topicIndex = 'index'\" class=\"topic\">\n            <a [routerLink]=\"topic.status == 0 ? '' : '/topic/'+topic.id\" routerLinkActive=\"active\" [class.disabled]=\"topic.status == 0 ? true : null\" class=\"topic-picture\">\n              <div [ngClass]=\"topic.image_id ? topic.image_id : 'cb0-img'\">\n                <div *ngIf=\"topic.status != 2\" class=\"topicButton\"  [ngClass]=\"topic.status == 1 ? 'greenout': 'redout'\" >\n                </div>\n                <div *ngIf=\"topic.status == 2\" class=\"topicButton\"  [ngClass]=\"'yellowout'\" >\n                  <div [ngStyle]=\"{'height.%' : topic.progress.percent}\" class=\"bottom_progress\" [ngClass]=\"'greenout'\"></div>\n                </div>\n              </div>\n            </a>\n            <div class=\"topic-progress\"> {{topic.progress.done}} of {{topic.progress.total}} done</div>\n            <div>\n              <div *ngIf=\"!topic.short_name\" class=\"topic-title\">{{topic.title}}</div>\n              <div *ngIf=\"topic.short_name\" class=\"topic-title\">{{topic.short_name}}</div>  \n            </div>\n          </div>\n        </div>\n      </mat-card>\n    </mat-card>\n  </div>\n</div>\n\n<!-- Old template (without Angular Material)\n<div class=\"text-center\">\n    <div ng-if=\"topicsTree.length\">\n        <div *ngFor=\"let level of topicsTree; let levelIndex = index\">\n            <div *ngIf=\"level.units.length\" class=\"shadow\">\n                <h3 style=\"font-weight: bold;\">{{level.title}}</h3>\n                <div *ngFor=\"let unit of level.units; let unitIndex = index\"  class=\"shadow\">\n                    <h4>{{unit.title}}</h4>\n                    <div *ngFor=\"let topic of unit.topics; let topicIndex = index\" style=\"display: inline-block;width:33%;vertical-align:top;\">\n                        <span class=\"fa-stack fa-4x\" >\n                            <a [routerLink]=\"topic.status == 0 ? '' : '/topic/'+topic.id\" routerLinkActive=\"active\" [class.disabled]=\"topic.status == 0 ? true : null\">\n                                <div [ngClass]=\"topic.image_id ? topic.image_id : 'cb0-img'\">\n                                    <div *ngIf=\"topic.status != 2\" class=\"topicButton\"  [ngClass]=\"topic.status == 1 ? 'greenout': 'redout'\" ></div>\n                                    <div *ngIf=\"topic.status == 2\" class=\"topicButton\"  [ngClass]=\"'yellowout'\" >\n                                        <div [ngStyle]=\"{'height.%' : topic.progress.percent}\" class=\"bottom_progress\" [ngClass]=\"'greenout'\"></div>\n                                    </div>\n                                </div>\n                            </a>\n                        </span>\n                        <div> {{topic.progress.done}} of {{topic.progress.total}} done</div>\n                        <div *ngIf=\"!topic.short_name\">{{topic.title}}</div>\n                        <div *ngIf=\"topic.short_name\">{{topic.short_name}}</div>\n                    </div>\n                    <div style=\"width:1%\"></div>\n                    <div style=\"clear:both\"><br /></div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n-->"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/home.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".level {\n  margin: 10px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  background-color: #f3f3f3; }\n\n.level-title, .unit-title {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.level-title {\n  font-weight: bold; }\n\n.unit {\n  margin: 10px;\n  width: 100%;\n  background-color: #f9f9f9; }\n\n.topics-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  -webkit-box-align: start;\n      -ms-flex-align: start;\n          align-items: flex-start; }\n\n.topic {\n  margin: 10px;\n  width: 120px;\n  padding: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n\n.topic-title, .topic-progress, .topic-picture {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  padding: 0;\n  margin: 0; }\n\n.topic-title, .topic-progress {\n  text-align: center; }\n"
 
 /***/ }),
 
@@ -140,7 +140,7 @@ var HomeComponent = (function () {
             moduleId: module.i,
             template: __webpack_require__("./src/app/_components/home/home.component.html"),
             providers: [__WEBPACK_IMPORTED_MODULE_1__services_index__["c" /* TopicService */]],
-            styles: [__webpack_require__("./src/app/_components/home/home.component.css")]
+            styles: [__webpack_require__("./src/app/_components/home/home.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_index__["c" /* TopicService */]])
     ], HomeComponent);
@@ -173,6 +173,20 @@ var HomeComponent = (function () {
 
 /***/ }),
 
+/***/ "./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2 mat-dialog-title>Incorrect :(</h2>\n<mat-dialog-content>\n    <div *ngIf=\"(answers.length == 1) && showAnswer\">\n        Correct answer is: {{answers[0].value}}\n    </div>\n    <div *ngIf=\"(answers.length != 1) && showAnswer\">\n        Correct answers are: \n        <ul>\n            <li *ngFor=\"let answer of answers; let answerIndex = 'index'\">\n                {{answer.value}}\n            </li>\n        </ul>\n    </div>\n    <div *ngIf=\"explanation!=''\">\n        {{explanation}}\n    </div>\n</mat-dialog-content>\n<mat-dialog-actions>\n    <button mat-button [mat-dialog-close]=\"false\" class='continue-button'>Continue</button>\n    <button mat-button [mat-dialog-close]=\"true\" class='error-button'>Report Error!</button>\n</mat-dialog-actions>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = "div {\n  min-height: 40px; }\n\n.continue-button {\n  background-color: #fef65b; }\n\n.error-button {\n  background-color: #ff4444; }\n"
+
+/***/ }),
+
 /***/ "./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -201,7 +215,6 @@ var BadDialogComponent = (function () {
         this.answers = data.data;
         this.explanation = data.explanation;
         this.showAnswer = data.showAnswers;
-        //this.answers[0]['value'] = "$$E=mc^2$$"; // test equation in LaTeX
         setTimeout(function () {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }, 50);
@@ -212,8 +225,8 @@ var BadDialogComponent = (function () {
     BadDialogComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'bad-dialog',
-            template: "<h2 mat-dialog-title>Incorrect :(</h2>\n        <mat-dialog-content>\n            <div *ngIf=\"(answers.length == 1) && showAnswer\">\n                Correct answer is: {{answers[0].value}}\n            </div>\n            <div *ngIf=\"(answers.length != 1) && showAnswer\">\n                Correct answers are: \n                <ul>\n                    <li *ngFor=\"let answer of answers; let answerIndex = index\">\n                        {{answer.value}}\n                    </li>\n                </ul>\n            </div>\n            <div *ngIf=\"explanation!=''\">\n                {{explanation}}\n            </div>\n        </mat-dialog-content>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: #fef65b\">Continue</button>\n            <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: #ff4444\">Report Error!</button>\n        </mat-dialog-actions>",
-            styles: ["\n        div { min-height: 40px; }\n    "]
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.scss")]
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialogRef */], Object])
@@ -222,6 +235,20 @@ var BadDialogComponent = (function () {
 }());
 
 
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2 mat-dialog-title>Correct!</h2>\n<mat-dialog-content></mat-dialog-content>\n<mat-dialog-actions>\n\t<button mat-button [mat-dialog-close]=\"true\" class='continue-button'>Continue</button>\n</mat-dialog-actions>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".continue-button {\n  background-color: #fef65b; }\n"
 
 /***/ }),
 
@@ -257,7 +284,8 @@ var GoodDialogComponent = (function () {
     GoodDialogComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'good-dialog',
-            template: "<h2 mat-dialog-title>Correct!</h2>\n        <mat-dialog-content></mat-dialog-content>\n        <mat-dialog-actions>\n          <button mat-button [mat-dialog-close]=\"true\" style=\"background-color: #fef65b\">Continue</button>\n        </mat-dialog-actions>"
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.scss")]
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialogRef */], Object])
@@ -292,17 +320,17 @@ var GoodDialogComponent = (function () {
 
 /***/ }),
 
-/***/ "./src/app/_components/home/topic/lesson/lesson.component.css":
-/***/ (function(module, exports) {
-
-module.exports = ".order-container {\n\tdisplay: -webkit-box;\n\tdisplay: -ms-flexbox;\n\tdisplay: flex;\n\t-webkit-box-align: center;\n\t    -ms-flex-align: center;\n\t        align-items: center;\n\t-webkit-box-pack: center;\n\t    -ms-flex-pack: center;\n\t        justify-content: center;\n\t-webkit-box-orient: vertical;\n\t-webkit-box-direction: normal;\n\t    -ms-flex-direction: column;\n\t        flex-direction: column;\n}\n\n.order-item {\n  background-color: rgba(17, 17, 17, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-width: 50px;\n  width: 80%;\n  line-height: 35px;\n  margin: 4px;\n  color: #fff;\n}\n"
-
-/***/ }),
-
 /***/ "./src/app/_components/home/topic/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" ></h2>\n        <question-with-chart *ngIf=\"is_chart\" [question]=\"question['question']\" >\n        </question-with-chart> \n        <!-- example for question-with-chart with custom styles:\n        <question-with-chart *ngIf=\"is_chart\" \n            [question]=\"question['question']\" \n            chartHeight=\"250\" \n            mainColor=\"#f7f7f7\" \n            selectedColor=\"#ff4444\" \n            strokeColor=\"#111\" \n            strokeWidth=\"1\">\n        </question-with-chart> -->\n        <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n            <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n        </div>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
+module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" ></h2>\n        <question-with-chart *ngIf=\"is_chart\" \n            [question]=\"question['question']\" \n            chartHeight=\"250\" >\n        </question-with-chart>\n        <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n            <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n        </div>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/lesson.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".order-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column; }\n\n.order-item {\n  background-color: rgba(17, 17, 17, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-width: 50px;\n  width: 80%;\n  line-height: 35px;\n  margin: 4px;\n  color: #fff; }\n"
 
 /***/ }),
 
@@ -379,7 +407,8 @@ var LessonComponent = (function () {
                     if (_this.question_num >= _this.lessonTree['questions'].length)
                         _this.question_num = _this.lessonTree['questions'].length;
                     _this.nextQuestion();
-                    _this.trackingService.startLesson(_this.lesson_id).subscribe(function (start_time) {
+                    _this.trackingService.startLesson(_this.lesson_id)
+                        .subscribe(function (start_time) {
                         _this.start_time = start_time;
                     });
                 }
@@ -549,7 +578,8 @@ var LessonComponent = (function () {
                         }
                         this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + "";
                     }
-                    if (this.question.answers[i].is_correct && this.question.answers[i].value != this.answers[i]) {
+                    if (this.question.answers[i].is_correct &&
+                        this.question.answers[i].value != this.answers[i]) {
                         return false;
                     }
                 }
@@ -578,7 +608,7 @@ var LessonComponent = (function () {
             moduleId: module.i,
             template: __webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.html"),
             providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]],
-            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.css")]
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */],
@@ -590,6 +620,20 @@ var LessonComponent = (function () {
 }());
 
 
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2 id=\"chart-container\" [innerHTML]=\"chart\"></h2>\n<label *ngIf=\"displayFraction\" class=\"center\">{{valueWhenMaxExists}}/{{chartMaxValue}}</label>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <mat-form-field *ngIf=\"chartControl == 1\" (change)=\"ngOnChanges()\">\n    <input matInput *ngIf=\"chartType != 4\" \n      [(ngModel)]=\"chartValue\" type=\"number\" step=\"0.01\" max=\"1\" min=\"0\"/>\n    <mat-progress-bar *ngIf=\"chartType != 4\"\n      value={{chartValue*100}} class='progress'>\n    </mat-progress-bar>\n    <input matInput *ngIf=\"chartType == 4\" \n      [(ngModel)]=\"chartValue\" type=\"number\" \n      [step]=\"chartStep\" [max]=\"chartEndValue\" [min]=\"chartStartValue\"/>\n    <mat-progress-bar *ngIf=\"chartType == 4\"\n      value={{chart4Value*100}} class='progress'>\n    </mat-progress-bar>\n  </mat-form-field>\n  <span *ngIf=\"chartControl == 2\">\n    <mat-slider *ngIf=\"chartType != 4\" \n      (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n      step=\"0.01\" max=\"1\" min=\"0\" color=\"primary\" class='slider-control'>\n    </mat-slider>\n    <mat-slider *ngIf=\"chartType == 4\" \n      (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n      [step]=\"chartStep\" [max]=\"chartEndValue\" [min]=\"chartStartValue\" \n      color=\"primary\" class='slider-control'>\n    </mat-slider>\n    <div class=\"value-label-container\">\n      <label *ngIf=\"chartType != 4\" >{{percentValue}}%</label>\n      <label *ngIf=\"chartType == 4\" >{{chartValue.toFixed(1)}}</label>\n    </div> \n  </span>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = "#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label-container label,\nmat-form-field, #controls > * {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n"
 
 /***/ }),
 
@@ -614,76 +658,112 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var QuestionWithChartComponent = (function () {
     function QuestionWithChartComponent(sanitizer) {
         this.sanitizer = sanitizer;
-        this.bubleRadius = 4;
+        this.mainColor = "#f7f7f7";
+        this.selectedColor = "#ff4444";
+        this.strokeColor = "#111";
+        this.strokeWidth = 1;
+        this.dotRadius = 4;
         this.chartType = 1;
+        this.chartControl = 0;
         this.chartValue = 0.50;
-        this.chartMaxValue = 100;
-        this.chartControl = 1;
+        this.chartMaxValue = 0;
+        this.chartStartValue = 0;
+        this.chartEndValue = 3;
+        this.chartStep = 0.5;
         this.initialized = false;
-        this.bubbles = [];
-        // set default styles if styles are not defined
+        this.displayFraction = false;
+        this.dots = [];
         if (!this.chartHeight)
             this.chartHeight = 250;
-        if (!this.mainColor)
-            this.mainColor = "#f7f7f7";
-        if (!this.selectedColor)
-            this.selectedColor = "#ff4444";
-        if (!this.strokeColor)
-            this.strokeColor = "#111";
-        if (!this.strokeWidth)
-            this.strokeWidth = 1;
     }
-    QuestionWithChartComponent.prototype.ngOnInit = function () {
-    };
     QuestionWithChartComponent.prototype.ngOnDestroy = function () {
-        this.destroyBubleChart();
+        this.destroyDotsChart();
     };
     QuestionWithChartComponent.prototype.ngOnChanges = function (changes) {
         if (this.oldQuestion != this.question) {
             this.oldQuestion = this.question;
             this.initialized = false;
         }
-        this.destroyBubleChart();
+        this.destroyDotsChart();
         this.buildChart();
+        this.valueWhenMaxExists = Math.round(this.chartValue * this.chartMaxValue);
+        this.percentValue = Math.round(this.chartValue * 100);
+        this.chart4Value = (this.chartValue - this.chartStartValue)
+            / (this.chartEndValue - this.chartStartValue);
+        // setup equation in LaTeX
+        setTimeout(function () {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }, 50);
     };
     // function to build charts
-    /**
-      - type 1 (A1):
-      %%chart{type:1; value:0.3; control: 1}%%
-
-      - type 2 (A4):
-      %%chart{type:2; value:0.3; control: 1}%%
-
-      - type 3 (A5):
-      %%chart{type:3; value:0.3; max: 10; control: 1}%%
-
-      value: percent fill (0-1)
-      max: max value
-    */
     QuestionWithChartComponent.prototype.buildChart = function () {
         var _this = this;
         if (!this.initialized) {
-            var chart = this.question.match(new RegExp(/[^{}]+(?=\}%%)/g));
+            var chart = this.question
+                .match(new RegExp(/[^{}]+(?=\}%%)/g));
             if (chart['0'].indexOf('type:') >= 0)
-                this.chartType =
-                    parseFloat(chart['0'].match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0'].replace('type:', ''));
+                this.chartType = parseFloat(chart['0']
+                    .match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
+                    .replace('type:', ''));
             if (chart['0'].indexOf('value:') >= 0)
-                this.chartValue =
-                    parseFloat(chart['0'].match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0'].replace('value:', ''));
+                this.chartValue = parseFloat(chart['0']
+                    .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
+                    .replace('value:', ''));
             if (chart['0'].indexOf('max:') >= 0) {
-                this.chartMaxValue =
-                    parseFloat(chart['0'].match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0'].replace('max:', ''));
+                this.chartMaxValue = parseFloat(chart['0']
+                    .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
+                    .replace('max:', ''));
             }
-            if (chart['0'].indexOf('value:') >= 0)
-                this.chartControl = parseFloat(chart['0'].match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
+            if (chart['0'].indexOf('start-value:') >= 0) {
+                this.chartStartValue = parseFloat(chart['0']
+                    .match(new RegExp(/start-value:([^;]*)(?=(;|$))/g))['0']
+                    .replace('start-value:', ''));
+            }
+            if (chart['0'].indexOf('end-value:') >= 0) {
+                this.chartEndValue = parseFloat(chart['0']
+                    .match(new RegExp(/end-value:([^;]*)(?=(;|$))/g))['0']
+                    .replace('end-value:', ''));
+            }
+            if (chart['0'].indexOf('step:') >= 0) {
+                this.chartStep = parseFloat(chart['0']
+                    .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
+                    .replace('step:', ''));
+            }
+            if (chart['0'].indexOf('main-color:') >= 0) {
+                this.mainColor = chart['0']
+                    .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
+                    .replace('main-color:', '');
+            }
+            if (chart['0'].indexOf('selected-color:') >= 0) {
+                this.selectedColor = chart['0']
+                    .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
+                    .replace('selected-color:', '');
+            }
+            if (chart['0'].indexOf('stroke-color:') >= 0) {
+                this.strokeColor = chart['0']
+                    .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
+                    .replace('stroke-color:', '');
+            }
+            if (chart['0'].indexOf('stroke-width:') >= 0) {
+                this.strokeWidth = chart['0']
+                    .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
+                    .replace('stroke-width:', '');
+            }
+            if (chart['0'].indexOf('control:') >= 0)
+                this.chartControl = parseFloat(chart['0']
+                    .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
                     .replace('control:', ''));
+            if (this.chartType == 4)
+                this.chartValue = this.chartStartValue;
             this.initialized = true;
         }
-        var chartHtml = this.question.replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
+        var chartHtml = this.question
+            .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
         switch (this.chartType) {
             default:
             case 1:
                 // Chart (type 1 - rectangle)
+                this.displayFraction = false;
                 chartHtml += '<svg style="height: '
                     + this.chartHeight + '; width:' + this.chartHeight + ';">';
                 chartHtml += '<rect id="rect2" style="height:'
@@ -691,7 +771,8 @@ var QuestionWithChartComponent = (function () {
                 chartHtml += ' fill: ' + this.mainColor + '; stroke: ' +
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
                 chartHtml += '></rect>';
-                chartHtml += '<rect id="rect1" style="y: ' + (1 - this.chartValue) * this.chartHeight + '; height:' +
+                chartHtml += '<rect id="rect1" style="y: ' +
+                    (1 - this.chartValue) * this.chartHeight + '; height:' +
                     this.chartValue * this.chartHeight + ' !important; width: 100%;';
                 chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' +
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
@@ -701,6 +782,7 @@ var QuestionWithChartComponent = (function () {
                 break;
             case 2:
                 // Chart (type 2 - circle)
+                this.displayFraction = false;
                 var radius = this.chartHeight / 2;
                 var angle = 2 * Math.PI * this.chartValue;
                 var x = radius + radius * Math.sin(angle);
@@ -738,6 +820,7 @@ var QuestionWithChartComponent = (function () {
                 break;
             case 3:
                 // Chart (type 3 - dots)
+                this.displayFraction = true;
                 var chartContainer_1 = document.getElementById('chart-container');
                 var canvas_1 = document.createElement("canvas");
                 requestAnimationFrame(function () {
@@ -748,33 +831,70 @@ var QuestionWithChartComponent = (function () {
                 canvas_1.style.width = chartContainer_1.style.width;
                 var ctx_1 = canvas_1.getContext("2d");
                 for (var i = 0; i < this.chartMaxValue; i++) {
-                    if (this.bubbles[i] == undefined) {
-                        this.bubbles[i] = {
-                            x: Math.random() * (canvas_1.width - this.bubleRadius * 2),
-                            y: Math.random() * (canvas_1.height - this.bubleRadius * 2),
-                            radius: this.bubleRadius
+                    if (this.dots[i] == undefined) {
+                        this.dots[i] = {
+                            x: Math.random() * (canvas_1.width - this.dotRadius * 2),
+                            y: Math.random() * (canvas_1.height - this.dotRadius * 2),
+                            radius: this.dotRadius
                         };
                     }
                 }
-                this.bubleChartRebuildFunctionId = setInterval(function () {
+                this.dotsChartRebuildFunctionId = setInterval(function () {
                     ctx_1.clearRect(0, 0, canvas_1.width, canvas_1.height);
-                    _this.drawBublesChart(_this.chartValue, _this.chartMaxValue, ctx_1, canvas_1);
+                    _this.drawDotsChart(_this.chartValue, _this.chartMaxValue, ctx_1, canvas_1);
                 }, 80);
+                break;
+            case 4:
+                // Chart (type 4 - slider)
+                this.displayFraction = false;
+                var circleDiameter = 2 * this.dotRadius;
+                var width = document.getElementById('chart-container').offsetWidth;
+                var indentation = circleDiameter + 5;
+                chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
+                chartHtml += '<line x1="' + indentation + '" y1="10" x2="'
+                    + (width - indentation) + '" y2="10" style="stroke:'
+                    + this.mainColor + '; stroke-width:'
+                    + this.strokeWidth + '" />';
+                width -= indentation * 2;
+                chartHtml += '<line x1="' + indentation + '" y1="10" x2="'
+                    + ((this.chartValue - this.chartStartValue) / (this.chartEndValue
+                        - this.chartStartValue) * width + indentation)
+                    + '" y2="10" style="stroke:'
+                    + this.selectedColor + '; stroke-width:'
+                    + this.strokeWidth + '" />';
+                for (var i = 0; i < (this.chartEndValue - this.chartStartValue); i += this.chartStep) {
+                    var position = (i * width
+                        / (this.chartEndValue - this.chartStartValue)) + indentation;
+                    chartHtml += '<text x="' + position
+                        + '" y="35" fill="' + this.strokeColor
+                        + '" font-size="16" text-anchor="middle">'
+                        + (this.chartStartValue + i).toFixed(1) + '</text>';
+                    chartHtml += '<circle cx="' + position + '" cy="10" r="'
+                        + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                }
+                chartHtml += '<text x="' + (width + indentation)
+                    + '" y="35" fill="' + this.strokeColor
+                    + '" font-size="16" text-anchor="middle">'
+                    + this.chartEndValue.toFixed(1) + '</text>';
+                chartHtml += '<circle cx="' + (width + indentation) + '" cy="10" r="'
+                    + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                chartHtml += '</svg>';
+                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
                 break;
         }
     };
-    // function to draw Bubles Chart
-    QuestionWithChartComponent.prototype.drawBublesChart = function (bublesPercent, maxBublesNum, ctx, canvas) {
-        var bublesNum = Math.round(maxBublesNum * bublesPercent);
-        for (var i = 0; i < bublesNum; i++) {
-            this.bubbles[i] = this.drawBuble(2, ctx, canvas, this.bubbles[i]);
+    // function to draw Dots Chart
+    QuestionWithChartComponent.prototype.drawDotsChart = function (dotsPercent, maxDotsNum, ctx, canvas) {
+        var dotsNum = Math.round(maxDotsNum * dotsPercent);
+        for (var i = 0; i < dotsNum; i++) {
+            this.dots[i] = this.drawDot(2, ctx, canvas, this.dots[i]);
         }
-        for (var i = bublesNum; i < maxBublesNum; i++) {
-            this.bubbles[i] = this.drawBuble(1, ctx, canvas, this.bubbles[i]);
+        for (var i = dotsNum; i < maxDotsNum; i++) {
+            this.dots[i] = this.drawDot(1, ctx, canvas, this.dots[i]);
         }
     };
-    // function to draw one Buble
-    QuestionWithChartComponent.prototype.drawBuble = function (type, ctx, canvas, buble) {
+    // function to draw one Dot
+    QuestionWithChartComponent.prototype.drawDot = function (type, ctx, canvas, dot) {
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = this.strokeWidth;
         if (type == 1) {
@@ -783,28 +903,28 @@ var QuestionWithChartComponent = (function () {
         if (type == 2) {
             ctx.fillStyle = this.selectedColor;
         }
-        buble.x += Math.random() * 2 - 1;
-        buble.y += Math.random() * 2 - 1;
-        // Check if buble goes beyond the field
-        var bubleDiameter = buble.radius * 2;
-        if (buble.x > canvas.width - bubleDiameter)
-            buble.x = canvas.width - bubleDiameter;
-        if (buble.x < bubleDiameter)
-            buble.x = bubleDiameter;
-        if (buble.y > canvas.height - bubleDiameter)
-            buble.y = canvas.height - bubleDiameter;
-        if (buble.y < bubleDiameter)
-            buble.y = bubleDiameter;
+        dot.x += Math.random() * 2 - 1;
+        dot.y += Math.random() * 2 - 1;
+        // Check if dot goes beyond the field
+        var dotDiameter = dot.radius * 2;
+        if (dot.x > canvas.width - dotDiameter)
+            dot.x = canvas.width - dotDiameter;
+        if (dot.x < dotDiameter)
+            dot.x = dotDiameter;
+        if (dot.y > canvas.height - dotDiameter)
+            dot.y = canvas.height - dotDiameter;
+        if (dot.y < dotDiameter)
+            dot.y = dotDiameter;
         ctx.beginPath();
-        ctx.arc(buble.x, buble.y, buble.radius, 0, Math.PI * 2, true);
+        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2, true);
         ctx.fill();
         ctx.stroke();
-        return buble;
+        return dot;
     };
-    // remove buble chart rebuild function if it exists
-    QuestionWithChartComponent.prototype.destroyBubleChart = function () {
-        if (this.bubleChartRebuildFunctionId)
-            clearInterval(this.bubleChartRebuildFunctionId);
+    // remove dot chart rebuild function if it exists
+    QuestionWithChartComponent.prototype.destroyDotsChart = function () {
+        if (this.dotsChartRebuildFunctionId)
+            clearInterval(this.dotsChartRebuildFunctionId);
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
@@ -812,29 +932,13 @@ var QuestionWithChartComponent = (function () {
     ], QuestionWithChartComponent.prototype, "question", void 0);
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-        __metadata("design:type", String)
-    ], QuestionWithChartComponent.prototype, "mainColor", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-        __metadata("design:type", String)
-    ], QuestionWithChartComponent.prototype, "selectedColor", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-        __metadata("design:type", String)
-    ], QuestionWithChartComponent.prototype, "strokeColor", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
         __metadata("design:type", Number)
     ], QuestionWithChartComponent.prototype, "chartHeight", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-        __metadata("design:type", Number)
-    ], QuestionWithChartComponent.prototype, "strokeWidth", void 0);
     QuestionWithChartComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'question-with-chart',
-            template: "\n      <h2 id=\"chart-container\" [innerHTML]=\"chart\"></h2>\n      <div id=\"controls\" >\n        <p>Value</p>\n        <mat-form-field *ngIf=\"chartControl == 1\" (change)=\"ngOnChanges()\">\n          <input matInput [(ngModel)]=\"chartValue\" \n            type=\"number\" step=\"0.01\" max=\"1\" min=\"0\"/>\n        </mat-form-field>\n        <mat-slider *ngIf=\"chartControl == 2\" (change)=\"ngOnChanges()\" color=\"primary\"\n        [(ngModel)]=\"chartValue\" step=\"0.01\" max=\"1\" min=\"0\" style=\"min-width: 250px;\"></mat-slider>\n        <p *ngIf=\"chartControl == 2\">{{chartValue.toFixed(2)}}</p>\n      </div>\n    ",
-            styles: ["\n        #chart-container{\n          display: flex;\n          align-items: center;\n          justify-content: center;\n          flex-direction: column;\n          margin: 0;\n          padding: 0;\n        }\n        #controls {\n          margin-top: 8px;\n          padding: 0;\n        }\n        #controls > * {\n          margin: 0;\n          padding: 0;\n        }\n    "],
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.scss")],
             changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["c" /* DomSanitizer */]])
@@ -843,6 +947,20 @@ var QuestionWithChartComponent = (function () {
 }());
 
 
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2 mat-dialog-title>Please specify reason</h2>\n<mat-dialog-content>\n    <mat-radio-group class=\"radio-group\" [(ngModel)]=\"selectedOption\">\n      <mat-radio-button class=\"radio-button\" *ngFor=\"let option of options; let optionIndex = index\" [value]=\"optionIndex\">\n        {{option}}\n      </mat-radio-button>\n    </mat-radio-group>\n</mat-dialog-content>\n<mat-form-field *ngIf=\"selectedOption == 3\">\n    <input matInput [(ngModel)]=\"custom\">\n</mat-form-field>\n<mat-dialog-actions>\n    <button mat-button [mat-dialog-close]=\"{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}\" class='send-button'>Send</button>\n    <button mat-button [mat-dialog-close]=\"false\" class='cancel-button'>Cancel</button>\n</mat-dialog-actions>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".send-button {\n  background-color: #31698a; }\n\n.cancel-button {\n  background-color: #6dc066; }\n"
 
 /***/ }),
 
@@ -887,7 +1005,8 @@ var ReportDialogComponent = (function () {
     ReportDialogComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'report-dialog',
-            template: "<h2 mat-dialog-title>Please specify reason</h2>\n        <mat-dialog-content>\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"selectedOption\">\n              <mat-radio-button class=\"radio-button\" *ngFor=\"let option of options; let optionIndex = index\" [value]=\"optionIndex\">\n                {{option}}\n              </mat-radio-button>\n            </mat-radio-group>\n        </mat-dialog-content>\n        <mat-form-field *ngIf=\"selectedOption == 3\">\n            <input matInput [(ngModel)]=\"custom\">\n        </mat-form-field>\n        <mat-dialog-actions>\n            <button mat-button [mat-dialog-close]=\"{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}\" style=\"background-color: #31698a\">Send</button>\n            <button mat-button [mat-dialog-close]=\"false\" style=\"background-color: #6dc066\">Cancel</button>\n        </mat-dialog-actions>"
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.scss")]
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialogRef */], Object])
@@ -902,7 +1021,14 @@ var ReportDialogComponent = (function () {
 /***/ "./src/app/_components/home/topic/topic.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <h2>{{topicTree.title}}</h2>\n    <div *ngIf=\"topicTree.lessons && topicTree.lessons.length\">\n        <div *ngFor=\"let lesson of topicTree.lessons; let levelIndex = index\" class=\"arrowRowContainer\">\n            <div class=\"arrowButtonContainer\" [ngClass]=\"lesson.status == 1 ? 'greenout': (lesson.status == 2) ? 'yellowout' : 'redout'\">\n                <a *ngIf=\"lesson.status == 1 || lesson.status == 2\" routerLink=\"/topic/{{topicTree.id}}/lesson/{{lesson.id}}\" routerLinkActive=\"active\">\n                    <div class=\"arrow\">\n                        <span>{{lesson.title}}</span>\n                    </div>\n                </a>\n                <div *ngIf=\"lesson.status == 0\" class=\"arrow\">\n                    <span>{{lesson.title}}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div *ngIf=\"(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id != 0\">\n        <h3>More lessons comming soon, please continue with next topic!</h3>\n    </div>\n    <div *ngIf=\"(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id == 0\">\n        <h3>More lessons comming soon!</h3>\n    </div>\n    <a\n        class=\"button-container\"\n        routerLink=\"/topic/{{topicTree.id}}/lesson/testout\"\n        routerLinkActive=\"active\"\n        *ngIf=\"topicTree.lessons && topicTree.lessons.length && !topicDone\">\n        <button\n            mat-raised-button\n            style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n            <mat-icon>update</mat-icon>\n            <span>Test out to finish topic</span>\n        </button>\n    </a>\n    <a\n        class=\"button-container\"\n        routerLink=\"/topic/{{topicTree.next_topic_id}}\"\n        routerLinkActive=\"active\"\n        *ngIf=\"(topicTree.lessons == undefined || !topicTree.lessons.length || topicDone) && topicTree.next_topic_id != 0\">\n        <button\n            mat-raised-button\n            style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n            <mat-icon>done all</mat-icon>\n            <span>Go to next topic</span>\n        </button>\n    </a>\n</div>"
+module.exports = "<a routerLink=\"/\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<div class=\"text-center\">\n    <h2>{{topicTree.title}}</h2>\n    <div *ngIf=\"topicTree.lessons && topicTree.lessons.length\">\n        <div *ngFor=\"let lesson of topicTree.lessons; let levelIndex = 'index'\" class=\"arrowRowContainer\">\n            <div class=\"arrowButtonContainer\" [ngClass]=\"lesson.status == 1 ? 'greenout': (lesson.status == 2) ? 'yellowout' : 'redout'\">\n                <a *ngIf=\"lesson.status == 1 || lesson.status == 2\" routerLink=\"/topic/{{topicTree.id}}/lesson/{{lesson.id}}\" routerLinkActive=\"active\">\n                    <div class=\"arrow\">\n                        <span>{{lesson.title}}</span>\n                    </div>\n                </a>\n                <div *ngIf=\"lesson.status == 0\" class=\"arrow\">\n                    <span>{{lesson.title}}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div *ngIf=\"(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id != 0\">\n        <h3>More lessons comming soon, please continue with next topic!</h3>\n    </div>\n    <div *ngIf=\"(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id == 0\">\n        <h3>More lessons comming soon!</h3>\n    </div>\n    <a\n        class=\"button-container\"\n        routerLink=\"/topic/{{topicTree.id}}/lesson/testout\"\n        routerLinkActive=\"active\"\n        *ngIf=\"topicTree.lessons && topicTree.lessons.length && !topicDone\">\n        <button mat-raised-button class=\"testout-button\">\n            <mat-icon>update</mat-icon>\n            <span>Test out to finish topic</span>\n        </button>\n    </a>\n    <a\n        class=\"button-container\"\n        routerLink=\"/topic/{{topicTree.next_topic_id}}\"\n        routerLinkActive=\"active\"\n        *ngIf=\"(topicTree.lessons == undefined || !topicTree.lessons.length || topicDone) && topicTree.next_topic_id != 0\">\n        <button mat-raised-button class=\"next-topic-button\">\n            <mat-icon>done all</mat-icon>\n            <span>Go to next topic</span>\n        </button>\n    </a>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/topic.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".testout-button {\n  margin: 16px;\n  color: #000;\n  background-color: #f5f5f5; }\n\n.next-topic-button {\n  margin: 16px;\n  color: #000;\n  background-color: #f5f5f5; }\n"
 
 /***/ }),
 
@@ -951,6 +1077,7 @@ var TopicComponent = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             moduleId: module.i,
             template: __webpack_require__("./src/app/_components/home/topic/topic.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/topic.component.scss")],
             providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */],
@@ -963,17 +1090,17 @@ var TopicComponent = (function () {
 
 /***/ }),
 
-/***/ "./src/app/_components/profile/profile.component.css":
-/***/ (function(module, exports) {
-
-module.exports = ".profile{\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  padding: 0;\n  margin: 0;\n}\n\nmat-card{\n  margin: 10px;\n  padding: 16px;\n  min-width: 200px;\n  max-width: 600px;\n}\n\nspan.card-title {\n  display: table;\n  white-space: nowrap;\n  padding: 8px;\n}\n\nspan.card-title:before, span.card-title:after {\n  border-top: 1px solid #616161;\n  content: '';\n  display: table-cell;\n  position: relative;\n  top: 0.5em;\n  width: 45%;\n}\n\nspan.card-title:before {\n  right: 1.5%;\n}\n\nspan.card-title:after {\n  left: 1.5%; \n}\n\nmat-input-container {\n   width: 100%;\n }\n\n.button-container{\n  padding: 0; \n  margin: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;  \n  -webkit-box-align: center;  \n      -ms-flex-align: center;  \n          align-items: center; \n  -webkit-box-pack: center; \n      -ms-flex-pack: center; \n          justify-content: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;  \n}\n\nbutton {\n\tcolor: #fff;\n\tbackground-color: #337AB7;\n}"
-
-/***/ }),
-
 /***/ "./src/app/_components/profile/profile.component.html":
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"profile\">\n  <mat-card id=\"profile-container\" class=\"grey-theme\">\n  \t<span class=\"card-title\">Change Profile Info:</span>\n    <form #changeProfile=\"ngForm\" (ngSubmit)=\"onChangeProfile()\">\n  \t\t<mat-input-container>\n        <input matInput\n          name=\"username\"\n          pattern=\"[a-zA-Z0-9]{2,255}\"\n          placeholder=\"Name\"\n          [(ngModel)]=\"user.username\" />\n        </mat-input-container>\n        <mat-input-container>\n          <input matInput\n            name=\"email\"\n            pattern=\"^\\S+@\\S+$\"\n            placeholder=\"Email\"\n            [(ngModel)]=\"user.email\" />\n        </mat-input-container> \n        <mat-input-container>\n          <label>Please set the number of consecutive correct answers  which will signify lesson completion for you. You can come back to profile to change the setting if you wish. (put 0 to answer all questions)</label>\n          <input matInput\n            name=\"question_num\"\n            pattern=\"[0-9]{1,2}\"\n            [(ngModel)]=\"user.questionNum\" />\n        </mat-input-container> \n        <div class=\"button-container\">\n          <button\n            mat-raised-button\n            type=\"submit\">\n            <mat-icon>update</mat-icon>\n            <span>Update</span>\n          </button>\n      \t</div>\n  \t</form>\n  </mat-card>\n\n  <mat-card class=\"grey-theme\">\n    <span class=\"card-title\">Change Password:</span>\n    <form #changePassword=\"ngForm\" (ngSubmit)=\"onChangePassword(newPassword.value, confirmedPassword.value)\">\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"New Password\"\n          #newPassword />\n      </mat-input-container>\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"Confirm Password\"\n          #confirmedPassword />\n      </mat-input-container>\n      <div class=\"alert alert-danger\" *ngIf=\"!passwordsMatch\">\n         <mat-icon>warning</mat-icon>\n         {{warningMessage}}\n      </div>\n      <div class=\"button-container\" >\n        <button id=\"change-password-button\"\n          mat-raised-button\n          type=\"submit\">\n          <mat-icon>update</mat-icon>\n          <span>Change Password</span>\n        </button>\n      </div>\n    </form>\n  </mat-card>\n\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/profile/profile.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".profile {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  padding: 0;\n  margin: 0; }\n\nmat-card {\n  margin: 10px;\n  padding: 16px;\n  min-width: 200px;\n  max-width: 600px; }\n\nspan.card-title {\n  display: table;\n  white-space: nowrap;\n  padding: 8px; }\n\nspan.card-title:before, span.card-title:after {\n  border-top: 1px solid #616161;\n  content: '';\n  display: table-cell;\n  position: relative;\n  top: 0.5em;\n  width: 45%; }\n\nspan.card-title:before {\n  right: 1.5%; }\n\nspan.card-title:after {\n  left: 1.5%; }\n\nmat-input-container {\n  width: 100%; }\n\n.button-container {\n  padding: 0;\n  margin: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n\nbutton {\n  color: #fff;\n  background-color: #337AB7; }\n"
 
 /***/ }),
 
@@ -1010,7 +1137,6 @@ var ProfileComponent = (function () {
         var _this = this;
         this.userService.getProfile()
             .subscribe(function (res) {
-            //console.log(JSON.stringify(res));
             _this.user.username = res['name'];
             _this.user.email = res['email'];
             _this.user.questionNum = res['question_num'];
@@ -1021,7 +1147,6 @@ var ProfileComponent = (function () {
         var _this = this;
         this.userService.changeProfile(this.user)
             .subscribe(function (res) {
-            //console.log('Update Result: ' + res);
             localStorage.setItem('question_num', "" + _this.user.questionNum);
         });
     };
@@ -1041,20 +1166,15 @@ var ProfileComponent = (function () {
             this.passwordsMatch = true;
             this.userService.changePassword(newPassword, confirmedPassword)
                 .subscribe(function (res) {
-                //console.log('Change Password Result: ' + res);
-                //console.log("Old Token: " + JSON.parse(localStorage.getItem('currentUser')).token);
                 _this.authenticationService.login(_this.user.email, newPassword);
-                //.subscribe(() => console.log("New Token: " + JSON.parse(localStorage.getItem('currentUser')).token));
-            }, function (error) {
-                // error
-            });
+            }, function (error) { console.log(error); });
         }
     };
     ProfileComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-profle',
             template: __webpack_require__("./src/app/_components/profile/profile.component.html"),
-            styles: [__webpack_require__("./src/app/_components/profile/profile.component.css")],
+            styles: [__webpack_require__("./src/app/_components/profile/profile.component.scss")],
             providers: [__WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */]]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */],
@@ -1093,6 +1213,13 @@ var ProfileComponent = (function () {
 /***/ (function(module, exports) {
 
 module.exports = "<a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n<div class=\"col-md-6 col-md-offset-3\">\n    <h2>Login</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && login()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Email</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Login</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n            <div class=\"pull-right\">\n                <a routerLink=\"/register\" >Register account</a>\n            </div>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n    </form>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/login/login.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
 
 /***/ }),
 
@@ -1145,7 +1272,8 @@ var LoginComponent = (function () {
     LoginComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             moduleId: module.i,
-            template: __webpack_require__("./src/app/_components/welcome/login/login.component.html")
+            template: __webpack_require__("./src/app/_components/welcome/login/login.component.html"),
+            styles: [__webpack_require__("./src/app/_components/welcome/login/login.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_2__services_index__["a" /* AuthenticationService */]])
@@ -1172,6 +1300,13 @@ var LoginComponent = (function () {
 /***/ (function(module, exports) {
 
 module.exports = "<a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n<div class=\"col-md-6 col-md-offset-3\">\n    <h2>Register</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && password.value == repassword.value && register()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Username</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"email\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': (f.submitted && !repassword.valid) || (f.submitted && password.value != repassword.value) }\">\n            <label for=\"repassword\">Password Confirm</label>\n            <input type=\"password\" class=\"form-control\" name=\"repassword\" [(ngModel)]=\"model.repassword\" #repassword=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !repassword.valid\" class=\"help-block\">Password Confirm is required</div>\n            <div *ngIf=\"f.submitted && repassword.valid && password.value != repassword.value\" class=\"help-block\">Password Confirm is wrong</div>\n        </div>\n        <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Register</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n    </form>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/register/register.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
 
 /***/ }),
 
@@ -1234,7 +1369,8 @@ var RegisterComponent = (function () {
     RegisterComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             moduleId: module.i,
-            template: __webpack_require__("./src/app/_components/welcome/register/register.component.html")
+            template: __webpack_require__("./src/app/_components/welcome/register/register.component.html"),
+            styles: [__webpack_require__("./src/app/_components/welcome/register/register.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_2__services_index__["a" /* AuthenticationService */]])
@@ -1276,17 +1412,6 @@ var TryComponent = (function () {
         this.authenticationService.logout();
     };
     TryComponent.prototype.onClick = function () {
-        /* https://stackoverflow.com/questions/42538280/angular2-how-to-use-on-the-frontend-crypto-pbkdf2sync-function-from-node-js
-        let crypto;
-        try {
-          crypto = require('crypto');
-        } catch (err) {
-          console.log('crypto support is disabled!');
-        }
-        let id = crypto.randomBytes(20, (err, buf) => {
-          if (err) throw err;
-        }).toString('hex');
-        */
         var _this = this;
         var id = this.randomString();
         var email = id + '@somemail.com';
@@ -1333,6 +1458,13 @@ var TryComponent = (function () {
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"col-md-6 col-md-offset-3\">\n    <h2 class=\"center\">Welcome!</h2>\n    <div class=\"pull-right\">\n        <a routerLink=\"/register\" class=\"btn btn-warning width150\">Register account</a>\n    </div>\n    <div>\n        <a routerLink=\"/login\" class=\"btn btn-info width150\">Login</a>\n    </div>\n    <br />\n    <div class=\"center\">\n        <app-try class=\"btn btn-success\"></app-try>\n    </div>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/welcome.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n"
 
 /***/ }),
 
@@ -1385,7 +1517,8 @@ var WelcomeComponent = (function () {
     WelcomeComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             moduleId: module.i,
-            template: __webpack_require__("./src/app/_components/welcome/welcome.component.html")
+            template: __webpack_require__("./src/app/_components/welcome/welcome.component.html"),
+            styles: [__webpack_require__("./src/app/_components/welcome/welcome.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_2__services_index__["a" /* AuthenticationService */]])
@@ -1503,14 +1636,16 @@ var AuthenticationService = (function () {
         return this.http.post(this.apiUrl + '/authenticate', request, options)
             .map(function (response) {
             // login successful if there's a jwt token in the response
-            var token = response.json() && response.json().message && response.json().message.token;
+            var token = response.json() && response.json().message &&
+                response.json().message.token;
             if (token) {
                 // set token property
                 _this.token = token;
                 // store username and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('currentUser', JSON.stringify({ username: username, token: token }));
                 var question_num = 5;
-                if (response.json().message && response.json().message.question_num != undefined) {
+                if (response.json().message && response.json()
+                    .message.question_num != undefined) {
                     question_num = response.json().message.question_num;
                 }
                 localStorage.setItem('question_num', question_num + "");
@@ -1530,7 +1665,8 @@ var AuthenticationService = (function () {
         return this.http.post(this.apiUrl + '/register', request, options)
             .map(function (response) {
             // login successful if there's a jwt token in the response
-            var token = response.json() && response.json().message && response.json().message.token;
+            var token = response.json() && response.json()
+                .message && response.json().message.token;
             return response.json();
         });
     };
@@ -1550,31 +1686,11 @@ var AuthenticationService = (function () {
 
 /***/ }),
 
-/***/ "./src/app/_services/index.ts":
+/***/ "./src/app/_services/http.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__authentication_service__ = __webpack_require__("./src/app/_services/authentication.service.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__authentication_service__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__server_service__ = __webpack_require__("./src/app/_services/server.service.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__server_service__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__topic_service__ = __webpack_require__("./src/app/_services/topic.service.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__topic_service__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tracking_service__ = __webpack_require__("./src/app/_services/tracking.service.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_3__tracking_service__["a"]; });
-
-
-
-
-
-
-/***/ }),
-
-/***/ "./src/app/_services/server.service.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ServerService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HttpService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
@@ -1598,19 +1714,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ServerService = (function () {
-    function ServerService(http, router, authenticationService) {
+var HttpService = (function () {
+    function HttpService(http, router, authenticationService) {
         this.http = http;
         this.router = router;
         this.authenticationService = authenticationService;
         this.apiUrl = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].apiUrl;
     }
-    ServerService.prototype.post = function (url, body, auth) {
+    HttpService.prototype.post = function (url, body, auth) {
         var _this = this;
         if (auth === void 0) { auth = true; }
         if (auth) {
             // add authorization header with jwt token
-            this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Authorization': 'Bearer ' + this.authenticationService.token, 'Content-Type': 'application/json' });
+            this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Authorization': 'Bearer '
+                    + this.authenticationService.token, 'Content-Type': 'application/json' });
         }
         else {
             // add authorization header with jwt token
@@ -1630,12 +1747,13 @@ var ServerService = (function () {
         });
         ;
     };
-    ServerService.prototype.get = function (url, auth) {
+    HttpService.prototype.get = function (url, auth) {
         var _this = this;
         if (auth === void 0) { auth = true; }
         if (auth) {
             // add authorization header with jwt token
-            this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Authorization': 'Bearer ' + this.authenticationService.token, 'Content-Type': 'application/json' });
+            this.headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Authorization': 'Bearer '
+                    + this.authenticationService.token, 'Content-Type': 'application/json' });
         }
         else {
             // add authorization header with jwt token
@@ -1654,14 +1772,34 @@ var ServerService = (function () {
             return response.json().message;
         });
     };
-    ServerService = __decorate([
+    HttpService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */],
             __WEBPACK_IMPORTED_MODULE_5__angular_router__["c" /* Router */],
             __WEBPACK_IMPORTED_MODULE_6__authentication_service__["a" /* AuthenticationService */]])
-    ], ServerService);
-    return ServerService;
+    ], HttpService);
+    return HttpService;
 }());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_services/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__authentication_service__ = __webpack_require__("./src/app/_services/authentication.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__authentication_service__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_service__ = __webpack_require__("./src/app/_services/http.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__http_service__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__topic_service__ = __webpack_require__("./src/app/_services/topic.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__topic_service__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tracking_service__ = __webpack_require__("./src/app/_services/tracking.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_3__tracking_service__["a"]; });
+
+
+
 
 
 
@@ -1674,7 +1812,7 @@ var ServerService = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TopicService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__server_service__ = __webpack_require__("./src/app/_services/server.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__http_service__ = __webpack_require__("./src/app/_services/http.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1688,40 +1826,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var TopicService = (function () {
-    function TopicService(serverService) {
-        this.serverService = serverService;
+    function TopicService(http) {
+        this.http = http;
     }
     TopicService.prototype.getTopics = function () {
         // get topic from api
-        return this.serverService.get('/topic')
+        return this.http.get('/topic')
             .map(function (response) { return response; });
     };
     TopicService.prototype.getTopic = function (id) {
         // get topic from api
-        return this.serverService.get('/topic/' + id)
+        return this.http.get('/topic/' + id)
             .map(function (response) { return response; });
     };
     TopicService.prototype.getLesson = function (topic_id, lesson_id) {
         // get lesson from api
         if (lesson_id == -1) {
-            return this.serverService.get('/topic/' + topic_id + '/testout')
+            return this.http.get('/topic/' + topic_id + '/testout')
                 .map(function (response) { return response; });
         }
         else {
-            return this.serverService.get('/topic/' + topic_id + '/lesson/' + lesson_id)
+            return this.http.get('/topic/' + topic_id + '/lesson/' + lesson_id)
                 .map(function (response) { return response; });
         }
     };
     TopicService.prototype.reportError = function (question_id, answers, option, custom) {
         // notify api about question error
-        var request = JSON.stringify({ answers: answers, options: option, comment: custom });
+        var request = JSON.stringify({ answers: answers,
+            options: option, comment: custom });
         console.log(request);
-        return this.serverService.post('/report_error/' + question_id, request)
+        return this.http.post('/report_error/' + question_id, request)
             .map(function (response) { return response; });
     };
     TopicService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__server_service__["a" /* ServerService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__http_service__["a" /* HttpService */]])
     ], TopicService);
     return TopicService;
 }());
@@ -1737,7 +1876,7 @@ var TopicService = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TrackingService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__server_service__ = __webpack_require__("./src/app/_services/server.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__http_service__ = __webpack_require__("./src/app/_services/http.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1751,36 +1890,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var TrackingService = (function () {
-    function TrackingService(serverService) {
-        this.serverService = serverService;
+    function TrackingService(http) {
+        this.http = http;
     }
     TrackingService.prototype.startLesson = function (lesson_id) {
         // notify api about lesson start
         if (lesson_id == -1) {
-            // todo: change this request
-            return this.serverService.post('/lesson/116/start', '')
+            /** TODO: change this HARDCODED value to testoutstart! */
+            return this.http.post('/', '')
                 .map(function (response) { return response; });
         }
         else {
-            return this.serverService.post('/lesson/' + lesson_id + '/start', '')
+            return this.http.post('/lesson/' + lesson_id + '/start', '')
                 .map(function (response) { return response; });
         }
     };
     TrackingService.prototype.doneLesson = function (topic_id, lesson_id, start_datetime, weak_questions) {
         // notify api about lesson done
-        var request = JSON.stringify({ start_datetime: start_datetime, weak_questions: weak_questions });
+        var request = JSON.stringify({ start_datetime: start_datetime,
+            weak_questions: weak_questions });
         if (lesson_id == -1) {
-            return this.serverService.post('/topic/' + topic_id + '/testoutdone', request)
+            return this.http.post('/topic/' + topic_id + '/testoutdone', request)
                 .map(function (response) { return response; });
         }
         else {
-            return this.serverService.post('/lesson/' + lesson_id + '/done', request)
+            return this.http.post('/lesson/' + lesson_id + '/done', request)
                 .map(function (response) { return response; });
         }
     };
     TrackingService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__server_service__["a" /* ServerService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__http_service__["a" /* HttpService */]])
     ], TrackingService);
     return TrackingService;
 }());
@@ -1796,7 +1936,7 @@ var TrackingService = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__server_service__ = __webpack_require__("./src/app/_services/server.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__http_service__ = __webpack_require__("./src/app/_services/http.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1810,11 +1950,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var UserService = (function () {
-    function UserService(serverService) {
-        this.serverService = serverService;
+    function UserService(http) {
+        this.http = http;
     }
     UserService.prototype.getProfile = function () {
-        return this.serverService.get('/profile')
+        return this.http.get('/profile')
             .map(function (res) { return res; })
             .catch(function (error) {
             throw Error(error);
@@ -1826,7 +1966,7 @@ var UserService = (function () {
             email: user.email,
             question_num: user.questionNum
         });
-        return this.serverService.post('/profile', request)
+        return this.http.post('/profile', request)
             .map(function (res) { })
             .catch(function (error) {
             console.log(error);
@@ -1838,10 +1978,8 @@ var UserService = (function () {
             password: newPassword,
             confirm_password: confirmedPassword
         });
-        return this.serverService.post('/profile', request)
-            .map(function (res) {
-            //console.log(res); 
-        })
+        return this.http.post('/profile', request)
+            .map(function (res) { })
             .catch(function (error) {
             console.log(error);
             throw Error(error);
@@ -1849,7 +1987,7 @@ var UserService = (function () {
     };
     UserService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__server_service__["a" /* ServerService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__http_service__["a" /* HttpService */]])
     ], UserService);
     return UserService;
 }());
@@ -1963,7 +2101,7 @@ var AppModule = (function () {
             providers: [
                 __WEBPACK_IMPORTED_MODULE_10__guards_index__["a" /* AuthGuard */],
                 __WEBPACK_IMPORTED_MODULE_11__services_index__["a" /* AuthenticationService */],
-                __WEBPACK_IMPORTED_MODULE_11__services_index__["b" /* ServerService */],
+                __WEBPACK_IMPORTED_MODULE_11__services_index__["b" /* HttpService */],
                 // providers used to create fake backend
                 //fakeBackendProvider,
                 //MockBackend,
@@ -2006,10 +2144,11 @@ var appRoutes = [
     { path: 'welcome', component: __WEBPACK_IMPORTED_MODULE_1__components_welcome_index__["a" /* WelcomeComponent */] },
     { path: 'login', component: __WEBPACK_IMPORTED_MODULE_2__components_welcome_login_index__["a" /* LoginComponent */] },
     { path: 'register', component: __WEBPACK_IMPORTED_MODULE_3__components_welcome_register_index__["a" /* RegisterComponent */] },
-    { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_8__components_profile_profile_component__["a" /* ProfileComponent */] },
+    { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_8__components_profile_profile_component__["a" /* ProfileComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: '', component: __WEBPACK_IMPORTED_MODULE_4__components_home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_5__components_home_topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
-    { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__["c" /* LessonComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
+    { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__["c" /* LessonComponent */],
+        canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     // otherwise redirect to welcome
     { path: '**', redirectTo: 'welcome' }
 ];

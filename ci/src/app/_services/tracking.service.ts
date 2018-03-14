@@ -15,7 +15,7 @@ export class TrackingService {
         // notify api about lesson start
         if(lesson_id == -1) {
           /** TODO: change this HARDCODED value to testoutstart! */
-          return this.http.post('/lesson/116/start', '')
+          return this.http.post('/', '')
           //return this.http.post('/testoutstart', '')
             .map((response: Response) => response); 
         }
