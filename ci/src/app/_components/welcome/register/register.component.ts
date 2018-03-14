@@ -5,7 +5,8 @@ import { AuthenticationService } from '../../../_services/index';
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'register.component.html'
+    templateUrl: 'register.component.html',
+    styleUrls: ['register.component.scss']
 })
 
 export class RegisterComponent implements OnInit {
@@ -24,10 +25,12 @@ export class RegisterComponent implements OnInit {
 
     register() {
         this.loading = true;
-        this.authenticationService.register(this.model.username, this.model.email, this.model.password)
+        this.authenticationService.register(this.model.username, 
+            this.model.email, this.model.password)
             .subscribe(result => {
                 if (result['success'] === true) {
-                   this.authenticationService.login( this.model.email, this.model.password).subscribe(result => {
+                   this.authenticationService.login( this.model.email, 
+                       this.model.password).subscribe(result => {
                         if (result == true) {
                             this.router.navigate(['/']);
                         }

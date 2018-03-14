@@ -5,6 +5,7 @@ import { TopicService } from '../../../_services/index';
 @Component({
     moduleId: module.id,
     templateUrl: 'topic.component.html',
+    styleUrls: ['topic.component.scss'],
     providers: [TopicService]
 })
 

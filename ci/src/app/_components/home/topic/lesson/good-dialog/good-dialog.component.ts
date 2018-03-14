@@ -3,11 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
     selector: 'good-dialog',
-    template: `<h2 mat-dialog-title>Correct!</h2>
-        <mat-dialog-content></mat-dialog-content>
-        <mat-dialog-actions>
-          <button mat-button [mat-dialog-close]="true" style="background-color: #fef65b">Continue</button>
-        </mat-dialog-actions>`
+    templateUrl: 'good-dialog.component.html',
+    styleUrls: ['good-dialog.component.scss']
 })
 export class GoodDialogComponent {
     constructor(

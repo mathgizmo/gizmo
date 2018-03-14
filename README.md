@@ -1,17 +1,17 @@
 # Math Gizmo
 
-### What is this repository for? ###
+### What is this repository for?
 
 We try to create app that allow people to learn math.
 It consist of 3 main modules admin, API, and hybrid app
 
-### How do I get set up? ###
+### How do I get set up?
 
 #### Server
 - For admin part we use [Composer](https://getcomposer.org/), so go to laravel folder and run `composer install`
 - Also change copy `config/global/dbconf.php` file into `config/local` folder and set you db credential there. Do not save real credential in global folders. 
 - To update your DB to current version go to laravel folder and run `php artisan migrate`
-- Make sure that apache has access to write into `laravel/bootstrap/cache` and `laravel/storage folders`. 
+- Make sure that apache has access to write into `laravel/bootstrap/cache` and `laravel/storage` folders. 
 - Run `php artisan key:generate` to generate app key. If you get eny error on key generation, create file `.env` and put `APP_KEY=` in it, then rerun command. Check .env file if key actually been generated.
 - Run `php artisan jwt:generate` to generate secret for API.
 
@@ -24,7 +24,7 @@ v6.11.3`
 - Globally install [Angular CLI](https://angular.io/guide/quickstart) using command `npm install -g @angular/cli@latest`
 - Run `npm install` into `ci` folder to install required npm modules
 - Add URL to your local server API to `/ci/src/environments/environment.ts` 
-- Run `npm start` or `ng serve --open --base-href /ci/` for a dev server. The app will automatically reload if you change any of the source files.
+- Run `npm start` or `ng serve  --open --base-href /gizmo/` for a dev server. The app will automatically reload if you change any of the source files.
 - Use `ng build --prod` into `ci` folder to build angular app and see your changes under apache (production build uses variables from `environment.prod.ts`, so set your globals there)
 - If you want to generate a new component run `ng generate component component-name`. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 

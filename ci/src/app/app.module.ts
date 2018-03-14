@@ -14,7 +14,8 @@ import { SortablejsModule } from 'angular-sortablejs';
 
 import { routing } from './app.routing';
 import { AuthGuard } from './_guards/index';
-import { AuthenticationService, ServerService } from './_services/index';
+
+import { AuthenticationService, HttpService } from './_services/index';
 
 import { AppComponent } from './_components/app.component';
 import { WelcomeComponent } from './_components/welcome/index';
@@ -24,7 +25,8 @@ import { TryComponent } from './_components/welcome/try/try.component';
 import { HomeComponent } from './_components/home/index';
 import { TopicComponent } from './_components/home/topic/index';
 import { LessonComponent, GoodDialogComponent, BadDialogComponent, 
-    ReportDialogComponent, QuestionWithChartComponent } from './_components/home/topic/lesson/index';
+    ReportDialogComponent, QuestionWithChartComponent } 
+    from './_components/home/topic/lesson/index';
 import { ProfileComponent } from './_components/profile/profile.component';
 
 @NgModule({
@@ -72,7 +74,7 @@ import { ProfileComponent } from './_components/profile/profile.component';
     providers: [
         AuthGuard,
         AuthenticationService,
-        ServerService,
+        HttpService,
 
         // providers used to create fake backend
         //fakeBackendProvider,

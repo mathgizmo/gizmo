@@ -4,21 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
     selector: 'report-dialog',
-    template: `<h2 mat-dialog-title>Please specify reason</h2>
-        <mat-dialog-content>
-            <mat-radio-group class="radio-group" [(ngModel)]="selectedOption">
-              <mat-radio-button class="radio-button" *ngFor="let option of options; let optionIndex = index" [value]="optionIndex">
-                {{option}}
-              </mat-radio-button>
-            </mat-radio-group>
-        </mat-dialog-content>
-        <mat-form-field *ngIf="selectedOption == 3">
-            <input matInput [(ngModel)]="custom">
-        </mat-form-field>
-        <mat-dialog-actions>
-            <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" style="background-color: #31698a">Send</button>
-            <button mat-button [mat-dialog-close]="false" style="background-color: #6dc066">Cancel</button>
-        </mat-dialog-actions>`
+    templateUrl: 'report-dialog.component.html',
+    styleUrls: ['report-dialog.component.scss']
 })
 export class ReportDialogComponent {
     custom: string;

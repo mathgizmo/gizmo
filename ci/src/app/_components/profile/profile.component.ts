@@ -6,7 +6,7 @@ import { AuthenticationService } from '../../_services/authentication.service';
 @Component({
   selector: 'app-profle',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
+  styleUrls: ['./profile.component.scss'],
   providers: [UserService]
 })
 export class ProfileComponent implements OnInit {
@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.userService.getProfile()
       .subscribe(res => {
-        //console.log(JSON.stringify(res));
         this.user.username = res['name'];
         this.user.email = res['email'];
         this.user.questionNum = res['question_num'];
@@ -36,8 +35,7 @@ export class ProfileComponent implements OnInit {
   onChangeProfile() {
     this.userService.changeProfile(this.user)
         .subscribe( res => {
-            //console.log('Update Result: ' + res);
-            localStorage.setItem('question_num', ""+this.user.questionNum);
+          localStorage.setItem('question_num', ""+this.user.questionNum);
         });
   }
 
@@ -54,13 +52,8 @@ export class ProfileComponent implements OnInit {
       this.passwordsMatch = true;
       this.userService.changePassword(newPassword, confirmedPassword)
         .subscribe(res => {
-        //console.log('Change Password Result: ' + res);
-        //console.log("Old Token: " + JSON.parse(localStorage.getItem('currentUser')).token);
         this.authenticationService.login(this.user.email, newPassword);
-          //.subscribe(() => console.log("New Token: " + JSON.parse(localStorage.getItem('currentUser')).token));
-      }, error => {
-        // error
-      });
+      }, error => { console.log(error); });
     }
   }
 

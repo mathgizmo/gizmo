@@ -13,10 +13,11 @@ const appRoutes: Routes = [
     { path: 'welcome', component: WelcomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'profile', component: ProfileComponent },
+    { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard] },
-    { path: 'topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard] },
+    { path: 'topic/:topic_id/lesson/:lesson_id', component: LessonComponent,
+    	canActivate: [AuthGuard] },
 
     // otherwise redirect to welcome
     { path: '**', redirectTo: 'welcome' }

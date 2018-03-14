@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Incorrect :(</h2>
+<mat-dialog-content>
+    <div *ngIf="(answers.length == 1) && showAnswer">
+        Correct answer is: {{answers[0].value}}
+    </div>
+    <div *ngIf="(answers.length != 1) && showAnswer">
+        Correct answers are: 
+        <ul>
+            <li *ngFor="let answer of answers; let answerIndex = 'index'">
+                {{answer.value}}
+            </li>
+        </ul>
+    </div>
+    <div *ngIf="explanation!=''">
+        {{explanation}}
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="false" class='continue-button'>Continue</button>
+    <button mat-button [mat-dialog-close]="true" class='error-button'>Report Error!</button>
+</mat-dialog-actions>

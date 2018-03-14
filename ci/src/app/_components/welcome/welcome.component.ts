@@ -5,7 +5,8 @@ import { AuthenticationService } from '../../_services/index';
 
 @Component({
     moduleId: module.id,
-    templateUrl: 'welcome.component.html'
+    templateUrl: 'welcome.component.html',
+    styleUrls: ['welcome.component.scss']
 })
 
 export class WelcomeComponent implements OnInit {
