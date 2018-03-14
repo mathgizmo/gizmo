@@ -66,56 +66,41 @@ CKEDITOR.plugins.add( 'chart', {
                             {
                                 type : 'text',
                                 id : 'value',
-                                label : 'Percent fill (value between 0 and 1)',
-                                'default' : '0.5',
+                                label : 'Value',
+                                'default' : '0',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /^(0((\.|\,)\d+)?|1((\.|\,)0+)?)$/, 
-                                        "Percent fill must be a number between 0 and 1" ),
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                        "Value must be a real number" ),
                                 required : true,
                                 commit : function( data )
                                 {
                                     data.value = this.getValue();
-                                }
+                                },
+                                onChange : function( api ) {
+                                    let dialog = CKEDITOR.dialog.getCurrent();
+                                    let max = dialog.getContentElement('general', 
+                                        'max');
+                                    let maxValue = parseFloat(max.getValue());
+                                    let thisValue = parseFloat(this.getValue());
+                                    if(max.isEnabled()) {
+                                        if (thisValue > maxValue) {
+                                            alert("Value ("+thisValue
+                                                +") must be less than Max Value ("+maxValue+")");
+                                        } 
+                                    }
+                                },
                             },
                             {
                                 type : 'text',
                                 id : 'max',
                                 label : 'Max Value',
                                 validate : CKEDITOR.dialog.validate
-                                    .integer('Max Value must be a number'),
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                        "Max Value must be a real number" ),
                                 required : false,
-                                'default' : '10',
                                 commit : function( data )
                                 {
                                     data.max = this.getValue();
-                                }
-                            },
-                            {
-                                type : 'text',
-                                id : 'start-value',
-                                label : 'Start Value',
-                                validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
-                                        "Start Value must be a real number" ),
-                                required : false,
-                                'default' : '1',
-                                commit : function( data )
-                                {
-                                    data.startValue = this.getValue();
-                                }
-                            },
-                            {
-                                type : 'text',
-                                id : 'end-value',
-                                label : 'End Value',
-                                validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
-                                        "End Value must be a real number" ),
-                                required : false,
-                                'default' : '10',
-                                commit : function( data )
-                                {
-                                    data.endValue = this.getValue();
                                 }
                             },
                             {
@@ -126,12 +111,39 @@ CKEDITOR.plugins.add( 'chart', {
                                     .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
                                         "Step must be a real number" ),
                                 required : false,
-                                'default' : '0.5',
                                 commit : function( data )
                                 {
                                     data.step = this.getValue();
                                 }
                             },
+                            {
+                                type : 'text',
+                                id : 'start',
+                                label : 'Start Value',
+                                validate : CKEDITOR.dialog.validate
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                        "Start Value must be a real number" ),
+                                required : false,
+                                'default' : '0',
+                                commit : function( data )
+                                {
+                                    data.start = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'text',
+                                id : 'end',
+                                label : 'End Value',
+                                validate : CKEDITOR.dialog.validate
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                        "End Value must be a real number" ),
+                                required : false,
+                                'default' : '5',
+                                commit : function( data )
+                                {
+                                    data.end = this.getValue();
+                                }
+                            }
                         ]
                     },
                     {
@@ -177,15 +189,15 @@ CKEDITOR.plugins.add( 'chart', {
 
                     // set type
                     let chartHtml = '%%chart{type:'+data.type+'; ';
+                    chartHtml += 'value:'+data.value+'; ';
 
                     // set data
                     if(data.type == 4) {
-                        chartHtml += 'start-value:'+data.startValue+'; ';
-                        chartHtml += 'end-value:'+data.endValue+'; ';
+                        chartHtml += 'start-value:'+data.start+'; ';
+                        chartHtml += 'end-value:'+data.end+'; ';
                         chartHtml += 'step:'+data.step+'; ';
                     } else {
-                        chartHtml += 'value:'+data.value+'; ';
-                        if (data.type == 3) {
+                        if (data.type == 1 || data.type == 2 || data.type == 3) {
                             chartHtml += 'max:'+data.max + '; ';
                         }
                     }
@@ -219,20 +231,35 @@ CKEDITOR.plugins.add( 'chart', {
                 onLoad : function() {
                     this.on('selectPage', function (e) {
                         let type = this.getContentElement('types', 'type').getValue();
-                        if(type == 3) {
-                            this.getContentElement('general', 'max').enable();
-                        } else this.getContentElement('general', 'max').disable();
+                        let max = this.getContentElement('general', 'max');
+                        let step = this.getContentElement('general', 'step');
+                        
+                        // disable unused fields
                         if(type == 4) {
-                            this.getContentElement('general', 'value').disable();
-                            this.getContentElement('general', 'start-value').enable();
-                            this.getContentElement('general', 'end-value').enable();
-                            this.getContentElement('general', 'step').enable();
+                            this.getContentElement('general', 'start').enable();
+                            this.getContentElement('general', 'end').enable();
+                            this.getContentElement('general', 'max').disable();
                         } else {
-                            this.getContentElement('general', 'value').enable();
-                            this.getContentElement('general', 'start-value').disable();
-                            this.getContentElement('general', 'end-value').disable();
-                            this.getContentElement('general', 'step').disable();
+                            this.getContentElement('general', 'start').disable();
+                            this.getContentElement('general', 'end').disable();
+                            this.getContentElement('general', 'max').enable();
                         }
+
+                        // set defaults
+                        if(type == 3) {
+                             max.setValue('100');
+                        } else {
+                            max.setValue('1');
+                        }
+                        if(max.getValue() <= 1) {
+                            step.setValue('0.01');
+                        } else {
+                            step.setValue('1');
+                        }
+                        if (type == 4) {
+                            step.setValue('0.5');
+                        }
+                        
                     })
                 }
             };
