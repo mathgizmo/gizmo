@@ -1,33 +1,50 @@
 <h2 id="chart-container" [innerHTML]="chart"></h2>
-<label *ngIf="displayFraction" class="center">{{valueWhenMaxExists}}/{{chartMaxValue}}</label>
 <div id="controls" *ngIf="chartControl > 0" >
   <p>Value</p>
-  <mat-form-field *ngIf="chartControl == 1" (change)="ngOnChanges()">
-    <input matInput *ngIf="chartType != 4" 
-      [(ngModel)]="chartValue" type="number" step="0.01" max="1" min="0"/>
-    <mat-progress-bar *ngIf="chartType != 4"
-      value={{chartValue*100}} class='progress'>
-    </mat-progress-bar>
-    <input matInput *ngIf="chartType == 4" 
-      [(ngModel)]="chartValue" type="number" 
-      [step]="chartStep" [max]="chartEndValue" [min]="chartStartValue"/>
-    <mat-progress-bar *ngIf="chartType == 4"
-      value={{chart4Value*100}} class='progress'>
-    </mat-progress-bar>
-  </mat-form-field>
+  <span *ngIf="chartControl == 1">
+    <mat-form-field (change)="ngOnChanges()">
+      <input matInput  *ngIf="chartType != 4"
+        [(ngModel)]="chartValue" type="number" 
+        [step]="chartStep" [max]="chartMaxValue" min="0"/>
+      <input *ngIf="chartType == 4"
+        matInput [(ngModel)]="chartValue" type="number" 
+        [step]="chartStep" [max]="chartMaxValue" [min]="chartStartValue"/>
+      <mat-progress-bar class='progress' value={{percentValue}}>
+      </mat-progress-bar>
+    </mat-form-field> 
+    <span *ngIf="chartType != 4">
+      <span class='max-value' *ngIf="chartMaxValue != 1" >/{{chartMaxValue}}</span>
+    </span>
+  </span>
   <span *ngIf="chartControl == 2">
-    <mat-slider *ngIf="chartType != 4" 
-      (change)="ngOnChanges()" [(ngModel)]="chartValue"
-      step="0.01" max="1" min="0" color="primary" class='slider-control'>
-    </mat-slider>
-    <mat-slider *ngIf="chartType == 4" 
-      (change)="ngOnChanges()" [(ngModel)]="chartValue"
-      [step]="chartStep" [max]="chartEndValue" [min]="chartStartValue" 
-      color="primary" class='slider-control'>
-    </mat-slider>
-    <div class="value-label-container">
-      <label *ngIf="chartType != 4" >{{percentValue}}%</label>
-      <label *ngIf="chartType == 4" >{{chartValue.toFixed(1)}}</label>
-    </div> 
+    <span *ngIf="chartType != 4" >
+      <mat-slider (change)="ngOnChanges()" [(ngModel)]="chartValue"
+        [step]="chartStep" [max]="chartMaxValue" min="0" 
+        color="primary" class='slider-control'>
+      </mat-slider>
+      <div class="value-label-container">
+        <label *ngIf="chartType != 3" >
+          <span *ngIf="!isSteepInteger">
+            {{chartValue.toFixed(1)}}/{{chartMaxValue.toFixed(1)}}
+          </span>
+          <span *ngIf="isSteepInteger">
+            {{chartValue}}/{{chartMaxValue}}
+          </span>
+        </label>
+        <label *ngIf="chartType == 3" >
+          {{chartValue}}/{{chartMaxValue}}
+        </label>
+      </div> 
+    </span>
+    <span *ngIf="chartType == 4" >
+      <mat-slider (change)="ngOnChanges()" [(ngModel)]="chartValue"
+        [step]="chartStep" [max]="chartMaxValue" [min]="chartStartValue" 
+        color="primary" class='slider-control'>
+      </mat-slider>
+      <div class="value-label-container">
+        <label *ngIf="!isSteepInteger">{{chartValue.toFixed(1)}}</label>
+        <label *ngIf="isSteepInteger">{{chartValue}}</label>
+      </div> 
+    </span>
   </span>
 </div>

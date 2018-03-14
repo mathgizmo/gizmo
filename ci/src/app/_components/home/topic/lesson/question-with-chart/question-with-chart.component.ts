@@ -26,17 +26,13 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
     private chartValue: number = 0.50;
     private chartMaxValue: number = 0;
     private chartStartValue: number = 0;
-    private chartEndValue: number = 3;
     private chartStep: number = 0.5;
 
     private initialized = false;
     private oldQuestion: string;
 
-    private chart4Value: number;
-
-    private valueWhenMaxExists : number;
     private percentValue: number;
-    private displayFraction: boolean = false;
+    private isSteepInteger: boolean = false;
 
     chart: SafeHtml;
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
@@ -59,11 +55,7 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
         }
         this.destroyDotsChart();
         this.buildChart();
-        this.valueWhenMaxExists =  Math.round(
-          this.chartValue*this.chartMaxValue);
-        this.percentValue = Math.round(this.chartValue*100);
-        this.chart4Value = (this.chartValue-this.chartStartValue)
-          /(this.chartEndValue-this.chartStartValue);
+        this.percentValue = Math.round(this.chartValue/this.chartMaxValue*100);
 
         // setup equation in LaTeX
         setTimeout(function() {
@@ -95,7 +87,7 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             .replace('start-value:', ''));
         }
         if (chart['0'].indexOf('end-value:') >= 0) {
-          this.chartEndValue = parseFloat(chart['0']
+          this.chartMaxValue = parseFloat(chart['0']
             .match(new RegExp(/end-value:([^;]*)(?=(;|$))/g))['0']
             .replace('end-value:', ''));
         }
@@ -128,17 +120,21 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           this.chartControl = parseFloat(chart['0']
             .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', ''));
-        if(this.chartType == 4) 
-          this.chartValue = this.chartStartValue;
         this.initialized = true;
       }
       let chartHtml = this.question
         .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
+      if(this.chartType == 3) {
+        this.chartStep >= 1 
+          ? this.chartStep = Math.round(this.chartStep)
+          : this.chartStep = 1;
+      }
+      this.isSteepInteger = Number.isInteger(this.chartStep);
+      let chartValuePercent = this.chartValue/this.chartMaxValue;
       switch (this.chartType) {
         default:
         case 1:
           // Chart (type 1 - rectangle)
-          this.displayFraction = false;
           chartHtml += '<svg style="height: '
             + this.chartHeight + '; width:' + this.chartHeight + ';">';
           chartHtml += '<rect id="rect2" style="height:'
@@ -147,8 +143,8 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
           chartHtml += '<rect id="rect1" style="y: ' +
-            (1 - this.chartValue) * this.chartHeight + '; height:' +
-            this.chartValue*this.chartHeight +' !important; width: 100%;';
+            (1 - chartValuePercent) * this.chartHeight + '; height:' +
+            chartValuePercent*this.chartHeight +' !important; width: 100%;';
           chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' + 
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
@@ -157,14 +153,13 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           break;
         case 2:
           // Chart (type 2 - circle)
-          this.displayFraction = false;
           let radius = this.chartHeight/2;
-          let angle = 2*Math.PI*this.chartValue;
+          let angle = 2*Math.PI*chartValuePercent;
           let x = radius + radius*Math.sin(angle);
           let  y = radius - radius*Math.cos(angle);
           chartHtml += '<svg style="height: '
             + this.chartHeight + '; width:' + this.chartHeight + ';">';
-          if(this.chartValue <= 0.999) {
+          if(chartValuePercent <= 0.999) {
             chartHtml += '<circle id="circle2" style="r: ' + radius 
               + ' !important; cx: '+ radius + ' !important; cy: ' 
               + radius + ' !important;';
@@ -172,7 +167,7 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '" />';
             chartHtml += '<path id="circle1" d="M'+ radius +','+ radius 
               + ' L' + radius + ',0 A' + radius + ',' + radius;
-            if(this.chartValue <= 0.5){
+            if(chartValuePercent <= 0.5){
               chartHtml += ' 1 0,1';
             } else {
               chartHtml += ' 1 1,1';  
@@ -193,7 +188,6 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           break;
         case 3:
           // Chart (type 3 - dots)
-          this.displayFraction = true;
           let chartContainer = document.getElementById('chart-container');
           let canvas = document.createElement("canvas");
           requestAnimationFrame(() => {
@@ -219,7 +213,6 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           break;
         case 4:
           // Chart (type 4 - slider)
-          this.displayFraction = false;
           let circleDiameter = 2*this.dotRadius;
           let width  = document.getElementById('chart-container').offsetWidth;
           let indentation = circleDiameter + 5;
@@ -229,16 +222,16 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             + this.mainColor + '; stroke-width:'
             + this.strokeWidth + '" />';
           width -= indentation*2;
-          chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
+          /*chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
             + ((this.chartValue-this.chartStartValue)/(this.chartEndValue
             -this.chartStartValue)*width + indentation) 
             + '" y2="10" style="stroke:' 
             + this.selectedColor + '; stroke-width:'
-            + this.strokeWidth + '" />';
-          for(let i = 0; i < (this.chartEndValue-this.chartStartValue); 
+            + this.strokeWidth + '" />';*/
+          for(let i = 0; i < (this.chartMaxValue-this.chartStartValue); 
             i+= this.chartStep) {
             let position = (i*width
-              /(this.chartEndValue-this.chartStartValue))+indentation;
+              /(this.chartMaxValue-this.chartStartValue))+indentation;
             chartHtml += '<text x="' + position
               + '" y="35" fill="' + this.strokeColor 
               +'" font-size="16" text-anchor="middle">' 
@@ -249,9 +242,13 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           chartHtml += '<text x="' + (width+indentation)
             + '" y="35" fill="' + this.strokeColor 
             +'" font-size="16" text-anchor="middle">' 
-            + this.chartEndValue.toFixed(1) + '</text>';
+            + this.chartMaxValue.toFixed(1) + '</text>';
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
             + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
+          let currentPointX = ((this.chartValue-this.chartStartValue)/(this.chartMaxValue
+            -this.chartStartValue)*width + indentation);
+          chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="' 
+            + circleDiameter + '" fill="' + this.selectedColor + '" />';
           chartHtml += '</svg>';
           this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
           break;
@@ -259,10 +256,9 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
     }
 
     // function to draw Dots Chart
-    private drawDotsChart(dotsPercent: number, 
+    private drawDotsChart(dotsNum: number, 
       maxDotsNum: number, ctx: CanvasRenderingContext2D,
       canvas: HTMLCanvasElement) {
-      let dotsNum = Math.round(maxDotsNum*dotsPercent);
       for (let i = 0; i < dotsNum; i++) {
         this.dots[i] = this.drawDot(2, ctx, canvas, this.dots[i]);
       }
