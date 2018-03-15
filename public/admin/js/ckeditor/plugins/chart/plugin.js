@@ -195,12 +195,12 @@ CKEDITOR.plugins.add( 'chart', {
                     if(data.type == 4) {
                         chartHtml += 'start-value:'+data.start+'; ';
                         chartHtml += 'end-value:'+data.end+'; ';
-                        chartHtml += 'step:'+data.step+'; ';
                     } else {
                         if (data.type == 1 || data.type == 2 || data.type == 3) {
                             chartHtml += 'max:'+data.max + '; ';
                         }
                     }
+                    chartHtml += 'step:'+data.step+'; ';
                     
                     // set styles
                     data.mainColor = '#'  + 

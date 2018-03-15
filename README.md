@@ -9,7 +9,7 @@ It consist of 3 main modules admin, API, and hybrid app
 
 #### Server
 - For admin part we use [Composer](https://getcomposer.org/), so go to laravel folder and run `composer install`
-- Also change copy `config/global/dbconf.php` file into `config/local` folder and set you db credential there. Do not save real credential in global folders. 
+- Also change copy `laravel/config/global/dbconf.php` file into `laravel/config/local` folder and set you db credential there. Do not save real credential in global folders. 
 - To update your DB to current version go to laravel folder and run `php artisan migrate`
 - Make sure that apache has access to write into `laravel/bootstrap/cache` and `laravel/storage` folders. 
 - Run `php artisan key:generate` to generate app key. If you get eny error on key generation, create file `.env` and put `APP_KEY=` in it, then rerun command. Check .env file if key actually been generated.
