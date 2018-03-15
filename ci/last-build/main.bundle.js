@@ -626,14 +626,14 @@ var LessonComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 id=\"chart-container\" [innerHTML]=\"chart\"></h2>\n<label *ngIf=\"displayFraction\" class=\"center\">{{valueWhenMaxExists}}/{{chartMaxValue}}</label>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <mat-form-field *ngIf=\"chartControl == 1\" (change)=\"ngOnChanges()\">\n    <input matInput *ngIf=\"chartType != 4\" \n      [(ngModel)]=\"chartValue\" type=\"number\" step=\"0.01\" max=\"1\" min=\"0\"/>\n    <mat-progress-bar *ngIf=\"chartType != 4\"\n      value={{chartValue*100}} class='progress'>\n    </mat-progress-bar>\n    <input matInput *ngIf=\"chartType == 4\" \n      [(ngModel)]=\"chartValue\" type=\"number\" \n      [step]=\"chartStep\" [max]=\"chartEndValue\" [min]=\"chartStartValue\"/>\n    <mat-progress-bar *ngIf=\"chartType == 4\"\n      value={{chart4Value*100}} class='progress'>\n    </mat-progress-bar>\n  </mat-form-field>\n  <span *ngIf=\"chartControl == 2\">\n    <mat-slider *ngIf=\"chartType != 4\" \n      (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n      step=\"0.01\" max=\"1\" min=\"0\" color=\"primary\" class='slider-control'>\n    </mat-slider>\n    <mat-slider *ngIf=\"chartType == 4\" \n      (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n      [step]=\"chartStep\" [max]=\"chartEndValue\" [min]=\"chartStartValue\" \n      color=\"primary\" class='slider-control'>\n    </mat-slider>\n    <div class=\"value-label-container\">\n      <label *ngIf=\"chartType != 4\" >{{percentValue}}%</label>\n      <label *ngIf=\"chartType == 4\" >{{chartValue.toFixed(1)}}</label>\n    </div> \n  </span>\n</div>"
+module.exports = "<h2 id=\"chart-container\" [innerHTML]=\"chart\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\"\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span *ngIf=\"!isSteepInteger\"> {{chartValue.toFixed(2)}} </span>\n          <span *ngIf=\"0\" > / {{chartMaxValue}} </span>\n          <span *ngIf=\"isSteepInteger\">\n            {{chartValue}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!isSteepInteger\">{{chartValue.toFixed(2)}}</label>\n        <label *ngIf=\"isSteepInteger\">{{chartValue}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
 
 /***/ }),
 
 /***/ "./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = "#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label-container label,\nmat-form-field, #controls > * {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n"
+module.exports = "input {\n  text-align: center;\n  font-weight: bold; }\n\n#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label-container label,\nmat-form-field, #controls > * {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n\n.max-value {\n  font-weight: bold; }\n"
 
 /***/ }),
 
@@ -667,11 +667,12 @@ var QuestionWithChartComponent = (function () {
         this.chartControl = 0;
         this.chartValue = 0.50;
         this.chartMaxValue = 0;
-        this.chartStartValue = 0;
-        this.chartEndValue = 3;
+        this.startValue = 0;
+        this.endValue = 1;
         this.chartStep = 0.5;
+        this.chartMarksList = [0, 0.5, 1];
         this.initialized = false;
-        this.displayFraction = false;
+        this.isSteepInteger = false;
         this.dots = [];
         if (!this.chartHeight)
             this.chartHeight = 250;
@@ -686,10 +687,7 @@ var QuestionWithChartComponent = (function () {
         }
         this.destroyDotsChart();
         this.buildChart();
-        this.valueWhenMaxExists = Math.round(this.chartValue * this.chartMaxValue);
-        this.percentValue = Math.round(this.chartValue * 100);
-        this.chart4Value = (this.chartValue - this.chartStartValue)
-            / (this.chartEndValue - this.chartStartValue);
+        this.percentValue = Math.round(this.chartValue / this.chartMaxValue * 100);
         // setup equation in LaTeX
         setTimeout(function () {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
@@ -714,15 +712,11 @@ var QuestionWithChartComponent = (function () {
                     .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
                     .replace('max:', ''));
             }
-            if (chart['0'].indexOf('start-value:') >= 0) {
-                this.chartStartValue = parseFloat(chart['0']
-                    .match(new RegExp(/start-value:([^;]*)(?=(;|$))/g))['0']
-                    .replace('start-value:', ''));
-            }
-            if (chart['0'].indexOf('end-value:') >= 0) {
-                this.chartEndValue = parseFloat(chart['0']
-                    .match(new RegExp(/end-value:([^;]*)(?=(;|$))/g))['0']
-                    .replace('end-value:', ''));
+            if (chart['0'].indexOf('marks:') >= 0) {
+                this.chartMarksList = chart['0']
+                    .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+                    .replace('marks:', '').split(',').map(Number);
+                this.chartMaxValue = this.chartMarksList[this.chartMarksList.length - 1];
             }
             if (chart['0'].indexOf('step:') >= 0) {
                 this.chartStep = parseFloat(chart['0']
@@ -753,17 +747,21 @@ var QuestionWithChartComponent = (function () {
                 this.chartControl = parseFloat(chart['0']
                     .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
                     .replace('control:', ''));
-            if (this.chartType == 4)
-                this.chartValue = this.chartStartValue;
             this.initialized = true;
         }
         var chartHtml = this.question
             .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
+        if (this.chartType == 3) {
+            this.chartStep >= 1
+                ? this.chartStep = Math.round(this.chartStep)
+                : this.chartStep = 1;
+        }
+        this.isSteepInteger = Number.isInteger(this.chartStep);
+        var chartValuePercent = this.chartValue / this.chartMaxValue;
         switch (this.chartType) {
             default:
             case 1:
                 // Chart (type 1 - rectangle)
-                this.displayFraction = false;
                 chartHtml += '<svg style="height: '
                     + this.chartHeight + '; width:' + this.chartHeight + ';">';
                 chartHtml += '<rect id="rect2" style="height:'
@@ -772,8 +770,8 @@ var QuestionWithChartComponent = (function () {
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
                 chartHtml += '></rect>';
                 chartHtml += '<rect id="rect1" style="y: ' +
-                    (1 - this.chartValue) * this.chartHeight + '; height:' +
-                    this.chartValue * this.chartHeight + ' !important; width: 100%;';
+                    (1 - chartValuePercent) * this.chartHeight + '; height:' +
+                    chartValuePercent * this.chartHeight + ' !important; width: 100%;';
                 chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' +
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
                 chartHtml += '></rect>';
@@ -782,14 +780,13 @@ var QuestionWithChartComponent = (function () {
                 break;
             case 2:
                 // Chart (type 2 - circle)
-                this.displayFraction = false;
                 var radius = this.chartHeight / 2;
-                var angle = 2 * Math.PI * this.chartValue;
+                var angle = 2 * Math.PI * chartValuePercent;
                 var x = radius + radius * Math.sin(angle);
                 var y = radius - radius * Math.cos(angle);
                 chartHtml += '<svg style="height: '
                     + this.chartHeight + '; width:' + this.chartHeight + ';">';
-                if (this.chartValue <= 0.999) {
+                if (chartValuePercent <= 0.999) {
                     chartHtml += '<circle id="circle2" style="r: ' + radius
                         + ' !important; cx: ' + radius + ' !important; cy: '
                         + radius + ' !important;';
@@ -797,7 +794,7 @@ var QuestionWithChartComponent = (function () {
                         this.strokeColor + '; stroke-width: ' + this.strokeWidth + '" />';
                     chartHtml += '<path id="circle1" d="M' + radius + ',' + radius
                         + ' L' + radius + ',0 A' + radius + ',' + radius;
-                    if (this.chartValue <= 0.5) {
+                    if (chartValuePercent <= 0.5) {
                         chartHtml += ' 1 0,1';
                     }
                     else {
@@ -820,7 +817,6 @@ var QuestionWithChartComponent = (function () {
                 break;
             case 3:
                 // Chart (type 3 - dots)
-                this.displayFraction = true;
                 var chartContainer_1 = document.getElementById('chart-container');
                 var canvas_1 = document.createElement("canvas");
                 requestAnimationFrame(function () {
@@ -846,46 +842,43 @@ var QuestionWithChartComponent = (function () {
                 break;
             case 4:
                 // Chart (type 4 - slider)
-                this.displayFraction = false;
                 var circleDiameter = 2 * this.dotRadius;
                 var width = document.getElementById('chart-container').offsetWidth;
                 var indentation = circleDiameter + 5;
+                this.startValue = Math.min.apply(null, this.chartMarksList);
+                this.endValue = Math.max.apply(null, this.chartMarksList);
                 chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
                 chartHtml += '<line x1="' + indentation + '" y1="10" x2="'
                     + (width - indentation) + '" y2="10" style="stroke:'
                     + this.mainColor + '; stroke-width:'
                     + this.strokeWidth + '" />';
                 width -= indentation * 2;
-                chartHtml += '<line x1="' + indentation + '" y1="10" x2="'
-                    + ((this.chartValue - this.chartStartValue) / (this.chartEndValue
-                        - this.chartStartValue) * width + indentation)
-                    + '" y2="10" style="stroke:'
-                    + this.selectedColor + '; stroke-width:'
-                    + this.strokeWidth + '" />';
-                for (var i = 0; i < (this.chartEndValue - this.chartStartValue); i += this.chartStep) {
-                    var position = (i * width
-                        / (this.chartEndValue - this.chartStartValue)) + indentation;
-                    chartHtml += '<text x="' + position
-                        + '" y="35" fill="' + this.strokeColor
-                        + '" font-size="16" text-anchor="middle">'
-                        + (this.chartStartValue + i).toFixed(1) + '</text>';
+                for (var i = 0; i < (this.endValue - this.startValue); i += this.chartStep) {
+                    var position = (i * width / (this.endValue - this.startValue)) + indentation;
                     chartHtml += '<circle cx="' + position + '" cy="10" r="'
                         + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
                 }
-                chartHtml += '<text x="' + (width + indentation)
-                    + '" y="35" fill="' + this.strokeColor
-                    + '" font-size="16" text-anchor="middle">'
-                    + this.chartEndValue.toFixed(1) + '</text>';
                 chartHtml += '<circle cx="' + (width + indentation) + '" cy="10" r="'
                     + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                for (var i = 0; i < this.chartMarksList.length; i++) {
+                    var position = ((this.chartMarksList[i] - this.startValue) / (this.endValue
+                        - this.startValue) * width + indentation);
+                    chartHtml += '<text x="' + position
+                        + '" y="35" fill="' + this.strokeColor
+                        + '" font-size="16" text-anchor="middle">'
+                        + this.chartMarksList[i] + '</text>';
+                }
+                var currentPointX = ((this.chartValue - this.startValue) / (this.endValue
+                    - this.startValue) * width + indentation);
+                chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="'
+                    + circleDiameter + '" fill="' + this.selectedColor + '" />';
                 chartHtml += '</svg>';
                 this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
                 break;
         }
     };
     // function to draw Dots Chart
-    QuestionWithChartComponent.prototype.drawDotsChart = function (dotsPercent, maxDotsNum, ctx, canvas) {
-        var dotsNum = Math.round(maxDotsNum * dotsPercent);
+    QuestionWithChartComponent.prototype.drawDotsChart = function (dotsNum, maxDotsNum, ctx, canvas) {
         for (var i = 0; i < dotsNum; i++) {
             this.dots[i] = this.drawDot(2, ctx, canvas, this.dots[i]);
         }

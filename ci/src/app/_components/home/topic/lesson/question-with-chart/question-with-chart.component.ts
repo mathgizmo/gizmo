@@ -25,6 +25,8 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
     private chartControl: number = 0;
     private chartValue: number = 0.50;
     private chartMaxValue: number = 0;
+    private startValue = 0;
+    private endValue = 1;
     private chartStep: number = 0.5;
     private chartMarksList: number[]= [0, 0.5, 1];
 
@@ -212,38 +214,32 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           let circleDiameter = 2*this.dotRadius;
           let width  = document.getElementById('chart-container').offsetWidth;
           let indentation = circleDiameter + 5;
-          let startValue = this.chartMarksList[0];
-          let endValue = this.chartMarksList[this.chartMarksList.length-1];
+          this.startValue = Math.min.apply(null, this.chartMarksList);
+          this.endValue = Math.max.apply(null, this.chartMarksList);
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
           chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
             + (width-indentation) + '" y2="10" style="stroke:' 
             + this.mainColor + '; stroke-width:'
             + this.strokeWidth + '" />';
           width -= indentation*2;
-          /*chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
-            + ((this.chartValue-this.chartStartValue)/(this.chartEndValue
-            -this.chartStartValue)*width + indentation) 
-            + '" y2="10" style="stroke:' 
-            + this.selectedColor + '; stroke-width:'
-            + this.strokeWidth + '" />';*/
 
-          for(let i = 0; i < (endValue-startValue); i+= this.chartStep) {
-            let position = (i*width/(endValue-startValue))+indentation;
+          for(let i = 0; i < (this.endValue-this.startValue); i+= this.chartStep) {
+            let position = (i*width/(this.endValue-this.startValue))+indentation;
             chartHtml += '<circle cx="' + position + '" cy="10" r="' 
               + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
           }
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
             + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
           for(let i = 0; i < this.chartMarksList.length; i++) {
-            let position = ((this.chartMarksList[i]-startValue)/(endValue
-              -startValue)*width + indentation);
+            let position = ((this.chartMarksList[i]-this.startValue)/(this.endValue
+              -this.startValue)*width + indentation);
             chartHtml += '<text x="' + position
               + '" y="35" fill="' + this.strokeColor 
               +'" font-size="16" text-anchor="middle">' 
               + this.chartMarksList[i] + '</text>';
           }
-          let currentPointX = ((this.chartValue-startValue)/(endValue
-            -startValue)*width + indentation);
+          let currentPointX = ((this.chartValue-this.startValue)/(this.endValue
+            -this.startValue)*width + indentation);
           chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="' 
             + circleDiameter + '" fill="' + this.selectedColor + '" />';
           chartHtml += '</svg>';
