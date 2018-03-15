@@ -240,7 +240,7 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             chartHtml += '<text x="' + position
               + '" y="35" fill="' + this.strokeColor 
               +'" font-size="16" text-anchor="middle">' 
-              + (this.chartMarksList[i]).toFixed(1) + '</text>';
+              + this.chartMarksList[i] + '</text>';
           }
           let currentPointX = ((this.chartValue-startValue)/(endValue
             -startValue)*width + indentation);
