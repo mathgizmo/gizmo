@@ -25,8 +25,8 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
     private chartControl: number = 0;
     private chartValue: number = 0.50;
     private chartMaxValue: number = 0;
-    private chartStartValue: number = 0;
     private chartStep: number = 0.5;
+    private chartMarksList: number[]= [0, 0.5, 1];
 
     private initialized = false;
     private oldQuestion: string;
@@ -81,15 +81,11 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
             .replace('max:', ''));
         }
-        if (chart['0'].indexOf('start-value:') >= 0) {
-          this.chartStartValue = parseFloat(chart['0']
-            .match(new RegExp(/start-value:([^;]*)(?=(;|$))/g))['0']
-            .replace('start-value:', ''));
-        }
-        if (chart['0'].indexOf('end-value:') >= 0) {
-          this.chartMaxValue = parseFloat(chart['0']
-            .match(new RegExp(/end-value:([^;]*)(?=(;|$))/g))['0']
-            .replace('end-value:', ''));
+        if (chart['0'].indexOf('marks:') >= 0) {
+           this.chartMarksList = chart['0']
+            .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+            .replace('marks:', '').split(',').map(Number);
+          this.chartMaxValue = this.chartMarksList[this.chartMarksList.length-1];
         }
         if (chart['0'].indexOf('step:') >= 0) {
           this.chartStep = parseFloat(chart['0']
@@ -216,6 +212,8 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
           let circleDiameter = 2*this.dotRadius;
           let width  = document.getElementById('chart-container').offsetWidth;
           let indentation = circleDiameter + 5;
+          let startValue = this.chartMarksList[0];
+          let endValue = this.chartMarksList[this.chartMarksList.length-1];
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
           chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
             + (width-indentation) + '" y2="10" style="stroke:' 
@@ -228,25 +226,24 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             + '" y2="10" style="stroke:' 
             + this.selectedColor + '; stroke-width:'
             + this.strokeWidth + '" />';*/
-          for(let i = 0; i < (this.chartMaxValue-this.chartStartValue); 
-            i+= this.chartStep) {
-            let position = (i*width
-              /(this.chartMaxValue-this.chartStartValue))+indentation;
-            chartHtml += '<text x="' + position
-              + '" y="35" fill="' + this.strokeColor 
-              +'" font-size="16" text-anchor="middle">' 
-              + (this.chartStartValue+i).toFixed(1) + '</text>';
+
+          for(let i = 0; i < (endValue-startValue); i+= this.chartStep) {
+            let position = (i*width/(endValue-startValue))+indentation;
             chartHtml += '<circle cx="' + position + '" cy="10" r="' 
               + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
           }
-          chartHtml += '<text x="' + (width+indentation)
-            + '" y="35" fill="' + this.strokeColor 
-            +'" font-size="16" text-anchor="middle">' 
-            + this.chartMaxValue.toFixed(1) + '</text>';
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
             + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
-          let currentPointX = ((this.chartValue-this.chartStartValue)/(this.chartMaxValue
-            -this.chartStartValue)*width + indentation);
+          for(let i = 0; i < this.chartMarksList.length; i++) {
+            let position = ((this.chartMarksList[i]-startValue)/(endValue
+              -startValue)*width + indentation);
+            chartHtml += '<text x="' + position
+              + '" y="35" fill="' + this.strokeColor 
+              +'" font-size="16" text-anchor="middle">' 
+              + (this.chartMarksList[i]).toFixed(1) + '</text>';
+          }
+          let currentPointX = ((this.chartValue-startValue)/(endValue
+            -startValue)*width + indentation);
           chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="' 
             + circleDiameter + '" fill="' + this.selectedColor + '" />';
           chartHtml += '</svg>';
