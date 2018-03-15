@@ -2,3 +2,5 @@ vendor/
 .*
 !.gitignore
 !.htaccess
+
+jwt.php

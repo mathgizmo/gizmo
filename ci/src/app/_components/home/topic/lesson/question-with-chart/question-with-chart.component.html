@@ -24,15 +24,15 @@
       </mat-slider>
       <div class="value-label-container">
         <label *ngIf="chartType != 3" >
-          <span *ngIf="!isSteepInteger">
-            {{chartValue.toFixed(1)}}/{{chartMaxValue.toFixed(1)}}
-          </span>
+          <span *ngIf="!isSteepInteger"> {{chartValue.toFixed(1)}} </span>
+          <span *ngIf="chartMaxValue != 1" > / {{chartMaxValue}} </span>
           <span *ngIf="isSteepInteger">
             {{chartValue}}/{{chartMaxValue}}
           </span>
         </label>
         <label *ngIf="chartType == 3" >
-          {{chartValue}}/{{chartMaxValue}}
+          <span> {{chartValue}} </span>
+          <span *ngIf="chartMaxValue != 1" > / {{chartMaxValue}} </span>
         </label>
       </div> 
     </span>

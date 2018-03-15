@@ -118,30 +118,16 @@ CKEDITOR.plugins.add( 'chart', {
                             },
                             {
                                 type : 'text',
-                                id : 'start',
-                                label : 'Start Value',
+                                id : 'marks',
+                                label : 'Marks List',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
-                                        "Start Value must be a real number" ),
+                                    .regex( /(([0-9]+([.][0-9]*)?|[.][0-9]+)(, *([0-9]+([.][0-9]*)?|[.][0-9]+)))*/, 
+                                        "Marks must be a comma separated list of numbers" ),
                                 required : false,
-                                'default' : '0',
+                                'default' : '0, 0.5, 1',
                                 commit : function( data )
                                 {
-                                    data.start = this.getValue();
-                                }
-                            },
-                            {
-                                type : 'text',
-                                id : 'end',
-                                label : 'End Value',
-                                validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
-                                        "End Value must be a real number" ),
-                                required : false,
-                                'default' : '5',
-                                commit : function( data )
-                                {
-                                    data.end = this.getValue();
+                                    data.marks = this.getValue();
                                 }
                             }
                         ]
@@ -193,14 +179,13 @@ CKEDITOR.plugins.add( 'chart', {
 
                     // set data
                     if(data.type == 4) {
-                        chartHtml += 'start-value:'+data.start+'; ';
-                        chartHtml += 'end-value:'+data.end+'; ';
-                        chartHtml += 'step:'+data.step+'; ';
+                        chartHtml += 'marks:'+data.marks+'; ';
                     } else {
                         if (data.type == 1 || data.type == 2 || data.type == 3) {
                             chartHtml += 'max:'+data.max + '; ';
                         }
                     }
+                    chartHtml += 'step:'+data.step+'; ';
                     
                     // set styles
                     data.mainColor = '#'  + 
@@ -236,12 +221,10 @@ CKEDITOR.plugins.add( 'chart', {
                         
                         // disable unused fields
                         if(type == 4) {
-                            this.getContentElement('general', 'start').enable();
-                            this.getContentElement('general', 'end').enable();
+                            this.getContentElement('general', 'marks').enable();
                             this.getContentElement('general', 'max').disable();
                         } else {
-                            this.getContentElement('general', 'start').disable();
-                            this.getContentElement('general', 'end').disable();
+                            this.getContentElement('general', 'marks').disable();
                             this.getContentElement('general', 'max').enable();
                         }
 
