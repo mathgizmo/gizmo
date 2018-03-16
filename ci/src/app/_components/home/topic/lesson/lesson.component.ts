@@ -32,6 +32,8 @@ export class LessonComponent implements OnInit {
     correct_answers : number;
     complete_percent : number;
 
+    questionForChart: string = '';
+
     incorrect_answers: number;
     max_incorrect_answers: number = 1;
 
@@ -97,6 +99,8 @@ export class LessonComponent implements OnInit {
         this.is_chart = false;
         if(this.question['question'].indexOf('%%chart{') >= 0){
             this.is_chart = true;
+            this.questionForChart = this.question['question']
+              .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
         }
 
         if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {

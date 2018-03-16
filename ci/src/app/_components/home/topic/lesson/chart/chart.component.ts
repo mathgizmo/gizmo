@@ -4,12 +4,12 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
-    selector: 'question-with-chart',
-    templateUrl: 'question-with-chart.component.html' ,
-    styleUrls: ['question-with-chart.component.scss'],
+    selector: 'chart',
+    templateUrl: 'chart.component.html' ,
+    styleUrls: ['chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionWithChartComponent implements OnDestroy, OnChanges {
+export class ChartComponent implements OnDestroy, OnChanges {
     
     @Input() question: string;
     @Input() chartHeight: number; // dimension of chart area in px
@@ -58,11 +58,6 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
         this.destroyDotsChart();
         this.buildChart();
         this.percentValue = Math.round(this.chartValue/this.chartMaxValue*100);
-
-        // setup equation in LaTeX
-        setTimeout(function() {
-          MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-        }, 50);
     }
 
     // function to build charts
@@ -120,8 +115,7 @@ export class QuestionWithChartComponent implements OnDestroy, OnChanges {
             .replace('control:', ''));
         this.initialized = true;
       }
-      let chartHtml = this.question
-        .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
+      let chartHtml = '';
       if(this.chartType == 3) {
         this.chartStep >= 1 
           ? this.chartStep = Math.round(this.chartStep)
