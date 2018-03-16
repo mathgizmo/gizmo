@@ -290,17 +290,17 @@ CKEDITOR.plugins.add( 'chart', {
                         if (chartStr.indexOf('main-color:') >= 0) {
                             document.getElementById('main-color').value =
                                 chartStr.match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
-                            .replace('main-color:', '');
+                            .replace('main-color:', '').replace('#', '');
                         }
                         if (chartStr.indexOf('selected-color:') >= 0) {
                             document.getElementById('selected-color').value =
                                 chartStr.match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
-                            .replace('selected-color:', '');
+                            .replace('selected-color:', '').replace('#', '');
                         }
                         if (chartStr.indexOf('stroke-color:') >= 0) {
                             document.getElementById('stroke-color').value = 
                                 chartStr.match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
-                            .replace('stroke-color:', '');
+                            .replace('stroke-color:', '').replace('#', '');
                         }
                         if (chartStr.indexOf('stroke-width:') >= 0) {
                             this.getContentElement('optional', 'stroke-width').setValue(
