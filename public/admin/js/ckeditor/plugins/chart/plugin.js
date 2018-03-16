@@ -233,9 +233,12 @@ CKEDITOR.plugins.add( 'chart', {
                     chartHtml += 'control: ' + data.control + '}%%';
 
                     // insert chart string to editor
-                    if(editor.getData().match(new RegExp(/[^{}]+(?=\}%%)/g))) 
-                        chartHtml = chartHtml.replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
-                    editor.insertHtml(chartHtml);
+                    if(editor.getData().match(new RegExp(/[^{}]+(?=\}%%)/g))) {
+                        editor.setData(
+                            editor.getData().replace(new RegExp(/%%chart(.*)(?=%)%/g), chartHtml)
+                        );
+                    }
+                    else editor.insertHtml(chartHtml);
                 },
                 onShow : function() {
                     // load for edit question
