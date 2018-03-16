@@ -38,6 +38,34 @@ CKEDITOR.plugins.add( 'chart', {
                                 commit : function( data )
                                 {
                                     data.type = this.getValue();
+                                },
+                                onChange : function( api ) {
+                                    let type = parseFloat(this.getValue());
+                                    let dialog = CKEDITOR.dialog.getCurrent();
+                                    let max = dialog.getContentElement('general', 'max');
+                                    let step = dialog.getContentElement('general', 'step');
+                                    // disable unused fields
+                                    if(type == 4) {
+                                        dialog.getContentElement('general', 'marks').enable();
+                                        dialog.getContentElement('general', 'max').disable();
+                                    } else {
+                                        dialog.getContentElement('general', 'marks').disable();
+                                        dialog.getContentElement('general', 'max').enable();
+                                    }
+                                    // set defaults
+                                    if(type == 3) {
+                                        max.setValue('100');
+                                    } else {
+                                        max.setValue('1');
+                                    }
+                                    if(max.getValue() <= 1) {
+                                        step.setValue('0.01');
+                                    } else {
+                                        step.setValue('1');
+                                    }
+                                    if (type == 4) {
+                                        step.setValue('0.5');
+                                    }
                                 }
                             },
                             {
@@ -78,8 +106,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 },
                                 onChange : function( api ) {
                                     let dialog = CKEDITOR.dialog.getCurrent();
-                                    let max = dialog.getContentElement('general', 
-                                        'max');
+                                    let max = dialog.getContentElement('general', 'max');
                                     let maxValue = parseFloat(max.getValue());
                                     let thisValue = parseFloat(this.getValue());
                                     if(max.isEnabled()) {
@@ -88,7 +115,7 @@ CKEDITOR.plugins.add( 'chart', {
                                                 +") must be less than Max Value ("+maxValue+")");
                                         } 
                                     }
-                                },
+                                }  
                             },
                             {
                                 type : 'text',
@@ -98,6 +125,7 @@ CKEDITOR.plugins.add( 'chart', {
                                     .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
                                         "Max Value must be a real number" ),
                                 required : false,
+                                'default': 1,
                                 commit : function( data )
                                 {
                                     data.max = this.getValue();
@@ -111,6 +139,7 @@ CKEDITOR.plugins.add( 'chart', {
                                     .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
                                         "Step must be a real number" ),
                                 required : false,
+                                'default': 0.01,
                                 commit : function( data )
                                 {
                                     data.step = this.getValue();
@@ -212,39 +241,17 @@ CKEDITOR.plugins.add( 'chart', {
 
                     // If redownload jscolor.js - change this.zIndex (in jscolor.js) 
                     //to 12000 to show color picker over ckeditor dialog!!!
-                },
+
+                    // disable unused fields for default type
+                    this.getContentElement('general', 'marks').disable();
+                }
+                /* this function trigered when tab changed
                 onLoad : function() {
                     this.on('selectPage', function (e) {
-                        let type = this.getContentElement('types', 'type').getValue();
-                        let max = this.getContentElement('general', 'max');
-                        let step = this.getContentElement('general', 'step');
-                        
-                        // disable unused fields
-                        if(type == 4) {
-                            this.getContentElement('general', 'marks').enable();
-                            this.getContentElement('general', 'max').disable();
-                        } else {
-                            this.getContentElement('general', 'marks').disable();
-                            this.getContentElement('general', 'max').enable();
-                        }
-
-                        // set defaults
-                        if(type == 3) {
-                             max.setValue('100');
-                        } else {
-                            max.setValue('1');
-                        }
-                        if(max.getValue() <= 1) {
-                            step.setValue('0.01');
-                        } else {
-                            step.setValue('1');
-                        }
-                        if (type == 4) {
-                            step.setValue('0.5');
-                        }
-                        
+                        //let type = this.getContentElement('types', 'type').getValue();
                     })
                 }
+                */
             };
         });
 
