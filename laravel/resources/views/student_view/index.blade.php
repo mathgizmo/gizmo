@@ -38,6 +38,7 @@
 							<table class="table table-striped">
 								<thead>
 								<tr>
+                                    <th class="col-md"></th>
 									<th class="col-md">
 										ID <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
 											<i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
@@ -63,26 +64,20 @@
 											<i class="fa fa-fw fa-sort{{ (request()->sort == 'date' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'date' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 										</a>
 									</th>
-									<th class="col-md"></th>
 								</tr>
 								</thead>
 								<tbody>
 								@foreach($students as $student)
 									<tr>
-										<td>{{ $student->id }}</td>
-										<td>{{ $student->name }}</td>
-										<td>{{ $student->email }}</td>
-										<td>{{ $student->created_at? $student->created_at->format('Y/m/d H:i') : '' }}</td>
-										<td>{{ $student->date != null ? date('H:i d.m.Y', strtotime($student->date)) : 'Never' }}</td>
-										<td>
-											<div class="btn-group">
-												<a href="{{ route('students.show', $student->id) }}" class="btn btn-info">Show</a>
-											</div>
-											<form action="{{ route('students.super', $student->id) }}" method="POST" style="display: inline;">
-												<input type="hidden" name="_method" value="PATCH">
-												{{ csrf_field() }}
-												<button class="btn btn-warning" type="submit">{{ $student->is_super ? 'Revoke super access' : 'Add super access' }}</button>
-											</form>
+                                            <td>
+                                            <div class="btn-group">
+                                                <a href="{{ route('students.show', $student->id) }}" class="btn btn-info">Show</a>
+                                            </div>
+                                            <form action="{{ route('students.super', $student->id) }}" method="POST" style="display: inline;">
+                                                <input type="hidden" name="_method" value="PATCH">
+                                                {{ csrf_field() }}
+                                                <button class="btn btn-warning" type="submit">{{ $student->is_super ? 'Revoke super access' : 'Add super access' }}</button>
+                                            </form>
                                             <form action="{{ route('students.reset', $student->id) }}"
                                                   method="POST" style="display: inline;"
                                                   onsubmit="if(confirm('This will remove all participant progress? Are you sure?')) { return true } else {return false };">
@@ -90,7 +85,12 @@
                                                 {{ csrf_field() }}
                                                 <button class="btn btn-danger" type="submit">Reset Progress</button>
                                             </form>
-										</td>
+                                        </td>
+										<td>{{ $student->id }}</td>
+										<td>{{ $student->name }}</td>
+										<td>{{ $student->email }}</td>
+										<td>{{ $student->created_at? $student->created_at->format('Y/m/d H:i') : '' }}</td>
+										<td>{{ $student->date != null ? date('H:i d.m.Y', strtotime($student->date)) : 'Never' }}</td>
 									</tr>
 								@endforeach
 								</tbody>
