@@ -38,6 +38,34 @@ CKEDITOR.plugins.add( 'chart', {
                                 commit : function( data )
                                 {
                                     data.type = this.getValue();
+                                },
+                                onChange : function( api ) {
+                                    let type = parseFloat(this.getValue());
+                                    let dialog = CKEDITOR.dialog.getCurrent();
+                                    let max = dialog.getContentElement('general', 'max');
+                                    let step = dialog.getContentElement('general', 'step');
+                                    // disable unused fields
+                                    if(type == 4) {
+                                        dialog.getContentElement('general', 'marks').enable();
+                                        dialog.getContentElement('general', 'max').disable();
+                                    } else {
+                                        dialog.getContentElement('general', 'marks').disable();
+                                        dialog.getContentElement('general', 'max').enable();
+                                    }
+                                    // set defaults
+                                    if(type == 3) {
+                                        max.setValue('100');
+                                    } else {
+                                        max.setValue('1');
+                                    }
+                                    if(max.getValue() <= 1) {
+                                        step.setValue('0.01');
+                                    } else {
+                                        step.setValue('1');
+                                    }
+                                    if (type == 4) {
+                                        step.setValue('0.5');
+                                    }
                                 }
                             },
                             {
@@ -78,8 +106,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 },
                                 onChange : function( api ) {
                                     let dialog = CKEDITOR.dialog.getCurrent();
-                                    let max = dialog.getContentElement('general', 
-                                        'max');
+                                    let max = dialog.getContentElement('general', 'max');
                                     let maxValue = parseFloat(max.getValue());
                                     let thisValue = parseFloat(this.getValue());
                                     if(max.isEnabled()) {
@@ -88,7 +115,7 @@ CKEDITOR.plugins.add( 'chart', {
                                                 +") must be less than Max Value ("+maxValue+")");
                                         } 
                                     }
-                                },
+                                }  
                             },
                             {
                                 type : 'text',
@@ -98,6 +125,7 @@ CKEDITOR.plugins.add( 'chart', {
                                     .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
                                         "Max Value must be a real number" ),
                                 required : false,
+                                'default': 1,
                                 commit : function( data )
                                 {
                                     data.max = this.getValue();
@@ -111,6 +139,7 @@ CKEDITOR.plugins.add( 'chart', {
                                     .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
                                         "Step must be a real number" ),
                                 required : false,
+                                'default': 0.01,
                                 commit : function( data )
                                 {
                                     data.step = this.getValue();
@@ -202,7 +231,14 @@ CKEDITOR.plugins.add( 'chart', {
 
                     // set control
                     chartHtml += 'control: ' + data.control + '}%%';
-                    editor.insertHtml(chartHtml);
+
+                    // insert chart string to editor
+                    if(editor.getData().match(new RegExp(/[^{}]+(?=\}%%)/g))) {
+                        editor.setData(
+                            editor.getData().replace(new RegExp(/%%chart(.*)(?=%)%/g), chartHtml)
+                        );
+                    }
+                    else editor.insertHtml(chartHtml);
                 },
                 onShow : function() {
                     // load for edit question
@@ -212,39 +248,88 @@ CKEDITOR.plugins.add( 'chart', {
 
                     // If redownload jscolor.js - change this.zIndex (in jscolor.js) 
                     //to 12000 to show color picker over ckeditor dialog!!!
-                },
-                onLoad : function() {
-                    this.on('selectPage', function (e) {
-                        let type = this.getContentElement('types', 'type').getValue();
-                        let max = this.getContentElement('general', 'max');
-                        let step = this.getContentElement('general', 'step');
-                        
-                        // disable unused fields
-                        if(type == 4) {
-                            this.getContentElement('general', 'marks').enable();
-                            this.getContentElement('general', 'max').disable();
-                        } else {
-                            this.getContentElement('general', 'marks').disable();
-                            this.getContentElement('general', 'max').enable();
+
+                    // try to parse existing chart string
+                    let chartStr = ""+editor.getData()
+                        .match(new RegExp(/[^{}]+(?=\}%%)/g));
+                    if(chartStr) {
+                        if (chartStr.indexOf('type:') >= 0) {
+                            this.getContentElement('types', 'type').setValue(
+                                parseFloat(chartStr.match(
+                                    new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
+                                .replace('type:', ''))
+                            );
+                        } 
+                        if (chartStr.indexOf('value:') >= 0) {
+                            this.getContentElement('general', 'value').setValue(
+                                parseFloat(chartStr.match(
+                                    new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
+                                .replace('value:', ''))
+                            );
+                        }
+                        if (chartStr.indexOf('max:') >= 0) {
+                            this.getContentElement('general', 'max').setValue(
+                                parseFloat(chartStr.match(
+                                    new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
+                                .replace('max:', ''))
+                            );
+                        }
+                        if (chartStr.indexOf('marks:') >= 0) {
+                           this.getContentElement('general', 'marks').setValue(
+                                chartStr.match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+                                .replace('marks:', '').split(',').map(Number)
+                            );
+                        }
+                        if (chartStr.indexOf('step:') >= 0) {
+                            this.getContentElement('general', 'step').setValue(
+                                parseFloat(chartStr.match(
+                                    new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
+                                .replace('step:', ''))
+                            );
+                        }
+                        if (chartStr.indexOf('main-color:') >= 0) {
+                            document.getElementById('main-color').value =
+                                chartStr.match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
+                            .replace('main-color:', '').replace('#', '');
+                        }
+                        if (chartStr.indexOf('selected-color:') >= 0) {
+                            document.getElementById('selected-color').value =
+                                chartStr.match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
+                            .replace('selected-color:', '').replace('#', '');
+                        }
+                        if (chartStr.indexOf('stroke-color:') >= 0) {
+                            document.getElementById('stroke-color').value = 
+                                chartStr.match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
+                            .replace('stroke-color:', '').replace('#', '');
+                        }
+                        if (chartStr.indexOf('stroke-width:') >= 0) {
+                            this.getContentElement('optional', 'stroke-width').setValue(
+                                chartStr.match(
+                                    new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
+                                .replace('stroke-width:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('control:') >= 0) {
+                            this.getContentElement('types', 'control').setValue(
+                                parseFloat(chartStr.match(
+                                    new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
+                                .replace('control:', ''))
+                            );
                         }
 
-                        // set defaults
-                        if(type == 3) {
-                             max.setValue('100');
-                        } else {
-                            max.setValue('1');
-                        }
-                        if(max.getValue() <= 1) {
-                            step.setValue('0.01');
-                        } else {
-                            step.setValue('1');
-                        }
-                        if (type == 4) {
-                            step.setValue('0.5');
-                        }
-                        
+                        // disable unused fields for default type
+                        if(this.getContentElement('types', 'type').getValue() != 4) 
+                            this.getContentElement('general', 'marks').disable(); 
+                    } 
+                     
+                }
+                /* this function trigered when tab changed
+                onLoad : function() {
+                    this.on('selectPage', function (e) {
+                        //let type = this.getContentElement('types', 'type').getValue();
                     })
                 }
+                */
             };
         });
 

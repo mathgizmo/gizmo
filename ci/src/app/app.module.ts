@@ -25,7 +25,7 @@ import { TryComponent } from './_components/welcome/try/try.component';
 import { HomeComponent } from './_components/home/index';
 import { TopicComponent } from './_components/home/topic/index';
 import { LessonComponent, GoodDialogComponent, BadDialogComponent, 
-    ReportDialogComponent, QuestionWithChartComponent } 
+    ReportDialogComponent, ChartComponent } 
     from './_components/home/topic/lesson/index';
 import { ProfileComponent } from './_components/profile/profile.component';
 
@@ -62,7 +62,7 @@ import { ProfileComponent } from './_components/profile/profile.component';
         GoodDialogComponent,
         BadDialogComponent,
         ReportDialogComponent,
-        QuestionWithChartComponent,
+        ChartComponent,
         ProfileComponent,
         TryComponent
     ],

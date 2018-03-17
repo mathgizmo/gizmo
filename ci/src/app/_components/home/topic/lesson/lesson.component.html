@@ -5,10 +5,10 @@
 <div class="text-center">
     <div *ngIf="question !== null">
         <h2 [innerHtml]="question.question" *ngIf="!is_chart" ></h2>
-        <question-with-chart *ngIf="is_chart" 
-            [question]="question['question']" 
-            chartHeight="250" >
-        </question-with-chart>
+        <span  *ngIf="is_chart" >
+            <h2 [innerHtml]="questionForChart" *ngIf="is_chart" ></h2>
+            <chart [question]="question['question']" chartHeight="250" ></chart>
+        </span>
         <div *ngIf="question.answer_mode=='order'" [sortablejs]="answers" class="order-container">
             <div *ngFor="let answer of answers" class="order-item">{{answer}}</div>
         </div>
