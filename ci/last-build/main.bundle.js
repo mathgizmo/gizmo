@@ -238,6 +238,321 @@ var BadDialogComponent = (function () {
 
 /***/ }),
 
+/***/ "./src/app/_components/home/topic/lesson/chart/chart.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2 id=\"chart-container\" [innerHTML]=\"chart\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\"\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span *ngIf=\"!isSteepInteger\"> {{chartValue.toFixed(2)}} </span>\n          <span *ngIf=\"0\" > / {{chartMaxValue}} </span>\n          <span *ngIf=\"isSteepInteger\">\n            {{chartValue}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!isSteepInteger\">{{chartValue.toFixed(2)}}</label>\n        <label *ngIf=\"isSteepInteger\">{{chartValue}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/chart/chart.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = "input {\n  text-align: center;\n  font-weight: bold; }\n\n#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label-container label,\nmat-form-field, #controls > * {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n\n.max-value {\n  font-weight: bold; }\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/chart/chart.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChartComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__("./node_modules/@angular/platform-browser/esm5/platform-browser.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var ChartComponent = (function () {
+    function ChartComponent(sanitizer) {
+        this.sanitizer = sanitizer;
+        this.mainColor = "#f7f7f7";
+        this.selectedColor = "#ff4444";
+        this.strokeColor = "#111";
+        this.strokeWidth = 1;
+        this.dotRadius = 4;
+        this.chartType = 1;
+        this.chartControl = 0;
+        this.chartValue = 0.50;
+        this.chartMaxValue = 0;
+        this.startValue = 0;
+        this.endValue = 1;
+        this.chartStep = 0.5;
+        this.chartMarksList = [0, 0.5, 1];
+        this.initialized = false;
+        this.isSteepInteger = false;
+        this.dots = [];
+        if (!this.chartHeight)
+            this.chartHeight = 250;
+    }
+    ChartComponent.prototype.ngOnDestroy = function () {
+        this.destroyDotsChart();
+    };
+    ChartComponent.prototype.ngOnChanges = function (changes) {
+        if (this.oldQuestion != this.question) {
+            this.oldQuestion = this.question;
+            this.initialized = false;
+        }
+        this.destroyDotsChart();
+        this.buildChart();
+        this.percentValue = Math.round(this.chartValue / this.chartMaxValue * 100);
+    };
+    // function to build charts
+    ChartComponent.prototype.buildChart = function () {
+        var _this = this;
+        if (!this.initialized) {
+            var chart = this.question
+                .match(new RegExp(/[^{}]+(?=\}%%)/g));
+            if (chart['0'].indexOf('type:') >= 0)
+                this.chartType = parseFloat(chart['0']
+                    .match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
+                    .replace('type:', ''));
+            if (chart['0'].indexOf('value:') >= 0)
+                this.chartValue = parseFloat(chart['0']
+                    .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
+                    .replace('value:', ''));
+            if (chart['0'].indexOf('max:') >= 0) {
+                this.chartMaxValue = parseFloat(chart['0']
+                    .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
+                    .replace('max:', ''));
+            }
+            if (chart['0'].indexOf('marks:') >= 0) {
+                this.chartMarksList = chart['0']
+                    .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+                    .replace('marks:', '').split(',').map(Number);
+                this.chartMaxValue = this.chartMarksList[this.chartMarksList.length - 1];
+            }
+            if (chart['0'].indexOf('step:') >= 0) {
+                this.chartStep = parseFloat(chart['0']
+                    .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
+                    .replace('step:', ''));
+            }
+            if (chart['0'].indexOf('main-color:') >= 0) {
+                this.mainColor = chart['0']
+                    .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
+                    .replace('main-color:', '');
+            }
+            if (chart['0'].indexOf('selected-color:') >= 0) {
+                this.selectedColor = chart['0']
+                    .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
+                    .replace('selected-color:', '');
+            }
+            if (chart['0'].indexOf('stroke-color:') >= 0) {
+                this.strokeColor = chart['0']
+                    .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
+                    .replace('stroke-color:', '');
+            }
+            if (chart['0'].indexOf('stroke-width:') >= 0) {
+                this.strokeWidth = chart['0']
+                    .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
+                    .replace('stroke-width:', '');
+            }
+            if (chart['0'].indexOf('control:') >= 0)
+                this.chartControl = parseFloat(chart['0']
+                    .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
+                    .replace('control:', ''));
+            this.initialized = true;
+        }
+        var chartHtml = '';
+        if (this.chartType == 3) {
+            this.chartStep >= 1
+                ? this.chartStep = Math.round(this.chartStep)
+                : this.chartStep = 1;
+        }
+        this.isSteepInteger = Number.isInteger(this.chartStep);
+        var chartValuePercent = this.chartValue / this.chartMaxValue;
+        switch (this.chartType) {
+            default:
+            case 1:
+                // Chart (type 1 - rectangle)
+                chartHtml += '<svg style="height: '
+                    + this.chartHeight + '; width:' + this.chartHeight + ';">';
+                chartHtml += '<rect id="rect2" style="height:'
+                    + this.chartHeight + ' !important; width: 100%;';
+                chartHtml += ' fill: ' + this.mainColor + '; stroke: ' +
+                    this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
+                chartHtml += '></rect>';
+                chartHtml += '<rect id="rect1" style="y: ' +
+                    (1 - chartValuePercent) * this.chartHeight + '; height:' +
+                    chartValuePercent * this.chartHeight + ' !important; width: 100%;';
+                chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' +
+                    this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
+                chartHtml += '></rect>';
+                chartHtml += '</svg>';
+                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+                break;
+            case 2:
+                // Chart (type 2 - circle)
+                var radius = this.chartHeight / 2;
+                var angle = 2 * Math.PI * chartValuePercent;
+                var x = radius + radius * Math.sin(angle);
+                var y = radius - radius * Math.cos(angle);
+                chartHtml += '<svg style="height: '
+                    + this.chartHeight + '; width:' + this.chartHeight + ';">';
+                if (chartValuePercent <= 0.999) {
+                    chartHtml += '<circle id="circle2" style="r: ' + radius
+                        + ' !important; cx: ' + radius + ' !important; cy: '
+                        + radius + ' !important;';
+                    chartHtml += ' fill: ' + this.mainColor + '; stroke: ' +
+                        this.strokeColor + '; stroke-width: ' + this.strokeWidth + '" />';
+                    chartHtml += '<path id="circle1" d="M' + radius + ',' + radius
+                        + ' L' + radius + ',0 A' + radius + ',' + radius;
+                    if (chartValuePercent <= 0.5) {
+                        chartHtml += ' 1 0,1';
+                    }
+                    else {
+                        chartHtml += ' 1 1,1';
+                    }
+                    chartHtml += ' ' + x + ', ' + y + ' z"';
+                    chartHtml += 'style="fill: ' + this.selectedColor + '; stroke: ' +
+                        this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
+                    chartHtml += '></path>';
+                }
+                else {
+                    chartHtml += '<circle id="circle1" style="r: ' + radius
+                        + ' !important; cx: ' + radius + ' !important; cy: '
+                        + radius + ' !important;';
+                    chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' +
+                        this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"/>';
+                }
+                chartHtml += '</svg>';
+                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+                break;
+            case 3:
+                // Chart (type 3 - dots)
+                var chartContainer_1 = document.getElementById('chart-container');
+                var canvas_1 = document.createElement("canvas");
+                requestAnimationFrame(function () {
+                    chartContainer_1.innerHTML = chartHtml;
+                    chartContainer_1.appendChild(canvas_1);
+                });
+                canvas_1.style.height = this.chartHeight + 'px';
+                canvas_1.style.width = chartContainer_1.style.width;
+                var ctx_1 = canvas_1.getContext("2d");
+                for (var i = 0; i < this.chartMaxValue; i++) {
+                    if (this.dots[i] == undefined) {
+                        this.dots[i] = {
+                            x: Math.random() * (canvas_1.width - this.dotRadius * 2),
+                            y: Math.random() * (canvas_1.height - this.dotRadius * 2),
+                            radius: this.dotRadius
+                        };
+                    }
+                }
+                this.dotsChartRebuildFunctionId = setInterval(function () {
+                    ctx_1.clearRect(0, 0, canvas_1.width, canvas_1.height);
+                    _this.drawDotsChart(_this.chartValue, _this.chartMaxValue, ctx_1, canvas_1);
+                }, 80);
+                break;
+            case 4:
+                // Chart (type 4 - slider)
+                var circleDiameter = 2 * this.dotRadius;
+                var width = document.getElementById('chart-container').offsetWidth;
+                var indentation = circleDiameter + 5;
+                this.startValue = Math.min.apply(null, this.chartMarksList);
+                this.endValue = Math.max.apply(null, this.chartMarksList);
+                chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
+                chartHtml += '<line x1="' + indentation + '" y1="10" x2="'
+                    + (width - indentation) + '" y2="10" style="stroke:'
+                    + this.mainColor + '; stroke-width:'
+                    + this.strokeWidth + '" />';
+                width -= indentation * 2;
+                for (var i = 0; i < (this.endValue - this.startValue); i += this.chartStep) {
+                    var position = (i * width / (this.endValue - this.startValue)) + indentation;
+                    chartHtml += '<circle cx="' + position + '" cy="10" r="'
+                        + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                }
+                chartHtml += '<circle cx="' + (width + indentation) + '" cy="10" r="'
+                    + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                for (var i = 0; i < this.chartMarksList.length; i++) {
+                    var position = ((this.chartMarksList[i] - this.startValue) / (this.endValue
+                        - this.startValue) * width + indentation);
+                    chartHtml += '<text x="' + position
+                        + '" y="35" fill="' + this.strokeColor
+                        + '" font-size="16" text-anchor="middle">'
+                        + this.chartMarksList[i] + '</text>';
+                }
+                var currentPointX = ((this.chartValue - this.startValue) / (this.endValue
+                    - this.startValue) * width + indentation);
+                chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="'
+                    + circleDiameter + '" fill="' + this.selectedColor + '" />';
+                chartHtml += '</svg>';
+                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+                break;
+        }
+    };
+    // function to draw Dots Chart
+    ChartComponent.prototype.drawDotsChart = function (dotsNum, maxDotsNum, ctx, canvas) {
+        for (var i = 0; i < dotsNum; i++) {
+            this.dots[i] = this.drawDot(2, ctx, canvas, this.dots[i]);
+        }
+        for (var i = dotsNum; i < maxDotsNum; i++) {
+            this.dots[i] = this.drawDot(1, ctx, canvas, this.dots[i]);
+        }
+    };
+    // function to draw one Dot
+    ChartComponent.prototype.drawDot = function (type, ctx, canvas, dot) {
+        ctx.strokeStyle = this.strokeColor;
+        ctx.lineWidth = this.strokeWidth;
+        if (type == 1) {
+            ctx.fillStyle = this.mainColor;
+        }
+        if (type == 2) {
+            ctx.fillStyle = this.selectedColor;
+        }
+        dot.x += Math.random() * 2 - 1;
+        dot.y += Math.random() * 2 - 1;
+        // Check if dot goes beyond the field
+        var dotDiameter = dot.radius * 2;
+        if (dot.x > canvas.width - dotDiameter)
+            dot.x = canvas.width - dotDiameter;
+        if (dot.x < dotDiameter)
+            dot.x = dotDiameter;
+        if (dot.y > canvas.height - dotDiameter)
+            dot.y = canvas.height - dotDiameter;
+        if (dot.y < dotDiameter)
+            dot.y = dotDiameter;
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2, true);
+        ctx.fill();
+        ctx.stroke();
+        return dot;
+    };
+    // remove dot chart rebuild function if it exists
+    ChartComponent.prototype.destroyDotsChart = function () {
+        if (this.dotsChartRebuildFunctionId)
+            clearInterval(this.dotsChartRebuildFunctionId);
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+        __metadata("design:type", String)
+    ], ChartComponent.prototype, "question", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+        __metadata("design:type", Number)
+    ], ChartComponent.prototype, "chartHeight", void 0);
+    ChartComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'chart',
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/chart/chart.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/chart/chart.component.scss")],
+            changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["c" /* DomSanitizer */]])
+    ], ChartComponent);
+    return ChartComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.html":
 /***/ (function(module, exports) {
 
@@ -302,15 +617,15 @@ var GoodDialogComponent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lesson_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__good_dialog_good_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__good_dialog_good_dialog_component__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__good_dialog_good_dialog_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bad_dialog_bad_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__bad_dialog_bad_dialog_component__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__report_dialog_report_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_3__report_dialog_report_dialog_component__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__question_with_chart_question_with_chart_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_4__question_with_chart_question_with_chart_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__chart_chart_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/chart/chart.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_4__chart_chart_component__["a"]; });
 
 
 
@@ -323,7 +638,7 @@ var GoodDialogComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" ></h2>\n        <question-with-chart *ngIf=\"is_chart\" \n            [question]=\"question['question']\" \n            chartHeight=\"250\" >\n        </question-with-chart>\n        <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n            <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n        </div>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
+module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" ></h2>\n        <span  *ngIf=\"is_chart\" >\n            <h2 [innerHtml]=\"questionForChart\" *ngIf=\"is_chart\" ></h2>\n            <chart [question]=\"question['question']\" chartHeight=\"250\" ></chart>\n        </span>\n        <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n            <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n        </div>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
 
 /***/ }),
 
@@ -378,6 +693,7 @@ var LessonComponent = (function () {
         this.start_time = '';
         this.initial_loading = 1;
         this.next = 0;
+        this.questionForChart = '';
         this.max_incorrect_answers = 1;
         if (localStorage.getItem('question_num') != undefined) {
             this.question_num = Number(localStorage.getItem('question_num'));
@@ -428,6 +744,8 @@ var LessonComponent = (function () {
         this.is_chart = false;
         if (this.question['question'].indexOf('%%chart{') >= 0) {
             this.is_chart = true;
+            this.questionForChart = this.question['question']
+                .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
         }
         if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
             for (var i = 0; i < this.question.answers.length; i++) {
@@ -617,326 +935,6 @@ var LessonComponent = (function () {
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["d" /* MatDialog */]])
     ], LessonComponent);
     return LessonComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<h2 id=\"chart-container\" [innerHTML]=\"chart\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\"\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span *ngIf=\"!isSteepInteger\"> {{chartValue.toFixed(2)}} </span>\n          <span *ngIf=\"0\" > / {{chartMaxValue}} </span>\n          <span *ngIf=\"isSteepInteger\">\n            {{chartValue}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!isSteepInteger\">{{chartValue.toFixed(2)}}</label>\n        <label *ngIf=\"isSteepInteger\">{{chartValue}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
-
-/***/ }),
-
-/***/ "./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.scss":
-/***/ (function(module, exports) {
-
-module.exports = "input {\n  text-align: center;\n  font-weight: bold; }\n\n#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label-container label,\nmat-form-field, #controls > * {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n\n.max-value {\n  font-weight: bold; }\n"
-
-/***/ }),
-
-/***/ "./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QuestionWithChartComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__("./node_modules/@angular/platform-browser/esm5/platform-browser.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-var QuestionWithChartComponent = (function () {
-    function QuestionWithChartComponent(sanitizer) {
-        this.sanitizer = sanitizer;
-        this.mainColor = "#f7f7f7";
-        this.selectedColor = "#ff4444";
-        this.strokeColor = "#111";
-        this.strokeWidth = 1;
-        this.dotRadius = 4;
-        this.chartType = 1;
-        this.chartControl = 0;
-        this.chartValue = 0.50;
-        this.chartMaxValue = 0;
-        this.startValue = 0;
-        this.endValue = 1;
-        this.chartStep = 0.5;
-        this.chartMarksList = [0, 0.5, 1];
-        this.initialized = false;
-        this.isSteepInteger = false;
-        this.dots = [];
-        if (!this.chartHeight)
-            this.chartHeight = 250;
-    }
-    QuestionWithChartComponent.prototype.ngOnDestroy = function () {
-        this.destroyDotsChart();
-    };
-    QuestionWithChartComponent.prototype.ngOnChanges = function (changes) {
-        if (this.oldQuestion != this.question) {
-            this.oldQuestion = this.question;
-            this.initialized = false;
-        }
-        this.destroyDotsChart();
-        this.buildChart();
-        this.percentValue = Math.round(this.chartValue / this.chartMaxValue * 100);
-        // setup equation in LaTeX
-        setTimeout(function () {
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-        }, 50);
-    };
-    // function to build charts
-    QuestionWithChartComponent.prototype.buildChart = function () {
-        var _this = this;
-        if (!this.initialized) {
-            var chart = this.question
-                .match(new RegExp(/[^{}]+(?=\}%%)/g));
-            if (chart['0'].indexOf('type:') >= 0)
-                this.chartType = parseFloat(chart['0']
-                    .match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
-                    .replace('type:', ''));
-            if (chart['0'].indexOf('value:') >= 0)
-                this.chartValue = parseFloat(chart['0']
-                    .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
-                    .replace('value:', ''));
-            if (chart['0'].indexOf('max:') >= 0) {
-                this.chartMaxValue = parseFloat(chart['0']
-                    .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
-                    .replace('max:', ''));
-            }
-            if (chart['0'].indexOf('marks:') >= 0) {
-                this.chartMarksList = chart['0']
-                    .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
-                    .replace('marks:', '').split(',').map(Number);
-                this.chartMaxValue = this.chartMarksList[this.chartMarksList.length - 1];
-            }
-            if (chart['0'].indexOf('step:') >= 0) {
-                this.chartStep = parseFloat(chart['0']
-                    .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
-                    .replace('step:', ''));
-            }
-            if (chart['0'].indexOf('main-color:') >= 0) {
-                this.mainColor = chart['0']
-                    .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
-                    .replace('main-color:', '');
-            }
-            if (chart['0'].indexOf('selected-color:') >= 0) {
-                this.selectedColor = chart['0']
-                    .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
-                    .replace('selected-color:', '');
-            }
-            if (chart['0'].indexOf('stroke-color:') >= 0) {
-                this.strokeColor = chart['0']
-                    .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
-                    .replace('stroke-color:', '');
-            }
-            if (chart['0'].indexOf('stroke-width:') >= 0) {
-                this.strokeWidth = chart['0']
-                    .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
-                    .replace('stroke-width:', '');
-            }
-            if (chart['0'].indexOf('control:') >= 0)
-                this.chartControl = parseFloat(chart['0']
-                    .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
-                    .replace('control:', ''));
-            this.initialized = true;
-        }
-        var chartHtml = this.question
-            .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
-        if (this.chartType == 3) {
-            this.chartStep >= 1
-                ? this.chartStep = Math.round(this.chartStep)
-                : this.chartStep = 1;
-        }
-        this.isSteepInteger = Number.isInteger(this.chartStep);
-        var chartValuePercent = this.chartValue / this.chartMaxValue;
-        switch (this.chartType) {
-            default:
-            case 1:
-                // Chart (type 1 - rectangle)
-                chartHtml += '<svg style="height: '
-                    + this.chartHeight + '; width:' + this.chartHeight + ';">';
-                chartHtml += '<rect id="rect2" style="height:'
-                    + this.chartHeight + ' !important; width: 100%;';
-                chartHtml += ' fill: ' + this.mainColor + '; stroke: ' +
-                    this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
-                chartHtml += '></rect>';
-                chartHtml += '<rect id="rect1" style="y: ' +
-                    (1 - chartValuePercent) * this.chartHeight + '; height:' +
-                    chartValuePercent * this.chartHeight + ' !important; width: 100%;';
-                chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' +
-                    this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
-                chartHtml += '></rect>';
-                chartHtml += '</svg>';
-                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
-                break;
-            case 2:
-                // Chart (type 2 - circle)
-                var radius = this.chartHeight / 2;
-                var angle = 2 * Math.PI * chartValuePercent;
-                var x = radius + radius * Math.sin(angle);
-                var y = radius - radius * Math.cos(angle);
-                chartHtml += '<svg style="height: '
-                    + this.chartHeight + '; width:' + this.chartHeight + ';">';
-                if (chartValuePercent <= 0.999) {
-                    chartHtml += '<circle id="circle2" style="r: ' + radius
-                        + ' !important; cx: ' + radius + ' !important; cy: '
-                        + radius + ' !important;';
-                    chartHtml += ' fill: ' + this.mainColor + '; stroke: ' +
-                        this.strokeColor + '; stroke-width: ' + this.strokeWidth + '" />';
-                    chartHtml += '<path id="circle1" d="M' + radius + ',' + radius
-                        + ' L' + radius + ',0 A' + radius + ',' + radius;
-                    if (chartValuePercent <= 0.5) {
-                        chartHtml += ' 1 0,1';
-                    }
-                    else {
-                        chartHtml += ' 1 1,1';
-                    }
-                    chartHtml += ' ' + x + ', ' + y + ' z"';
-                    chartHtml += 'style="fill: ' + this.selectedColor + '; stroke: ' +
-                        this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
-                    chartHtml += '></path>';
-                }
-                else {
-                    chartHtml += '<circle id="circle1" style="r: ' + radius
-                        + ' !important; cx: ' + radius + ' !important; cy: '
-                        + radius + ' !important;';
-                    chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' +
-                        this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"/>';
-                }
-                chartHtml += '</svg>';
-                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
-                break;
-            case 3:
-                // Chart (type 3 - dots)
-                var chartContainer_1 = document.getElementById('chart-container');
-                var canvas_1 = document.createElement("canvas");
-                requestAnimationFrame(function () {
-                    chartContainer_1.innerHTML = chartHtml;
-                    chartContainer_1.appendChild(canvas_1);
-                });
-                canvas_1.style.height = this.chartHeight + 'px';
-                canvas_1.style.width = chartContainer_1.style.width;
-                var ctx_1 = canvas_1.getContext("2d");
-                for (var i = 0; i < this.chartMaxValue; i++) {
-                    if (this.dots[i] == undefined) {
-                        this.dots[i] = {
-                            x: Math.random() * (canvas_1.width - this.dotRadius * 2),
-                            y: Math.random() * (canvas_1.height - this.dotRadius * 2),
-                            radius: this.dotRadius
-                        };
-                    }
-                }
-                this.dotsChartRebuildFunctionId = setInterval(function () {
-                    ctx_1.clearRect(0, 0, canvas_1.width, canvas_1.height);
-                    _this.drawDotsChart(_this.chartValue, _this.chartMaxValue, ctx_1, canvas_1);
-                }, 80);
-                break;
-            case 4:
-                // Chart (type 4 - slider)
-                var circleDiameter = 2 * this.dotRadius;
-                var width = document.getElementById('chart-container').offsetWidth;
-                var indentation = circleDiameter + 5;
-                this.startValue = Math.min.apply(null, this.chartMarksList);
-                this.endValue = Math.max.apply(null, this.chartMarksList);
-                chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
-                chartHtml += '<line x1="' + indentation + '" y1="10" x2="'
-                    + (width - indentation) + '" y2="10" style="stroke:'
-                    + this.mainColor + '; stroke-width:'
-                    + this.strokeWidth + '" />';
-                width -= indentation * 2;
-                for (var i = 0; i < (this.endValue - this.startValue); i += this.chartStep) {
-                    var position = (i * width / (this.endValue - this.startValue)) + indentation;
-                    chartHtml += '<circle cx="' + position + '" cy="10" r="'
-                        + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
-                }
-                chartHtml += '<circle cx="' + (width + indentation) + '" cy="10" r="'
-                    + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
-                for (var i = 0; i < this.chartMarksList.length; i++) {
-                    var position = ((this.chartMarksList[i] - this.startValue) / (this.endValue
-                        - this.startValue) * width + indentation);
-                    chartHtml += '<text x="' + position
-                        + '" y="35" fill="' + this.strokeColor
-                        + '" font-size="16" text-anchor="middle">'
-                        + this.chartMarksList[i] + '</text>';
-                }
-                var currentPointX = ((this.chartValue - this.startValue) / (this.endValue
-                    - this.startValue) * width + indentation);
-                chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="'
-                    + circleDiameter + '" fill="' + this.selectedColor + '" />';
-                chartHtml += '</svg>';
-                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
-                break;
-        }
-    };
-    // function to draw Dots Chart
-    QuestionWithChartComponent.prototype.drawDotsChart = function (dotsNum, maxDotsNum, ctx, canvas) {
-        for (var i = 0; i < dotsNum; i++) {
-            this.dots[i] = this.drawDot(2, ctx, canvas, this.dots[i]);
-        }
-        for (var i = dotsNum; i < maxDotsNum; i++) {
-            this.dots[i] = this.drawDot(1, ctx, canvas, this.dots[i]);
-        }
-    };
-    // function to draw one Dot
-    QuestionWithChartComponent.prototype.drawDot = function (type, ctx, canvas, dot) {
-        ctx.strokeStyle = this.strokeColor;
-        ctx.lineWidth = this.strokeWidth;
-        if (type == 1) {
-            ctx.fillStyle = this.mainColor;
-        }
-        if (type == 2) {
-            ctx.fillStyle = this.selectedColor;
-        }
-        dot.x += Math.random() * 2 - 1;
-        dot.y += Math.random() * 2 - 1;
-        // Check if dot goes beyond the field
-        var dotDiameter = dot.radius * 2;
-        if (dot.x > canvas.width - dotDiameter)
-            dot.x = canvas.width - dotDiameter;
-        if (dot.x < dotDiameter)
-            dot.x = dotDiameter;
-        if (dot.y > canvas.height - dotDiameter)
-            dot.y = canvas.height - dotDiameter;
-        if (dot.y < dotDiameter)
-            dot.y = dotDiameter;
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2, true);
-        ctx.fill();
-        ctx.stroke();
-        return dot;
-    };
-    // remove dot chart rebuild function if it exists
-    QuestionWithChartComponent.prototype.destroyDotsChart = function () {
-        if (this.dotsChartRebuildFunctionId)
-            clearInterval(this.dotsChartRebuildFunctionId);
-    };
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-        __metadata("design:type", String)
-    ], QuestionWithChartComponent.prototype, "question", void 0);
-    __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-        __metadata("design:type", Number)
-    ], QuestionWithChartComponent.prototype, "chartHeight", void 0);
-    QuestionWithChartComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            selector: 'question-with-chart',
-            template: __webpack_require__("./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.html"),
-            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/question-with-chart/question-with-chart.component.scss")],
-            changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush
-        }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["c" /* DomSanitizer */]])
-    ], QuestionWithChartComponent);
-    return QuestionWithChartComponent;
 }());
 
 
@@ -2078,16 +2076,16 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_15__components_welcome_register_index__["a" /* RegisterComponent */],
                 __WEBPACK_IMPORTED_MODULE_17__components_home_index__["a" /* HomeComponent */],
                 __WEBPACK_IMPORTED_MODULE_18__components_home_topic_index__["a" /* TopicComponent */],
-                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["c" /* LessonComponent */],
-                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["b" /* GoodDialogComponent */],
+                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["d" /* LessonComponent */],
+                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["c" /* GoodDialogComponent */],
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["a" /* BadDialogComponent */],
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["e" /* ReportDialogComponent */],
-                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["d" /* QuestionWithChartComponent */],
+                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["b" /* ChartComponent */],
                 __WEBPACK_IMPORTED_MODULE_20__components_profile_profile_component__["a" /* ProfileComponent */],
                 __WEBPACK_IMPORTED_MODULE_16__components_welcome_try_try_component__["a" /* TryComponent */]
             ],
             entryComponents: [
-                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["b" /* GoodDialogComponent */],
+                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["c" /* GoodDialogComponent */],
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["a" /* BadDialogComponent */],
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["e" /* ReportDialogComponent */]
             ],
@@ -2140,7 +2138,7 @@ var appRoutes = [
     { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_8__components_profile_profile_component__["a" /* ProfileComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: '', component: __WEBPACK_IMPORTED_MODULE_4__components_home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_5__components_home_topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
-    { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__["c" /* LessonComponent */],
+    { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__["d" /* LessonComponent */],
         canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     // otherwise redirect to welcome
     { path: '**', redirectTo: 'welcome' }
