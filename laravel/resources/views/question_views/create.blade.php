@@ -141,7 +141,8 @@
                             class="form-group{{ $errors->has('ignore_order') ? ' has-error' : '' }}">
                             <label for="type" class="col-md-4 control-label">Ignore order options for answers</label>
                             <div class="col-md-6 radio">
-                                <label for="type" class="col-md-3"> <input type="checkbox" name="ignore_order" value="1"></label>
+                                <label for="type" class="col-md-3"> 
+                                    <input id='ignore_order_input' type="checkbox" name="ignore_order" value="1"></label>
                                 @if ($errors->has('ignore_order'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('ignore_order') }}</strong>
@@ -153,10 +154,12 @@
                             let reply_mode = document.getElementById('reply_mode');
                             reply_mode.onchange = () => {
                               let ignore_order = document.getElementById('ignore_order');
+                              let ignore_order_input = document.getElementById('ignore_order_input');
                               if(reply_mode.value == 'FB') { 
-                                  ignore_order.style.display = 'block';
+                                ignore_order.style.display = 'block';
                               }  else {
-                                ignore_order.style.display = 'none';
+                                ignore_order.style.display = 'none'; 
+                                ignore_order_input.value = false;
                               }
                             }
                         </script>

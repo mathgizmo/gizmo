@@ -305,7 +305,6 @@ class QuestionController extends Controller
 		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $question->tid)->get();
 		$qrmodes = DB::select('select * from reply_mode');
 
-
 		return view('question_views.edit', ['question'=>$question,'levels'=>$levels,
 		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers]);
     }
