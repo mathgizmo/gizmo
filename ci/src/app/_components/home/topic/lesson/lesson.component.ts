@@ -132,6 +132,35 @@ export class LessonComponent implements OnInit {
     }
     
     checkAnswer() {
+      
+      // sort question answers
+      if(this.question.question_order) {
+        this.question.answers.sort( (a, b) => {
+          return a.value - b.value; 
+        });
+        // check if all answers are numbers
+        let isNumbers = true;
+        for (let i = 0; i < this.answers.length; i++){
+          let answer = this.answers[i].replace(",", ".");
+          if(isNaN(+answer)) {
+            isNumbers = false;
+            break;
+          }
+        }
+        if(isNumbers) { 
+          for (let i = 0; i < this.answers.length; i++)
+            this.answers[i] = this.answers[i].replace(",", ".");
+          this.answers.sort( (a, b) => {
+            return +a - +b; 
+          });
+          //console.log("NUM: "+this.answers);
+        }
+        else {
+          this.answers.sort();
+          //console.log("STR: "+this.answers);
+        }
+      }
+
       if (this.isCorrect()) {
         this.correct_answers++;
         this.complete_percent = (this.correct_answers == 0) ? 0

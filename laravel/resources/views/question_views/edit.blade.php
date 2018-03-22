@@ -137,19 +137,19 @@
                             </div>
                         </div>
 
-                        <div id='ignore_order' style='display: none;' 
-                            class="form-group{{ $errors->has('ignore_order') ? ' has-error' : '' }}">
-                            <label for="type" class="col-md-4 control-label">Ignore order options for answers</label>
+                        <div id='question_order' style='display: none;' 
+                            class="form-group{{ $errors->has('question_order') ? ' has-error' : '' }}">
+                            <label for="type" class="col-md-4 control-label">Order options for answers</label>
                             <div class="col-md-6 radio">
                                 <label for="type" class="col-md-3"> 
-                                    <input id='ignore_order_input' type="checkbox" name="ignore_order" value="1" 
-                                    @if ($question->ignore_order)
+                                    <input id='question_order_input' type="checkbox" name="question_order" value="1" 
+                                    @if ($question->question_order)
                                         checked="checked"
                                     @endif
                                 ></label>
-                                @if ($errors->has('ignore_order'))
+                                @if ($errors->has('question_order'))
                                     <span class="help-block">
-                                    <strong>{{ $errors->first('ignore_order') }}</strong>
+                                    <strong>{{ $errors->first('question_order') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -157,13 +157,13 @@
                         <script type="text/javascript">
                             let reply_mode = document.getElementById('reply_mode');
                             reply_mode.onchange = () => {
-                              let ignore_order = document.getElementById('ignore_order');
-                              let ignore_order_input = document.getElementById('ignore_order_input');
+                              let order = document.getElementById('question_order');
+                              let order_input = document.getElementById('question_order_input');
                               if(reply_mode.value == 'FB') { 
-                                ignore_order.style.display = 'block';
+                                order.style.display = 'block';
                               }  else {
-                                ignore_order.style.display = 'none'; 
-                                ignore_order_input.value = false;
+                                order.style.display = 'none'; 
+                                order_input.value = false;
                               }
                             }
                         </script>

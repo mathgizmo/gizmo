@@ -13,7 +13,7 @@ class UpdateQuestionTable2 extends Migration
     public function up()
     {
         Schema::table('question', function($table) {
-            $table->boolean('ignore_order')->default(false);
+            $table->boolean('question_order')->default(false);
         });
     }
 
@@ -25,7 +25,7 @@ class UpdateQuestionTable2 extends Migration
     public function down()
     {
         Schema::table('question', function($table) {
-            $table->dropColumn('ignore_order');
+            $table->dropColumn('question_order');
         });
     }
 
