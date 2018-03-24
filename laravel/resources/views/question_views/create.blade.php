@@ -136,6 +136,34 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div id='question_order' style='display: none;' 
+                            class="form-group{{ $errors->has('question_order') ? ' has-error' : '' }}">
+                            <label for="type" class="col-md-4 control-label">Order options for answers</label>
+                            <div class="col-md-6 radio">
+                                <label for="type" class="col-md-3"> 
+                                    <input id='question_order_input' type="checkbox" name="question_order" value="1"></label>
+                                @if ($errors->has('question_order'))
+                                    <span class="help-block">
+                                    <strong>{{ $errors->first('question_order') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            let reply_mode = document.getElementById('reply_mode');
+                            reply_mode.onchange = () => {
+                              let order = document.getElementById('question_order');
+                              let order_input = document.getElementById('question_order_input');
+                              if(reply_mode.value == 'FB') { 
+                                order.style.display = 'block';
+                              }  else {
+                                order.style.display = 'none'; 
+                                order_input.value = false;
+                              }
+                            }
+                        </script>
+
 						<div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
                             <label for="question" class="col-md-4 control-label">Question</label>
                             <div class="col-md-6">
@@ -265,7 +293,7 @@
                             @endif
                         </div>
                     </div>
-
+                    
 		<div class="form-group">
 			<div class="col-md-6 col-md-offset-4">
                <a class="btn btn-default" href="{{ route('question_views.index') }}">Back</a>

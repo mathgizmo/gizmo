@@ -231,8 +231,9 @@ class QuestionController extends Controller
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],
 									'created_at' => date('Y-m-d H:i:s'),
-                                    'conversion' => $request['conversion'] ?: false,
-                                    'rounding' => $request['rounding'] ?: false,
+                  'conversion' => $request['conversion'] ?: false,
+                  'rounding' => $request['rounding'] ?: false,
+                  'question_order' => $request['question_order'] ?: false,
 									'modified_at' => date('Y-m-d H:i:s')
 									]);
 		$question = Question::create($collectionQuestion->all());
@@ -304,7 +305,6 @@ class QuestionController extends Controller
 		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $question->tid)->get();
 		$qrmodes = DB::select('select * from reply_mode');
 
-
 		return view('question_views.edit', ['question'=>$question,'levels'=>$levels,
 		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers]);
     }
@@ -343,8 +343,9 @@ class QuestionController extends Controller
 
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
 									'feedback' => $request['feedback'],
-                                    'conversion' => $request['conversion'] ?: false,
-                                    'rounding' => $request['rounding'] ?: false,
+                  'conversion' => $request['conversion'] ?: false,
+                  'rounding' => $request['rounding'] ?: false,
+                  'question_order' => $request['question_order'] ?: false,
 									'created_at' => date('Y-m-d H:i:s'),
 									'modified_at' => date('Y-m-d H:i:s')
 									]);

@@ -1,13 +1,10 @@
-﻿<div class="col-md-6 col-md-offset-3">
-    <h2 class="center">Welcome!</h2>
-    <div class="pull-right">
-        <a routerLink="/register" class="btn btn-warning width150">Register account</a>
-    </div>
-    <div>
-        <a routerLink="/login" class="btn btn-info width150">Login</a>
-    </div>
-    <br />
-    <div class="center">
-        <app-try class="btn btn-success"></app-try>
-    </div>
+﻿<div class="welcome">
+  <h2 class="center">Welcome!</h2>
+  <div class="buttons-container">
+    <a mat-button routerLink="/register" class="register-button">Register account</a>
+    <a mat-button routerLink="/login" class="login-button">Login</a>
+    <button mat-button class="try-button"> 
+      <app-try></app-try>
+    </button>
+  </div>
 </div>
