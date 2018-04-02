@@ -780,6 +780,33 @@ var LessonComponent = (function () {
     };
     LessonComponent.prototype.checkAnswer = function () {
         var _this = this;
+        // sort question answers
+        if (this.question.question_order) {
+            this.question.answers.sort(function (a, b) {
+                return a.value - b.value;
+            });
+            // check if all answers are numbers
+            var isNumbers = true;
+            for (var i = 0; i < this.answers.length; i++) {
+                var answer = this.answers[i].replace(",", ".");
+                if (isNaN(+answer)) {
+                    isNumbers = false;
+                    break;
+                }
+            }
+            if (isNumbers) {
+                for (var i = 0; i < this.answers.length; i++)
+                    this.answers[i] = this.answers[i].replace(",", ".");
+                this.answers.sort(function (a, b) {
+                    return +a - +b;
+                });
+                //console.log("NUM: "+this.answers);
+            }
+            else {
+                this.answers.sort();
+                //console.log("STR: "+this.answers);
+            }
+        }
         if (this.isCorrect()) {
             this.correct_answers++;
             this.complete_percent = (this.correct_answers == 0) ? 0
@@ -1448,14 +1475,14 @@ var TryComponent = (function () {
 /***/ "./src/app/_components/welcome/welcome.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-6 col-md-offset-3\">\n    <h2 class=\"center\">Welcome!</h2>\n    <div class=\"pull-right\">\n        <a routerLink=\"/register\" class=\"btn btn-warning width150\">Register account</a>\n    </div>\n    <div>\n        <a routerLink=\"/login\" class=\"btn btn-info width150\">Login</a>\n    </div>\n    <br />\n    <div class=\"center\">\n        <app-try class=\"btn btn-success\"></app-try>\n    </div>\n</div>\n"
+module.exports = "<div class=\"welcome\">\n  <h2 class=\"center\">Welcome!</h2>\n  <div class=\"buttons-container\">\n    <a mat-button routerLink=\"/register\" class=\"register-button\">Register account</a>\n    <a mat-button routerLink=\"/login\" class=\"login-button\">Login</a>\n    <button mat-button class=\"try-button\"> \n      <app-try></app-try>\n    </button>\n  </div>\n</div>\n"
 
 /***/ }),
 
 /***/ "./src/app/_components/welcome/welcome.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n"
+module.exports = ".buttons-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .buttons-container .register-button, .buttons-container .login-button, .buttons-container .try-button {\n    margin: 8px;\n    padding: 0;\n    width: 150px;\n    color: #fafafa;\n    text-decoration: none; }\n  .buttons-container .login-button {\n    background-color: #31698a; }\n  .buttons-container .register-button {\n    background-color: #6dc066; }\n  .buttons-container .try-button {\n    background-color: #daa520; }\n  .center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n"
 
 /***/ }),
 
