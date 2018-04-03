@@ -1,6 +1,5 @@
-import { Component, Inject, OnDestroy, ChangeDetectionStrategy, 
+import { Component, Inject, OnInit, OnDestroy, ChangeDetectionStrategy, 
     Input, OnChanges, SimpleChanges } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
@@ -9,7 +8,7 @@ import {MatSliderModule} from '@angular/material/slider';
     styleUrls: ['chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChartComponent implements OnDestroy, OnChanges {
+export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     
     @Input() question: string;
     @Input() chartHeight: number; // dimension of chart area in px
@@ -35,19 +34,23 @@ export class ChartComponent implements OnDestroy, OnChanges {
 
     private percentValue: number;
     private isSteepInteger: boolean = false;
+    private setClickPositionEventId: boolean = false;
 
-    chart: SafeHtml;
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
    
-    constructor(private sanitizer: DomSanitizer){
+    constructor(){
       this.dots = [];
       if(!this.chartHeight)
-        this.chartHeight=250; 
+        this.chartHeight=250;
+    }
+
+    ngOnInit() {
     }
 
     ngOnDestroy() {
       this.destroyDotsChart();
+      this.removeSetClickPositionEvent();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -56,6 +59,7 @@ export class ChartComponent implements OnDestroy, OnChanges {
             this.initialized = false;
         }
         this.destroyDotsChart();
+        this.removeSetClickPositionEvent();
         this.buildChart();
         this.percentValue = Math.round(this.chartValue/this.chartMaxValue*100);
     }
@@ -123,6 +127,7 @@ export class ChartComponent implements OnDestroy, OnChanges {
       }
       this.isSteepInteger = Number.isInteger(this.chartStep);
       let chartValuePercent = this.chartValue/this.chartMaxValue;
+      let chartContainer = document.getElementById('chart-container');
       switch (this.chartType) {
         default:
         case 1:
@@ -141,7 +146,7 @@ export class ChartComponent implements OnDestroy, OnChanges {
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
           chartHtml += '</svg>';
-          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+          chartContainer.innerHTML = chartHtml;
           break;
         case 2:
           // Chart (type 2 - circle)
@@ -176,11 +181,10 @@ export class ChartComponent implements OnDestroy, OnChanges {
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
           chartHtml += '</svg>';
-          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+          chartContainer.innerHTML = chartHtml;
           break;
         case 3:
           // Chart (type 3 - dots)
-          let chartContainer = document.getElementById('chart-container');
           let canvas = document.createElement("canvas");
           requestAnimationFrame(() => {
             chartContainer.innerHTML = chartHtml;
@@ -206,7 +210,7 @@ export class ChartComponent implements OnDestroy, OnChanges {
         case 4:
           // Chart (type 4 - slider)
           let circleDiameter = 2*this.dotRadius;
-          let width  = document.getElementById('chart-container').offsetWidth;
+          let width  = chartContainer.offsetWidth;
           let indentation = circleDiameter + 5;
           this.startValue = Math.min.apply(null, this.chartMarksList);
           this.endValue = Math.max.apply(null, this.chartMarksList);
@@ -232,13 +236,42 @@ export class ChartComponent implements OnDestroy, OnChanges {
               +'" font-size="16" text-anchor="middle">' 
               + this.chartMarksList[i] + '</text>';
           }
-          let currentPointX = ((this.chartValue-this.startValue)/(this.endValue
-            -this.startValue)*width + indentation);
+          let currentPointX = (this.chartValue-this.startValue)/(this.endValue
+            -this.startValue)*width + indentation;
           chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="' 
             + circleDiameter + '" fill="' + this.selectedColor + '" />';
           chartHtml += '</svg>';
-          this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+          chartContainer.innerHTML = chartHtml;
+
+          if(!this.setClickPositionEventId) {
+            chartContainer.addEventListener('click', this.setClickPosition.bind(this));
+            this.setClickPositionEventId = true;
+          }
+
           break;
+      }
+    }
+
+    // function to set value by clicking on top slider
+    private setClickPosition(event){
+      let chartContainer = document.getElementById('chart-container');
+      var pos = getAbsolutePosition(chartContainer);
+      let x = event.pageX - pos.x;
+      let circleDiameter = 2*this.dotRadius;
+      let width  = chartContainer.offsetWidth;
+      let indentation = circleDiameter + 5;
+      this.chartValue = (x - indentation)*(this.endValue
+        -this.startValue) / width + this.startValue;
+
+      this.chartValue = Math.round(this.chartValue * 105)/100;
+      if(this.chartValue < this.startValue) 
+        this.chartValue = this.startValue;
+      else if (this.chartValue > this.endValue) 
+        this.chartValue = this.endValue;
+
+      this.buildChart();
+      if(this.chartControl > 0) {
+        document.getElementById('inputValue').focus();
       }
     }
 
@@ -291,4 +324,24 @@ export class ChartComponent implements OnDestroy, OnChanges {
       if (this.dotsChartRebuildFunctionId)
         clearInterval(this.dotsChartRebuildFunctionId); 
     }
+
+    // remove Set Click Position Event if it exists
+    private removeSetClickPositionEvent() {
+      if(this.setClickPositionEventId) {
+        document.getElementById('chart-container')
+          .removeEventListener('click', this.setClickPosition);
+        this.setClickPositionEventId = false;
+      }
+    }
 }
+
+// function to get absolute position of HTML element
+function getAbsolutePosition(element) {
+  let r = { x: element.offsetLeft, y: element.offsetTop };
+  if (element.offsetParent) {
+    let tmp = getAbsolutePosition(element.offsetParent);
+    r.x += tmp.x;
+    r.y += tmp.y;
+  }
+  return r;
+};

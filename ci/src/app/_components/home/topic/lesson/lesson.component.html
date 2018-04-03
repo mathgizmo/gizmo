@@ -37,10 +37,10 @@
                     </mat-checkbox>
                 </div>
             </div>
-            <mat-form-field *ngIf="question.answer_mode=='input'">
-                <input matInput *ngFor="let answer of question.answers; let answerIndex = 'index'" [(ngModel)]="answers[answerIndex]" name="'answers[{{answerIndex}}]'"
-                (keyup.enter) = "checkAnswer()" color="primary" placeholder="Enter your answer here" class="input">
-            </mat-form-field>
+            <div  *ngIf="question.answer_mode=='input'">
+                <input *ngFor="let answer of question.answers; let answerIndex = 'index'" [(ngModel)]="answers[answerIndex]" name="'answers[{{answerIndex}}]'"
+                (keyup.enter) = "checkAnswer()" class="input">
+            </div>
         </span>
         <br />
         <button (click)="checkAnswer()"

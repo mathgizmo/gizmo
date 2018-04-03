@@ -1,4 +1,4 @@
-<h2 id="chart-container" [innerHTML]="chart"></h2>
+<h2 id="chart-container"></h2>
 <div id="controls" *ngIf="chartControl > 0" >
   <p>Value</p>
   <span *ngIf="chartControl == 1">
@@ -6,7 +6,7 @@
       <input matInput  *ngIf="chartType != 4"
         [(ngModel)]="chartValue" type="number" 
         [step]="chartStep" [max]="chartMaxValue" min="0"/>
-      <input *ngIf="chartType == 4"
+      <input *ngIf="chartType == 4" id='inputValue'
         matInput [(ngModel)]="chartValue" type="number" 
         [step]="chartStep" [max]="chartMaxValue" [min]="chartStartValue"/>
       <mat-progress-bar class='progress' value={{percentValue}}>
@@ -39,7 +39,7 @@
     <span *ngIf="chartType == 4" >
       <mat-slider (change)="ngOnChanges()" [(ngModel)]="chartValue"
         [step]="chartStep" [max]="endValue" [min]="startValue" 
-        color="primary" class='slider-control'>
+        color="primary" class='slider-control' id='inputValue'>
       </mat-slider>
       <div class="value-label-container">
         <label *ngIf="!isSteepInteger">{{chartValue.toFixed(2)}}</label>
