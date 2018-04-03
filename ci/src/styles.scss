@@ -333,3 +333,15 @@ h1, h2, h3, h4 {
 .width150 {
     width: 150px;
 }
+
+.question, .question *, .jumbotron .question p {
+  font-size: 24px;
+}
+
+.answer, .answer *, .jumbotron .answer p {
+  font-size: 16px;
+}
+
+.mjx-chtml {
+    line-height: 160% !important;
+}

@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatSelectModule, 
     MatIconModule, MatMenuModule, MatRadioModule, 
     MatDialogModule, MatProgressBarModule, MatSliderModule,
-    MatToolbarModule, MatCardModule } from '@angular/material';
+    MatToolbarModule, MatCardModule, MatCheckboxModule } from '@angular/material';
 import { BaseRequestOptions } from '@angular/http';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
@@ -48,6 +48,7 @@ import { ProfileComponent } from './_components/profile/profile.component';
         MatSliderModule,
         MatToolbarModule, 
         MatCardModule,
+        MatCheckboxModule,
         FlexLayoutModule,
         SortablejsModule.forRoot({ animation: 150 })
     ],
