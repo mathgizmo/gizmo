@@ -229,7 +229,6 @@ class QuestionController extends Controller
 		'question' => $request['question']]);
 
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
-									'feedback' => $request['feedback'],
 									'created_at' => date('Y-m-d H:i:s'),
                   'conversion' => $request['conversion'] ?: false,
                   'rounding' => $request['rounding'] ?: false,
@@ -342,7 +341,6 @@ class QuestionController extends Controller
 		'question' => $request['question']]);
 
 		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
-									'feedback' => $request['feedback'],
                   'conversion' => $request['conversion'] ?: false,
                   'rounding' => $request['rounding'] ?: false,
                   'question_order' => $request['question_order'] ?: false,

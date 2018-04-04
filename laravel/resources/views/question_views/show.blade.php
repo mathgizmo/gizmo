@@ -89,18 +89,6 @@
 								</div>
 							</div>
 						@endforeach
-						<div class="row bg-info">
-							<div class="col-md-2">
-							<div class="form-group">
-								<label for="name">Feedback</label>
-							</div>
-							</div>
-
-							<div class="col-md-10">
-									<p class="form-control-static"> {{$question->feedback}}</p>
-							</div>
-						</div>
-
 						<div class="row bg-success">
 							<div class="col-md-2">
 							<div class="form-group">
