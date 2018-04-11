@@ -229,7 +229,7 @@ var BadDialogComponent = (function () {
             styles: [__webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.scss")]
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialogRef */], Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */], Object])
     ], BadDialogComponent);
     return BadDialogComponent;
 }());
@@ -241,7 +241,7 @@ var BadDialogComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/chart/chart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 id=\"chart-container\" [innerHTML]=\"chart\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\"\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span *ngIf=\"!isSteepInteger\"> {{chartValue.toFixed(2)}} </span>\n          <span *ngIf=\"0\" > / {{chartMaxValue}} </span>\n          <span *ngIf=\"isSteepInteger\">\n            {{chartValue}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!isSteepInteger\">{{chartValue.toFixed(2)}}</label>\n        <label *ngIf=\"isSteepInteger\">{{chartValue}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
+module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\" id='inputValue'\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span *ngIf=\"!isSteepInteger\"> {{chartValue.toFixed(2)}} </span>\n          <span *ngIf=\"0\" > / {{chartMaxValue}} </span>\n          <span *ngIf=\"isSteepInteger\">\n            {{chartValue}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!isSteepInteger\">{{chartValue.toFixed(2)}}</label>\n        <label *ngIf=\"isSteepInteger\">{{chartValue}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
 
 /***/ }),
 
@@ -258,7 +258,6 @@ module.exports = "input {\n  text-align: center;\n  font-weight: bold; }\n\n#cha
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChartComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__("./node_modules/@angular/platform-browser/esm5/platform-browser.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -269,10 +268,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-
 var ChartComponent = (function () {
-    function ChartComponent(sanitizer) {
-        this.sanitizer = sanitizer;
+    function ChartComponent() {
         this.mainColor = "#f7f7f7";
         this.selectedColor = "#ff4444";
         this.strokeColor = "#111";
@@ -288,12 +285,16 @@ var ChartComponent = (function () {
         this.chartMarksList = [0, 0.5, 1];
         this.initialized = false;
         this.isSteepInteger = false;
+        this.setClickPositionEventId = false;
         this.dots = [];
         if (!this.chartHeight)
             this.chartHeight = 250;
     }
+    ChartComponent.prototype.ngOnInit = function () {
+    };
     ChartComponent.prototype.ngOnDestroy = function () {
         this.destroyDotsChart();
+        this.removeSetClickPositionEvent();
     };
     ChartComponent.prototype.ngOnChanges = function (changes) {
         if (this.oldQuestion != this.question) {
@@ -301,6 +302,7 @@ var ChartComponent = (function () {
             this.initialized = false;
         }
         this.destroyDotsChart();
+        this.removeSetClickPositionEvent();
         this.buildChart();
         this.percentValue = Math.round(this.chartValue / this.chartMaxValue * 100);
     };
@@ -368,6 +370,7 @@ var ChartComponent = (function () {
         }
         this.isSteepInteger = Number.isInteger(this.chartStep);
         var chartValuePercent = this.chartValue / this.chartMaxValue;
+        var chartContainer = document.getElementById('chart-container');
         switch (this.chartType) {
             default:
             case 1:
@@ -386,7 +389,7 @@ var ChartComponent = (function () {
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
                 chartHtml += '></rect>';
                 chartHtml += '</svg>';
-                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+                chartContainer.innerHTML = chartHtml;
                 break;
             case 2:
                 // Chart (type 2 - circle)
@@ -423,18 +426,17 @@ var ChartComponent = (function () {
                         this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"/>';
                 }
                 chartHtml += '</svg>';
-                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+                chartContainer.innerHTML = chartHtml;
                 break;
             case 3:
                 // Chart (type 3 - dots)
-                var chartContainer_1 = document.getElementById('chart-container');
                 var canvas_1 = document.createElement("canvas");
                 requestAnimationFrame(function () {
-                    chartContainer_1.innerHTML = chartHtml;
-                    chartContainer_1.appendChild(canvas_1);
+                    chartContainer.innerHTML = chartHtml;
+                    chartContainer.appendChild(canvas_1);
                 });
                 canvas_1.style.height = this.chartHeight + 'px';
-                canvas_1.style.width = chartContainer_1.style.width;
+                canvas_1.style.width = chartContainer.style.width;
                 var ctx_1 = canvas_1.getContext("2d");
                 for (var i = 0; i < this.chartMaxValue; i++) {
                     if (this.dots[i] == undefined) {
@@ -453,7 +455,7 @@ var ChartComponent = (function () {
             case 4:
                 // Chart (type 4 - slider)
                 var circleDiameter = 2 * this.dotRadius;
-                var width = document.getElementById('chart-container').offsetWidth;
+                var width = chartContainer.offsetWidth;
                 var indentation = circleDiameter + 5;
                 this.startValue = Math.min.apply(null, this.chartMarksList);
                 this.endValue = Math.max.apply(null, this.chartMarksList);
@@ -478,13 +480,37 @@ var ChartComponent = (function () {
                         + '" font-size="16" text-anchor="middle">'
                         + this.chartMarksList[i] + '</text>';
                 }
-                var currentPointX = ((this.chartValue - this.startValue) / (this.endValue
-                    - this.startValue) * width + indentation);
+                var currentPointX = (this.chartValue - this.startValue) / (this.endValue
+                    - this.startValue) * width + indentation;
                 chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="'
                     + circleDiameter + '" fill="' + this.selectedColor + '" />';
                 chartHtml += '</svg>';
-                this.chart = this.sanitizer.bypassSecurityTrustHtml(chartHtml);
+                chartContainer.innerHTML = chartHtml;
+                if (!this.setClickPositionEventId) {
+                    chartContainer.addEventListener('click', this.setClickPosition.bind(this));
+                    this.setClickPositionEventId = true;
+                }
                 break;
+        }
+    };
+    // function to set value by clicking on top slider
+    ChartComponent.prototype.setClickPosition = function (event) {
+        var chartContainer = document.getElementById('chart-container');
+        var pos = getAbsolutePosition(chartContainer);
+        var x = event.pageX - pos.x;
+        var circleDiameter = 2 * this.dotRadius;
+        var width = chartContainer.offsetWidth;
+        var indentation = circleDiameter + 5;
+        this.chartValue = (x - indentation) * (this.endValue
+            - this.startValue) / width + this.startValue;
+        this.chartValue = Math.round(this.chartValue * 105) / 100;
+        if (this.chartValue < this.startValue)
+            this.chartValue = this.startValue;
+        else if (this.chartValue > this.endValue)
+            this.chartValue = this.endValue;
+        this.buildChart();
+        if (this.chartControl > 0) {
+            document.getElementById('inputValue').focus();
         }
     };
     // function to draw Dots Chart
@@ -529,6 +555,14 @@ var ChartComponent = (function () {
         if (this.dotsChartRebuildFunctionId)
             clearInterval(this.dotsChartRebuildFunctionId);
     };
+    // remove Set Click Position Event if it exists
+    ChartComponent.prototype.removeSetClickPositionEvent = function () {
+        if (this.setClickPositionEventId) {
+            document.getElementById('chart-container')
+                .removeEventListener('click', this.setClickPosition);
+            this.setClickPositionEventId = false;
+        }
+    };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
         __metadata("design:type", String)
@@ -544,11 +578,22 @@ var ChartComponent = (function () {
             styles: [__webpack_require__("./src/app/_components/home/topic/lesson/chart/chart.component.scss")],
             changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__["c" /* DomSanitizer */]])
+        __metadata("design:paramtypes", [])
     ], ChartComponent);
     return ChartComponent;
 }());
 
+// function to get absolute position of HTML element
+function getAbsolutePosition(element) {
+    var r = { x: element.offsetLeft, y: element.offsetTop };
+    if (element.offsetParent) {
+        var tmp = getAbsolutePosition(element.offsetParent);
+        r.x += tmp.x;
+        r.y += tmp.y;
+    }
+    return r;
+}
+;
 
 
 /***/ }),
@@ -603,7 +648,7 @@ var GoodDialogComponent = (function () {
             styles: [__webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.scss")]
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialogRef */], Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */], Object])
     ], GoodDialogComponent);
     return GoodDialogComponent;
 }());
@@ -638,14 +683,14 @@ var GoodDialogComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" ></h2>\n        <span  *ngIf=\"is_chart\" >\n            <h2 [innerHtml]=\"questionForChart\" *ngIf=\"is_chart\" ></h2>\n            <chart [question]=\"question['question']\" chartHeight=\"250\" ></chart>\n        </span>\n        <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n            <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n        </div>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <li *ngFor=\"let answer of question.answers; let answerIndex = index\">\n                <input type=\"checkbox\" [(ngModel)]=\"answers[answerIndex]\"/> {{answer.value}}\n            </li>\n        </div>\n        <div *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = index\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\">\n        </div>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
+module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" class=\"question\"></h2>\n        <span  *ngIf=\"is_chart\" >\n            <h2 [innerHtml]=\"questionForChart\" *ngIf=\"is_chart\" class=\"question\"></h2>\n            <chart [question]=\"question['question']\" chartHeight=\"250\" ></chart>\n        </span>\n        <span class=\"answer\">\n            <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n                <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n            </div>\n            <div *ngIf=\"question.answer_mode=='radio'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                        {{answer.value}}\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='TF'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                        false\n                    </mat-radio-button>\n                    <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                        true\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='checkbox'\">\n                <div *ngFor=\"let answer of question.answers; let answerIndex = 'index'\">\n                    <mat-checkbox [(ngModel)]=\"answers[answerIndex]\" color=\"primary\"> \n                        {{answer.value}} \n                    </mat-checkbox>\n                </div>\n            </div>\n            <div  *ngIf=\"question.answer_mode=='input'\">\n                <input *ngFor=\"let answer of question.answers; let answerIndex = 'index'\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n                (keyup.enter) = \"checkAnswer()\" class=\"input\">\n            </div>\n        </span>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
 
 /***/ }),
 
 /***/ "./src/app/_components/home/topic/lesson/lesson.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".order-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column; }\n\n.order-item {\n  background-color: rgba(17, 17, 17, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-width: 50px;\n  width: 80%;\n  line-height: 35px;\n  margin: 4px;\n  color: #fff; }\n"
+module.exports = ".order-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column; }\n\n.order-item {\n  background-color: rgba(17, 17, 17, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-width: 50px;\n  width: 80%;\n  line-height: 35px;\n  margin: 4px;\n  color: #fff; }\n\n.radio-button {\n  text-align: left; }\n\n.input {\n  text-align: center; }\n"
 
 /***/ }),
 
@@ -959,7 +1004,7 @@ var LessonComponent = (function () {
             __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */],
             __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_material__["d" /* MatDialog */]])
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialog */]])
     ], LessonComponent);
     return LessonComponent;
 }());
@@ -1027,7 +1072,7 @@ var ReportDialogComponent = (function () {
             styles: [__webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.scss")]
         }),
         __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["f" /* MatDialogRef */], Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */], Object])
     ], ReportDialogComponent);
     return ReportDialogComponent;
 }());
@@ -2082,17 +2127,18 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_9__app_routing__["a" /* routing */],
                 __WEBPACK_IMPORTED_MODULE_6_angular2_fontawesome_angular2_fontawesome__["Angular2FontawesomeModule"],
                 __WEBPACK_IMPORTED_MODULE_4__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["h" /* MatInputModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["i" /* MatInputModule */],
                 __WEBPACK_IMPORTED_MODULE_5__angular_material__["b" /* MatButtonModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["l" /* MatSelectModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["g" /* MatIconModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["i" /* MatMenuModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["k" /* MatRadioModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["e" /* MatDialogModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["j" /* MatProgressBarModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["m" /* MatSliderModule */],
-                __WEBPACK_IMPORTED_MODULE_5__angular_material__["n" /* MatToolbarModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["m" /* MatSelectModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["h" /* MatIconModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["j" /* MatMenuModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["l" /* MatRadioModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["f" /* MatDialogModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["k" /* MatProgressBarModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["n" /* MatSliderModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["o" /* MatToolbarModule */],
                 __WEBPACK_IMPORTED_MODULE_5__angular_material__["c" /* MatCardModule */],
+                __WEBPACK_IMPORTED_MODULE_5__angular_material__["d" /* MatCheckboxModule */],
                 __WEBPACK_IMPORTED_MODULE_7__angular_flex_layout__["a" /* FlexLayoutModule */],
                 __WEBPACK_IMPORTED_MODULE_8_angular_sortablejs__["SortablejsModule"].forRoot({ animation: 150 })
             ],
@@ -2182,7 +2228,7 @@ var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["d" /* RouterModule 
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
 var environment = {
     production: true,
-    apiUrl: 'http://healthnumeracyproject.com/api' // global API URL (for production build)
+    apiUrl: ' http://your_site.com/api' // global API URL (for production build)
     //... more of your variables
 };
 

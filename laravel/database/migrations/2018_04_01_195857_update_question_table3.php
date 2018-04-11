@@ -12,7 +12,7 @@ class UpdateQuestionTable3 extends Migration
      */
     public function up()
     {
-        DB::statement("UPDATE question SET explanation = CONCAT(explanation, ' ', feedback)");
+        DB::statement("UPDATE question SET explanation = CONCAT(IFNULL(explanation,''), ' ', IFNULL(feedback,''))");
         Schema::table('question', function($table) {
             $table->dropColumn('feedback');
         });
