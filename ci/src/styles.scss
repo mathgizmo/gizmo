@@ -334,14 +334,10 @@ h1, h2, h3, h4 {
     width: 150px;
 }
 
-.question, .question *, .jumbotron .question p {
+.question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
   font-size: 24px;
 }
 
-.answer, .answer *, .jumbotron .answer p {
+.answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
   font-size: 16px;
-}
-
-.mjx-chtml {
-    line-height: 160% !important;
 }
