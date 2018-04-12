@@ -2228,7 +2228,7 @@ var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["d" /* RouterModule 
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
 var environment = {
     production: true,
-    apiUrl: 'http://healthnumeracyproject.com//api' // global API URL (for production build)
+    apiUrl: 'http://healthnumeracyproject.com/api' // global API URL (for production build)
     //... more of your variables
 };
 
