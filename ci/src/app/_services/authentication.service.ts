@@ -68,4 +68,14 @@ export class AuthenticationService {
         this.token = null;
         localStorage.removeItem('currentUser');
     }
+
+    sendPasswordResetEmail(email: string): Observable<boolean>  {
+        let request = JSON.stringify({ email: email });
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers }); // Create a request option
+        return this.http.post(this.apiUrl+'/password-reset-email', request, options)
+            .map((response: Response) => {
+                return response.json();
+            });
+    }
 }

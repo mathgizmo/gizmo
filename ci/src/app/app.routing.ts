@@ -1,7 +1,7 @@
 ﻿import { Routes, RouterModule } from '@angular/router';
 
 import { WelcomeComponent } from './_components/welcome/index';
-import { LoginComponent } from './_components/welcome/login/index';
+import { LoginComponent, ForgotPasswordComponent } from './_components/welcome/login/index';
 import { RegisterComponent } from './_components/welcome/register/index';
 import { HomeComponent } from './_components/home/index';
 import { TopicComponent } from './_components/home/topic/index';
@@ -13,6 +13,7 @@ const appRoutes: Routes = [
     { path: 'welcome', component: WelcomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard] },

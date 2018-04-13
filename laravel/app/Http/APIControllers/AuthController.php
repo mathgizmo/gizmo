@@ -8,6 +8,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use App\Student;
+use App\PasswordResets;
+use Mail;
 
 class AuthController extends Controller
 {
@@ -68,6 +70,48 @@ class AuthController extends Controller
             return $this->success($result);
         }
 
+        return $this->success($error);
+    }
+
+    public function passwordResetEmail(Request $request) {
+        $fields = ['email'];
+        // grab credentials from the request
+        $credentials = $request->only($fields);
+        foreach($fields as $field) {
+            $credentials[$field] = trim($credentials[$field]);
+        }
+
+        $validator = Validator::make(
+            $credentials,
+            [
+                'email' => 'required|email|max:255'
+            ]
+            );
+        if ($validator->fails())
+        {
+            return $this->error($validator->messages());
+        }
+
+        $token = str_random(64);
+        $email = $credentials['email'];
+        $result = PasswordResets::create([
+            'email' => $email,
+            'token' => $token
+        ]);
+
+        /** TODO: change this line to server ULR on production build */
+        $url = 'http://localhost:4200/gizmo/reset-password'; 
+        //$url = url('/gizmo/reset-password');
+        
+        if($result) {
+            $data = array('token'=>$token, 'email' => $email, 'url' => $url);
+            Mail::send('mail', $data, function($message) use ($data) {
+               $message->to($data['email'], $data['email'])->subject
+                  ('Password Reset at MathGizmo');
+               $message->from('mathgizmo01@gmail.com','Gizmo Support');
+            });
+            return $this->success($result);
+        }
         return $this->success($error);
     }
 }
