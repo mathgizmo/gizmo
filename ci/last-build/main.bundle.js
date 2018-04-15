@@ -503,7 +503,19 @@ var ChartComponent = (function () {
         var indentation = circleDiameter + 5;
         this.chartValue = (x - indentation) * (this.endValue
             - this.startValue) / width + this.startValue;
-        this.chartValue = Math.round(this.chartValue * 105) / 100;
+        this.chartValue = this.chartValue * 1.05;
+        // find the closest point
+        var point = this.startValue;
+        var diff = Math.abs(this.chartValue - point);
+        for (var i = this.startValue; i <= this.endValue; i += this.chartStep) {
+            var newdiff = Math.abs(this.chartValue - i);
+            if (newdiff < diff) {
+                diff = newdiff;
+                point = i;
+            }
+        }
+        Math.abs(this.chartValue - this.endValue) < diff ?
+            this.chartValue = this.endValue : this.chartValue = point;
         if (this.chartValue < this.startValue)
             this.chartValue = this.startValue;
         else if (this.chartValue > this.endValue)
