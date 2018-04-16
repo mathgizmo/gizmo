@@ -97,7 +97,7 @@ class AuthController extends Controller
 
         $student = Student::where('email', '=' , $email)->first();
         if(!$student) {
-            return $this->error('We can not found email you provided in our database!');
+            return $this->error('We can not find email you provided in our database! You can register a new account with this email.');
         }
 
         // delete existings resets if exists

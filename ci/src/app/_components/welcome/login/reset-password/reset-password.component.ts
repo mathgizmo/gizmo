@@ -44,7 +44,7 @@ export class ResetPasswordComponent implements OnInit {
         		this.router.navigate(['/login']);
         	} else {
         		let error = '';
-        		let messageArr = result['message']['email'];
+        		let messageArr = result['message']['password'];
 		        if(messageArr) {
 		          for(let i = 0; i < messageArr.length; i++ ) {
 		            error += messageArr[i] + ' ';
