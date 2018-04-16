@@ -150,7 +150,7 @@ class AuthController extends Controller
         }
 
         $dateCreated = strtotime($pr['created_at']);
-        $expireInterval = 43200; // token expire interval in seconds (12 h)
+        $expireInterval = 86400; // token expire interval in seconds (24 h)
         $currentTime = time();
 
         if($currentTime  - $dateCreated > $expireInterval) {

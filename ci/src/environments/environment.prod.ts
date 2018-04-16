@@ -1,7 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://your_site.com', // global base URL (for production build)
-  apiUrl: this.baseUrl + '/api',
-  clientUrl: this.baseUrl + '/gizmo'
+  apiUrl: 'http://your_site.com/api', //global API URL (for production build)
+  baseUrl: window.location.origin + '/gizmo' // Base URL here
   //... more of your variables
 };
