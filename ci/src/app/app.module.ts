@@ -28,6 +28,7 @@ import { LessonComponent, GoodDialogComponent, BadDialogComponent,
     ReportDialogComponent, ChartComponent } 
     from './_components/home/topic/lesson/index';
 import { ProfileComponent } from './_components/profile/profile.component';
+import { ResetPasswordComponent } from './_components/welcome/login/reset-password/reset-password.component';
 
 @NgModule({
     imports: [
@@ -66,7 +67,8 @@ import { ProfileComponent } from './_components/profile/profile.component';
         ChartComponent,
         ProfileComponent,
         TryComponent,
-        ForgotPasswordComponent
+        ForgotPasswordComponent,
+        ResetPasswordComponent
     ],
     entryComponents: [
         GoodDialogComponent,

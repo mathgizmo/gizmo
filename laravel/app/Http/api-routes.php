@@ -15,6 +15,7 @@ $api->get('/' , 'App\Http\APIControllers\HomeController@index');
 $api->any('/authenticate' , 'App\Http\APIControllers\AuthController@authenticate');
 $api->any('/register' , 'App\Http\APIControllers\AuthController@register');
 $api->post('/password-reset-email' , 'App\Http\APIControllers\AuthController@passwordResetEmail');
+$api->post('/reset-password' , 'App\Http\APIControllers\AuthController@resetPassword');
 
 $api->group(['middleware' => 'api.auth'], function () use ($api) {
     $api->any('/topic' , 'App\Http\APIControllers\TopicController@index');

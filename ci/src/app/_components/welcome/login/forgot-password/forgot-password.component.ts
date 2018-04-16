@@ -9,18 +9,41 @@ import { AuthenticationService } from '../../../../_services/index';
 export class ForgotPasswordComponent implements OnInit {
   email: string;
   message: boolean = false;
+  error: string;
+  emailNotFound = false;
+  waiting = false;
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor( 
+    private authenticationService: AuthenticationService
+  ) { 
+    this.error = "Please write a valid email adress!";
+  }
 
-  ngOnInit() {
+  ngOnInit() { 
   }
 
   sendEmail() {
-  	this.authenticationService.sendPasswordResetEmail(this.email)
-        .subscribe(result => {
-          // 
-        });
-    this.message = true;
+    this.emailNotFound = false;
+    this.waiting = true;
+    this.authenticationService.sendPasswordResetEmail(this.email)
+    .subscribe(result => {
+      if(result['success']) {
+        this.message = true; 
+      } else {
+        let error = '';
+        let messageArr = result['message']['email'];
+        if(messageArr) {
+          for(let i = 0; i < messageArr.length; i++ ) {
+            error += messageArr[i] + ' ';
+          }
+        } else {
+          error = result['message'];
+        }
+        this.error = error;
+        this.emailNotFound = true;
+      }
+      this.waiting = false;
+    });
   }
 
 }

@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 export class AuthenticationService {
     public token: string;
     private readonly apiUrl = environment.apiUrl;
+    private readonly clientUrl = environment.clientUrl;
 
     constructor(private http: Http) {
         // set token if saved in local storage
@@ -70,10 +71,21 @@ export class AuthenticationService {
     }
 
     sendPasswordResetEmail(email: string): Observable<boolean>  {
-        let request = JSON.stringify({ email: email });
+        let request = JSON.stringify({ email: email, url: this.clientUrl+'/reset-password' });
         let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
         let options = new RequestOptions({ headers: headers }); // Create a request option
         return this.http.post(this.apiUrl+'/password-reset-email', request, options)
+            .map((response: Response) => {
+                return response.json();
+            });
+    }
+
+    resetPassword(newPassword: string, confirmedPassword: string, token: string): Observable<boolean> {
+        let request = JSON.stringify({ password: newPassword, 
+          confirm_password: confirmedPassword, token: token });
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers }); // Create a request option
+        return this.http.post(this.apiUrl+'/reset-password', request, options)
             .map((response: Response) => {
                 return response.json();
             });
