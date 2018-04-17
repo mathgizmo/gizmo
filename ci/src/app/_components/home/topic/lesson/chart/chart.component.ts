@@ -33,8 +33,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private oldQuestion: string;
 
     private percentValue: number;
-    private isSteepInteger: boolean = false;
     private setClickPositionEventId: boolean = false;
+    private precision: number = 2; // number of decimals (0 - integer)
 
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
@@ -92,6 +92,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.chartStep = parseFloat(chart['0']
             .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
             .replace('step:', ''));
+          Number.isInteger(this.chartStep) ? this.precision = 0
+            : this.precision = (this.chartStep + "").split(".")[1].length;
         }
         if (chart['0'].indexOf('main-color:') >= 0) {
           this.mainColor = chart['0']
@@ -125,7 +127,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           ? this.chartStep = Math.round(this.chartStep)
           : this.chartStep = 1;
       }
-      this.isSteepInteger = Number.isInteger(this.chartStep);
       let chartValuePercent = this.chartValue/this.chartMaxValue;
       let chartContainer = document.getElementById('chart-container');
       switch (this.chartType) {
@@ -258,11 +259,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
       var pos = getAbsolutePosition(chartContainer);
       let x = event.pageX - pos.x;
       let circleDiameter = 2*this.dotRadius;
-      let width  = chartContainer.offsetWidth;
       let indentation = circleDiameter + 5;
+      let width  = chartContainer.offsetWidth - indentation*2;
       this.chartValue = (x - indentation)*(this.endValue
         -this.startValue) / width + this.startValue;
-      this.chartValue = this.chartValue*1.05;
 
       // find the closest point
       let point = this.startValue;
