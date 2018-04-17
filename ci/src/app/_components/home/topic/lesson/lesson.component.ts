@@ -161,6 +161,16 @@ export class LessonComponent implements OnInit {
         }
       }
 
+      // convert percents to float
+      for(let i = 0; i < this.answers.length; i++) {
+        if(this.answers[i].includes('%')) {
+          let answer = this.answers[i].replace('%', '');
+          if (!isNaN(+answer)) {
+            this.answers[i] = parseFloat(answer)/100+'';
+          }
+        }
+      }
+      
       if (this.isCorrect()) {
         this.correct_answers++;
         this.complete_percent = (this.correct_answers == 0) ? 0
