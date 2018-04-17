@@ -77,6 +77,9 @@ export class LessonComponent implements OnInit {
                           .subscribe(start_time => {
                             this.start_time = start_time;
                         });
+                        if (this.lesson_id == -1) {
+                          this.question_num = lessonTree['questions'].length;
+                        }
                     }
                     if (this.lesson_id == -1) {
                         this.next = lessonTree['next_topic_id'];
@@ -235,9 +238,7 @@ export class LessonComponent implements OnInit {
                     this.lesson_id, this.start_time, this.weak_questions).subscribe();
               }
           });
-          if(this.lesson_id == -1) {
-            this.question_num--;
-          } else {
+          if(this.lesson_id != -1) {
             this.correct_answers = this.complete_percent = 0;
           }
       }
