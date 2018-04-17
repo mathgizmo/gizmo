@@ -63,9 +63,6 @@ export class LessonComponent implements OnInit {
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
             this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
-            if (this.lesson_id == -1) {
-                this.question_num = 0;
-            }
 
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id)
@@ -163,12 +160,14 @@ export class LessonComponent implements OnInit {
 
       // convert percents to float
       for(let i = 0; i < this.answers.length; i++) {
-        if(this.answers[i].includes('%')) {
-          let answer = this.answers[i].replace('%', '');
-          if (!isNaN(+answer)) {
-            this.answers[i] = parseFloat(answer)/100+'';
+        try { 
+          if(this.answers[i].includes('%')) {
+            let answer = this.answers[i].replace('%', '');
+            if (!isNaN(+answer)) {
+              this.answers[i] = parseFloat(answer)/100+'';
+            }
           }
-        }
+        } catch(err) {}    
       }
       
       if (this.isCorrect()) {

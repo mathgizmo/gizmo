@@ -1,5 +1,6 @@
-<a routerLink="/welcome" routerLinkActive="active" class="backButton left"><-Back Home</a>
-<div class="col-md-6 col-md-offset-3">
+<div class="auth-container">
+<div>
+    <a routerLink="/welcome" routerLinkActive="active" class="backButton left"><-Back Home</a>
     <h2>Register</h2>
     <form name="form" (ngSubmit)="f.form.valid && password.value == repassword.value && register()" #f="ngForm" novalidate>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
@@ -35,4 +36,5 @@
             </a>
         </div> 
     </form>
+</div>
 </div>
