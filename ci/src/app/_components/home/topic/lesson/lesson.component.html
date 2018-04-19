@@ -1,6 +1,6 @@
 ﻿<span class="grey-theme">
  <a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
-<mat-progress-bar color="accent" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
+<mat-progress-bar color="accent" class="lesson-progress" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
 <label *ngIf="question_num > 0" style="display: flex; justify-content: center;">{{correct_answers}}/{{question_num}}</label>
 <div class="text-center">
     <div *ngIf="question !== null">

@@ -1,4 +1,4 @@
-﻿import { Injectable } from '@angular/core';
+﻿import { Injectable, Inject} from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 export class AuthenticationService {
     public token: string;
     private readonly apiUrl = environment.apiUrl;
+    private readonly baseUrl = environment.baseUrl;
 
     constructor(private http: Http) {
         // set token if saved in local storage
@@ -67,5 +68,28 @@ export class AuthenticationService {
         // clear token remove user from local storage to log user out
         this.token = null;
         localStorage.removeItem('currentUser');
+    }
+
+    sendPasswordResetEmail(email: string): Observable<boolean>  {
+        let url = this.baseUrl+'/reset-password';
+        let request = JSON.stringify({ email: email, url:  url });
+        console.log(request);
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers }); // Create a request option
+        return this.http.post(this.apiUrl+'/password-reset-email', request, options)
+            .map((response: Response) => {
+                return response.json();
+            });
+    }
+
+    resetPassword(newPassword: string, confirmedPassword: string, token: string): Observable<boolean> {
+        let request = JSON.stringify({ password: newPassword, 
+          confirm_password: confirmedPassword, token: token });
+        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        let options = new RequestOptions({ headers: headers }); // Create a request option
+        return this.http.post(this.apiUrl+'/reset-password', request, options)
+            .map((response: Response) => {
+                return response.json();
+            });
     }
 }

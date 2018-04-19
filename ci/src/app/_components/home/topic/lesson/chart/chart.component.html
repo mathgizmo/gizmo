@@ -24,10 +24,8 @@
       </mat-slider>
       <div class="value-label-container">
         <label *ngIf="chartType != 3" >
-          <span *ngIf="!isSteepInteger"> {{chartValue.toFixed(2)}} </span>
-          <span *ngIf="0" > / {{chartMaxValue}} </span>
-          <span *ngIf="isSteepInteger">
-            {{chartValue}}/{{chartMaxValue}}
+          <span>
+            {{chartValue.toFixed(precision)}}/{{chartMaxValue}}
           </span>
         </label>
         <label *ngIf="chartType == 3" >
@@ -42,8 +40,7 @@
         color="primary" class='slider-control' id='inputValue'>
       </mat-slider>
       <div class="value-label-container">
-        <label *ngIf="!isSteepInteger">{{chartValue.toFixed(2)}}</label>
-        <label *ngIf="isSteepInteger">{{chartValue}}</label>
+        <label>{{chartValue.toFixed(precision)}}</label>
       </div> 
     </span>
   </span>

@@ -1,23 +1,19 @@
 ﻿<!-- main app container -->
 <div class="jumbotron"> 
     <div class="container">
-        <div class="col-sm-8 col-sm-offset-2">
-            <div *ngIf="showMenu" class="menu">
-                <mat-toolbar class="toolbar">
-                    <button mat-icon-button [matMenuTriggerFor]="menu">
-                        <mat-icon>menu</mat-icon>
-                    </button>
-                    <!-- This fills the remaining space of the current row -->
-                    <!-- <span class="fill-remaining-space"></span> -->
-                </mat-toolbar>
-                <mat-menu #menu="matMenu">
-                    <br />
-                    <a mat-menu-item routerLink="">Home</a>
-                    <a mat-menu-item routerLink="profile">Profile</a>
-                    <a mat-menu-item routerLink="login">Logout</a>
-                </mat-menu>
-            </div>
-            <router-outlet></router-outlet>
+        <div *ngIf="showMenu" class="menu">
+            <mat-toolbar class="toolbar">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </mat-toolbar>
+            <mat-menu #menu="matMenu">
+                <br />
+                <a mat-menu-item routerLink="">Home</a>
+                <a mat-menu-item routerLink="profile">Profile</a>
+                <a mat-menu-item routerLink="login">Logout</a>
+            </mat-menu>
         </div>
+        <router-outlet></router-outlet>
     </div>
 </div>

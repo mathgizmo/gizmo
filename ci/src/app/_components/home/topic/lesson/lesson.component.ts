@@ -63,9 +63,6 @@ export class LessonComponent implements OnInit {
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
             this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
-            if (this.lesson_id == -1) {
-                this.question_num = 0;
-            }
 
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id)
@@ -80,6 +77,9 @@ export class LessonComponent implements OnInit {
                           .subscribe(start_time => {
                             this.start_time = start_time;
                         });
+                        if (this.lesson_id == -1) {
+                          this.question_num = lessonTree['questions'].length;
+                        }
                     }
                     if (this.lesson_id == -1) {
                         this.next = lessonTree['next_topic_id'];
@@ -161,6 +161,18 @@ export class LessonComponent implements OnInit {
         }
       }
 
+      // convert percents to float
+      for(let i = 0; i < this.answers.length; i++) {
+        try { 
+          if(this.answers[i].includes('%')) {
+            let answer = this.answers[i].replace('%', '');
+            if (!isNaN(+answer)) {
+              this.answers[i] = parseFloat(answer)/100+'';
+            }
+          }
+        } catch(err) {}    
+      }
+      
       if (this.isCorrect()) {
         this.correct_answers++;
         this.complete_percent = (this.correct_answers == 0) ? 0
@@ -226,9 +238,7 @@ export class LessonComponent implements OnInit {
                     this.lesson_id, this.start_time, this.weak_questions).subscribe();
               }
           });
-          if(this.lesson_id == -1) {
-            this.question_num--;
-          } else {
+          if(this.lesson_id != -1) {
             this.correct_answers = this.complete_percent = 0;
           }
       }
