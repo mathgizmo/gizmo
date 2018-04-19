@@ -20,14 +20,14 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /***/ "./src/app/_components/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!-- main app container -->\n<div class=\"jumbotron\"> \n    <div class=\"container\">\n        <div class=\"col-sm-8 col-sm-offset-2\">\n            <div *ngIf=\"showMenu\" class=\"menu\">\n                <mat-toolbar class=\"toolbar\">\n                    <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                        <mat-icon>menu</mat-icon>\n                    </button>\n                    <!-- This fills the remaining space of the current row -->\n                    <!-- <span class=\"fill-remaining-space\"></span> -->\n                </mat-toolbar>\n                <mat-menu #menu=\"matMenu\">\n                    <br />\n                    <a mat-menu-item routerLink=\"\">Home</a>\n                    <a mat-menu-item routerLink=\"profile\">Profile</a>\n                    <a mat-menu-item routerLink=\"login\">Logout</a>\n                </mat-menu>\n            </div>\n            <router-outlet></router-outlet>\n        </div>\n    </div>\n</div>"
+module.exports = "<!-- main app container -->\n<div class=\"jumbotron\"> \n    <div class=\"container\">\n        <div *ngIf=\"showMenu\" class=\"menu\">\n            <mat-toolbar class=\"toolbar\">\n                <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                    <mat-icon>menu</mat-icon>\n                </button>\n            </mat-toolbar>\n            <mat-menu #menu=\"matMenu\">\n                <br />\n                <a mat-menu-item routerLink=\"\">Home</a>\n                <a mat-menu-item routerLink=\"profile\">Profile</a>\n                <a mat-menu-item routerLink=\"login\">Logout</a>\n            </mat-menu>\n        </div>\n        <router-outlet></router-outlet>\n    </div>\n</div>"
 
 /***/ }),
 
 /***/ "./src/app/_components/app.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = "h1 {\n  color: #369;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 250%; }\n\n.toolbar {\n  background-color: transparent; }\n"
+module.exports = "h1 {\n  color: #369;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 250%; }\n\n.toolbar {\n  background-color: transparent;\n  padding: 0;\n  margin: 0; }\n"
 
 /***/ }),
 
@@ -100,7 +100,7 @@ module.exports = "<div *ngIf=\"topicsTree.length\" class=\"topics\">\n  <div *ng
 /***/ "./src/app/_components/home/home.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".level {\n  margin: 10px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  background-color: #f3f3f3; }\n\n.level-title, .unit-title {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.level-title {\n  font-weight: bold; }\n\n.unit {\n  margin: 10px;\n  width: 100%;\n  background-color: #f9f9f9; }\n\n.topics-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  -webkit-box-align: start;\n      -ms-flex-align: start;\n          align-items: flex-start; }\n\n.topic {\n  margin: 10px;\n  width: 120px;\n  padding: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n\n.topic-title, .topic-progress, .topic-picture {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  padding: 0;\n  margin: 0; }\n\n.topic-title, .topic-progress {\n  text-align: center; }\n"
+module.exports = ".level {\n  margin: 10px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  background-color: #f3f3f3; }\n\n.level-title, .unit-title {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.level-title {\n  font-weight: bold; }\n\n.unit {\n  margin: 10px;\n  width: 100%;\n  background-color: #f9f9f9; }\n\n.topics-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: row;\n          flex-direction: row;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  -webkit-box-align: start;\n      -ms-flex-align: start;\n          align-items: flex-start; }\n\n.topic {\n  width: 120px;\n  padding: 0;\n  margin: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n\n.topic-title, .topic-progress, .topic-picture {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  padding: 0;\n  margin: 0; }\n\n.topic-title, .topic-progress {\n  text-align: center; }\n"
 
 /***/ }),
 
@@ -241,7 +241,7 @@ var BadDialogComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/chart/chart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\" id='inputValue'\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span *ngIf=\"!isSteepInteger\"> {{chartValue.toFixed(2)}} </span>\n          <span *ngIf=\"0\" > / {{chartMaxValue}} </span>\n          <span *ngIf=\"isSteepInteger\">\n            {{chartValue}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!isSteepInteger\">{{chartValue.toFixed(2)}}</label>\n        <label *ngIf=\"isSteepInteger\">{{chartValue}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
+module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\" id='inputValue'\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span>\n            {{chartValue.toFixed(precision)}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label>{{chartValue.toFixed(precision)}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
 
 /***/ }),
 
@@ -284,8 +284,8 @@ var ChartComponent = (function () {
         this.chartStep = 0.5;
         this.chartMarksList = [0, 0.5, 1];
         this.initialized = false;
-        this.isSteepInteger = false;
         this.setClickPositionEventId = false;
+        this.precision = 2; // number of decimals (0 - integer)
         this.dots = [];
         if (!this.chartHeight)
             this.chartHeight = 250;
@@ -335,6 +335,8 @@ var ChartComponent = (function () {
                 this.chartStep = parseFloat(chart['0']
                     .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
                     .replace('step:', ''));
+                Number.isInteger(this.chartStep) ? this.precision = 0
+                    : this.precision = (this.chartStep + "").split(".")[1].length;
             }
             if (chart['0'].indexOf('main-color:') >= 0) {
                 this.mainColor = chart['0']
@@ -368,7 +370,6 @@ var ChartComponent = (function () {
                 ? this.chartStep = Math.round(this.chartStep)
                 : this.chartStep = 1;
         }
-        this.isSteepInteger = Number.isInteger(this.chartStep);
         var chartValuePercent = this.chartValue / this.chartMaxValue;
         var chartContainer = document.getElementById('chart-container');
         switch (this.chartType) {
@@ -499,11 +500,10 @@ var ChartComponent = (function () {
         var pos = getAbsolutePosition(chartContainer);
         var x = event.pageX - pos.x;
         var circleDiameter = 2 * this.dotRadius;
-        var width = chartContainer.offsetWidth;
         var indentation = circleDiameter + 5;
+        var width = chartContainer.offsetWidth - indentation * 2;
         this.chartValue = (x - indentation) * (this.endValue
             - this.startValue) / width + this.startValue;
-        this.chartValue = this.chartValue * 1.05;
         // find the closest point
         var point = this.startValue;
         var diff = Math.abs(this.chartValue - point);
@@ -695,7 +695,7 @@ var GoodDialogComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/lesson.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" class=\"question\"></h2>\n        <span  *ngIf=\"is_chart\" >\n            <h2 [innerHtml]=\"questionForChart\" *ngIf=\"is_chart\" class=\"question\"></h2>\n            <chart [question]=\"question['question']\" chartHeight=\"250\" ></chart>\n        </span>\n        <span class=\"answer\">\n            <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n                <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n            </div>\n            <div *ngIf=\"question.answer_mode=='radio'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                        {{answer.value}}\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='TF'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                        false\n                    </mat-radio-button>\n                    <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                        true\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='checkbox'\">\n                <div *ngFor=\"let answer of question.answers; let answerIndex = 'index'\">\n                    <mat-checkbox [(ngModel)]=\"answers[answerIndex]\" color=\"primary\"> \n                        {{answer.value}} \n                    </mat-checkbox>\n                </div>\n            </div>\n            <div  *ngIf=\"question.answer_mode=='input'\">\n                <input *ngFor=\"let answer of question.answers; let answerIndex = 'index'\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n                (keyup.enter) = \"checkAnswer()\" class=\"input\">\n            </div>\n        </span>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
+module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" class=\"lesson-progress\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" class=\"question\"></h2>\n        <span  *ngIf=\"is_chart\" >\n            <h2 [innerHtml]=\"questionForChart\" *ngIf=\"is_chart\" class=\"question\"></h2>\n            <chart [question]=\"question['question']\" chartHeight=\"250\" ></chart>\n        </span>\n        <span class=\"answer\">\n            <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n                <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n            </div>\n            <div *ngIf=\"question.answer_mode=='radio'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                        {{answer.value}}\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='TF'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                        false\n                    </mat-radio-button>\n                    <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                        true\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='checkbox'\">\n                <div *ngFor=\"let answer of question.answers; let answerIndex = 'index'\">\n                    <mat-checkbox [(ngModel)]=\"answers[answerIndex]\" color=\"primary\"> \n                        {{answer.value}} \n                    </mat-checkbox>\n                </div>\n            </div>\n            <div  *ngIf=\"question.answer_mode=='input'\">\n                <input *ngFor=\"let answer of question.answers; let answerIndex = 'index'\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n                (keyup.enter) = \"checkAnswer()\" class=\"input\">\n            </div>\n        </span>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
 
 /***/ }),
 
@@ -768,9 +768,6 @@ var LessonComponent = (function () {
             _this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
             _this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
-            if (_this.lesson_id == -1) {
-                _this.question_num = 0;
-            }
             // get lesson tree from API
             _this.topicService.getLesson(_this.topic_id, _this.lesson_id)
                 .subscribe(function (lessonTree) {
@@ -784,6 +781,9 @@ var LessonComponent = (function () {
                         .subscribe(function (start_time) {
                         _this.start_time = start_time;
                     });
+                    if (_this.lesson_id == -1) {
+                        _this.question_num = lessonTree['questions'].length;
+                    }
                 }
                 if (_this.lesson_id == -1) {
                     _this.next = lessonTree['next_topic_id'];
@@ -864,6 +864,18 @@ var LessonComponent = (function () {
                 //console.log("STR: "+this.answers);
             }
         }
+        // convert percents to float
+        for (var i = 0; i < this.answers.length; i++) {
+            try {
+                if (this.answers[i].includes('%')) {
+                    var answer = this.answers[i].replace('%', '');
+                    if (!isNaN(+answer)) {
+                        this.answers[i] = parseFloat(answer) / 100 + '';
+                    }
+                }
+            }
+            catch (err) { }
+        }
         if (this.isCorrect()) {
             this.correct_answers++;
             this.complete_percent = (this.correct_answers == 0) ? 0
@@ -928,10 +940,7 @@ var LessonComponent = (function () {
                     _this.trackingService.doneLesson(_this.topic_id, _this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
                 }
             });
-            if (this.lesson_id == -1) {
-                this.question_num--;
-            }
-            else {
+            if (this.lesson_id != -1) {
                 this.correct_answers = this.complete_percent = 0;
             }
         }
@@ -1175,7 +1184,7 @@ module.exports = "<div class=\"profile\">\n  <mat-card id=\"profile-container\" 
 /***/ "./src/app/_components/profile/profile.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".profile {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  padding: 0;\n  margin: 0; }\n\nmat-card {\n  margin: 10px;\n  padding: 16px;\n  min-width: 200px;\n  max-width: 600px; }\n\nspan.card-title {\n  display: table;\n  white-space: nowrap;\n  padding: 8px; }\n\nspan.card-title:before, span.card-title:after {\n  border-top: 1px solid #616161;\n  content: '';\n  display: table-cell;\n  position: relative;\n  top: 0.5em;\n  width: 45%; }\n\nspan.card-title:before {\n  right: 1.5%; }\n\nspan.card-title:after {\n  left: 1.5%; }\n\nmat-input-container {\n  width: 100%; }\n\n.button-container {\n  padding: 0;\n  margin: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n\nbutton {\n  color: #fff;\n  background-color: #337AB7; }\n"
+module.exports = ".profile {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n  padding: 0;\n  margin: 0;\n  width: 100%; }\n\nmat-card {\n  margin: 10px;\n  padding: 15px;\n  min-width: 250px;\n  max-width: 580px; }\n\nspan.card-title {\n  display: table;\n  white-space: nowrap;\n  padding: 8px; }\n\nspan.card-title:before, span.card-title:after {\n  border-top: 1px solid #616161;\n  content: '';\n  display: table-cell;\n  position: relative;\n  top: 0.5em;\n  width: 45%; }\n\nspan.card-title:before {\n  right: 1.5%; }\n\nspan.card-title:after {\n  left: 1.5%; }\n\nmat-input-container {\n  width: 100%; }\n\n.button-container {\n  padding: 0;\n  margin: 0;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n\nbutton {\n  color: #fff;\n  background-color: #337AB7; }\n\n@media screen and (min-width: 600px) {\n  .profile {\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: row;\n            flex-direction: row;\n    -webkit-box-align: start;\n        -ms-flex-align: start;\n            align-items: flex-start; }\n  mat-card {\n    width: calc(50% - 20px); } }\n"
 
 /***/ }),
 
@@ -1273,12 +1282,101 @@ var ProfileComponent = (function () {
 
 /***/ }),
 
+/***/ "./src/app/_components/welcome/login/forgot-password/forgot-password.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<form *ngIf='!message' name=\"form\" #f=\"ngForm\" (ngSubmit)=\"f.form.valid && sendEmail()\" \nclass=\"grey-theme password-container\">\n  <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n  <mat-card>\n    <mat-card-title>\n      <mat-icon>vpn_key</mat-icon>\n      <span>Forgot Password?</span>\n    </mat-card-title>\n    <mat-card-content>\n      <mat-input-container>\n        <input matInput\n          [(ngModel)]=\"email\"\n          name=\"email\"\n          pattern=\"^\\S+@\\S+$\"\n          required=\"required\"\n          placeholder=\"Email\"\n          #emailField=\"ngModel\" />\n      </mat-input-container>\n      <div class=\"alert alert-danger\" *ngIf=\"(f.submitted && !emailField.valid) || emailNotFound\">\n      \t<mat-icon>warning</mat-icon>\n       \t{{error}}\n  \t  </div>\n    </mat-card-content>\n    <mat-card-actions>\n    <button *ngIf=\"!waiting\"\n      mat-raised-button\n      type=\"submit\" color=\"primary\">\n      <span>Confirm</span>\n    </button>\n    <button *ngIf=\"waiting\"\n      mat-raised-button disabled\n      type=\"submit\" color=\"primary\">\n      <span>Confirm</span>\n    </button>\n    </mat-card-actions>\n  </mat-card>\n</form>\n\n<div *ngIf='message' class='grey-theme forgot-password-container'><div>\n  <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n  <mat-card>\n    <mat-card-title>\n      <mat-icon>mail</mat-icon>\n      <span class=\"text-center\">We sent you an email with password reset link.</span>\n    </mat-card-title>\n    <mat-card-actions>\n    <a mat-raised-button color=\"primary\" class=\"link\" \n    \t[routerLink]=\"['/']\" routerLinkActive=\"link-active\">\n      Ok\n    </a>\n    </mat-card-actions>\n  </mat-card>\n</div></div>"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/login/forgot-password/forgot-password.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".password-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 100%; }\n\n.backButton {\n  -webkit-box-align: left;\n      -ms-flex-align: left;\n          align-items: left; }\n\n.backButton, mat-card {\n  max-width: 580px;\n  min-width: 200px;\n  width: calc(100% - 12px);\n  margin: 0 6px; }\n\nmat-card {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-height: 260px; }\n\nmat-card input, mat-card button {\n    font-size: 1.2rem; }\n\nmat-card button {\n    padding: 5px 15px; }\n\nmat-card mat-card-title {\n    font-size: 1.8rem; }\n\nmat-card mat-card-content {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    width: 100%;\n    max-width: 400px; }\n\n.link {\n  text-decoration: none;\n  color: #000; }\n\n.container {\n  margin: 10px;\n  padding: 0; }\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/login/forgot-password/forgot-password.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ForgotPasswordComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_index__ = __webpack_require__("./src/app/_services/index.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var ForgotPasswordComponent = (function () {
+    function ForgotPasswordComponent(authenticationService) {
+        this.authenticationService = authenticationService;
+        this.message = false;
+        this.emailNotFound = false;
+        this.waiting = false;
+        this.error = "Please write a valid email adress!";
+    }
+    ForgotPasswordComponent.prototype.ngOnInit = function () {
+    };
+    ForgotPasswordComponent.prototype.sendEmail = function () {
+        var _this = this;
+        this.emailNotFound = false;
+        this.waiting = true;
+        this.authenticationService.sendPasswordResetEmail(this.email)
+            .subscribe(function (result) {
+            if (result['success']) {
+                _this.message = true;
+            }
+            else {
+                var error = '';
+                var messageArr = result['message']['email'];
+                if (messageArr) {
+                    for (var i = 0; i < messageArr.length; i++) {
+                        error += messageArr[i] + ' ';
+                    }
+                }
+                else {
+                    error = result['message'];
+                }
+                _this.error = error;
+                _this.emailNotFound = true;
+            }
+            _this.waiting = false;
+        });
+    };
+    ForgotPasswordComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'app-forgot-password',
+            template: __webpack_require__("./src/app/_components/welcome/login/forgot-password/forgot-password.component.html"),
+            styles: [__webpack_require__("./src/app/_components/welcome/login/forgot-password/forgot-password.component.scss")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_index__["a" /* AuthenticationService */]])
+    ], ForgotPasswordComponent);
+    return ForgotPasswordComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/_components/welcome/login/index.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__login_component__ = __webpack_require__("./src/app/_components/welcome/login/login.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__login_component__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__login_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__forgot_password_forgot_password_component__ = __webpack_require__("./src/app/_components/welcome/login/forgot-password/forgot-password.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__forgot_password_forgot_password_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reset_password_reset_password_component__ = __webpack_require__("./src/app/_components/welcome/login/reset-password/reset-password.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__reset_password_reset_password_component__["a"]; });
+
+
 
 
 
@@ -1287,14 +1385,14 @@ var ProfileComponent = (function () {
 /***/ "./src/app/_components/welcome/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n<div class=\"col-md-6 col-md-offset-3\">\n    <h2>Login</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && login()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Email</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Login</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n            <div class=\"pull-right\">\n                <a routerLink=\"/register\" >Register account</a>\n            </div>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n    </form>\n</div>\n"
+module.exports = "<div class=\"auth-container\">\n<div>\n    <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n    <h2>Login</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && login()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"text\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n            <a [routerLink]=\"['/forgot-password']\" routerLinkActive=\"link-active\">\n                <span>Forgot password?</span>\n            </a>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        <div class=\"form-group center-block\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary center-block\">Login</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div class=\"text-center\">\n            <span>Don't have an account?</span>\n            <a [routerLink]=\"['/register']\" routerLinkActive=\"link-active\">\n                <span>Register account</span>\n            </a>\n        </div> \n    </form>\n</div>\n</div>\n"
 
 /***/ }),
 
 /***/ "./src/app/_components/welcome/login/login.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".auth-container {\n  margin: 8px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .auth-container div {\n    width: 100%;\n    max-width: 400px;\n    min-width: 200px; }\n"
 
 /***/ }),
 
@@ -1333,7 +1431,7 @@ var LoginComponent = (function () {
     LoginComponent.prototype.login = function () {
         var _this = this;
         this.loading = true;
-        this.authenticationService.login(this.model.username, this.model.password)
+        this.authenticationService.login(this.model.email, this.model.password)
             .subscribe(function (result) {
             if (result === true) {
                 _this.router.navigate(['/']);
@@ -1360,6 +1458,106 @@ var LoginComponent = (function () {
 
 /***/ }),
 
+/***/ "./src/app/_components/welcome/login/reset-password/reset-password.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<form #changePassword=\"ngForm\" (ngSubmit)=\"onChangePassword(newPassword.value, confirmedPassword.value)\" class=\"grey-theme password-container\">\n  <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n  <mat-card>\n    <mat-card-title>\n      <mat-icon>vpn_key</mat-icon>\n      <span>Reset Password</span>\n    </mat-card-title>\n    <mat-card-content>\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"New Password\"\n          #newPassword />\n      </mat-input-container>\n      <mat-input-container>\n        <input matInput\n          required=\"required\"\n          pattern=\".{6,30}\"\n          type=\"password\"\n          placeholder=\"Confirm Password\"\n          #confirmedPassword />\n      </mat-input-container>\n      <div class=\"alert alert-danger\" *ngIf=\"!passwordsMatch\">\n         <mat-icon>warning</mat-icon>\n         {{warning}}\n      </div>\n    </mat-card-content>\n    <mat-card-actions>\n    <button\n      mat-raised-button\n      type=\"submit\" color=\"primary\">\n      <span>Confirm</span>\n    </button>\n    </mat-card-actions>\n  </mat-card>\n</form>"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/login/reset-password/reset-password.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".password-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  width: 100%; }\n\n.backButton {\n  -webkit-box-align: left;\n      -ms-flex-align: left;\n          align-items: left; }\n\n.backButton, mat-card {\n  max-width: 580px;\n  min-width: 200px;\n  width: calc(100% - 12px);\n  margin: 0 6px; }\n\nmat-card {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-height: 260px; }\n\nmat-card input, mat-card button {\n    font-size: 1.2rem; }\n\nmat-card button {\n    padding: 5px 15px; }\n\nmat-card mat-card-title {\n    font-size: 1.8rem; }\n\nmat-card mat-card-content {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    width: 100%;\n    max-width: 400px; }\n\n.link {\n  text-decoration: none;\n  color: #000; }\n\n.container {\n  margin: 10px;\n  padding: 0; }\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/login/reset-password/reset-password.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ResetPasswordComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_index__ = __webpack_require__("./src/app/_services/index.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var ResetPasswordComponent = (function () {
+    function ResetPasswordComponent(authenticationService, router, route) {
+        var _this = this;
+        this.authenticationService = authenticationService;
+        this.router = router;
+        this.route = route;
+        this.passwordsMatch = true;
+        this.route.params.subscribe(function (params) {
+            _this.token = params['token'];
+        });
+    }
+    ResetPasswordComponent.prototype.ngOnInit = function () {
+    };
+    ResetPasswordComponent.prototype.onChangePassword = function (newPassword, confirmedPassword) {
+        var _this = this;
+        if (newPassword != confirmedPassword) {
+            this.passwordsMatch = false;
+            this.warning = "Password does not match the confirm password!";
+            return;
+        }
+        else if (newPassword == "") {
+            this.passwordsMatch = false;
+            this.warning = "You can't use empty passwords!";
+            return;
+        }
+        else {
+            this.passwordsMatch = true;
+            this.authenticationService.resetPassword(newPassword, confirmedPassword, this.token)
+                .subscribe(function (result) {
+                if (result['success']) {
+                    _this.router.navigate(['/login']);
+                }
+                else {
+                    var error = '';
+                    var messageArr = result['message']['password'];
+                    if (messageArr) {
+                        for (var i = 0; i < messageArr.length; i++) {
+                            error += messageArr[i] + ' ';
+                        }
+                    }
+                    else {
+                        error = result['message'];
+                    }
+                    _this.warning = error;
+                    _this.passwordsMatch = false;
+                }
+            }, function (error) { console.log(error); });
+        }
+    };
+    ResetPasswordComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'app-reset-password',
+            template: __webpack_require__("./src/app/_components/welcome/login/reset-password/reset-password.component.html"),
+            styles: [__webpack_require__("./src/app/_components/welcome/login/reset-password/reset-password.component.scss")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_index__["a" /* AuthenticationService */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]])
+    ], ResetPasswordComponent);
+    return ResetPasswordComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/_components/welcome/register/index.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1374,14 +1572,14 @@ var LoginComponent = (function () {
 /***/ "./src/app/_components/welcome/register/register.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n<div class=\"col-md-6 col-md-offset-3\">\n    <h2>Register</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && password.value == repassword.value && register()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Username</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"email\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': (f.submitted && !repassword.valid) || (f.submitted && password.value != repassword.value) }\">\n            <label for=\"repassword\">Password Confirm</label>\n            <input type=\"password\" class=\"form-control\" name=\"repassword\" [(ngModel)]=\"model.repassword\" #repassword=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !repassword.valid\" class=\"help-block\">Password Confirm is required</div>\n            <div *ngIf=\"f.submitted && repassword.valid && password.value != repassword.value\" class=\"help-block\">Password Confirm is wrong</div>\n        </div>\n        <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Register</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n    </form>\n</div>\n"
+module.exports = "<div class=\"auth-container\">\n<div>\n    <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n    <h2>Register</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && password.value == repassword.value && register()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Username</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"email\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': (f.submitted && !repassword.valid) || (f.submitted && password.value != repassword.value) }\">\n            <label for=\"repassword\">Password Confirm</label>\n            <input type=\"password\" class=\"form-control\" name=\"repassword\" [(ngModel)]=\"model.repassword\" #repassword=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !repassword.valid\" class=\"help-block\">Password Confirm is required</div>\n            <div *ngIf=\"f.submitted && repassword.valid && password.value != repassword.value\" class=\"help-block\">Password Confirm is wrong</div>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        <div class=\"form-group center-block\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary center-block\">Register</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div class=\"text-center\">\n            <span>Already have an account?</span>\n            <a [routerLink]=\"['/login']\" routerLinkActive=\"link-active\">\n                <span>Login</span>\n            </a>\n        </div> \n    </form>\n</div>\n</div>\n"
 
 /***/ }),
 
 /***/ "./src/app/_components/welcome/register/register.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".auth-container {\n  margin: 8px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .auth-container div {\n    width: 100%;\n    max-width: 400px;\n    min-width: 200px; }\n"
 
 /***/ }),
 
@@ -1699,6 +1897,7 @@ var AuthenticationService = (function () {
     function AuthenticationService(http) {
         this.http = http;
         this.apiUrl = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].apiUrl;
+        this.baseUrl = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].baseUrl;
         // set token if saved in local storage
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
@@ -1749,6 +1948,27 @@ var AuthenticationService = (function () {
         // clear token remove user from local storage to log user out
         this.token = null;
         localStorage.removeItem('currentUser');
+    };
+    AuthenticationService.prototype.sendPasswordResetEmail = function (email) {
+        var url = this.baseUrl + '/reset-password';
+        var request = JSON.stringify({ email: email, url: url });
+        console.log(request);
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({ headers: headers }); // Create a request option
+        return this.http.post(this.apiUrl + '/password-reset-email', request, options)
+            .map(function (response) {
+            return response.json();
+        });
+    };
+    AuthenticationService.prototype.resetPassword = function (newPassword, confirmedPassword, token) {
+        var request = JSON.stringify({ password: newPassword,
+            confirm_password: confirmedPassword, token: token });
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
+        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({ headers: headers }); // Create a request option
+        return this.http.post(this.apiUrl + '/reset-password', request, options)
+            .map(function (response) {
+            return response.json();
+        });
     };
     AuthenticationService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -2099,12 +2319,14 @@ var UserService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__components_home_topic_index__ = __webpack_require__("./src/app/_components/home/topic/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__ = __webpack_require__("./src/app/_components/home/topic/lesson/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_profile_profile_component__ = __webpack_require__("./src/app/_components/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__components_welcome_login_reset_password_reset_password_component__ = __webpack_require__("./src/app/_components/welcome/login/reset-password/reset-password.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -2157,7 +2379,7 @@ var AppModule = (function () {
             declarations: [
                 __WEBPACK_IMPORTED_MODULE_12__components_app_component__["a" /* AppComponent */],
                 __WEBPACK_IMPORTED_MODULE_13__components_welcome_index__["a" /* WelcomeComponent */],
-                __WEBPACK_IMPORTED_MODULE_14__components_welcome_login_index__["a" /* LoginComponent */],
+                __WEBPACK_IMPORTED_MODULE_14__components_welcome_login_index__["b" /* LoginComponent */],
                 __WEBPACK_IMPORTED_MODULE_15__components_welcome_register_index__["a" /* RegisterComponent */],
                 __WEBPACK_IMPORTED_MODULE_17__components_home_index__["a" /* HomeComponent */],
                 __WEBPACK_IMPORTED_MODULE_18__components_home_topic_index__["a" /* TopicComponent */],
@@ -2167,7 +2389,9 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["e" /* ReportDialogComponent */],
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["b" /* ChartComponent */],
                 __WEBPACK_IMPORTED_MODULE_20__components_profile_profile_component__["a" /* ProfileComponent */],
-                __WEBPACK_IMPORTED_MODULE_16__components_welcome_try_try_component__["a" /* TryComponent */]
+                __WEBPACK_IMPORTED_MODULE_16__components_welcome_try_try_component__["a" /* TryComponent */],
+                __WEBPACK_IMPORTED_MODULE_14__components_welcome_login_index__["a" /* ForgotPasswordComponent */],
+                __WEBPACK_IMPORTED_MODULE_21__components_welcome_login_reset_password_reset_password_component__["a" /* ResetPasswordComponent */]
             ],
             entryComponents: [
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["c" /* GoodDialogComponent */],
@@ -2218,8 +2442,10 @@ var AppModule = (function () {
 
 var appRoutes = [
     { path: 'welcome', component: __WEBPACK_IMPORTED_MODULE_1__components_welcome_index__["a" /* WelcomeComponent */] },
-    { path: 'login', component: __WEBPACK_IMPORTED_MODULE_2__components_welcome_login_index__["a" /* LoginComponent */] },
+    { path: 'login', component: __WEBPACK_IMPORTED_MODULE_2__components_welcome_login_index__["b" /* LoginComponent */] },
     { path: 'register', component: __WEBPACK_IMPORTED_MODULE_3__components_welcome_register_index__["a" /* RegisterComponent */] },
+    { path: 'forgot-password', component: __WEBPACK_IMPORTED_MODULE_2__components_welcome_login_index__["a" /* ForgotPasswordComponent */] },
+    { path: 'reset-password/:token', component: __WEBPACK_IMPORTED_MODULE_2__components_welcome_login_index__["c" /* ResetPasswordComponent */] },
     { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_8__components_profile_profile_component__["a" /* ProfileComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: '', component: __WEBPACK_IMPORTED_MODULE_4__components_home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_5__components_home_topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
@@ -2240,7 +2466,8 @@ var routing = __WEBPACK_IMPORTED_MODULE_0__angular_router__["d" /* RouterModule 
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
 var environment = {
     production: true,
-    apiUrl: 'http://healthnumeracyproject.com/api' // global API URL (for production build)
+    apiUrl: 'http://healthnumeracyproject.com/api',
+    baseUrl: window.location.origin + '/gizmo' // Base URL here
     //... more of your variables
 };
 
