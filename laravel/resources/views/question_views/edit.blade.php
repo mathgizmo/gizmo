@@ -13,9 +13,10 @@
     <div class="row">
         <div class="col-md-12">
 
-            <form class="form-horizontal" role="form" action="{{ route('question_views.update', $question->id) }}" method="POST">
+            <form class="form-horizontal" role="form" action="{{ route('question_views.update', $question->id) }}" method="POST" id="edit-form">
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_type" value="update" id="update-type">
 
 				        <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
                             <label for="level_id" class="col-md-4 control-label">Level</label>
@@ -300,10 +301,11 @@
                     </div>
                 </div>
 
-
-
             <a class="btn btn-default" href="{{ route('question_views.index') }}">Back</a>
-            <button class="btn btn-primary" type="submit" >Save</button>
+            <button class="btn btn-primary" type="button"
+                onclick="document.getElementById('update-type').value = 'new';
+                    document.getElementById('edit-form').submit();" >Save a copy as</button>
+            <button class="btn btn-primary" type="submit">Save</button>
             </form>
         </div>
     </div>

@@ -315,62 +315,69 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-       // print_r($id);
-	   $levels = DB::select('select * from level');
-		//$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
-		//$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
-		$units = DB::table('unit')->where('level_id',$request->level_id)->get();
-		$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-		$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+    public function update(Request $request, $id) {
+      $questionID = $id;
+      // print_r($id);
+  	  $levels = DB::select('select * from level');
+  		//$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
+  		//$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
+  		$units = DB::table('unit')->where('level_id',$request->level_id)->get();
+  		$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
+  		$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
 
-	$this->validate($request, [
-		 'level_id'	=> 'required',
-		 'unit_id'	=> 'required',
-		 'topic_id'	=> 'required',
-		 'lesson_id'	=> 'required',
-		 'question'		=> 'required',
-		 'reply_mode'	=> 'required',
-          'answer'  => 'required|array|min:1|max:6',
-          'answer.*'=>'required|string',
-    ]);
+    	$this->validate($request, [
+    		 'level_id'	=> 'required',
+    		 'unit_id'	=> 'required',
+    		 'topic_id'	=> 'required',
+    		 'lesson_id'	=> 'required',
+    		 'question'		=> 'required',
+    		 'reply_mode'	=> 'required',
+              'answer'  => 'required|array|min:1|max:6',
+              'answer.*'=>'required|string',
+      ]);
 
-		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],
-		'reply_mode' => $request['reply_mode'],
-		'question' => $request['question']]);
+  		$collectionQuestion = collect(['lesson_id' => $request['lesson_id'],
+  		'reply_mode' => $request['reply_mode'],
+  		'question' => $request['question']]);
 
-		$collectionQuestion = $collectionQuestion->merge(['explanation' => $request['explanation'],
+  		$collectionQuestion = $collectionQuestion
+        ->merge(['explanation' => $request['explanation'],
                   'conversion' => $request['conversion'] ?: false,
                   'rounding' => $request['rounding'] ?: false,
                   'question_order' => $request['question_order'] ?: false,
 									'created_at' => date('Y-m-d H:i:s'),
 									'modified_at' => date('Y-m-d H:i:s')
-									]);
+							  ]);
 
-		DB::table('question')->where('id', $id)->update($collectionQuestion->all());
-        Question::find($id)->answers()->delete();
-        $type = $request['reply_mode'];
-        $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'], [1, 6, 1, 6, 6, 6],  $type);
-        for ($i = 0;$i < ($iterations>count($request->answer) ? count($request->answer) :  $iterations) ; $i++) {
-            $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
-            Answer::create([
-                'question_id' => $id,
-                'value' => $request->answer[$i],
-                'answer_order' => $i,
-                'is_correct' => $is_correct,
-            ]);
-        }
+      if($request['_type'] == 'new') {
+        $questionID = DB::table('question')->insertGetId($collectionQuestion->all());
+      } else { 
+        DB::table('question')->where('id', $questionID)->update($collectionQuestion->all());
+        Question::find($questionID)->answers()->delete();
+      }
 
-		$questions = DB::table('question')
-            ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
-            ->join('topic', 'lesson.topic_id', '=', 'topic.id')
-			->join('unit', 'topic.unit_id', '=', 'unit.id')
-			->join('level', 'unit.level_id', '=', 'level.id')
-            ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
-            ->orderBy('question.id', 'desc')->paginate(10);
+      $type = $request['reply_mode'];
+       $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'], [1, 6, 1, 6, 6, 6],  $type);
+       for ($i = 0;$i < ($iterations>count($request->answer) ? count($request->answer) :  $iterations) ; $i++) {
+           $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
+           Answer::create([
+               'question_id' => $questionID,
+               'value' => $request->answer[$i],
+               'answer_order' => $i,
+               'is_correct' => $is_correct,
+           ]);
+       }
 
-        return redirect(route('question_views.index'));
+      $questions = DB::table('question')
+              ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
+              ->join('topic', 'lesson.topic_id', '=', 'topic.id')
+        ->join('unit', 'topic.unit_id', '=', 'unit.id')
+        ->join('level', 'unit.level_id', '=', 'level.id')
+              ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
+              ->orderBy('question.id', 'desc')->paginate(10);
+
+      return redirect(route('question_views.index'));
+
     }
 
     /**
