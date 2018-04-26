@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Storage;
+use Config;
 
 class QuestionController extends Controller
 {
@@ -171,8 +172,11 @@ class QuestionController extends Controller
 
 		$lessons = DB::table('lesson')->select('id', 'title')->get();
 		$qrmodes = DB::select('select * from reply_mode');
+
+    $preview_url = Config::get('app.preview_url');
+
 		return view('question_views.create',['levels' => $levels,
-		'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lsnid]);
+		'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lsnid, 'preview_url'=> $preview_url]);
 	}
 
     /**
@@ -304,8 +308,10 @@ class QuestionController extends Controller
 		$lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $question->tid)->get();
 		$qrmodes = DB::select('select * from reply_mode');
 
+    $preview_url = Config::get('app.preview_url');
+
 		return view('question_views.edit', ['question'=>$question,'levels'=>$levels,
-		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers]);
+		'units'=>$units,'topics'=>$topics,'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers, 'preview_url'=>$preview_url ]);
     }
 
     /**
@@ -405,4 +411,5 @@ class QuestionController extends Controller
 			->orderBy('question.id', 'desc')->paginate(10);
         return redirect()->route('question_views.index');
     }
+
 }

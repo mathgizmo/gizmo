@@ -12,7 +12,7 @@ It consist of 3 main modules admin, API, and hybrid app
 - Also change copy `laravel/config/global/dbconf.php` file into `laravel/config/local` folder and set you db credential there. Do not save real credential in global folders. 
 - To update your DB to current version go to laravel folder and run `php artisan migrate`
 - Make sure that apache has access to write into `laravel/bootstrap/cache` and `laravel/storage` folders. 
-- Create file `.env` and put `APP_KEY=` in it. For email sending make sure that you have in your `.env` file next keys set: `MAIL_DRIVER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_ENCRYPTION`. You can just rename `example.env` to `.env`.
+- Create file `.env` and put `APP_KEY=` in it. For email sending make sure that you have in your `.env` file next keys set: `MAIL_DRIVER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_ENCRYPTION`. For preview questions in admin you need `PREVIEW_URL` with link to your client base preview path. You can just rename `example.env` to `.env`.
 - Run `php artisan key:generate` to generate app key. Check `.env` file if key actually been generated.
 - Run `php artisan jwt:generate` to generate secret for API.
 - 

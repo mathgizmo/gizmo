@@ -131,6 +131,16 @@ return [
 
     'key' => env('APP_KEY'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Preview URL
+    |--------------------------------------------------------------------------
+    |
+    | Angular client preview components URL
+    |
+    */
+    'preview_url' => env('PREVIEW_URL', url('/').'/gizmo/preview/'),
+
     'cipher' => 'AES-256-CBC',
 
     /*
