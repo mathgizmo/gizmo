@@ -139,7 +139,7 @@ return [
     | Angular client preview components URL
     |
     */
-    'preview_url' => env('PREVIEW_URL', url('/').'/gizmo/preview/'),
+    'preview_url' => env('PREVIEW_URL', 'http://localhost:4200/gizmo/preview/'),
 
     'cipher' => 'AES-256-CBC',
 
