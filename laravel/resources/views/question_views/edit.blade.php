@@ -178,6 +178,7 @@
                               let order_input = document.getElementById('question_order_input');
                               if(reply_mode.value == 'FB') {
                                 order.style.display = 'block';
+                                
                               }  else {
                                 order.style.display = 'none';
                                 order_input.value = false;

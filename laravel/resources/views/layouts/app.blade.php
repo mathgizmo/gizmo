@@ -55,6 +55,7 @@
                         <li><a href="{{ url('/unit_views') }}">Manage Units</a></li>
                         <li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
                         <li><a href="{{ url('/lesson_views') }}">Manage Lessons</a></li>
+                        <li><a href="{{ url('/placement_views') }}">Manage Placements</a></li>
                         @if(auth()->user()->is_admin)
                             <li><a href="{{ route('users.index') }}">Administrators</a></li>
                         @endif
