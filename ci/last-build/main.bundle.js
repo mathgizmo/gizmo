@@ -20,7 +20,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /***/ "./src/app/_components/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!-- main app container -->\n<div class=\"jumbotron\"> \n    <div class=\"container\">\n        <div *ngIf=\"showMenu\" class=\"menu\">\n            <mat-toolbar class=\"toolbar\">\n                <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                    <mat-icon>menu</mat-icon>\n                </button>\n            </mat-toolbar>\n            <mat-menu #menu=\"matMenu\">\n                <br />\n                <a mat-menu-item routerLink=\"\">Home</a>\n                <a mat-menu-item routerLink=\"profile\">Profile</a>\n                <a mat-menu-item routerLink=\"login\">Logout</a>\n            </mat-menu>\n        </div>\n        <router-outlet></router-outlet>\n    </div>\n</div>"
+module.exports = "<!-- main app container -->\n<div class=\"jumbotron\"> \n    <div class=\"container\">\n        <div *ngIf=\"showMenu\" class=\"menu\" id='main-menu'>\n            <mat-toolbar class=\"toolbar\">\n                <button mat-icon-button [matMenuTriggerFor]=\"menu\">\n                    <mat-icon>menu</mat-icon>\n                </button>\n            </mat-toolbar>\n            <mat-menu #menu=\"matMenu\">\n                <br />\n                <a mat-menu-item routerLink=\"\">Home</a>\n                <a mat-menu-item routerLink=\"profile\">Profile</a>\n                <a mat-menu-item routerLink=\"login\">Logout</a>\n            </mat-menu>\n        </div>\n        <router-outlet></router-outlet>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -238,21 +238,395 @@ var BadDialogComponent = (function () {
 
 /***/ }),
 
-/***/ "./src/app/_components/home/topic/lesson/chart/chart.component.html":
+/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h2 mat-dialog-title>Correct!</h2>\n<mat-dialog-content></mat-dialog-content>\n<mat-dialog-actions>\n\t<button mat-button [mat-dialog-close]=\"true\" class='continue-button'>Continue</button>\n</mat-dialog-actions>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".continue-button {\n  background-color: #fef65b; }\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GoodDialogComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+var GoodDialogComponent = (function () {
+    function GoodDialogComponent(dialogRef, data) {
+        this.dialogRef = dialogRef;
+        this.data = data;
+    }
+    GoodDialogComponent.prototype.onNoClick = function () {
+        this.dialogRef.close();
+    };
+    GoodDialogComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'good-dialog',
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.scss")]
+        }),
+        __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */], Object])
+    ], GoodDialogComponent);
+    return GoodDialogComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lesson_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__good_dialog_good_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__good_dialog_good_dialog_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bad_dialog_bad_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__bad_dialog_bad_dialog_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__report_dialog_report_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_3__report_dialog_report_dialog_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__question_question_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/question/question.component.ts");
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__question_chart_chart_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/question/chart/chart.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_5__question_chart_chart_component__["a"]; });
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/lesson.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" class=\"lesson-progress\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <app-question \n            [question]='question' \n            (onAnswered)=\"checkAnswer($event)\"\n        ></app-question>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/lesson.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/lesson.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LessonComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_index__ = __webpack_require__("./src/app/_services/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__good_dialog_good_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bad_dialog_bad_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__report_dialog_report_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
+
+
+var LessonComponent = (function () {
+    function LessonComponent(router, topicService, trackingService, route, dialog) {
+        this.router = router;
+        this.topicService = topicService;
+        this.trackingService = trackingService;
+        this.route = route;
+        this.dialog = dialog;
+        this.lessonTree = [];
+        this.weak_questions = [];
+        this.start_time = '';
+        this.initial_loading = 1;
+        this.next = 0;
+        this.max_incorrect_answers = 1;
+        this.question = null;
+        this.answers = null;
+        if (localStorage.getItem('question_num') != undefined) {
+            this.question_num = Number(localStorage.getItem('question_num'));
+        }
+        else {
+            this.question_num = 4;
+        }
+    }
+    LessonComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.question_num = +localStorage.getItem('question_num');
+        this.incorrect_answers = 0;
+        this.sub = this.route.params.subscribe(function (params) {
+            _this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
+            _this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
+                +params['lesson_id']; // (+) converts string 'id' to a number
+            // get lesson tree from API
+            _this.topicService.getLesson(_this.topic_id, _this.lesson_id)
+                .subscribe(function (lessonTree) {
+                _this.lessonTree = lessonTree;
+                _this.initial_loading = 0;
+                if (lessonTree['questions'].length) {
+                    if (_this.question_num >= _this.lessonTree['questions'].length)
+                        _this.question_num = _this.lessonTree['questions'].length;
+                    _this.nextQuestion();
+                    _this.trackingService.startLesson(_this.lesson_id)
+                        .subscribe(function (start_time) {
+                        _this.start_time = start_time;
+                    });
+                    if (_this.lesson_id == -1) {
+                        _this.question_num = lessonTree['questions'].length;
+                    }
+                }
+                if (_this.lesson_id == -1) {
+                    _this.next = lessonTree['next_topic_id'];
+                }
+                else {
+                    _this.next = lessonTree['next_lesson_id'];
+                }
+                _this.correct_answers = _this.complete_percent = 0;
+            });
+        });
+    };
+    LessonComponent.prototype.nextQuestion = function () {
+        this.question = this.lessonTree['questions'].shift();
+    };
+    LessonComponent.prototype.checkAnswer = function (answers) {
+        var _this = this;
+        this.answers = answers;
+        // sort question answers
+        if (this.question.question_order) {
+            this.question.answers.sort(function (a, b) {
+                return a.value - b.value;
+            });
+            // check if all answers are numbers
+            var isNumbers = true;
+            for (var i = 0; i < this.answers.length; i++) {
+                var answer = this.answers[i].replace(",", ".");
+                if (isNaN(+answer)) {
+                    isNumbers = false;
+                    break;
+                }
+            }
+            if (isNumbers) {
+                for (var i = 0; i < this.answers.length; i++)
+                    this.answers[i] = this.answers[i].replace(",", ".");
+                this.answers.sort(function (a, b) {
+                    return +a - +b;
+                });
+                //console.log("NUM: "+this.answers);
+            }
+            else {
+                this.answers.sort();
+                //console.log("STR: "+this.answers);
+            }
+        }
+        // convert percents to float
+        for (var i = 0; i < this.answers.length; i++) {
+            try {
+                if (this.answers[i].includes('%')) {
+                    var answer = this.answers[i].replace('%', '');
+                    if (!isNaN(+answer)) {
+                        this.answers[i] = parseFloat(answer) / 100 + '';
+                    }
+                }
+            }
+            catch (err) { }
+        }
+        if (this.isCorrect()) {
+            this.correct_answers++;
+            this.complete_percent = (this.correct_answers == 0) ? 0
+                : this.correct_answers / this.question_num * 100;
+            //if we have enough correct responces just remove rest of the questions
+            if (this.correct_answers == this.question_num
+                && this.question_num != 0) {
+                this.lessonTree['questions'] = [];
+            }
+            var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_4__good_dialog_good_dialog_component__["a" /* GoodDialogComponent */], {
+                width: '300px',
+                data: {}
+            });
+            dialogRef.afterClosed().subscribe(function (result) {
+                if (_this.lessonTree['questions'].length) {
+                    _this.nextQuestion();
+                }
+                else {
+                    _this.question = null;
+                    _this.trackingService.doneLesson(_this.topic_id, _this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
+                }
+            });
+        }
+        else {
+            if (this.weak_questions.indexOf(this.question.id) === -1) {
+                this.weak_questions.push(this.question.id);
+            }
+            this.incorrect_answers++;
+            if (this.lesson_id == -1 &&
+                this.incorrect_answers > this.max_incorrect_answers) {
+                this.router.navigate(['/topic/' + this.topic_id]);
+            }
+            else {
+                this.lessonTree['questions'].push(this.question);
+            }
+            var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_5__bad_dialog_bad_dialog_component__["a" /* BadDialogComponent */], {
+                width: '300px',
+                data: { data: this.question.answers.filter(function (answer) {
+                        if (answer.is_correct == 1)
+                            return true;
+                        return false;
+                    }), explanation: this.question.explanation,
+                    showAnswers: (this.lesson_id == -1) ? false : true
+                }
+            });
+            dialogRef.afterClosed().subscribe(function (result) {
+                if (result) {
+                    var reportDialogRef = _this.dialog.open(__WEBPACK_IMPORTED_MODULE_6__report_dialog_report_dialog_component__["a" /* ReportDialogComponent */], {
+                        //width: '300px',
+                        data: { question_id: _this.question.id, answers: _this.answers }
+                    });
+                    reportDialogRef.afterClosed().subscribe(function (result) {
+                        //console.log(result);
+                        _this.topicService.reportError(result.question_id, result.answers, result.option, result.text).subscribe();
+                    });
+                }
+                if (_this.lessonTree['questions'].length) {
+                    _this.nextQuestion();
+                }
+                else {
+                    _this.question = null;
+                    _this.trackingService.doneLesson(_this.topic_id, _this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
+                }
+            });
+            if (this.lesson_id != -1) {
+                this.correct_answers = this.complete_percent = 0;
+            }
+        }
+    };
+    LessonComponent.prototype.isCorrect = function () {
+        if (this.question.answer_mode == 'radio') {
+            if (this.answers[0] === "")
+                return false;
+            var answer = +this.answers[0];
+            if (answer < 0 || answer >= this.question.answers.length)
+                return false;
+            if (this.question.answers[answer].is_correct) {
+                return true;
+            }
+        }
+        else {
+            if (this.answers.length < this.question.answers.length) {
+                return false;
+            }
+            for (var i = 0; i < this.question.answers.length; i++) {
+                if (this.question.answer_mode == 'checkbox') {
+                    if (this.question.answers[i].is_correct && this.answers[i] === ""
+                        || !this.question.answers[i].is_correct && this.answers[i] !== "") {
+                        return false;
+                    }
+                }
+                else {
+                    if (this.answers[i] === "")
+                        return false;
+                    if (this.question.conversion) {
+                        this.answers[i] = this.answers[i].replace(/[^\d.-\/]/g, '');
+                        var temp = this.answers[i].split("/");
+                        if (temp[1] != undefined) {
+                            this.answers[i] = (Number(temp[0]) / Number(temp[1])) + "";
+                        }
+                        else {
+                            this.answers[i] = temp[0] + "";
+                        }
+                    }
+                    if (this.question.rounding) {
+                        this.answers[i] = this.answers[i].replace(/[^\d.-]/g, '');
+                        var temp = this.question.answers[i].value.split(".");
+                        var roundTo = 0;
+                        if (temp[1] != undefined) {
+                            roundTo = temp[1].length;
+                        }
+                        this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + "";
+                    }
+                    if (this.question.answers[i].is_correct &&
+                        this.question.answers[i].value != this.answers[i]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    };
+    LessonComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            moduleId: module.i,
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.html"),
+            providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]],
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.scss")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
+            __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */],
+            __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialog */]])
+    ], LessonComponent);
+    return LessonComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.html":
 /***/ (function(module, exports) {
 
 module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\" id='inputValue'\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span>\n            {{chartValue.toFixed(precision)}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label>{{chartValue.toFixed(precision)}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
 
 /***/ }),
 
-/***/ "./src/app/_components/home/topic/lesson/chart/chart.component.scss":
+/***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.scss":
 /***/ (function(module, exports) {
 
 module.exports = "input {\n  text-align: center;\n  font-weight: bold; }\n\n#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label-container label,\nmat-form-field, #controls > * {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n\n.max-value {\n  font-weight: bold; }\n"
 
 /***/ }),
 
-/***/ "./src/app/_components/home/topic/lesson/chart/chart.component.ts":
+/***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -586,8 +960,8 @@ var ChartComponent = (function () {
     ChartComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'chart',
-            template: __webpack_require__("./src/app/_components/home/topic/lesson/chart/chart.component.html"),
-            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/chart/chart.component.scss")],
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/question/chart/chart.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/question/chart/chart.component.scss")],
             changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush
         }),
         __metadata("design:paramtypes", [])
@@ -610,114 +984,26 @@ function getAbsolutePosition(element) {
 
 /***/ }),
 
-/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.html":
+/***/ "./src/app/_components/home/topic/lesson/question/question.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 mat-dialog-title>Correct!</h2>\n<mat-dialog-content></mat-dialog-content>\n<mat-dialog-actions>\n\t<button mat-button [mat-dialog-close]=\"true\" class='continue-button'>Continue</button>\n</mat-dialog-actions>"
+module.exports = "<span class=\"grey-theme\">\n    <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" class=\"question\"></h2>\n    <span  *ngIf=\"is_chart\" >\n        <h2 [innerHtml]=\"questionForChart\" *ngIf=\"is_chart\" class=\"question\"></h2>\n        <chart [question]=\"question['question']\" chartHeight=\"250\" ></chart>\n    </span>\n    <span class=\"answer\">\n        <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n            <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n        </div>\n        <div *ngIf=\"question.answer_mode=='radio'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                    {{answer.value}}\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='TF'\">\n            <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                    false\n                </mat-radio-button>\n                <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                    true\n                </mat-radio-button>\n            </mat-radio-group>\n        </div>\n        <div *ngIf=\"question.answer_mode=='checkbox'\">\n            <div *ngFor=\"let answer of question.answers; let answerIndex = 'index'\">\n                <mat-checkbox [(ngModel)]=\"answers[answerIndex]\" color=\"primary\"> \n                    {{answer.value}} \n                </mat-checkbox>\n            </div>\n        </div>\n        <div  *ngIf=\"question.answer_mode=='input'\">\n            <input *ngFor=\"let answer of question.answers; let answerIndex = 'index'\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n            (keyup.enter) = \"checkAnswer()\" class=\"input\">\n        </div>\n    </span>\n\n    <button (click)=\"checkAnswer()\" id=\"continue-button\"\n        mat-raised-button\n        style=\"color: #000; background-color: #f5f5f5; \">\n        <span>Continue</span>\n    </button>\n</span>\n\n"
 
 /***/ }),
 
-/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.scss":
-/***/ (function(module, exports) {
-
-module.exports = ".continue-button {\n  background-color: #fef65b; }\n"
-
-/***/ }),
-
-/***/ "./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GoodDialogComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-
-
-var GoodDialogComponent = (function () {
-    function GoodDialogComponent(dialogRef, data) {
-        this.dialogRef = dialogRef;
-        this.data = data;
-    }
-    GoodDialogComponent.prototype.onNoClick = function () {
-        this.dialogRef.close();
-    };
-    GoodDialogComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            selector: 'good-dialog',
-            template: __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.html"),
-            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.scss")]
-        }),
-        __param(1, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */], Object])
-    ], GoodDialogComponent);
-    return GoodDialogComponent;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/_components/home/topic/lesson/index.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lesson_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_0__lesson_component__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__good_dialog_good_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_1__good_dialog_good_dialog_component__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bad_dialog_bad_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__bad_dialog_bad_dialog_component__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__report_dialog_report_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_3__report_dialog_report_dialog_component__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__chart_chart_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/chart/chart.component.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_4__chart_chart_component__["a"]; });
-
-
-
-
-
-
-
-/***/ }),
-
-/***/ "./src/app/_components/home/topic/lesson/lesson.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<span class=\"grey-theme\">\n <a routerLink=\"/topic/{{topic_id}}\" routerLinkActive=\"active\" class=\"backButton left\"><-Back</a>\n<mat-progress-bar color=\"accent\" class=\"lesson-progress\" *ngIf=\"question_num > 0\" mode=determinate value={{complete_percent}} ></mat-progress-bar>\n<label *ngIf=\"question_num > 0\" style=\"display: flex; justify-content: center;\">{{correct_answers}}/{{question_num}}</label>\n<div class=\"text-center\">\n    <div *ngIf=\"question !== null\">\n        <h2 [innerHtml]=\"question.question\" *ngIf=\"!is_chart\" class=\"question\"></h2>\n        <span  *ngIf=\"is_chart\" >\n            <h2 [innerHtml]=\"questionForChart\" *ngIf=\"is_chart\" class=\"question\"></h2>\n            <chart [question]=\"question['question']\" chartHeight=\"250\" ></chart>\n        </span>\n        <span class=\"answer\">\n            <div *ngIf=\"question.answer_mode=='order'\" [sortablejs]=\"answers\" class=\"order-container\">\n                <div *ngFor=\"let answer of answers\" class=\"order-item\">{{answer}}</div>\n            </div>\n            <div *ngIf=\"question.answer_mode=='radio'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" *ngFor=\"let answer of question.answers; let answerIndex = index\" value=\"{{answerIndex}}\" color=\"primary\">\n                        {{answer.value}}\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='TF'\">\n                <mat-radio-group class=\"radio-group\" [(ngModel)]=\"answers[0]\" >\n                    <mat-radio-button class=\"radio-button\" value=\"False\" color=\"primary\">\n                        false\n                    </mat-radio-button>\n                    <mat-radio-button class=\"radio-button\" value=\"True\" color=\"primary\">\n                        true\n                    </mat-radio-button>\n                </mat-radio-group>\n            </div>\n            <div *ngIf=\"question.answer_mode=='checkbox'\">\n                <div *ngFor=\"let answer of question.answers; let answerIndex = 'index'\">\n                    <mat-checkbox [(ngModel)]=\"answers[answerIndex]\" color=\"primary\"> \n                        {{answer.value}} \n                    </mat-checkbox>\n                </div>\n            </div>\n            <div  *ngIf=\"question.answer_mode=='input'\">\n                <input *ngFor=\"let answer of question.answers; let answerIndex = 'index'\" [(ngModel)]=\"answers[answerIndex]\" name=\"'answers[{{answerIndex}}]'\"\n                (keyup.enter) = \"checkAnswer()\" class=\"input\">\n            </div>\n        </span>\n        <br />\n        <button (click)=\"checkAnswer()\"\n            mat-raised-button\n            style=\"color: #000; background-color: #f5f5f5; \">\n            <span>Continue</span>\n        </button>\n    </div>\n    <div *ngIf=\"question === null\">\n        <div *ngIf=\"initial_loading == 1\">\n            <h2>Loading....!</h2>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id != -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this lesson.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}/lesson/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next lesson</span>\n                </button>\n            </a>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{topic_id}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next == 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go back to topic</span>\n                </button>\n            </a>\n        </div>\n        <div *ngIf=\"initial_loading == 0 && lesson_id == -1\">\n            <h2>Congratulations!</h2>\n            <h3>You have finished this topic.</h3>\n            <a\n                class=\"button-container\"\n                routerLink=\"/topic/{{next}}\"\n                routerLinkActive=\"active\"\n                *ngIf=\"next != 0\">\n                <button\n                    mat-raised-button\n                    style=\"margin: 16px; color: #000; background-color: #f5f5f5;\">\n                    <mat-icon>done all</mat-icon>\n                    <span>Go to next topic</span>\n                </button>\n            </a>\n        </div>\n    </div>\n</div>   \n</span>"
-
-/***/ }),
-
-/***/ "./src/app/_components/home/topic/lesson/lesson.component.scss":
+/***/ "./src/app/_components/home/topic/lesson/question/question.component.scss":
 /***/ (function(module, exports) {
 
 module.exports = ".order-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column; }\n\n.order-item {\n  background-color: rgba(17, 17, 17, 0.5);\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  min-width: 50px;\n  width: 80%;\n  line-height: 35px;\n  margin: 4px;\n  color: #fff; }\n\n.radio-button {\n  text-align: left; }\n\n.input {\n  text-align: center; }\n"
 
 /***/ }),
 
-/***/ "./src/app/_components/home/topic/lesson/lesson.component.ts":
+/***/ "./src/app/_components/home/topic/lesson/question/question.component.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LessonComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QuestionComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_index__ = __webpack_require__("./src/app/_services/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__good_dialog_good_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/good-dialog/good-dialog.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__bad_dialog_bad_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/bad-dialog/bad-dialog.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__report_dialog_report_dialog_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/report-dialog/report-dialog.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -728,76 +1014,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-
-
-
-
-
-
-
-
-var LessonComponent = (function () {
-    function LessonComponent(router, topicService, trackingService, route, dialog) {
-        this.router = router;
-        this.topicService = topicService;
-        this.trackingService = trackingService;
-        this.route = route;
-        this.dialog = dialog;
-        this.lessonTree = [];
-        this.question = null;
-        this.answer = '';
-        this.weak_questions = [];
-        this.start_time = '';
-        this.initial_loading = 1;
-        this.next = 0;
+var QuestionComponent = (function () {
+    function QuestionComponent() {
+        this._question = null;
+        this.onAnswered = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]();
         this.questionForChart = '';
-        this.max_incorrect_answers = 1;
-        if (localStorage.getItem('question_num') != undefined) {
-            this.question_num = Number(localStorage.getItem('question_num'));
-        }
-        else {
-            this.question_num = 4;
-        }
         this.is_chart = false;
     }
-    LessonComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.question_num = +localStorage.getItem('question_num');
-        this.incorrect_answers = 0;
-        this.sub = this.route.params.subscribe(function (params) {
-            _this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
-            _this.lesson_id = (params['lesson_id'] == "testout") ? -1 :
-                +params['lesson_id']; // (+) converts string 'id' to a number
-            // get lesson tree from API
-            _this.topicService.getLesson(_this.topic_id, _this.lesson_id)
-                .subscribe(function (lessonTree) {
-                _this.lessonTree = lessonTree;
-                _this.initial_loading = 0;
-                if (lessonTree['questions'].length) {
-                    if (_this.question_num >= _this.lessonTree['questions'].length)
-                        _this.question_num = _this.lessonTree['questions'].length;
-                    _this.nextQuestion();
-                    _this.trackingService.startLesson(_this.lesson_id)
-                        .subscribe(function (start_time) {
-                        _this.start_time = start_time;
-                    });
-                    if (_this.lesson_id == -1) {
-                        _this.question_num = lessonTree['questions'].length;
-                    }
-                }
-                if (_this.lesson_id == -1) {
-                    _this.next = lessonTree['next_topic_id'];
-                }
-                else {
-                    _this.next = lessonTree['next_lesson_id'];
-                }
-                _this.correct_answers = _this.complete_percent = 0;
-            });
-        });
-    };
-    LessonComponent.prototype.nextQuestion = function () {
+    Object.defineProperty(QuestionComponent.prototype, "question", {
+        get: function () {
+            return this._question;
+        },
+        set: function (value) {
+            this._question = value;
+            this.ngOnInit();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    QuestionComponent.prototype.ngOnInit = function () {
         this.answers = [];
-        this.question = this.lessonTree['questions'].shift();
         this.is_chart = false;
         if (this.question['question'].indexOf('%%chart{') >= 0) {
             this.is_chart = true;
@@ -835,172 +1071,11 @@ var LessonComponent = (function () {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }, 50);
     };
-    LessonComponent.prototype.checkAnswer = function () {
-        var _this = this;
-        // sort question answers
-        if (this.question.question_order) {
-            this.question.answers.sort(function (a, b) {
-                return a.value - b.value;
-            });
-            // check if all answers are numbers
-            var isNumbers = true;
-            for (var i = 0; i < this.answers.length; i++) {
-                var answer = this.answers[i].replace(",", ".");
-                if (isNaN(+answer)) {
-                    isNumbers = false;
-                    break;
-                }
-            }
-            if (isNumbers) {
-                for (var i = 0; i < this.answers.length; i++)
-                    this.answers[i] = this.answers[i].replace(",", ".");
-                this.answers.sort(function (a, b) {
-                    return +a - +b;
-                });
-                //console.log("NUM: "+this.answers);
-            }
-            else {
-                this.answers.sort();
-                //console.log("STR: "+this.answers);
-            }
-        }
-        // convert percents to float
-        for (var i = 0; i < this.answers.length; i++) {
-            try {
-                if (this.answers[i].includes('%')) {
-                    var answer = this.answers[i].replace('%', '');
-                    if (!isNaN(+answer)) {
-                        this.answers[i] = parseFloat(answer) / 100 + '';
-                    }
-                }
-            }
-            catch (err) { }
-        }
-        if (this.isCorrect()) {
-            this.correct_answers++;
-            this.complete_percent = (this.correct_answers == 0) ? 0
-                : this.correct_answers / this.question_num * 100;
-            //if we have enough correct responces just remove rest of the questions
-            if (this.correct_answers == this.question_num
-                && this.question_num != 0) {
-                this.lessonTree['questions'] = [];
-            }
-            var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_4__good_dialog_good_dialog_component__["a" /* GoodDialogComponent */], {
-                width: '300px',
-                data: {}
-            });
-            dialogRef.afterClosed().subscribe(function (result) {
-                if (_this.lessonTree['questions'].length) {
-                    _this.nextQuestion();
-                }
-                else {
-                    _this.question = null;
-                    _this.trackingService.doneLesson(_this.topic_id, _this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
-                }
-            });
-        }
-        else {
-            if (this.weak_questions.indexOf(this.question.id) === -1) {
-                this.weak_questions.push(this.question.id);
-            }
-            this.incorrect_answers++;
-            if (this.lesson_id == -1 &&
-                this.incorrect_answers > this.max_incorrect_answers) {
-                this.router.navigate(['/topic/' + this.topic_id]);
-            }
-            else {
-                this.lessonTree['questions'].push(this.question);
-            }
-            var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_5__bad_dialog_bad_dialog_component__["a" /* BadDialogComponent */], {
-                width: '300px',
-                data: { data: this.question.answers.filter(function (answer) {
-                        if (answer.is_correct == 1)
-                            return true;
-                        return false;
-                    }), explanation: this.question.explanation,
-                    showAnswers: (this.lesson_id == -1) ? false : true
-                }
-            });
-            dialogRef.afterClosed().subscribe(function (result) {
-                if (result) {
-                    var reportDialogRef = _this.dialog.open(__WEBPACK_IMPORTED_MODULE_6__report_dialog_report_dialog_component__["a" /* ReportDialogComponent */], {
-                        //width: '300px',
-                        data: { question_id: _this.question.id, answers: _this.answers }
-                    });
-                    reportDialogRef.afterClosed().subscribe(function (result) {
-                        console.log(result);
-                        _this.topicService.reportError(result.question_id, result.answers, result.option, result.text).subscribe();
-                    });
-                }
-                if (_this.lessonTree['questions'].length) {
-                    _this.nextQuestion();
-                }
-                else {
-                    _this.question = null;
-                    _this.trackingService.doneLesson(_this.topic_id, _this.lesson_id, _this.start_time, _this.weak_questions).subscribe();
-                }
-            });
-            if (this.lesson_id != -1) {
-                this.correct_answers = this.complete_percent = 0;
-            }
-        }
-    };
-    LessonComponent.prototype.isCorrect = function () {
-        if (this.question.answer_mode == 'radio') {
-            if (this.answers[0] === "")
-                return false;
-            var answer = +this.answers[0];
-            if (answer < 0 || answer >= this.question.answers.length)
-                return false;
-            if (this.question.answers[answer].is_correct) {
-                return true;
-            }
-        }
-        else {
-            if (this.answers.length < this.question.answers.length) {
-                return false;
-            }
-            for (var i = 0; i < this.question.answers.length; i++) {
-                if (this.question.answer_mode == 'checkbox') {
-                    if (this.question.answers[i].is_correct && this.answers[i] === ""
-                        || !this.question.answers[i].is_correct && this.answers[i] !== "") {
-                        return false;
-                    }
-                }
-                else {
-                    if (this.answers[i] === "")
-                        return false;
-                    if (this.question.conversion) {
-                        this.answers[i] = this.answers[i].replace(/[^\d.-\/]/g, '');
-                        var temp = this.answers[i].split("/");
-                        if (temp[1] != undefined) {
-                            this.answers[i] = (Number(temp[0]) / Number(temp[1])) + "";
-                        }
-                        else {
-                            this.answers[i] = temp[0] + "";
-                        }
-                    }
-                    if (this.question.rounding) {
-                        this.answers[i] = this.answers[i].replace(/[^\d.-]/g, '');
-                        var temp = this.question.answers[i].value.split(".");
-                        var roundTo = 0;
-                        if (temp[1] != undefined) {
-                            roundTo = temp[1].length;
-                        }
-                        this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + "";
-                    }
-                    if (this.question.answers[i].is_correct &&
-                        this.question.answers[i].value != this.answers[i]) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
+    QuestionComponent.prototype.checkAnswer = function () {
+        this.onAnswered.emit(this.answers);
     };
     // function to shuffle answers in order
-    LessonComponent.prototype.shuffle = function (array) {
+    QuestionComponent.prototype.shuffle = function (array) {
         var currentIndex = array.length, temporaryValue, randomIndex;
         // While there remain elements to shuffle...
         while (0 !== currentIndex) {
@@ -1014,20 +1089,24 @@ var LessonComponent = (function () {
         }
         return array;
     };
-    LessonComponent = __decorate([
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+        __metadata("design:type", Object),
+        __metadata("design:paramtypes", [Object])
+    ], QuestionComponent.prototype, "question", null);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
+        __metadata("design:type", Object)
+    ], QuestionComponent.prototype, "onAnswered", void 0);
+    QuestionComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            moduleId: module.i,
-            template: __webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.html"),
-            providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]],
-            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.scss")]
+            selector: 'app-question',
+            template: __webpack_require__("./src/app/_components/home/topic/lesson/question/question.component.html"),
+            styles: [__webpack_require__("./src/app/_components/home/topic/lesson/question/question.component.scss")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
-            __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */],
-            __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */],
-            __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
-            __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialog */]])
-    ], LessonComponent);
-    return LessonComponent;
+        __metadata("design:paramtypes", [])
+    ], QuestionComponent);
+    return QuestionComponent;
 }());
 
 
@@ -1168,6 +1247,91 @@ var TopicComponent = (function () {
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]])
     ], TopicComponent);
     return TopicComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_components/previews/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__question_preview_question_preview_component__ = __webpack_require__("./src/app/_components/previews/question-preview/question-preview.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__question_preview_question_preview_component__["a"]; });
+
+
+
+/***/ }),
+
+/***/ "./src/app/_components/previews/question-preview/question-preview.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"text-center\">\n\t<app-question [question]='question'></app-question>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/previews/question-preview/question-preview.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/_components/previews/question-preview/question-preview.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return QuestionPreviewComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var QuestionPreviewComponent = (function () {
+    function QuestionPreviewComponent(activatedRoute) {
+        this.activatedRoute = activatedRoute;
+        this.question = null;
+    }
+    QuestionPreviewComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.activatedRoute.queryParams.subscribe(function (params) {
+            _this.question = {
+                reply_mode: params['reply_mode'],
+                question: params['question'],
+                answers: []
+            };
+            var i = 1;
+            while (params['answer' + i]) {
+                _this.question.answers.push({
+                    value: params['answer' + i]
+                });
+                i++;
+            }
+            try {
+                document.getElementById('continue-button').style.display = 'none';
+                document.getElementById('main-menu').style.display = 'none';
+            }
+            catch (ex) { }
+        });
+    };
+    QuestionPreviewComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'app-question-preview',
+            template: __webpack_require__("./src/app/_components/previews/question-preview/question-preview.component.html"),
+            styles: [__webpack_require__("./src/app/_components/previews/question-preview/question-preview.component.scss")]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]])
+    ], QuestionPreviewComponent);
+    return QuestionPreviewComponent;
 }());
 
 
@@ -1385,14 +1549,14 @@ var ForgotPasswordComponent = (function () {
 /***/ "./src/app/_components/welcome/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"auth-container\">\n<div>\n    <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n    <h2>Login</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && login()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"text\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n            <a [routerLink]=\"['/forgot-password']\" routerLinkActive=\"link-active\">\n                <span>Forgot password?</span>\n            </a>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        <div class=\"form-group center-block\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary center-block\">Login</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div class=\"text-center\">\n            <span>Don't have an account?</span>\n            <a [routerLink]=\"['/register']\" routerLinkActive=\"link-active\">\n                <span>Register account</span>\n            </a>\n        </div> \n    </form>\n</div>\n</div>\n"
+module.exports = "<div class=\"auth-container\">\n<div>\n    <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n    <h2>Login</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && login()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"text\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n            <a [routerLink]=\"['/forgot-password']\" routerLinkActive=\"link-active\">\n                <span>Forgot password?</span>\n            </a>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        <div class=\"form-group center-block button-container\">\n            <button mat-button [disabled]=\"loading\" class=\"login-button\">\n                <span *ngIf=\"!loading\">Login</span>\n                <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n            </button>\n        </div>\n        <div class=\"text-center\">\n            <span>Don't have an account?</span>\n            <a [routerLink]=\"['/register']\" routerLinkActive=\"link-active\">\n                <span>Register account</span>\n            </a>\n        </div> \n    </form>\n</div>\n</div>\n"
 
 /***/ }),
 
 /***/ "./src/app/_components/welcome/login/login.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".auth-container {\n  margin: 8px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .auth-container div {\n    width: 100%;\n    max-width: 400px;\n    min-width: 200px; }\n"
+module.exports = ".auth-container {\n  margin: 8px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .auth-container div {\n    width: 100%;\n    max-width: 400px;\n    min-width: 200px; }\n  .button-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .login-button {\n  background-color: #31698a;\n  margin: 8px;\n  padding: 0;\n  width: 100px;\n  color: #fafafa;\n  text-decoration: none; }\n"
 
 /***/ }),
 
@@ -1572,14 +1736,14 @@ var ResetPasswordComponent = (function () {
 /***/ "./src/app/_components/welcome/register/register.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"auth-container\">\n<div>\n    <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n    <h2>Register</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && password.value == repassword.value && register()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Username</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"email\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': (f.submitted && !repassword.valid) || (f.submitted && password.value != repassword.value) }\">\n            <label for=\"repassword\">Password Confirm</label>\n            <input type=\"password\" class=\"form-control\" name=\"repassword\" [(ngModel)]=\"model.repassword\" #repassword=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !repassword.valid\" class=\"help-block\">Password Confirm is required</div>\n            <div *ngIf=\"f.submitted && repassword.valid && password.value != repassword.value\" class=\"help-block\">Password Confirm is wrong</div>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        <div class=\"form-group center-block\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary center-block\">Register</button>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </div>\n        <div class=\"text-center\">\n            <span>Already have an account?</span>\n            <a [routerLink]=\"['/login']\" routerLinkActive=\"link-active\">\n                <span>Login</span>\n            </a>\n        </div> \n    </form>\n</div>\n</div>\n"
+module.exports = "<div class=\"auth-container\">\n<div>\n    <a routerLink=\"/welcome\" routerLinkActive=\"active\" class=\"backButton left\"><-Back Home</a>\n    <h2>Register</h2>\n    <form name=\"form\" (ngSubmit)=\"f.form.valid && password.value == repassword.value && register()\" #f=\"ngForm\" novalidate>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !username.valid }\">\n            <label for=\"username\">Username</label>\n            <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"model.username\" #username=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !username.valid\" class=\"help-block\">Username is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !email.valid }\">\n            <label for=\"email\">Email</label>\n            <input type=\"email\" class=\"form-control\" name=\"email\" [(ngModel)]=\"model.email\" #email=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !email.valid\" class=\"help-block\">Email is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': f.submitted && !password.valid }\">\n            <label for=\"password\">Password</label>\n            <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"model.password\" #password=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !password.valid\" class=\"help-block\">Password is required</div>\n        </div>\n        <div class=\"form-group\" [ngClass]=\"{ 'has-error': (f.submitted && !repassword.valid) || (f.submitted && password.value != repassword.value) }\">\n            <label for=\"repassword\">Password Confirm</label>\n            <input type=\"password\" class=\"form-control\" name=\"repassword\" [(ngModel)]=\"model.repassword\" #repassword=\"ngModel\" required />\n            <div *ngIf=\"f.submitted && !repassword.valid\" class=\"help-block\">Password Confirm is required</div>\n            <div *ngIf=\"f.submitted && repassword.valid && password.value != repassword.value\" class=\"help-block\">Password Confirm is wrong</div>\n        </div>\n        <div *ngIf=\"error\" class=\"alert alert-danger\">{{error}}</div>\n        <div class=\"form-group center-block  button-container\">\n            <button mat-button [disabled]=\"loading\" class=\"register-button\">\n                <span *ngIf=\"!loading\">Register</span>\n                <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n            </button>\n        </div>\n        <div class=\"text-center\">\n            <span>Already have an account?</span>\n            <a [routerLink]=\"['/login']\" routerLinkActive=\"link-active\">\n                <span>Login</span>\n            </a>\n        </div> \n    </form>\n</div>\n</div>\n"
 
 /***/ }),
 
 /***/ "./src/app/_components/welcome/register/register.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".auth-container {\n  margin: 8px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .auth-container div {\n    width: 100%;\n    max-width: 400px;\n    min-width: 200px; }\n"
+module.exports = ".auth-container {\n  margin: 8px;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .auth-container div {\n    width: 100%;\n    max-width: 400px;\n    min-width: 200px; }\n  .button-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n  .register-button {\n  background-color: #31698a;\n  margin: 8px;\n  padding: 0;\n  width: 100px;\n  color: #fafafa;\n  text-decoration: none; }\n"
 
 /***/ }),
 
@@ -2320,12 +2484,16 @@ var UserService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__ = __webpack_require__("./src/app/_components/home/topic/lesson/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__components_profile_profile_component__ = __webpack_require__("./src/app/_components/profile/profile.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__components_welcome_login_reset_password_reset_password_component__ = __webpack_require__("./src/app/_components/welcome/login/reset-password/reset-password.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__components_home_topic_lesson_question_question_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/question/question.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__components_previews_question_preview_question_preview_component__ = __webpack_require__("./src/app/_components/previews/question-preview/question-preview.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -2391,7 +2559,9 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_20__components_profile_profile_component__["a" /* ProfileComponent */],
                 __WEBPACK_IMPORTED_MODULE_16__components_welcome_try_try_component__["a" /* TryComponent */],
                 __WEBPACK_IMPORTED_MODULE_14__components_welcome_login_index__["a" /* ForgotPasswordComponent */],
-                __WEBPACK_IMPORTED_MODULE_21__components_welcome_login_reset_password_reset_password_component__["a" /* ResetPasswordComponent */]
+                __WEBPACK_IMPORTED_MODULE_21__components_welcome_login_reset_password_reset_password_component__["a" /* ResetPasswordComponent */],
+                __WEBPACK_IMPORTED_MODULE_22__components_home_topic_lesson_question_question_component__["a" /* QuestionComponent */],
+                __WEBPACK_IMPORTED_MODULE_23__components_previews_question_preview_question_preview_component__["a" /* QuestionPreviewComponent */]
             ],
             entryComponents: [
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["c" /* GoodDialogComponent */],
@@ -2431,6 +2601,8 @@ var AppModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__ = __webpack_require__("./src/app/_components/home/topic/lesson/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__guards_index__ = __webpack_require__("./src/app/_guards/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_profile_profile_component__ = __webpack_require__("./src/app/_components/profile/profile.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_previews_index__ = __webpack_require__("./src/app/_components/previews/index.ts");
+
 
 
 
@@ -2451,6 +2623,7 @@ var appRoutes = [
     { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_5__components_home_topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__["d" /* LessonComponent */],
         canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
+    { path: 'preview/question', component: __WEBPACK_IMPORTED_MODULE_9__components_previews_index__["a" /* QuestionPreviewComponent */] },
     // otherwise redirect to welcome
     { path: '**', redirectTo: 'welcome' }
 ];
