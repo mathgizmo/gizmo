@@ -13,9 +13,10 @@
     <div class="row">
         <div class="col-md-12">
 
-            <form class="form-horizontal" role="form" action="{{ route('question_views.update', $question->id) }}" method="POST">
+            <form class="form-horizontal" role="form" action="{{ route('question_views.update', $question->id) }}" method="POST" id="edit-form">
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="_type" value="update" id="update-type">
 
 				        <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
                             <label for="level_id" class="col-md-4 control-label">Level</label>
@@ -176,7 +177,7 @@
                               let order = document.getElementById('question_order');
                               let order_input = document.getElementById('question_order_input');
                               if(reply_mode.value == 'FB') {
-                                order.style.display = 'block';S
+                                order.style.display = 'block';
                               }  else {
                                 order.style.display = 'none';
                                 order_input.value = false;
@@ -259,6 +260,12 @@
                         <label for="question" class="col-md-4 control-label">Preview</label>
                         <div class="col-md-6">
                             <div class="preview"></div>
+                            <button type="button" class="btn btn-info pull-right preview_button" data-toggle="modal" data-target="#previewModal">
+                                Preview question
+                            </button> 
+                            <span id='preview_url' style="display: none !important;">
+                                {{ $preview_url }}
+                            </span>
                         </div>
                     </div>
 
@@ -300,10 +307,11 @@
                     </div>
                 </div>
 
-
-
             <a class="btn btn-default" href="{{ route('question_views.index') }}">Back</a>
-            <button class="btn btn-primary" type="submit" >Save</button>
+            <button class="btn btn-primary" type="button"
+                onclick="document.getElementById('update-type').value = 'new';
+                    document.getElementById('edit-form').submit();" >Save a copy as</button>
+            <button class="btn btn-primary" type="submit">Save</button>
             </form>
         </div>
     </div>
@@ -313,6 +321,21 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="previewModalTitle">Question Preview</h4>
+      </div>
+      <div class="modal-body">
+        <iframe width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -333,6 +356,60 @@
             $('.add_answer').on('click', function() {
                 add_answer(1);
                 $('#reply_mode').trigger('change');
+            });
+
+            $('.preview_button').on('click', function() {
+                let data = {};
+                let formData = $('#edit-form').serializeArray();
+                $.each(formData, function() {
+                    if (data[this.name]) {
+                        if (!data[this.name].push) {
+                            data[this.name] = [data[this.name]];
+                        }
+                        data[this.name].push(this.value || '');
+                    } else {
+                        data[this.name] = this.value || '';
+                    }
+                });
+                let src = document.getElementById('preview_url').innerHTML;
+                src = src.replace(/\s/g, '');
+                console.log(src);
+                src += 'question?reply_mode='
+                    + data["reply_mode"] + '&question='
+                    + encodeURIComponent(question.getData());
+                let answers = data["answer[]"];
+                if(Array.isArray(answers)) {
+                    for(let i = 0; i < answers.length; i++) {
+                        src += '&answer' + (i+1) + '=' + answers[i];
+                    }
+                } else {
+                    src += '&answer1=' + answers;
+                }
+                $('.modal').on('shown.bs.modal',function(){
+                    $(this).find('iframe').attr('src',src)
+                });
+
+                /*$.ajax({
+                  type: 'POST',
+                  url: window.location.origin + '/admin/question/preview',
+                  data: {
+                    "_token": data["_token"],
+                    "level_id": data["level_id"],
+                    "unit_id": data["unit_id"],
+                    "topic_id": data["topic_id"],
+                    "lesson_id": data["lesson_id"],
+                    "question": data["question"],
+                    "answer[]": data["answer[]"],
+                    "reply_mode": data["reply_mode"]
+                  },
+                  dataType: 'JSON',
+                  success: function(response){ 
+                    console.log(response);
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    //console.log(textStatus + ' : ' + errorThrown);
+                  }
+                });*/
             });
 
             $(document).on('change', '[name="is_correct[]"]', function () {

@@ -5,9 +5,11 @@ import { LoginComponent, ForgotPasswordComponent, ResetPasswordComponent } from 
 import { RegisterComponent } from './_components/welcome/register/index';
 import { HomeComponent } from './_components/home/index';
 import { TopicComponent } from './_components/home/topic/index';
-import { LessonComponent } from './_components/home/topic/lesson/index';
+import { LessonComponent, QuestionComponent } from './_components/home/topic/lesson/index';
 import { AuthGuard } from './_guards/index';
 import { ProfileComponent } from './_components/profile/profile.component';
+
+import { QuestionPreviewComponent }from './_components/previews/index';
 
 const appRoutes: Routes = [
     { path: 'welcome', component: WelcomeComponent },
@@ -19,7 +21,9 @@ const appRoutes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard] },
     { path: 'topic/:topic_id/lesson/:lesson_id', component: LessonComponent,
-    	canActivate: [AuthGuard] },
+        canActivate: [AuthGuard] },
+
+    { path: 'preview/question', component: QuestionPreviewComponent },
 
     // otherwise redirect to welcome
     { path: '**', redirectTo: 'welcome' }

@@ -11,3 +11,19 @@
 		min-width: 200px;
 	}
 }
+
+.button-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+} 
+.register-button {
+	background-color: #31698a;
+	margin: 8px;
+	padding: 0;
+	width: 100px;
+	color: #fafafa;
+	text-decoration: none;
+}

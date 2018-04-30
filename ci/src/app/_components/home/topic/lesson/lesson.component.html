@@ -4,50 +4,10 @@
 <label *ngIf="question_num > 0" style="display: flex; justify-content: center;">{{correct_answers}}/{{question_num}}</label>
 <div class="text-center">
     <div *ngIf="question !== null">
-        <h2 [innerHtml]="question.question" *ngIf="!is_chart" class="question"></h2>
-        <span  *ngIf="is_chart" >
-            <h2 [innerHtml]="questionForChart" *ngIf="is_chart" class="question"></h2>
-            <chart [question]="question['question']" chartHeight="250" ></chart>
-        </span>
-        <span class="answer">
-            <div *ngIf="question.answer_mode=='order'" [sortablejs]="answers" class="order-container">
-                <div *ngFor="let answer of answers" class="order-item">{{answer}}</div>
-            </div>
-            <div *ngIf="question.answer_mode=='radio'">
-                <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >
-                    <mat-radio-button class="radio-button" *ngFor="let answer of question.answers; let answerIndex = index" value="{{answerIndex}}" color="primary">
-                        {{answer.value}}
-                    </mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <div *ngIf="question.answer_mode=='TF'">
-                <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >
-                    <mat-radio-button class="radio-button" value="False" color="primary">
-                        false
-                    </mat-radio-button>
-                    <mat-radio-button class="radio-button" value="True" color="primary">
-                        true
-                    </mat-radio-button>
-                </mat-radio-group>
-            </div>
-            <div *ngIf="question.answer_mode=='checkbox'">
-                <div *ngFor="let answer of question.answers; let answerIndex = 'index'">
-                    <mat-checkbox [(ngModel)]="answers[answerIndex]" color="primary"> 
-                        {{answer.value}} 
-                    </mat-checkbox>
-                </div>
-            </div>
-            <div  *ngIf="question.answer_mode=='input'">
-                <input *ngFor="let answer of question.answers; let answerIndex = 'index'" [(ngModel)]="answers[answerIndex]" name="'answers[{{answerIndex}}]'"
-                (keyup.enter) = "checkAnswer()" class="input">
-            </div>
-        </span>
-        <br />
-        <button (click)="checkAnswer()"
-            mat-raised-button
-            style="color: #000; background-color: #f5f5f5; ">
-            <span>Continue</span>
-        </button>
+        <app-question 
+            [question]='question' 
+            (onAnswered)="checkAnswer($event)"
+        ></app-question>
     </div>
     <div *ngIf="question === null">
         <div *ngIf="initial_loading == 1">

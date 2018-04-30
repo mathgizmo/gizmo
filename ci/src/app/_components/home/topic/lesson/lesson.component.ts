@@ -19,9 +19,7 @@ export class LessonComponent implements OnInit {
     lessonTree: any = [];
     topic_id: number;
     lesson_id: number;
-    question: any = null;
-    answer: string = '';
-    answers: string[];
+
     weak_questions: string[] = [];
     start_time: any = '';
     initial_loading = 1;
@@ -30,14 +28,13 @@ export class LessonComponent implements OnInit {
 
     question_num : number;
     correct_answers : number;
-    complete_percent : number;
-
-    questionForChart: string = '';
+    complete_percent : number; 
 
     incorrect_answers: number;
     max_incorrect_answers: number = 1;
 
-    is_chart: boolean;
+    question: any = null;
+    answers: string[] = null;
 
     constructor(
             private router: Router,
@@ -53,7 +50,6 @@ export class LessonComponent implements OnInit {
         else {
             this.question_num = 4;
         }
-        this.is_chart = false;
     }
 
     ngOnInit() {
@@ -93,46 +89,11 @@ export class LessonComponent implements OnInit {
     }
 
     nextQuestion() {
-        this.answers = [];
-        this.question = this.lessonTree['questions'].shift();
-
-        this.is_chart = false;
-        if(this.question['question'].indexOf('%%chart{') >= 0){
-            this.is_chart = true;
-            this.questionForChart = this.question['question']
-              .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
-        }
-
-        if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
-            for (var i = 0; i < this.question.answers.length; i++) {
-                this.answers.push('');
-            }
-            this.question.answer_mode = 'checkbox';
-        } else if (['mcq'].indexOf(this.question.reply_mode) >= 0) {
-            this.answers.push('');
-            this.question.answer_mode = 'radio';
-        } else if (['TF'].indexOf(this.question.reply_mode) >= 0) {
-            this.answers.push('');
-            this.question.answer_mode = 'TF';
-        } else if (['order'].indexOf(this.question.reply_mode) >= 0) {
-            for (var i = 0; i < this.question.answers.length; i++) {
-                this.answers.push(this.question.answers[i].value);
-            }
-            this.answers = this.shuffle(this.answers);
-            this.question.answer_mode = 'order';
-        } else {
-            for (var i = 0; i < this.question.answers.length; i++) {
-                this.answers.push('');
-            }
-            this.question.answer_mode = 'input';
-        }
-        setTimeout(function() {
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-        }, 50);
+      this.question = this.lessonTree['questions'].shift();
     }
     
-    checkAnswer() {
-      
+    checkAnswer(answers: string[]) {
+      this.answers = answers;
       // sort question answers
       if(this.question.question_order) {
         this.question.answers.sort( (a, b) => {
@@ -225,7 +186,7 @@ export class LessonComponent implements OnInit {
                   });
                   
                   reportDialogRef.afterClosed().subscribe(result => {
-                      console.log(result);
+                      //console.log(result);
                       this.topicService.reportError(result.question_id, 
                         result.answers, result.option, result.text).subscribe();
                   });
@@ -292,22 +253,6 @@ export class LessonComponent implements OnInit {
             return true;
         }
         return false;
-    }
-
-    // function to shuffle answers in order
-    private shuffle(array) {
-      let currentIndex = array.length, temporaryValue, randomIndex;    
-      // While there remain elements to shuffle...
-      while (0 !== currentIndex) {    
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;    
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-      }    
-      return array;
     }
 
 }

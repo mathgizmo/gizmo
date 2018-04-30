@@ -15,7 +15,7 @@
 						</div>
 					@endif
 
-					<form class="form-horizontal" role="form" action="{{ route('question_views.store') }}" method="POST">
+					<form class="form-horizontal" role="form" action="{{ route('question_views.store') }}" method="POST" id="create-form">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 				        <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
@@ -228,18 +228,26 @@
                                 @endif
                             @endfor
                         </div>
-                        <div class="form-group">
-                            <label for="question" class="col-md-4 control-label">Preview</label>
-                            <div class="col-md-6">
-                                <div class="preview"></div>
-                            </div>
-                        </div>
                         <div class="form-group add_answer_block" style="display: none;">
                             <label for="answer" class="col-md-6 control-label"></label>
                             <div class="col-md-4">
                                 <button type="button" class="btn btn-info pull-right add_answer">+ add answer</button>
                             </div>
                             <div class="col-md-2"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="question" class="col-md-4 control-label">Preview</label>
+                            <div class="col-md-6">
+                                <div class="preview"></div>
+                                <button type="button"  data-toggle="modal" 
+                                    data-target="#previewModal" 
+                                    class="btn btn-info pull-right preview_button">
+                                    Preview question
+                                </button> 
+                                <span id='preview_url' style="display: none !important;">
+                                    {{ $preview_url }}
+                                </span>
+                            </div>
                         </div>
 
 					  <div class="form-group{{ $errors->has('explanation') ? ' has-error' : '' }}">
@@ -295,6 +303,20 @@
     </div>
 </div>
 
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="previewModalTitle">Question Preview</h4>
+      </div>
+      <div class="modal-body">
+        <iframe width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -316,6 +338,39 @@
                 add_answer(1);
                 $('#reply_mode').trigger('change');
             });
+
+
+            $('.preview_button').on('click', function() {
+                let data = {};
+                let formData = $('#create-form').serializeArray();
+                $.each(formData, function() {
+                    if (data[this.name]) {
+                        if (!data[this.name].push) {
+                            data[this.name] = [data[this.name]];
+                        }
+                        data[this.name].push(this.value || '');
+                    } else {
+                        data[this.name] = this.value || '';
+                    }
+                });
+                let src = document.getElementById('preview_url').innerHTML;
+                src = src.replace(/\s/g, '');
+                src += 'question?reply_mode='
+                    + data["reply_mode"] + '&question='
+                    + encodeURIComponent(question.getData());
+                let answers = data["answer[]"];
+                if(Array.isArray(answers)) {
+                    for(let i = 0; i < answers.length; i++) {
+                        src += '&answer' + (i+1) + '=' + answers[i];
+                    }
+                } else {
+                    src += '&answer1=' + answers;
+                }
+                $('.modal').on('shown.bs.modal',function(){
+                    $(this).find('iframe').attr('src',src)
+                });
+            });
+
 
             $(document).on('change', '[name="is_correct[]"]', function () {
                 var val = $('#reply_mode').val();
