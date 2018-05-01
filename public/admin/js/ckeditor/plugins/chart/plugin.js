@@ -48,9 +48,17 @@ CKEDITOR.plugins.add( 'chart', {
                                     if(type == 4) {
                                         dialog.getContentElement('general', 'marks').enable();
                                         dialog.getContentElement('general', 'max').disable();
+                                        dialog.getContentElement('optional', 
+                                            'mark-diameter').enable();
+                                        dialog.getContentElement('optional', 
+                                            'point-diameter').enable();
                                     } else {
                                         dialog.getContentElement('general', 'marks').disable();
                                         dialog.getContentElement('general', 'max').enable();
+                                        dialog.getContentElement('optional', 
+                                            'mark-diameter').disable();
+                                        dialog.getContentElement('optional', 
+                                            'point-diameter').disable();
                                     }
                                     // set defaults
                                     if(type == 3) {
@@ -65,6 +73,8 @@ CKEDITOR.plugins.add( 'chart', {
                                     }
                                     if (type == 4) {
                                         step.setValue('0.5');
+                                        dialog.getContentElement('optional', 
+                                            'stroke-width').setValue('3');
                                     }
                                 }
                             },
@@ -192,6 +202,32 @@ CKEDITOR.plugins.add( 'chart', {
                                 {
                                     data.strokeWidth = this.getValue();
                                 }
+                            },
+                            {
+                                type : 'text',
+                                id : 'mark-diameter',
+                                label : 'Mark Diameter:',
+                                validate : CKEDITOR.dialog.validate
+                                    .integer('Mark Diameter must be a number'),
+                                required : false,
+                                'default': 8,
+                                commit : function( data )
+                                {
+                                    data.markDiameter = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'text',
+                                id : 'point-diameter',
+                                label : 'Point Diameter:',
+                                validate : CKEDITOR.dialog.validate
+                                    .integer('Point Diameter must be a number'),
+                                required : false,
+                                'default': 3,
+                                commit : function( data )
+                                {
+                                    data.pointDiameter = this.getValue();
+                                }
                             }
                         ]
                     }
@@ -219,15 +255,21 @@ CKEDITOR.plugins.add( 'chart', {
                     // set styles
                     data.mainColor = '#'  + 
                         document.getElementById('main-color').value;
-                    chartHtml += 'main-color: ' + data.mainColor + '; '; 
+                    chartHtml += 'main-color: ' + data.mainColor.trim() + '; '; 
                     data.selectedColor = '#'  + 
                         document.getElementById('selected-color').value;
-                    chartHtml += 'selected-color: ' + data.selectedColor + '; '; 
+                    chartHtml += 'selected-color: ' + data.selectedColor.trim() + '; '; 
                     data.strokeColor = '#'  + 
                         document.getElementById('stroke-color').value;
-                    chartHtml += 'stroke-color: ' + data.strokeColor + '; '; 
+                    chartHtml += 'stroke-color: ' + data.strokeColor.trim() + '; '; 
                     if(data.strokeWidth > 0) 
                         chartHtml += 'stroke-width:'+data.strokeWidth+'; ';
+                    if(data.type == 4) {
+                        if(data.markDiameter > 0) 
+                            chartHtml += 'mark-diameter:'+data.markDiameter+'; ';
+                        if(data.pointDiameter > 0) 
+                            chartHtml += 'point-diameter:'+data.pointDiameter+'; ';
+                    }
 
                     // set control
                     chartHtml += 'control: ' + data.control + '}%%';
@@ -290,23 +332,37 @@ CKEDITOR.plugins.add( 'chart', {
                         if (chartStr.indexOf('main-color:') >= 0) {
                             document.getElementById('main-color').value =
                                 chartStr.match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
-                            .replace('main-color:', '').replace('#', '');
+                            .replace('main-color:', '').replace('#', '').trim();
                         }
                         if (chartStr.indexOf('selected-color:') >= 0) {
                             document.getElementById('selected-color').value =
                                 chartStr.match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
-                            .replace('selected-color:', '').replace('#', '');
+                            .replace('selected-color:', '').replace('#', '').trim();
                         }
                         if (chartStr.indexOf('stroke-color:') >= 0) {
                             document.getElementById('stroke-color').value = 
                                 chartStr.match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
-                            .replace('stroke-color:', '').replace('#', '');
+                            .replace('stroke-color:', '').replace('#', '').trim();
                         }
                         if (chartStr.indexOf('stroke-width:') >= 0) {
                             this.getContentElement('optional', 'stroke-width').setValue(
                                 chartStr.match(
                                     new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
                                 .replace('stroke-width:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('point-diameter:') >= 0) {
+                            this.getContentElement('optional', 'point-diameter')
+                                .setValue(chartStr.match(
+                                    new RegExp(/point-diameter:([^;]*)(?=(;|$))/g))['0']
+                                .replace('point-diameter:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('mark-diameter:') >= 0) {
+                            this.getContentElement('optional', 'mark-diameter')
+                                .setValue(chartStr.match(
+                                    new RegExp(/mark-diameter:([^;]*)(?=(;|$))/g))['0']
+                                .replace('mark-diameter:', '')
                             );
                         }
                         if (chartStr.indexOf('control:') >= 0) {
@@ -318,8 +374,11 @@ CKEDITOR.plugins.add( 'chart', {
                         }
 
                         // disable unused fields for default type
-                        if(this.getContentElement('types', 'type').getValue() != 4) 
+                        if(this.getContentElement('types', 'type').getValue() != 4) {
                             this.getContentElement('general', 'marks').disable(); 
+                            this.getContentElement('optional', 'mark-diameter').disable();
+                            this.getContentElement('optional', 'point-diameter').disable();
+                        }
                     } 
                      
                 }

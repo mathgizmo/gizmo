@@ -17,6 +17,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private selectedColor: string = "#ff4444";
     private strokeColor: string = "#111";
     private strokeWidth: number = 1;
+    private markDiameter: number = 3;
+    private pointDiameter: number = 1;
 
     private dotRadius: number = 4;
 
@@ -82,18 +84,22 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
             .replace('max:', ''));
         }
-        if (chart['0'].indexOf('marks:') >= 0) {
-           this.chartMarksList = chart['0']
-            .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
-            .replace('marks:', '').split(',').map(Number);
-          this.chartMaxValue = this.chartMarksList[this.chartMarksList.length-1];
-        }
         if (chart['0'].indexOf('step:') >= 0) {
           this.chartStep = parseFloat(chart['0']
             .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
             .replace('step:', ''));
           Number.isInteger(this.chartStep) ? this.precision = 0
             : this.precision = (this.chartStep + "").split(".")[1].length;
+        }
+        if (chart['0'].indexOf('marks:') >= 0) {
+          this.chartMarksList = chart['0']
+            .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+            .replace('marks:', '').split(',').map(Number);
+          const precision = this.precision; //used in anonymous function below
+          this.chartMarksList = this.chartMarksList.map(function(elem){
+            return Number(elem.toFixed(precision));
+          });
+          this.chartMaxValue = this.chartMarksList[this.chartMarksList.length-1];
         }
         if (chart['0'].indexOf('main-color:') >= 0) {
           this.mainColor = chart['0']
@@ -111,9 +117,19 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .replace('stroke-color:', '');
         }
         if (chart['0'].indexOf('stroke-width:') >= 0) {
-          this.strokeWidth = chart['0']
+          this.strokeWidth = +chart['0']
             .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-width:', '');
+        }
+        if (chart['0'].indexOf('mark-diameter:') >= 0) {
+          this.markDiameter = +chart['0']
+            .match(new RegExp(/mark-diameter:([^;]*)(?=(;|$))/g))['0']
+            .replace('mark-diameter:', '');
+        }
+        if (chart['0'].indexOf('point-diameter:') >= 0) {
+          this.pointDiameter = +chart['0']
+            .match(new RegExp(/point-diameter:([^;]*)(?=(;|$))/g))['0']
+            .replace('point-diameter:', '');
         }
         if (chart['0'].indexOf('control:') >= 0)
           this.chartControl = parseFloat(chart['0']
@@ -210,9 +226,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           break;
         case 4:
           // Chart (type 4 - slider)
-          let circleDiameter = 2*this.dotRadius;
           let width  = chartContainer.offsetWidth;
-          let indentation = circleDiameter + 5;
+          let indentation = this.pointDiameter + 5;
           this.startValue = Math.min.apply(null, this.chartMarksList);
           this.endValue = Math.max.apply(null, this.chartMarksList);
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
@@ -224,11 +239,24 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
           for(let i = 0; i < (this.endValue-this.startValue); i+= this.chartStep) {
             let position = (i*width/(this.endValue-this.startValue))+indentation;
-            chartHtml += '<circle cx="' + position + '" cy="10" r="' 
-              + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
+            let point = Number((i+this.startValue).toFixed(this.precision));
+            if(this.chartMarksList.includes(point)) {
+              chartHtml += '<circle cx="' + position + '" cy="10" r="' 
+                + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
+              let textPosition = ((point-this.startValue)/(this.endValue
+                -this.startValue)*width + indentation);
+              chartHtml += '<text x="' + textPosition
+                + '" y="35" fill="' + this.strokeColor 
+                +'" font-size="16" text-anchor="middle">' 
+                + point + '</text>';
+            } else {
+              chartHtml += '<circle cx="' + position + '" cy="10" r="' 
+                + (this.pointDiameter/2) + '" fill="' + this.strokeColor + '" />';
+            } 
           }
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
-            + (circleDiameter/2) + '" fill="' + this.strokeColor + '" />';
+            + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
+          /* Old version (can be deleted)
           for(let i = 0; i < this.chartMarksList.length; i++) {
             let position = ((this.chartMarksList[i]-this.startValue)/(this.endValue
               -this.startValue)*width + indentation);
@@ -236,11 +264,11 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               + '" y="35" fill="' + this.strokeColor 
               +'" font-size="16" text-anchor="middle">' 
               + this.chartMarksList[i] + '</text>';
-          }
+          }*/
           let currentPointX = (this.chartValue-this.startValue)/(this.endValue
             -this.startValue)*width + indentation;
           chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="' 
-            + circleDiameter + '" fill="' + this.selectedColor + '" />';
+            + this.markDiameter + '" fill="' + this.selectedColor + '" />';
           chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;
 
