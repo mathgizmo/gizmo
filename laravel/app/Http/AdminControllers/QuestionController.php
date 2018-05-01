@@ -381,9 +381,32 @@ class QuestionController extends Controller
         ->join('level', 'unit.level_id', '=', 'level.id')
               ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
               ->orderBy('question.id', 'desc')->paginate(10);
-
-      return redirect(route('question_views.index'));
-
+      if($request['_type'] == 'new') {
+        $question = DB::table('question')
+          ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
+          ->join('topic', 'lesson.topic_id', '=', 'topic.id')
+          ->join('unit', 'topic.unit_id', '=', 'unit.id')
+          ->join('level', 'unit.level_id', '=', 'level.id')
+          ->select('question.*', 'lesson.title','topic.title as ttitle',
+          'topic.id as tid','unit.title as utitle','unit.id as uid','level.title as ltitle','level.id as lid')
+          ->where('question.id', '=', $questionID)->first();
+        $answers = DB::select('select * from answer where question_id = ' . $questionID);
+        $levels = DB::select('select * from level');
+        $units = DB::table('unit')->select('id', 'title')
+          ->where('level_id', $question->lid)->get();
+        $topics = DB::table('topic')->select('id', 'title')
+          ->where('unit_id', $question->uid)->get();
+        $lessons = DB::table('lesson')->select('id', 'title')
+          ->where('topic_id', $question->tid)->get();
+        $qrmodes = DB::select('select * from reply_mode');
+        $preview_url = Config::get('app.preview_url');
+        return view('question_views.edit', ['question'=>$question,
+          'levels'=>$levels, 'units'=>$units,'topics'=>$topics,
+          'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers, 
+          'preview_url'=>$preview_url ]);
+      } else {
+        return redirect(route('question_views.index'));
+      }
     }
 
     /**
