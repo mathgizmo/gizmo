@@ -20,7 +20,7 @@ CKEDITOR.plugins.add( 'chart', {
                 [
                     {
                         id : 'types',
-                        label : 'Chart type',
+                        label : 'Types',
                         elements :
                         [
                             {
@@ -92,6 +92,23 @@ CKEDITOR.plugins.add( 'chart', {
                                 commit : function( data )
                                 {
                                     data.control = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'select',
+                                id : 'value-display',
+                                label : 'Value displayed as:',
+                                items : [ 
+                                    [ 'Plain Value', '0' ],
+                                    [ 'Fraction', '1' ],
+                                    [ 'Decimal', '2' ],
+                                    [ 'Percentage', '3' ]
+                                ],
+                                'default' : '0',
+                                required : true,
+                                commit : function( data )
+                                {
+                                    data.valueDisplay = this.getValue();
                                 }
                             }
                         ]
@@ -271,6 +288,9 @@ CKEDITOR.plugins.add( 'chart', {
                             chartHtml += 'point-diameter:'+data.pointDiameter+'; ';
                     }
 
+                    // set value display
+                    chartHtml += 'value-display:'+data.valueDisplay+'; ';
+
                     // set control
                     chartHtml += 'control: ' + data.control + '}%%';
 
@@ -370,6 +390,13 @@ CKEDITOR.plugins.add( 'chart', {
                                 parseFloat(chartStr.match(
                                     new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
                                 .replace('control:', ''))
+                            );
+                        }
+                        if (chartStr.indexOf('value-display:') >= 0) {
+                            this.getContentElement('types', 'value-display').setValue(
+                                parseFloat(chartStr.match(
+                                    new RegExp(/value-display:([^;]*)(?=(;|$))/g))['0']
+                                .replace('value-display:', ''))
                             );
                         }
 
