@@ -615,7 +615,7 @@ var LessonComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"chartControl > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"chartControl == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput  *ngIf=\"chartType != 4\"\n        [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\"/>\n      <input *ngIf=\"chartType == 4\" id='inputValue'\n        matInput [(ngModel)]=\"chartValue\" type=\"number\" \n        [step]=\"chartStep\" [max]=\"chartMaxValue\" [min]=\"chartStartValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"chartType != 4\">\n      <span class='max-value' *ngIf=\"chartMaxValue != 1\" >/{{chartMaxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"chartControl == 2\">\n    <span *ngIf=\"chartType != 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"chartMaxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"chartType != 3\" >\n          <span>\n            {{chartValue.toFixed(precision)}}/{{chartMaxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"chartType == 3\" >\n          <span> {{chartValue}} </span>\n          <span *ngIf=\"chartMaxValue != 1\" > / {{chartMaxValue}} </span>\n        </label>\n      </div> \n    </span>\n    <span *ngIf=\"chartType == 4\" >\n      <mat-slider (change)=\"ngOnChanges()\" [(ngModel)]=\"chartValue\"\n        [step]=\"chartStep\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label>{{chartValue.toFixed(precision)}}</label>\n      </div> \n    </span>\n  </span>\n</div>"
+module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"control > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"control == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput *ngIf=\"type != 4\"\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" min=\"0\"/>\n      <input matInput *ngIf=\"type == 4\" id='inputValue'\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" [min]=\"startValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"valueDisplay == 1\" >\n      <span class='max-value'>/{{maxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"control == 2\">\n    <span>\n      <mat-slider  *ngIf=\"type != 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"maxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <mat-slider *ngIf=\"type == 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n          <span>\n            {{value.toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 1\">\n            / {{maxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n          <span *ngIf=\"valueDisplay == 2\">\n            {{(value/maxValue).toFixed(2)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 3\">\n            {{(value/maxValue*100).toFixed(2)}}%\n          </span>\n        </label>\n      </div> \n    </span>\n  </span>\n</div>"
 
 /***/ }),
 
@@ -648,15 +648,18 @@ var ChartComponent = (function () {
         this.selectedColor = "#ff4444";
         this.strokeColor = "#111";
         this.strokeWidth = 1;
+        this.markDiameter = 3;
+        this.pointDiameter = 1;
         this.dotRadius = 4;
-        this.chartType = 1;
-        this.chartControl = 0;
-        this.chartValue = 0.50;
-        this.chartMaxValue = 0;
+        this.type = 1;
+        this.control = 0;
+        this.valueDisplay = 0;
+        this.value = 0.50;
+        this.maxValue = 0;
         this.startValue = 0;
         this.endValue = 1;
-        this.chartStep = 0.5;
-        this.chartMarksList = [0, 0.5, 1];
+        this.step = 0.5;
+        this.marksList = [0, 0.5, 1];
         this.initialized = false;
         this.setClickPositionEventId = false;
         this.precision = 2; // number of decimals (0 - integer)
@@ -678,7 +681,7 @@ var ChartComponent = (function () {
         this.destroyDotsChart();
         this.removeSetClickPositionEvent();
         this.buildChart();
-        this.percentValue = Math.round(this.chartValue / this.chartMaxValue * 100);
+        this.percentValue = Math.round(this.value / this.maxValue * 100);
     };
     // function to build charts
     ChartComponent.prototype.buildChart = function () {
@@ -686,31 +689,42 @@ var ChartComponent = (function () {
         if (!this.initialized) {
             var chart = this.question
                 .match(new RegExp(/[^{}]+(?=\}%%)/g));
-            if (chart['0'].indexOf('type:') >= 0)
-                this.chartType = parseFloat(chart['0']
+            if (chart['0'].indexOf('type:') >= 0) {
+                this.type = parseFloat(chart['0']
                     .match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
                     .replace('type:', ''));
-            if (chart['0'].indexOf('value:') >= 0)
-                this.chartValue = parseFloat(chart['0']
+            }
+            if (chart['0'].indexOf('value-display:') >= 0) {
+                this.valueDisplay = +chart['0']
+                    .match(new RegExp(/value-display:([^;]*)(?=(;|$))/g))['0']
+                    .replace('value-display:', '');
+            }
+            if (chart['0'].indexOf('value:') >= 0) {
+                this.value = parseFloat(chart['0']
                     .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
                     .replace('value:', ''));
+            }
             if (chart['0'].indexOf('max:') >= 0) {
-                this.chartMaxValue = parseFloat(chart['0']
+                this.maxValue = parseFloat(chart['0']
                     .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
                     .replace('max:', ''));
             }
-            if (chart['0'].indexOf('marks:') >= 0) {
-                this.chartMarksList = chart['0']
-                    .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
-                    .replace('marks:', '').split(',').map(Number);
-                this.chartMaxValue = this.chartMarksList[this.chartMarksList.length - 1];
-            }
             if (chart['0'].indexOf('step:') >= 0) {
-                this.chartStep = parseFloat(chart['0']
+                this.step = parseFloat(chart['0']
                     .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
                     .replace('step:', ''));
-                Number.isInteger(this.chartStep) ? this.precision = 0
-                    : this.precision = (this.chartStep + "").split(".")[1].length;
+                Number.isInteger(this.step) ? this.precision = 0
+                    : this.precision = (this.step + "").split(".")[1].length;
+            }
+            if (chart['0'].indexOf('marks:') >= 0) {
+                this.marksList = chart['0']
+                    .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+                    .replace('marks:', '').split(',').map(Number);
+                var precision_1 = this.precision; //used in anonymous function below
+                this.marksList = this.marksList.map(function (elem) {
+                    return Number(elem.toFixed(precision_1));
+                });
+                this.maxValue = this.marksList[this.marksList.length - 1];
             }
             if (chart['0'].indexOf('main-color:') >= 0) {
                 this.mainColor = chart['0']
@@ -728,25 +742,35 @@ var ChartComponent = (function () {
                     .replace('stroke-color:', '');
             }
             if (chart['0'].indexOf('stroke-width:') >= 0) {
-                this.strokeWidth = chart['0']
+                this.strokeWidth = +chart['0']
                     .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
                     .replace('stroke-width:', '');
             }
+            if (chart['0'].indexOf('mark-diameter:') >= 0) {
+                this.markDiameter = +chart['0']
+                    .match(new RegExp(/mark-diameter:([^;]*)(?=(;|$))/g))['0']
+                    .replace('mark-diameter:', '');
+            }
+            if (chart['0'].indexOf('point-diameter:') >= 0) {
+                this.pointDiameter = +chart['0']
+                    .match(new RegExp(/point-diameter:([^;]*)(?=(;|$))/g))['0']
+                    .replace('point-diameter:', '');
+            }
             if (chart['0'].indexOf('control:') >= 0)
-                this.chartControl = parseFloat(chart['0']
+                this.control = +chart['0']
                     .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
-                    .replace('control:', ''));
+                    .replace('control:', '');
             this.initialized = true;
         }
         var chartHtml = '';
-        if (this.chartType == 3) {
-            this.chartStep >= 1
-                ? this.chartStep = Math.round(this.chartStep)
-                : this.chartStep = 1;
+        if (this.type == 3) {
+            this.step >= 1
+                ? this.step = Math.round(this.step)
+                : this.step = 1;
         }
-        var chartValuePercent = this.chartValue / this.chartMaxValue;
+        var valuePercent = this.value / this.maxValue;
         var chartContainer = document.getElementById('chart-container');
-        switch (this.chartType) {
+        switch (this.type) {
             default:
             case 1:
                 // Chart (type 1 - rectangle)
@@ -758,8 +782,8 @@ var ChartComponent = (function () {
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
                 chartHtml += '></rect>';
                 chartHtml += '<rect id="rect1" style="y: ' +
-                    (1 - chartValuePercent) * this.chartHeight + '; height:' +
-                    chartValuePercent * this.chartHeight + ' !important; width: 100%;';
+                    (1 - valuePercent) * this.chartHeight + '; height:' +
+                    valuePercent * this.chartHeight + ' !important; width: 100%;';
                 chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' +
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
                 chartHtml += '></rect>';
@@ -769,12 +793,12 @@ var ChartComponent = (function () {
             case 2:
                 // Chart (type 2 - circle)
                 var radius = this.chartHeight / 2;
-                var angle = 2 * Math.PI * chartValuePercent;
+                var angle = 2 * Math.PI * valuePercent;
                 var x = radius + radius * Math.sin(angle);
                 var y = radius - radius * Math.cos(angle);
                 chartHtml += '<svg style="height: '
                     + this.chartHeight + '; width:' + this.chartHeight + ';">';
-                if (chartValuePercent <= 0.999) {
+                if (valuePercent <= 0.999) {
                     chartHtml += '<circle id="circle2" style="r: ' + radius
                         + ' !important; cx: ' + radius + ' !important; cy: '
                         + radius + ' !important;';
@@ -782,7 +806,7 @@ var ChartComponent = (function () {
                         this.strokeColor + '; stroke-width: ' + this.strokeWidth + '" />';
                     chartHtml += '<path id="circle1" d="M' + radius + ',' + radius
                         + ' L' + radius + ',0 A' + radius + ',' + radius;
-                    if (chartValuePercent <= 0.5) {
+                    if (valuePercent <= 0.5) {
                         chartHtml += ' 1 0,1';
                     }
                     else {
@@ -813,7 +837,7 @@ var ChartComponent = (function () {
                 canvas_1.style.height = this.chartHeight + 'px';
                 canvas_1.style.width = chartContainer.style.width;
                 var ctx_1 = canvas_1.getContext("2d");
-                for (var i = 0; i < this.chartMaxValue; i++) {
+                for (var i = 0; i < this.maxValue; i++) {
                     if (this.dots[i] == undefined) {
                         this.dots[i] = {
                             x: Math.random() * (canvas_1.width - this.dotRadius * 2),
@@ -824,41 +848,59 @@ var ChartComponent = (function () {
                 }
                 this.dotsChartRebuildFunctionId = setInterval(function () {
                     ctx_1.clearRect(0, 0, canvas_1.width, canvas_1.height);
-                    _this.drawDotsChart(_this.chartValue, _this.chartMaxValue, ctx_1, canvas_1);
+                    _this.drawDotsChart(_this.value, _this.maxValue, ctx_1, canvas_1);
                 }, 80);
                 break;
             case 4:
                 // Chart (type 4 - slider)
-                var circleDiameter = 2 * this.dotRadius;
                 var width = chartContainer.offsetWidth;
-                var indentation = circleDiameter + 5;
-                this.startValue = Math.min.apply(null, this.chartMarksList);
-                this.endValue = Math.max.apply(null, this.chartMarksList);
+                var indentation = this.pointDiameter + 5;
+                this.startValue = Math.min.apply(null, this.marksList);
+                this.endValue = this.maxValue =
+                    Math.max.apply(null, this.marksList);
                 chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
                 chartHtml += '<line x1="' + indentation + '" y1="10" x2="'
                     + (width - indentation) + '" y2="10" style="stroke:'
                     + this.mainColor + '; stroke-width:'
                     + this.strokeWidth + '" />';
                 width -= indentation * 2;
-                for (var i = 0; i < (this.endValue - this.startValue); i += this.chartStep) {
+                for (var i = 0; i < (this.endValue - this.startValue); i += this.step) {
                     var position = (i * width / (this.endValue - this.startValue)) + indentation;
-                    chartHtml += '<circle cx="' + position + '" cy="10" r="'
-                        + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                    var point = Number((i + this.startValue).toFixed(this.precision));
+                    if (this.marksList.includes(point)) {
+                        chartHtml += '<circle cx="' + position + '" cy="10" r="'
+                            + (this.markDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                        var textPosition = ((point - this.startValue) / (this.endValue
+                            - this.startValue) * width + indentation);
+                        chartHtml += '<text x="' + textPosition
+                            + '" y="35" fill="' + this.strokeColor
+                            + '" font-size="16" text-anchor="middle">'
+                            + point + '</text>';
+                    }
+                    else {
+                        chartHtml += '<circle cx="' + position + '" cy="10" r="'
+                            + (this.pointDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                    }
                 }
                 chartHtml += '<circle cx="' + (width + indentation) + '" cy="10" r="'
-                    + (circleDiameter / 2) + '" fill="' + this.strokeColor + '" />';
-                for (var i = 0; i < this.chartMarksList.length; i++) {
-                    var position = ((this.chartMarksList[i] - this.startValue) / (this.endValue
-                        - this.startValue) * width + indentation);
-                    chartHtml += '<text x="' + position
-                        + '" y="35" fill="' + this.strokeColor
-                        + '" font-size="16" text-anchor="middle">'
-                        + this.chartMarksList[i] + '</text>';
-                }
-                var currentPointX = (this.chartValue - this.startValue) / (this.endValue
+                    + (this.markDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+                chartHtml += '<text x="' + (width + indentation)
+                    + '" y="35" fill="' + this.strokeColor
+                    + '" font-size="16" text-anchor="middle">'
+                    + this.marksList[this.marksList.length - 1] + '</text>';
+                /* Old version (can be deleted)
+                for(let i = 0; i < this.marksList.length; i++) {
+                  let position = ((this.marksList[i]-this.startValue)/(this.endValue
+                    -this.startValue)*width + indentation);
+                  chartHtml += '<text x="' + position
+                    + '" y="35" fill="' + this.strokeColor
+                    +'" font-size="16" text-anchor="middle">'
+                    + this.marksList[i] + '</text>';
+                }*/
+                var currentPointX = (this.value - this.startValue) / (this.endValue
                     - this.startValue) * width + indentation;
                 chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="'
-                    + circleDiameter + '" fill="' + this.selectedColor + '" />';
+                    + this.markDiameter + '" fill="' + this.selectedColor + '" />';
                 chartHtml += '</svg>';
                 chartContainer.innerHTML = chartHtml;
                 if (!this.setClickPositionEventId) {
@@ -876,26 +918,26 @@ var ChartComponent = (function () {
         var circleDiameter = 2 * this.dotRadius;
         var indentation = circleDiameter + 5;
         var width = chartContainer.offsetWidth - indentation * 2;
-        this.chartValue = (x - indentation) * (this.endValue
+        this.value = (x - indentation) * (this.endValue
             - this.startValue) / width + this.startValue;
         // find the closest point
         var point = this.startValue;
-        var diff = Math.abs(this.chartValue - point);
-        for (var i = this.startValue; i <= this.endValue; i += this.chartStep) {
-            var newdiff = Math.abs(this.chartValue - i);
+        var diff = Math.abs(this.value - point);
+        for (var i = this.startValue; i <= this.endValue; i += this.step) {
+            var newdiff = Math.abs(this.value - i);
             if (newdiff < diff) {
                 diff = newdiff;
                 point = i;
             }
         }
-        Math.abs(this.chartValue - this.endValue) < diff ?
-            this.chartValue = this.endValue : this.chartValue = point;
-        if (this.chartValue < this.startValue)
-            this.chartValue = this.startValue;
-        else if (this.chartValue > this.endValue)
-            this.chartValue = this.endValue;
+        Math.abs(this.value - this.endValue) < diff ?
+            this.value = this.endValue : this.value = point;
+        if (this.value < this.startValue)
+            this.value = this.startValue;
+        else if (this.value > this.endValue)
+            this.value = this.endValue;
         this.buildChart();
-        if (this.chartControl > 0) {
+        if (this.control > 0) {
             document.getElementById('inputValue').focus();
         }
     };
