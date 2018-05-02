@@ -155,7 +155,7 @@
 
                         <div id='question_order' style='display: none;'
                             class="form-group{{ $errors->has('question_order') ? ' has-error' : '' }}">
-                            <label for="type" class="col-md-4 control-label">Answers order does not matter</label>
+                            <label for="type" class="col-md-4 control-label">Answers order does matter</label>
                             <div class="col-md-6 radio">
                                 <label for="type" class="col-md-3">
                                     <input id='question_order_input' type="checkbox" name="question_order" value="1"></label>
@@ -166,16 +166,27 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group" id='depended_answers' style='display: none;' >
+                            <span class="col-md-4"></span>
+                            <div class="col-md-6">
+                                <label>To make answers depended on each other put "x" for main answer and math expression for other like x+7.</label>
+                            </div>
+                        </div>
+
                         <script type="text/javascript">
                             let reply_mode = document.getElementById('reply_mode');
                             reply_mode.onchange = () => {
                               let order = document.getElementById('question_order');
                               let order_input = document.getElementById('question_order_input');
+                              let depended_answers = document.getElementById('depended_answers');
                               if(reply_mode.value == 'FB') {
                                 order.style.display = 'block';
+                                depended_answers.style.display = 'block';
                               }  else {
                                 order.style.display = 'none';
                                 order_input.value = false;
+                                depended_answers.style.display = 'none';
                               }
                             }
                         </script>
