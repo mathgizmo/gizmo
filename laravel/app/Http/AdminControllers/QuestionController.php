@@ -259,8 +259,13 @@ class QuestionController extends Controller
 		$qrmodes = DB::select('select * from reply_mode');
 		//$questions = DB::select('')
 		\Session::flash('flash_message','successfully saved.');
+
+		$preview_url = Config::get('app.preview_url');
+
 		return view('question_views.create',[ 'levels' => $levels,
-        'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lesson_id])->withInput($request->all());
+        'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lesson_id,
+            'preview_url'=> $preview_url
+		])->withInput($request->all());
     }
 
     /**
@@ -357,7 +362,7 @@ class QuestionController extends Controller
 
       if($request['_type'] == 'new') {
         $questionID = DB::table('question')->insertGetId($collectionQuestion->all());
-      } else { 
+      } else {
         DB::table('question')->where('id', $questionID)->update($collectionQuestion->all());
         Question::find($questionID)->answers()->delete();
       }
@@ -402,7 +407,7 @@ class QuestionController extends Controller
         $preview_url = Config::get('app.preview_url');
         return view('question_views.edit', ['question'=>$question,
           'levels'=>$levels, 'units'=>$units,'topics'=>$topics,
-          'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers, 
+          'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers,
           'preview_url'=>$preview_url ]);
       } else {
         return redirect(route('question_views.index'));
