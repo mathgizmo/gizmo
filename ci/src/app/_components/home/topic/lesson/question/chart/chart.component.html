@@ -1,46 +1,50 @@
 <h2 id="chart-container"></h2>
-<div id="controls" *ngIf="chartControl > 0" >
+<div id="controls" *ngIf="control > 0" >
   <p>Value</p>
-  <span *ngIf="chartControl == 1">
+  <span *ngIf="control == 1">
     <mat-form-field (change)="ngOnChanges()">
-      <input matInput  *ngIf="chartType != 4"
-        [(ngModel)]="chartValue" type="number" 
-        [step]="chartStep" [max]="chartMaxValue" min="0"/>
-      <input *ngIf="chartType == 4" id='inputValue'
-        matInput [(ngModel)]="chartValue" type="number" 
-        [step]="chartStep" [max]="chartMaxValue" [min]="chartStartValue"/>
+      <input matInput *ngIf="type != 4"
+        [(ngModel)]="value" type="number" 
+        [step]="step" [max]="maxValue" min="0"/>
+      <input matInput *ngIf="type == 4" id='inputValue'
+        [(ngModel)]="value" type="number" 
+        [step]="step" [max]="maxValue" [min]="startValue"/>
       <mat-progress-bar class='progress' value={{percentValue}}>
       </mat-progress-bar>
     </mat-form-field> 
-    <span *ngIf="chartType != 4">
-      <span class='max-value' *ngIf="chartMaxValue != 1" >/{{chartMaxValue}}</span>
+    <span *ngIf="valueDisplay == 1" >
+      <span class='max-value'>/{{maxValue}}</span>
     </span>
   </span>
-  <span *ngIf="chartControl == 2">
-    <span *ngIf="chartType != 4" >
-      <mat-slider (change)="ngOnChanges()" [(ngModel)]="chartValue"
-        [step]="chartStep" [max]="chartMaxValue" min="0" 
+  <span *ngIf="control == 2">
+    <span>
+      <mat-slider  *ngIf="type != 4" 
+        (change)="ngOnChanges()" [(ngModel)]="value"
+        [step]="step" [max]="maxValue" min="0" 
         color="primary" class='slider-control'>
       </mat-slider>
-      <div class="value-label-container">
-        <label *ngIf="chartType != 3" >
-          <span>
-            {{chartValue.toFixed(precision)}}/{{chartMaxValue}}
-          </span>
-        </label>
-        <label *ngIf="chartType == 3" >
-          <span> {{chartValue}} </span>
-          <span *ngIf="chartMaxValue != 1" > / {{chartMaxValue}} </span>
-        </label>
-      </div> 
-    </span>
-    <span *ngIf="chartType == 4" >
-      <mat-slider (change)="ngOnChanges()" [(ngModel)]="chartValue"
-        [step]="chartStep" [max]="endValue" [min]="startValue" 
+      <mat-slider *ngIf="type == 4" 
+        (change)="ngOnChanges()" [(ngModel)]="value"
+        [step]="step" [max]="endValue" [min]="startValue" 
         color="primary" class='slider-control' id='inputValue'>
       </mat-slider>
       <div class="value-label-container">
-        <label>{{chartValue.toFixed(precision)}}</label>
+        <label *ngIf="!(valueDisplay == 2 || valueDisplay == 3)">
+          <span>
+            {{value.toFixed(precision)}}
+          </span>
+          <span *ngIf="valueDisplay == 1">
+            / {{maxValue}}
+          </span>
+        </label>
+        <label *ngIf="(valueDisplay == 2 || valueDisplay == 3)">
+          <span *ngIf="valueDisplay == 2">
+            {{(value/maxValue).toFixed(2)}}
+          </span>
+          <span *ngIf="valueDisplay == 3">
+            {{(value/maxValue*100).toFixed(2)}}%
+          </span>
+        </label>
       </div> 
     </span>
   </span>
