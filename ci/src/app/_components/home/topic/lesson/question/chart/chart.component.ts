@@ -82,6 +82,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/value-display:([^;]*)(?=(;|$))/g))['0']
             .replace('value-display:', '');
         }
+        else {
+            this.valueDisplay = 0;
+        }
+        if (this.valueDisplay < 0 || this.valueDisplay > 3) {
+            this.valueDisplay = 0;
+        }
         if (chart['0'].indexOf('value:') >= 0) {
           this.value = parseFloat(chart['0']
             .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
