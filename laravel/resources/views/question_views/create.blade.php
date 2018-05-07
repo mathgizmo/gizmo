@@ -155,7 +155,7 @@
 
                         <div id='question_order' style='display: none;'
                             class="form-group{{ $errors->has('question_order') ? ' has-error' : '' }}">
-                            <label for="type" class="col-md-4 control-label">Answers order does matter</label>
+                            <label for="type" class="col-md-4 control-label">Answers order does not matter</label>
                             <div class="col-md-6 radio">
                                 <label for="type" class="col-md-3">
                                     <input id='question_order_input' type="checkbox" name="question_order" value="1"></label>
@@ -250,11 +250,11 @@
                             <label for="question" class="col-md-4 control-label">Preview</label>
                             <div class="col-md-6">
                                 <div class="preview"></div>
-                                <button type="button"  data-toggle="modal" 
-                                    data-target="#previewModal" 
+                                <button type="button"  data-toggle="modal"
+                                    data-target="#previewModal"
                                     class="btn btn-info pull-right preview_button">
                                     Preview question
-                                </button> 
+                                </button>
                                 <span id='preview_url' style="display: none !important;">
                                     {{ $preview_url }}
                                 </span>
