@@ -553,6 +553,39 @@ var LessonComponent = (function () {
             if (this.answers.length < this.question.answers.length) {
                 return false;
             }
+            if (this.question.reply_mode == 'FB') {
+                var depended_answers = true;
+                var xIndex = -1;
+                for (var i_1 = 0; i_1 < this.question.answers.length; i_1++) {
+                    if (this.question.answers[i_1].value.includes('x')) {
+                        if (this.question.answers[i_1].value == 'x') {
+                            xIndex = i_1;
+                        }
+                    }
+                    else {
+                        depended_answers = false;
+                        break;
+                    }
+                }
+                if (xIndex >= 0 && depended_answers) {
+                    var Parser = __webpack_require__("./node_modules/expr-eval/dist/bundle.js").Parser;
+                    var parser = new Parser();
+                    var xValue = null;
+                    for (var i_2 = 0; i_2 < this.question.answers.length; i_2++) {
+                        if (this.question.answers[i_2].value == 'x' && !xValue) {
+                            xValue = this.answers[i_2];
+                            break;
+                        }
+                    }
+                    for (var i_3 = 0; i_3 < this.question.answers.length; i_3++) {
+                        var expr = parser.parse(this.question.answers[i_3].value);
+                        if (!(expr.evaluate({ x: xValue }) == this.answers[i_3])) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
             for (var i = 0; i < this.question.answers.length; i++) {
                 if (this.question.answer_mode == 'checkbox') {
                     if (this.question.answers[i].is_correct && this.answers[i] === ""

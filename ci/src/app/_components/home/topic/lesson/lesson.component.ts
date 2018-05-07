@@ -94,6 +94,7 @@ export class LessonComponent implements OnInit {
     
     checkAnswer(answers: string[]) {
       this.answers = answers;
+
       // sort question answers
       if(this.question.question_order) {
         this.question.answers.sort( (a, b) => {
@@ -216,6 +217,38 @@ export class LessonComponent implements OnInit {
         } else {
             if (this.answers.length < this.question.answers.length) {
                 return false;
+            }
+            if (this.question.reply_mode == 'FB') {
+              let depended_answers = true;
+              let xIndex = -1;
+              for(let i = 0; i < this.question.answers.length; i++) {
+                if(this.question.answers[i].value.includes('x')) {
+                  if (this.question.answers[i].value == 'x') {
+                    xIndex = i;
+                  }
+                } else {
+                  depended_answers = false;
+                  break;
+                }
+              }
+              if(xIndex >= 0 && depended_answers) {
+                let Parser = require('expr-eval').Parser;
+                let parser = new Parser();
+                let xValue = null;
+                for(let i = 0; i < this.question.answers.length; i++) {
+                  if(this.question.answers[i].value == 'x' && !xValue) {
+                    xValue = this.answers[i];
+                    break;
+                  }
+                }
+                for(let i = 0; i < this.question.answers.length; i++) {
+                  let expr = parser.parse(this.question.answers[i].value);
+                  if (! (expr.evaluate({ x: xValue }) == this.answers[i]) ) {
+                    return false; 
+                  } 
+                }
+                return true;
+              }
             }
             for (var i = 0; i < this.question.answers.length; i++) {
                 if (this.question.answer_mode == 'checkbox') {
