@@ -4,15 +4,23 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-try',
-  template: '<div>Try without registration</div>',
-  host: { '(click)': 'onClick()'}
+  template: '<button mat-button class="try-button">Try without registration</button>',
+  host: { '(click)': 'onTry()'},
+  styles: [`
+    .try-button {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+  `]
 })
 
 export class TryComponent implements OnInit {
 
   constructor(
   	private authenticationService: AuthenticationService,
-  	private router: Router,
+  	private router: Router
   	) { 
   }
 
@@ -21,7 +29,7 @@ export class TryComponent implements OnInit {
     this.authenticationService.logout();
   }
 
-  private onClick() {
+  public onTry():any {
     let id = this.randomString();
   	let email = id+'@somemail.com';
   	let password = id;
