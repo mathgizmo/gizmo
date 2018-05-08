@@ -260,10 +260,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
               let textPosition = ((point-this.startValue)/(this.endValue
                 -this.startValue)*width + indentation);
-              chartHtml += '<text x="' + textPosition
+              if(i == 0) {
+                chartHtml += '<text x="' + (this.markDiameter/2)
+                + '" y="35" fill="' + this.strokeColor 
+                +'" font-size="16" text-anchor="start">' 
+                + point + '</text>';
+              } else {
+                chartHtml += '<text x="' + textPosition
                 + '" y="35" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="middle">' 
                 + point + '</text>';
+              }
             } else {
               chartHtml += '<circle cx="' + position + '" cy="10" r="' 
                 + (this.pointDiameter/2) + '" fill="' + this.strokeColor + '" />';
@@ -271,9 +278,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
             + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
-          chartHtml += '<text x="' + (width+indentation)
+          chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
             + '" y="35" fill="' + this.strokeColor 
-            +'" font-size="16" text-anchor="middle">' 
+            +'" font-size="16" text-anchor="end">' 
             + this.marksList[this.marksList.length-1] + '</text>';
           /* Old version (can be deleted)
           for(let i = 0; i < this.marksList.length; i++) {
