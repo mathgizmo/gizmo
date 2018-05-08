@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy, ChangeDetectionStrategy, 
-    Input, OnChanges, SimpleChanges } from '@angular/core';
+    Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
@@ -42,7 +42,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
    
-    constructor(){
+    constructor(private ref:ChangeDetectorRef){
       this.dots = [];
       if(!this.chartHeight)
         this.chartHeight=250;
@@ -81,13 +81,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.valueDisplay = +chart['0']
             .match(new RegExp(/value-display:([^;]*)(?=(;|$))/g))['0']
             .replace('value-display:', '');
+        } else {
+          this.valueDisplay = 0;
         }
-        else {
-            this.valueDisplay = 0;
-        }
-        if (this.valueDisplay < 0 || this.valueDisplay > 3) {
-            this.valueDisplay = 0;
-        }
+        if(this.valueDisplay > 4) this.valueDisplay = 0;
         if (chart['0'].indexOf('value:') >= 0) {
           this.value = parseFloat(chart['0']
             .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
@@ -305,6 +302,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
           break;
       }
+      this.ref.detectChanges();
     }
 
     // function to set value by clicking on top slider
@@ -337,9 +335,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         this.value = this.endValue;
 
       this.buildChart();
-      if(this.control > 0) {
+      /*if(this.control > 0 && this.valueDisplay != 4) {
         document.getElementById('inputValue').focus();
-      }
+      }*/
     }
 
     // function to draw Dots Chart

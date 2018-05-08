@@ -1,6 +1,7 @@
 <h2 id="chart-container"></h2>
-<div id="controls" *ngIf="control > 0" >
+<div id="controls" *ngIf="valueDisplay != 4">
   <p>Value</p>
+  
   <span *ngIf="control == 1">
     <mat-form-field (change)="ngOnChanges()">
       <input matInput *ngIf="type != 4"
@@ -16,6 +17,7 @@
       <span class='max-value'>/{{maxValue}}</span>
     </span>
   </span>
+
   <span *ngIf="control == 2">
     <span>
       <mat-slider  *ngIf="type != 4" 
@@ -48,4 +50,26 @@
       </div> 
     </span>
   </span>
+
+  <span *ngIf="(control != 1 && control != 2)">
+    <div class="value-label-container">
+      <label *ngIf="!(valueDisplay == 2 || valueDisplay == 3)">
+        <span>
+          {{value.toFixed(precision)}}
+        </span>
+        <span *ngIf="valueDisplay == 1">
+          / {{maxValue}}
+        </span>
+      </label>
+      <label *ngIf="(valueDisplay == 2 || valueDisplay == 3)">
+        <span *ngIf="valueDisplay == 2">
+          {{(value/maxValue).toFixed(precision+2)}}
+        </span>
+        <span *ngIf="valueDisplay == 3">
+          {{(value/maxValue*100).toFixed(precision)}}%
+        </span>
+      </label>
+    </div>
+  </span>
+
 </div>

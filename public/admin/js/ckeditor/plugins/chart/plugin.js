@@ -102,7 +102,8 @@ CKEDITOR.plugins.add( 'chart', {
                                     [ 'Plain Value', '0' ],
                                     [ 'Fraction', '1' ],
                                     [ 'Decimal', '2' ],
-                                    [ 'Percentage', '3' ]
+                                    [ 'Percentage', '3' ],
+                                    [ 'Do not show', '4' ]
                                 ],
                                 'default' : '0',
                                 required : true,
