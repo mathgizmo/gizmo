@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, OnDestroy, ChangeDetectionStrategy, 
-    Input, OnChanges, SimpleChanges } from '@angular/core';
+    Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
@@ -42,7 +42,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
    
-    constructor(){
+    constructor(private ref:ChangeDetectorRef){
       this.dots = [];
       if(!this.chartHeight)
         this.chartHeight=250;
@@ -81,13 +81,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.valueDisplay = +chart['0']
             .match(new RegExp(/value-display:([^;]*)(?=(;|$))/g))['0']
             .replace('value-display:', '');
+        } else {
+          this.valueDisplay = 0;
         }
-        else {
-            this.valueDisplay = 0;
-        }
-        if (this.valueDisplay < 0 || this.valueDisplay > 3) {
-            this.valueDisplay = 0;
-        }
+        if(this.valueDisplay > 4) this.valueDisplay = 0;
         if (chart['0'].indexOf('value:') >= 0) {
           this.value = parseFloat(chart['0']
             .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
@@ -260,10 +257,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
               let textPosition = ((point-this.startValue)/(this.endValue
                 -this.startValue)*width + indentation);
-              chartHtml += '<text x="' + textPosition
+              if(i == 0) {
+                chartHtml += '<text x="' + (this.markDiameter/2)
+                + '" y="35" fill="' + this.strokeColor 
+                +'" font-size="16" text-anchor="start">' 
+                + point + '</text>';
+              } else {
+                chartHtml += '<text x="' + textPosition
                 + '" y="35" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="middle">' 
                 + point + '</text>';
+              }
             } else {
               chartHtml += '<circle cx="' + position + '" cy="10" r="' 
                 + (this.pointDiameter/2) + '" fill="' + this.strokeColor + '" />';
@@ -271,9 +275,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
             + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
-          chartHtml += '<text x="' + (width+indentation)
+          chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
             + '" y="35" fill="' + this.strokeColor 
-            +'" font-size="16" text-anchor="middle">' 
+            +'" font-size="16" text-anchor="end">' 
             + this.marksList[this.marksList.length-1] + '</text>';
           /* Old version (can be deleted)
           for(let i = 0; i < this.marksList.length; i++) {
@@ -298,6 +302,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
           break;
       }
+      this.ref.detectChanges();
     }
 
     // function to set value by clicking on top slider
@@ -330,9 +335,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         this.value = this.endValue;
 
       this.buildChart();
-      if(this.control > 0) {
+      /*if(this.control > 0 && this.valueDisplay != 4) {
         document.getElementById('inputValue').focus();
-      }
+      }*/
     }
 
     // function to draw Dots Chart
