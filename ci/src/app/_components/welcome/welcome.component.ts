@@ -16,7 +16,8 @@ export class WelcomeComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private authenticationService: AuthenticationService) { }
+        private authenticationService: AuthenticationService) {
+    }
 
     ngOnInit() {
         // reset login status
