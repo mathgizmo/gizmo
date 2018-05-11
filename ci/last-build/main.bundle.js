@@ -648,7 +648,7 @@ var LessonComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"control > 0\" >\n  <p>Value</p>\n  <span *ngIf=\"control == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput *ngIf=\"type != 4\"\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" min=\"0\"/>\n      <input matInput *ngIf=\"type == 4\" id='inputValue'\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" [min]=\"startValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"valueDisplay == 1\" >\n      <span class='max-value'>/{{maxValue}}</span>\n    </span>\n  </span>\n  <span *ngIf=\"control == 2\">\n    <span>\n      <mat-slider  *ngIf=\"type != 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"maxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <mat-slider *ngIf=\"type == 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n          <span>\n            {{value.toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 1\">\n            / {{maxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n          <span *ngIf=\"valueDisplay == 2\">\n            {{(value/maxValue).toFixed(2)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 3\">\n            {{(value/maxValue*100).toFixed(2)}}%\n          </span>\n        </label>\n      </div> \n    </span>\n  </span>\n</div>"
+module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"valueDisplay != 4\">\n  <p>Value</p>\n  \n  <span *ngIf=\"control == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput *ngIf=\"type != 4\"\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" min=\"0\"/>\n      <input matInput *ngIf=\"type == 4\" id='inputValue'\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" [min]=\"startValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"valueDisplay == 1\" >\n      <span class='max-value'>/{{maxValue}}</span>\n    </span>\n  </span>\n\n  <span *ngIf=\"control == 2\">\n    <span>\n      <mat-slider  *ngIf=\"type != 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"maxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <mat-slider *ngIf=\"type == 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n          <span>\n            {{value.toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 1\">\n            / {{maxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n          <span *ngIf=\"valueDisplay == 2\">\n            {{(value/maxValue).toFixed(precision+2)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 3\">\n            {{(value/maxValue*100).toFixed(precision)}}%\n          </span>\n        </label>\n      </div> \n    </span>\n  </span>\n\n  <span *ngIf=\"(control != 1 && control != 2)\">\n    <div class=\"value-label-container\">\n      <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n        <span>\n          {{value.toFixed(precision)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 1\">\n          / {{maxValue}}\n        </span>\n      </label>\n      <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n        <span *ngIf=\"valueDisplay == 2\">\n          {{(value/maxValue).toFixed(precision+2)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 3\">\n          {{(value/maxValue*100).toFixed(precision)}}%\n        </span>\n      </label>\n    </div>\n  </span>\n\n</div>"
 
 /***/ }),
 
@@ -676,7 +676,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 var ChartComponent = (function () {
-    function ChartComponent() {
+    function ChartComponent(ref) {
+        this.ref = ref;
         this.mainColor = "#f7f7f7";
         this.selectedColor = "#ff4444";
         this.strokeColor = "#111";
@@ -735,9 +736,8 @@ var ChartComponent = (function () {
             else {
                 this.valueDisplay = 0;
             }
-            if (this.valueDisplay < 0 || this.valueDisplay > 3) {
+            if (this.valueDisplay > 4)
                 this.valueDisplay = 0;
-            }
             if (chart['0'].indexOf('value:') >= 0) {
                 this.value = parseFloat(chart['0']
                     .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
@@ -911,10 +911,18 @@ var ChartComponent = (function () {
                             + (this.markDiameter / 2) + '" fill="' + this.strokeColor + '" />';
                         var textPosition = ((point - this.startValue) / (this.endValue
                             - this.startValue) * width + indentation);
-                        chartHtml += '<text x="' + textPosition
-                            + '" y="35" fill="' + this.strokeColor
-                            + '" font-size="16" text-anchor="middle">'
-                            + point + '</text>';
+                        if (i == 0) {
+                            chartHtml += '<text x="' + (this.markDiameter / 2)
+                                + '" y="35" fill="' + this.strokeColor
+                                + '" font-size="16" text-anchor="start">'
+                                + point + '</text>';
+                        }
+                        else {
+                            chartHtml += '<text x="' + textPosition
+                                + '" y="35" fill="' + this.strokeColor
+                                + '" font-size="16" text-anchor="middle">'
+                                + point + '</text>';
+                        }
                     }
                     else {
                         chartHtml += '<circle cx="' + position + '" cy="10" r="'
@@ -923,9 +931,9 @@ var ChartComponent = (function () {
                 }
                 chartHtml += '<circle cx="' + (width + indentation) + '" cy="10" r="'
                     + (this.markDiameter / 2) + '" fill="' + this.strokeColor + '" />';
-                chartHtml += '<text x="' + (width + indentation)
+                chartHtml += '<text x="' + (width + indentation * 2 - (this.markDiameter / 2))
                     + '" y="35" fill="' + this.strokeColor
-                    + '" font-size="16" text-anchor="middle">'
+                    + '" font-size="16" text-anchor="end">'
                     + this.marksList[this.marksList.length - 1] + '</text>';
                 /* Old version (can be deleted)
                 for(let i = 0; i < this.marksList.length; i++) {
@@ -948,6 +956,7 @@ var ChartComponent = (function () {
                 }
                 break;
         }
+        this.ref.detectChanges();
     };
     // function to set value by clicking on top slider
     ChartComponent.prototype.setClickPosition = function (event) {
@@ -976,9 +985,9 @@ var ChartComponent = (function () {
         else if (this.value > this.endValue)
             this.value = this.endValue;
         this.buildChart();
-        if (this.control > 0) {
-            document.getElementById('inputValue').focus();
-        }
+        /*if(this.control > 0 && this.valueDisplay != 4) {
+          document.getElementById('inputValue').focus();
+        }*/
     };
     // function to draw Dots Chart
     ChartComponent.prototype.drawDotsChart = function (dotsNum, maxDotsNum, ctx, canvas) {
@@ -1045,7 +1054,7 @@ var ChartComponent = (function () {
             styles: [__webpack_require__("./src/app/_components/home/topic/lesson/question/chart/chart.component.scss")],
             changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectorRef"]])
     ], ChartComponent);
     return ChartComponent;
 }());
@@ -1929,7 +1938,7 @@ var TryComponent = (function () {
         // reset login status
         this.authenticationService.logout();
     };
-    TryComponent.prototype.onClick = function () {
+    TryComponent.prototype.onTry = function () {
         var _this = this;
         var id = this.randomString();
         var email = id + '@somemail.com';
@@ -1959,8 +1968,9 @@ var TryComponent = (function () {
     TryComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-try',
-            template: '<div>Try without registration</div>',
-            host: { '(click)': 'onClick()' }
+            template: '<button mat-button class="try-button">Try without registration</button>',
+            host: { '(click)': 'onTry()' },
+            styles: ["\n    .try-button {\n      width: 100%;\n      height: 100%;\n      padding: 0;\n      margin: 0;\n    }\n  "]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_index__["a" /* AuthenticationService */],
             __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]])
@@ -1975,7 +1985,7 @@ var TryComponent = (function () {
 /***/ "./src/app/_components/welcome/welcome.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"welcome\">\n  <h2 class=\"center\">Welcome!</h2>\n  <div class=\"buttons-container\">\n    <a mat-button routerLink=\"/register\" class=\"register-button\">Register account</a>\n    <a mat-button routerLink=\"/login\" class=\"login-button\">Login</a>\n    <button mat-button class=\"try-button\"> \n      <app-try></app-try>\n    </button>\n  </div>\n</div>\n"
+module.exports = "<div class=\"welcome\">\n  <h2 class=\"center\">Welcome!</h2>\n  <div class=\"buttons-container\">\n    <a mat-button routerLink=\"/register\" class=\"register-button\">Register account</a>\n    <a mat-button routerLink=\"/login\" class=\"login-button\">Login</a>\n    <app-try class=\"try-button\"></app-try>\n  </div>\n</div>\n"
 
 /***/ }),
 
