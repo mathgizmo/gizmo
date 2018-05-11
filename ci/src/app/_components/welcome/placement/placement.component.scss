@@ -1,0 +1,25 @@
+.button {
+	margin-bottom: 8px !important;
+	padding: 0;
+	width: 100px;
+	text-decoration: none;
+}
+
+.ok-button, .next-button {
+	color: #fafafa;
+	background-color: #31698a;
+}
+
+.yes-button {
+	color: #fafafa;
+	background-color: #6dc066;
+}
+
+.no-button {
+	color: #fafafa;
+	background-color: #ff4444;
+}
+
+.not-sure-button, .skip-button {
+	background-color: #e6e6fa;
+}

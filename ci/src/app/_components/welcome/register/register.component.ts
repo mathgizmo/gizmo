@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
                    this.authenticationService.login( this.model.email, 
                        this.model.password).subscribe(result => {
                         if (result == true) {
-                            this.router.navigate(['/']);
+                            this.router.navigate(['placement']);
                         }
                    });
                 } else {console.log(result['message'])

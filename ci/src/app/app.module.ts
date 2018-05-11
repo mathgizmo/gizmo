@@ -31,7 +31,9 @@ import { ProfileComponent } from './_components/profile/profile.component';
 import { ResetPasswordComponent } from './_components/welcome/login/reset-password/reset-password.component';
 import { QuestionComponent } from './_components/home/topic/lesson/question/question.component';
 
-import { QuestionPreviewComponent } from './_components/previews/question-preview/question-preview.component';
+import { QuestionPreviewComponent } from
+    './_components/previews/question-preview/question-preview.component';
+import { PlacementComponent, NoDialogComponent } from './_components/welcome/placement/index';
 
 @NgModule({
     imports: [
@@ -73,12 +75,15 @@ import { QuestionPreviewComponent } from './_components/previews/question-previe
         ForgotPasswordComponent,
         ResetPasswordComponent,
         QuestionComponent,
-        QuestionPreviewComponent
+        QuestionPreviewComponent,
+        PlacementComponent,
+        NoDialogComponent
     ],
     entryComponents: [
         GoodDialogComponent,
         BadDialogComponent,
-        ReportDialogComponent
+        ReportDialogComponent,
+        NoDialogComponent
     ],
     providers: [
         AuthGuard,

@@ -40,7 +40,7 @@ export class TryComponent implements OnInit {
                this.authenticationService.login(email, password)
                  .subscribe(res => {
                     if (res == true) {
-                        this.router.navigate(['/']);
+                        this.router.navigate(['placement']);
                     }
                });
             }
