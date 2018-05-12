@@ -139,10 +139,10 @@ var HomeComponent = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             moduleId: module.i,
             template: __webpack_require__("./src/app/_components/home/home.component.html"),
-            providers: [__WEBPACK_IMPORTED_MODULE_1__services_index__["c" /* TopicService */]],
+            providers: [__WEBPACK_IMPORTED_MODULE_1__services_index__["d" /* TopicService */]],
             styles: [__webpack_require__("./src/app/_components/home/home.component.scss")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_index__["c" /* TopicService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_index__["d" /* TopicService */]])
     ], HomeComponent);
     return HomeComponent;
 }());
@@ -629,12 +629,12 @@ var LessonComponent = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             moduleId: module.i,
             template: __webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.html"),
-            providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */]],
+            providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TopicService */], __WEBPACK_IMPORTED_MODULE_2__services_index__["e" /* TrackingService */]],
             styles: [__webpack_require__("./src/app/_components/home/topic/lesson/lesson.component.scss")]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
-            __WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */],
-            __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TrackingService */],
+            __WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TopicService */],
+            __WEBPACK_IMPORTED_MODULE_2__services_index__["e" /* TrackingService */],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
             __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialog */]])
     ], LessonComponent);
@@ -1331,9 +1331,9 @@ var TopicComponent = (function () {
             moduleId: module.i,
             template: __webpack_require__("./src/app/_components/home/topic/topic.component.html"),
             styles: [__webpack_require__("./src/app/_components/home/topic/topic.component.scss")],
-            providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */]]
+            providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TopicService */]]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* TopicService */],
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_index__["d" /* TopicService */],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */]])
     ], TopicComponent);
     return TopicComponent;
@@ -1812,6 +1812,222 @@ var ResetPasswordComponent = (function () {
 
 /***/ }),
 
+/***/ "./src/app/_components/welcome/placement/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__placement_component__ = __webpack_require__("./src/app/_components/welcome/placement/placement.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__placement_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__no_dialog_no_dialog_component__ = __webpack_require__("./src/app/_components/welcome/placement/no-dialog/no-dialog.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__no_dialog_no_dialog_component__["a"]; });
+
+
+
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/placement/no-dialog/no-dialog.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<form #questionNumForm='ngForm' (ngSubmit)='onClick()' class='grey-theme text-center'>\n\t<h4 mat-dialog-title class=\"title\">Number of correct answers</h4>\n\t<div>Please set the number of consecutive correct answers  which will signify lesson completion for you (put 0 to answer all questions). You can change this value at any time in your profile. </div>\n\t<mat-input-container class='input-container'>\n\t\t<input matInput name='question_num' \n\t\tpattern='[0-9]{1,2}' [(ngModel)]='user.questionNum'  \n\t\tclass='question-num-input' />\n\t</mat-input-container>\n\t<mat-dialog-actions class='buttons'>\n\t\t<button mat-button type='submit' class='continue-button'>\n\t\t\tContinue\n\t\t</button>\n\t</mat-dialog-actions>\n</form>"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/placement/no-dialog/no-dialog.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = "form, form div, .input-container, .question-num-input, .buttons, .continue-button {\n  margin: 0;\n  padding: 0; }\n\n.buttons {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n\n.continue-button {\n  color: #fafafa;\n  background-color: #31698a; }\n\n.question-num-input {\n  text-align: center;\n  font-weight: bold; }\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/placement/no-dialog/no-dialog.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NoDialogComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_user_service__ = __webpack_require__("./src/app/_services/user.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_user__ = __webpack_require__("./src/app/_models/user.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+var NoDialogComponent = (function () {
+    function NoDialogComponent(userService, dialogRef, data) {
+        this.userService = userService;
+        this.dialogRef = dialogRef;
+        this.data = data;
+        this.user = new __WEBPACK_IMPORTED_MODULE_3__models_user__["a" /* User */]();
+        this.user.questionNum = +localStorage.getItem('question_num') || 5;
+    }
+    NoDialogComponent.prototype.onClick = function () {
+        var _this = this;
+        this.userService.changeProfile(this.user)
+            .subscribe(function (res) {
+            localStorage.setItem('question_num', "" + _this.user.questionNum);
+        });
+        this.dialogRef.close();
+    };
+    NoDialogComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'no-dialog',
+            template: __webpack_require__("./src/app/_components/welcome/placement/no-dialog/no-dialog.component.html"),
+            styles: [__webpack_require__("./src/app/_components/welcome/placement/no-dialog/no-dialog.component.scss")],
+            providers: [__WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */]]
+        }),
+        __param(2, Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__WEBPACK_IMPORTED_MODULE_1__angular_material__["a" /* MAT_DIALOG_DATA */])),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_user_service__["a" /* UserService */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_material__["g" /* MatDialogRef */], Object])
+    ], NoDialogComponent);
+    return NoDialogComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/placement/placement.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<mat-card class=\"text-center\" *ngIf=\"state == 0\">\n\t<mat-card-title>\n\t\tAlmost ready!\n\t</mat-card-title>\n\t<mat-card-subtitle>\n\t\tPlease answer some questions, so that we can determine your level.\n\t</mat-card-subtitle>\n\t<!-- <mat-card-content></mat-card-content> -->\n\t<mat-card-actions>\n\t\t<button mat-button class=\"skip-button button\" (click)=\"onSkip()\">\n            <span>Skip</span>\n        </button>\n\t\t<button mat-button class=\"next-button button\" (click)=\"onNext()\">\n            <span *ngIf=\"!loading\">Next</span>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </button>\n\t</mat-card-actions>\n</mat-card>\n\n<mat-card class=\"text-center\" *ngIf=\"state == 1\">\n\t<mat-card-title>\n\t\t{{ question }}\n\t</mat-card-title>\n\t<mat-card-actions>\n\t\t<button mat-button class=\"yes-button button\" (click)=\"onYes()\">\n            <span *ngIf=\"!loading\">YES</span>\n            <img *ngIf=\"loading\" src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\" />\n        </button>\n\t\t<button mat-button class=\"no-button button\" (click)=\"onNo()\">\n            <span>NO</span>\n        </button>\n        <button mat-button class=\"not-sure-button button\" (click)=\"onNotSure()\">\n            <span>NOT SURE</span>\n        </button>\n\t</mat-card-actions>\n</mat-card>\n\n<mat-card class=\"text-center\" *ngIf=\"state == 2\">\n\t<mat-card-title>\n\t\tYou answered \"Yes\" to all questions!\n\t</mat-card-title>\n\t<mat-card-actions>\n\t\t<button mat-button class=\"ok-button button\" (click)=\"onSkip()\">\n            <span>Ok</span>\n        </button>\n\t</mat-card-actions>\n</mat-card>\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/placement/placement.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".button {\n  margin-bottom: 8px !important;\n  padding: 0;\n  width: 100px;\n  text-decoration: none; }\n\n.ok-button, .next-button {\n  color: #fafafa;\n  background-color: #31698a; }\n\n.yes-button {\n  color: #fafafa;\n  background-color: #6dc066; }\n\n.no-button {\n  color: #fafafa;\n  background-color: #ff4444; }\n\n.not-sure-button, .skip-button {\n  background-color: #e6e6fa; }\n"
+
+/***/ }),
+
+/***/ "./src/app/_components/welcome/placement/placement.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PlacementComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_index__ = __webpack_require__("./src/app/_services/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_material__ = __webpack_require__("./node_modules/@angular/material/esm5/material.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__no_dialog_no_dialog_component__ = __webpack_require__("./src/app/_components/welcome/placement/no-dialog/no-dialog.component.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var PlacementComponent = (function () {
+    function PlacementComponent(placementService, router, dialog) {
+        this.placementService = placementService;
+        this.router = router;
+        this.dialog = dialog;
+        this.questions = [];
+        this.unitId = -1;
+        this.question = "";
+        this.state = 0;
+        this.loading = false;
+    }
+    PlacementComponent.prototype.ngOnInit = function () {
+    };
+    PlacementComponent.prototype.onSkip = function () {
+        this.router.navigate(['/']);
+    };
+    PlacementComponent.prototype.onNext = function () {
+        var _this = this;
+        this.loading = true;
+        this.placementService.getPlacementQuestions()
+            .subscribe(function (response) {
+            _this.state = 1;
+            _this.questions = response;
+            _this.nextQuestion();
+            _this.loading = false;
+        });
+    };
+    PlacementComponent.prototype.onYes = function () {
+        var _this = this;
+        this.loading = true;
+        this.placementService.doneUnit(this.unitId)
+            .subscribe(function (response) {
+            _this.nextQuestion();
+            //console.log(response);
+            _this.loading = false;
+        });
+    };
+    PlacementComponent.prototype.onNo = function () {
+        var _this = this;
+        var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_4__no_dialog_no_dialog_component__["a" /* NoDialogComponent */], {
+            width: '300px',
+            data: {}
+        });
+        dialogRef.afterClosed().subscribe(function (result) {
+            _this.placementService.getFirstTopicId(_this.unitId)
+                .subscribe(function (response) {
+                _this.router.navigate(['/topic/' + response]);
+            });
+        });
+    };
+    PlacementComponent.prototype.onNotSure = function () {
+        var _this = this;
+        var dialogRef = this.dialog.open(__WEBPACK_IMPORTED_MODULE_4__no_dialog_no_dialog_component__["a" /* NoDialogComponent */], {
+            width: '300px',
+            data: {}
+        });
+        dialogRef.afterClosed().subscribe(function (result) {
+            _this.placementService.doneHalfUnit(_this.unitId)
+                .subscribe(function (response) {
+                _this.router.navigate(['/topic/' + response]);
+            });
+        });
+    };
+    PlacementComponent.prototype.nextQuestion = function () {
+        if (this.questions.length) {
+            var question = this.questions.shift();
+            this.unitId = question["unit_id"];
+            this.question = question["question"];
+        }
+        else {
+            this.state = 2;
+        }
+    };
+    PlacementComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'app-placement',
+            template: __webpack_require__("./src/app/_components/welcome/placement/placement.component.html"),
+            styles: [__webpack_require__("./src/app/_components/welcome/placement/placement.component.scss")],
+            providers: [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* PlacementService */]]
+        }),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__services_index__["c" /* PlacementService */],
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */],
+            __WEBPACK_IMPORTED_MODULE_3__angular_material__["e" /* MatDialog */]])
+    ], PlacementComponent);
+    return PlacementComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/_components/welcome/register/index.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1877,7 +2093,7 @@ var RegisterComponent = (function () {
             if (result['success'] === true) {
                 _this.authenticationService.login(_this.model.email, _this.model.password).subscribe(function (result) {
                     if (result == true) {
-                        _this.router.navigate(['/']);
+                        _this.router.navigate(['placement']);
                     }
                 });
             }
@@ -1950,7 +2166,7 @@ var TryComponent = (function () {
                 _this.authenticationService.login(email, password)
                     .subscribe(function (res) {
                     if (res == true) {
-                        _this.router.navigate(['/']);
+                        _this.router.navigate(['placement']);
                     }
                 });
             }
@@ -2344,12 +2560,68 @@ var HttpService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__http_service__ = __webpack_require__("./src/app/_services/http.service.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_1__http_service__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__topic_service__ = __webpack_require__("./src/app/_services/topic.service.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__topic_service__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_2__topic_service__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__tracking_service__ = __webpack_require__("./src/app/_services/tracking.service.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_3__tracking_service__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_3__tracking_service__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__placement_service__ = __webpack_require__("./src/app/_services/placement.service.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_4__placement_service__["a"]; });
 
 
 
+
+
+
+
+/***/ }),
+
+/***/ "./src/app/_services/placement.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PlacementService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_map__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__http_service__ = __webpack_require__("./src/app/_services/http.service.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var PlacementService = (function () {
+    function PlacementService(http) {
+        this.http = http;
+    }
+    PlacementService.prototype.getPlacementQuestions = function () {
+        return this.http.get('/placement')
+            .map(function (response) { return response; });
+    };
+    PlacementService.prototype.getFirstTopicId = function (unitId) {
+        return this.http.get('/placement/getTopicId/' + unitId)
+            .map(function (response) { return response; });
+    };
+    PlacementService.prototype.doneUnit = function (unitId) {
+        var request = JSON.stringify({ unit_id: unitId });
+        return this.http.post('/placement/done-unit', request)
+            .map(function (response) { return response; });
+    };
+    PlacementService.prototype.doneHalfUnit = function (unitId) {
+        var request = JSON.stringify({ unit_id: unitId });
+        return this.http.post('/placement/done-half-unit', request)
+            .map(function (response) { return response; });
+    };
+    PlacementService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__http_service__["a" /* HttpService */]])
+    ], PlacementService);
+    return PlacementService;
+}());
 
 
 
@@ -2577,12 +2849,14 @@ var UserService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__components_welcome_login_reset_password_reset_password_component__ = __webpack_require__("./src/app/_components/welcome/login/reset-password/reset-password.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__components_home_topic_lesson_question_question_component__ = __webpack_require__("./src/app/_components/home/topic/lesson/question/question.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__components_previews_question_preview_question_preview_component__ = __webpack_require__("./src/app/_components/previews/question-preview/question-preview.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__components_welcome_placement_index__ = __webpack_require__("./src/app/_components/welcome/placement/index.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -2652,12 +2926,15 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_14__components_welcome_login_index__["a" /* ForgotPasswordComponent */],
                 __WEBPACK_IMPORTED_MODULE_21__components_welcome_login_reset_password_reset_password_component__["a" /* ResetPasswordComponent */],
                 __WEBPACK_IMPORTED_MODULE_22__components_home_topic_lesson_question_question_component__["a" /* QuestionComponent */],
-                __WEBPACK_IMPORTED_MODULE_23__components_previews_question_preview_question_preview_component__["a" /* QuestionPreviewComponent */]
+                __WEBPACK_IMPORTED_MODULE_23__components_previews_question_preview_question_preview_component__["a" /* QuestionPreviewComponent */],
+                __WEBPACK_IMPORTED_MODULE_24__components_welcome_placement_index__["b" /* PlacementComponent */],
+                __WEBPACK_IMPORTED_MODULE_24__components_welcome_placement_index__["a" /* NoDialogComponent */]
             ],
             entryComponents: [
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["c" /* GoodDialogComponent */],
                 __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["a" /* BadDialogComponent */],
-                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["e" /* ReportDialogComponent */]
+                __WEBPACK_IMPORTED_MODULE_19__components_home_topic_lesson_index__["e" /* ReportDialogComponent */],
+                __WEBPACK_IMPORTED_MODULE_24__components_welcome_placement_index__["a" /* NoDialogComponent */]
             ],
             providers: [
                 __WEBPACK_IMPORTED_MODULE_10__guards_index__["a" /* AuthGuard */],
@@ -2692,7 +2969,9 @@ var AppModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__ = __webpack_require__("./src/app/_components/home/topic/lesson/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__guards_index__ = __webpack_require__("./src/app/_guards/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_profile_profile_component__ = __webpack_require__("./src/app/_components/profile/profile.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_previews_index__ = __webpack_require__("./src/app/_components/previews/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_welcome_placement_placement_component__ = __webpack_require__("./src/app/_components/welcome/placement/placement.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_previews_index__ = __webpack_require__("./src/app/_components/previews/index.ts");
+
 
 
 
@@ -2709,12 +2988,13 @@ var appRoutes = [
     { path: 'register', component: __WEBPACK_IMPORTED_MODULE_3__components_welcome_register_index__["a" /* RegisterComponent */] },
     { path: 'forgot-password', component: __WEBPACK_IMPORTED_MODULE_2__components_welcome_login_index__["a" /* ForgotPasswordComponent */] },
     { path: 'reset-password/:token', component: __WEBPACK_IMPORTED_MODULE_2__components_welcome_login_index__["c" /* ResetPasswordComponent */] },
+    { path: 'placement', component: __WEBPACK_IMPORTED_MODULE_9__components_welcome_placement_placement_component__["a" /* PlacementComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'profile', component: __WEBPACK_IMPORTED_MODULE_8__components_profile_profile_component__["a" /* ProfileComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: '', component: __WEBPACK_IMPORTED_MODULE_4__components_home_index__["a" /* HomeComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:id', component: __WEBPACK_IMPORTED_MODULE_5__components_home_topic_index__["a" /* TopicComponent */], canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
     { path: 'topic/:topic_id/lesson/:lesson_id', component: __WEBPACK_IMPORTED_MODULE_6__components_home_topic_lesson_index__["d" /* LessonComponent */],
         canActivate: [__WEBPACK_IMPORTED_MODULE_7__guards_index__["a" /* AuthGuard */]] },
-    { path: 'preview/question', component: __WEBPACK_IMPORTED_MODULE_9__components_previews_index__["a" /* QuestionPreviewComponent */] },
+    { path: 'preview/question', component: __WEBPACK_IMPORTED_MODULE_10__components_previews_index__["a" /* QuestionPreviewComponent */] },
     // otherwise redirect to welcome
     { path: '**', redirectTo: 'welcome' }
 ];
