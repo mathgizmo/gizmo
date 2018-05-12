@@ -1,7 +1,14 @@
-<span class="text-center">
-	<h2 mat-dialog-title>You need to correctly answer {{questionNum}} questions to finish lesson!</h2>
-	<mat-dialog-content></mat-dialog-content>
+<form #questionNumForm='ngForm' (ngSubmit)='onClick()' class='grey-theme text-center'>
+	<h4 mat-dialog-title class="title">Number of correct answers</h4>
+	<div>Please set the number of consecutive correct answers  which will signify lesson completion for you (put 0 to answer all questions). You can change this value at any time in your profile. </div>
+	<mat-input-container class='input-container'>
+		<input matInput name='question_num' 
+		pattern='[0-9]{1,2}' [(ngModel)]='user.questionNum'  
+		class='question-num-input' />
+	</mat-input-container>
 	<mat-dialog-actions class='buttons'>
-		<button mat-button [mat-dialog-close]="true" class='continue-button'>Continue</button>
+		<button mat-button type='submit' class='continue-button'>
+			Continue
+		</button>
 	</mat-dialog-actions>
-</span>
+</form>

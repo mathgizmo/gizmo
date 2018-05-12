@@ -1,14 +1,23 @@
+form, form div, .input-container, .question-num-input, .buttons, .continue-button {
+	margin: 0;
+	padding: 0;	
+}
+
 .buttons {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
-	margin: 0;
-	padding: 0;	
+	
 }
 
 .continue-button {
 	color: #fafafa;
 	background-color: #31698a;
+}
+
+.question-num-input {
+	text-align: center;
+	font-weight: bold;
 }
