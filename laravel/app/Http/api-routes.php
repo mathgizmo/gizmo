@@ -20,8 +20,8 @@ $api->post('/reset-password' , 'App\Http\APIControllers\AuthController@resetPass
 $api->group(['middleware' => 'api.auth'], function () use ($api) {
     $api->get('/placement' , 'App\Http\APIControllers\PlacementController@get');
     $api->get('/placement/getTopicId/{unit_id}' , 'App\Http\APIControllers\PlacementController@getTopicId');
-    $api->get('/placement/getMiddleTopicId/{unit_id}' , 'App\Http\APIControllers\PlacementController@getMiddleTopicId');
     $api->post('/placement/done-unit' , 'App\Http\APIControllers\PlacementController@doneUnit');
+    $api->post('/placement/done-half-unit' , 'App\Http\APIControllers\PlacementController@doneHalfUnit');
     $api->any('/topic' , 'App\Http\APIControllers\TopicController@index');
     $api->any('/topic/{id}' , 'App\Http\APIControllers\TopicController@get');
     $api->any('/topic/{id}/lesson/{lesson_id}' , 'App\Http\APIControllers\TopicController@getLesson');

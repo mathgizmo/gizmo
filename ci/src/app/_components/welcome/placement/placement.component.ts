@@ -68,7 +68,7 @@ export class PlacementComponent implements OnInit {
             data: { }
         });
         dialogRef.afterClosed().subscribe(result => {
-            this.placementService.getMiddleTopicId(this.unitId)
+            this.placementService.doneHalfUnit(this.unitId)
 		  		.subscribe(response => {
             		this.router.navigate(['/topic/'+response]);
 		        });

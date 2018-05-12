@@ -15,19 +15,20 @@ export class PlacementService {
 	        .map((response: Response) => response);
 	}
 
+	getFirstTopicId(unitId) {
+		return this.http.get('/placement/getTopicId/'+unitId)
+	        .map((response: Response) => response);
+	}
+
 	doneUnit(unitId) {
 		let request = JSON.stringify({ unit_id: unitId });
 		return this.http.post('/placement/done-unit', request)
 	        .map((response: Response) => response);
 	}
 
-	getFirstTopicId(unitId) {
-		return this.http.get('/placement/getTopicId/'+unitId)
-	        .map((response: Response) => response);
-	}
-
-	getMiddleTopicId(unitId) {
-		return this.http.get('/placement/getMiddleTopicId/'+unitId)
+	doneHalfUnit(unitId) {
+		let request = JSON.stringify({ unit_id: unitId });
+		return this.http.post('/placement/done-half-unit', request)
 	        .map((response: Response) => response);
 	}
 
