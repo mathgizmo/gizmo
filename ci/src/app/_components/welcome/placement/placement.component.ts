@@ -18,6 +18,8 @@ export class PlacementComponent implements OnInit {
   question: string = "";
   state: number = 0;
 
+  loading = false;
+
   constructor(
   	private placementService: PlacementService,
   	private router: Router,
@@ -32,19 +34,23 @@ export class PlacementComponent implements OnInit {
   }
 
   onNext() {
-  	this.placementService.getPlacementQuestions()
+  	this.loading = true;
+    this.placementService.getPlacementQuestions()
         .subscribe(response => {
             this.state = 1;
             this.questions = response;
             this.nextQuestion();
+            this.loading = false;
         });
   }
 
   onYes() {
-  	this.placementService.doneUnit(this.unitId)
+  	this.loading = true;
+    this.placementService.doneUnit(this.unitId)
   		.subscribe(response => {
             this.nextQuestion();
             //console.log(response);
+            this.loading = false;
         });
   }
 
