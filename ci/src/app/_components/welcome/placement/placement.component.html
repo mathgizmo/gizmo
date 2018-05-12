@@ -1,0 +1,45 @@
+<mat-card class="text-center" *ngIf="state == 0">
+	<mat-card-title>
+		Almost done!
+	</mat-card-title>
+	<mat-card-subtitle>
+		Please answer some questions, so that we can determine your level.
+	</mat-card-subtitle>
+	<!-- <mat-card-content></mat-card-content> -->
+	<mat-card-actions>
+		<button mat-button class="skip-button button" (click)="onSkip()">
+            <span>Skip</span>
+        </button>
+		<button mat-button class="next-button button" (click)="onNext()">
+            <span>Next</span>
+        </button>
+	</mat-card-actions>
+</mat-card>
+
+<mat-card class="text-center" *ngIf="state == 1">
+	<mat-card-title>
+		{{ question }}
+	</mat-card-title>
+	<mat-card-actions>
+		<button mat-button class="yes-button button" (click)="onYes()">
+            <span>YES</span>
+        </button>
+		<button mat-button class="no-button button" (click)="onNo()">
+            <span>NO</span>
+        </button>
+        <button mat-button class="not-sure-button button" (click)="onNotSure()">
+            <span>NOT SURE</span>
+        </button>
+	</mat-card-actions>
+</mat-card>
+
+<mat-card class="text-center" *ngIf="state == 2">
+	<mat-card-title>
+		You answered "Yes" to all questions!
+	</mat-card-title>
+	<mat-card-actions>
+		<button mat-button class="ok-button button" (click)="onSkip()">
+            <span>Ok</span>
+        </button>
+	</mat-card-actions>
+</mat-card>

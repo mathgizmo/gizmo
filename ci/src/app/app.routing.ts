@@ -8,6 +8,7 @@ import { TopicComponent } from './_components/home/topic/index';
 import { LessonComponent, QuestionComponent } from './_components/home/topic/lesson/index';
 import { AuthGuard } from './_guards/index';
 import { ProfileComponent } from './_components/profile/profile.component';
+import { PlacementComponent } from './_components/welcome/placement/placement.component';
 
 import { QuestionPreviewComponent }from './_components/previews/index';
 
@@ -17,6 +18,7 @@ const appRoutes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'forgot-password', component: ForgotPasswordComponent },
     { path: 'reset-password/:token', component: ResetPasswordComponent },
+    { path: 'placement', component: PlacementComponent, canActivate: [AuthGuard] },
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard] },
