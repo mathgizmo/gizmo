@@ -321,6 +321,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         let y = event.pageY - pos.y;
         let height  = chartContainer.offsetHeight;
         this.value = this.maxValue - y*this.maxValue / height;
+        this.buildChart();
       } else if (this.type == 2) {
         let x = event.pageX - pos.x;
         let y = event.pageY - pos.y;
@@ -339,6 +340,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         } else if(xc<0 && yc>0) { // IV
           this.value += this.maxValue;
         }
+        this.buildChart();
       } else if (this.type == 4) {
         let x = event.pageX - pos.x;
         let circleDiameter = 2*this.dotRadius;
@@ -364,9 +366,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.value = this.startValue;
         else if (this.value > this.endValue) 
           this.value = this.endValue;
-       }
-      
-      this.buildChart();
+
+        this.buildChart();
+      }
     }
 
     // function to draw Dots Chart
