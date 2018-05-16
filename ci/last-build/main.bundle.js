@@ -648,14 +648,14 @@ var LessonComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"valueDisplay != 4\">\n  <p>Value</p>\n  \n  <span *ngIf=\"control == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput *ngIf=\"type != 4\"\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" min=\"0\"/>\n      <input matInput *ngIf=\"type == 4\" id='inputValue'\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" [min]=\"startValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"valueDisplay == 1\" >\n      <span class='max-value'>/{{maxValue}}</span>\n    </span>\n  </span>\n\n  <span *ngIf=\"control == 2\">\n    <span>\n      <mat-slider  *ngIf=\"type != 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"maxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <mat-slider *ngIf=\"type == 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n          <span>\n            {{value.toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 1\">\n            / {{maxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n          <span *ngIf=\"valueDisplay == 2\">\n            {{(value/maxValue).toFixed(precision+2)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 3\">\n            {{(value/maxValue*100).toFixed(precision)}}%\n          </span>\n        </label>\n      </div> \n    </span>\n  </span>\n\n  <span *ngIf=\"(control != 1 && control != 2)\">\n    <div class=\"value-label-container\">\n      <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n        <span>\n          {{value.toFixed(precision)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 1\">\n          / {{maxValue}}\n        </span>\n      </label>\n      <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n        <span *ngIf=\"valueDisplay == 2\">\n          {{(value/maxValue).toFixed(precision+2)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 3\">\n          {{(value/maxValue*100).toFixed(precision)}}%\n        </span>\n      </label>\n    </div>\n  </span>\n\n</div>"
+module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" *ngIf=\"valueDisplay != 4\">\n  <p class=\"value-label\">Value</p>\n  \n  <span *ngIf=\"control == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput *ngIf=\"type != 4\"\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" min=\"0\"/>\n      <input matInput *ngIf=\"type == 4\" id='inputValue'\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" [min]=\"startValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"valueDisplay == 1\" >\n      <span class='max-value'>/{{maxValue}}</span>\n    </span>\n  </span>\n\n  <span *ngIf=\"control == 2\">\n    <span>\n      <mat-slider  *ngIf=\"type != 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"maxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <mat-slider *ngIf=\"type == 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <div class=\"value-label-container\">\n        <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n          <span>\n            {{value.toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 1\">\n            / {{maxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n          <span *ngIf=\"valueDisplay == 2\">\n            {{(value/maxValue).toFixed(precision+2)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 3\">\n            {{(value/maxValue*100).toFixed(precision)}}%\n          </span>\n        </label>\n      </div> \n    </span>\n  </span>\n\n  <span *ngIf=\"(control != 1 && control != 2)\">\n    <div class=\"value-label-container\">\n      <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n        <span>\n          {{value.toFixed(precision)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 1\">\n          / {{maxValue}}\n        </span>\n      </label>\n      <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n        <span *ngIf=\"valueDisplay == 2\">\n          {{(value/maxValue).toFixed(precision+2)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 3\">\n          {{(value/maxValue*100).toFixed(precision)}}%\n        </span>\n      </label>\n    </div>\n  </span>\n\n</div>"
 
 /***/ }),
 
 /***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = "input {\n  text-align: center;\n  font-weight: bold; }\n\n#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label-container label,\nmat-form-field, #controls > * {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n\n.max-value {\n  font-weight: bold; }\n"
+module.exports = "input {\n  text-align: center;\n  font-weight: bold; }\n\n#chart-container {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  margin: 0;\n  padding: 0; }\n\n#controls {\n  margin-top: 8px;\n  padding: 0; }\n\n.slider-control {\n  min-width: 250px; }\n\n.center {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center; }\n\n.value-label-container, .value-label, .value-label-container label,\nmat-form-field, #controls > *, #controls span, input, mat-slider {\n  margin: 0;\n  padding: 0; }\n\n.progress {\n  width: 100%;\n  height: 4px;\n  z-index: 2;\n  position: absolute;\n  top: 25px;\n  left: 0; }\n\n.max-value {\n  font-weight: bold; }\n"
 
 /***/ }),
 
@@ -828,6 +828,10 @@ var ChartComponent = (function () {
                 chartHtml += '></rect>';
                 chartHtml += '</svg>';
                 chartContainer.innerHTML = chartHtml;
+                if (!this.setClickPositionEventId) {
+                    chartContainer.addEventListener('click', this.setClickPosition.bind(this));
+                    this.setClickPositionEventId = true;
+                }
                 break;
             case 2:
                 // Chart (type 2 - circle)
@@ -865,6 +869,10 @@ var ChartComponent = (function () {
                 }
                 chartHtml += '</svg>';
                 chartContainer.innerHTML = chartHtml;
+                if (!this.setClickPositionEventId) {
+                    chartContainer.addEventListener('click', this.setClickPosition.bind(this));
+                    this.setClickPositionEventId = true;
+                }
                 break;
             case 3:
                 // Chart (type 3 - dots)
@@ -962,32 +970,59 @@ var ChartComponent = (function () {
     ChartComponent.prototype.setClickPosition = function (event) {
         var chartContainer = document.getElementById('chart-container');
         var pos = getAbsolutePosition(chartContainer);
-        var x = event.pageX - pos.x;
-        var circleDiameter = 2 * this.dotRadius;
-        var indentation = circleDiameter + 5;
-        var width = chartContainer.offsetWidth - indentation * 2;
-        this.value = (x - indentation) * (this.endValue
-            - this.startValue) / width + this.startValue;
-        // find the closest point
-        var point = this.startValue;
-        var diff = Math.abs(this.value - point);
-        for (var i = this.startValue; i <= this.endValue; i += this.step) {
-            var newdiff = Math.abs(this.value - i);
-            if (newdiff < diff) {
-                diff = newdiff;
-                point = i;
-            }
+        if (this.type == 1) {
+            var y = event.pageY - pos.y;
+            var height = chartContainer.offsetHeight;
+            this.value = this.maxValue - y * this.maxValue / height;
+            this.buildChart();
         }
-        Math.abs(this.value - this.endValue) < diff ?
-            this.value = this.endValue : this.value = point;
-        if (this.value < this.startValue)
-            this.value = this.startValue;
-        else if (this.value > this.endValue)
-            this.value = this.endValue;
-        this.buildChart();
-        /*if(this.control > 0 && this.valueDisplay != 4) {
-          document.getElementById('inputValue').focus();
-        }*/
+        else if (this.type == 2) {
+            var x = event.pageX - pos.x;
+            var y = event.pageY - pos.y;
+            var height = chartContainer.offsetHeight;
+            var width = chartContainer.offsetWidth;
+            var x0 = width / 2;
+            var y0 = height / 2;
+            var xc = x - x0;
+            var yc = y0 - y;
+            var angle = Math.atan(xc / yc);
+            this.value = angle / (2 * Math.PI) * this.maxValue; // I
+            if (xc > 0 && yc < 0) {
+                this.value += 0.5 * this.maxValue;
+            }
+            else if (xc < 0 && yc < 0) {
+                this.value = (-1) / this.value + 0.75 * this.maxValue;
+            }
+            else if (xc < 0 && yc > 0) {
+                this.value += this.maxValue;
+            }
+            this.buildChart();
+        }
+        else if (this.type == 4) {
+            var x = event.pageX - pos.x;
+            var circleDiameter = 2 * this.dotRadius;
+            var indentation = circleDiameter + 5;
+            var width = chartContainer.offsetWidth - indentation * 2;
+            this.value = (x - indentation) * (this.endValue
+                - this.startValue) / width + this.startValue;
+            // find the closest point
+            var point = this.startValue;
+            var diff = Math.abs(this.value - point);
+            for (var i = this.startValue; i <= this.endValue; i += this.step) {
+                var newdiff = Math.abs(this.value - i);
+                if (newdiff < diff) {
+                    diff = newdiff;
+                    point = i;
+                }
+            }
+            Math.abs(this.value - this.endValue) < diff ?
+                this.value = this.endValue : this.value = point;
+            if (this.value < this.startValue)
+                this.value = this.startValue;
+            else if (this.value > this.endValue)
+                this.value = this.endValue;
+            this.buildChart();
+        }
     };
     // function to draw Dots Chart
     ChartComponent.prototype.drawDotsChart = function (dotsNum, maxDotsNum, ctx, canvas) {
@@ -1034,8 +1069,8 @@ var ChartComponent = (function () {
     // remove Set Click Position Event if it exists
     ChartComponent.prototype.removeSetClickPositionEvent = function () {
         if (this.setClickPositionEventId) {
-            document.getElementById('chart-container')
-                .removeEventListener('click', this.setClickPosition);
+            var chartContainer = document.getElementById('chart-container');
+            chartContainer.removeEventListener('click', this.setClickPosition.bind(this));
             this.setClickPositionEventId = false;
         }
     };
