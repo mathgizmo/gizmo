@@ -175,6 +175,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           chartHtml +=  '></rect>';
           chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;
+          if(!this.setClickPositionEventId) {
+            chartContainer.addEventListener('click', this.setClickPosition.bind(this));
+            this.setClickPositionEventId = true;
+          }
           break;
         case 2:
           // Chart (type 2 - circle)
@@ -210,6 +214,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
           chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;
+          if(!this.setClickPositionEventId) {
+            chartContainer.addEventListener('click', this.setClickPosition.bind(this));
+            this.setClickPositionEventId = true;
+          }
           break;
         case 3:
           // Chart (type 3 - dots)
@@ -308,36 +316,59 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     // function to set value by clicking on top slider
     private setClickPosition(event){
       let chartContainer = document.getElementById('chart-container');
-      var pos = getAbsolutePosition(chartContainer);
-      let x = event.pageX - pos.x;
-      let circleDiameter = 2*this.dotRadius;
-      let indentation = circleDiameter + 5;
-      let width  = chartContainer.offsetWidth - indentation*2;
-      this.value = (x - indentation)*(this.endValue
-        -this.startValue) / width + this.startValue;
-
-      // find the closest point
-      let point = this.startValue;
-      let diff = Math.abs(this.value - point);
-      for (let i = this.startValue; i <= this.endValue; i+= this.step) {
-        let newdiff = Math.abs(this.value - i);
-        if (newdiff < diff) {
-           diff = newdiff;
-           point = i;
+      let pos = getAbsolutePosition(chartContainer);
+      if (this.type == 1) {
+        let y = event.pageY - pos.y;
+        let height  = chartContainer.offsetHeight;
+        this.value = this.maxValue - y*this.maxValue / height;
+        this.buildChart();
+      } else if (this.type == 2) {
+        let x = event.pageX - pos.x;
+        let y = event.pageY - pos.y;
+        let height  = chartContainer.offsetHeight;
+        let width  = chartContainer.offsetWidth;
+        let x0 = width/2;
+        let y0 = height/2;
+        let xc = x - x0;
+        let yc = y0 - y;
+        let angle = Math.atan(xc/yc);
+        this.value = angle/(2*Math.PI)*this.maxValue; // I
+        if(xc>0 && yc<0) { // II
+          this.value += 0.5*this.maxValue;
+        } else if(xc<0 && yc<0) { // III
+          this.value = (-1)/this.value + 0.75*this.maxValue;
+        } else if(xc<0 && yc>0) { // IV
+          this.value += this.maxValue;
         }
+        this.buildChart();
+      } else if (this.type == 4) {
+        let x = event.pageX - pos.x;
+        let circleDiameter = 2*this.dotRadius;
+        let indentation = circleDiameter + 5;
+        let width  = chartContainer.offsetWidth - indentation*2;
+        this.value = (x - indentation)*(this.endValue
+          -this.startValue) / width + this.startValue;
+
+        // find the closest point
+        let point = this.startValue;
+        let diff = Math.abs(this.value - point);
+        for (let i = this.startValue; i <= this.endValue; i+= this.step) {
+          let newdiff = Math.abs(this.value - i);
+          if (newdiff < diff) {
+            diff = newdiff;
+            point = i;
+          }
+        }
+        Math.abs(this.value - this.endValue) < diff ?
+          this.value = this.endValue : this.value = point;
+
+        if(this.value < this.startValue) 
+          this.value = this.startValue;
+        else if (this.value > this.endValue) 
+          this.value = this.endValue;
+
+        this.buildChart();
       }
-      Math.abs(this.value - this.endValue) < diff ?
-        this.value = this.endValue : this.value = point;
-
-      if(this.value < this.startValue) 
-        this.value = this.startValue;
-      else if (this.value > this.endValue) 
-        this.value = this.endValue;
-
-      this.buildChart();
-      /*if(this.control > 0 && this.valueDisplay != 4) {
-        document.getElementById('inputValue').focus();
-      }*/
     }
 
     // function to draw Dots Chart
@@ -393,8 +424,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     // remove Set Click Position Event if it exists
     private removeSetClickPositionEvent() {
       if(this.setClickPositionEventId) {
-        document.getElementById('chart-container')
-          .removeEventListener('click', this.setClickPosition);
+        let chartContainer = document.getElementById('chart-container');
+        chartContainer.removeEventListener('click', this.setClickPosition.bind(this));
         this.setClickPositionEventId = false;
       }
     }
