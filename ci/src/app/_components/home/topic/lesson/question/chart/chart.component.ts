@@ -333,10 +333,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         let yc = y0 - y;
         let angle = Math.atan(xc/yc);
         this.value = angle/(2*Math.PI)*this.maxValue; // I
-        if(xc>0 && yc<0) { // II
+        if( (xc>0 && yc<0) || (xc<0 && yc<0) ) { // II-III
           this.value += 0.5*this.maxValue;
-        } else if(xc<0 && yc<0) { // III
-          this.value = (-1)/this.value + 0.75*this.maxValue;
         } else if(xc<0 && yc>0) { // IV
           this.value += this.maxValue;
         }
