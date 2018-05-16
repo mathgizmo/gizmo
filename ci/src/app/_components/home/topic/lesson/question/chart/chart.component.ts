@@ -321,6 +321,21 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         let y = event.pageY - pos.y;
         let height  = chartContainer.offsetHeight;
         this.value = this.maxValue - y*this.maxValue / height;
+
+        // find the closest point
+        let point = 0;
+        let diff = Math.abs(this.value - point);
+        for (let i = 0; i <= this.maxValue; i+= this.step) {
+          let newdiff = Math.abs(this.value - i);
+          if (newdiff < diff) {
+            diff = newdiff;
+            point = i;
+          }
+        }
+        Math.abs(this.value - this.maxValue) < diff ?
+          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
+            this.precision))/Math.pow(10, this.precision);;
+
         this.buildChart();
       } else if (this.type == 2) {
         let x = event.pageX - pos.x;
@@ -333,11 +348,26 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         let yc = y0 - y;
         let angle = Math.atan(xc/yc);
         this.value = angle/(2*Math.PI)*this.maxValue; // I
-        if( (xc>0 && yc<0) || (xc<0 && yc<0) ) { // II-III
+        if( (xc>0 && yc<0) || (xc<=0 && yc<0) ) { // II-III
           this.value += 0.5*this.maxValue;
-        } else if(xc<0 && yc>0) { // IV
+        } else if(xc<0 && yc>=0) { // IV
           this.value += this.maxValue;
         }
+
+        // find the closest point
+        let point = 0;
+        let diff = Math.abs(this.value - point);
+        for (let i = 0; i <= this.maxValue; i+= this.step) {
+          let newdiff = Math.abs(this.value - i);
+          if (newdiff < diff) {
+            diff = newdiff;
+            point = i;
+          }
+        }
+        Math.abs(this.value - this.maxValue) < diff ?
+          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
+            this.precision))/Math.pow(10, this.precision);;
+
         this.buildChart();
       } else if (this.type == 4) {
         let x = event.pageX - pos.x;
