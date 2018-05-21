@@ -123,16 +123,18 @@ export class LessonComponent implements OnInit {
         }
       }
 
-      // convert percents to float
-      for(let i = 0; i < this.answers.length; i++) {
-        try { 
-          if(this.answers[i].includes('%')) {
-            let answer = this.answers[i].replace('%', '');
-            if (!isNaN(+answer)) {
-              this.answers[i] = parseFloat(answer)/100+'';
+      // convert percents to float for FB 
+      if(this.question.reply_mode == 'FB') {
+        for(let i = 0; i < this.answers.length; i++) {
+          try { 
+            if(this.answers[i].includes('%')) {
+              let answer = this.answers[i].replace('%', '');
+              if (!isNaN(+answer)) {
+                this.answers[i] = parseFloat(answer)/100+'';
+              }
             }
-          }
-        } catch(err) {}    
+          } catch(err) {}    
+        }
       }
       
       if (this.isCorrect()) {
