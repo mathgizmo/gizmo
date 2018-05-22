@@ -36,7 +36,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private oldQuestion: string;
 
     private percentValue: number;
-    private setClickPositionEventId: boolean = false;
     private precision: number = 2; // number of decimals (0 - integer)
 
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
@@ -49,11 +48,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     }
 
     ngOnInit() {
+      document.getElementById('chart-container')
+        .addEventListener('click', this.setClickPosition.bind(this));
     }
 
     ngOnDestroy() {
       this.destroyDotsChart();
-      this.removeSetClickPositionEvent();
+      document.getElementById('chart-container')
+        .removeEventListener('click', this.setClickPosition.bind(this));
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -62,7 +64,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             this.initialized = false;
         }
         this.destroyDotsChart();
-        this.removeSetClickPositionEvent();
         this.buildChart();
         this.percentValue = Math.round(this.value/this.maxValue*100);
     }
@@ -173,12 +174,27 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' + 
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
+
+          if(this.valueDisplay != 4) {
+            let valueLabel = '<text text-anchor="middle" x=' 
+              + this.chartHeight/2 + ' y=' 
+              + (this.chartHeight/2+(this.chartHeight/10)) + ' fill="' 
+              + this.strokeColor +'" class="chart-value-label">';
+            if(this.valueDisplay == 0) {
+              valueLabel += this.value.toFixed(this.precision);
+            } else if (this.valueDisplay == 1) {
+              valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
+            } else if (this.valueDisplay == 2) {
+              valueLabel += (this.value/this.maxValue).toFixed(this.precision+2);
+            } else if (this.valueDisplay == 3) {
+              valueLabel += (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+            }
+            valueLabel +=  '</text>';
+            chartHtml += valueLabel;
+          }
+
           chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;
-          if(!this.setClickPositionEventId) {
-            chartContainer.addEventListener('click', this.setClickPosition.bind(this));
-            this.setClickPositionEventId = true;
-          }
           break;
         case 2:
           // Chart (type 2 - circle)
@@ -212,12 +228,26 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' + 
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
+
+          if(this.valueDisplay != 4) {
+            let valueLabel = '<text text-anchor="middle" x=' 
+              + radius + ' y=' + (radius+(radius/5)) + ' fill="' 
+              + this.strokeColor +'" class="chart-value-label">';
+            if(this.valueDisplay == 0) {
+              valueLabel += this.value.toFixed(this.precision);
+            } else if (this.valueDisplay == 1) {
+              valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
+            } else if (this.valueDisplay == 2) {
+              valueLabel += (this.value/this.maxValue).toFixed(this.precision+2);
+            } else if (this.valueDisplay == 3) {
+              valueLabel += (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+            }
+            valueLabel +=  '</text>';
+            chartHtml += valueLabel;
+          }
+
           chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;
-          if(!this.setClickPositionEventId) {
-            chartContainer.addEventListener('click', this.setClickPosition.bind(this));
-            this.setClickPositionEventId = true;
-          }
           break;
         case 3:
           // Chart (type 3 - dots)
@@ -225,6 +255,22 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           requestAnimationFrame(() => {
             chartContainer.innerHTML = chartHtml;
             chartContainer.appendChild(canvas);
+
+            if(this.valueDisplay != 4) {
+              let valueLabel = document.createElement("label");
+              valueLabel.classList.add('chart-value-label');
+              if(this.valueDisplay == 0) {
+                valueLabel.innerHTML = ''+ this.value.toFixed(this.precision);
+              } else if (this.valueDisplay == 1) {
+                valueLabel.innerHTML = ''+ this.value.toFixed(this.precision) + '/' + this.maxValue;
+              } else if (this.valueDisplay == 2) {
+                valueLabel.innerHTML = ''+ (this.value/this.maxValue).toFixed(this.precision+2);
+              } else if (this.valueDisplay == 3) {
+                valueLabel.innerHTML = ''+ (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+              }
+              chartContainer.appendChild(valueLabel);
+            }
+   
           });
           canvas.style.height = this.chartHeight+'px';
           canvas.style.width = chartContainer.style.width;
@@ -251,63 +297,76 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.endValue = this.maxValue = 
             Math.max.apply(null, this.marksList);
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
-          chartHtml += '<line x1="' + indentation + '" y1="10" x2="' 
-            + (width-indentation) + '" y2="10" style="stroke:' 
+          chartHtml += '<line x1="' + indentation + '" y1="25" x2="' 
+            + (width-indentation) + '" y2="25" style="stroke:' 
             + this.mainColor + '; stroke-width:'
             + this.strokeWidth + '" />';
           width -= indentation*2;
-
           for(let i = 0; i < (this.endValue-this.startValue); i+= this.step) {
             let position = (i*width/(this.endValue-this.startValue))+indentation;
             let point = Number((i+this.startValue).toFixed(this.precision));
             if(this.marksList.includes(point)) {
-              chartHtml += '<circle cx="' + position + '" cy="10" r="' 
+              chartHtml += '<circle cx="' + position + '" cy="25" r="' 
                 + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
               let textPosition = ((point-this.startValue)/(this.endValue
                 -this.startValue)*width + indentation);
               if(i == 0) {
                 chartHtml += '<text x="' + (this.markDiameter/2)
-                + '" y="35" fill="' + this.strokeColor 
+                + '" y="50" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="start">' 
                 + point + '</text>';
               } else {
                 chartHtml += '<text x="' + textPosition
-                + '" y="35" fill="' + this.strokeColor 
+                + '" y="50" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="middle">' 
                 + point + '</text>';
               }
             } else {
-              chartHtml += '<circle cx="' + position + '" cy="10" r="' 
+              chartHtml += '<circle cx="' + position + '" cy="25" r="' 
                 + (this.pointDiameter/2) + '" fill="' + this.strokeColor + '" />';
             } 
           }
-          chartHtml += '<circle cx="' + (width+indentation) + '" cy="10" r="' 
+          chartHtml += '<circle cx="' + (width+indentation) + '" cy="25" r="' 
             + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
           chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
-            + '" y="35" fill="' + this.strokeColor 
+            + '" y="50" fill="' + this.strokeColor 
             +'" font-size="16" text-anchor="end">' 
             + this.marksList[this.marksList.length-1] + '</text>';
-          /* Old version (can be deleted)
-          for(let i = 0; i < this.marksList.length; i++) {
-            let position = ((this.marksList[i]-this.startValue)/(this.endValue
-              -this.startValue)*width + indentation);
-            chartHtml += '<text x="' + position
-              + '" y="35" fill="' + this.strokeColor 
-              +'" font-size="16" text-anchor="middle">' 
-              + this.marksList[i] + '</text>';
-          }*/
           let currentPointX = (this.value-this.startValue)/(this.endValue
             -this.startValue)*width + indentation;
-          chartHtml += '<circle cx="' + currentPointX + '" cy="10" r="' 
+          chartHtml += '<circle cx="' + currentPointX + '" cy="25" r="' 
             + this.markDiameter + '" fill="' + this.selectedColor + '" />';
-          chartHtml += '</svg>';
-          chartContainer.innerHTML = chartHtml;
 
-          if(!this.setClickPositionEventId) {
-            chartContainer.addEventListener('click', this.setClickPosition.bind(this));
-            this.setClickPositionEventId = true;
+          if(this.valueDisplay != 4) {
+            let currentPointLabel = '<text ';  
+            let currentValueFixed = Number((this.value).toFixed(this.precision));
+            let startValueFixed = Number((this.startValue).toFixed(this.precision));
+            let endValueFixed = Number((this.endValue).toFixed(this.precision));
+            if(currentValueFixed == startValueFixed) {
+              currentPointLabel += 'x=' + (this.markDiameter/2) + ' text-anchor="start"';
+            } else if (currentValueFixed == endValueFixed) {
+              currentPointLabel += 'x=' + (width+indentation*2-(this.markDiameter/2))
+               + ' text-anchor="end"';
+            } else {
+              currentPointLabel += 'x=' + currentPointX + ' text-anchor="middle"';
+            }
+            currentPointLabel += '" y="15" fill="' + this.strokeColor 
+              +'"  class="chart-value-label">';
+            if(this.valueDisplay == 0) {
+              currentPointLabel += this.value.toFixed(this.precision);
+            } else if (this.valueDisplay == 1) {
+              currentPointLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
+            } else if (this.valueDisplay == 2) {
+              currentPointLabel += (this.value/this.maxValue).toFixed(this.precision+2);
+            } else if (this.valueDisplay == 3) {
+              currentPointLabel += (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+            }
+            currentPointLabel +=  '</text>';
+            chartHtml += currentPointLabel;
           }
 
+          chartHtml += '</svg>';
+          chartContainer.innerHTML = chartHtml;  
           break;
       }
       this.ref.detectChanges();
@@ -449,14 +508,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         clearInterval(this.dotsChartRebuildFunctionId); 
     }
 
-    // remove Set Click Position Event if it exists
-    private removeSetClickPositionEvent() {
-      if(this.setClickPositionEventId) {
-        let chartContainer = document.getElementById('chart-container');
-        chartContainer.removeEventListener('click', this.setClickPosition.bind(this));
-        this.setClickPositionEventId = false;
-      }
-    }
 }
 
 // function to get absolute position of HTML element

@@ -1,6 +1,7 @@
 <h2 id="chart-container"></h2>
-<div id="controls" *ngIf="valueDisplay != 4">
-  <p class="value-label">Value</p>
+<div id="controls" >
+<!-- <div id="controls" *ngIf="valueDisplay != 4">
+    <p class="value-label">Value</p>-->
   
   <span *ngIf="control == 1">
     <mat-form-field (change)="ngOnChanges()">
@@ -13,9 +14,9 @@
       <mat-progress-bar class='progress' value={{percentValue}}>
       </mat-progress-bar>
     </mat-form-field> 
-    <span *ngIf="valueDisplay == 1" >
+    <!-- <span *ngIf="valueDisplay == 1" >
       <span class='max-value'>/{{maxValue}}</span>
-    </span>
+    </span> -->
   </span>
 
   <span *ngIf="control == 2">
@@ -30,7 +31,7 @@
         [step]="step" [max]="endValue" [min]="startValue" 
         color="primary" class='slider-control' id='inputValue'>
       </mat-slider>
-      <div class="value-label-container">
+      <!-- <div class="value-label-container">
         <label *ngIf="!(valueDisplay == 2 || valueDisplay == 3)">
           <span>
             {{value.toFixed(precision)}}
@@ -47,12 +48,12 @@
             {{(value/maxValue*100).toFixed(precision)}}%
           </span>
         </label>
-      </div> 
+      </div> -->
     </span>
   </span>
 
-  <span *ngIf="(control != 1 && control != 2)">
-    <div class="value-label-container">
+  <!-- <span *ngIf="(control != 1 && control != 2)">
+    <div id="value-label-container">
       <label *ngIf="!(valueDisplay == 2 || valueDisplay == 3)">
         <span>
           {{value.toFixed(precision)}}
@@ -70,6 +71,6 @@
         </span>
       </label>
     </div>
-  </span>
+  </span> -->
 
 </div>
