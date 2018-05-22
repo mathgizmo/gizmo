@@ -405,7 +405,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
-            this.precision))/Math.pow(10, this.precision);;
+            this.precision))/Math.pow(10, this.precision);
 
         this.buildChart();
       } else if (this.type == 2) {
@@ -437,7 +437,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
-            this.precision))/Math.pow(10, this.precision);;
+            this.precision))/Math.pow(10, this.precision);
 
         this.buildChart();
       } else if (this.type == 4) {
@@ -459,7 +459,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
         }
         Math.abs(this.value - this.endValue) < diff ?
-          this.value = this.endValue : this.value = point;
+          this.value = this.endValue : this.value = Math.round(point*Math.pow(10, 
+            this.precision))/Math.pow(10, this.precision);
 
         if(this.value < this.startValue) 
           this.value = this.startValue;
