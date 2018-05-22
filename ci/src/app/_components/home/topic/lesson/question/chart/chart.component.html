@@ -42,10 +42,10 @@
         </label>
         <label *ngIf="(valueDisplay == 2 || valueDisplay == 3)">
           <span *ngIf="valueDisplay == 2">
-            {{(value/maxValue).toFixed(precision+2)}}
+            {{(value/maxValue).toFixed(precision)}}
           </span>
           <span *ngIf="valueDisplay == 3">
-            {{(value/maxValue*100).toFixed(precision)}}%
+            {{(value/maxValue*100).toFixed(precision-2)}}%
           </span>
         </label>
       </div> -->
@@ -64,10 +64,10 @@
       </label>
       <label *ngIf="(valueDisplay == 2 || valueDisplay == 3)">
         <span *ngIf="valueDisplay == 2">
-          {{(value/maxValue).toFixed(precision+2)}}
+          {{(value/maxValue).toFixed(precision)}}
         </span>
         <span *ngIf="valueDisplay == 3">
-          {{(value/maxValue*100).toFixed(precision)}}%
+          {{(value/maxValue*100).toFixed(precision-2)}}%
         </span>
       </label>
     </div>
