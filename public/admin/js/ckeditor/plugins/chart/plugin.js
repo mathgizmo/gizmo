@@ -133,16 +133,19 @@ CKEDITOR.plugins.add( 'chart', {
                                     data.value = this.getValue();
                                 },
                                 onChange : function( api ) {
-                                    let dialog = CKEDITOR.dialog.getCurrent();
-                                    let max = dialog.getContentElement('general', 'max');
-                                    let maxValue = parseFloat(max.getValue());
-                                    let thisValue = parseFloat(this.getValue());
-                                    if(max.isEnabled()) {
-                                        if (thisValue > maxValue) {
-                                            alert("Value ("+thisValue
-                                                +") must be less than Max Value ("+maxValue+")");
-                                        } 
-                                    }
+                                    setTimeout(function() {
+                                        let dialog = CKEDITOR.dialog.getCurrent();
+                                        let max = dialog.getContentElement('general', 'max');
+                                        let maxValue = parseFloat(max.getValue());
+                                        let thisValue = parseFloat(this.getValue());
+                                        if(max.isEnabled()) {
+                                            if (thisValue > maxValue) {
+                                                alert("Value ("+thisValue
+                                                    +") must be less than Max Value ("+maxValue+")");
+                                            } 
+                                        }
+                                    }, 50);
+
                                 }  
                             },
                             {
