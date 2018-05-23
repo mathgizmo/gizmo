@@ -24,7 +24,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
     private type: number = 1;
     private control: number = 0;
-    private valueDisplay: number = 0;
+    private valueDisplayChart: number = 1;
+    private valueDisplay: number = 1;
     private value: number = 0.50;
     private maxValue: number = 0;
     private startValue = 0;
@@ -37,6 +38,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
     private percentValue: number;
     private precision: number = 2; // number of decimals (0 - integer)
+    private fixValue: number = 0;
 
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
@@ -78,14 +80,16 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
             .replace('type:', ''));
         }
+        if (chart['0'].indexOf('value-display-chart:') >= 0) {
+          this.valueDisplayChart = +chart['0']
+            .match(new RegExp(/value-display-chart:([^;]*)(?=(;|$))/g))['0']
+            .replace('value-display-chart:', '');
+        }
         if (chart['0'].indexOf('value-display:') >= 0) {
           this.valueDisplay = +chart['0']
             .match(new RegExp(/value-display:([^;]*)(?=(;|$))/g))['0']
             .replace('value-display:', '');
-        } else {
-          this.valueDisplay = 0;
         }
-        if(this.valueDisplay > 4) this.valueDisplay = 0;
         if (chart['0'].indexOf('value:') >= 0) {
           this.value = parseFloat(chart['0']
             .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
@@ -147,6 +151,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.control = +chart['0']
             .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', '');
+        this.fixValue = Math.round(this.maxValue/this.step).toString().length;
         this.initialized = true;
       }
       let chartHtml = '';
@@ -175,21 +180,20 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
 
-          if(this.valueDisplay != 4) {
+          if(this.valueDisplayChart > 0) {
             let valueLabel = '<text text-anchor="middle" x=' 
               + this.chartHeight/2 + ' y=' 
               + (this.chartHeight/2+(this.chartHeight/10)) + ' fill="' 
               + this.strokeColor +'" class="chart-value-label">';
-            let fixValue = Math.round(this.maxValue/this.step).toString().length;
-            if(this.valueDisplay == 0) {
+            if(this.valueDisplayChart == 1) {
               valueLabel += this.value.toFixed(this.precision);
-            } else if (this.valueDisplay == 1) {
+            } else if (this.valueDisplayChart == 2) {
               valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
-            } else if (this.valueDisplay == 2) {
-              valueLabel += (this.value/this.maxValue).toFixed(fixValue);
-            } else if (this.valueDisplay == 3) {
-              (fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%' 
-                : valueLabel += (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
+            } else if (this.valueDisplayChart == 3) {
+              valueLabel += (this.value/this.maxValue).toFixed(this.fixValue);
+            } else if (this.valueDisplayChart == 4) {
+              (this.fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%' 
+                : valueLabel += (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
             }
             valueLabel +=  '</text>';
             chartHtml += valueLabel;
@@ -231,21 +235,20 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
 
-          if(this.valueDisplay != 4) {
+          if(this.valueDisplayChart > 0) {
             let valueLabel = '<text text-anchor="middle" x=' 
               + radius + ' y=' + (radius+(radius/5)) + ' fill="' 
               + this.strokeColor +'" class="chart-value-label">';
-            let fixValue = Math.round(this.maxValue/this.step).toString().length;
-            if(this.valueDisplay == 0) {
+            if(this.valueDisplayChart == 1) {
               valueLabel += this.value.toFixed(this.precision);
-            } else if (this.valueDisplay == 1) {
+            } else if (this.valueDisplayChart == 2) {
               valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
-            } else if (this.valueDisplay == 2) {
+            } else if (this.valueDisplayChart == 3) {
               valueLabel += (this.value/this.maxValue)
-                .toFixed(fixValue);
-            } else if (this.valueDisplay == 3) {
-              (fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
-                : valueLabel += (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
+                .toFixed(this.fixValue);
+            } else if (this.valueDisplayChart == 4) {
+              (this.fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
+                : valueLabel += (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
             }
             valueLabel +=  '</text>';
             chartHtml += valueLabel;
@@ -261,22 +264,20 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             chartContainer.innerHTML = chartHtml;
             chartContainer.appendChild(canvas);
 
-            if(this.valueDisplay != 4) {
+            if(this.valueDisplayChart > 0) {
               let valueLabel = document.createElement("label");
               valueLabel.classList.add('chart-value-label');
-              let fixValue = Math.round(this.maxValue/this.step).toString().length;
-              if(this.valueDisplay == 0) {
+              if(this.valueDisplayChart == 1) {
                 valueLabel.innerHTML = ''+ this.value.toFixed(this.precision);
-              } else if (this.valueDisplay == 1) {
+              } else if (this.valueDisplayChart == 2) {
                 valueLabel.innerHTML = ''+ this.value.toFixed(this.precision) + '/' + this.maxValue;
-              } else if (this.valueDisplay == 2) {
-                valueLabel.innerHTML = ''+ (this.value/this.maxValue)
-                  .toFixed(fixValue);
-              } else if (this.valueDisplay == 3) {
-                (fixValue < 2) ? valueLabel.innerHTML = 
+              } else if (this.valueDisplayChart == 3) {
+                valueLabel.innerHTML = ''+ (this.value/this.maxValue).toFixed(this.fixValue);
+              } else if (this.valueDisplayChart == 4) {
+                (this.fixValue < 2) ? valueLabel.innerHTML = 
                     ''+ (this.value/this.maxValue*100).toFixed(0) + '%'
                   : valueLabel.innerHTML = 
-                    ''+ (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
+                    ''+ (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
               }
               chartContainer.appendChild(valueLabel);
             }
@@ -347,7 +348,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           chartHtml += '<circle cx="' + currentPointX + '" cy="25" r="' 
             + this.markDiameter + '" fill="' + this.selectedColor + '" />';
 
-          if(this.valueDisplay != 4) {
+          if(this.valueDisplayChart > 0) {
             let currentPointLabel = '<text ';  
             let currentValueFixed = Number((this.value).toFixed(this.precision));
             let startValueFixed = Number((this.startValue).toFixed(this.precision));
@@ -362,16 +363,15 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             }
             currentPointLabel += '" y="15" fill="' + this.strokeColor 
               +'"  class="chart-value-label">';
-            let fixValue = Math.round(this.maxValue/this.step).toString().length;
-            if(this.valueDisplay == 0) {
+            if(this.valueDisplayChart == 1) {
               currentPointLabel += this.value.toFixed(this.precision);
-            } else if (this.valueDisplay == 1) {
+            } else if (this.valueDisplayChart == 2) {
               currentPointLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
-            } else if (this.valueDisplay == 2) {
-              currentPointLabel += (this.value/this.maxValue).toFixed(fixValue);
-            } else if (this.valueDisplay == 3) {
-              (fixValue < 2) ? currentPointLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
-              : currentPointLabel += (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
+            } else if (this.valueDisplayChart == 3) {
+              currentPointLabel += (this.value/this.maxValue).toFixed(this.fixValue);
+            } else if (this.valueDisplayChart == 4) {
+              (this.fixValue < 2) ? currentPointLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
+              : currentPointLabel += (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
             }
             currentPointLabel +=  '</text>';
             chartHtml += currentPointLabel;

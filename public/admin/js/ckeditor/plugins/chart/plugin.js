@@ -96,20 +96,38 @@ CKEDITOR.plugins.add( 'chart', {
                             },
                             {
                                 type : 'select',
-                                id : 'value-display',
-                                label : 'Value displayed as:',
+                                id : 'value-display-chart',
+                                label : 'Value on chart displayed as:',
                                 items : [ 
-                                    [ 'Plain Value', '0' ],
-                                    [ 'Fraction', '1' ],
-                                    [ 'Decimal', '2' ],
-                                    [ 'Percentage', '3' ],
-                                    [ 'Do not show', '4' ]
+                                    [ 'Do not show', '0' ],
+                                    [ 'Plain Value', '1' ],
+                                    [ 'Fraction', '2' ],
+                                    [ 'Decimal', '3' ],
+                                    [ 'Percentage', '4' ]  
                                 ],
-                                'default' : '0',
+                                'default' : '1',
                                 required : true,
                                 commit : function( data )
                                 {
-                                    data.valueDisplay = this.getValue();
+                                    data.valueDisplayChart = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'select',
+                                id : 'value-display',
+                                label : 'Value on control displayed as:',
+                                items : [ 
+                                    [ 'Do not show', '0' ],
+                                    [ 'Plain Value', '1' ],
+                                    [ 'Fraction', '2' ],
+                                    [ 'Decimal', '3' ],
+                                    [ 'Percentage', '4' ]  
+                                ],
+                                'default' : '1',
+                                required : true,
+                                commit : function( data )
+                                {
+                                    data.valueDisplayControl = this.getValue();
                                 }
                             }
                         ]
@@ -293,7 +311,8 @@ CKEDITOR.plugins.add( 'chart', {
                     }
 
                     // set value display
-                    chartHtml += 'value-display:'+data.valueDisplay+'; ';
+                    chartHtml += 'value-display-chart:'+data.valueDisplayChart+'; ';
+                    chartHtml += 'value-display:'+data.valueDisplayControl+'; ';
 
                     // set control
                     chartHtml += 'control: ' + data.control + '}%%';
@@ -394,6 +413,13 @@ CKEDITOR.plugins.add( 'chart', {
                                 parseFloat(chartStr.match(
                                     new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
                                 .replace('control:', ''))
+                            );
+                        }
+                        if (chartStr.indexOf('value-display-chart:') >= 0) {
+                            this.getContentElement('types', 'value-display-chart').setValue(
+                                parseFloat(chartStr.match(
+                                    new RegExp(/value-display-chart:([^;]*)(?=(;|$))/g))['0']
+                                .replace('value-display-chart:', ''))
                             );
                         }
                         if (chartStr.indexOf('value-display:') >= 0) {
