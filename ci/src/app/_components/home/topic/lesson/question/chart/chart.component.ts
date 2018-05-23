@@ -181,10 +181,15 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           chartHtml +=  '></rect>';
 
           if(this.valueDisplayChart > 0) {
-            let valueLabel = '<text text-anchor="middle" x=' 
-              + this.chartHeight/2 + ' y=' 
-              + (this.chartHeight/2+(this.chartHeight/10)) + ' fill="' 
-              + this.strokeColor +'" class="chart-value-label">';
+            let x, y;
+            x = this.chartHeight/2;
+            if(this.value < this.maxValue/10) {
+              y = this.chartHeight - (this.value/this.maxValue*this.chartHeight)-5;
+            } else {
+              y = this.chartHeight - 0.5*(this.value/this.maxValue*this.chartHeight)+5;
+            }
+            let valueLabel = '<text text-anchor="middle" x=' + x + ' y=' + y
+              + ' fill="' + this.strokeColor +'" class="chart-value-label">';
             if(this.valueDisplayChart == 1) {
               valueLabel += this.value.toFixed(this.precision);
             } else if (this.valueDisplayChart == 2) {
@@ -236,9 +241,28 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
 
           if(this.valueDisplayChart > 0) {
-            let valueLabel = '<text text-anchor="middle" x=' 
-              + radius + ' y=' + (radius+(radius/5)) + ' fill="' 
-              + this.strokeColor +'" class="chart-value-label">';
+            let x, y;
+            let anchor; // start | middle | end
+            if(this.value/this.maxValue < 0.25) { // I
+              x = this.chartHeight;
+              y = 20;
+              anchor = 'end'; 
+            } else if (this.value/this.maxValue < 0.5) { // II
+              x = this.chartHeight;
+              y = this.chartHeight - 15;
+              anchor = 'end';
+            } else if (this.value/this.maxValue < 0.75) { // III
+              x = 0;
+              y = this.chartHeight - 15;
+              anchor = 'start';
+            } else { // IV
+              x = 0;
+              y = 20;
+              anchor = 'start';
+            }
+            let valueLabel = '<text text-anchor="' + anchor 
+              + '" x=' + x + ' y=' + y + ' fill="' 
+              + this.strokeColor + '" class="chart-value-label">';
             if(this.valueDisplayChart == 1) {
               valueLabel += this.value.toFixed(this.precision);
             } else if (this.valueDisplayChart == 2) {
