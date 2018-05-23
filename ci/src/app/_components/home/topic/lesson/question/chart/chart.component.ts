@@ -180,14 +180,16 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               + this.chartHeight/2 + ' y=' 
               + (this.chartHeight/2+(this.chartHeight/10)) + ' fill="' 
               + this.strokeColor +'" class="chart-value-label">';
+            let fixValue = Math.round(this.maxValue/this.step).toString().length;
             if(this.valueDisplay == 0) {
               valueLabel += this.value.toFixed(this.precision);
             } else if (this.valueDisplay == 1) {
               valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
             } else if (this.valueDisplay == 2) {
-              valueLabel += (this.value/this.maxValue).toFixed(this.precision+2);
+              valueLabel += (this.value/this.maxValue).toFixed(fixValue);
             } else if (this.valueDisplay == 3) {
-              valueLabel += (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+              (fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%' 
+                : valueLabel += (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
             }
             valueLabel +=  '</text>';
             chartHtml += valueLabel;
@@ -233,14 +235,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             let valueLabel = '<text text-anchor="middle" x=' 
               + radius + ' y=' + (radius+(radius/5)) + ' fill="' 
               + this.strokeColor +'" class="chart-value-label">';
+            let fixValue = Math.round(this.maxValue/this.step).toString().length;
             if(this.valueDisplay == 0) {
               valueLabel += this.value.toFixed(this.precision);
             } else if (this.valueDisplay == 1) {
               valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
             } else if (this.valueDisplay == 2) {
-              valueLabel += (this.value/this.maxValue).toFixed(this.precision+2);
+              valueLabel += (this.value/this.maxValue)
+                .toFixed(fixValue);
             } else if (this.valueDisplay == 3) {
-              valueLabel += (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+              (fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
+                : valueLabel += (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
             }
             valueLabel +=  '</text>';
             chartHtml += valueLabel;
@@ -259,14 +264,19 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             if(this.valueDisplay != 4) {
               let valueLabel = document.createElement("label");
               valueLabel.classList.add('chart-value-label');
+              let fixValue = Math.round(this.maxValue/this.step).toString().length;
               if(this.valueDisplay == 0) {
                 valueLabel.innerHTML = ''+ this.value.toFixed(this.precision);
               } else if (this.valueDisplay == 1) {
                 valueLabel.innerHTML = ''+ this.value.toFixed(this.precision) + '/' + this.maxValue;
               } else if (this.valueDisplay == 2) {
-                valueLabel.innerHTML = ''+ (this.value/this.maxValue).toFixed(this.precision+2);
+                valueLabel.innerHTML = ''+ (this.value/this.maxValue)
+                  .toFixed(fixValue);
               } else if (this.valueDisplay == 3) {
-                valueLabel.innerHTML = ''+ (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+                (fixValue < 2) ? valueLabel.innerHTML = 
+                    ''+ (this.value/this.maxValue*100).toFixed(0) + '%'
+                  : valueLabel.innerHTML = 
+                    ''+ (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
               }
               chartContainer.appendChild(valueLabel);
             }
@@ -352,14 +362,16 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             }
             currentPointLabel += '" y="15" fill="' + this.strokeColor 
               +'"  class="chart-value-label">';
+            let fixValue = Math.round(this.maxValue/this.step).toString().length;
             if(this.valueDisplay == 0) {
               currentPointLabel += this.value.toFixed(this.precision);
             } else if (this.valueDisplay == 1) {
               currentPointLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
             } else if (this.valueDisplay == 2) {
-              currentPointLabel += (this.value/this.maxValue).toFixed(this.precision+2);
+              currentPointLabel += (this.value/this.maxValue).toFixed(fixValue);
             } else if (this.valueDisplay == 3) {
-              currentPointLabel += (this.value/this.maxValue*100).toFixed(this.precision) + '%';
+              (fixValue < 2) ? currentPointLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
+              : currentPointLabel += (this.value/this.maxValue*100).toFixed(fixValue-2) + '%';
             }
             currentPointLabel +=  '</text>';
             chartHtml += currentPointLabel;
@@ -393,7 +405,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
-            this.precision))/Math.pow(10, this.precision);;
+            this.precision))/Math.pow(10, this.precision);
 
         this.buildChart();
       } else if (this.type == 2) {
@@ -425,7 +437,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
-            this.precision))/Math.pow(10, this.precision);;
+            this.precision))/Math.pow(10, this.precision);
 
         this.buildChart();
       } else if (this.type == 4) {
@@ -447,7 +459,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
         }
         Math.abs(this.value - this.endValue) < diff ?
-          this.value = this.endValue : this.value = point;
+          this.value = this.endValue : this.value = Math.round(point*Math.pow(10, 
+            this.precision))/Math.pow(10, this.precision);
 
         if(this.value < this.startValue) 
           this.value = this.startValue;
