@@ -1,8 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
@@ -32,15 +31,17 @@ export class HttpService {
 
         // post to api
         return this.http.post(this.apiUrl+url, body, options)
-            .map((response: Response) => response.json().message)
-            .catch((response: Response) => {
-                var json = response.json();
-                if (json.status_code == 401) {
-                    this.authenticationService.logout();
-                    this.router.navigate(['login']);
-                }
-                return response.json().message;
-            });;
+            .pipe(
+                map((response: Response) => response.json().message),
+                catchError((response: Response) => {
+                    let json = response.json();
+                    if (json.status_code == 401) {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    }
+                    return response.json().message;
+                })
+            );
     }
 
     get(url: string, auth: boolean = true) {
@@ -56,14 +57,16 @@ export class HttpService {
 
         // get from api
         return this.http.get(this.apiUrl+url, options)
-            .map((response: Response) => response.json().message)
-            .catch((response: Response) => {
-                var json = response.json();
-                if (json.status_code == 401) {
-                    this.authenticationService.logout();
-                    this.router.navigate(['login']);
-                }
-                return response.json().message;
-            });
+            .pipe(
+                map((response: Response) => response.json().message),
+                catchError((response: Response) => {
+                    let json = response.json();
+                    if (json.status_code == 401) {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    }
+                    return response.json().message;
+                })
+            );
     }
 }

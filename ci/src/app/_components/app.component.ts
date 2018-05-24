@@ -1,6 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import 'rxjs/add/operator/filter';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
     moduleId: module.id,
@@ -20,15 +20,17 @@ export class AppComponent {
         private router: Router,
         private activatedRoute: ActivatedRoute) {
             router.events
-                .filter((event) => event instanceof NavigationEnd)
-                .map(() => activatedRoute)
-            .subscribe((event) => {
-                if (router.url == "/login") {
-                    this.showMenu = false;
-                }
-                else {
-                    this.showMenu = this.isLoggedIn();
-            }
-            });
+                .pipe(
+                    filter((event) => event instanceof NavigationEnd),
+                    map(() => activatedRoute)
+                )
+                .subscribe((event) => {
+                    if (router.url == "/login") {
+                        this.showMenu = false;
+                    }
+                    else {
+                        this.showMenu = this.isLoggedIn();
+                    }
+                });
     };
 }

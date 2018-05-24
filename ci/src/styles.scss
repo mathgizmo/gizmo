@@ -12,7 +12,6 @@ $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);
 
-
 // Define an alternate theme.
 $grey-primary: mat-palette($mat-grey, 700);
 $grey-accent:  mat-palette($mat-green, A400);
@@ -25,7 +24,7 @@ CSS class whatever you want. Any component inside of an element with
 }
 
 body {
-    font-family: $mat-font-family;
+    //font-family: $mat-font-family;
     font-weight: normal;
     background-color: #eee;
 }
