@@ -650,7 +650,7 @@ var LessonComponent = (function () {
 /***/ "./src/app/_components/home/topic/lesson/question/chart/chart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" >\n<!-- <div id=\"controls\" *ngIf=\"valueDisplay != 4\">\n    <p class=\"value-label\">Value</p>-->\n  \n  <span *ngIf=\"control == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput *ngIf=\"type != 4\"\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" min=\"0\"/>\n      <input matInput *ngIf=\"type == 4\" id='inputValue'\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" [min]=\"startValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <!-- <span *ngIf=\"valueDisplay == 1\" >\n      <span class='max-value'>/{{maxValue}}</span>\n    </span> -->\n  </span>\n\n  <span *ngIf=\"control == 2\">\n    <span>\n      <mat-slider  *ngIf=\"type != 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"maxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <mat-slider *ngIf=\"type == 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n      <!-- <div class=\"value-label-container\">\n        <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n          <span>\n            {{value.toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 1\">\n            / {{maxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n          <span *ngIf=\"valueDisplay == 2\">\n            {{(value/maxValue).toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 3\">\n            {{(value/maxValue*100).toFixed(precision-2)}}%\n          </span>\n        </label>\n      </div> -->\n    </span>\n  </span>\n\n  <!-- <span *ngIf=\"(control != 1 && control != 2)\">\n    <div id=\"value-label-container\">\n      <label *ngIf=\"!(valueDisplay == 2 || valueDisplay == 3)\">\n        <span>\n          {{value.toFixed(precision)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 1\">\n          / {{maxValue}}\n        </span>\n      </label>\n      <label *ngIf=\"(valueDisplay == 2 || valueDisplay == 3)\">\n        <span *ngIf=\"valueDisplay == 2\">\n          {{(value/maxValue).toFixed(precision)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 3\">\n          {{(value/maxValue*100).toFixed(precision-2)}}%\n        </span>\n      </label>\n    </div>\n  </span> -->\n\n</div>"
+module.exports = "<h2 id=\"chart-container\"></h2>\n<div id=\"controls\" >\n  <span *ngIf=\"control == 1\">\n    <mat-form-field (change)=\"ngOnChanges()\">\n      <input matInput *ngIf=\"type != 4\"\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" min=\"0\"/>\n      <input matInput *ngIf=\"type == 4\" id='inputValue'\n        [(ngModel)]=\"value\" type=\"number\" \n        [step]=\"step\" [max]=\"maxValue\" [min]=\"startValue\"/>\n      <mat-progress-bar class='progress' value={{percentValue}}>\n      </mat-progress-bar>\n    </mat-form-field> \n    <span *ngIf=\"valueDisplay == 2\" >\n      <span class='max-value'>/{{maxValue}}</span>\n    </span>\n  </span>\n\n  <span *ngIf=\"control == 2\">\n    <span>\n      <mat-slider  *ngIf=\"type != 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"maxValue\" min=\"0\" \n        color=\"primary\" class='slider-control'>\n      </mat-slider>\n      <mat-slider *ngIf=\"type == 4\" \n        (change)=\"ngOnChanges()\" [(ngModel)]=\"value\"\n        [step]=\"step\" [max]=\"endValue\" [min]=\"startValue\" \n        color=\"primary\" class='slider-control' id='inputValue'>\n      </mat-slider>\n\n      <div class=\"value-label-container\">\n        <label *ngIf=\"(valueDisplay == 1 || valueDisplay == 2)\">\n          <span>\n            Value = {{value.toFixed(precision)}}\n          </span>\n          <span *ngIf=\"valueDisplay == 2\">\n            / {{maxValue}}\n          </span>\n        </label>\n        <label *ngIf=\"(valueDisplay == 3 || valueDisplay == 4)\">\n          <span *ngIf=\"valueDisplay == 3\">\n            Value = {{(value/maxValue).toFixed(fixValue)}}\n          </span>\n          <span *ngIf=\"(valueDisplay == 4 && fixValue >= 2)\">\n            Value = {{(value/maxValue*100).toFixed(fixValue-2)}}%\n          </span>\n          <span *ngIf=\"(valueDisplay == 4 && fixValue < 2)\">\n            Value = {{(value/maxValue*100).toFixed(0)}}%\n          </span>\n        </label>\n      </div>\n\n    </span>\n  </span>\n\n<span *ngIf=\"(control != 1 && control != 2)\">\n    <div id=\"value-label-container\">\n      <label *ngIf=\"(valueDisplay == 1 || valueDisplay == 2)\">\n        <span>\n          Value = {{value.toFixed(precision)}}\n        </span>\n        <span *ngIf=\"valueDisplay == 2\">\n          / {{maxValue}}\n        </span>\n      </label>\n      <label *ngIf=\"(valueDisplay == 3 || valueDisplay == 4)\">\n          <span *ngIf=\"valueDisplay == 3\">\n            Value = {{(value/maxValue).toFixed(fixValue)}}\n          </span>\n          <span *ngIf=\"(valueDisplay == 4 && fixValue >= 2)\">\n            Value = {{(value/maxValue*100).toFixed(fixValue-2)}}%\n          </span>\n          <span *ngIf=\"(valueDisplay == 4 && fixValue < 2)\">\n            Value = {{(value/maxValue*100).toFixed(0)}}%\n          </span>\n        </label>\n    </div>\n  </span>\n\n</div>"
 
 /***/ }),
 
@@ -689,7 +689,8 @@ var ChartComponent = (function () {
         this.dotRadius = 4;
         this.type = 1;
         this.control = 0;
-        this.valueDisplay = 0;
+        this.valueDisplayChart = 1;
+        this.valueDisplay = 1;
         this.value = 0.50;
         this.maxValue = 0;
         this.startValue = 0;
@@ -698,6 +699,7 @@ var ChartComponent = (function () {
         this.marksList = [0, 0.5, 1];
         this.initialized = false;
         this.precision = 2; // number of decimals (0 - integer)
+        this.fixValue = 0;
         this.dots = [];
         if (!this.chartHeight)
             this.chartHeight = 250;
@@ -731,16 +733,16 @@ var ChartComponent = (function () {
                     .match(new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
                     .replace('type:', ''));
             }
+            if (chart['0'].indexOf('value-display-chart:') >= 0) {
+                this.valueDisplayChart = +chart['0']
+                    .match(new RegExp(/value-display-chart:([^;]*)(?=(;|$))/g))['0']
+                    .replace('value-display-chart:', '');
+            }
             if (chart['0'].indexOf('value-display:') >= 0) {
                 this.valueDisplay = +chart['0']
                     .match(new RegExp(/value-display:([^;]*)(?=(;|$))/g))['0']
                     .replace('value-display:', '');
             }
-            else {
-                this.valueDisplay = 0;
-            }
-            if (this.valueDisplay > 4)
-                this.valueDisplay = 0;
             if (chart['0'].indexOf('value:') >= 0) {
                 this.value = parseFloat(chart['0']
                     .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
@@ -802,6 +804,7 @@ var ChartComponent = (function () {
                 this.control = +chart['0']
                     .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
                     .replace('control:', '');
+            this.fixValue = Math.round(this.maxValue / this.step).toString().length;
             this.initialized = true;
         }
         var chartHtml = '';
@@ -829,24 +832,29 @@ var ChartComponent = (function () {
                 chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' +
                     this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"';
                 chartHtml += '></rect>';
-                if (this.valueDisplay != 4) {
-                    var valueLabel = '<text text-anchor="middle" x='
-                        + this.chartHeight / 2 + ' y='
-                        + (this.chartHeight / 2 + (this.chartHeight / 10)) + ' fill="'
-                        + this.strokeColor + '" class="chart-value-label">';
-                    var fixValue = Math.round(this.maxValue / this.step).toString().length;
-                    if (this.valueDisplay == 0) {
+                if (this.valueDisplayChart > 0) {
+                    var x_1, y_1;
+                    x_1 = this.chartHeight / 2;
+                    if (this.value < this.maxValue / 10) {
+                        y_1 = this.chartHeight - (this.value / this.maxValue * this.chartHeight) - 5;
+                    }
+                    else {
+                        y_1 = this.chartHeight - 0.5 * (this.value / this.maxValue * this.chartHeight) + 5;
+                    }
+                    var valueLabel = '<text text-anchor="middle" x=' + x_1 + ' y=' + y_1
+                        + ' fill="' + this.strokeColor + '" class="chart-value-label">';
+                    if (this.valueDisplayChart == 1) {
                         valueLabel += this.value.toFixed(this.precision);
                     }
-                    else if (this.valueDisplay == 1) {
+                    else if (this.valueDisplayChart == 2) {
                         valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
                     }
-                    else if (this.valueDisplay == 2) {
-                        valueLabel += (this.value / this.maxValue).toFixed(fixValue);
+                    else if (this.valueDisplayChart == 3) {
+                        valueLabel += (this.value / this.maxValue).toFixed(this.fixValue);
                     }
-                    else if (this.valueDisplay == 3) {
-                        (fixValue < 2) ? valueLabel += (this.value / this.maxValue * 100).toFixed(0) + '%'
-                            : valueLabel += (this.value / this.maxValue * 100).toFixed(fixValue - 2) + '%';
+                    else if (this.valueDisplayChart == 4) {
+                        (this.fixValue < 2) ? valueLabel += (this.value / this.maxValue * 100).toFixed(0) + '%'
+                            : valueLabel += (this.value / this.maxValue * 100).toFixed(this.fixValue - 2) + '%';
                     }
                     valueLabel += '</text>';
                     chartHtml += valueLabel;
@@ -888,24 +896,45 @@ var ChartComponent = (function () {
                     chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' +
                         this.strokeColor + '; stroke-width: ' + this.strokeWidth + '"/>';
                 }
-                if (this.valueDisplay != 4) {
-                    var valueLabel = '<text text-anchor="middle" x='
-                        + radius + ' y=' + (radius + (radius / 5)) + ' fill="'
+                if (this.valueDisplayChart > 0) {
+                    var x_2, y_2;
+                    var anchor = void 0; // start | middle | end
+                    if (this.value / this.maxValue < 0.25) {
+                        x_2 = this.chartHeight;
+                        y_2 = 20;
+                        anchor = 'end';
+                    }
+                    else if (this.value / this.maxValue < 0.5) {
+                        x_2 = this.chartHeight;
+                        y_2 = this.chartHeight - 15;
+                        anchor = 'end';
+                    }
+                    else if (this.value / this.maxValue < 0.75) {
+                        x_2 = 0;
+                        y_2 = this.chartHeight - 15;
+                        anchor = 'start';
+                    }
+                    else {
+                        x_2 = 0;
+                        y_2 = 20;
+                        anchor = 'start';
+                    }
+                    var valueLabel = '<text text-anchor="' + anchor
+                        + '" x=' + x_2 + ' y=' + y_2 + ' fill="'
                         + this.strokeColor + '" class="chart-value-label">';
-                    var fixValue = Math.round(this.maxValue / this.step).toString().length;
-                    if (this.valueDisplay == 0) {
+                    if (this.valueDisplayChart == 1) {
                         valueLabel += this.value.toFixed(this.precision);
                     }
-                    else if (this.valueDisplay == 1) {
+                    else if (this.valueDisplayChart == 2) {
                         valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
                     }
-                    else if (this.valueDisplay == 2) {
+                    else if (this.valueDisplayChart == 3) {
                         valueLabel += (this.value / this.maxValue)
-                            .toFixed(fixValue);
+                            .toFixed(this.fixValue);
                     }
-                    else if (this.valueDisplay == 3) {
-                        (fixValue < 2) ? valueLabel += (this.value / this.maxValue * 100).toFixed(0) + '%'
-                            : valueLabel += (this.value / this.maxValue * 100).toFixed(fixValue - 2) + '%';
+                    else if (this.valueDisplayChart == 4) {
+                        (this.fixValue < 2) ? valueLabel += (this.value / this.maxValue * 100).toFixed(0) + '%'
+                            : valueLabel += (this.value / this.maxValue * 100).toFixed(this.fixValue - 2) + '%';
                     }
                     valueLabel += '</text>';
                     chartHtml += valueLabel;
@@ -919,25 +948,23 @@ var ChartComponent = (function () {
                 requestAnimationFrame(function () {
                     chartContainer.innerHTML = chartHtml;
                     chartContainer.appendChild(canvas_1);
-                    if (_this.valueDisplay != 4) {
+                    if (_this.valueDisplayChart > 0) {
                         var valueLabel = document.createElement("label");
                         valueLabel.classList.add('chart-value-label');
-                        var fixValue = Math.round(_this.maxValue / _this.step).toString().length;
-                        if (_this.valueDisplay == 0) {
+                        if (_this.valueDisplayChart == 1) {
                             valueLabel.innerHTML = '' + _this.value.toFixed(_this.precision);
                         }
-                        else if (_this.valueDisplay == 1) {
+                        else if (_this.valueDisplayChart == 2) {
                             valueLabel.innerHTML = '' + _this.value.toFixed(_this.precision) + '/' + _this.maxValue;
                         }
-                        else if (_this.valueDisplay == 2) {
-                            valueLabel.innerHTML = '' + (_this.value / _this.maxValue)
-                                .toFixed(fixValue);
+                        else if (_this.valueDisplayChart == 3) {
+                            valueLabel.innerHTML = '' + (_this.value / _this.maxValue).toFixed(_this.fixValue);
                         }
-                        else if (_this.valueDisplay == 3) {
-                            (fixValue < 2) ? valueLabel.innerHTML =
+                        else if (_this.valueDisplayChart == 4) {
+                            (_this.fixValue < 2) ? valueLabel.innerHTML =
                                 '' + (_this.value / _this.maxValue * 100).toFixed(0) + '%'
                                 : valueLabel.innerHTML =
-                                    '' + (_this.value / _this.maxValue * 100).toFixed(fixValue - 2) + '%';
+                                    '' + (_this.value / _this.maxValue * 100).toFixed(_this.fixValue - 2) + '%';
                         }
                         chartContainer.appendChild(valueLabel);
                     }
@@ -1008,7 +1035,7 @@ var ChartComponent = (function () {
                     - this.startValue) * width + indentation;
                 chartHtml += '<circle cx="' + currentPointX + '" cy="25" r="'
                     + this.markDiameter + '" fill="' + this.selectedColor + '" />';
-                if (this.valueDisplay != 4) {
+                if (this.valueDisplayChart > 0) {
                     var currentPointLabel = '<text ';
                     var currentValueFixed = Number((this.value).toFixed(this.precision));
                     var startValueFixed = Number((this.startValue).toFixed(this.precision));
@@ -1025,19 +1052,18 @@ var ChartComponent = (function () {
                     }
                     currentPointLabel += '" y="15" fill="' + this.strokeColor
                         + '"  class="chart-value-label">';
-                    var fixValue = Math.round(this.maxValue / this.step).toString().length;
-                    if (this.valueDisplay == 0) {
+                    if (this.valueDisplayChart == 1) {
                         currentPointLabel += this.value.toFixed(this.precision);
                     }
-                    else if (this.valueDisplay == 1) {
+                    else if (this.valueDisplayChart == 2) {
                         currentPointLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
                     }
-                    else if (this.valueDisplay == 2) {
-                        currentPointLabel += (this.value / this.maxValue).toFixed(fixValue);
+                    else if (this.valueDisplayChart == 3) {
+                        currentPointLabel += (this.value / this.maxValue).toFixed(this.fixValue);
                     }
-                    else if (this.valueDisplay == 3) {
-                        (fixValue < 2) ? currentPointLabel += (this.value / this.maxValue * 100).toFixed(0) + '%'
-                            : currentPointLabel += (this.value / this.maxValue * 100).toFixed(fixValue - 2) + '%';
+                    else if (this.valueDisplayChart == 4) {
+                        (this.fixValue < 2) ? currentPointLabel += (this.value / this.maxValue * 100).toFixed(0) + '%'
+                            : currentPointLabel += (this.value / this.maxValue * 100).toFixed(this.fixValue - 2) + '%';
                     }
                     currentPointLabel += '</text>';
                     chartHtml += currentPointLabel;
