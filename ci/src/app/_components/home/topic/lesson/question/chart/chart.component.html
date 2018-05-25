@@ -1,8 +1,5 @@
 <h2 id="chart-container"></h2>
 <div id="controls" >
-<!-- <div id="controls" *ngIf="valueDisplay != 4">
-    <p class="value-label">Value</p>-->
-  
   <span *ngIf="control == 1">
     <mat-form-field (change)="ngOnChanges()">
       <input matInput *ngIf="type != 4"
@@ -14,9 +11,9 @@
       <mat-progress-bar class='progress' value={{percentValue}}>
       </mat-progress-bar>
     </mat-form-field> 
-    <!-- <span *ngIf="valueDisplay == 1" >
+    <span *ngIf="valueDisplay == 2" >
       <span class='max-value'>/{{maxValue}}</span>
-    </span> -->
+    </span>
   </span>
 
   <span *ngIf="control == 2">
@@ -31,46 +28,54 @@
         [step]="step" [max]="endValue" [min]="startValue" 
         color="primary" class='slider-control' id='inputValue'>
       </mat-slider>
-      <!-- <div class="value-label-container">
-        <label *ngIf="!(valueDisplay == 2 || valueDisplay == 3)">
+
+      <div class="value-label-container">
+        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2)">
           <span>
-            {{value.toFixed(precision)}}
+            Value = {{value.toFixed(precision)}}
           </span>
-          <span *ngIf="valueDisplay == 1">
+          <span *ngIf="valueDisplay == 2">
             / {{maxValue}}
           </span>
         </label>
-        <label *ngIf="(valueDisplay == 2 || valueDisplay == 3)">
-          <span *ngIf="valueDisplay == 2">
-            {{(value/maxValue).toFixed(precision)}}
-          </span>
+        <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
           <span *ngIf="valueDisplay == 3">
-            {{(value/maxValue*100).toFixed(precision-2)}}%
+            Value = {{(value/maxValue).toFixed(fixValue)}}
+          </span>
+          <span *ngIf="(valueDisplay == 4 && fixValue >= 2)">
+            Value = {{(value/maxValue*100).toFixed(fixValue-2)}}%
+          </span>
+          <span *ngIf="(valueDisplay == 4 && fixValue < 2)">
+            Value = {{(value/maxValue*100).toFixed(0)}}%
           </span>
         </label>
-      </div> -->
+      </div>
+
     </span>
   </span>
 
-  <!-- <span *ngIf="(control != 1 && control != 2)">
+<span *ngIf="(control != 1 && control != 2)">
     <div id="value-label-container">
-      <label *ngIf="!(valueDisplay == 2 || valueDisplay == 3)">
+      <label *ngIf="(valueDisplay == 1 || valueDisplay == 2)">
         <span>
-          {{value.toFixed(precision)}}
+          Value = {{value.toFixed(precision)}}
         </span>
-        <span *ngIf="valueDisplay == 1">
+        <span *ngIf="valueDisplay == 2">
           / {{maxValue}}
         </span>
       </label>
-      <label *ngIf="(valueDisplay == 2 || valueDisplay == 3)">
-        <span *ngIf="valueDisplay == 2">
-          {{(value/maxValue).toFixed(precision)}}
-        </span>
-        <span *ngIf="valueDisplay == 3">
-          {{(value/maxValue*100).toFixed(precision-2)}}%
-        </span>
-      </label>
+      <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
+          <span *ngIf="valueDisplay == 3">
+            Value = {{(value/maxValue).toFixed(fixValue)}}
+          </span>
+          <span *ngIf="(valueDisplay == 4 && fixValue >= 2)">
+            Value = {{(value/maxValue*100).toFixed(fixValue-2)}}%
+          </span>
+          <span *ngIf="(valueDisplay == 4 && fixValue < 2)">
+            Value = {{(value/maxValue*100).toFixed(0)}}%
+          </span>
+        </label>
     </div>
-  </span> -->
+  </span>
 
 </div>
