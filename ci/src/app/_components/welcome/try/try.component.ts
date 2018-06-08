@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../../_services/index';
+import { AuthenticationService, LoaderService } from '../../../_services/index';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,7 +20,8 @@ export class TryComponent implements OnInit {
 
   constructor(
   	private authenticationService: AuthenticationService,
-  	private router: Router
+  	private router: Router,
+    private loaderService: LoaderService
   	) { 
   }
 
@@ -30,6 +31,7 @@ export class TryComponent implements OnInit {
   }
 
   public onTry():any {
+    this.loaderService.show();
     let id = this.randomString();
   	let email = id+'@somemail.com';
   	let password = id;
@@ -44,6 +46,7 @@ export class TryComponent implements OnInit {
                     }
                });
             }
+            this.loaderService.hide();
         });
   }
 
