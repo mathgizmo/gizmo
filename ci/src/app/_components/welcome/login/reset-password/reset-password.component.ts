@@ -12,6 +12,7 @@ export class ResetPasswordComponent implements OnInit {
   passwordsMatch: boolean;
   warning: string;
   token: string;
+  waiting = false;
 
   constructor(
   	private authenticationService: AuthenticationService,
@@ -40,7 +41,8 @@ export class ResetPasswordComponent implements OnInit {
       this.passwordsMatch = true;
       this.authenticationService.resetPassword(newPassword, confirmedPassword, this.token)
         .subscribe(result => {
-        	if(result['success']) {
+        	this.waiting = true;
+          if(result['success']) {
         		this.router.navigate(['/login']);
         	} else {
         		let error = '';
@@ -55,6 +57,7 @@ export class ResetPasswordComponent implements OnInit {
 		        this.warning = error;
 		        this.passwordsMatch = false;
         	}
+          this.waiting = false;
       }, error => { console.log(error); });
     }
   }

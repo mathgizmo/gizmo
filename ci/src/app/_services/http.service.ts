@@ -1,11 +1,13 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, finalize } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from './authentication.service';
+import { LoaderService} from './loader.service';
+
 
 @Injectable()
 export class HttpService {
@@ -15,10 +17,12 @@ export class HttpService {
     constructor(
         private http: Http,
         private router: Router,
-        private authenticationService: AuthenticationService) {
+        private authenticationService: AuthenticationService,
+        private loaderService: LoaderService) {
     }
 
     post(url: string, body: string, auth: boolean = true) {
+        this.showLoader();
         if (auth) {
             // add authorization header with jwt token
             this.headers = new Headers({ 'Authorization': 'Bearer '
@@ -40,11 +44,15 @@ export class HttpService {
                         this.router.navigate(['login']);
                     }
                     return response.json().message;
+                }),
+                finalize(() => {
+                    this.hideLoader();
                 })
             );
     }
 
     get(url: string, auth: boolean = true) {
+        this.showLoader();
         if (auth) {
             // add authorization header with jwt token
             this.headers = new Headers({ 'Authorization': 'Bearer '
@@ -66,7 +74,18 @@ export class HttpService {
                         this.router.navigate(['login']);
                     }
                     return response.json().message;
+                }),
+                finalize(() => {
+                    this.hideLoader();
                 })
             );
+    }
+
+    private showLoader(): void {
+        this.loaderService.show();
+    }
+    
+    private hideLoader(): void {
+        this.loaderService.hide();
     }
 }
