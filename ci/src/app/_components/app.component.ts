@@ -1,6 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { map, filter } from 'rxjs/operators';
+import { HTTPStatus } from '../_services/index';
 
 @Component({
     moduleId: module.id,
@@ -10,6 +11,8 @@ import { map, filter } from 'rxjs/operators';
 })
 
 export class AppComponent {
+    HTTPActivity: boolean;
+
     public showMenu = this.isLoggedIn();
 
     protected isLoggedIn() {
@@ -18,7 +21,10 @@ export class AppComponent {
 
     constructor(
         private router: Router,
-        private activatedRoute: ActivatedRoute) {
+        private activatedRoute: ActivatedRoute,
+        private httpStatus: HTTPStatus) {
+            this.httpStatus.getHttpStatus()
+                .subscribe((status: boolean) => {this.HTTPActivity = status;});
             router.events
                 .pipe(
                     filter((event) => event instanceof NavigationEnd),

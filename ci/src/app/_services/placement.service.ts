@@ -25,7 +25,7 @@ export class PlacementService {
 	}
 
 	doneUnit(unitId) {
-		let request = JSON.stringify({ unit_id: unitId });
+		let request = { unit_id: unitId };
 		return this.http.post('/placement/done-unit', request)
 	        .pipe(
     			map((response: Response) => response)
@@ -33,7 +33,7 @@ export class PlacementService {
 	}
 
 	doneHalfUnit(unitId) {
-		let request = JSON.stringify({ unit_id: unitId });
+		let request = { unit_id: unitId };
 		return this.http.post('/placement/done-half-unit', request)
 	        .pipe(
     			map((response: Response) => response)

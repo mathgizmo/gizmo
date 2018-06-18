@@ -18,11 +18,7 @@ It consist of 3 main modules admin, API, and hybrid app
 - 
 
 #### Client
-- For Client App we use [Angular6](https://angular.io/) which require [NodeJS](https://nodejs.org/) version 6 at least. Verify that you are running at least node 6.9.x and npm 3.x.x by running `node -v` and `npm -v` in a terminal/console window. Older versions produce errors, but newer versions are fine. 
-`npm -v
-3.10.10
-node -v
-v6.11.3`
+- For Client App we use [Angular6](https://angular.io/) which require [NodeJS](https://nodejs.org/) version 8.9+ at least. Check your version by running `node -v` and `npm -v` in a terminal/console window.    
 - Globally install [Angular CLI](https://angular.io/guide/quickstart) using command `npm install -g @angular/cli@latest`
 - Run `npm install` into `ci` folder to install required npm modules
 - Add URL to your local server API to `/ci/src/environments/environment.ts` 

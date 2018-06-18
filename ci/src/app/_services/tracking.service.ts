@@ -31,8 +31,8 @@ export class TrackingService {
 
     doneLesson(topic_id, lesson_id, start_datetime, weak_questions) {
         // notify api about lesson done
-        let request = JSON.stringify({ start_datetime: start_datetime, 
-            weak_questions: weak_questions });
+        let request = { start_datetime: start_datetime, 
+            weak_questions: weak_questions };
         if(lesson_id == -1) {
           return this.http.post('/topic/'+topic_id+'/testoutdone', request)
             .pipe(

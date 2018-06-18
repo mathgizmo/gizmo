@@ -46,8 +46,7 @@ export class TopicService {
 
     reportError(question_id, answers, option, custom) {
         // notify api about question error
-        let request = JSON.stringify({ answers: answers, 
-            options: option, comment: custom });
+        let request = { answers: answers, options: option, comment: custom };
         return this.http.post('/report_error/'+question_id, request)
             .pipe(
                 map((response: Response) => response)

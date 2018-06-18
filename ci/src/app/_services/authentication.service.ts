@@ -1,5 +1,5 @@
 ﻿import { Injectable, Inject} from '@angular/core';
-import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -9,36 +9,32 @@ export class AuthenticationService {
     public token: string;
     private readonly apiUrl = environment.apiUrl;
     private readonly baseUrl = environment.baseUrl;
+    private headers?: HttpHeaders;
 
-    constructor(private http: Http) {
+    constructor(private http: HttpClient) {
         // set token if saved in local storage
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
+        this.headers = new HttpHeaders({'Content-Type': 'application/json' });
     }
 
-    login(username: string, password: string): Observable<boolean> {
-        let request = JSON.stringify({ email: username, password: password });
-
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-
-        return this.http.post(this.apiUrl+'/authenticate', request, options)
+    login(username: string, password: string): Observable<any> {
+        let request = { email: username, password: password };
+        return this.http.post(this.apiUrl+'/authenticate', request, { headers: this.headers })
             .pipe(
                 map((response: Response) => {
                     // login successful if there's a jwt token in the response
-                    let token = response.json() && response.json().message && 
-                        response.json().message.token;
+                    let token = response && response['message'] && 
+                        response['message']['token'];
                     if (token) {
                         // set token property
                         this.token = token;    
-
                         // store username and jwt token in local storage to keep user logged in between page refreshes
                         localStorage.setItem('currentUser', 
                             JSON.stringify({ username: username, token: token }));
                         var question_num = 5;
-                        if (response.json().message && response.json()
-                            .message.question_num != undefined) {
-                            question_num = response.json().message.question_num;
+                        if (response['message'] && response['message']['question_num'] != undefined) {
+                            question_num = response['message']['question_num'];
                         }
                         localStorage.setItem('question_num', question_num+"");
                         // return true to indicate successful login
@@ -51,19 +47,14 @@ export class AuthenticationService {
             );
     }
 
-    register(username: string, email: string, password: string): Observable<boolean> {
-        let request = JSON.stringify({ email: email, name: username, password: password });
-
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-
-        return this.http.post(this.apiUrl+'/register', request, options)
+    register(username: string, email: string, password: string): Observable<any> {
+        let request = { email: email, name: username, password: password };
+        return this.http.post(this.apiUrl+'/register', request, { headers: this.headers } )
             .pipe(
                 map((response: Response) => {
                     // login successful if there's a jwt token in the response
-                    let token = response.json() && response.json()
-                        .message && response.json().message.token;
-                    return response.json();
+                    let token = response && response['message'] && response['message']['token'];
+                    return response;
                 })
             );
     }
@@ -74,28 +65,23 @@ export class AuthenticationService {
         localStorage.removeItem('currentUser');
     }
 
-    sendPasswordResetEmail(email: string): Observable<boolean>  {
+    sendPasswordResetEmail(email: string): Observable<any>  {
         let url = this.baseUrl+'/reset-password';
-        let request = JSON.stringify({ email: email, url:  url });
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-        return this.http.post(this.apiUrl+'/password-reset-email', request, options)
+        let request = { email: email, url:  url };
+        return this.http.post(this.apiUrl+'/password-reset-email', request, { headers: this.headers })
             .pipe(
                 map((response: Response) => {
-                    return response.json();
+                    return response;
                 })
             );
     }
 
-    resetPassword(newPassword: string, confirmedPassword: string, token: string): Observable<boolean> {
-        let request = JSON.stringify({ password: newPassword, 
-          confirm_password: confirmedPassword, token: token });
-        let headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
-        let options = new RequestOptions({ headers: headers }); // Create a request option
-        return this.http.post(this.apiUrl+'/reset-password', request, options)
+    resetPassword(newPassword: string, confirmedPassword: string, token: string): Observable<any> {
+        let request = { password: newPassword, confirm_password: confirmedPassword, token: token };
+        return this.http.post(this.apiUrl+'/reset-password', request, { headers: this.headers })
             .pipe(
                 map((response: Response) => {
-                    return response.json();
+                    return response;
                 })
             );
     }

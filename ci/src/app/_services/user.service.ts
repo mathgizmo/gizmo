@@ -26,12 +26,11 @@ export class UserService {
     }
 
     public changeProfile(user: User) {
-      let request = JSON.stringify({
+      let request = {
           name: user.username,
           email: user.email,
           question_num: user.questionNum
-      });
-
+      };
       return this.http.post('/profile', request)
           .pipe(
             map((res: Response) => { }),
@@ -44,12 +43,10 @@ export class UserService {
 
     public changePassword(newPassword: string, 
       confirmedPassword: string) {
-
-      let request = JSON.stringify({
+      let request = {
           password: newPassword, 
           confirm_password: confirmedPassword
-      });
-
+      };
       return this.http.post('/profile', request)
         .pipe(
           map((res: Response) => { }),
