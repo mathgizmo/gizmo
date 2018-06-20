@@ -23,6 +23,10 @@
           pattern="[0-9]{1,2}"
           [(ngModel)]="user.questionNum" />
       </mat-form-field> 
+      <div class="alert alert-danger" *ngIf="badEmail">
+         <mat-icon>warning</mat-icon>
+         {{warningMessage}}
+      </div>
       <div class="button-container">
         <button
           mat-raised-button

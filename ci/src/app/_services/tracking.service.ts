@@ -1,7 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { HttpService } from './http.service';
 
@@ -16,16 +14,10 @@ export class TrackingService {
         if(lesson_id == -1) {
           /** TODO: change this HARDCODED value to testoutstart! */
           //return this.http.post('/testoutstart', '')
-          return this.http.post('/', '')
-            .pipe(
-                map((response: Response) => response)
-            ); 
+          return this.http.post('/', ''); 
         }
         else {
-        return this.http.post('/lesson/'+lesson_id+'/start', '')
-            .pipe(
-                map((response: Response) => response)
-            );
+            return this.http.post('/lesson/'+lesson_id+'/start', '');
         }
     }
 
@@ -34,16 +26,10 @@ export class TrackingService {
         let request = { start_datetime: start_datetime, 
             weak_questions: weak_questions };
         if(lesson_id == -1) {
-          return this.http.post('/topic/'+topic_id+'/testoutdone', request)
-            .pipe(
-                map((response: Response) => response)
-            ); 
+          return this.http.post('/topic/'+topic_id+'/testoutdone', request); 
         }
         else {
-          return this.http.post('/lesson/'+lesson_id+'/done', request)
-            .pipe(
-                map((response: Response) => response)
-            );
+          return this.http.post('/lesson/'+lesson_id+'/done', request);
         }
     }
 }

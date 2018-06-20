@@ -1,5 +1,4 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -11,13 +10,12 @@ import { HttpService } from './http.service';
 export class UserService {
     
     constructor(
-        private http: HttpService) {
+      private http: HttpService) {
     }
 
     public getProfile() {
       return this.http.get('/profile')
         .pipe(
-          map((res:Response) => res),
           catchError(error => {
             console.log(error);
             throw Error(error);
@@ -32,13 +30,12 @@ export class UserService {
           question_num: user.questionNum
       };
       return this.http.post('/profile', request)
-          .pipe(
-            map((res: Response) => { }),
-            catchError(error => {
-              console.log(error);
-              throw Error(error);
-            })
-          );
+        .pipe(
+          catchError(error => {
+            console.log(error);
+            throw Error(error);
+          })
+        );
     }
 
     public changePassword(newPassword: string, 
@@ -49,7 +46,6 @@ export class UserService {
       };
       return this.http.post('/profile', request)
         .pipe(
-          map((res: Response) => { }),
           catchError(error => {
             console.log(error);
             throw Error(error);

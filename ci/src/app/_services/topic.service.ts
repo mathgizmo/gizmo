@@ -1,7 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { HttpService } from './http.service';
 
@@ -12,44 +10,29 @@ export class TopicService {
         private http: HttpService) {
     }
 
+    // get topics from api
     getTopics() {
-        // get topic from api
-        return this.http.get('/topic')
-            .pipe(
-                map((response: Response) => response)
-            );
+        return this.http.get('/topic');
     }
 
+    // get topic from api
     getTopic(id) {
-        // get topic from api
-        return this.http.get('/topic/'+id)
-            .pipe(
-                map((response: Response) => response)
-            );
+        return this.http.get('/topic/'+id);
     }
 
+    // get lesson from api
     getLesson(topic_id, lesson_id) {
-        // get lesson from api
         if(lesson_id == -1) {
-            return this.http.get('/topic/'+topic_id+'/testout')
-                .pipe(
-                    map((response: Response) => response)
-                );
+            return this.http.get('/topic/'+topic_id+'/testout');
         }
         else {
-          return this.http.get('/topic/'+topic_id+'/lesson/'+lesson_id)
-            .pipe(
-                map((response: Response) => response)
-            );
+          return this.http.get('/topic/'+topic_id+'/lesson/'+lesson_id);
         }
     }
 
+    // notify api about question error
     reportError(question_id, answers, option, custom) {
-        // notify api about question error
         let request = { answers: answers, options: option, comment: custom };
-        return this.http.post('/report_error/'+question_id, request)
-            .pipe(
-                map((response: Response) => response)
-            );
+        return this.http.post('/report_error/'+question_id, request);
     }
 }
