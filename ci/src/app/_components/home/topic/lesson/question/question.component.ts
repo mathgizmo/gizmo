@@ -70,7 +70,7 @@ export class QuestionComponent implements OnInit {
   }
 
   checkAnswer() {
-    if(this.answers.length < 1 || this.answers.every(element => element == "")){
+    if(this.answers.length < 1 || this.answers.some(element => element == "")){
       this.warning = true;
       this.warningMessage = "Please, answer the question!";
     } else {
