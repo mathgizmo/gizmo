@@ -202,6 +202,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         this.fixValue = Math.round(this.maxValue/this.step).toString().length;
         this.initialized = true;
       }
+      if(this.type == 3) {
+        this.value = Math.round(this.value);
+      }
       let chartHtml = '';
       let valuePercent = this.value/this.maxValue;
       let chartContainer = document.getElementById('chart-container');
