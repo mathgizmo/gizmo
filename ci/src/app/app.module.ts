@@ -1,21 +1,23 @@
 ﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatSelectModule, 
     MatIconModule, MatMenuModule, MatRadioModule, 
     MatDialogModule, MatProgressBarModule, MatSliderModule,
     MatToolbarModule, MatCardModule, MatCheckboxModule } from '@angular/material';
-import { BaseRequestOptions } from '@angular/http';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { SortablejsModule } from 'angular-sortablejs';
 
+import { BaseRequestOptions, HttpModule } from '@angular/http'; // ??? Fake BackEnd
+
 import { routing } from './app.routing';
 import { AuthGuard } from './_guards/index';
 
-import { AuthenticationService, HttpService } from './_services/index';
+import { AuthenticationService, HttpService, 
+    HTTPListener, HTTPStatus } from './_services/index';
 
 import { AppComponent } from './_components/app.component';
 import { WelcomeComponent } from './_components/welcome/index';
@@ -39,7 +41,8 @@ import { PlacementComponent, NoDialogComponent } from './_components/welcome/pla
     imports: [
         BrowserModule,
         FormsModule,
-        HttpModule,
+        HttpClientModule,
+        HttpModule, // ??? Fake BackEnd
         routing,
         Angular2FontawesomeModule,
         BrowserAnimationsModule,
@@ -57,6 +60,8 @@ import { PlacementComponent, NoDialogComponent } from './_components/welcome/pla
         MatCheckboxModule,
         FlexLayoutModule,
         SortablejsModule.forRoot({ animation: 150 })
+    ],
+    exports: [
     ],
     declarations: [
         AppComponent,
@@ -89,6 +94,13 @@ import { PlacementComponent, NoDialogComponent } from './_components/welcome/pla
         AuthGuard,
         AuthenticationService,
         HttpService,
+        HTTPListener, 
+        HTTPStatus,
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: HTTPListener,
+          multi: true
+        },
 
         // providers used to create fake backend
         //fakeBackendProvider,

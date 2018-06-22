@@ -2,57 +2,61 @@
   <mat-card id="profile-container" class="grey-theme">
   	<span class="card-title">Change Profile Info:</span>
     <form #changeProfile="ngForm" (ngSubmit)="onChangeProfile()">
-  		<mat-input-container>
+  		<mat-form-field>
         <input matInput
           name="username"
           pattern="[a-zA-Z0-9]{2,255}"
           placeholder="Name"
           [(ngModel)]="user.username" />
-        </mat-input-container>
-        <mat-input-container>
-          <input matInput
-            name="email"
-            pattern="^\S+@\S+$"
-            placeholder="Email"
-            [(ngModel)]="user.email" />
-        </mat-input-container> 
-        <mat-input-container>
-          <label>Please set the number of consecutive correct answers  which will signify lesson completion for you. You can come back to profile to change the setting if you wish. (put 0 to answer all questions)</label>
-          <input matInput
-            name="question_num"
-            pattern="[0-9]{1,2}"
-            [(ngModel)]="user.questionNum" />
-        </mat-input-container> 
-        <div class="button-container">
-          <button
-            mat-raised-button
-            type="submit">
-            <mat-icon>update</mat-icon>
-            <span>Update</span>
-          </button>
-      	</div>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+          name="email"
+          pattern="^\S+@\S+$"
+          placeholder="Email"
+          [(ngModel)]="user.email" />
+      </mat-form-field> 
+      <mat-form-field>
+        <label>Please set the number of consecutive correct answers  which will signify lesson completion for you. You can come back to profile to change the setting if you wish. (put 0 to answer all questions)</label>
+        <input matInput
+          name="question_num"
+          pattern="[0-9]{1,2}"
+          [(ngModel)]="user.questionNum" />
+      </mat-form-field> 
+      <div class="alert alert-danger" *ngIf="badEmail">
+         <mat-icon>warning</mat-icon>
+         {{warningMessage}}
+      </div>
+      <div class="button-container">
+        <button
+          mat-raised-button
+          type="submit">
+          <mat-icon>update</mat-icon>
+          <span>Update</span>
+        </button>
+    	</div>
   	</form>
   </mat-card>
 
   <mat-card class="grey-theme">
     <span class="card-title">Change Password:</span>
     <form #changePassword="ngForm" (ngSubmit)="onChangePassword(newPassword.value, confirmedPassword.value)">
-      <mat-input-container>
+      <mat-form-field>
         <input matInput
           required="required"
           pattern=".{6,30}"
           type="password"
           placeholder="New Password"
           #newPassword />
-      </mat-input-container>
-      <mat-input-container>
+      </mat-form-field>
+      <mat-form-field>
         <input matInput
           required="required"
           pattern=".{6,30}"
           type="password"
           placeholder="Confirm Password"
           #confirmedPassword />
-      </mat-input-container>
+      </mat-form-field>
       <div class="alert alert-danger" *ngIf="!passwordsMatch">
          <mat-icon>warning</mat-icon>
          {{warningMessage}}

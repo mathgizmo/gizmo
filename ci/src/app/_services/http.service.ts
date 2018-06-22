@@ -1,69 +1,73 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { map, catchError, finalize } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from './authentication.service';
 
+
 @Injectable()
 export class HttpService {
-    private headers?: Headers;
+    private headers?: HttpHeaders;
     private readonly apiUrl = environment.apiUrl;
 
     constructor(
-        private http: Http,
+        private http: HttpClient,
         private router: Router,
         private authenticationService: AuthenticationService) {
     }
 
-    post(url: string, body: string, auth: boolean = true) {
+    post(url: string, body: any, auth: boolean = true) {
         if (auth) {
             // add authorization header with jwt token
-            this.headers = new Headers({ 'Authorization': 'Bearer '
+            this.headers = new HttpHeaders({ 'Authorization': 'Bearer '
                 + this.authenticationService.token, 'Content-Type': 'application/json' });
         } else {
             // add authorization header with jwt token
-            this.headers = new Headers({'Content-Type': 'application/json' });
+            this.headers = new HttpHeaders({'Content-Type': 'application/json' });
         }
-        let options = new RequestOptions({ headers: this.headers });
 
         // post to api
-        return this.http.post(this.apiUrl+url, body, options)
-            .map((response: Response) => response.json().message)
-            .catch((response: Response) => {
-                var json = response.json();
-                if (json.status_code == 401) {
-                    this.authenticationService.logout();
-                    this.router.navigate(['login']);
-                }
-                return response.json().message;
-            });;
+        return this.http.post(this.apiUrl+url, body, { headers: this.headers } )
+            .pipe(
+                map((response: Response) => response['message']),
+                catchError((response: Response) => {
+                    if (response['status_code'] == 401) {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    }
+                    return response['message'];
+                }),
+                finalize(() => {
+                })
+            );
     }
 
     get(url: string, auth: boolean = true) {
         if (auth) {
             // add authorization header with jwt token
-            this.headers = new Headers({ 'Authorization': 'Bearer '
+            this.headers = new HttpHeaders({ 'Authorization': 'Bearer '
                 + this.authenticationService.token, 'Content-Type': 'application/json' });
         } else {
             // add authorization header with jwt token
-            this.headers = new Headers({'Content-Type': 'application/json' });
+            this.headers = new HttpHeaders({'Content-Type': 'application/json' });
         }
-        let options = new RequestOptions({ headers: this.headers });
 
         // get from api
-        return this.http.get(this.apiUrl+url, options)
-            .map((response: Response) => response.json().message)
-            .catch((response: Response) => {
-                var json = response.json();
-                if (json.status_code == 401) {
-                    this.authenticationService.logout();
-                    this.router.navigate(['login']);
-                }
-                return response.json().message;
-            });
+        return this.http.get(this.apiUrl+url, { headers: this.headers } )
+            .pipe(
+                map((response: Response) => response['message']),
+                catchError((response: Response) => {
+                    if (response['status_code'] == 401) {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    }
+                    return response['message'];
+                }),
+                finalize(() => {
+                })
+            );
     }
 }

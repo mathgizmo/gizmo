@@ -17,11 +17,11 @@
         </div>
         <div *ngIf="question.answer_mode=='TF'">
             <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >
-                <mat-radio-button class="radio-button" value="False" color="primary">
-                    false
-                </mat-radio-button>
                 <mat-radio-button class="radio-button" value="True" color="primary">
                     true
+                </mat-radio-button>
+                <mat-radio-button class="radio-button" value="False" color="primary">
+                    false
                 </mat-radio-button>
             </mat-radio-group>
         </div>

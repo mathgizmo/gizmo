@@ -1,7 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
 
 import { HttpService } from './http.service';
 
@@ -15,27 +13,23 @@ export class TrackingService {
         // notify api about lesson start
         if(lesson_id == -1) {
           /** TODO: change this HARDCODED value to testoutstart! */
-          return this.http.post('/', '')
           //return this.http.post('/testoutstart', '')
-            .map((response: Response) => response); 
+          return this.http.post('/', ''); 
         }
         else {
-        return this.http.post('/lesson/'+lesson_id+'/start', '')
-            .map((response: Response) => response);
+            return this.http.post('/lesson/'+lesson_id+'/start', '');
         }
     }
 
     doneLesson(topic_id, lesson_id, start_datetime, weak_questions) {
         // notify api about lesson done
-        let request = JSON.stringify({ start_datetime: start_datetime, 
-            weak_questions: weak_questions });
+        let request = { start_datetime: start_datetime, 
+            weak_questions: weak_questions };
         if(lesson_id == -1) {
-          return this.http.post('/topic/'+topic_id+'/testoutdone', request)
-            .map((response: Response) => response); 
+          return this.http.post('/topic/'+topic_id+'/testoutdone', request); 
         }
         else {
-          return this.http.post('/lesson/'+lesson_id+'/done', request)
-            .map((response: Response) => response);
+          return this.http.post('/lesson/'+lesson_id+'/done', request);
         }
     }
 }

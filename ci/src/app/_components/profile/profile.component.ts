@@ -11,7 +11,8 @@ import { AuthenticationService } from '../../_services/authentication.service';
 })
 export class ProfileComponent implements OnInit {
   user: User;
-  passwordsMatch: boolean;
+  passwordsMatch: boolean = true;
+  badEmail: boolean = false;
   warningMessage: string;
 
   constructor(
@@ -19,7 +20,6 @@ export class ProfileComponent implements OnInit {
     private authenticationService: AuthenticationService
   ) {
     this.user = new User();
-    this.passwordsMatch = true;
   }
 
   ngOnInit() {
@@ -34,12 +34,20 @@ export class ProfileComponent implements OnInit {
 
   onChangeProfile() {
     this.userService.changeProfile(this.user)
-        .subscribe( res => {
+      .subscribe( res => {
+        this.passwordsMatch = true;  
+        if(Array.isArray(res['email'])) {
+          this.warningMessage = res['email'][0];
+          this.badEmail = true;
+        } else {
           localStorage.setItem('question_num', ""+this.user.questionNum);
-        });
+          this.badEmail = false;
+        }
+      });
   }
 
   onChangePassword(newPassword: string, confirmedPassword: string){
+    this.badEmail = false;
     if(newPassword != confirmedPassword) {
       this.passwordsMatch = false;
       this.warningMessage = "Password does not match the confirm password!";
