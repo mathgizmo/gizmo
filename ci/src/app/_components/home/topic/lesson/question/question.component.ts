@@ -11,30 +11,33 @@ export class QuestionComponent implements OnInit {
   private _question: any = null;
   @Input() set question(value: any) {
     this._question = value;
-    this.ngOnInit();
+    this.initQuestion();
   }
   get question(): any {
     return this._question;
   }
 
   @Output() onAnswered = new EventEmitter<string[]>();
-  answers: string[];
+  answers: string[] = [];
   questionForChart: string = '';
-  is_chart: boolean;
+  is_chart: boolean = false;
+  warning: boolean = false;
+  warningMessage: string = 'Undefined exception';
 
-  constructor() { 
-  	this.is_chart = false;
+  constructor() {
   }
 
   ngOnInit() {
-  	this.answers = [];
+  }
+
+  initQuestion() {
+    this.answers = [];
     this.is_chart = false;
     if(this.question['question'].indexOf('%%chart{') >= 0){
         this.is_chart = true;
         this.questionForChart = this.question['question']
           .replace(new RegExp(/%%chart(.*)(?=%)%/g), "");
     }
-
     if (['mcqms'].indexOf(this.question.reply_mode) >= 0) {
         for (var i = 0; i < this.question.answers.length; i++) {
             this.answers.push('');
@@ -54,17 +57,26 @@ export class QuestionComponent implements OnInit {
         this.question.answer_mode = 'order';
     } else {
         for (var i = 0; i < this.question.answers.length; i++) {
-            this.answers.push('');
+          this.answers.push('');
         }
         this.question.answer_mode = 'input';
+        setTimeout( () => {
+          $(".input:first").focus();
+        }, 10);
     }
     setTimeout(function() {
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
-    }, 50);
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    }, 10);
   }
 
   checkAnswer() {
-  	this.onAnswered.emit(this.answers);
+    if(this.answers.length < 1 || this.answers.some(element => element == "")){
+      this.warning = true;
+      this.warningMessage = "Please, answer the question!";
+    } else {
+      this.warning = false;
+      this.onAnswered.emit(this.answers);
+    }
   }
 
   // function to shuffle answers in order
