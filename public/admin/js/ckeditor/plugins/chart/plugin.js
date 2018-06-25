@@ -267,6 +267,30 @@ CKEDITOR.plugins.add( 'chart', {
                                 {
                                     data.pointDiameter = this.getValue();
                                 }
+                            },
+                            {
+                                type : 'text',
+                                id : 'accuracy-chart-value',
+                                label : 'Chart value accuracy:',
+                                validate : CKEDITOR.dialog.validate
+                                    .integer('Chart value accuracy must be a number'),
+                                required : false,
+                                commit : function( data )
+                                {
+                                    data.accuracyChart = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'text',
+                                id : 'accuracy-control-value',
+                                label : 'Control value accuracy:',
+                                validate : CKEDITOR.dialog.validate
+                                    .integer('Control value accuracy must be a number'),
+                                required : false,
+                                commit : function( data )
+                                {
+                                    data.accuracyControl = this.getValue();
+                                }
                             }
                         ]
                     }
@@ -309,6 +333,12 @@ CKEDITOR.plugins.add( 'chart', {
                         if(data.pointDiameter > 0) 
                             chartHtml += 'point-diameter:'+data.pointDiameter+'; ';
                     }
+
+                    // set value accuracy
+                    if(data.accuracyChart >= 0) 
+                        chartHtml += 'accuracy-chart-value:'+data.accuracyChart+'; ';
+                    if(data.accuracyControl >= 0)
+                        chartHtml += 'accuracy-control-value:'+data.accuracyControl+'; ';
 
                     // set value display
                     chartHtml += 'value-display-chart:'+data.valueDisplayChart+'; ';
@@ -399,6 +429,20 @@ CKEDITOR.plugins.add( 'chart', {
                                 .setValue(chartStr.match(
                                     new RegExp(/point-diameter:([^;]*)(?=(;|$))/g))['0']
                                 .replace('point-diameter:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('accuracy-chart-value:') >= 0) {
+                            this.getContentElement('optional', 'accuracy-chart-value')
+                                .setValue(chartStr.match(
+                                    new RegExp(/accuracy-chart-value:([^;]*)(?=(;|$))/g))['0']
+                                .replace('accuracy-chart-value:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('accuracy-control-value:') >= 0) {
+                            this.getContentElement('optional', 'accuracy-control-value')
+                                .setValue(chartStr.match(
+                                    new RegExp(/accuracy-control-value:([^;]*)(?=(;|$))/g))['0']
+                                .replace('accuracy-control-value:', '')
                             );
                         }
                         if (chartStr.indexOf('mark-diameter:') >= 0) {

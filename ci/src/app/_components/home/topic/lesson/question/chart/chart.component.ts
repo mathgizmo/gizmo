@@ -23,7 +23,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private dotRadius: number = 4;
 
     private type: number = 1;
-    public control: number = 0;
+    public control: number = 0; // ?? exception if private
     private valueDisplayChart: number = 1;
     private valueDisplay: number = 1;
     private value: number = 0.50;
@@ -33,12 +33,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private step: number = 0.5;
     private marksList: number[]= [0, 0.5, 1];
 
+    private accuracyControl: number = 2; // number of decimals (0 - integer)
+    private accuracyChart: number = 2; // number of decimals (0 - integer)
+
     private initialized = false;
     private oldQuestion: string;
 
     private percentValue: number;
-    private precision: number = 2; // number of decimals (0 - integer)
-    private fixValue: number = 0;
+
     private inputValue: number = 0;
     private stepInput: number = 0.01;
     private maxInputValue: number = 1;
@@ -122,14 +124,44 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               ? this.step = Math.round(this.step)
               : this.step = 1;
           }
-          Number.isInteger(this.step) ? this.precision = 0
-            : this.precision = (this.step + "").split(".")[1].length;
+          if(this.valueDisplay == 3 || this.valueDisplay == 4) {
+            this.accuracyControl = Math.round(this.maxValue/this.step).toString().length;
+            if(this.valueDisplay == 4) {
+              (this.accuracyControl >= 2) 
+                ? this.accuracyControl -= 2
+                : this.accuracyControl = 0;
+            }
+          } else {
+            Number.isInteger(this.step) ? this.accuracyControl = 0
+            : this.accuracyControl = (this.step + "").split(".")[1].length;
+          }
+          if(this.valueDisplayChart == 3 || this.valueDisplayChart == 4) { 
+            this.accuracyChart = Math.round(this.maxValue/this.step).toString().length;
+            if(this.valueDisplayChart == 4) {
+              (this.accuracyChart >= 2) 
+                ? this.accuracyChart -= 2
+                : this.accuracyChart = 0;
+            }
+          } else {
+            Number.isInteger(this.step) ? this.accuracyChart = 0
+            : this.accuracyChart = (this.step + "").split(".")[1].length;
+          }  
+        }
+        if (chart['0'].indexOf('accuracy-chart-value:') >= 0) {
+          this.accuracyChart = +chart['0']
+            .match(new RegExp(/accuracy-chart-value:([^;]*)(?=(;|$))/g))['0']
+            .replace('accuracy-chart-value:', '');
+        }
+        if (chart['0'].indexOf('accuracy-control-value:') >= 0) {
+          this.accuracyControl = +chart['0']
+            .match(new RegExp(/accuracy-control-value:([^;]*)(?=(;|$))/g))['0']
+            .replace('accuracy-control-value:', '');
         }
         if (chart['0'].indexOf('marks:') >= 0) {
           this.marksList = chart['0']
             .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
             .replace('marks:', '').split(',').map(Number);
-          const precision = this.precision; //used in anonymous function below
+          const precision = Math.max(this.accuracyControl, this.accuracyChart); //used in anonymous function below
           this.marksList = this.marksList.map(function(elem){
             return Number(elem.toFixed(precision));
           });
@@ -199,7 +231,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         this.percentValue = Math.round((this.value-this.startValue)
           /(this.maxValue-this.startValue)*100);
-        this.fixValue = Math.round(this.maxValue/this.step).toString().length;
         this.initialized = true;
       }
       if(this.value < this.startValue) this.value = this.startValue;
@@ -237,14 +268,13 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             let valueLabel = '<text text-anchor="middle" x=' + x + ' y=' + y
               + ' fill="' + this.strokeColor +'" class="chart-value-label">';
             if(this.valueDisplayChart == 1) {
-              valueLabel += this.value.toFixed(this.precision);
+              valueLabel += this.value.toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 2) {
-              valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
+              valueLabel += this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
             } else if (this.valueDisplayChart == 3) {
-              valueLabel += (this.value/this.maxValue).toFixed(this.fixValue);
+              valueLabel += (this.value/this.maxValue).toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 4) {
-              (this.fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%' 
-                : valueLabel += (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
+              valueLabel += (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%' 
             }
             valueLabel +=  '</text>';
             chartHtml += valueLabel;
@@ -310,15 +340,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               + '" x=' + x + ' y=' + y + ' fill="' 
               + this.strokeColor + '" class="chart-value-label">';
             if(this.valueDisplayChart == 1) {
-              valueLabel += this.value.toFixed(this.precision);
+              valueLabel += this.value.toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 2) {
-              valueLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
+              valueLabel += this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
             } else if (this.valueDisplayChart == 3) {
               valueLabel += (this.value/this.maxValue)
-                .toFixed(this.fixValue);
+                .toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 4) {
-              (this.fixValue < 2) ? valueLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
-                : valueLabel += (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
+              valueLabel += (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%';
             }
             valueLabel +=  '</text>';
             chartHtml += valueLabel;
@@ -338,16 +367,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               let valueLabel = document.createElement("label");
               valueLabel.classList.add('chart-value-label');
               if(this.valueDisplayChart == 1) {
-                valueLabel.innerHTML = ''+ this.value.toFixed(this.precision);
+                valueLabel.innerHTML = ''+ this.value.toFixed(this.accuracyChart);
               } else if (this.valueDisplayChart == 2) {
-                valueLabel.innerHTML = ''+ this.value.toFixed(this.precision) + '/' + this.maxValue;
+                valueLabel.innerHTML = ''+ this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
               } else if (this.valueDisplayChart == 3) {
-                valueLabel.innerHTML = ''+ (this.value/this.maxValue).toFixed(this.fixValue);
+                valueLabel.innerHTML = ''+ (this.value/this.maxValue).toFixed(this.accuracyChart);
               } else if (this.valueDisplayChart == 4) {
-                (this.fixValue < 2) ? valueLabel.innerHTML = 
-                    ''+ (this.value/this.maxValue*100).toFixed(0) + '%'
-                  : valueLabel.innerHTML = 
-                    ''+ (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
+                valueLabel.innerHTML = ''+ (this.value/this.maxValue*100)
+                  .toFixed(this.accuracyChart) + '%';
               }
               chartContainer.appendChild(valueLabel);
             }
@@ -372,6 +399,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           break;
         case 4:
           // Chart (type 4 - slider)
+          let precision = Math.max(this.accuracyControl, this.accuracyChart);
           let width  = chartContainer.offsetWidth;
           let indentation = this.pointDiameter + 5;
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
@@ -382,7 +410,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           width -= indentation*2;
           for(let i = 0; i < (this.endValue-this.startValue); i+= this.step) {
             let position = (i*width/(this.endValue-this.startValue))+indentation;
-            let point = Number((i+this.startValue).toFixed(this.precision));
+            let point = Number((i+this.startValue).toFixed(precision));
             if(this.marksList.includes(point)) {
               chartHtml += '<circle cx="' + position + '" cy="25" r="' 
                 + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
@@ -417,9 +445,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
           if(this.valueDisplayChart > 0) {
             let currentPointLabel = '<text ';  
-            let currentValueFixed = Number((this.value).toFixed(this.precision));
-            let startValueFixed = Number((this.startValue).toFixed(this.precision));
-            let endValueFixed = Number((this.endValue).toFixed(this.precision));
+            let currentValueFixed = Number((this.value).toFixed(precision));
+            let startValueFixed = Number((this.startValue).toFixed(precision));
+            let endValueFixed = Number((this.endValue).toFixed(precision));
             if(currentValueFixed == startValueFixed) {
               currentPointLabel += 'x=' + (this.markDiameter/2) + ' text-anchor="start"';
             } else if (currentValueFixed == endValueFixed) {
@@ -431,19 +459,18 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             currentPointLabel += '" y="15" fill="' + this.strokeColor 
               +'"  class="chart-value-label">';
             if(this.valueDisplayChart == 1) {
-              currentPointLabel += this.value.toFixed(this.precision);
+              currentPointLabel += this.value.toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 2) {
-              currentPointLabel += this.value.toFixed(this.precision) + '/' + this.maxValue;
+              currentPointLabel += this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
             } else if (this.valueDisplayChart == 3) {
-              currentPointLabel += (this.value/this.maxValue).toFixed(this.fixValue);
-            } else if (this.valueDisplayChart == 4) {
-              (this.fixValue < 2) ? currentPointLabel += (this.value/this.maxValue*100).toFixed(0) + '%'
-              : currentPointLabel += (this.value/this.maxValue*100).toFixed(this.fixValue-2) + '%';
+              currentPointLabel += (this.value/this.maxValue).toFixed(this.accuracyChart);
+            } else if (this.valueDisplayChart == 4) { 
+              currentPointLabel += (this.value/this.maxValue*100)
+                .toFixed(this.accuracyChart) + '%';
             }
             currentPointLabel +=  '</text>';
             chartHtml += currentPointLabel;
           }
-
           chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;  
           break;
@@ -452,9 +479,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     }
 
     // function to set value by clicking on top slider
-    private setClickPosition(event){
+    private setClickPosition(event) {
       let chartContainer = document.getElementById('chart-container');
       let pos = getAbsolutePosition(chartContainer);
+
+      let accuracy = this.accuracyControl;
+      if(this.valueDisplay == 3 || this.valueDisplay == 4) {
+        accuracy = Math.max(accuracy, 5);
+      }
 
       if (this.type == 1) {
         let y = event.pageY - pos.y;
@@ -473,7 +505,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
-            this.precision))/Math.pow(10, this.precision);
+            accuracy))/Math.pow(10, accuracy);
       } else if (this.type == 2) {
         let x = event.pageX - pos.x;
         let y = event.pageY - pos.y;
@@ -503,7 +535,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
-            this.precision))/Math.pow(10, this.precision);
+            accuracy))/Math.pow(10, accuracy);
       } else if (this.type == 4) {
         let x = event.pageX - pos.x;
         let circleDiameter = 2*this.dotRadius;
@@ -524,7 +556,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }
         Math.abs(this.value - this.endValue) < diff ?
           this.value = this.endValue : this.value = Math.round(point*Math.pow(10, 
-            this.precision))/Math.pow(10, this.precision);
+            accuracy))/Math.pow(10, accuracy);
 
         if(this.value < this.startValue) 
           this.value = this.startValue;
@@ -543,7 +575,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               /(this.maxValue-this.startValue)*100);
           } else {
             this.inputValue = Math.round(this.value*Math.pow(10, 
-              this.precision))/Math.pow(10, this.precision);
+              accuracy))/Math.pow(10, accuracy);
           }
           resolve();
         }).then(() => { 
