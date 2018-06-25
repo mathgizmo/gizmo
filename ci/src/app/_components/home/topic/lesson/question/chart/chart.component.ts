@@ -39,6 +39,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private percentValue: number;
     private precision: number = 2; // number of decimals (0 - integer)
     private fixValue: number = 0;
+    private inputValue: number = 0;
+    private stepInput: number = 0.01;
+    private maxInputValue: number = 1;
+    private minInputValue: number = 0;
 
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
@@ -66,8 +70,22 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             this.initialized = false;
         }
         this.destroyDotsChart();
-        this.buildChart();
-        this.percentValue = Math.round(this.value/this.maxValue*100);
+        let promise = new Promise((resolve) => {
+          if(this.control == 1) {
+            if (this.valueDisplay == 3) {
+              this.value = this.inputValue*(this.maxValue-this.startValue)+this.startValue;
+            } else if(this.valueDisplay == 4){
+              this.value = (this.inputValue/100)*(this.maxValue-this.startValue)+this.startValue;
+            } else {
+              this.value = this.inputValue;
+            }
+          } 
+          this.percentValue = Math.round((this.value-this.startValue)
+            /(this.maxValue-this.startValue)*100);
+          resolve();
+        }).then(() => { 
+          this.buildChart(); 
+        });  
     }
 
     // function to build charts
@@ -95,15 +113,15 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
             .replace('value:', ''));
         }
-        if (chart['0'].indexOf('max:') >= 0) {
-          this.maxValue = parseFloat(chart['0']
-            .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
-            .replace('max:', ''));
-        }
         if (chart['0'].indexOf('step:') >= 0) {
           this.step = parseFloat(chart['0']
             .match(new RegExp(/step:([^;]*)(?=(;|$))/g))['0']
             .replace('step:', ''));
+          if(this.type == 3) {
+            this.step >= 1
+              ? this.step = Math.round(this.step)
+              : this.step = 1;
+          }
           Number.isInteger(this.step) ? this.precision = 0
             : this.precision = (this.step + "").split(".")[1].length;
         }
@@ -115,7 +133,13 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.marksList = this.marksList.map(function(elem){
             return Number(elem.toFixed(precision));
           });
-          this.maxValue = this.marksList[this.marksList.length-1];
+          this.startValue = Math.min.apply(null, this.marksList);
+          this.endValue = this.maxValue = Math.max.apply(null, this.marksList);
+        }
+        if (chart['0'].indexOf('max:') >= 0) {
+          this.maxValue = parseFloat(chart['0']
+            .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
+            .replace('max:', ''));
         }
         if (chart['0'].indexOf('main-color:') >= 0) {
           this.mainColor = chart['0']
@@ -151,15 +175,37 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.control = +chart['0']
             .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', '');
+        if(this.control == 1) {
+          if(this.valueDisplay == 3) {
+            this.minInputValue = 0;
+            this.maxInputValue = 1;
+            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*100)/100;
+            this.inputValue = Math.round((this.value-this.startValue)
+              /(this.maxValue-this.startValue)*100)/100;
+          } else if (this.valueDisplay == 4) {
+            this.minInputValue = 0;
+            this.maxInputValue = 100;
+            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*100);
+            this.inputValue = Math.round((this.value-this.startValue)
+              /(this.maxValue-this.startValue)*100);
+          } else {
+            this.minInputValue = this.startValue;
+            this.maxInputValue = this.maxValue;
+            this.stepInput = this.step;
+            this.inputValue = this.value;
+          }
+        } else {
+          this.minInputValue = this.startValue;
+        }
+        this.percentValue = Math.round((this.value-this.startValue)
+          /(this.maxValue-this.startValue)*100);
         this.fixValue = Math.round(this.maxValue/this.step).toString().length;
         this.initialized = true;
       }
+      if(this.value < this.startValue) this.value = this.startValue;
+      if(this.value > this.maxValue) this.value = this.maxValue;
+      if(this.type == 3) this.value = Math.round(this.value);
       let chartHtml = '';
-      if(this.type == 3) {
-        this.step >= 1 
-          ? this.step = Math.round(this.step)
-          : this.step = 1;
-      }
       let valuePercent = this.value/this.maxValue;
       let chartContainer = document.getElementById('chart-container');
       switch (this.type) {
@@ -328,9 +374,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           // Chart (type 4 - slider)
           let width  = chartContainer.offsetWidth;
           let indentation = this.pointDiameter + 5;
-          this.startValue = Math.min.apply(null, this.marksList);
-          this.endValue = this.maxValue = 
-            Math.max.apply(null, this.marksList);
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
           chartHtml += '<line x1="' + indentation + '" y1="25" x2="' 
             + (width-indentation) + '" y2="25" style="stroke:' 
@@ -412,6 +455,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private setClickPosition(event){
       let chartContainer = document.getElementById('chart-container');
       let pos = getAbsolutePosition(chartContainer);
+
       if (this.type == 1) {
         let y = event.pageY - pos.y;
         let height  = chartContainer.offsetHeight;
@@ -430,8 +474,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
             this.precision))/Math.pow(10, this.precision);
-
-        this.buildChart();
       } else if (this.type == 2) {
         let x = event.pageX - pos.x;
         let y = event.pageY - pos.y;
@@ -462,8 +504,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         Math.abs(this.value - this.maxValue) < diff ?
           this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
             this.precision))/Math.pow(10, this.precision);
-
-        this.buildChart();
       } else if (this.type == 4) {
         let x = event.pageX - pos.x;
         let circleDiameter = 2*this.dotRadius;
@@ -490,9 +530,26 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.value = this.startValue;
         else if (this.value > this.endValue) 
           this.value = this.endValue;
-
-        this.buildChart();
       }
+      if(this.type == 1 || this.type == 2 || this.type == 4) {
+        this.percentValue = Math.round((this.value-this.startValue)
+          /(this.maxValue-this.startValue)*100);
+        let promise = new Promise((resolve) => {
+          if(this.control == 1 && this.valueDisplay == 3) {
+            this.inputValue = Math.round((this.value-this.startValue)
+              /(this.maxValue-this.startValue)*100)/100;
+          } else if(this.control == 1 && this.valueDisplay == 4){
+            this.inputValue = Math.round((this.value-this.startValue)
+              /(this.maxValue-this.startValue)*100);
+          } else {
+            this.inputValue = Math.round(this.value*Math.pow(10, 
+              this.precision))/Math.pow(10, this.precision);
+          }
+          resolve();
+        }).then(() => { 
+          this.buildChart(); 
+        });
+      }  
     }
 
     // function to draw Dots Chart

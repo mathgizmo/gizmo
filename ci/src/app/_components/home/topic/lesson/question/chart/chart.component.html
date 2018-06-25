@@ -2,18 +2,15 @@
 <div id="controls" >
   <span *ngIf="control == 1">
     <mat-form-field (change)="ngOnChanges()">
-      <input matInput *ngIf="type != 4"
-        [(ngModel)]="value" type="number" 
-        [step]="step" [max]="maxValue" min="0"/>
-      <input matInput *ngIf="type == 4" id='inputValue'
-        [(ngModel)]="value" type="number" 
-        [step]="step" [max]="maxValue" [min]="startValue"/>
+      <input matInput [(ngModel)]="inputValue" type="number"
+        [step]="stepInput" [max]="maxInputValue" [min]="minInputValue" />
       <mat-progress-bar class='progress' value={{percentValue}}>
       </mat-progress-bar>
-    </mat-form-field> 
+    </mat-form-field>
     <span *ngIf="valueDisplay == 2" >
       <span class='max-value'>/{{maxValue}}</span>
     </span>
+    <span *ngIf="valueDisplay == 4">%</span>
   </span>
 
   <span *ngIf="control == 2">
@@ -40,13 +37,13 @@
         </label>
         <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
           <span *ngIf="valueDisplay == 3">
-            Value = {{(value/maxValue).toFixed(fixValue)}}
+            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(fixValue)}}
           </span>
           <span *ngIf="(valueDisplay == 4 && fixValue >= 2)">
-            Value = {{(value/maxValue*100).toFixed(fixValue-2)}}%
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(fixValue-2)}}%
           </span>
           <span *ngIf="(valueDisplay == 4 && fixValue < 2)">
-            Value = {{(value/maxValue*100).toFixed(0)}}%
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(0)}}%
           </span>
         </label>
       </div>
@@ -66,13 +63,13 @@
       </label>
       <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
           <span *ngIf="valueDisplay == 3">
-            Value = {{(value/maxValue).toFixed(fixValue)}}
+            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(fixValue)}}
           </span>
           <span *ngIf="(valueDisplay == 4 && fixValue >= 2)">
-            Value = {{(value/maxValue*100).toFixed(fixValue-2)}}%
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(fixValue-2)}}%
           </span>
           <span *ngIf="(valueDisplay == 4 && fixValue < 2)">
-            Value = {{(value/maxValue*100).toFixed(0)}}%
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(0)}}%
           </span>
         </label>
     </div>
