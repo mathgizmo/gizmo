@@ -23,7 +23,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private dotRadius: number = 4;
 
     private type: number = 1;
-    private control: number = 0;
+    public control: number = 0;
     private valueDisplayChart: number = 1;
     private valueDisplay: number = 1;
     private value: number = 0.50;
