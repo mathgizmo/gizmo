@@ -89,7 +89,9 @@ export class LessonComponent implements OnInit {
     }
 
     nextQuestion() {
-      this.question = this.lessonTree['questions'].shift();
+      var randInt = Math.floor(Math.random() * this.lessonTree['questions'].length);
+      this.question = this.lessonTree['questions'][randInt];
+      this.lessonTree['questions'].splice(randInt, 1);
     }
     
     checkAnswer(answers: string[]) {
