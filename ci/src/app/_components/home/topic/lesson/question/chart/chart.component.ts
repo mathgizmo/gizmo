@@ -319,15 +319,15 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           if(this.valueDisplayChart > 0) {
             let x, y;
             let anchor; // start | middle | end
-            if(this.value/this.maxValue < 0.25) { // I
+            if(this.value/this.maxValue < 0.375) { // I (0.25+0.125)
               x = this.chartHeight;
               y = 20;
               anchor = 'end'; 
-            } else if (this.value/this.maxValue < 0.5) { // II
+            } else if (this.value/this.maxValue < 0.625) { // II (0.5+0.125)
               x = this.chartHeight;
               y = this.chartHeight - 15;
               anchor = 'end';
-            } else if (this.value/this.maxValue < 0.75) { // III
+            } else if (this.value/this.maxValue < 0.875) { // III (0.75+0.125)
               x = 0;
               y = this.chartHeight - 15;
               anchor = 'start';
