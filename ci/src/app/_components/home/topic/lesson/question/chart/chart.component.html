@@ -29,7 +29,7 @@
       <div class="value-label-container">
         <label *ngIf="(valueDisplay == 1 || valueDisplay == 2)">
           <span>
-            Value = {{value.toFixed(precision)}}
+            Value = {{value.toFixed(accuracyControl)}}
           </span>
           <span *ngIf="valueDisplay == 2">
             / {{maxValue}}
@@ -37,13 +37,10 @@
         </label>
         <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
           <span *ngIf="valueDisplay == 3">
-            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(fixValue)}}
+            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(accuracyControl)}}
           </span>
-          <span *ngIf="(valueDisplay == 4 && fixValue >= 2)">
-            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(fixValue-2)}}%
-          </span>
-          <span *ngIf="(valueDisplay == 4 && fixValue < 2)">
-            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(0)}}%
+          <span *ngIf="valueDisplay == 4">
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(accuracyControl)}}%
           </span>
         </label>
       </div>
@@ -55,7 +52,7 @@
     <div id="value-label-container">
       <label *ngIf="(valueDisplay == 1 || valueDisplay == 2)">
         <span>
-          Value = {{value.toFixed(precision)}}
+          Value = {{value.toFixed(accuracyControl)}}
         </span>
         <span *ngIf="valueDisplay == 2">
           / {{maxValue}}
@@ -63,13 +60,10 @@
       </label>
       <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
           <span *ngIf="valueDisplay == 3">
-            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(fixValue)}}
+            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(accuracyControl)}}
           </span>
-          <span *ngIf="(valueDisplay == 4 && fixValue >= 2)">
-            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(fixValue-2)}}%
-          </span>
-          <span *ngIf="(valueDisplay == 4 && fixValue < 2)">
-            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(0)}}%
+          <span *ngIf="valueDisplay == 4">
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(accuracyControl)}}%
           </span>
         </label>
     </div>
