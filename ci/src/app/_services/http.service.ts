@@ -34,7 +34,7 @@ export class HttpService {
             .pipe(
                 map((response: Response) => response['message']),
                 catchError((response: Response) => {
-                    if (response['status_code'] == 401) {
+                    if (response['status_code'] == 401 || response['error']['status_code'] == 401) {
                         this.authenticationService.logout();
                         this.router.navigate(['login']);
                     }
@@ -54,13 +54,12 @@ export class HttpService {
             // add authorization header with jwt token
             this.headers = new HttpHeaders({'Content-Type': 'application/json' });
         }
-
         // get from api
         return this.http.get(this.apiUrl+url, { headers: this.headers } )
             .pipe(
                 map((response: Response) => response['message']),
                 catchError((response: Response) => {
-                    if (response['status_code'] == 401) {
+                    if (response['status_code'] == 401 || response['error']['status_code'] == 401) {
                         this.authenticationService.logout();
                         this.router.navigate(['login']);
                     }
