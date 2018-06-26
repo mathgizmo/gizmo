@@ -81,6 +81,25 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             } else {
               this.value = this.inputValue;
             }
+            if(this.type == 4) {
+              let accuracy = this.accuracyControl;
+              if(this.valueDisplay == 3 || this.valueDisplay == 4) {
+                accuracy = Math.max(accuracy, 5);
+              }
+              // find the closest point
+              let point = this.startValue;
+              let diff = Math.abs(this.value - point);
+              for (let i = this.startValue; i <= this.endValue; i+= this.step) {
+                let newdiff = Math.abs(this.value - i);
+                if (newdiff < diff) {
+                  diff = newdiff;
+                  point = i;
+                }
+              }
+              Math.abs(this.value - this.endValue) < diff ?
+                this.value = this.endValue : this.value = Math.round(point*Math.pow(10, 
+                  accuracy))/Math.pow(10, accuracy); 
+            }
           } 
           this.percentValue = Math.round((this.value-this.startValue)
             /(this.maxValue-this.startValue)*100);
@@ -211,15 +230,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           if(this.valueDisplay == 3) {
             this.minInputValue = 0;
             this.maxInputValue = 1;
-            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*100)/100;
+            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*10000)/10000;
+            if(!this.stepInput) this.stepInput = this.step/(this.maxValue-this.startValue);
             this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*100)/100;
+              /(this.maxValue-this.startValue)*10000)/10000;
           } else if (this.valueDisplay == 4) {
             this.minInputValue = 0;
             this.maxInputValue = 100;
-            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*100);
+            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*10000)/100;
+            if(!this.stepInput) this.stepInput = this.step/(this.maxValue-this.startValue)*100;
             this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*100);
+              /(this.maxValue-this.startValue)*10000)/100;
           } else {
             this.minInputValue = this.startValue;
             this.maxInputValue = this.maxValue;

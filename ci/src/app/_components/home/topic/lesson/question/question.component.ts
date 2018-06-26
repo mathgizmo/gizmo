@@ -70,7 +70,8 @@ export class QuestionComponent implements OnInit {
   }
 
   checkAnswer() {
-    if(this.answers.length < 1 || this.answers.some(element => element == "")){
+    if(this.answers.length < 1 || this.answers.every(elem => elem == "") || 
+      (this.question.answer_mode == 'input' && this.answers.some(elem => elem == "")) ) {
       this.warning = true;
       this.warningMessage = "Please, answer the question!";
     } else {
