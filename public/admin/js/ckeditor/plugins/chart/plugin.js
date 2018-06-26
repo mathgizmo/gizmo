@@ -337,7 +337,7 @@ CKEDITOR.plugins.add( 'chart', {
                     // set value accuracy
                     if(data.accuracyChart >= 0 && data.accuracyChart.length)
                         chartHtml += 'accuracy-chart-value:'+data.accuracyChart+'; ';
-                    if(data.accuracyControl >= 0  && data.accuracyChart.length)
+                    if(data.accuracyControl >= 0  && data.accuracyControl.length)
                         chartHtml += 'accuracy-control-value:'+data.accuracyControl+'; ';
 
                     // set value display
