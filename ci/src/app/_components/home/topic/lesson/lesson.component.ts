@@ -66,6 +66,21 @@ export class LessonComponent implements OnInit {
                     this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
+                        //randomize array
+                        var currentIndex = lessonTree['questions'].length, temporaryValue, randomIndex;
+                        // While there remain elements to shuffle...
+                        while (0 !== currentIndex) {
+
+                          // Pick a remaining element...
+                          randomIndex = Math.floor(Math.random() * currentIndex);
+                          currentIndex -= 1;
+
+                          // And swap it with the current element.
+                          temporaryValue = lessonTree['questions'][currentIndex];
+                          lessonTree['questions'][currentIndex] = lessonTree['questions'][randomIndex];
+                          lessonTree['questions'][randomIndex] = temporaryValue;
+                        }
+                        
                         if(this.question_num >= this.lessonTree['questions'].length)
                             this.question_num = this.lessonTree['questions'].length;
                         this.nextQuestion();
@@ -89,9 +104,7 @@ export class LessonComponent implements OnInit {
     }
 
     nextQuestion() {
-      var randInt = Math.floor(Math.random() * this.lessonTree['questions'].length);
-      this.question = this.lessonTree['questions'][randInt];
-      this.lessonTree['questions'].splice(randInt, 1);
+      this.question = this.lessonTree['questions'].shift();
     }
     
     checkAnswer(answers: string[]) {
