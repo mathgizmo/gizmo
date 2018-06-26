@@ -237,10 +237,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           } else if (this.valueDisplay == 4) {
             this.minInputValue = 0;
             this.maxInputValue = 100;
-            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*10000)/10;
+            this.stepInput = Math.round(this.step/(this.maxValue-this.startValue)*10000)/100;
             if(!this.stepInput) this.stepInput = this.step/(this.maxValue-this.startValue)*100;
             this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*10000)/10;
+              /(this.maxValue-this.startValue)*10000)/100;
           } else {
             this.minInputValue = this.startValue;
             this.maxInputValue = this.maxValue;
