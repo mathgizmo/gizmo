@@ -35,7 +35,7 @@ import { QuestionComponent } from './_components/home/topic/lesson/question/ques
 
 import { QuestionPreviewComponent } from
     './_components/previews/question-preview/question-preview.component';
-import { PlacementComponent, NoDialogComponent } from './_components/welcome/placement/index';
+import { PlacementComponent, QuestionNumDialogComponent } from './_components/welcome/placement/index';
 
 @NgModule({
     imports: [
@@ -82,13 +82,13 @@ import { PlacementComponent, NoDialogComponent } from './_components/welcome/pla
         QuestionComponent,
         QuestionPreviewComponent,
         PlacementComponent,
-        NoDialogComponent
+        QuestionNumDialogComponent
     ],
     entryComponents: [
         GoodDialogComponent,
         BadDialogComponent,
         ReportDialogComponent,
-        NoDialogComponent
+        QuestionNumDialogComponent
     ],
     providers: [
         AuthGuard,

@@ -4,17 +4,17 @@ import { UserService } from '../../../../_services/user.service';
 import { User } from '../../../../_models/user';
 
 @Component({
-    selector: 'no-dialog',
-    templateUrl: 'no-dialog.component.html',
-    styleUrls: ['no-dialog.component.scss'],
+    selector: 'question-num-dialog',
+    templateUrl: 'question-num-dialog.component.html',
+    styleUrls: ['question-num-dialog.component.scss'],
     providers: [UserService]
 })
-export class NoDialogComponent {
+export class QuestionNumDialogComponent {
     user: User = new User();
 
     constructor(
         private userService: UserService,
-        public dialogRef: MatDialogRef<NoDialogComponent>,
+        public dialogRef: MatDialogRef<QuestionNumDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         this.user.questionNum = +localStorage.getItem('question_num') || 5;
     }
