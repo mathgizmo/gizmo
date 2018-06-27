@@ -39,8 +39,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private initialized = false;
     private oldQuestion: string;
 
-    private percentValue: number;
-
     private inputValue: number = 0;
     private stepInput: number = 0.01;
     private maxInputValue: number = 1;
@@ -101,8 +99,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                   accuracy))/Math.pow(10, accuracy); 
             }
           } 
-          this.percentValue = Math.round((this.value-this.startValue)
-            /(this.maxValue-this.startValue)*100);
           resolve();
         }).then(() => { 
           this.buildChart(); 
@@ -250,8 +246,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         } else {
           this.minInputValue = this.startValue;
         }
-        this.percentValue = Math.round((this.value-this.startValue)
-          /(this.maxValue-this.startValue)*100);
         this.initialized = true;
       }
       if(this.value < this.startValue) this.value = this.startValue;
@@ -585,15 +579,13 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.value = this.endValue;
       }
       if(this.type == 1 || this.type == 2 || this.type == 4) {
-        this.percentValue = Math.round((this.value-this.startValue)
-          /(this.maxValue-this.startValue)*100);
         let promise = new Promise((resolve) => {
           if(this.control == 1 && this.valueDisplay == 3) {
             this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*100)/100;
+              /(this.maxValue-this.startValue)*Math.pow(10, accuracy))/Math.pow(10, accuracy);
           } else if(this.control == 1 && this.valueDisplay == 4){
             this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*100);
+              /(this.maxValue-this.startValue)*Math.pow(10, accuracy+2))/Math.pow(10, accuracy);
           } else {
             this.inputValue = Math.round(this.value*Math.pow(10, 
               accuracy))/Math.pow(10, accuracy);
