@@ -192,36 +192,51 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.mainColor = chart['0']
             .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
             .replace('main-color:', '');
+        } else { 
+          this.mainColor = "#f7f7f7";
         }
         if (chart['0'].indexOf('selected-color:') >= 0) {
           this.selectedColor = chart['0']
             .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
             .replace('selected-color:', '');
+        } else { 
+          this.selectedColor = "#ff4444";
         }
         if (chart['0'].indexOf('stroke-color:') >= 0) {
           this.strokeColor = chart['0']
             .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-color:', '');
+        } else { 
+          this.strokeColor = "#111";
         }
         if (chart['0'].indexOf('stroke-width:') >= 0) {
           this.strokeWidth = +chart['0']
             .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-width:', '');
+        } else { 
+          this.strokeWidth = 1;
         }
         if (chart['0'].indexOf('mark-diameter:') >= 0) {
           this.markDiameter = +chart['0']
             .match(new RegExp(/mark-diameter:([^;]*)(?=(;|$))/g))['0']
             .replace('mark-diameter:', '');
+        } else { 
+          this.markDiameter = 3;
         }
         if (chart['0'].indexOf('point-diameter:') >= 0) {
           this.pointDiameter = +chart['0']
             .match(new RegExp(/point-diameter:([^;]*)(?=(;|$))/g))['0']
             .replace('point-diameter:', '');
+        } else { 
+          this.pointDiameter = 1;
         }
-        if (chart['0'].indexOf('control:') >= 0)
+        if (chart['0'].indexOf('control:') >= 0) {
           this.control = +chart['0']
             .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', '');
+        } else {
+          this.control = 0;
+        }
         if(this.control == 1) {
           if(this.valueDisplay == 3) {
             this.minInputValue = 0;
