@@ -330,45 +330,48 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' + 
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
-
+          chartHtml += '</svg>';
+            
           if(this.valueDisplayChart > 0) {
-            let x, y;
-            let anchor; // start | middle | end
-            if(this.value/this.maxValue < 0.375) { // I (0.25+0.125)
-              x = this.chartHeight;
-              y = 20;
-              anchor = 'end'; 
-            } else if (this.value/this.maxValue < 0.625) { // II (0.5+0.125)
-              x = this.chartHeight;
-              y = this.chartHeight - 15;
-              anchor = 'end';
-            } else if (this.value/this.maxValue < 0.875) { // III (0.75+0.125)
-              x = 0;
-              y = this.chartHeight - 15;
-              anchor = 'start';
-            } else { // IV
-              x = 0;
-              y = 20;
-              anchor = 'start';
+            var chartValueLabelFontSize = 16;
+            setTimeout(()=>{
+              let fontSize = $('.chart-value-label:first')
+                .css('font-size');
+              fontSize.includes('px') 
+                ? chartValueLabelFontSize = +(fontSize.replace('px',''))
+                : chartValueLabelFontSize = 16;
+            }, 10);
+            let valueLabel = document.createElement("label");
+            valueLabel.classList.add("chart-value-label");
+            valueLabel.style.position = "absolute";
+            valueLabel.style.color = this.strokeColor;
+            if(this.value/this.maxValue < 0.5) {
+              valueLabel.style.left = ((chartContainer.clientWidth
+                -this.chartHeight)/2+8+x) + "px";
+            } else {
+              valueLabel.style.right = ((chartContainer.clientWidth
+                -this.chartHeight)/2+(+this.chartHeight+8)-x) + "px";
             }
-            let valueLabel = '<text text-anchor="' + anchor 
-              + '" x=' + x + ' y=' + y + ' fill="' 
-              + this.strokeColor + '" class="chart-value-label">';
+            if(this.value/this.maxValue < 0.25 || this.value/this.maxValue > 0.75) {
+              valueLabel.style.top = y-chartValueLabelFontSize + "px";
+            } else {
+              valueLabel.style.top = y + "px";
+            }
             if(this.valueDisplayChart == 1) {
-              valueLabel += this.value.toFixed(this.accuracyChart);
+              valueLabel.innerHTML += this.value.toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 2) {
-              valueLabel += this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
+              valueLabel.innerHTML += this.value.toFixed(this.accuracyChart)
+                 + '/' + this.maxValue;
             } else if (this.valueDisplayChart == 3) {
-              valueLabel += (this.value/this.maxValue)
+              valueLabel.innerHTML += (this.value/this.maxValue)
                 .toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 4) {
-              valueLabel += (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%';
+              valueLabel.innerHTML += (this.value/this.maxValue*100)
+                .toFixed(this.accuracyChart) + '%';
             }
-            valueLabel +=  '</text>';
-            chartHtml += valueLabel;
+            chartHtml += valueLabel.outerHTML;
           }
 
-          chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;
           break;
         case 3:
