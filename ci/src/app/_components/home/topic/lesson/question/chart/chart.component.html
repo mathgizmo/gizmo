@@ -4,7 +4,7 @@
     <mat-form-field (change)="ngOnChanges()">
       <input matInput [(ngModel)]="inputValue" type="number"
         [step]="stepInput" [max]="maxInputValue" [min]="minInputValue" />
-      <mat-progress-bar class='progress' value={{percentValue}}>
+      <mat-progress-bar class='progress' [value]="((value-startValue)/(maxValue-startValue)*100).toFixed(0)">
       </mat-progress-bar>
     </mat-form-field>
     <span *ngIf="valueDisplay == 2" >

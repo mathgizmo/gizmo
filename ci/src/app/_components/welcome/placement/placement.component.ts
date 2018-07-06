@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { PlacementService } from '../../../_services/index';
 
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
-import { NoDialogComponent } from './no-dialog/no-dialog.component';
+import { QuestionNumDialogComponent } from './question-num-dialog/question-num-dialog.component';
 
 @Component({
   selector: 'app-placement',
@@ -30,55 +30,57 @@ export class PlacementComponent implements OnInit {
   }
 
   onSkip() {
-  	this.router.navigate(['/']);
+    let dialogRef = this.dialog.open(QuestionNumDialogComponent, {
+      width: '300px', data: { } 
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(['/']);
+    });
   }
 
   onNext() {
   	this.loading = true;
     this.placementService.getPlacementQuestions()
-        .subscribe(response => {
-            this.state = 1;
-            this.questions = response;
-            this.nextQuestion();
-            this.loading = false;
-        });
+    .subscribe(response => {
+      this.state = 1;
+      this.questions = response;
+      this.nextQuestion();
+      this.loading = false;
+    });
   }
 
   onYes() {
   	this.loading = true;
     this.placementService.doneUnit(this.unitId)
-  		.subscribe(response => {
-            this.nextQuestion();
-            //console.log(response);
-            this.loading = false;
-        });
+ 		.subscribe(response => {
+      this.nextQuestion();
+      this.loading = false;
+    });
   }
 
   onNo() {
-  	let dialogRef = this.dialog.open(NoDialogComponent, {
-            width: '300px',
-            data: { }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.placementService.getFirstTopicId(this.unitId)
-		  		.subscribe(response => {
-            		this.router.navigate(['/topic/'+response]);
-		        });
-        });
-
+  	let dialogRef = this.dialog.open(QuestionNumDialogComponent, {
+      width: '300px',
+      data: { }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.placementService.getFirstTopicId(this.unitId)
+		.subscribe(response => {
+        this.router.navigate(['/topic/'+response]);
+      });
+    });
   }
 
   onNotSure() {
-  	let dialogRef = this.dialog.open(NoDialogComponent, {
-            width: '300px',
-            data: { }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.placementService.doneHalfUnit(this.unitId)
-		  		.subscribe(response => {
-            		this.router.navigate(['/topic/'+response]);
-		        });
-        });
+  	let dialogRef = this.dialog.open(QuestionNumDialogComponent, {
+      width: '300px', data: { }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.placementService.doneHalfUnit(this.unitId)
+		.subscribe(response => {
+        this.router.navigate(['/topic/'+response]);
+      });
+    });
   }
 
   nextQuestion() {

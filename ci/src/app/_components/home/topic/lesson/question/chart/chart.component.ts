@@ -39,8 +39,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private initialized = false;
     private oldQuestion: string;
 
-    private percentValue: number;
-
     private inputValue: number = 0;
     private stepInput: number = 0.01;
     private maxInputValue: number = 1;
@@ -101,8 +99,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                   accuracy))/Math.pow(10, accuracy); 
             }
           } 
-          this.percentValue = Math.round((this.value-this.startValue)
-            /(this.maxValue-this.startValue)*100);
           resolve();
         }).then(() => { 
           this.buildChart(); 
@@ -196,36 +192,51 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.mainColor = chart['0']
             .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
             .replace('main-color:', '');
+        } else { 
+          this.mainColor = "#f7f7f7";
         }
         if (chart['0'].indexOf('selected-color:') >= 0) {
           this.selectedColor = chart['0']
             .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
             .replace('selected-color:', '');
+        } else { 
+          this.selectedColor = "#ff4444";
         }
         if (chart['0'].indexOf('stroke-color:') >= 0) {
           this.strokeColor = chart['0']
             .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-color:', '');
+        } else { 
+          this.strokeColor = "#111";
         }
         if (chart['0'].indexOf('stroke-width:') >= 0) {
           this.strokeWidth = +chart['0']
             .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-width:', '');
+        } else { 
+          this.strokeWidth = 1;
         }
         if (chart['0'].indexOf('mark-diameter:') >= 0) {
           this.markDiameter = +chart['0']
             .match(new RegExp(/mark-diameter:([^;]*)(?=(;|$))/g))['0']
             .replace('mark-diameter:', '');
+        } else { 
+          this.markDiameter = 3;
         }
         if (chart['0'].indexOf('point-diameter:') >= 0) {
           this.pointDiameter = +chart['0']
             .match(new RegExp(/point-diameter:([^;]*)(?=(;|$))/g))['0']
             .replace('point-diameter:', '');
+        } else { 
+          this.pointDiameter = 1;
         }
-        if (chart['0'].indexOf('control:') >= 0)
+        if (chart['0'].indexOf('control:') >= 0) {
           this.control = +chart['0']
             .match(new RegExp(/control:([^;]*)(?=(;|$))/g))['0']
             .replace('control:', '');
+        } else {
+          this.control = 0;
+        }
         if(this.control == 1) {
           if(this.valueDisplay == 3) {
             this.minInputValue = 0;
@@ -250,8 +261,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         } else {
           this.minInputValue = this.startValue;
         }
-        this.percentValue = Math.round((this.value-this.startValue)
-          /(this.maxValue-this.startValue)*100);
         this.initialized = true;
       }
       if(this.value < this.startValue) this.value = this.startValue;
@@ -336,45 +345,48 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' + 
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
-
+          chartHtml += '</svg>';
+            
           if(this.valueDisplayChart > 0) {
-            let x, y;
-            let anchor; // start | middle | end
-            if(this.value/this.maxValue < 0.375) { // I (0.25+0.125)
-              x = this.chartHeight;
-              y = 20;
-              anchor = 'end'; 
-            } else if (this.value/this.maxValue < 0.625) { // II (0.5+0.125)
-              x = this.chartHeight;
-              y = this.chartHeight - 15;
-              anchor = 'end';
-            } else if (this.value/this.maxValue < 0.875) { // III (0.75+0.125)
-              x = 0;
-              y = this.chartHeight - 15;
-              anchor = 'start';
-            } else { // IV
-              x = 0;
-              y = 20;
-              anchor = 'start';
+            var chartValueLabelFontSize = 16;
+            setTimeout(()=>{
+              let fontSize = $('.chart-value-label:first')
+                .css('font-size');
+              fontSize.includes('px') 
+                ? chartValueLabelFontSize = +(fontSize.replace('px',''))
+                : chartValueLabelFontSize = 16;
+            }, 10);
+            let valueLabel = document.createElement("label");
+            valueLabel.classList.add("chart-value-label");
+            valueLabel.style.position = "absolute";
+            valueLabel.style.color = this.strokeColor;
+            if(this.value/this.maxValue < 0.5) {
+              valueLabel.style.left = ((chartContainer.clientWidth
+                -this.chartHeight)/2+8+x) + "px";
+            } else {
+              valueLabel.style.right = ((chartContainer.clientWidth
+                -this.chartHeight)/2+(+this.chartHeight+8)-x) + "px";
             }
-            let valueLabel = '<text text-anchor="' + anchor 
-              + '" x=' + x + ' y=' + y + ' fill="' 
-              + this.strokeColor + '" class="chart-value-label">';
+            if(this.value/this.maxValue < 0.25 || this.value/this.maxValue > 0.75) {
+              valueLabel.style.top = y-chartValueLabelFontSize + "px";
+            } else {
+              valueLabel.style.top = y + "px";
+            }
             if(this.valueDisplayChart == 1) {
-              valueLabel += this.value.toFixed(this.accuracyChart);
+              valueLabel.innerHTML += this.value.toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 2) {
-              valueLabel += this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
+              valueLabel.innerHTML += this.value.toFixed(this.accuracyChart)
+                 + '/' + this.maxValue;
             } else if (this.valueDisplayChart == 3) {
-              valueLabel += (this.value/this.maxValue)
+              valueLabel.innerHTML += (this.value/this.maxValue)
                 .toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 4) {
-              valueLabel += (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%';
+              valueLabel.innerHTML += (this.value/this.maxValue*100)
+                .toFixed(this.accuracyChart) + '%';
             }
-            valueLabel +=  '</text>';
-            chartHtml += valueLabel;
+            chartHtml += valueLabel.outerHTML;
           }
 
-          chartHtml += '</svg>';
           chartContainer.innerHTML = chartHtml;
           break;
         case 3:
@@ -585,15 +597,13 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.value = this.endValue;
       }
       if(this.type == 1 || this.type == 2 || this.type == 4) {
-        this.percentValue = Math.round((this.value-this.startValue)
-          /(this.maxValue-this.startValue)*100);
         let promise = new Promise((resolve) => {
           if(this.control == 1 && this.valueDisplay == 3) {
             this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*100)/100;
+              /(this.maxValue-this.startValue)*Math.pow(10, accuracy))/Math.pow(10, accuracy);
           } else if(this.control == 1 && this.valueDisplay == 4){
             this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*100);
+              /(this.maxValue-this.startValue)*Math.pow(10, accuracy+2))/Math.pow(10, accuracy);
           } else {
             this.inputValue = Math.round(this.value*Math.pow(10, 
               accuracy))/Math.pow(10, accuracy);
