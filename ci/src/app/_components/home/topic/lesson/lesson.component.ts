@@ -32,6 +32,7 @@ export class LessonComponent implements OnInit {
 
     incorrect_answers: number;
     max_incorrect_answers: number = 1;
+    randomisation: boolean = true;
 
     question: any = null;
     answers: string[] = null;
@@ -66,21 +67,22 @@ export class LessonComponent implements OnInit {
                     this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
-                        //randomize array
-                        var currentIndex = lessonTree['questions'].length, temporaryValue, randomIndex;
-                        // While there remain elements to shuffle...
-                        while (0 !== currentIndex) {
-
-                          // Pick a remaining element...
-                          randomIndex = Math.floor(Math.random() * currentIndex);
-                          currentIndex -= 1;
-
-                          // And swap it with the current element.
-                          temporaryValue = lessonTree['questions'][currentIndex];
-                          lessonTree['questions'][currentIndex] = lessonTree['questions'][randomIndex];
-                          lessonTree['questions'][randomIndex] = temporaryValue;
-                        }
-                        
+                        this.randomisation = lessonTree['randomisation'];
+                        if(this.randomisation) {
+                          //randomize array
+                          var currentIndex = lessonTree['questions'].length, 
+                            temporaryValue, randomIndex;
+                          // While there remain elements to shuffle...
+                          while (0 !== currentIndex) {  
+                            // Pick a remaining element...
+                            randomIndex = Math.floor(Math.random() * currentIndex);
+                            currentIndex -= 1;  
+                            // And swap it with the current element.
+                            temporaryValue = lessonTree['questions'][currentIndex];
+                            lessonTree['questions'][currentIndex] = lessonTree['questions'][randomIndex];
+                            lessonTree['questions'][randomIndex] = temporaryValue;
+                          }
+                        } 
                         if(this.question_num >= this.lessonTree['questions'].length)
                             this.question_num = this.lessonTree['questions'].length;
                         this.nextQuestion();

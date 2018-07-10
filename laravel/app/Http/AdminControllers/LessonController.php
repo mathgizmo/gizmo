@@ -74,6 +74,7 @@ class LessonController extends Controller
 		DB::table('lesson')->insert([
 			'title' => $request['lesson_title'], 
 			'order_no' => $request['order_no'], 
+			'randomisation' => $request['randomisation'] ?: false,
 			'dependency' => $request['dependency'] ?: false,
             'dev_mode' => $request['dev_mode'] ?: false,
 			'topic_id' => $request['topic_id'],
@@ -165,6 +166,7 @@ class LessonController extends Controller
 		 
 		 DB::table('lesson')->where('id',$id)->update([
 		 'title' => $request['lesson_title'],
+		 'randomisation' => $request['randomisation'] ?: false,
          'dependency' => $request['dependency'] ?: false,
          'dev_mode' => $request['dev_mode'] ?: false,
 		 'topic_id' => $request['topic_id'],
