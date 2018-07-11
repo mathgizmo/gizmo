@@ -34,7 +34,10 @@ CKEDITOR.editorConfig = function( config ) {
 	
 	config.mathJaxLib = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
 
-    config.extraPlugins = 'filebrowser,image,sourcedialog,dialog,dialogui,chart';
+    config.extraPlugins = 'filebrowser,image,sourcedialog,dialog,dialogui,font,format,chart';
 
     config.filebrowserUploadUrl = '/admin/question_views/uploadImage';
+
+    // Enable all default text formats
+    config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre;address;div';
 };

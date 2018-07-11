@@ -24,7 +24,6 @@ CSS class whatever you want. Any component inside of an element with
 }
 
 body {
-    //font-family: $mat-font-family;
     font-weight: normal;
     background-color: #eee;
 }
@@ -333,9 +332,11 @@ h1, h2, h3, h4 {
     width: 150px;
 }
 
+/*** set from admin in ckEditor
 .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
   font-size: 24px;
-}
+} 
+*/
 
 .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
   font-size: 16px;
