@@ -237,6 +237,7 @@ class QuestionController extends Controller
                   'conversion' => $request['conversion'] ?: false,
                   'rounding' => $request['rounding'] ?: false,
                   'question_order' => $request['question_order'] ?: false,
+                  'answers_round' => $request['answers_round'] ?: 0,
 									'modified_at' => date('Y-m-d H:i:s')
 									]);
 		$question = Question::create($collectionQuestion->all());
@@ -356,6 +357,7 @@ class QuestionController extends Controller
                   'conversion' => $request['conversion'] ?: false,
                   'rounding' => $request['rounding'] ?: false,
                   'question_order' => $request['question_order'] ?: false,
+                  'answers_round' => $request['answers_round'] ?: 0,
 									'created_at' => date('Y-m-d H:i:s'),
 									'modified_at' => date('Y-m-d H:i:s')
 							  ]);

@@ -278,13 +278,35 @@ export class LessonComponent implements OnInit {
                 } else {
                     if (this.answers[i] === "") return false;
                     if (this.question.conversion) {
+                        // convert users answer
                         this.answers[i] = this.answers[i].replace(/[^\d.-\/]/g,'');
                         let temp = this.answers[i].split("/");
                         if (temp[1] != undefined) {
-                            this.answers[i] = (Number(temp[0])/Number(temp[1])) + "";
+                          this.answers[i] = (Number(temp[0])/Number(temp[1])) + "";
                         }
                         else {
-                            this.answers[i] = temp[0] + "";
+                          this.answers[i] = temp[0] + "";
+                        }
+                        // convert correct answer
+                        if(this.question.answers[i].value.includes('/')) {
+                          this.question.answers[i].value = this.question.answers[i]
+                            .value.replace(/[^\d.-\/]/g,'');
+                          temp = this.question.answers[i].value.split("/");
+                          if (temp[1] != undefined) {
+                            this.question.answers[i].value = (Number(temp[0])
+                              /Number(temp[1])) + "";
+                          }
+                          else {
+                            this.question.answers[i].value = temp[0] + "";
+                          }
+                        }
+                        // round answers
+                        if(this.question.answers_round > 0) {
+                          this.question.answers[i].value = Math.round(
+                            this.question.answers[i].value*Math.pow(10,
+                              this.question.answers_round))/Math.pow(10,this.question.answers_round);
+                          this.answers[i] = Math.round(+this.answers[i]*Math.pow(10,
+                              this.question.answers_round))/Math.pow(10,this.question.answers_round)+""; 
                         }
                     }
                     if (this.question.rounding) {
