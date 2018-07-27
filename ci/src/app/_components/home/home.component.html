@@ -1,9 +1,9 @@
 ﻿<div *ngIf="topicsTree.length" class="topics">
   <div *ngFor="let level of topicsTree; let levelIndex = 'index'" >
     <mat-card *ngIf="level.units.length" class="level">
-      <h3 class="level-title">{{level.title}}</h3>
+      <h3 class="level-title title">{{level.title}}</h3>
       <mat-card class="unit" *ngFor="let unit of level.units; let unitIndex = 'index'">
-        <h4 class="unit-title">{{unit.title}}</h4>
+        <h4 class="unit-title subtitle">{{unit.title}}</h4>
         <div class="topics-container">
           <div *ngFor="let topic of unit.topics; let topicIndex = 'index'" class="topic">
             <a [routerLink]="topic.status == 0 ? '' : '/topic/'+topic.id" routerLinkActive="active" [class.disabled]="topic.status == 0 ? true : null" class="topic-picture">

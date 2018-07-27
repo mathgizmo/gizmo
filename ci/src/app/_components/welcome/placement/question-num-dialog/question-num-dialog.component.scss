@@ -9,7 +9,10 @@ form, form div, .input-container, .question-num-input, .buttons, .continue-butto
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
-	
+}
+
+.title {
+	line-height: 60px;
 }
 
 .continue-button {

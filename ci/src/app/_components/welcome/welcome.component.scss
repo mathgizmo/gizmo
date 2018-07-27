@@ -1,3 +1,5 @@
+@import '../../../colors';
+
 .buttons-container {
 	display: flex;
 	justify-content: center;
@@ -7,22 +9,25 @@
 	
 	.register-button, .login-button, .try-button {
 		margin: 8px;
-		padding: 0;
-		width: 150px;
-		color: #fafafa;
+		padding: 22px !important;
+		width: 500px;
+		//color: #fafafa;
 		text-decoration: none;
 	}
 
 	.login-button {
-		background-color: #31698a;
+		background-color: $teal !important;
+		width: 200px;
 	}	
 
 	.register-button {
-		background-color: #6dc066;
+		background-color: $green !important;
+		width: 560px;
 	}
 
 	.try-button {
-		background-color: #daa520;
+		//background-color: #daa520;
+		width: 820px;
 	}
 }
 
@@ -30,3 +35,11 @@
 	display: flex;
 	justify-content: center;
 }
+
+.logo {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 18px;
+}
+
