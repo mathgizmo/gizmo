@@ -32,6 +32,7 @@ export class LessonComponent implements OnInit {
 
     incorrect_answers: number;
     max_incorrect_answers: number = 1;
+    randomisation: boolean = true;
 
     question: any = null;
     answers: string[] = null;
@@ -66,21 +67,22 @@ export class LessonComponent implements OnInit {
                     this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
-                        //randomize array
-                        var currentIndex = lessonTree['questions'].length, temporaryValue, randomIndex;
-                        // While there remain elements to shuffle...
-                        while (0 !== currentIndex) {
-
-                          // Pick a remaining element...
-                          randomIndex = Math.floor(Math.random() * currentIndex);
-                          currentIndex -= 1;
-
-                          // And swap it with the current element.
-                          temporaryValue = lessonTree['questions'][currentIndex];
-                          lessonTree['questions'][currentIndex] = lessonTree['questions'][randomIndex];
-                          lessonTree['questions'][randomIndex] = temporaryValue;
-                        }
-                        
+                        this.randomisation = lessonTree['randomisation'];
+                        if(this.randomisation) {
+                          //randomize array
+                          var currentIndex = lessonTree['questions'].length, 
+                            temporaryValue, randomIndex;
+                          // While there remain elements to shuffle...
+                          while (0 !== currentIndex) {  
+                            // Pick a remaining element...
+                            randomIndex = Math.floor(Math.random() * currentIndex);
+                            currentIndex -= 1;  
+                            // And swap it with the current element.
+                            temporaryValue = lessonTree['questions'][currentIndex];
+                            lessonTree['questions'][currentIndex] = lessonTree['questions'][randomIndex];
+                            lessonTree['questions'][randomIndex] = temporaryValue;
+                          }
+                        } 
                         if(this.question_num >= this.lessonTree['questions'].length)
                             this.question_num = this.lessonTree['questions'].length;
                         this.nextQuestion();
@@ -276,13 +278,35 @@ export class LessonComponent implements OnInit {
                 } else {
                     if (this.answers[i] === "") return false;
                     if (this.question.conversion) {
+                        // convert users answer
                         this.answers[i] = this.answers[i].replace(/[^\d.-\/]/g,'');
                         let temp = this.answers[i].split("/");
                         if (temp[1] != undefined) {
-                            this.answers[i] = (Number(temp[0])/Number(temp[1])) + "";
+                          this.answers[i] = (Number(temp[0])/Number(temp[1])) + "";
                         }
                         else {
-                            this.answers[i] = temp[0] + "";
+                          this.answers[i] = temp[0] + "";
+                        }
+                        // convert correct answer
+                        if(this.question.answers[i].value.includes('/')) {
+                          this.question.answers[i].value = this.question.answers[i]
+                            .value.replace(/[^\d.-\/]/g,'');
+                          temp = this.question.answers[i].value.split("/");
+                          if (temp[1] != undefined) {
+                            this.question.answers[i].value = (Number(temp[0])
+                              /Number(temp[1])) + "";
+                          }
+                          else {
+                            this.question.answers[i].value = temp[0] + "";
+                          }
+                        }
+                        // round answers
+                        if(this.question.answers_round > 0) {
+                          this.question.answers[i].value = Math.round(
+                            this.question.answers[i].value*Math.pow(10,
+                              this.question.answers_round))/Math.pow(10,this.question.answers_round);
+                          this.answers[i] = Math.round(+this.answers[i]*Math.pow(10,
+                              this.question.answers_round))/Math.pow(10,this.question.answers_round)+""; 
                         }
                     }
                     if (this.question.rounding) {

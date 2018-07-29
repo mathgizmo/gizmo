@@ -85,6 +85,13 @@
                                                 {{ csrf_field() }}
                                                 <button class="btn btn-danger" type="submit">Reset Progress</button>
                                             </form>
+                                            <form action="{{ route('students.delete', $student->id) }}"
+                                                  method="POST" style="display: inline;"
+                                                  onsubmit="if(confirm('Are you about to delete {{ $student->name }}, all participant information will be lost. This action is irreversible.')) { return true } else {return false };">
+                                                <input type="hidden" name="_method" value="POST">
+                                                {{ csrf_field() }}
+                                                <button class="btn btn-danger" type="submit">Delete</button>
+                                            </form>
                                         </td>
 										<td>{{ $student->id }}</td>
 										<td>{{ $student->name }}</td>

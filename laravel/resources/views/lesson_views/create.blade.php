@@ -99,6 +99,19 @@
                                 @endif
                             </div>
 				      	</div>
+
+				      	<div class="form-group{{ $errors->has('randomisation') ? ' has-error' : '' }}">
+                            <label for="type" class="col-md-4 control-label">Turn on randomisation</label>
+
+                            <div class="col-md-6 radio"> 
+								<label for="type" class="col-md-3"> <input checked="checked" type="checkbox" name="randomisation" value="1"></label>
+                                @if ($errors->has('randomisation'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('randomisation') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+						</div>
 			
 						<div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
                             <label for="type" class="col-md-4 control-label">This should be finished to continue</label>

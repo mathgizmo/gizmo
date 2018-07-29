@@ -45,4 +45,10 @@ class StudentController extends Controller
 
         return back();
     }
+
+    public function delete(Student $student)
+    {
+        $student->delete();
+        return back();
+    }
 }

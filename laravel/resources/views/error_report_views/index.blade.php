@@ -19,24 +19,39 @@
 								<tr>
 									<th class="col-md">
 										ID
+										<a href="{{ route('error_report.index', array_merge(request()->all(), ['type' => $type, 'sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+											<i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+										</a>
 									</th>
 									<th class="col-md">
 										Question ID
-									</th>
-									<th class="col-md">
-										Answer ID
+										<a href="{{ route('error_report.index', array_merge(request()->all(), ['type' => $type, 'sort' => 'question_id', 'order' => ((request()->sort == 'question_id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+											<i class="fa fa-fw fa-sort{{ (request()->sort == 'question_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'question_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 									</th>
 									<th class="col-md">
 										Student ID
+										<a href="{{ route('error_report.index', array_merge(request()->all(), ['type' => $type, 'sort' => 'student_id', 'order' => ((request()->sort == 'student_id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+											<i class="fa fa-fw fa-sort{{ (request()->sort == 'student_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'student_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 									</th>
 									<th class="col-md">
 										Options
+										<a href="{{ route('error_report.index', array_merge(request()->all(), ['type' => $type, 'sort' => 'options', 'order' => ((request()->sort == 'options' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+											<i class="fa fa-fw fa-sort{{ (request()->sort == 'options' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'options' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 									</th>
 									<th class="col-md">
 										Comment
+										<a href="{{ route('error_report.index', array_merge(request()->all(), ['type' => $type, 'sort' => 'comment', 'order' => ((request()->sort == 'comment' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+											<i class="fa fa-fw fa-sort{{ (request()->sort == 'comment' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'comment' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+									</th>
+									<th class="col-md">
+										Answer
+										<a href="{{ route('error_report.index', array_merge(request()->all(), ['type' => $type, 'sort' => 'answers', 'order' => ((request()->sort == 'answers' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+											<i class="fa fa-fw fa-sort{{ (request()->sort == 'answers' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'answers' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 									</th>
 									<th class="col-md">
 										Time
+										<a href="{{ route('error_report.index', array_merge(request()->all(), ['type' => $type, 'sort' => 'created_at', 'order' => ((request()->sort == 'created_at' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+											<i class="fa fa-fw fa-sort{{ (request()->sort == 'created_at' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'created_at' && request()->order == 'desc') ? '-desc' : '' }}"></i>
 									</th>
 									<th class="col-md"></th>
 								</tr>
@@ -46,10 +61,10 @@
 										<tr>
 											<td>{{ $error_report->id }}</td>
 											<td><a href="{{ route('question_views.show', $error_report->question_id) }}" target="_blank">{{ $error_report->question_id }}</a></td>
-											<td>{{ $error_report->answer_id }}</td>
 											<td>{{ $error_report->student_id }}</td>
 											<td>{{ $error_report->options }}</td>
 											<td>{{ $error_report->comment }}</td>
+											<td>{{ $error_report->answers }}</td>
 											<td>{{ $error_report->created_at->format('d.m.Y H:i') }}</td>
 											<td>
 												<div class="btn-group">

@@ -98,6 +98,7 @@
 												<th class="col-md">ID</th>
 												<th class="col-md">Order No</th>
 												<th class="col-md">Title</th>
+												<th class="col-md">Randomisation</th>
 												<th class="col-md">Dependency</th>
 												<th class="col-md">Lesson in development</th>
 												<th class="col-md-3">OPTIONS</th>
@@ -111,6 +112,7 @@
 									<td>{{$lesson->id}}</td>
 									<td>{{$lesson->order_no}}</td>
 									<td>{{$lesson->title}}</td>
+									<td>{{($lesson->randomisation == true) ? 'Yes' : 'No'}}</td>
 									<td>{{($lesson->dependency == true) ? 'Yes' : 'No'}}</td>
 									<td>{{($lesson->dev_mode == true) ? 'Yes' : 'No'}}</td>
 									<td class="text-right">

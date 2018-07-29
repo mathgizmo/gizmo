@@ -290,7 +290,9 @@
                         <label for="type" class="col-md-4 control-label">Convert user answer to decimal value</label>
 
                         <div class="col-md-6 radio">
-                            <label for="type" class="col-md-3"> <input type="checkbox" name="conversion" value="1"></label>
+                            <label for="type" class="col-md-3"> 
+                                <input type="checkbox" name="conversion" value="1" id='decimal-conversion' onchange="onDecimalConversionChange()">
+                            </label>
                             @if ($errors->has('conversion'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('conversion') }}</strong>
@@ -298,6 +300,30 @@
                             @endif
                         </div>
                     </div>
+
+                    <div id="answers-round" class="form-group{{ $errors->has('answers_round') ? ' has-error' : '' }}">
+                        <label for="answers_round" class="col-md-4 control-label">Round answers up to N digits after point</label>
+                        <div class="col-md-6">
+                            <input id="answers_round" class="form-control" name="answers_round" value="0"></input>
+                            @if ($errors->has('answers_round'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('answers_round') }}</strong>
+                                </span>
+                            @endif
+                        </div>  
+                    </div>
+                    <script type="text/javascript">
+                        onDecimalConversionChange();
+                        function onDecimalConversionChange() {
+                            let conversion = document.getElementById("decimal-conversion");
+                            let answersRound = document.getElementById("answers-round");
+                            if(conversion.checked) {
+                                answersRound.style.display = 'block';
+                            } else {
+                                answersRound.style.display = 'none';
+                            }
+                        }   
+                    </script>
 
 		<div class="form-group">
 			<div class="col-md-6 col-md-offset-4">
