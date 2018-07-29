@@ -1,64 +1,34 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "mathjax",
-        "scope": null,
-        "escapedName": "mathjax",
-        "name": "mathjax",
-        "rawSpec": "",
-        "spec": "latest",
-        "type": "tag"
-      },
-      "/var/www/vhosts/gizmo/ci"
-    ]
-  ],
-  "_from": "mathjax@latest",
-  "_id": "mathjax@2.7.2",
-  "_inCache": true,
+  "_from": "mathjax@2.7.4",
+  "_id": "mathjax@2.7.4",
+  "_inBundle": false,
+  "_integrity": "sha512-B6SLtoETmV08kqTepRyz8eqMRGFzllPy2QASKFdFl0g0YB6SNgQVnWae11RaF3/y8ZKLTJNJ7hLbMIqmBEkLzw==",
   "_location": "/mathjax",
-  "_nodeVersion": "8.4.0",
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/mathjax-2.7.2.tgz_1503767672285_0.7523579699918628"
-  },
-  "_npmUser": {
-    "name": "mjadmin",
-    "email": "manager@mathjax.org"
-  },
-  "_npmVersion": "5.3.0",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "mathjax",
-    "scope": null,
-    "escapedName": "mathjax",
+    "type": "version",
+    "registry": true,
+    "raw": "mathjax@2.7.4",
     "name": "mathjax",
-    "rawSpec": "",
-    "spec": "latest",
-    "type": "tag"
+    "escapedName": "mathjax",
+    "rawSpec": "2.7.4",
+    "saveSpec": null,
+    "fetchSpec": "2.7.4"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/mathjax/-/mathjax-2.7.2.tgz",
-  "_shasum": "97d78bbebfb65a8621ce33fb7c1f10917355a878",
-  "_shrinkwrap": null,
-  "_spec": "mathjax",
+  "_resolved": "https://registry.npmjs.org/mathjax/-/mathjax-2.7.4.tgz",
+  "_shasum": "a88c55392b69a9715813cdc041ce02de6548a603",
+  "_spec": "mathjax@2.7.4",
   "_where": "/var/www/vhosts/gizmo/ci",
   "bugs": {
     "url": "http://github.com/mathjax/MathJax/issues"
   },
-  "dependencies": {},
+  "bundleDependencies": false,
+  "deprecated": false,
   "description": "Beautiful math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers.",
-  "devDependencies": {},
-  "directories": {},
-  "dist": {
-    "integrity": "sha512-Z9te7r3lsjZibugO1uKsdyqICKXVNr7M1Ll2GtjJu9cUKvOvwDqEp0YIjBD4H58NNuPg5DP5/AQ2Tu8K52Mqng==",
-    "shasum": "97d78bbebfb65a8621ce33fb7c1f10917355a878",
-    "tarball": "https://registry.npmjs.org/mathjax/-/mathjax-2.7.2.tgz"
-  },
-  "gitHead": "82590066f9cc3561d4a6b6355ce82af324cb161d",
   "homepage": "https://github.com/mathjax/MathJax#readme",
   "keywords": [
     "math",
@@ -74,13 +44,12 @@
   "main": "./unpacked/MathJax.js",
   "maintainers": [
     {
-      "name": "mjadmin",
-      "email": "manager@mathjax.org"
+      "name": "MathJax Consortium",
+      "email": "info@mathjax.org",
+      "url": "http://www.mathjax.org"
     }
   ],
   "name": "mathjax",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git://github.com/mathjax/MathJax.git"
@@ -88,5 +57,5 @@
   "scripts": {
     "test": "echo 'No tests here!'"
   },
-  "version": "2.7.2"
+  "version": "2.7.4"
 }
