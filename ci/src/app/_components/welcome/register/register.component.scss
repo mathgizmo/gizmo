@@ -1,3 +1,5 @@
+@import '../../../../colors';
+
 .auth-container {
 	margin: 8px;
 	display: flex;
@@ -7,7 +9,7 @@
 	flex-wrap: wrap;
 	div {
 		width: 100%;
-		max-width: 400px;
+		//max-width: 400px;
 		min-width: 200px;
 	}
 }
@@ -20,10 +22,14 @@
 	flex-wrap: wrap;
 } 
 .register-button {
-	background-color: #31698a;
+	background-color: $teal;
 	margin: 8px;
-	padding: 0;
-	width: 100px;
+	padding: 22px;
+	width: 300px;
 	color: #fafafa;
 	text-decoration: none;
+}
+
+input {
+	height: 50px;
 }

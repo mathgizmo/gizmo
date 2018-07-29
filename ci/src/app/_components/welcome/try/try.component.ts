@@ -4,14 +4,15 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-try',
-  template: '<button mat-button class="try-button">Try without registration</button>',
+  template: '<button mat-button class="button try-button">Try without registration</button>',
   host: { '(click)': 'onTry()'},
   styles: [`
     .try-button {
       width: 100%;
       height: 100%;
-      padding: 0;
+      padding: 22px;
       margin: 0;
+      background-color: #FFB133 !important;
     }
   `]
 })

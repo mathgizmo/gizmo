@@ -164,7 +164,7 @@ export class LessonComponent implements OnInit {
            this.lessonTree['questions'] = [];
         }
         let dialogRef = this.dialog.open(GoodDialogComponent, {
-            width: '300px',
+            width: '400px',
             data: { }
         });
 
@@ -189,7 +189,7 @@ export class LessonComponent implements OnInit {
               this.lessonTree['questions'].push(this.question);
           }
           let dialogRef = this.dialog.open(BadDialogComponent, {
-              width: '300px',
+              width: '800px',
               data: { data: this.question.answers.filter(function(answer){
                   if (answer.is_correct == 1) return true;
                   return false;
@@ -201,7 +201,7 @@ export class LessonComponent implements OnInit {
           dialogRef.afterClosed().subscribe(result => {
               if (result) {
                   let reportDialogRef = this.dialog.open(ReportDialogComponent, {
-                      //width: '300px',
+                      //width: '800px',
                       data: {question_id: this.question.id, answers: this.answers}
                   });
                   
