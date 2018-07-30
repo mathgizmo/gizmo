@@ -270,6 +270,7 @@ export class LessonComponent implements OnInit {
               }
             }
             for (var i = 0; i < this.question.answers.length; i++) {
+                let correctAnswer = this.question.answers[i].value;
                 if (this.question.answer_mode == 'checkbox') {
                     if (this.question.answers[i].is_correct && this.answers[i] === ""
                         || !this.question.answers[i].is_correct && this.answers[i] !== "") {
@@ -288,22 +289,21 @@ export class LessonComponent implements OnInit {
                           this.answers[i] = temp[0] + "";
                         }
                         // convert correct answer
-                        if(this.question.answers[i].value.includes('/')) {
-                          this.question.answers[i].value = this.question.answers[i]
-                            .value.replace(/[^\d.-\/]/g,'');
-                          temp = this.question.answers[i].value.split("/");
+                        if(correctAnswer.includes('/')) {
+                          correctAnswer = correctAnswer.replace(/[^\d.-\/]/g,'');
+                          temp = correctAnswer.split("/");
                           if (temp[1] != undefined) {
-                            this.question.answers[i].value = (Number(temp[0])
+                            correctAnswer = (Number(temp[0])
                               /Number(temp[1])) + "";
                           }
                           else {
-                            this.question.answers[i].value = temp[0] + "";
+                            correctAnswer = temp[0] + "";
                           }
                         }
                         // round answers
                         if(this.question.answers_round > 0) {
-                          this.question.answers[i].value = Math.round(
-                            this.question.answers[i].value*Math.pow(10,
+                          correctAnswer = Math.round(
+                            correctAnswer*Math.pow(10,
                               this.question.answers_round))/Math.pow(10,this.question.answers_round);
                           this.answers[i] = Math.round(+this.answers[i]*Math.pow(10,
                               this.question.answers_round))/Math.pow(10,this.question.answers_round)+""; 
@@ -311,7 +311,7 @@ export class LessonComponent implements OnInit {
                     }
                     if (this.question.rounding) {
                         this.answers[i] = this.answers[i].replace(/[^\d.-]/g,'');
-                        let temp = this.question.answers[i].value.split(".");
+                        let temp = correctAnswer.split(".");
                         var roundTo = 0;
                         if (temp[1] != undefined) {
                             roundTo = temp[1].length;
@@ -319,7 +319,7 @@ export class LessonComponent implements OnInit {
                         this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + "";
                     }
                     if (this.question.answers[i].is_correct && 
-                      this.question.answers[i].value != this.answers[i]) {
+                      correctAnswer != this.answers[i]) {
                         return false;
                     }
                 }
