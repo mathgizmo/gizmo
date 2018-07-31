@@ -1,6 +1,6 @@
 ﻿<a routerLink="/" routerLinkActive="active" class="backButton left"><-Back</a>
 <div class="text-center">
-    <h2 class="subtitle">{{topicTree.title}}</h2>
+    <h2>{{topicTree.title}}</h2>
     <div *ngIf="topicTree.lessons && topicTree.lessons.length">
         <div *ngFor="let lesson of topicTree.lessons; let levelIndex = 'index'" class="arrowRowContainer">
             <div class="arrowButtonContainer" [ngClass]="lesson.status == 1 ? 'greenout': (lesson.status == 2) ? 'yellowout' : 'redout'">
@@ -16,17 +16,17 @@
         </div>
     </div>
     <div *ngIf="(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id != 0">
-        <h3 class="answer">More lessons comming soon, please continue with next topic!</h3>
+        <h3>More lessons comming soon, please continue with next topic!</h3>
     </div>
     <div *ngIf="(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id == 0">
-        <h3 class="answer">More lessons comming soon!</h3>
+        <h3>More lessons comming soon!</h3>
     </div>
     <a
         class="button-container"
         routerLink="/topic/{{topicTree.id}}/lesson/testout"
         routerLinkActive="active"
         *ngIf="topicTree.lessons && topicTree.lessons.length && !topicDone">
-        <button mat-raised-button class="button testout-button completion-button">
+        <button mat-raised-button class="testout-button">
             <mat-icon>update</mat-icon>
             <span>Test out to finish topic</span>
         </button>
@@ -36,7 +36,7 @@
         routerLink="/topic/{{topicTree.next_topic_id}}"
         routerLinkActive="active"
         *ngIf="(topicTree.lessons == undefined || !topicTree.lessons.length || topicDone) && topicTree.next_topic_id != 0">
-        <button mat-raised-button class="button moving-forward-button next-topic-button">
+        <button mat-raised-button class="next-topic-button">
             <mat-icon>done all</mat-icon>
             <span>Go to next topic</span>
         </button>

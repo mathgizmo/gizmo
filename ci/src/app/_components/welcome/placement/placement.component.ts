@@ -31,7 +31,7 @@ export class PlacementComponent implements OnInit {
 
   onSkip() {
     let dialogRef = this.dialog.open(QuestionNumDialogComponent, {
-      width: '1000px', data: { } 
+      width: '300px', data: { } 
     });
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate(['/']);
@@ -60,7 +60,7 @@ export class PlacementComponent implements OnInit {
 
   onNo() {
   	let dialogRef = this.dialog.open(QuestionNumDialogComponent, {
-      width: '1000px',
+      width: '300px',
       data: { }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -73,7 +73,7 @@ export class PlacementComponent implements OnInit {
 
   onNotSure() {
   	let dialogRef = this.dialog.open(QuestionNumDialogComponent, {
-      width: '1000px', data: { }
+      width: '300px', data: { }
     });
     dialogRef.afterClosed().subscribe(result => {
       this.placementService.doneHalfUnit(this.unitId)

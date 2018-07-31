@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   flex-wrap: wrap;
   padding: 0;
   margin: 0;
@@ -13,12 +13,30 @@ mat-card{
   margin: 10px;
   padding: 15px;
   min-width: 250px;
-  width: calc(100% - 20px); 
+  max-width: 580px;
 }
 
-.title {
-  display: block;
-  text-align: center;
+span.card-title {
+  display: table;
+  white-space: nowrap;
+  padding: 8px;
+}
+
+span.card-title:before, span.card-title:after {
+  border-top: 1px solid #616161;
+  content: '';
+  display: table-cell;
+  position: relative;
+  top: 0.5em;
+  width: 45%;
+}
+
+span.card-title:before {
+  right: 1.5%;
+}
+
+span.card-title:after {
+  left: 1.5%; 
 }
 
 mat-form-field {
@@ -26,8 +44,25 @@ mat-form-field {
 }
 
 .button-container{
+  padding: 0; 
+  margin: 0;
   display: flex;  
   align-items: center; 
   justify-content: center;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;  
+}
+
+button {
+	color: #fff;
+	background-color: #337AB7;
+}
+
+@media screen and (min-width: 600px) { 
+  .profile{
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  mat-card{
+    width: calc(50% - 20px); 
+  }
 }

@@ -1,102 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
-@import './colors';
 @import '~@angular/material/theming';
 @import url('//fonts.googleapis.com/icon?family=Material+Icons');
 
-// import fonts
-@import url('https://fonts.googleapis.com/css?family=Quicksand:500');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
-
 @include mat-core();
+
+$primary: mat-palette($mat-lime, 500);
+$accent:  mat-palette($mat-lime, 500, A200, A400);
+$warn:    mat-palette($mat-red, 500);
+
+$theme: mat-light-theme($primary, $accent, $warn);
+
+@include angular-material-theme($theme);
+
+// Define an alternate theme.
+$grey-primary: mat-palette($mat-grey, 700);
+$grey-accent:  mat-palette($mat-green, A400);
+$grey-theme:   mat-light-theme($grey-primary, $grey-accent, $warn);
+/* Include the alternative theme styles inside of a block with a CSS class. You can make this
+CSS class whatever you want. Any component inside of an element with
+.grey-theme class will be affected by this alternate theme instead of the default theme. */
+.grey-theme {
+  @include angular-material-theme($grey-theme);
+}
 
 body {
     font-weight: normal;
-    background-color: #ddd;
-    font-family: 'Open Sans';
-    font-weight: 300;
-    font-size: 32pt;
-    color: $navy;
+    background-color: #eee;
 }
 
 h1, h2, h3, h4 {
-    font-family: 'Open Sans';
-    font-weight: 600;
-}
-
-.title {
-  font-family: 'Quicksand';
-  font-weight: 500;
-  font-size: 60pt;
-  color: $navy;
-}
-
-.button, .mat-button {
-  font-family: 'Quicksand'!important;
-  font-weight: 500 !important; 
-  font-size: 48pt !important;
-  color: $white !important;
-  background-color: $teal !important;
-  border-radius: 50px !important;
-  padding: 22px !important;
-  min-width: 250px !important;
-}
-
-.completion-button {
-  background-color: $gold !important;
-}
-
-.moving-forward-button {
-  background-color: $green !important;
-}
-
-.error-button {
-  background-color: $red !important;
-}
-
-.mat-button-wrapper {
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-}
-
-.subtitle {
-  font-family: 'Quicksand';
-  font-weight: 500;
-  font-size: 36pt;
-  color: $navy;
-}
-
-.question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
-  font-family: 'Open Sans';
-  font-weight: 600;
-  font-size: 32pt;
-  color: $navy;
-} 
-
-.answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
-  font-family: 'Open Sans';
-  font-weight: 300;
-  font-size: 32pt;
-  color: $navy;
-}
-
-.topic-title {
-  font-family: 'Open Sans';
-  font-weight: 600;
-  font-size: 21pt;
-  color: $navy;
-} 
-
-.topic-progress {
-  font-family: 'Open Sans';
-  font-weight: 300;
-  font-size: 21pt;
-  color: $navy;
-}
-
-// add border radius to all cards
-.mat-card {
-    border-radius: 25px !important;
+    font-weight: normal;
 }
 
 .help-block {
@@ -323,8 +256,7 @@ h1, h2, h3, h4 {
     background-size: 100% 100%;
 }
 .arrowButtonContainer {
-    width:250px;
-    height: 120px;
+    width:100px;
     padding: 25px;
     margin: 1px;
 
@@ -400,6 +332,16 @@ h1, h2, h3, h4 {
     width: 150px;
 }
 
+/*** set from admin in ckEditor
+.question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
+  font-size: 24px;
+} 
+*/
+
+.answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+  font-size: 16px;
+}
+
 .chart-value-label {
   font-size: 16px;
   font-weight: bold;
@@ -436,187 +378,4 @@ h1, h2, h3, h4 {
         margin: 4px !important;
         padding: 2px !important;
     }
-}
-
-
-/** THEMING */
-$mat-navy: (
-    50: #e0e5e8,
-    100: #b3bec6,
-    200: #8093a1,
-    300: #4d677b,
-    400: #26475e,
-    500: #002642,
-    600: #00223c,
-    700: #001c33,
-    800: #00172b,
-    900: #000d1d,
-    A100: #5b8bff,
-    A200: #2867ff,
-    A400: #0048f4,
-    A700: #0040da,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-
-$mat-teal: (
-    50: #e6f6f8,
-    100: #c0e9ec,
-    200: #97dbe0,
-    300: #6dcdd4,
-    400: #4dc2ca,
-    500: #2eb7c1,
-    600: #29b0bb,
-    700: #23a7b3,
-    800: #1d9fab,
-    900: #12909e,
-    A100: #cffaff,
-    A200: #9cf4ff,
-    A400: #69efff,
-    A700: #50ecff,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-
-$mat-gold: (
-    50: #fff6e7,
-    100: #ffe8c2,
-    200: #ffd899,
-    300: #ffc870,
-    400: #ffbd52,
-    500: #ffb133,
-    600: #ffaa2e,
-    700: #ffa127,
-    800: #ff9820,
-    900: #ff8814,
-    A100: #ffffff,
-    A200: #fffdfb,
-    A400: #ffe1c8,
-    A700: #ffd3ae,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-
-$primary: mat-palette($mat-navy);
-$accent:  mat-palette($mat-teal);
-$warn:    mat-palette($mat-gold);
-$theme: mat-light-theme($primary, $accent, $warn);
-@include angular-material-theme($theme);
-
-// Define an alternate theme
-$mat-green: (
-    50: #e2f4e6,
-    100: #b8e3c0,
-    200: #88d097,
-    300: #58bd6d,
-    400: #35ae4d,
-    500: #11a02e,
-    600: #0f9829,
-    700: #0c8e23,
-    800: #0a841d,
-    900: #057312,
-    A100: #a2ffa9,
-    A200: #6fff79,
-    A400: #3cff4a,
-    A700: #23ff32,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-$mat-red: (
-    50: #fde4e5,
-    100: #fabbbd,
-    200: #f68e92,
-    300: #f26066,
-    400: #f03e45,
-    500: #ed1c24,
-    600: #eb1920,
-    700: #e8141b,
-    800: #e51116,
-    900: #e0090d,
-    A100: #ffffff,
-    A200: #ffd7d7,
-    A400: #ffa4a5,
-    A700: #ff8b8c,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-$grey-primary: mat-palette($mat-grey, 700);
-$grey-accent:  mat-palette($mat-green);
-$grey-warn: mat-palette($mat-red);
-$grey-theme:   mat-light-theme($grey-primary, $grey-accent, $grey-warn);
-/* Include the alternative theme styles inside of a block with a CSS class. You can make this
-CSS class whatever you want. Any component inside of an element with
-.grey-theme class will be affected by this alternate theme instead of the default theme. */
-.grey-theme {
-  @include angular-material-theme($grey-theme);
 }
