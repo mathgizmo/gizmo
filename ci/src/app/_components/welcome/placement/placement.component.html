@@ -1,8 +1,8 @@
 <mat-card class="text-center" *ngIf="state == 0">
-	<mat-card-title>
+	<mat-card-title class='title'>
 		Almost ready!
 	</mat-card-title>
-	<mat-card-subtitle>
+	<mat-card-subtitle class='subtitle'>
 		Please answer some questions, so that we can determine your level.
 	</mat-card-subtitle>
 	<mat-card-actions>
@@ -17,7 +17,7 @@
 </mat-card>
 
 <mat-card class="text-center" *ngIf="state == 1">
-	<mat-card-title>
+	<mat-card-title class='subtitle'>
 		{{ question }}
 	</mat-card-title>
 	<mat-card-actions>
@@ -35,7 +35,7 @@
 </mat-card>
 
 <mat-card class="text-center" *ngIf="state == 2">
-	<mat-card-title>
+	<mat-card-title class='subtitle'>
 		Congrats! You answered "Yes" to all questions.
 	</mat-card-title>
 	<mat-card-actions>

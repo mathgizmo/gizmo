@@ -1,12 +1,18 @@
-h1 {
-  color: #369;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 250%;
-}
+@import '../../colors';
+
+
 .toolbar {
 	background-color: transparent;
+  color: $navy;
 	padding: 0;
 	margin: 0;
+  
+}
+
+.menu-item {
+  font-family: 'Quicksand' !important;
+  color: $navy;
+  margin: 0;
 }
 
 // loader
@@ -41,7 +47,7 @@ h1 {
   margin: 0 auto;
   width: 15%;
   height: 15%;
-  background-color: #333;
+  background-color: $navy;
   border-radius: 100%;
   -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
           animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;

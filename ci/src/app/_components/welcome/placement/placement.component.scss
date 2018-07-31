@@ -1,3 +1,5 @@
+@import '../../../../colors';
+
 .button {
 	margin-bottom: 8px !important;
 	padding: 0;
@@ -7,19 +9,24 @@
 
 .ok-button, .next-button {
 	color: #fafafa;
-	background-color: #31698a;
+	background-color: $teal !important;
 }
 
 .yes-button {
 	color: #fafafa;
-	background-color: #6dc066;
+	background-color: $green !important;
 }
 
 .no-button {
 	color: #fafafa;
-	background-color: #ff4444;
+	background-color: $red !important;
 }
 
 .not-sure-button, .skip-button {
-	background-color: #e6e6fa;
+	background-color: #e6e6fa !important;
+	color: $navy !important;
+}
+
+.not-sure-button {
+	width: 360px;
 }
