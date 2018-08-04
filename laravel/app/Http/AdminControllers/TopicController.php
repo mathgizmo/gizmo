@@ -16,10 +16,10 @@ class TopicController extends Controller
      */
     public function index(Request $request)
     {
-		$levels = DB::select('select * from level');
-		$units = DB::select('select * from unit');
-		$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-		return view('topic_views.index',['levels'=>$levels,'units'=>$units,'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
+        $levels = DB::select('select * from level');
+        $units = DB::select('select * from unit');
+        $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
+        return view('topic_views.index',['levels'=>$levels,'units'=>$units,'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
     }
 
     /**
@@ -30,19 +30,19 @@ class TopicController extends Controller
     public function create()
     {
         $lid = "";
-		$uid = "";
-		$levels = DB::select('select * from level');
-		$units = DB::select('select * from unit');
-		$topics = DB::table('topic')->where('unit_id',$uid)->get();
-		$total_topic = Topic::all()->count();
-		return view('topic_views.create',array(
-			'levels' => $levels,
-			'units' => $units,
-			'topics' => $topics,
-			'lid' => $lid,
-			'uid' => $uid,
-			'total_topic' => $total_topic
-		));
+        $uid = "";
+        $levels = DB::select('select * from level');
+        $units = DB::select('select * from unit');
+        $topics = DB::table('topic')->where('unit_id',$uid)->get();
+        $total_topic = Topic::all()->count();
+        return view('topic_views.create',array(
+            'levels' => $levels,
+            'units' => $units,
+            'topics' => $topics,
+            'lid' => $lid,
+            'uid' => $uid,
+            'total_topic' => $total_topic
+        ));
     }
 
 
@@ -59,8 +59,8 @@ class TopicController extends Controller
         $uid = $request->unit_id;
         //$tid = $request->topic_id;
         $this->validate($request, [
-            'level_id'	=> 'required',
-            'unit_id'	=> 'required',
+            'level_id'    => 'required',
+            'unit_id'    => 'required',
             'topic_title'=> 'required'
         ]);
 
@@ -136,8 +136,8 @@ class TopicController extends Controller
         $uid = $request->unit_id;
         //$tid = $request->topic_id;
         $this->validate($request, [
-            'level_id'	=> 'required',
-            'unit_id'	=> 'required',
+            'level_id'    => 'required',
+            'unit_id'    => 'required',
             'topic_title'=> 'required'
         ]);
 

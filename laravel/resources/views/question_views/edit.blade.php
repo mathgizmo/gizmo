@@ -18,21 +18,21 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="_type" value="update" id="update-type">
 
-				        <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
                             <label for="level_id" class="col-md-4 control-label">Level</label>
 
                             <div class="col-md-6">
-							      <select class="form-control" name="level_id" id="level_id">
+                                  <select class="form-control" name="level_id" id="level_id">
 
-								  @if (count($levels) > 0)
-									  <option value="">Select From ...</option>
-										@foreach($levels as $level)
-											<option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $question->lid) selected="selected"
-											@endif
-											>{{$level->title}}</option>
-										@endforeach
-								 @endif
-									</select>
+                                  @if (count($levels) > 0)
+                                      <option value="">Select From ...</option>
+                                        @foreach($levels as $level)
+                                            <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $question->lid) selected="selected"
+                                            @endif
+                                            >{{$level->title}}</option>
+                                        @endforeach
+                                 @endif
+                                    </select>
 
                                 @if ($errors->has('level_id'))
                                     <span class="help-block">
@@ -42,21 +42,21 @@
                             </div>
                         </div>
 
-						<div id="unit_options"> </div>
-						<div class="form-group{{ $errors->has('unit_id') ? ' has-error' : '' }}">
+                        <div id="unit_options"> </div>
+                        <div class="form-group{{ $errors->has('unit_id') ? ' has-error' : '' }}">
                             <label for="unit_id" class="col-md-4 control-label">Unit</label>
 
                             <div class="col-md-6">
-							      <select class="form-control" name="unit_id" id="unit_id">
-								   @if (count($units) > 0)
+                                  <select class="form-control" name="unit_id" id="unit_id">
+                                   @if (count($units) > 0)
                                           <option value="">Select From ...</option>
-								  @foreach($units as $unit)
-											<option value="{{$unit->id}}" @if ( $unit->id == $question->uid) selected="selected"
-											@endif
-											>{{$unit->title}}</option>
-										@endforeach
-								  @endif
-									</select>
+                                  @foreach($units as $unit)
+                                            <option value="{{$unit->id}}" @if ( $unit->id == $question->uid) selected="selected"
+                                            @endif
+                                            >{{$unit->title}}</option>
+                                        @endforeach
+                                  @endif
+                                    </select>
 
                                 @if ($errors->has('unit_id'))
                                     <span class="help-block">
@@ -66,22 +66,22 @@
                             </div>
                         </div>
 
-						<div class="form-group{{ $errors->has('topic_id') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('topic_id') ? ' has-error' : '' }}">
                             <label for="topic_id" class="col-md-4 control-label">Topic</label>
 
                             <div class="col-md-6">
-							      <select class="form-control" name="topic_id" id="topic_id">
+                                  <select class="form-control" name="topic_id" id="topic_id">
 
-								  @if (count($topics) > 0)
+                                  @if (count($topics) > 0)
                                           <option value="">Select From ...</option>
-								  @foreach($topics as $topic)
-											<option value="{{$topic->id}}" @if ( $topic->id == $question->tid) selected="selected"
-											@endif
-											>{{$topic->title}}</option>
-										@endforeach
-								  @endif
+                                  @foreach($topics as $topic)
+                                            <option value="{{$topic->id}}" @if ( $topic->id == $question->tid) selected="selected"
+                                            @endif
+                                            >{{$topic->title}}</option>
+                                        @endforeach
+                                  @endif
 
-									</select>
+                                    </select>
 
                                 @if ($errors->has('topic_id'))
                                     <span class="help-block">
@@ -91,21 +91,21 @@
                             </div>
                         </div>
 
-						<div class="form-group{{ $errors->has('lesson_id') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('lesson_id') ? ' has-error' : '' }}">
                             <label for="lesson_id" class="col-md-4 control-label">Lesson</label>
 
                             <div class="col-md-6">
-							      <select class="form-control" name="lesson_id" id="lesson_id">
+                                  <select class="form-control" name="lesson_id" id="lesson_id">
 
-									@if (count($lessons) > 0)
+                                    @if (count($lessons) > 0)
                                           <option value="">Select From ...</option>
-								  @foreach($lessons as $lesson)
-											<option value="{{$lesson->id}}" @if ( $lesson->id == $question->lesson_id) selected="selected"
-											@endif
-											>{{$lesson->title}}</option>
-										@endforeach
-								  @endif
-									</select>
+                                  @foreach($lessons as $lesson)
+                                            <option value="{{$lesson->id}}" @if ( $lesson->id == $question->lesson_id) selected="selected"
+                                            @endif
+                                            >{{$lesson->title}}</option>
+                                        @endforeach
+                                  @endif
+                                    </select>
 
                                 @if ($errors->has('lesson_id'))
                                     <span class="help-block">
@@ -138,7 +138,7 @@
                             </div>
                         </div>
 
-						<div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
+                        <div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
                             <label for="question" class="col-md-4 control-label">Question</label>
                             <div class="col-md-6">
                                 <span>For LaTeX please use next format \( $$latext here$$ \) or \(\(latext here\)\)</span>
@@ -197,7 +197,7 @@
                         </script>
 
                     <div class="answers_block">
-		    	<?php $key = 0; ?>
+                <?php $key = 0; ?>
                         @foreach($answers as $key => $answer)
                             <div class="form-group answer{{ $errors->has('answer.' . $key) ? ' has-error' : '' }}">
                                 <label for="answer" class="col-md-4 control-label">Answer</label>
@@ -280,7 +280,7 @@
                         </div>
                     </div>
 
-					  <div class="form-group{{ $errors->has('explanation') ? ' has-error' : '' }}">
+                      <div class="form-group{{ $errors->has('explanation') ? ' has-error' : '' }}">
                             <label for="explanation" class="col-md-4 control-label">Explanation</label>
 
                             <div class="col-md-6">
@@ -292,7 +292,7 @@
                                     </span>
                                 @endif
                             </div>
-				      </div>
+                      </div>
                 <div class="form-group{{ $errors->has('rounding') ? ' has-error' : '' }}">
                     <label for="type" class="col-md-4 control-label">Round user answer with same precision as correct answer</label>
 
@@ -309,7 +309,7 @@
                     <label for="type" class="col-md-4 control-label">Convert user answer to decimal value</label>
 
                     <div class="col-md-6 radio">
-                        <label for="type" class="col-md-3"> 
+                        <label for="type" class="col-md-3">
                             <input {{($question->conversion == true) ? 'checked="checked"' : ''}} type="checkbox" name="conversion" value="1" id='decimal-conversion' onchange="onDecimalConversionChange()"></label>
                         @if ($errors->has('conversion'))
                             <span class="help-block">
@@ -328,7 +328,7 @@
                                 <strong>{{ $errors->first('answers_round') }}</strong>
                             </span>
                         @endif
-                    </div>  
+                    </div>
                 </div>
                 <script type="text/javascript">
                     onDecimalConversionChange();
@@ -341,7 +341,7 @@
                         } else {
                             answersRound.style.display = 'none';
                         }
-                    }   
+                    }
                 </script>
 
             <a class="btn btn-default" href="{{ route('question_views.index') }}">Back</a>
@@ -353,7 +353,7 @@
         </div>
     </div>
 
-	          </div>
+              </div>
             </div>
         </div>
     </div>

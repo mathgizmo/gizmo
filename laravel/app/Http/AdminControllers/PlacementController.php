@@ -38,7 +38,7 @@ class PlacementController extends Controller
             'total_placements' => $total_placements,
             'units' => $units,
             'lid' => $lid
-        )); 
+        ));
     }
 
     /**
@@ -60,7 +60,7 @@ class PlacementController extends Controller
         $unit = Unit::find($request['unit_id']);
         $placement->unit()->associate($unit);
         $placement->save();
-        
+
         $placements = PlacementQuestion::with('unit')->get();
         \Session::flash('flash_message','successfully saved.');
         return view('placement_views.index',['placements'=>$placements]);

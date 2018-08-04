@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PasswordResets extends Model
 {
     protected $table = 'password_resets';
-    
+
     /**
      * The attributes that are mass assignable.
      *

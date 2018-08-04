@@ -18,10 +18,10 @@ class LevelController extends Controller
     public function index()
     {
         //
-		$levels = Level::All();
-		//$units = DB::table('unit')->where('level_id',$request->level_id)->get();
-		//$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-		return view('level_views.index',['levels'=>$levels]);
+        $levels = Level::All();
+        //$units = DB::table('unit')->where('level_id',$request->level_id)->get();
+        //$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
+        return view('level_views.index',['levels'=>$levels]);
     }
 
     /**
@@ -36,7 +36,7 @@ class LevelController extends Controller
         return view('level_views.create',array(
             'levels' => $levels,
             'total_level' => $total_level
-        )); 
+        ));
     }
 
     /**
@@ -49,23 +49,23 @@ class LevelController extends Controller
     {
         //
 
-		//$uid = $request->unit_id;
-		//$tid = $request->topic_id;
-		$this->validate($request, [
-		 'title'=> 'required',
-		 ]);
-		 
-		 DB::table('level')->insert([
+        //$uid = $request->unit_id;
+        //$tid = $request->topic_id;
+        $this->validate($request, [
+         'title'=> 'required',
+         ]);
+
+         DB::table('level')->insert([
          'title' => $request['title'],
          'dependency' => $request['dependency'] ?: false,
-		 'order_no' => $request['order_no'], 
-		 'created_at' => date('Y-m-d H:i:s'),
-		 'updated_at' => date('Y-m-d H:i:s')
-		]);
-		
-		$levels = DB::select('select * from level');
-		\Session::flash('flash_message','successfully saved.');
-		return view('level_views.index',['levels'=>$levels]); 
+         'order_no' => $request['order_no'],
+         'created_at' => date('Y-m-d H:i:s'),
+         'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        $levels = DB::select('select * from level');
+        \Session::flash('flash_message','successfully saved.');
+        return view('level_views.index',['levels'=>$levels]);
     }
 
     /**
@@ -77,7 +77,7 @@ class LevelController extends Controller
     public function show($id)
     {
         //
-		return "Under Construction";
+        return "Under Construction";
     }
 
     /**
@@ -106,13 +106,13 @@ class LevelController extends Controller
      */
     public function update(Request $request, $id)
     {
-   
+
         $this->validate($request, [
             'title'  => 'required',
         ]);
-         
+
         DB::table('level')->where('id',$id)->update([
-            'title' => $request['title'], 
+            'title' => $request['title'],
             'order_no' => $request['order_no'],
             'dependency' => $request['dependency'] ?: false,
             'created_at' => date('Y-m-d H:i:s'),
@@ -131,6 +131,6 @@ class LevelController extends Controller
     public function destroy($id)
     {
         Level::where('id', $id)->delete();
-		return redirect('/level_views')->with( array('message'=> 'Deleted successfully') );
+        return redirect('/level_views')->with( array('message'=> 'Deleted successfully') );
     }
 }

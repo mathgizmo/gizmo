@@ -39,7 +39,7 @@ class JSON
                 'status_code' => 500
             ], 500);
         }
-        
+
         $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
     }

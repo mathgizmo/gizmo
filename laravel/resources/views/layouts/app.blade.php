@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
-	<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -93,13 +93,13 @@
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-	{{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
-	<script type="text/javascript">
-	$(document).ready(function () {
+    <script type="text/javascript">
+    $(document).ready(function () {
 
-		var repMode = $("#reply_mode option:selected").val();
-		setTF(repMode);
+        var repMode = $("#reply_mode option:selected").val();
+        setTF(repMode);
 
         $("#reply_mode").on('change',function(){
             setTF($(this).val());
@@ -125,71 +125,71 @@
         });
 
 
-	});
+    });
 
-	</script>
+    </script>
 
-		<script type="text/javascript">
-		$('#level_id').on('change',function(){
-			$value=$(this).val();
-			$.ajax({
-				type : 'get',
-				url  : '{{URL:: to('/question_views/create')}}',
-				data : {'level_id':$value},
-				success: function(data){
-					$('#unit_id').html(data);
-					}
-				});
-			});
-		$('#unit_id').on('change',function(){
-			$value=$(this).val();
-			$.ajax({
-				type : 'get',
-				url  : '{{URL:: to('/question_views/create')}}',
-				data : {'unit_id':$value},
-				success: function(data){
-					//alert(data);
-					$('#topic_id').html(data);
-					}
-				});
-			});
+        <script type="text/javascript">
+        $('#level_id').on('change',function(){
+            $value=$(this).val();
+            $.ajax({
+                type : 'get',
+                url  : '{{URL:: to('/question_views/create')}}',
+                data : {'level_id':$value},
+                success: function(data){
+                    $('#unit_id').html(data);
+                    }
+                });
+            });
+        $('#unit_id').on('change',function(){
+            $value=$(this).val();
+            $.ajax({
+                type : 'get',
+                url  : '{{URL:: to('/question_views/create')}}',
+                data : {'unit_id':$value},
+                success: function(data){
+                    //alert(data);
+                    $('#topic_id').html(data);
+                    }
+                });
+            });
 
-	$('#topic_id').on('change',function(){
-		$value=$(this).val();
-		$.ajax({
-			type : 'get',
-			url  : '{{URL:: to('/question_views/create')}}',
-			data : {'topic_id':$value},
-			success: function(data){
-				//alert(data);
-				$('#lesson_id').html(data);
-			}
-		});
-	});
+    $('#topic_id').on('change',function(){
+        $value=$(this).val();
+        $.ajax({
+            type : 'get',
+            url  : '{{URL:: to('/question_views/create')}}',
+            data : {'topic_id':$value},
+            success: function(data){
+                //alert(data);
+                $('#lesson_id').html(data);
+            }
+        });
+    });
 
-	$(function () {
+    $(function () {
 
-	    $("#addImageModal button#save-image").on('click', function() {
-	        $('#addImageModal').modal('hide');
-	        $('form#topic label#change-image img').removeClass();
+        $("#addImageModal button#save-image").on('click', function() {
+            $('#addImageModal').modal('hide');
+            $('form#topic label#change-image img').removeClass();
 
-	        $('form#topic label#add-image').hide();
-	        $('form#topic label#change-image').show();
+            $('form#topic label#add-image').hide();
+            $('form#topic label#change-image').show();
 
-	        var intVal = $('#addImageModal input[type=checkbox]:checked').val();
-	        $('form#topic label#change-image img').addClass(intVal);
-	        $('form#topic input[name=image_id').val(intVal);
-	    });
+            var intVal = $('#addImageModal input[type=checkbox]:checked').val();
+            $('form#topic label#change-image img').addClass(intVal);
+            $('form#topic input[name=image_id').val(intVal);
+        });
 
-	    $( "#addImageModal input[type=checkbox]" ).on( "click", function() {
-	    	$('#addImageModal input[type=checkbox]').prop('checked', false);
-	    	$(this).prop('checked', true);
-	    });
+        $( "#addImageModal input[type=checkbox]" ).on( "click", function() {
+            $('#addImageModal input[type=checkbox]').prop('checked', false);
+            $(this).prop('checked', true);
+        });
 
-	});
-	</script>
+    });
+    </script>
 
-	@yield('scripts')
+    @yield('scripts')
 
 </body>
 </html>
