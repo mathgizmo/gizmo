@@ -20,7 +20,7 @@ class LessonController extends Controller
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
         $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
-        return view('lesson_views.index',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
+        return view('lesson_views.index', ['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
 
     }
 
@@ -40,7 +40,7 @@ class LessonController extends Controller
         $lessons = DB::table('lesson')->where('topic_id',$tid)->get();
         $total_lesson = Lesson::all()->count();
 
-        return view('lesson_views.create',[
+        return view('lesson_views.create', [
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,
@@ -89,7 +89,7 @@ class LessonController extends Controller
         $total_lesson = Lesson::all()->count();
 
         \Session::flash('flash_message','successfully saved.');
-        return view('lesson_views.create',[
+        return view('lesson_views.create', [
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,
@@ -181,7 +181,7 @@ class LessonController extends Controller
         $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
         $total_lesson = Lesson::all()->count();
 
-        return view('lesson_views.create',[
+        return view('lesson_views.create', [
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,
@@ -211,7 +211,7 @@ class LessonController extends Controller
         $topic_id = DB::table('lesson')->select('topic_id')->where('id',$id)->first();
         DB::table('lesson')->where('id', $id)->delete();
         $lessons = DB::table('lesson')->where('topic_id',$topic_id->topic_id)->get();
-        return view('lesson_views.index',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
+        return view('lesson_views.index', ['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
 
     }
 }

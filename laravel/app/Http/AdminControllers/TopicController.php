@@ -19,7 +19,7 @@ class TopicController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-        return view('topic_views.index',['levels'=>$levels,'units'=>$units,'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
+        return view('topic_views.index', ['levels'=>$levels,'units'=>$units,'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
     }
 
     /**
@@ -81,7 +81,7 @@ class TopicController extends Controller
         $total_topic = Topic::all()->count();
         //$lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
         \Session::flash('flash_message','successfully saved.');
-        return view('topic_views.create',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid,'total_topic'=>$total_topic]);
+        return view('topic_views.create', ['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid,'total_topic'=>$total_topic]);
     }
 
     /**
@@ -162,7 +162,7 @@ class TopicController extends Controller
         $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
         $total_topic = Topic::all()->count();
 
-        return view('topic_views.create',[
+        return view('topic_views.create', [
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,

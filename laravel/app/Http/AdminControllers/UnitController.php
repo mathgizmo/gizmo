@@ -19,7 +19,7 @@ class UnitController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id',$request->level_id)->get();
         //$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-        return view( 'unit_views.index',['levels'=>$levels,'units'=>$units, 'level_id' => $request->level_id] );
+        return view( 'unit_views.index', ['levels'=>$levels,'units'=>$units, 'level_id' => $request->level_id] );
     }
 
     /**
@@ -34,7 +34,7 @@ class UnitController extends Controller
         $units = DB::table('unit')->where('level_id',$lid)->get();
         $total_unit = Unit::all()->count();
 
-        return view('unit_views.create',[
+        return view('unit_views.create', [
             'levels' => $levels,
             'units' => $units,
             'lid' => $lid,
@@ -73,7 +73,7 @@ class UnitController extends Controller
         $total_unit = Unit::all()->count();
 
         \Session::flash('flash_message','successfully saved.');
-        return view('unit_views.create',[
+        return view('unit_views.create', [
             'levels' => $levels,
             'units' => $units,
             'lid' => $lid,
@@ -147,7 +147,7 @@ class UnitController extends Controller
         $units = DB::table('unit')->where('level_id',$request->level_id)->get();
         $total_unit = Unit::all()->count();
 
-        return view('unit_views.create',[
+        return view('unit_views.create', [
             'levels' => $levels,
             'units' => $units,
             'lid' => $lid,

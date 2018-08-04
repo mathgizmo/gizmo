@@ -21,7 +21,7 @@ class LevelController extends Controller
         $levels = Level::All();
         //$units = DB::table('unit')->where('level_id',$request->level_id)->get();
         //$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-        return view('level_views.index',['levels'=>$levels]);
+        return view('level_views.index', ['levels'=>$levels]);
     }
 
     /**
@@ -65,7 +65,7 @@ class LevelController extends Controller
 
         $levels = DB::select('select * from level');
         \Session::flash('flash_message','successfully saved.');
-        return view('level_views.index',['levels'=>$levels]);
+        return view('level_views.index', ['levels'=>$levels]);
     }
 
     /**

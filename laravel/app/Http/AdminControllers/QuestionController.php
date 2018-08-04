@@ -175,7 +175,7 @@ class QuestionController extends Controller
 
     $preview_url = Config::get('app.preview_url');
 
-        return view('question_views.create',['levels' => $levels,
+        return view('question_views.create', ['levels' => $levels,
         'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lsnid, 'preview_url'=> $preview_url]);
     }
 
@@ -263,7 +263,7 @@ class QuestionController extends Controller
 
         $preview_url = Config::get('app.preview_url');
 
-        return view('question_views.create',[ 'levels' => $levels,
+        return view('question_views.create', [ 'levels' => $levels,
         'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lesson_id,
             'preview_url'=> $preview_url
         ])->withInput($request->all());
