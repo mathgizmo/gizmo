@@ -50,7 +50,7 @@ class UserController extends Controller
         $this->checkAccess(auth()->user()->is_admin);
 
         $this->validate(request(), [
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|max:255|unique:users, email,' . $user->id,
         ]);
         if (request()->name == '') {
             return back()->withErrors(['name' => 'Name can\'t be empty.']);

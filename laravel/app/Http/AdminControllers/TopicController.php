@@ -35,7 +35,7 @@ class TopicController extends Controller
         $units = DB::select('select * from unit');
         $topics = DB::table('topic')->where('unit_id',$uid)->get();
         $total_topic = Topic::all()->count();
-        return view('topic_views.create',array(
+        return view('topic_views.create', array(
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,

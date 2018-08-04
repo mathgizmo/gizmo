@@ -422,8 +422,8 @@
                 } else {
                     src += '&answer1=' + answers;
                 }
-                $('.modal').on('shown.bs.modal',function(){
-                    $(this).find('iframe').attr('src',src)
+                $('.modal').on('shown.bs.modal', function(){
+                    $(this).find('iframe').attr('src', src)
                 });
 
                 /*$.ajax({
