@@ -33,7 +33,7 @@ class PlacementController extends Controller
         $placements = PlacementQuestion::with('unit')->get();
         $units = Unit::all();
         $lid = "";
-        return view('placement_views.create',array(
+        return view('placement_views.create', array(
             'placements' => $placements,
             'total_placements' => $total_placements,
             'units' => $units,

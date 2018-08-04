@@ -33,7 +33,7 @@ class LevelController extends Controller
     {
         $total_level = Level::all()->count();
         $levels = Level::All();
-        return view('level_views.create',array(
+        return view('level_views.create', array(
             'levels' => $levels,
             'total_level' => $total_level
         ));

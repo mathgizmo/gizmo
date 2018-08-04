@@ -101,7 +101,7 @@
         var repMode = $("#reply_mode option:selected").val();
         setTF(repMode);
 
-        $("#reply_mode").on('change',function(){
+        $("#reply_mode").on('change', function(){
             setTF($(this).val());
 
         });
@@ -119,7 +119,7 @@
                 $(".answer-input").show();
             }
         }
-        $(".answer-TF").on('change',function(){
+        $(".answer-TF").on('change', function(){
             var selection = $(this).val();
             $(this).prev('input').val(selection);
         });
@@ -130,7 +130,7 @@
     </script>
 
         <script type="text/javascript">
-        $('#level_id').on('change',function(){
+        $('#level_id').on('change', function(){
             $value=$(this).val();
             $.ajax({
                 type : 'get',
@@ -141,7 +141,7 @@
                     }
                 });
             });
-        $('#unit_id').on('change',function(){
+        $('#unit_id').on('change', function(){
             $value=$(this).val();
             $.ajax({
                 type : 'get',
@@ -154,7 +154,7 @@
                 });
             });
 
-    $('#topic_id').on('change',function(){
+    $('#topic_id').on('change', function(){
         $value=$(this).val();
         $.ajax({
             type : 'get',

@@ -248,7 +248,7 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
             $lesson['questions'][$index]['answers'] = [];
         }
 
-        foreach(DB::table('answer')->whereIn('question_id',array_keys($questions))->get() as $answer) {
+        foreach(DB::table('answer')->whereIn('question_id', array_keys($questions))->get() as $answer) {
             $lesson['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
         }
 
@@ -295,7 +295,7 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
             $topic['questions'][$id]['answers'] = [];
         }
 
-        foreach(DB::table('answer')->whereIn('question_id',array_keys($questions))->get() as $answer) {
+        foreach(DB::table('answer')->whereIn('question_id', array_keys($questions))->get() as $answer) {
             $topic['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
         }
 
