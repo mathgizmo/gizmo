@@ -159,11 +159,11 @@ class TopicController extends Controller
 
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-        $topic = DB::table('topic')->where('id',$id)->first();
+        $topic = DB::table('topic')->where('id', $id)->first();
         if(!$topic) {
             return $this->error('topic not found');
         }
-        $query = DB::table('lesson')->where('topic_id',$id);
+        $query = DB::table('lesson')->where('topic_id', $id);
         if (!$student->is_admin()) {
             $query->where('dev_mode', 0);
         }
@@ -176,11 +176,11 @@ class TopicController extends Controller
 
         $lessons_done = [];
         foreach(DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 0])
-            ->whereIn('entity_id',$lessons_ids)->get() as $row) {
+            ->whereIn('entity_id', $lessons_ids)->get() as $row) {
                 $lessons_done[] = $row['entity_id'];
         }
         $topic['status'] = count(DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 1])
-            ->where('entity_id',$topic['id'])->get());
+            ->where('entity_id', $topic['id'])->get());
         $active_flag = true;
         $last_active_order = 0;
         foreach ($topic['lessons'] as $id => $lesson) {
@@ -232,16 +232,16 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
 
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-        $topic = DB::table('topic')->where('id',$id)->first();
+        $topic = DB::table('topic')->where('id', $id)->first();
         if(!$topic) {
             return $this->error('topic not found');
         }
 
-        $lesson = DB::table('lesson')->where('id',$lesson_id)->where('topic_id', $id)->orderBy('id')->first();
+        $lesson = DB::table('lesson')->where('id', $lesson_id)->where('topic_id', $id)->orderBy('id')->first();
         if(!$lesson) {
             return $this->error('lesson not found');
         }
-        $lesson['questions'] = DB::table('question')->where('lesson_id',$lesson_id)->get();
+        $lesson['questions'] = DB::table('question')->where('lesson_id', $lesson_id)->get();
         $questions = [];
         foreach($lesson['questions'] as $index => $question) {
             $questions[$question['id']] = $index;

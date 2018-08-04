@@ -19,8 +19,8 @@ class LevelController extends Controller
     {
         //
         $levels = Level::All();
-        //$units = DB::table('unit')->where('level_id',$request->level_id)->get();
-        //$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
+        //$units = DB::table('unit')->where('level_id', $request->level_id)->get();
+        //$topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
         return view('level_views.index', ['levels'=>$levels]);
     }
 
@@ -111,7 +111,7 @@ class LevelController extends Controller
             'title'  => 'required',
         ]);
 
-        DB::table('level')->where('id',$id)->update([
+        DB::table('level')->where('id', $id)->update([
             'title' => $request['title'],
             'order_no' => $request['order_no'],
             'dependency' => $request['dependency'] ?: false,
@@ -119,7 +119,7 @@ class LevelController extends Controller
             'updated_at' => date('Y-m-d H:i:s')
         ]);
 
-        return redirect('/level_views')->with( array('message'=> 'Updated successfully') );
+        return redirect('/level_views')->with(array('message'=> 'Updated successfully'));
     }
 
     /**
@@ -131,6 +131,6 @@ class LevelController extends Controller
     public function destroy($id)
     {
         Level::where('id', $id)->delete();
-        return redirect('/level_views')->with( array('message'=> 'Deleted successfully') );
+        return redirect('/level_views')->with(array('message'=> 'Deleted successfully'));
     }
 }

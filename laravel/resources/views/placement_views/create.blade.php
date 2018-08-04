@@ -22,7 +22,7 @@
                                   @if (count($units) > 0)
                                       <option value="">Select From ...</option>
                                         @foreach($units as $unit)
-                                            <option value="{{$unit->id}}" @if (old("unit_id") == $unit->id) selected="selected" @endif  @if ( $unit->id == $lid) selected="selected"
+                                            <option value="{{$unit->id}}" @if (old("unit_id") == $unit->id) selected="selected" @endif  @if ($unit->id == $lid) selected="selected"
                                             @endif
                                             >{{$unit->title}}</option>
                                         @endforeach
