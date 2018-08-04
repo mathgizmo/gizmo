@@ -19,7 +19,7 @@ class PlacementController extends Controller
     public function index()
     {
         $placements = PlacementQuestion::with('unit')->get();
-        return view('placement_views.index',['placements'=>$placements]);
+        return view('placement_views.index', ['placements'=>$placements]);
     }
 
     /**
@@ -63,7 +63,7 @@ class PlacementController extends Controller
 
         $placements = PlacementQuestion::with('unit')->get();
         \Session::flash('flash_message','successfully saved.');
-        return view('placement_views.index',['placements'=>$placements]);
+        return view('placement_views.index', ['placements'=>$placements]);
     }
 
     /**
