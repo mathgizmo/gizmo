@@ -46,7 +46,7 @@ class QuestionController extends Controller
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
-            ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle');
+            ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle');
         if ($request->has('level_id')) {
             $level_id = $request->level_id;
             $query = $query->where('level_id',$request->level_id);
@@ -176,7 +176,7 @@ class QuestionController extends Controller
     $preview_url = Config::get('app.preview_url');
 
         return view('question_views.create', ['levels' => $levels,
-        'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lsnid, 'preview_url'=> $preview_url]);
+        'qrmodes' => $qrmodes, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'lid'=>$lid, 'uid'=>$uid, 'tid'=>$tid, 'lsnid'=>$lsnid, 'preview_url'=> $preview_url]);
     }
 
     /**
@@ -259,12 +259,12 @@ class QuestionController extends Controller
         $lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $tid)->get();
         $qrmodes = DB::select('select * from reply_mode');
         //$questions = DB::select('')
-        \Session::flash('flash_message','successfully saved.');
+        \Session::flash('flash_message', 'successfully saved.');
 
         $preview_url = Config::get('app.preview_url');
 
         return view('question_views.create', [ 'levels' => $levels,
-        'qrmodes' => $qrmodes,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons,'lid'=>$lid,'uid'=>$uid,'tid'=>$tid,'lsnid'=>$lesson_id,
+        'qrmodes' => $qrmodes, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'lid'=>$lid, 'uid'=>$uid, 'tid'=>$tid, 'lsnid'=>$lesson_id,
             'preview_url'=> $preview_url
         ])->withInput($request->all());
     }
@@ -282,7 +282,7 @@ class QuestionController extends Controller
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
-            ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
+            ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle')
             ->where('question.id', '=', $id)->first();
      //    print_r($question);
 
@@ -304,8 +304,8 @@ class QuestionController extends Controller
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
-            ->select('question.*', 'lesson.title','topic.title as ttitle',
-            'topic.id as tid','unit.title as utitle','unit.id as uid','level.title as ltitle','level.id as lid')
+            ->select('question.*', 'lesson.title', 'topic.title as ttitle',
+            'topic.id as tid', 'unit.title as utitle', 'unit.id as uid', 'level.title as ltitle', 'level.id as lid')
             ->where('question.id', '=', $id)->first();
         $answers = DB::select('select * from answer where question_id = ' . $id);
         $levels = DB::select('select * from level');
@@ -316,8 +316,8 @@ class QuestionController extends Controller
 
     $preview_url = Config::get('app.preview_url');
 
-        return view('question_views.edit', ['question'=>$question,'levels'=>$levels,
-        'units'=>$units,'topics'=>$topics,'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers, 'preview_url'=>$preview_url ]);
+        return view('question_views.edit', ['question'=>$question, 'levels'=>$levels,
+        'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'qrmodes'=>$qrmodes, 'answers'=>$answers, 'preview_url'=>$preview_url ]);
     }
 
     /**
@@ -386,7 +386,7 @@ class QuestionController extends Controller
               ->join('topic', 'lesson.topic_id', '=', 'topic.id')
         ->join('unit', 'topic.unit_id', '=', 'unit.id')
         ->join('level', 'unit.level_id', '=', 'level.id')
-              ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
+              ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle')
               ->orderBy('question.id', 'desc')->paginate(10);
       if($request['_type'] == 'new') {
         $question = DB::table('question')
@@ -394,8 +394,8 @@ class QuestionController extends Controller
           ->join('topic', 'lesson.topic_id', '=', 'topic.id')
           ->join('unit', 'topic.unit_id', '=', 'unit.id')
           ->join('level', 'unit.level_id', '=', 'level.id')
-          ->select('question.*', 'lesson.title','topic.title as ttitle',
-          'topic.id as tid','unit.title as utitle','unit.id as uid','level.title as ltitle','level.id as lid')
+          ->select('question.*', 'lesson.title', 'topic.title as ttitle',
+          'topic.id as tid', 'unit.title as utitle', 'unit.id as uid', 'level.title as ltitle', 'level.id as lid')
           ->where('question.id', '=', $questionID)->first();
         $answers = DB::select('select * from answer where question_id = ' . $questionID);
         $levels = DB::select('select * from level');
@@ -408,8 +408,8 @@ class QuestionController extends Controller
         $qrmodes = DB::select('select * from reply_mode');
         $preview_url = Config::get('app.preview_url');
         return view('question_views.edit', ['question'=>$question,
-          'levels'=>$levels, 'units'=>$units,'topics'=>$topics,
-          'lessons'=>$lessons, 'qrmodes'=>$qrmodes,'answers'=>$answers,
+          'levels'=>$levels, 'units'=>$units, 'topics'=>$topics,
+          'lessons'=>$lessons, 'qrmodes'=>$qrmodes, 'answers'=>$answers,
           'preview_url'=>$preview_url ]);
       } else {
         return redirect(route('question_views.index'));
@@ -428,16 +428,16 @@ class QuestionController extends Controller
         $levels = DB::select('select * from level');
         //$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
         //$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
-        $units = DB::table('unit')->where('level_id','1')->get();
-        $topics = DB::table('topic')->where('unit_id','1')->get();
-        $lessons = DB::table('lesson')->where('topic_id','1')->get();
+        $units = DB::table('unit')->where('level_id', '1')->get();
+        $topics = DB::table('topic')->where('unit_id', '1')->get();
+        $lessons = DB::table('lesson')->where('topic_id', '1')->get();
         DB::table('question')->where('id', $id)->delete();
         $questions = DB::table('question')
             ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
-            ->select('question.*', 'lesson.title','topic.title as ttitle','unit.title as utitle','level.title as ltitle')
+            ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle')
             ->orderBy('question.id', 'desc')->paginate(10);
         return redirect()->route('question_views.index');
     }

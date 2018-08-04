@@ -64,7 +64,7 @@ class LevelController extends Controller
         ]);
 
         $levels = DB::select('select * from level');
-        \Session::flash('flash_message','successfully saved.');
+        \Session::flash('flash_message', 'successfully saved.');
         return view('level_views.index', ['levels'=>$levels]);
     }
 

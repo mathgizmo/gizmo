@@ -20,7 +20,7 @@ class LessonController extends Controller
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
         $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
-        return view('lesson_views.index', ['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
+        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
 
     }
 
@@ -88,7 +88,7 @@ class LessonController extends Controller
         $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
         $total_lesson = Lesson::all()->count();
 
-        \Session::flash('flash_message','successfully saved.');
+        \Session::flash('flash_message', 'successfully saved.');
         return view('lesson_views.create', [
             'levels' => $levels,
             'units' => $units,
@@ -128,7 +128,7 @@ class LessonController extends Controller
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
             ->select('lesson.*', 'topic.title as ttitle',
-            'topic.id as tid','unit.title as utitle','unit.id as uid','level.title as ltitle','level.id as lid')
+            'topic.id as tid', 'unit.title as utitle', 'unit.id as uid', 'level.title as ltitle', 'level.id as lid')
             ->where('lesson.id', '=', $id)->first();
 
         $levels = DB::select('select * from level');
@@ -211,7 +211,7 @@ class LessonController extends Controller
         $topic_id = DB::table('lesson')->select('topic_id')->where('id',$id)->first();
         DB::table('lesson')->where('id', $id)->delete();
         $lessons = DB::table('lesson')->where('topic_id',$topic_id->topic_id)->get();
-        return view('lesson_views.index', ['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lessons'=>$lessons]);
+        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
 
     }
 }

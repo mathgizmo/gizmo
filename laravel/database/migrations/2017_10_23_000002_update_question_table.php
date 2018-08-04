@@ -24,17 +24,17 @@ SQL
         );
         DB::unprepared(<<<SQL
 INSERT INTO `reply_mode` VALUES
-(10,'mcq','Multiple Choice', NULL, NULL),
-(11,'order','Correct Order', NULL, NULL),
-(12,'mcqms','Multiple Choice/Multiple Answers', NULL, NULL);
+(10, 'mcq', 'Multiple Choice', NULL, NULL),
+(11, 'order', 'Correct Order', NULL, NULL),
+(12, 'mcqms', 'Multiple Choice/Multiple Answers', NULL, NULL);
 SQL
     );
         DB::unprepared(<<<SQL
-UPDATE question set reply_mode = 'mcq' WHERE reply_mode in ('mcq3','mcq4','mcq5','mcq6');
+UPDATE question set reply_mode = 'mcq' WHERE reply_mode in ('mcq3', 'mcq4', 'mcq5', 'mcq6');
 SQL
     );
         DB::unprepared(<<<SQL
-UPDATE question set reply_mode = 'order' WHERE reply_mode in ('ascending','descending');
+UPDATE question set reply_mode = 'order' WHERE reply_mode in ('ascending', 'descending');
 SQL
         );
     }
@@ -53,12 +53,12 @@ SQL
         });
         DB::unprepared(<<<SQL
 INSERT INTO `reply_mode` VALUES
-(4,'mcq3','Multiple Choice 3', NULL, NULL),
-(5,'mcq4','Multiple Choice 4', NULL, NULL),
-(6,'mcq5','Multiple Choice 5', NULL, NULL),
-(7,'mcq6','Multiple Choice 6', NULL, NULL),
-(8,'ascending','Ascending Order', NULL, NULL),
-(9,'descending','Descending Order', NULL, NULL);
+(4, 'mcq3', 'Multiple Choice 3', NULL, NULL),
+(5, 'mcq4', 'Multiple Choice 4', NULL, NULL),
+(6, 'mcq5', 'Multiple Choice 5', NULL, NULL),
+(7, 'mcq6', 'Multiple Choice 6', NULL, NULL),
+(8, 'ascending', 'Ascending Order', NULL, NULL),
+(9, 'descending', 'Descending Order', NULL, NULL);
 SQL
     );
         DB::unprepared(<<<SQL
