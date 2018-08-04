@@ -19,6 +19,7 @@
             "assets": [
               "src/assets",
               "src/favicon.ico",
+              "src/assets/images/icons",
               "src/.htaccess"
             ],
             "styles": [

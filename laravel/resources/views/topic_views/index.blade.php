@@ -98,7 +98,7 @@
 						<tbody>
 							@foreach($topics as $topic)
 								<tr>
-									<td><img id="show-img" class="{{$topic->image_id}}" src="{{ URL::asset('images/img_trans.gif') }}" /></td>
+									<td><img id="show-img" class="{{$topic->icon_src}}" src="{{ URL::asset($topic->icon_src) }}" /></td>
 									<td>{{$topic->order_no}}</td>
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
