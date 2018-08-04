@@ -8,7 +8,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading"><div class="panel-title">
              Edit Topic
-			</div></div>
+            </div></div>
 
                 <div class="panel-body">
 
@@ -19,21 +19,21 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-		        <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('level_id') ? ' has-error' : '' }}">
                     <label for="level_id" class="col-md-4 control-label">Level</label>
 
                     <div class="col-md-6">
-					      <select class="form-control" name="level_id" id="level_id">
+                          <select class="form-control" name="level_id" id="level_id">
 
-						  @if (count($levels) > 0)
-							  <option value="">Select From ...</option>
-								@foreach($levels as $level)
-									<option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $topic->lid) selected="selected"
-									@endif
-									>{{$level->title}}</option>
-								@endforeach
-						 @endif
-							</select>
+                          @if (count($levels) > 0)
+                              <option value="">Select From ...</option>
+                                @foreach($levels as $level)
+                                    <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $topic->lid) selected="selected"
+                                    @endif
+                                    >{{$level->title}}</option>
+                                @endforeach
+                         @endif
+                            </select>
 
                         @if ($errors->has('level_id'))
                             <span class="help-block">
@@ -43,20 +43,20 @@
                     </div>
                 </div>
 
-				<div id="unit_options"> </div>
-					<div class="form-group{{ $errors->has('unit_id') ? ' has-error' : '' }}">
+                <div id="unit_options"> </div>
+                    <div class="form-group{{ $errors->has('unit_id') ? ' has-error' : '' }}">
                         <label for="unit_id" class="col-md-4 control-label">Unit</label>
 
                         <div class="col-md-6">
-						      <select class="form-control" name="unit_id" id="unit_id">
-							   @if (count($units) > 0)
-							  @foreach($units as $unit)
-										<option value="{{$unit->id}}" @if ( $unit->id == $topic->uid) selected="selected"
-										@endif
-										>{{$unit->title}}</option>
-									@endforeach
-							  @endif
-								</select>
+                              <select class="form-control" name="unit_id" id="unit_id">
+                               @if (count($units) > 0)
+                              @foreach($units as $unit)
+                                        <option value="{{$unit->id}}" @if ( $unit->id == $topic->uid) selected="selected"
+                                        @endif
+                                        >{{$unit->title}}</option>
+                                    @endforeach
+                              @endif
+                                </select>
 
                             @if ($errors->has('unit_id'))
                                 <span class="help-block">
@@ -109,8 +109,8 @@
                         <label for="type" class="col-md-3"> <input {{ ($topic->dependency == true) ? 'checked="checked"' : ''}} type="checkbox" name="dependency" value="1"></label>
                         @if ($errors->has('dependency'))
                             <span class="help-block">
-												<strong>{{ $errors->first('dependency') }}</strong>
-											</span>
+                                                <strong>{{ $errors->first('dependency') }}</strong>
+                                            </span>
                         @endif
                     </div>
                 </div>
@@ -136,17 +136,17 @@
                     </div>
 
                     <div class="form-group">
-			            <div class="col-md-6 col-md-offset-4">
+                        <div class="col-md-6 col-md-offset-4">
                             <a class="btn btn-default" href="{{ route('topic_views.create') }}">Back</a>
                             <button class="btn btn-primary" type="submit" >Update</button>
 
-            			</div>
-            		</div>
+                        </div>
+                    </div>
                 </form>
                 </div>
             </div>
 
-	          </div>
+              </div>
             </div>
         </div>
     </div>
@@ -162,13 +162,13 @@
             </div>
             <div class="modal-body">
                 <div class="topic-images">
-	        		<ul>
-					  	@for ($i = 1; $i <= 20; $i++)
-					  	<li><input type="checkbox" id="cb{{ $i }}" value="cb{{ $i }}-img" />
-						    <label for="cb{{ $i }}"><img id="cb{{ $i }}-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
-						</li>
+                    <ul>
+                          @for ($i = 1; $i <= 20; $i++)
+                          <li><input type="checkbox" id="cb{{ $i }}" value="cb{{ $i }}-img" />
+                            <label for="cb{{ $i }}"><img id="cb{{ $i }}-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
+                        </li>
                         @endfor
-					</ul>
+                    </ul>
                 </div>
             </div>
             <div class="modal-footer">

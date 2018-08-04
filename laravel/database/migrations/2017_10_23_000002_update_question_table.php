@@ -52,7 +52,7 @@ SQL
             $table->integer('size')->default(1);
         });
         DB::unprepared(<<<SQL
-INSERT INTO `reply_mode` VALUES 
+INSERT INTO `reply_mode` VALUES
 (4,'mcq3','Multiple Choice 3',NULL,NULL),
 (5,'mcq4','Multiple Choice 4',NULL,NULL),
 (6,'mcq5','Multiple Choice 5',NULL,NULL),

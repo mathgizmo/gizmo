@@ -19,7 +19,7 @@
                                 <input type="hidden" name="_method" value="PUT">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                  
+
 
                                     <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                                         <label for="title" class="col-md-4 control-label"> Title</label>
@@ -28,7 +28,7 @@
                                             <textarea id="title" class="form-control"  name="title"> {{$level->title}}</textarea>
 
                                             @if ($errors->has('title'))
-                                            <span class="help-block"> 
+                                            <span class="help-block">
                                                 <strong>{{ $errors->first('title') }}</strong>
                                             </span>
                                             @endif
@@ -41,12 +41,12 @@
                                     <label for="type" class="col-md-3"> <input {{ ($level->dependency == true) ? 'checked="checked"' : ''}} type="checkbox" name="dependency" value="1"></label>
                                     @if ($errors->has('dependency'))
                                         <span class="help-block">
-												<strong>{{ $errors->first('dependency') }}</strong>
-											</span>
+                                                <strong>{{ $errors->first('dependency') }}</strong>
+                                            </span>
                                     @endif
                                 </div>
                             </div>
-                   
+
 
                                     <div class="form-group{{ $errors->has('order_no') ? ' has-error' : '' }}">
                                         <label for="order_no" class="col-md-4 control-label">Order No</label>

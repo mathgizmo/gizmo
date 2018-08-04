@@ -102,14 +102,14 @@ class AuthController extends Controller
 
         // delete existings resets if exists
         PasswordResets::where('email', $email)->delete();
-        
+
         $url = $credentials['url'];
         $token = str_random(64);
         $result = PasswordResets::create([
             'email' => $email,
             'token' => $token
         ]);
-        
+
         if($result) {
             $data = array('token'=>$token, 'email' => $email, 'url' => $url);
             Mail::queue('mail', $data, function($message) use ($data) {
@@ -122,7 +122,7 @@ class AuthController extends Controller
         return $this->success($error);
     }
 
-    public function resetPassword(Request $request) { 
+    public function resetPassword(Request $request) {
         $fields = ['password', 'token'];
         // grab credentials from the request
         $credentials = $request->only($fields);

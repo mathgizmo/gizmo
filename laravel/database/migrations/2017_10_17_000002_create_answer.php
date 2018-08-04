@@ -75,7 +75,7 @@ SQL
         DB::unprepared(<<<SQL
 UPDATE question
 SET question = CONCAT_WS(' __BLANK__ ',
-	IF(question_fp1 <> '', question_fp1, NULL),
+    IF(question_fp1 <> '', question_fp1, NULL),
     IF(question_fp2<> '', question_fp2, NULL),
     IF(question_fp3<> '', question_fp3, NULL),
     IF(question_fp4<> '', question_fp4, NULL),

@@ -26,9 +26,9 @@
                                       @if (count($units) > 0)
                                         <option value="">Select From ...</option>
                                             @foreach($units as $unit)
-                                                <option value="{{$unit->id}}" @if (old("unit_id") == $unit->id) selected="selected" @endif 
-                                                @if ( $unit->id == $placement->unit_id) selected="selected" 
-                                                @endif 
+                                                <option value="{{$unit->id}}" @if (old("unit_id") == $unit->id) selected="selected" @endif
+                                                @if ( $unit->id == $placement->unit_id) selected="selected"
+                                                @endif
                                                 >{{$unit->title}}
                                             @endforeach
                                          </option>
@@ -47,7 +47,7 @@
                                 <div class="col-md-6">
                                     <textarea id="question" class="form-control"  name="question"> {{$placement->question}}</textarea>
                                     @if ($errors->has('question'))
-                                    <span class="help-block"> 
+                                    <span class="help-block">
                                         <strong>{{ $errors->first('question') }}</strong>
                                     </span>
                                     @endif
@@ -62,8 +62,8 @@
                                     <label for="type" class="col-md-3"> <input {{ ($placement->is_active == 1) ? 'checked="checked"' : ''}} type="checkbox" name="is_active" value="1"></label>
                                     @if ($errors->has('is_active'))
                                         <span class="help-block">
-												<strong>{{ $errors->first('is_active') }}</strong>
-											</span>
+                                                <strong>{{ $errors->first('is_active') }}</strong>
+                                            </span>
                                     @endif
                                 </div>
                             </div>
