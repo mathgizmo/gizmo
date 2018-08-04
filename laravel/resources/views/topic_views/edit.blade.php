@@ -28,7 +28,7 @@
                           @if (count($levels) > 0)
                               <option value="">Select From ...</option>
                                 @foreach($levels as $level)
-                                    <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $topic->lid) selected="selected"
+                                    <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ($level->id == $topic->lid) selected="selected"
                                     @endif
                                     >{{$level->title}}</option>
                                 @endforeach
@@ -51,7 +51,7 @@
                               <select class="form-control" name="unit_id" id="unit_id">
                                @if (count($units) > 0)
                               @foreach($units as $unit)
-                                        <option value="{{$unit->id}}" @if ( $unit->id == $topic->uid) selected="selected"
+                                        <option value="{{$unit->id}}" @if ($unit->id == $topic->uid) selected="selected"
                                         @endif
                                         >{{$unit->title}}</option>
                                     @endforeach

@@ -27,7 +27,7 @@
                                   @if (count($levels) > 0)
                                       <option value="">Select From ...</option>
                                         @foreach($levels as $level)
-                                            <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $question->lid) selected="selected"
+                                            <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ($level->id == $question->lid) selected="selected"
                                             @endif
                                             >{{$level->title}}</option>
                                         @endforeach
@@ -51,7 +51,7 @@
                                    @if (count($units) > 0)
                                           <option value="">Select From ...</option>
                                   @foreach($units as $unit)
-                                            <option value="{{$unit->id}}" @if ( $unit->id == $question->uid) selected="selected"
+                                            <option value="{{$unit->id}}" @if ($unit->id == $question->uid) selected="selected"
                                             @endif
                                             >{{$unit->title}}</option>
                                         @endforeach
@@ -75,7 +75,7 @@
                                   @if (count($topics) > 0)
                                           <option value="">Select From ...</option>
                                   @foreach($topics as $topic)
-                                            <option value="{{$topic->id}}" @if ( $topic->id == $question->tid) selected="selected"
+                                            <option value="{{$topic->id}}" @if ($topic->id == $question->tid) selected="selected"
                                             @endif
                                             >{{$topic->title}}</option>
                                         @endforeach
@@ -100,7 +100,7 @@
                                     @if (count($lessons) > 0)
                                           <option value="">Select From ...</option>
                                   @foreach($lessons as $lesson)
-                                            <option value="{{$lesson->id}}" @if ( $lesson->id == $question->lesson_id) selected="selected"
+                                            <option value="{{$lesson->id}}" @if ($lesson->id == $question->lesson_id) selected="selected"
                                             @endif
                                             >{{$lesson->title}}</option>
                                         @endforeach
@@ -141,7 +141,7 @@
                         <div class="form-group{{ $errors->has('question') ? ' has-error' : '' }}">
                             <label for="question" class="col-md-4 control-label">Question</label>
                             <div class="col-md-6">
-                                <span>For LaTeX please use next format \( $$latext here$$ \) or \(\(latext here\)\)</span>
+                                <span>For LaTeX please use next format \($$latext here$$ \) or \(\(latext here\)\)</span>
                                 <br />
                                 <span>Use __ as placeholder in Fill in the blank questions</span>
                                 <textarea id="question" class="form-control"  name="question"> {{$question->question}}</textarea>
@@ -228,7 +228,7 @@
                             </div>
                         @endforeach
                             @for ($i = $key; $i < 6; $i++)
-                                @if ($errors->has('answer.' . $i) || old('answer.' . $i) != '' )
+                                @if ($errors->has('answer.' . $i) || old('answer.' . $i) != '')
                                     <div class="form-group answer{{ $errors->has('answer.' . $i) ? ' has-error' : '' }}">
                                         <label for="answer" class="col-md-4 control-label">Answer</label>
                                         <div class="col-md-4">
@@ -379,7 +379,7 @@
     <script src="{{ URL::asset('js/jquery.jslatex.packed.js') }}"></script>
     <script src="{{ URL::asset('js/ckeditor/ckeditor.js') }}"></script>
     <script>
-        var question = CKEDITOR.replace( 'question' );
+        var question = CKEDITOR.replace('question');
     </script>
     <script>
         $(document).ready(function(){

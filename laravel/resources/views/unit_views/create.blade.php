@@ -23,7 +23,7 @@
                                   @if (count($levels) > 0)
                                       <option value="">Select From ...</option>
                                         @foreach($levels as $level)
-                                            <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ( $level->id == $lid) selected="selected"
+                                            <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ($level->id == $lid) selected="selected"
                                             @endif
                                             >{{$level->title}}</option>
                                         @endforeach

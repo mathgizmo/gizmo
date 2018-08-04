@@ -17,9 +17,9 @@ class UnitController extends Controller
     public function index(Request $request)
     {
         $levels = DB::select('select * from level');
-        $units = DB::table('unit')->where('level_id',$request->level_id)->get();
-        //$topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-        return view( 'unit_views.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id] );
+        $units = DB::table('unit')->where('level_id', $request->level_id)->get();
+        //$topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
+        return view('unit_views.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
     }
 
     /**
@@ -31,7 +31,7 @@ class UnitController extends Controller
     {
         $lid = "";
         $levels = DB::select('select * from level');
-        $units = DB::table('unit')->where('level_id',$lid)->get();
+        $units = DB::table('unit')->where('level_id', $lid)->get();
         $total_unit = Unit::all()->count();
 
         return view('unit_views.create', [
@@ -69,7 +69,7 @@ class UnitController extends Controller
         ]);
 
         $levels = DB::select('select * from level');
-        $units = DB::table('unit')->where('level_id',$lid)->get();
+        $units = DB::table('unit')->where('level_id', $lid)->get();
         $total_unit = Unit::all()->count();
 
         \Session::flash('flash_message', 'successfully saved.');
@@ -134,7 +134,7 @@ class UnitController extends Controller
             'unit_title'=> 'required',
         ]);
 
-        DB::table('unit')->where('id',$id)->update([
+        DB::table('unit')->where('id', $id)->update([
             'title' => $request['unit_title'],
             'dependency' => $request['dependency'] ?: false,
             'level_id' => $request['level_id'],
@@ -144,7 +144,7 @@ class UnitController extends Controller
         ]);
 
         $levels = DB::select('select * from level');
-        $units = DB::table('unit')->where('level_id',$request->level_id)->get();
+        $units = DB::table('unit')->where('level_id', $request->level_id)->get();
         $total_unit = Unit::all()->count();
 
         return view('unit_views.create', [
@@ -165,6 +165,6 @@ class UnitController extends Controller
     {
         $level_id = $request->input('level_id');
         Unit::where('id', $id)->delete();
-        return redirect('/unit_views?level_id='. $level_id)->with( array('message'=> 'Deleted successfully') );
+        return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Deleted successfully'));
     }
 }

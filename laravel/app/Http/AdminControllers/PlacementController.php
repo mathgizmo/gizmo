@@ -119,7 +119,7 @@ class PlacementController extends Controller
         $placement->save();
 
         return redirect('/placement_views')
-            ->with( array('message'=> 'Updated successfully') );
+            ->with(array('message'=> 'Updated successfully'));
     }
 
     /**
@@ -132,6 +132,6 @@ class PlacementController extends Controller
     {
         PlacementQuestion::where('id', $id)->delete();
         return redirect('/placement_views')
-            ->with( array('message'=> 'Deleted successfully') );
+            ->with(array('message'=> 'Deleted successfully'));
     }
 }

@@ -19,7 +19,7 @@ class LessonController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
-        $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
         return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
 
     }
@@ -37,7 +37,7 @@ class LessonController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
-        $lessons = DB::table('lesson')->where('topic_id',$tid)->get();
+        $lessons = DB::table('lesson')->where('topic_id', $tid)->get();
         $total_lesson = Lesson::all()->count();
 
         return view('lesson_views.create', [
@@ -85,7 +85,7 @@ class LessonController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
-        $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
         $total_lesson = Lesson::all()->count();
 
         \Session::flash('flash_message', 'successfully saved.');
@@ -164,7 +164,7 @@ class LessonController extends Controller
          'lesson_title'=> 'required',
          ]);
 
-         DB::table('lesson')->where('id',$id)->update([
+         DB::table('lesson')->where('id', $id)->update([
          'title' => $request['lesson_title'],
          'randomisation' => $request['randomisation'] ?: false,
          'dependency' => $request['dependency'] ?: false,
@@ -178,7 +178,7 @@ class LessonController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
-        $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
         $total_lesson = Lesson::all()->count();
 
         return view('lesson_views.create', [
@@ -208,9 +208,9 @@ class LessonController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
-        $topic_id = DB::table('lesson')->select('topic_id')->where('id',$id)->first();
+        $topic_id = DB::table('lesson')->select('topic_id')->where('id', $id)->first();
         DB::table('lesson')->where('id', $id)->delete();
-        $lessons = DB::table('lesson')->where('topic_id',$topic_id->topic_id)->get();
+        $lessons = DB::table('lesson')->where('topic_id', $topic_id->topic_id)->get();
         return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
 
     }

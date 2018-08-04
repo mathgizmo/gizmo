@@ -181,7 +181,7 @@
             $('form#topic input[name=image_id').val(intVal);
         });
 
-        $( "#addImageModal input[type=checkbox]" ).on( "click", function() {
+        $("#addImageModal input[type=checkbox]").on("click", function() {
             $('#addImageModal input[type=checkbox]').prop('checked', false);
             $(this).prop('checked', true);
         });

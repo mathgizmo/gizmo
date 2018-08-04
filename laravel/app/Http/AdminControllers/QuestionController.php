@@ -33,9 +33,9 @@ class QuestionController extends Controller
 
         $levels = DB::select('select * from level');
         $reply_modes = DB::select('select * from reply_mode');
-        $units = DB::table('unit')->where('level_id',$request->level_id)->get();
-        $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-        $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+        $units = DB::table('unit')->where('level_id', $request->level_id)->get();
+        $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
+        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
         $qrmodes = [];
         foreach (DB::select('select * from reply_mode') as $reply_mode) {
             $qrmodes[$reply_mode->code] = $reply_mode->mode;
@@ -49,25 +49,25 @@ class QuestionController extends Controller
             ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle');
         if ($request->has('level_id')) {
             $level_id = $request->level_id;
-            $query = $query->where('level_id',$request->level_id);
+            $query = $query->where('level_id', $request->level_id);
         } else {
             $level_id = '';
         }
         if ($request->has('unit_id')) {
             $unit_id = $request->unit_id;
-            $query = $query->where('unit_id',$request->unit_id);
+            $query = $query->where('unit_id', $request->unit_id);
         } else {
             $unit_id = '';
         }
         if ($request->has('topic_id')) {
             $topic_id = $request->topic_id;
-            $query = $query->where('topic_id',$request->topic_id);
+            $query = $query->where('topic_id', $request->topic_id);
         } else {
             $topic_id = '';
         }
         if ($request->has('lesson_id')) {
             $lesson_id = $request->lesson_id;
-            $query = $query->where('lesson_id',$request->lesson_id);
+            $query = $query->where('lesson_id', $request->lesson_id);
         } else {
             $lesson_id = '';
         }
@@ -331,11 +331,11 @@ class QuestionController extends Controller
       $questionID = $id;
       // print_r($id);
         $levels = DB::select('select * from level');
-          //$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
-          //$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
-          $units = DB::table('unit')->where('level_id',$request->level_id)->get();
-          $topics = DB::table('topic')->where('unit_id',$request->unit_id)->get();
-          $lessons = DB::table('lesson')->where('topic_id',$request->topic_id)->get();
+          //$units = DB::select('select * from unit')->where('level_id', $request->level_id)->get();
+          //$topics = DB::select('select * from topic')->where('unit_id', $request->unit_id)->get();
+          $units = DB::table('unit')->where('level_id', $request->level_id)->get();
+          $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
+          $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
 
         $this->validate($request, [
              'level_id'    => 'required',
@@ -426,8 +426,8 @@ class QuestionController extends Controller
     {
         //print_r() print private
         $levels = DB::select('select * from level');
-        //$units = DB::select('select * from unit')->where('level_id',$request->level_id)->get();
-        //$topics = DB::select('select * from topic')->where('unit_id',$request->unit_id)->get();
+        //$units = DB::select('select * from unit')->where('level_id', $request->level_id)->get();
+        //$topics = DB::select('select * from topic')->where('unit_id', $request->unit_id)->get();
         $units = DB::table('unit')->where('level_id', '1')->get();
         $topics = DB::table('topic')->where('unit_id', '1')->get();
         $lessons = DB::table('lesson')->where('topic_id', '1')->get();

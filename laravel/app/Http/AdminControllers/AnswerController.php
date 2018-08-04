@@ -108,11 +108,11 @@ class AnswerController extends Controller
                 SELECT q.id, q.mcq1, IF(q.mcq1=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq1 <> '')
             UNION ALL (SELECT q.id, q.mcq2, IF(q.mcq2=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq2 <> '')
 
-            UNION ALL (SELECT q.id, q.mcq3, IF(q.mcq3=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq3 <> '' )
+            UNION ALL (SELECT q.id, q.mcq3, IF(q.mcq3=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq3 <> '')
 
             UNION ALL (SELECT q.id, q.mcq4, IF(q.mcq4=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq4 <> '')
 
-            UNION ALL (SELECT q.id, q.mcq5, IF(q.mcq5=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq5 <> '' )
+            UNION ALL (SELECT q.id, q.mcq5, IF(q.mcq5=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq5 <> '')
 
             UNION ALL (SELECT q.id, q.mcq6, IF(q.mcq6=q.answer, 1, 0), 0, NOW(), NOW() FROM question as q where q.reply_mode IN ('mcq3', 'mcq4', 'mcq5', 'mcq6') AND q.mcq6 <> '')");
 
