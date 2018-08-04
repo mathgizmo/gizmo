@@ -29,23 +29,23 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/create-answer/questions-bank', 'AnswerController@insertAnswerFromQuestions');
     Route::any('/question_views/uploadImage', 'QuestionController@uploadImage');
 
-    Route::get('users','UserController@index')->name('users.index');
-    Route::get('users/create','UserController@create')->name('users.create');
+    Route::get('users', 'UserController@index')->name('users.index');
+    Route::get('users/create', 'UserController@create')->name('users.create');
     Route::post('users', 'UserController@store')->name('users.store');
-    Route::get('users/{user}','UserController@show')->name('users.show');
-    Route::get('users/{user}/edit','UserController@edit')->name('users.edit');
-    Route::patch('users/{user}','UserController@update')->name('users.update');
-    Route::delete('users/{user}','UserController@destroy')->name('users.destroy');
+    Route::get('users/{user}', 'UserController@show')->name('users.show');
+    Route::get('users/{user}/edit', 'UserController@edit')->name('users.edit');
+    Route::patch('users/{user}', 'UserController@update')->name('users.update');
+    Route::delete('users/{user}', 'UserController@destroy')->name('users.destroy');
 
-    Route::get('students','StudentController@index')->name('students.index');
-    Route::get('students/{student}','StudentController@show')->name('students.show');
-    Route::patch('students/super/{student}','StudentController@superUpdate')->name('students.super');
-    Route::post('students/reset/{student}','StudentController@resetProgress')->name('students.reset');
-    Route::post('students/delete/{student}','StudentController@delete')->name('students.delete');
+    Route::get('students', 'StudentController@index')->name('students.index');
+    Route::get('students/{student}', 'StudentController@show')->name('students.show');
+    Route::patch('students/super/{student}', 'StudentController@superUpdate')->name('students.super');
+    Route::post('students/reset/{student}', 'StudentController@resetProgress')->name('students.reset');
+    Route::post('students/delete/{student}', 'StudentController@delete')->name('students.delete');
 
-    Route::get('settings','SettingController@index')->name('settings.index');
-    Route::patch('settings','SettingController@update')->name('settings.update');
+    Route::get('settings', 'SettingController@index')->name('settings.index');
+    Route::patch('settings', 'SettingController@update')->name('settings.update');
 
-    Route::get('error_report/{type}','ReportErrorController@index')->name('error_report.index');
-    Route::get('error_report/{type}/{id}','ReportErrorController@updateStatus')->name('error_report.update_status');
+    Route::get('error_report/{type}', 'ReportErrorController@index')->name('error_report.index');
+    Route::get('error_report/{type}/{id}', 'ReportErrorController@updateStatus')->name('error_report.update_status');
 });

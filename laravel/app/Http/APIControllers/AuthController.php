@@ -115,7 +115,7 @@ class AuthController extends Controller
             Mail::queue('mail', $data, function($message) use ($data) {
                $message->to($data['email'], $data['email'])->subject
                   ('Password Reset at MathGizmo');
-               $message->from('mathgizmo01@gmail.com','Gizmo Support');
+               $message->from('mathgizmo01@gmail.com', 'Gizmo Support');
             });
             return $this->success('The mail has been sent successfully!');
         }

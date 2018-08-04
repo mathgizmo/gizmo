@@ -62,7 +62,7 @@ class PlacementController extends Controller
         $placement->save();
 
         $placements = PlacementQuestion::with('unit')->get();
-        \Session::flash('flash_message','successfully saved.');
+        \Session::flash('flash_message', 'successfully saved.');
         return view('placement_views.index', ['placements'=>$placements]);
     }
 

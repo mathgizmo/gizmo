@@ -254,7 +254,7 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
 
         $lesson['topic'] = $topic;
 
-        $next = (DB::table('lesson')->where('id','!=', $lesson_id)
+        $next = (DB::table('lesson')->where('id', '!=', $lesson_id)
             ->where('topic_id', $id)->where('dev_mode', '=', 0)->where(
                 function ($query) use ($lesson) {
                     $query->where('order_no', '>', $lesson['order_no'])
