@@ -25,6 +25,6 @@ complete:
         - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/ && composer install"
         - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/ && php artisan migrate"
         - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/ci/ && npm install"
- #       - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/ci/ && ng build --prod"
+ #       - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/ci/ && npm run prod-build"
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/public $GIZMO_DEPLOYMENT_PATH/www "
         
