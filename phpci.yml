@@ -24,7 +24,6 @@ complete:
         - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/backup/ && chmod +x do_restore.sh && ./do_restore.sh"
         - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/ && composer install"
         - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/ && php artisan migrate"
-        - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/ci/ && npm install"
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/ci/test-build $GIZMO_DEPLOYMENT_PATH/gizmo/public/ci "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/ci/test-build $GIZMO_DEPLOYMENT_PATH/gizmo/public/gizmo "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/public $GIZMO_DEPLOYMENT_PATH/www "
