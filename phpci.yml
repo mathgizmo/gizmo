@@ -13,4 +13,18 @@ test:
     allowed_warnings: -1
 complete:
     shell:
-        - "cp -R %BUILD_PATH%/* $GIZMO_DEPLOYMENT_PATH "
+        - "cp -R %BUILD_PATH%/build_in_progress $GIZMO_DEPLOYMENT_PATH/ "
+        - "ln -sfn $GIZMO_DEPLOYMENT_PATH/build_in_progress $GIZMO_DEPLOYMENT_PATH/www "
+        - "rm -Rf $GIZMO_DEPLOYMENT_PATH/gizmo/* "
+        - "cp -R %BUILD_PATH%/* $GIZMO_DEPLOYMENT_PATH/gizmo "
+        - "cp $HOME/gizmo/.env $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/"
+        - "cp $HOME/gizmo/dbconf.php $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/config/local/"
+        - "cp $HOME/gizmo/environment.prod.ts $GIZMO_DEPLOYMENT_PATH/gizmo/ci/src/environments/"
+        - "cp $HOME/gizmo/.dropbox_uploader $GIZMO_DEPLOYMENT_PATH/gizmo/backup/"
+        - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/backup/ && chmod +x do_restore.sh && ./do_restore.sh"
+        - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/ && composer install"
+        - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/ && php artisan migrate"
+        - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/ci/ && npm install"
+        - "cd $GIZMO_DEPLOYMENT_PATH/gizmo/ci/ && ng build --prod"
+        - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/public $GIZMO_DEPLOYMENT_PATH/www "
+        
