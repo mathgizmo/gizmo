@@ -109,6 +109,13 @@ class TopicController extends Controller
         }
 
         foreach (DB::select('select * from topic order by order_no, id asc') as $topic) {
+            try {
+                if($topic['icon_src'] == '' || !file_exists('../admin/'.$topic['icon_src'])) {
+                    $topic['icon_src'] = 'images/default-icon.svg';
+                }
+            } catch (Exception $e) {
+                $topic['icon_src'] = 'images/default-icon.svg';
+            }
             if (!isset($units[$topic['unit_id']])) continue;
             list($u_element_id, $l_element_id) = $units[$topic['unit_id']];
             $topic['order_id'] = $topic['order_no']?:floor(count($response[$l_element_id]['units'][$u_element_id]['topics'])/2);

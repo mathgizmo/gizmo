@@ -93,15 +93,20 @@
                             </div>
                       </div>
 
-                    <div class="form-group{{ $errors->has('image_id') ? ' has-error' : '' }}">
-                        <label for="image_id" class="col-md-4 control-label">Image</label>
+					<div class="form-group{{ $errors->has('icon_src') ? ' has-error' : '' }}">
+	                    <label for="icon_src" class="col-md-4 control-label">Image</label>
 
-                        <div class="col-md-6">
-                            <label id="add-image"><a href="#" class="btn" data-toggle="modal" data-target="#addImageModal">Add Image</a></label>
-                            <label id="change-image"><img id="show-img" class="cb0-img" src="{{ URL::asset('images/img_trans.gif') }}" /><a href="#" class="btn" data-toggle="modal" data-target="#addImageModal">Change Image</a></label>
-                            <input type="hidden" name="image_id" value="">
-                        </div>
-                    </div>
+	                    <div class="col-md-6">
+							<label id="add-image">
+								<a href="#addImageModal" class="btn" data-toggle="modal" data-target="#addImageModal">Add Image</a>
+							</label>
+							<label id="change-image">
+								<img id="show-img" src="{{ URL::asset('images/default-icon.svg') }}" width="70px" />
+								<a href="#addImageModal" class="btn" data-toggle="modal" data-target="#addImageModal">Change Image</a>
+							</label>
+							<input type="hidden" name="icon_src" value="">
+	                    </div>
+					</div>
 
                     <div class="form-group{{ $errors->has('order_no') ? ' has-error' : '' }}">
                         <label for="order_no" class="col-md-4 control-label">Order No</label>
@@ -143,54 +148,54 @@
                          </div>
                     </div>
             </form>
-            @if (count($topics) > 0)
-            <div class="row">
-                <div class="col.md.12">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th class="col-md">Image</th>
-                                    <th class="col-md">Order No</th>
-                                    <th class="col-md">ID</th>
-                                    <th class="col-md">Title</th>
-                                    <th class="col-md">Short Name</th>
-                                    <th class="col-md">Dependency</th>
-                                    <th class="col-md-3">OPTIONS</th>
-                                </tr>
-                            </thead>
+			@if (count($topics) > 0)
+			<div class="row">
+				<div class="col.md.12">
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th class="col-md">Image</th>
+									<th class="col-md">Order No</th>
+									<th class="col-md">ID</th>
+									<th class="col-md">Title</th>
+									<th class="col-md">Short Name</th>
+									<th class="col-md">Dependency</th>
+									<th class="col-md-3">OPTIONS</th>
+								</tr>
+							</thead>
 
-                        <tbody>
-                            @foreach($topics as $topic)
-                                <tr>
-                                    <td><img id="show-img" class="{{$topic->image_id}}" src="{{ URL::asset('images/img_trans.gif') }}" /></td>
-                                    <td>{{$topic->order_no}}</td>
-                                    <td>{{$topic->id}}</td>
-                                    <td>{{$topic->title}}</td>
-                                    <td>{{$topic->short_name}}</td>
-                                    <td>{{($topic->dependency == true) ? 'Yes' : 'No'}}</td>
-                                    <td class="text-center">
+						<tbody>
+							@foreach($topics as $topic)
+								<tr>
+									<td><img id="show-img" class="{{$topic->icon_src}}" src="{{ URL::asset($topic->icon_src) }}" /></td>
+									<td>{{$topic->order_no}}</td>
+									<td>{{$topic->id}}</td>
+									<td>{{$topic->title}}</td>
+									<td>{{$topic->short_name}}</td>
+									<td>{{($topic->dependency == true) ? 'Yes' : 'No'}}</td>
+									<td class="text-center">
 
-                                            <!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
-                                            <a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
-                                            <form action="{{ route('topic_views.destroy', $topic->id) }}"
-                                                method="POST" style="display: inline;"
-                                                onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <button class="btn btn-danger" type="submit">Delete</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
+											<a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
+											<form action="{{ route('topic_views.destroy', $topic->id) }}"
+												method="POST" style="display: inline;"
+												onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+												<input type="hidden" name="_method" value="DELETE">
+												<input type="hidden" name="_token" value="{{ csrf_token() }}">
+												<button class="btn btn-danger" type="submit">Delete</button>
+												</form>
+											</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
 
-                        </div>
+						</div>
 
-                    </div>
-                </div>
-                @endif
+					</div>
+				</div>
+				@endif
 
               </div>
             </div>
@@ -200,28 +205,82 @@
 
 <!-- Modal -->
 <div class="modal fade" id="addImageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add Topic Image</h4>
-              </div>
-              <div class="modal-body">
-                <div class="topic-images">
-                    <ul>
-                          @for ($i = 1; $i <= 20; $i++)
-                          <li><input type="checkbox" id="cb{{ $i }}" value="cb{{ $i }}-img" />
-                            <label for="cb{{ $i }}"><img id="cb{{ $i }}-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
-                        </li>
+  	<div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        	<h4 class="modal-title" id="myModalLabel">Add Topic Image</h4>
+	      	</div>
+	      	<div class="modal-body">
+	        	
+				<div style="display: flex; flex-direction: row; justify-content: center;">
+					<img id="custom-img" src="{{ URL::asset('images/default-icon.svg') }}" style='z-index: 999; margin: 4px; height: 100px;'/>
+					<span style="margin: 4px;">
+						<input type="file" name="icon" accept=".SVG" class="form-control-file" id="upload-icon" style="margin: 4px;">
+					    <button class="btn btn-primary" id='upload-icon-button' style="margin: 4px;">Upload Icon</button>
+					</span>
+				</div>
+				<script type="text/javascript">
+					function checkIcon(checkedIcon) {
+						let modal = document.getElementById('topic-icons-list');
+						let inputs = modal.getElementsByTagName('input');
+						for(var i = 0; i < inputs.length; i++) {
+						    if(inputs[i].type == "checkbox") {
+						        inputs[i].checked = false; 
+						    }  
+						}
+						checkedIcon.checked = true; 
+					}
+				</script>
+	        	<div class="topic-images">
+	        		<ul id='topic-icons-list'>
+					  	@for ($i = 0; $i < count($icons); $i++)
+					  	<li><input type="checkbox" id="cb{{ $i }}" value="{{$icons[$i]}}" onclick="checkIcon(this)" />
+						    <label for="cb{{ $i }}"><img id="{{$icons[$i]}}" src="{{ URL::asset($icons[$i]) }}" class='topic-icon'/></label>
+						</li>
                         @endfor
-                    </ul>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="save-image" type="button" class="btn btn-primary">Add Image</button>
-              </div>
-        </div>
+					</ul>
+	        	</div>
+
+	      	</div>
+	      	<div class="modal-footer">
+	      		<script>
+                    function deleteIcon() {
+                        let modal = document.getElementById('topic-icons-list');
+                        let inputs = modal.getElementsByTagName('input');
+                        let icon = '';
+
+                        for(var i = 0; i < inputs.length; i++) {
+                            if(inputs[i].type == "checkbox" && inputs[i].checked) {
+                                icon = inputs[i].value;
+                                inputs[i].parentNode.remove();
+                            }  
+                        }
+                        let formData = new FormData();
+                        formData.append('icon', icon);
+                        formData.append('_token', "{{ csrf_token() }}");
+                        $.ajax({
+                            url: "{{ route('file.delete-icon') }}",
+                            type: "POST",
+                            data: formData,
+                            cache: false,
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false, 
+                            success: function(data, textStatus, jqXHR) {
+                                //console.log(data);
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log('ERROR');
+                            }
+                        });
+                    }
+                </script>
+                <button id="delete-image" type="button" data-toggle="confirmation" data-placement="top" data-on-confirm="deleteIcon()" class="btn btn-danger pull-left" >Delete Image</button>
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        	<button id="save-image" type="button" class="btn btn-primary">Attach Image</button>
+	      	</div>
+	    </div>
     </div>
 </div>
 
@@ -231,10 +290,63 @@
 
 <script>
 $(document).ready(function(){
-        setTimeout(function() {
-          $('#successMessage').fadeOut('fast');
-        }, 4000); // <-- time in milliseconds
+    setTimeout(function() {
+      $('#successMessage').fadeOut('fast');
+    }, 4000); // <-- time in milliseconds
+
+    $('#upload-icon').change( function() {
+	  if (this.files && this.files[0]) {
+	    var reader = new FileReader();
+	    reader.onload = function(e) {
+	      let img = document.getElementById('custom-img');
+	      img.setAttribute('src', e.target.result);
+	    }
+	    reader.readAsDataURL(this.files[0]);
+	  }
     });
+
+    $('#upload-icon-button').click( function() {
+        let files = document.getElementById('upload-icon').files;
+        if(files[0].type != 'image/svg+xml') {
+            alert('Invalid type of file. The file must be image/svg+xml, not '+files[0].type);
+            return;
+        }
+        let formData = new FormData();
+        formData.append('icon', files[0]);
+        formData.append('_token', "{{ csrf_token() }}");
+        $.ajax({
+            url: "{{ route('file.upload-icon') }}",
+            type: "POST",
+            data: formData,
+            cache: false,
+            dataType: 'json',
+            processData: false,
+            contentType: false, 
+            success: function(data, textStatus, jqXHR) {
+                $('#topic-icons-list')
+                    .load('{{ route('topic_views.create') }} #topic-icons-list > *');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('textStatus: ' + textStatus + '\njqXHR:' +jqXHR + '\errorThrown:' + errorThrown);
+            }
+        });
+    });
+
+    $(function () {
+	    $("#addImageModal button#save-image").on('click', function() {
+	        $('#addImageModal').modal('hide');
+	        $('form#topic label#change-image img').removeClass();
+
+	        $('form#topic label#add-image').hide();
+	        $('form#topic label#change-image').show();
+
+	        var topicIcon = $('#addImageModal input[type=checkbox]:checked').val();
+	        $('form#topic label#change-image img').addClass(topicIcon);
+	        $('form#topic input[name=icon_src').val(topicIcon);
+	        $('form#topic label#change-image img').attr("src", "{{ URL::asset('/') }}"+topicIcon);
+	    });
+	});
+});
 </script>
 
 @endsection
