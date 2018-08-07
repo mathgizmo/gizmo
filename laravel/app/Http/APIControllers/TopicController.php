@@ -2,12 +2,9 @@
 
 namespace App\Http\APIControllers;
 
-use App\Http\Requests;
 use App\Topic;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use JWTAuth;
-use App\Http\APIControllers\StudentsTrackingController;
 
 class TopicController extends Controller
 {
@@ -21,7 +18,6 @@ class TopicController extends Controller
         $student = JWTAuth::parseToken()->authenticate();
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-
         $lessons_done = [];
         foreach(DB::table('lesson')->select('topic_id', DB::raw("COUNT(lesson.id) as total"), DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done"))
             ->leftJoin('progresses', function ($join) use ($student) {
@@ -32,7 +28,6 @@ class TopicController extends Controller
             ->groupBy('topic_id')->get()as $topic) {
                 $lessons_done[$topic['topic_id']] = $topic;
         }
-
         $topics_done = [];
         $units_done = [];
         $levels_done = [];
@@ -50,7 +45,6 @@ class TopicController extends Controller
                     break;
             }
         }
-
         $response =[];
         $levels = [];
         $units = [];
@@ -79,13 +73,11 @@ class TopicController extends Controller
             $levels[$level['id']] = count($response);
             $response[] = $level;
         }
-
         foreach (DB::select('select * from unit order by order_no, id asc') as $unit) {
             if (!isset($levels[$unit['level_id']])) continue;
             $unit['topics'] = [];
             $l_element_id = $levels[$unit['level_id']];
             $units[$unit['id']] = array(count($response[$l_element_id]['units']), $l_element_id);
-
             $unit['active_flag'] = 1;
             $unit['last_active_order'] = 0;
             if ($response[$l_element_id]['active_flag'] && in_array($unit['id'], $units_done)) {
@@ -104,10 +96,8 @@ class TopicController extends Controller
                     $unit['active_flag'] = 0;
                 }
             }
-
             $response[$l_element_id]['units'][] = $unit;
         }
-
         foreach (DB::select('select * from topic order by order_no, id asc') as $topic) {
             try {
                 if($topic['icon_src'] == '' || !file_exists('../admin/'.$topic['icon_src'])) {
@@ -147,14 +137,13 @@ class TopicController extends Controller
             $response[$l_element_id]['units'][$u_element_id]['topics'][] = $topic;
         }
         DB::connection()->setFetchMode($mode);
-
-
         return $this->success($response);
     }
 
     /**
      * return tree of lessons for given topics.
      *
+     * @param $id
      * @return array
      */
     public function get($id)
@@ -163,7 +152,6 @@ class TopicController extends Controller
             return $this->error('id must be integer');
         }
         $student = JWTAuth::parseToken()->authenticate();
-
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         $topic = DB::table('topic')->where('id', $id)->first();
@@ -180,7 +168,6 @@ class TopicController extends Controller
             $lessons_ids[] = $lesson['id'];
             $topic['lessons'][$id]['status'] = 0;
         }
-
         $lessons_done = [];
         foreach(DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 0])
             ->whereIn('entity_id', $lessons_ids)->get() as $row) {
@@ -210,14 +197,9 @@ class TopicController extends Controller
                 }
             }
         }
-        $ids = collect(DB::select("SELECT t.id FROM topic t
-JOIN unit u ON t.unit_id = u.id
-JOIN level l ON u.level_id = l.id
-ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->toArray();
+        $ids = collect(DB::select("SELECT t.id FROM topic t JOIN unit u ON t.unit_id = u.id JOIN level l ON u.level_id = l.id ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->toArray();
         $topic_order_id = array_search($topic['id'], $ids);
         $topic['next_topic_id'] = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
-
-
         DB::connection()->setFetchMode($mode);
         return $this->success($topic);
     }
@@ -225,6 +207,8 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
     /**
      * return tree of questions for given lesson.
      *
+     * @param $id
+     * @param $lesson_id
      * @return array
      */
     public function getLesson($id, $lesson_id)
@@ -232,18 +216,15 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
         if(!$id || !is_numeric($id)) {
             return $this->error('id must be integer');
         }
-
         if(!$lesson_id || !is_numeric($lesson_id)) {
             return $this->error('lesson_id must be integer');
         }
-
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         $topic = DB::table('topic')->where('id', $id)->first();
         if(!$topic) {
             return $this->error('topic not found');
         }
-
         $lesson = DB::table('lesson')->where('id', $lesson_id)->where('topic_id', $id)->orderBy('id')->first();
         if(!$lesson) {
             return $this->error('lesson not found');
@@ -254,13 +235,10 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
             $questions[$question['id']] = $index;
             $lesson['questions'][$index]['answers'] = [];
         }
-
         foreach(DB::table('answer')->whereIn('question_id', array_keys($questions))->get() as $answer) {
             $lesson['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
         }
-
         $lesson['topic'] = $topic;
-
         $next = (DB::table('lesson')->where('id', '!=', $lesson_id)
             ->where('topic_id', $id)->where('dev_mode', '=', 0)->where(
                 function ($query) use ($lesson) {
@@ -272,60 +250,54 @@ ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->t
                 })
             ->first());
         $lesson['next_lesson_id'] = isset($next['id']) ? $next['id'] : 0;
-
         DB::connection()->setFetchMode($mode);
         return $this->success($lesson);
     }
 
+    /**
+     * @param $topic_id
+     * @return mixed
+     */
     function testout($topic_id) {
         if (($model = Topic::find($topic_id)) == null) {
             return $this->error('Invalid topic.');
         }
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-
         $topic = $model->toArray();
         $topic_id = $topic['id'];
-
         $topic['questions'] = DB::table('question')
             ->select('question.*')
-
             ->join(DB::raw('(SELECT id FROM lesson WHERE topic_id = ' . $topic_id . ' AND dependency = 1 ORDER BY order_no DESC, id DESC LIMIT 2) l'), function($join)
             {
                 $join->on('question.lesson_id', '=', 'l.id');
             })
             ->inRandomOrder()->take(4)->get();
-
         $questions = [];
         foreach($topic['questions'] as $id=>$question) {
             $questions[$question['id']] = $id;
             $topic['questions'][$id]['answers'] = [];
         }
-
         foreach(DB::table('answer')->whereIn('question_id', array_keys($questions))->get() as $answer) {
             $topic['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
         }
-
-        $ids = collect(DB::select("SELECT t.id FROM topic t
-JOIN unit u ON t.unit_id = u.id
-JOIN level l ON u.level_id = l.id
-ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->toArray();
+        $ids = collect(DB::select("SELECT t.id FROM topic t JOIN unit u ON t.unit_id = u.id JOIN level l ON u.level_id = l.id ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->toArray();
         $topic_order_id = array_search($topic_id, $ids);
         $topic['next_topic_id'] = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
-
         DB::connection()->setFetchMode($mode);
         return $this->success($topic);
     }
 
+    /**
+     * @param $topic
+     * @return mixed
+     */
     function testoutdone($topic) {
         if (($model = Topic::find($topic)) == null) {
             return $this->error('Invalid topic.');
         }
-
         $student = JWTAuth::parseToken()->authenticate();
-
         StudentsTrackingController::topicProgressDone($model->id, $student);
-
         return $this->success('OK.');
     }
 }
