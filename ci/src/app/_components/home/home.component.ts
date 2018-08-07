@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { TopicService } from '../../_services/index';
 
@@ -11,8 +12,10 @@ import { TopicService } from '../../_services/index';
 
 export class HomeComponent implements OnInit {
     topicsTree: any = [];
+    topicIcon: any;
 
-    constructor(private topicService: TopicService) { }
+    constructor(private topicService: TopicService, private sanitizer: DomSanitizer) { 
+    }
 
     ngOnInit() {
         // get topics tree from API
@@ -20,6 +23,10 @@ export class HomeComponent implements OnInit {
             .subscribe(topicsTree => {
                 this.topicsTree = topicsTree;
             });
+    }
+
+    setTopicIcon(image) {
+        return this.sanitizer.bypassSecurityTrustStyle(`url(./assets/${image})`);
     }
 
 }
