@@ -11,18 +11,20 @@ use App\Question;
 class ReportErrorController extends Controller
 {
 
+    /**
+     * @param $question
+     * @return mixed
+     */
     public function report($question)
     {
         if (($model = Question::find($question)) == null) {
             return $this->error('Invalid question.');
         }
-
         $student = JWTAuth::parseToken()->authenticate();
         $answers = request('answers');
         if (!is_array($answers)) {
             $answers = [$answers];
         }
-
         ReportError::create([
             'student_id' => $student->id,
             'question_id' => $question,
@@ -30,7 +32,6 @@ class ReportErrorController extends Controller
             'options' => request('options'),
             'comment' => request('comment'),
         ]);
-
         if (Setting::getValueByKey('admin_email')) {
             try {
                 Mail::send('emails.report_error', [], function ($m) {
@@ -42,7 +43,6 @@ class ReportErrorController extends Controller
 
             }
         }
-
         return $this->success('OK.');
     }
 }

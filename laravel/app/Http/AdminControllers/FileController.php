@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
-
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -27,7 +23,6 @@ class FileController extends Controller
         } catch (Exception $e) {
             $json['path'] = 'Caught exception: '.$e->getMessage();
         }
-        //$json['link'] = url('/').'/'.$json['path'];
         return json_encode($json);
     }
 

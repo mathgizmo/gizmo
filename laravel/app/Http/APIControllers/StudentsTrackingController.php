@@ -8,24 +8,21 @@ use App\Topic;
 use App\Unit;
 use JWTAuth;
 use App\Lesson;
-use App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 
 class StudentsTrackingController extends Controller
 {
+    /**
+     * @param $lesson
+     * @return mixed
+     */
     public function start($lesson)
     {
         if (($model = Lesson::find($lesson)) == null) {
             return $this->error('Invalid lesson.');
         }
-
         $student = JWTAuth::parseToken()->authenticate();
-
-        /*if (StudentsTracking::where(['student_id' => $student->id, 'lesson_id' => $lesson])->first() != null) {
-            return $this->error('You already start this lesson.');
-        }*/
         $now = date("Y-m-d H:i:s");
-
         StudentsTracking::create([
             'student_id' => $student->id,
             'lesson_id' => $lesson,
@@ -36,26 +33,19 @@ class StudentsTrackingController extends Controller
             'ip' => request()->ip(),
             'user_agent' => request()->server('HTTP_USER_AGENT'),
         ]);
-
         return $this->success($now);
     }
 
+    /**
+     * @param $lesson
+     * @return mixed
+     */
     public function done($lesson)
     {
         if (($model = Lesson::find($lesson)) == null) {
             return $this->error('Invalid lesson.');
         }
-
         $student = JWTAuth::parseToken()->authenticate();
-
-        /*if (StudentsTracking::where(['student_id' => $student->id, 'lesson_id' => $lesson, 'action' => 'start'])->first() == null) {
-            return $this->error('You can\'t done this lesson because you never start it.');
-        }
-
-        if (StudentsTracking::where(['student_id' => $student->id, 'lesson_id' => $lesson, 'action' => 'done'])->first() != null) {
-            return $this->error('You already done this lesson.');
-        }*/
-
         StudentsTracking::create([
             'student_id' => $student->id,
             'lesson_id' => $lesson,
@@ -66,7 +56,6 @@ class StudentsTrackingController extends Controller
             'ip' => request()->ip(),
             'user_agent' => request()->server('HTTP_USER_AGENT'),
         ]);
-
         $progress_data = [
             'student_id' => $student->id,
             'entity_type' => 0,
@@ -90,10 +79,13 @@ class StudentsTrackingController extends Controller
                 self::topicProgressDone($model->topic_id, $student);
             }
         }
-
         return $this->success('OK.');
     }
 
+    /**
+     * @param $topic_id
+     * @param $student
+     */
     public static function topicProgressDone($topic_id, $student)
     {
         //mark topic as done
@@ -104,7 +96,6 @@ class StudentsTrackingController extends Controller
         ];
         DB::insert('INSERT IGNORE INTO progresses(student_id, entity_type, entity_id) '.
             'values (?, ?, ?)', array_values($progress_data));
-
         //find all topics from unit that are not done yet
         $topic_model = Topic::where("id", $topic_id)->first();
         $topics = DB::table('topic')->leftJoin('progresses', function ($join) use ($student) {
@@ -120,7 +111,6 @@ class StudentsTrackingController extends Controller
             $progress_data['entity_id'] = $topic_model->unit_id;
             DB::insert('INSERT IGNORE INTO progresses(student_id, entity_type, entity_id) '.
                 'values (?, ?, ?)', array_values($progress_data));
-
             //find all units from level that are not done yet
             $unit_model = Unit::where("id", $topic_model->unit_id)->first();
             $units = DB::table('unit')->leftJoin('progresses', function ($join) use ($student) {

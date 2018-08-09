@@ -2,7 +2,6 @@
 
 namespace App\Http\APIControllers;
 
-use App\Http\Requests;
 use App\PlacementQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,19 +24,18 @@ class PlacementController extends Controller
     /**
      * return first topic id.
      *
+     * @param $unit_id
      * @return int
      */
     public function getTopicId($unit_id) {
         if(!$unit_id || !is_numeric($unit_id)) {
             return $this->error('id must be integer');
         }
-
         $topic = DB::table('topic')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->where('unit.id', $unit_id)
             ->select('topic.id')
             ->first();
-
         $topic_id = $topic->id;
         return $this->success($topic_id);
     }
@@ -51,14 +49,12 @@ class PlacementController extends Controller
     public function doneHalfUnit(Request $request) {
         $unit_id = $request->unit_id;
         $student = JWTAuth::parseToken()->authenticate();
-
         $topics = DB::table('topic')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->where('unit.id', $unit_id)
             ->select('topic.id')
             ->get();
         $middleTopicIndex = round(count($topics)/2);
-
         for ($i = 0; $i < $middleTopicIndex-1; $i++) {
             $topicId = $topics[$i]->id;
             DB::table('progresses')->insert([
@@ -79,7 +75,6 @@ class PlacementController extends Controller
                 ]);
             }
         }
-
         $topic_id = $topics[$middleTopicIndex]->id;
         return $this->success($topic_id);
     }
@@ -93,7 +88,6 @@ class PlacementController extends Controller
     public function doneUnit(Request $request) {
         $unit_id = $request->unit_id;
         $student = JWTAuth::parseToken()->authenticate();
-
         // done lessons
         $lessons = DB::table('lesson')
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
@@ -127,7 +121,6 @@ class PlacementController extends Controller
             'entity_id' => $unit_id,
             'entity_type' => 2
         ]);
-
         return $this->success("Unit ".$unit_id." done!");
     }
 }
