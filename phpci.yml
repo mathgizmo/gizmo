@@ -12,7 +12,7 @@ test:
     allowed_errors: -1
     allowed_warnings: -1
 complete:
-    Vo_Vik\PHPCI\Plugin\BranchedShell:
+    \Vo_Vik\PHPCI\Plugin\BranchedShell:
         - "cp -R %BUILD_PATH%/build_in_progress $GIZMO_DEPLOYMENT_PATH/ "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/build_in_progress $GIZMO_DEPLOYMENT_PATH/www "
         - "rm -Rf $GIZMO_DEPLOYMENT_PATH/gizmo/* "
