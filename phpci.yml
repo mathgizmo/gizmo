@@ -27,4 +27,6 @@ complete:
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/ci/test-build $GIZMO_DEPLOYMENT_PATH/gizmo/public/ci "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/ci/test-build $GIZMO_DEPLOYMENT_PATH/gizmo/public/gizmo "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/public $GIZMO_DEPLOYMENT_PATH/www "
-        
+    \Rephlux\PHPCI\Plugin\ExternalEnvironment:
+        master:
+            env: "/usr/www/phpci/.env/laravel-application-production.env"        
