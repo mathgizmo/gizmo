@@ -15,6 +15,7 @@ complete:
     \VoVik\PHPCI\Plugin\BranchedShell:
         - "cp -R %BUILD_PATH%/build_in_progress $GIZMO_DEPLOYMENT_PATH/ "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/build_in_progress $GIZMO_DEPLOYMENT_PATH/www "
+        - " > $GIZMO_DEPLOYMENT_PATH/restart.lock"
         - "rm -Rf $GIZMO_DEPLOYMENT_PATH/gizmo/* "
         - "cp -R %BUILD_PATH%/* $GIZMO_DEPLOYMENT_PATH/gizmo "
         - "cp $HOME/gizmo/.env $GIZMO_DEPLOYMENT_PATH/gizmo/laravel/"
@@ -29,3 +30,4 @@ complete:
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/ci/last-build $GIZMO_DEPLOYMENT_PATH/gizmo/public/ci "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/ci/last-build $GIZMO_DEPLOYMENT_PATH/gizmo/public/gizmo "
         - "ln -sfn $GIZMO_DEPLOYMENT_PATH/gizmo/public $GIZMO_DEPLOYMENT_PATH/www "
+        - " > $GIZMO_DEPLOYMENT_PATH/restart.lock"
