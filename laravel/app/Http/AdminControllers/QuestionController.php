@@ -24,7 +24,7 @@ class QuestionController extends Controller
             unset($options['_token']);
             session(['options' => $options]);
         }
-        else if (count(session('options'))) {
+        else if (is_array(session('options')) && count(session('options'))) {
             return redirect()->route('question_views.index', session('options'));
         }
         $levels = DB::select('select * from level');
@@ -81,7 +81,7 @@ class QuestionController extends Controller
             $query = $query->orderBy('question.id', 'desc');
         }
         $questions = $query->paginate(10)->appends(Input::except('page'));
-        return view('question_views.index', 
+        return view('question_views.index',
           compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes', 'reply_modes'));
     }
 
@@ -155,7 +155,7 @@ class QuestionController extends Controller
         $lessons = DB::table('lesson')->select('id', 'title')->get();
         $qrmodes = DB::select('select * from reply_mode');
         $preview_url = Config::get('app.preview_url');
-        return view('question_views.create', 
+        return view('question_views.create',
           ['levels' => $levels, 'qrmodes' => $qrmodes, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'lid'=>$lid, 'uid'=>$uid, 'tid'=>$tid, 'lsnid'=>$lsnid, 'preview_url'=> $preview_url]);
     }
 
@@ -193,7 +193,7 @@ class QuestionController extends Controller
       ]);
       $question = Question::create($collectionQuestion->all());
       $type = $request['reply_mode'];
-      $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'], 
+      $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'],
         [1, 6, 1, 6, 6, 6],  $type);
       for ($i = 0; $i < ($iterations > count($request->answer) ? count($request->answer) :  $iterations); $i++) {
           $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
@@ -222,7 +222,7 @@ class QuestionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    { 
+    {
         $question = DB::table('question')
           ->join('lesson', 'question.lesson_id', '=', 'lesson.id')
           ->join('topic', 'lesson.topic_id', '=', 'topic.id')
@@ -304,7 +304,7 @@ class QuestionController extends Controller
           Question::find($questionID)->answers()->delete();
         }
         $type = $request['reply_mode'];
-         $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'], 
+         $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'],
           [1, 6, 1, 6, 6, 6],  $type);
          for ($i = 0;$i < ($iterations>count($request->answer) ? count($request->answer) :  $iterations) ; $i++) {
             $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
@@ -356,7 +356,7 @@ class QuestionController extends Controller
         }
         finally {
           return redirect()->route('question_views.index');
-        } 
+        }
     }
 
 }
