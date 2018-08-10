@@ -164,7 +164,7 @@ export class LessonComponent implements OnInit {
            this.lessonTree['questions'] = [];
         }
         let dialogRef = this.dialog.open(GoodDialogComponent, {
-            width: '400px',
+            //width: '400px',
             data: { }
         });
 
@@ -189,7 +189,7 @@ export class LessonComponent implements OnInit {
               this.lessonTree['questions'].push(this.question);
           }
           let dialogRef = this.dialog.open(BadDialogComponent, {
-              width: '800px',
+              //width: '800px',
               data: { data: this.question.answers.filter(function(answer){
                   if (answer.is_correct == 1) return true;
                   return false;

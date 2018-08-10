@@ -1,9 +1,6 @@
 @import '../../../../colors';
 
 .button {
-	margin-bottom: 8px !important;
-	padding: 0;
-	width: 100px;
 	text-decoration: none;
 }
 
@@ -25,8 +22,4 @@
 .not-sure-button, .skip-button {
 	background-color: #e6e6fa !important;
 	color: $navy !important;
-}
-
-.not-sure-button {
-	width: 360px;
 }

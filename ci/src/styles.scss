@@ -14,7 +14,7 @@ body {
     background-color: #ddd;
     font-family: 'Open Sans';
     font-weight: 300;
-    font-size: 32pt;
+    font-size: 20px;
     color: $navy;
 }
 
@@ -26,19 +26,18 @@ h1, h2, h3, h4 {
 .title {
   font-family: 'Quicksand';
   font-weight: 500;
-  font-size: 60pt;
+  font-size: 42px;
   color: $navy;
 }
 
 .button, .mat-button {
   font-family: 'Quicksand'!important;
   font-weight: 500 !important; 
-  font-size: 48pt !important;
+  font-size: 32px !important;
   color: $white !important;
   background-color: $teal !important;
   border-radius: 50px !important;
-  padding: 22px !important;
-  min-width: 250px !important;
+  padding: 10px 25px !important;
 }
 
 .completion-button {
@@ -62,35 +61,35 @@ h1, h2, h3, h4 {
 .subtitle {
   font-family: 'Quicksand';
   font-weight: 500;
-  font-size: 36pt;
+  font-size: 26px;
   color: $navy;
 }
 
 .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
   font-family: 'Open Sans';
   font-weight: 600;
-  font-size: 32pt;
+  font-size: 20px;
   color: $navy;
 } 
 
 .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
   font-family: 'Open Sans';
   font-weight: 300;
-  font-size: 32pt;
+  font-size: 20px;
   color: $navy;
 }
 
 .topic-title {
   font-family: 'Open Sans';
   font-weight: 600;
-  font-size: 21pt;
+  font-size: 16px;
   color: $navy;
 } 
 
 .topic-progress {
   font-family: 'Open Sans';
   font-weight: 300;
-  font-size: 21pt;
+  font-size: 16px;
   color: $navy;
 }
 
@@ -160,11 +159,10 @@ h1, h2, h3, h4 {
     background-size: 100% 100%;
 }
 .arrowButtonContainer {
-    width:250px;
-    height: 120px;
-    padding: 25px;
+    width: 150px;
+    height: 68px;
+    padding: 12px;
     margin: 1px;
-
 }
 .greenout {
     background: 
@@ -272,6 +270,80 @@ h1, h2, h3, h4 {
     .continue-button, .error-button, .send-button, .cancel-button  {
         margin: 4px !important;
         padding: 2px !important;
+    }
+}
+
+@media screen and (max-width: 1024px) { 
+    body {
+        font-size: 12px;
+    }
+
+    .title {
+      font-size: 28px;
+    }
+
+    .button, .mat-button {
+      font-size: 21px !important;
+      padding: 4px 14px !important;
+    }
+
+    .subtitle {
+      font-size: 16.8px;
+    }
+
+    .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
+      font-size: 12px;
+    } 
+
+    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+      font-size: 12px;
+    }
+
+    .topic-title, .topic-progress {
+      font-size: 9px;
+    } 
+
+    .arrowButtonContainer {
+        width: 100px;
+        height: 52px;
+        //padding: 12px;
+    }
+}
+
+@media screen and (max-width: 768px) { 
+    body {
+        font-size: 11px;
+    }
+
+    .title {
+      font-size: 20px;
+    }
+
+    .button, .mat-button {
+      font-size: 16px !important;
+      padding: 2px 12px !important;
+    }
+
+    .subtitle {
+      font-size: 12px;
+    }
+
+    .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
+      font-size: 11px;
+    } 
+
+    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+      font-size: 11px;
+    }
+
+    .topic-title, .topic-progress {
+      font-size: 8px;
+    } 
+
+    .arrowButtonContainer {
+        width: 80px;
+        height: 42px;
+        //padding: 12px;
     }
 }
 

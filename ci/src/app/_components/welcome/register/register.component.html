@@ -24,7 +24,10 @@
             <div *ngIf="f.submitted && !repassword.valid" class="help-block">Password Confirm is required</div>
             <div *ngIf="f.submitted && repassword.valid && password.value != repassword.value" class="help-block">Password Confirm is wrong</div>
         </div>
-        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+        <div *ngIf="error" class="alert alert-danger">
+            <mat-icon>warning</mat-icon>
+            <span class="answer">&nbsp;{{error}}</span>
+        </div>
         <div class="form-group center-block  button-container">
             <button mat-button [disabled]="loading" class="button register-button">
                 <span *ngIf="!loading">Register</span>

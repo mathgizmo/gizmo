@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
     .try-button {
       width: 100%;
       height: 100%;
-      padding: 22px;
       margin: 0;
       background-color: #FFB133 !important;
     }

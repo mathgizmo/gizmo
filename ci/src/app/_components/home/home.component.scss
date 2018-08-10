@@ -33,7 +33,7 @@
 }
 
 .topic {
-	width: 200px;
+	width: 140px;
 	padding: 0;
 	margin: 4px;
 	display: flex;
@@ -53,4 +53,16 @@
 
 .topic-title, .topic-progress {
 	text-align: center;
+}
+
+@media screen and (max-width: 1024px) { 
+    .topic {
+		width: 110px;
+	}
+}
+
+@media screen and (max-width: 768px) { 
+    .topic {
+		width: 100px;
+	}
 }
