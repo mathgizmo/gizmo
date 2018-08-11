@@ -64,8 +64,8 @@ form.create-topic label#change-image {
 }
 
 .topic-icon {
-  width: 81px;
-  height: 81px;
+  width: 120px;
+  /*height: 120px;*/
 }
 .backButton {
   float:left;

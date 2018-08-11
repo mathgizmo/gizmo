@@ -40,7 +40,11 @@ class TopicController extends Controller
         $units = DB::select('select * from unit');
         $topics = DB::table('topic')->where('unit_id', $uid)->get();
         $total_topic = Topic::all()->count();
-        $icons = \File::files('images/icons');
+        //$icons = \File::files('images/icons');
+        $icons = array();
+        foreach (glob("images/icons/*.svg") as $file) {
+          $icons[] = $file;
+        }
         return view('topic_views.create', array(
             'levels' => $levels,
             'units' => $units,
@@ -79,7 +83,11 @@ class TopicController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-        $icons = \File::files('images/icons');
+        //$icons = \File::files('images/icons');
+        $icons = array();
+        foreach (glob("images/icons/*.svg") as $file) {
+          $icons[] = $file;
+        }
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::table('topic')->where('unit_id', $uid)->get();
@@ -119,7 +127,11 @@ class TopicController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->select('id', 'title')->where('level_id', $topic->lid)->get();
         $total_topic = Topic::all()->count();
-        $icons = \File::files('images/icons');
+        //$icons = \File::files('images/icons');
+        $icons = array();
+        foreach (glob("images/icons/*.svg") as $file) {
+          $icons[] = $file;
+        }
         if(!file_exists($topic->icon_src)) {
             $topic->icon_src = 'images/default-icon.svg';
         }
@@ -167,7 +179,11 @@ class TopicController extends Controller
         $units = DB::select('select * from unit');
         $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
         $total_topic = Topic::all()->count();
-        $icons = \File::files('images/icons');
+        //$icons = \File::files('images/icons');
+        $icons = array();
+        foreach (glob("images/icons/*.svg") as $file) {
+          $icons[] = $file;
+        }
         foreach ($topics as $key => $value) {
             if(!file_exists($topics[$key]->icon_src)) {
                 $topics[$key]->icon_src = 'images/default-icon.svg';

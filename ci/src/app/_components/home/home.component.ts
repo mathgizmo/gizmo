@@ -2,6 +2,7 @@
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { TopicService } from '../../_services/index';
+import { environment } from '../../../environments/environment';
 
 @Component({
     moduleId: module.id,
@@ -13,6 +14,7 @@ import { TopicService } from '../../_services/index';
 export class HomeComponent implements OnInit {
     topicsTree: any = [];
     topicIcon: any;
+    private readonly adminUrl = environment.adminUrl;
 
     constructor(private topicService: TopicService, private sanitizer: DomSanitizer) { 
     }
@@ -26,7 +28,8 @@ export class HomeComponent implements OnInit {
     }
 
     setTopicIcon(image) {
-        return this.sanitizer.bypassSecurityTrustStyle(`url(./assets/${image})`);
+        let link = `url(`+this.adminUrl+`/${image})`;
+        return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
 }
