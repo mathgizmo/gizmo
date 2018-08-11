@@ -99,7 +99,7 @@
 
                         <div class="col-md-6">
                             <label id="change-image">
-                                <img id="show-img" src="{{ URL::asset($topic->icon_src) }}" width="70px" />
+                                <img id="show-img" src="{{ URL::asset($topic->icon_src) }}" width="100px" />
                                 <a href="#addImageModal" class="btn" data-toggle="modal" data-target="#addImageModal">Change Image</a>
                             </label>
                             <input type="hidden" name="icon_src" value="">
@@ -166,7 +166,7 @@
             <div class="modal-body">
                 
                 <div style="display: flex; flex-direction: row; justify-content: center;">
-                    <img id="custom-img" src="{{ URL::asset('images/default-icon.svg') }}" style='z-index: 999; margin: 4px; height: 100px;'/>
+                    <img id="custom-img" src="{{ URL::asset('images/default-icon.svg') }}" style='z-index: 999; margin: 4px; height: 120px;'/>
                     <span style="margin: 4px;">
                         <input type="file" name="icon" accept=".SVG" class="form-control-file" id="upload-icon" style="margin: 4px;">
                         <button class="btn btn-primary" id='upload-icon-button' style="margin: 4px;">Upload Icon</button>

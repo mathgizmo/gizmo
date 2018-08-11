@@ -16,7 +16,10 @@
                 <span>Forgot password?</span>
             </a>
         </div>
-        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+        <div *ngIf="error" class="alert alert-danger">
+            <mat-icon>warning</mat-icon>
+            <span class="answer">&nbsp;{{error}}</span>
+        </div>
         <div class="form-group center-block button-container">
             <button mat-button [disabled]="loading" class="button login-button">
                 <span *ngIf="!loading">Login</span>

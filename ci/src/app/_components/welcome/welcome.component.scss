@@ -9,25 +9,20 @@
 	
 	.register-button, .login-button, .try-button {
 		margin: 8px;
-		padding: 22px !important;
-		width: 500px;
 		//color: #fafafa;
 		text-decoration: none;
 	}
 
 	.login-button {
 		background-color: $teal !important;
-		width: 200px;
 	}	
 
 	.register-button {
 		background-color: $green !important;
-		width: 560px;
 	}
 
 	.try-button {
 		//background-color: #daa520;
-		width: 820px;
 	}
 }
 

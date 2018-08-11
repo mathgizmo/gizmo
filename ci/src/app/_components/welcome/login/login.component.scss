@@ -9,7 +9,7 @@
 	flex-wrap: wrap;
 	div {
 		width: 100%;
-		//max-width: 400px;
+		max-width: 500px;
 		min-width: 200px;
 	}
 }
@@ -23,13 +23,6 @@
 } 
 .login-button {
 	background-color: $teal;
-	margin: 8px;
-	padding: 22px;
-	width: 200px;
 	color: #fafafa;
 	text-decoration: none;
-}
-
-input {
-	min-height: 60px;
 }
