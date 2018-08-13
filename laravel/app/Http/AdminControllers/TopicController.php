@@ -77,6 +77,7 @@ class TopicController extends Controller
             'icon_src' => $request['icon_src'] ?: 'images/default-icon.svg',
             'short_name' => $request['short_name'],
             'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
             'unit_id' => $request['unit_id'],
@@ -167,6 +168,7 @@ class TopicController extends Controller
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
             'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
             'unit_id' => $request['unit_id'],
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')

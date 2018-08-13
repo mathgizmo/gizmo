@@ -73,7 +73,7 @@ class TopicController extends Controller
             $levels[$level['id']] = count($response);
             $response[] = $level;
         }
-        foreach (DB::select('select * from unit order by order_no, id asc') as $unit) {
+        foreach (DB::select('select * from unit where dev_mode = 0 order by order_no, id asc') as $unit) {
             if (!isset($levels[$unit['level_id']])) continue;
             $unit['topics'] = [];
             $l_element_id = $levels[$unit['level_id']];
@@ -98,7 +98,7 @@ class TopicController extends Controller
             }
             $response[$l_element_id]['units'][] = $unit;
         }
-        foreach (DB::select('select * from topic order by order_no, id asc') as $topic) {
+        foreach (DB::select('select * from topic where dev_mode = 0 order by order_no, id asc') as $topic) {
             try {
                 if($topic['icon_src'] == '' || !file_exists('../admin/'.$topic['icon_src'])) {
                     $topic['icon_src'] = 'images/default-icon.svg';

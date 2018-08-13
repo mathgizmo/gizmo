@@ -140,6 +140,17 @@
                             @endif
                         </div>
                     </div>
+                    <div class="form-group{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
+                        <label for="type" class="col-md-4 control-label">Topic in development</label>
+                        <div class="col-md-6 radio">
+                            <label for="type" class="col-md-3"> <input checked="checked" type="checkbox" name="dev_mode" value="1"></label>
+                            @if ($errors->has('dev_mode'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('dev_mode') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <div class="col-md-6 col-md-offset-4">

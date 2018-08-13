@@ -57,6 +57,7 @@ class UnitController extends Controller
         DB::table('unit')->insert([
          'title' => $request['unit_title'],
          'dependency' => $request['dependency'] ?: false,
+         'dev_mode' => $request['dev_mode'] ?: false,
          'level_id' => $request['level_id'],
          'order_no' => $request['order_no'],
          'created_at' => date('Y-m-d H:i:s'),
@@ -122,6 +123,7 @@ class UnitController extends Controller
         DB::table('unit')->where('id', $id)->update([
             'title' => $request['unit_title'],
             'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
             'level_id' => $request['level_id'],
             'order_no' => $request['order_no'],
             'created_at' => date('Y-m-d H:i:s'),

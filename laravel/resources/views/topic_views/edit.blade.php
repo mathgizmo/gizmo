@@ -112,8 +112,19 @@
                         <label for="type" class="col-md-3"> <input {{ ($topic->dependency == true) ? 'checked="checked"' : ''}} type="checkbox" name="dependency" value="1"></label>
                         @if ($errors->has('dependency'))
                             <span class="help-block">
-                                                <strong>{{ $errors->first('dependency') }}</strong>
-                                            </span>
+                                <strong>{{ $errors->first('dependency') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
+                    <label for="type" class="col-md-4 control-label">Topic in development</label>
+                    <div class="col-md-6 radio">
+                        <label for="type" class="col-md-3"> <input {{ ($topic->dev_mode == true) ? 'checked="checked"' : ''}} type="checkbox" name="dev_mode" value="1"></label>
+                        @if ($errors->has('dev_mode'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('dev_mode') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
