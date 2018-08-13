@@ -1,4 +1,7 @@
-﻿<span>
+﻿<div class="jumbotron"> 
+<div class="container">
+
+<span>
  <a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
  <span class="grey-theme">
     <mat-progress-bar  color="accent" class="lesson-progress" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
@@ -65,3 +68,6 @@
     </div>
 </div>   
 </span>
+
+</div>
+</div>

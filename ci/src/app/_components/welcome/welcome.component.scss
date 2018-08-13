@@ -1,40 +1,261 @@
 @import '../../../colors';
 
-.buttons-container {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: row;
-	flex-wrap: wrap;
-	
-	.register-button, .login-button, .try-button {
-		margin: 8px;
-		//color: #fafafa;
-		text-decoration: none;
+@import url('https://fonts.googleapis.com/css?family=Quicksand:500');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
+
+.welcome {
+	background-color: #FFF;
+	width: 100%;
+	height:100vh;
+	padding: 0;
+	margin: 0;
+	font-family: 'Open Sans';
+    font-weight: 300;
+    color: $navy;
+	.left {
+		float: left;
+		width: 50%;
+		height: 100%;
+		overflow: none;
+		.logo-container {
+			margin: 0;
+			padding: 0;
+			height: 20%;
+			.logo {
+				display: block;
+				position: relative;
+				left: 83px; 
+				top: 29px;
+			    width: 180px;
+			    margin: 0;
+			    padding: 0;
+			}
+		}
+		.left-container {
+			margin: 0;
+			padding: 0;
+			height: 80%;
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			.header {
+				font-size: 34px;
+				color: $gold;
+				width: 400px;
+				margin: 0;
+				padding: 0;
+				z-index: 1;
+			}
+			.copy {
+				font-size: 34px;
+				margin: 0;
+				width: 400px;
+				z-index: 1;
+			}
+			.line {
+				background-color: $teal;
+				display: block;
+				margin: 0 auto;
+				padding: 0;
+				margin-top: 12px;
+				margin-bottom: 12px;
+				height: 2px;
+				width: 407px;
+				z-index: 1;
+			}
+			.buttons-container {
+				margin: 0;
+				margin-top: 22px;
+				width: 400px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				flex-wrap: wrap;
+				z-index: 1;
+				.register-button, .login-button, .try-button {
+					font-size: 34px !important;
+					margin: 4px 0;
+					width: 240px;
+					//color: #fafafa;
+					text-decoration: none;
+				}
+				.login-button {
+					background-color: $teal !important;
+				}	
+				.register-button {
+					background-color: $gold !important;
+				}
+				.try-button {
+					//background-color: #daa520;
+				}
+			}
+			.bottom-text {
+				font-size: 12px;
+				display: block;
+				margin: 0 auto;
+				margin-top: 12px;
+				padding: 0;
+				text-align: center;
+				max-width: 240px;
+				z-index: 1;
+			}
+			.circle {
+				width: 240px;
+			    height: 120px;
+			    background-color: $teal;
+			    border-top-right-radius: 120px;
+			    border-bottom: 0;
+			    display: block;
+				position: absolute;
+				bottom: 0;
+				left: -120px;
+				z-index: 0; 
+			}
+		}
 	}
-
-	.login-button {
-		background-color: $teal !important;
-	}	
-
-	.register-button {
-		background-color: $green !important;
-	}
-
-	.try-button {
-		//background-color: #daa520;
+	.right {
+		float: right;
+		width: 50%;
+		height: 100%;
+		background-image: url("/assets/images/welcome-bg.png");
+		background-size: cover;
+		background-repeat: no-repeat;
+		.right-text {
+			color: white;
+			font-size: 34px;
+			height: 100vh;
+		} 
 	}
 }
 
 .center {
 	display: flex;
 	justify-content: center;
+	align-items: center;
+	align-content: center;
+	text-align: center;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 
-.logo {
-	display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 18px;
+@media screen and (max-width: 1024px) { 
+	.welcome {
+		.left {
+			.logo-container {
+				.logo {
+					left: 54.5px; 
+					top: 19px;
+				    width: 118px;
+				}
+			}
+			.left-container {
+				.header {
+					font-size: 22.5px;
+					width: 260px;
+				}
+				.copy {
+					font-size: 22.5px;
+					width: 260px;
+				}
+				.line {
+					margin-top: 12px;
+					margin-bottom: 12px;
+					height: 2px;
+					width: 268px;
+				}
+				.buttons-container {
+					margin-top: 22px;
+					width: 260px;
+					.register-button, .login-button, .try-button {
+						font-size: 22.5px !important;
+						margin: 4px 0;
+						width: 158px;
+					}
+				}
+				.bottom-text {
+					font-size: 10px;
+					margin-top: 12px;
+					max-width: 158px;
+				}
+				.circle {
+					width: 180px;
+				    height: 90px;
+				    border-top-right-radius: 90px;
+				    left: -90px;
+				}
+			}
+		}
+		.right {
+			.right-text {
+				font-size: 22.5px;
+			}
+		}
+	}
 }
 
+@media screen and (max-width: 768px) { 
+	.welcome {
+		.left {
+			.logo-container {
+				.logo {
+					left: 38.5px; 
+					top: 14px;
+				    width: 83.6px;
+				}
+			}
+			.left-container {
+				.header {
+					font-size: 16px;
+					width: 180px;
+				}
+				.copy {
+					font-size: 16px;
+					width: 180px;
+				}
+				.line {
+					margin-top: 12px;
+					margin-bottom: 12px;
+					height: 2px;
+					width: 189px;
+				}
+				.buttons-container {
+					margin-top: 22px;
+					width: 180px;
+					.register-button, .login-button, .try-button {
+						font-size: 16px !important;
+						margin: 4px 0;
+						width: 112px;
+					}
+				}
+				.bottom-text {
+					font-size: 10px;
+					margin-top: 12px;
+					max-width: 112px;
+				}
+				.circle {
+					width: 130px;
+				    height: 65px;
+				    border-top-right-radius: 65px;
+				    left: -65px;
+				}
+			}
+		}
+		.right {
+			.right-text {
+				font-size: 16px;
+			}
+		}
+	}
+}
+
+@media only screen and (orientation: portrait) {
+	.welcome {
+		.left {
+			width: 100%;
+		}
+		.right {
+			width: 100%;
+		}
+	}
+}
