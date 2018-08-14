@@ -139,11 +139,11 @@ h1, h2, h3, h4 {
 }
 
 .topic-img {
-    width: 120px !important;
+    width: 115px !important;
     height: 115px !important;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
     background-size: 100%;
+    margin: 0;
+    padding: 0;
     //background-image: url(/assets/images/default-icon.svg);
 }
 
