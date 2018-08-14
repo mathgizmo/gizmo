@@ -3,14 +3,17 @@
 
 .toolbar {
 	background-color: transparent;
-  color: $navy;
+  color: $white;
 	padding: 0;
 	margin: 0;
   position: fixed;
-  top: 0;
-  left: 10px;
+  top: 10px;
+  left: 20px;
   z-index: 99999;
-  width: 100px;
+}
+
+.menu-icon {
+  width: 40px;
 }
 
 .menu-item {
@@ -51,7 +54,7 @@
   margin: 0 auto;
   width: 15%;
   height: 15%;
-  background-color: $navy;
+  background-color: $white;
   border-radius: 100%;
   -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
           animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;

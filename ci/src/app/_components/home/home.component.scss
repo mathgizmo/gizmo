@@ -6,15 +6,18 @@
 	align-items: center;
 	background-color: rgba(255, 255, 255, 0.2);
 	text-align: center;
+	padding: 20px;
 }
 
-.level-title, .unit-title {
+.unit-title {
 	display: flex;
 	justify-content: center;
 }
 
 .level-title {
-	font-weight: bold;
+	margin: 0;
+	margin-left: 40px;
+	margin-top: 28px;
 }
 
 .unit {
@@ -59,10 +62,16 @@
     .topic {
 		width: 110px;
 	}
+	.level-title {
+		margin-left: 38px;
+	}
 }
 
 @media screen and (max-width: 768px) { 
     .topic {
 		width: 100px;
+	}
+	.level-title {
+		margin-left: 36px;
 	}
 }
