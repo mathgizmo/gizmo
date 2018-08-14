@@ -70,7 +70,7 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				flex-direction: column;
+				flex-direction: row;
 				flex-wrap: wrap;
 				z-index: 1;
 				.register-button, .login-button, .try-button {
@@ -118,14 +118,17 @@
 		float: right;
 		width: 50%;
 		height: 100%;
+		background-color: $teal;
 		background-image: url("/assets/images/welcome-bg.png");
-		background-size: cover;
+		background-size: contain;
+		background-position: center bottom;
 		background-repeat: no-repeat;
 		.right-text {
 			color: white;
 			font-size: 34px;
 			height: 100vh;
-		} 
+			z-index: 1;
+		}
 	}
 }
 
@@ -143,6 +146,7 @@
 	.welcome {
 		.left {
 			.logo-container {
+
 				.logo {
 					left: 54.5px; 
 					top: 19px;
@@ -253,9 +257,113 @@
 	.welcome {
 		.left {
 			width: 100%;
+			.logo-container {
+				height: 12%;
+				.logo {
+					left: 38.5px; 
+					top: 14px;
+				    width: 83.6px;
+				}
+			}
+			.left-container {
+				height: 88%;
+				.header {
+					width: 80%;
+				}
+				.copy {
+					width: 80%;
+				}
+				.line {
+					width: 82%;
+				}
+				.buttons-container {
+					width: 80%;
+					flex-direction: column;
+					.register-button, .login-button, .try-button {
+						width: 200px;
+					}
+				}
+				.bottom-text {
+					max-width: 200px;
+				}
+				.circle {
+				}
+			}
 		}
 		.right {
 			width: 100%;
+			.right-text {
+			}
+		}
+	}
+}
+
+@media only screen and (max-height: 500px) and (orientation: landscape) {
+	.welcome {
+		.left {
+			width: 100%;
+			.logo-container {
+				height: 20%;
+				.logo {
+					left: 38.5px; 
+					top: 14px;
+				    width: 83.6px;
+				}
+			}
+			.left-container {
+				height: 80%;
+				.header {
+					width: 80%;
+				}
+				.copy {
+					width: 80%;
+				}
+				.line {
+					width: 82%;
+				}
+				.buttons-container {
+					margin-top: 12px;
+					width: 80%;
+					flex-direction: column;
+					.register-button, .login-button, .try-button {
+						width: 200px;
+					}
+				}
+				.bottom-text {
+					margin-top: 4px;
+					max-width: 200px;
+				}
+				.circle {
+				}
+			}
+		}
+		.right {
+			width: 100%;
+			background-size: 100%;
+			.right-text {
+			}
+		}
+	}
+}
+
+@media only screen and (max-height: 350px) {
+	.welcome {
+		.left {
+			.left-container {
+				.buttons-container {
+					margin-top: 12px;
+					width: 98%;
+					flex-direction: row;
+					.register-button, .login-button, .try-button {
+						width: 28%;
+						margin: 0 4px;
+					}
+				}
+				.bottom-text {
+					margin-top: 4px;
+					max-width: 200px;
+				}
+			}
 		}
 	}
 }
