@@ -1,7 +1,4 @@
-﻿<div class="jumbotron"> 
-<div class="container">
-
-<a routerLink="/" routerLinkActive="active" class="backButton left"><-Back</a>
+﻿<a routerLink="/" routerLinkActive="active" class="backButton">{{backLinkText}}</a>
 <div class="text-center">
     <h2 class="title">{{topicTree.title}}</h2>
     <div *ngIf="topicTree.lessons && topicTree.lessons.length">
@@ -44,7 +41,4 @@
             <span>Go to next topic</span>
         </button>
     </a>
-</div>
-
-</div>
 </div>

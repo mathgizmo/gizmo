@@ -1,11 +1,9 @@
 ﻿<!-- main app container -->
 <div *ngIf="showMenu" class="menu" id='main-menu'>
-    <mat-toolbar class="toolbar">
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <img src="./assets/images/menu-button-white.svg" class="menu-icon">
-            <!--<mat-icon class="menu-icon">menu</mat-icon>-->
-        </button>
-    </mat-toolbar>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <img src="./assets/images/menu-button-white.svg" class="menu-icon">
+        <!--<mat-icon class="menu-icon">menu</mat-icon>-->
+    </button>
     <mat-menu #menu="matMenu" class="menu">
         <br />
         <a mat-menu-item routerLink="" class="menu-item">Home</a>

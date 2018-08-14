@@ -1,3 +1,5 @@
+@import '../../../../colors';
+
 .testout-button {
 	margin: 16px; 
 	color: #000; 
@@ -8,4 +10,13 @@
 	margin: 16px; 
 	color: #000; 
 	background-color: #f5f5f5;
+}
+
+.backButton {
+  	color: $white;
+  	display: block;
+	padding: 20px 0 0 0;
+	margin: 0 0 0 80px;
+	font-size: 14px;
+  	z-index: 20;
 }

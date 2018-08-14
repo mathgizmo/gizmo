@@ -155,6 +155,10 @@ class TopicController extends Controller
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         $topic = DB::table('topic')->where('id', $id)->first();
+        $unit = DB::table('unit')->where('id', $topic['unit_id'])->first();
+        $level = DB::table('level')->where('id', $unit['level_id'])->first();
+        $topic['unit'] = $unit['title'];
+        $topic['level'] = $level['title'];
         if(!$topic) {
             return $this->error('topic not found');
         }

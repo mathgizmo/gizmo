@@ -10,6 +10,7 @@ import { TopicService } from '../../../_services/index';
 })
 
 export class TopicComponent implements OnInit {
+    backLinkText: string = '<-Back';
     topicTree: any = [];
     id: number;
     private sub: any;
@@ -30,6 +31,8 @@ export class TopicComponent implements OnInit {
             this.topicService.getTopic(this.id)
                 .subscribe(topicTree => {
                     this.topicTree = topicTree;
+                    this.backLinkText = this.topicTree.level + " > " 
+                        + this.topicTree.unit;
                     let lessons = this.topicTree.lessons;
                     this.topicDone = (this.topicTree.status == 1);
                 });
