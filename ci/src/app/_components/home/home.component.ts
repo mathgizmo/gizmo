@@ -32,4 +32,9 @@ export class HomeComponent implements OnInit {
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
+    setTopicIconComplete(image) {
+        let link = `url(`+this.adminUrl+`/${image}`.slice(0, -4)+`-complete.svg)`;
+        return this.sanitizer.bypassSecurityTrustStyle(link);
+    }
+
 }
