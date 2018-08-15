@@ -10,12 +10,19 @@
         <div class="topics-container">
           <div *ngFor="let topic of unit.topics; let topicIndex = 'index'" class="topic">
             <a [routerLink]="topic.status == 0 ? '' : '/topic/'+topic.id" routerLinkActive="active" [class.disabled]="topic.status == 0 ? true : null" class="topic-picture">
-              <div *ngIf="topic.status == 0" class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)" style="opacity: 0.4;">
+            
+              <div class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)">
+                <div *ngIf="topic.status == 0" class="locked" ></div>
+                <div *ngIf="topic.status == 1" class="complete" ></div>
+                <div *ngIf="topic.status == 2" class="normal" ></div>
+              </div>
+              <!-- <div *ngIf="topic.status == 0" class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)" style="opacity: 0.4;">
               </div>
               <div *ngIf="topic.status == 1" class="topic-img" [style.background-image]="setTopicIconComplete(topic.icon_src)">
               </div>
               <div *ngIf="topic.status == 2" class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)">
-              </div>
+              </div> -->
+
             </a>
             <div class="topic-progress"> {{topic.progress.done}} of {{topic.progress.total}} done</div>
             <div>

@@ -9,6 +9,31 @@
 
 @include mat-core();
 
+/** Icons colors here :) **/
+.normal {
+
+}
+.complete {
+    background-color: #ffff0070;
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    border-radius: 50%;
+    bottom: 6px;
+    top: 6px;
+}
+.locked {
+    background-color: #ffff;
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    border-radius: 50%;
+    bottom: 6px;
+    top: 6px;
+    opacity: 0.4;
+}
+/** End of Icons colors */
+
 body {
     font-weight: normal;
     background-color: $teal;
@@ -144,6 +169,7 @@ h1, h2, h3, h4 {
     background-size: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
     //background-image: url(/assets/images/default-icon.svg);
 }
 

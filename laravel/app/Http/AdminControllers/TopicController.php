@@ -42,7 +42,7 @@ class TopicController extends Controller
         $total_topic = Topic::all()->count();
         $icons = array();
         $all = glob("images/icons/*.svg");
-        $complete = glob("images/icons/*-complete.svg");
+        $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
           $icons[] = $file;
         }
@@ -87,7 +87,7 @@ class TopicController extends Controller
         ]);
         $icons = array();
         $all = glob("images/icons/*.svg");
-        $complete = glob("images/icons/*-complete.svg");
+        $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
           $icons[] = $file;
         }
@@ -132,7 +132,7 @@ class TopicController extends Controller
         $total_topic = Topic::all()->count();
         $icons = array();
         $all = glob("images/icons/*.svg");
-        $complete = glob("images/icons/*-complete.svg");
+        $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
           $icons[] = $file;
         }
@@ -186,7 +186,7 @@ class TopicController extends Controller
         $total_topic = Topic::all()->count();
         $icons = array();
         $all = glob("images/icons/*.svg");
-        $complete = glob("images/icons/*-complete.svg");
+        $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
           $icons[] = $file;
         }

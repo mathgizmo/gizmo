@@ -101,7 +101,7 @@
 								<a href="#addImageModal" class="btn" data-toggle="modal" data-target="#addImageModal">Add Image</a>
 							</label>
 							<label id="change-image">
-								<img id="show-img" src="{{ URL::asset('images/default-icon.svg') }}" width="100px" />
+								<img class="show-img" src="{{ URL::asset('images/default-icon.svg') }}" width="100px" />
 								<a href="#addImageModal" class="btn" data-toggle="modal" data-target="#addImageModal">Change Image</a>
 							</label>
 							<input type="hidden" name="icon_src" value="">
@@ -179,7 +179,7 @@
 						<tbody>
 							@foreach($topics as $topic)
 								<tr>
-									<td><img id="show-img" class="{{$topic->icon_src}}" src="{{ URL::asset($topic->icon_src) }}" /></td>
+									<td><img class="show-img" class="{{$topic->icon_src}}" src="{{ URL::asset($topic->icon_src) }}" /></td>
 									<td>{{$topic->order_no}}</td>
 									<td>{{$topic->id}}</td>
 									<td>{{$topic->title}}</td>
@@ -225,40 +225,32 @@
 	      	<div class="modal-body">
 	        	
 				<div style="display: flex; flex-direction: row; justify-content: center;">
-                    <img id="custom-img1" src="{{ URL::asset('images/default-icon.svg') }}" style='z-index: 999; margin: 4px; height: 110px; width: 110px;'/>
-                    <img id="custom-img2" src="{{ URL::asset('images/default-icon.svg') }}" style='z-index: 999; margin: 4px; height: 110px; width: 110px;'/>
+                    <img id="custom-img" src="{{ URL::asset('images/default-icon.svg') }}" style='z-index: 999; margin: 4px; height: 100px; width: 100px;'/>
                     <span style="margin: 4px;">
                         <span>Choose topic icon</span>
-                        <input type="file" name="icon1" accept=".SVG" class="form-control-file" id="upload-icon1" style="margin: 4px;">
-                        <span>Choose topic complete icon</span>
-                        <input type="file" name="icon2" accept=".SVG" class="form-control-file" id="upload-icon2" style="margin: 4px;">
+                        <input type="file" name="icon" accept=".SVG" class="form-control-file" id="upload-icon" style="margin: 4px;">
+                        <button class="btn btn-primary" id='upload-icon-button' style="text-align:center; margin-top: 4px;">Upload Icon</button>
                     </span>
                 </div>
-                <div style="display: flex; justify-content: center;">
-                    <button class="btn btn-primary" id='upload-icon-button' style="text-align:center;">Upload Icons</button>
-                </div>
                 
-				<script type="text/javascript">
-					function checkIcon(checkedIcon) {
-						let modal = document.getElementById('topic-icons-list');
-						let inputs = modal.getElementsByTagName('input');
-						for(var i = 0; i < inputs.length; i++) {
-						    if(inputs[i].type == "checkbox") {
-						        inputs[i].checked = false; 
-						    }  
-						}
-						checkedIcon.checked = true; 
-					}
-				</script>
-	        	<div class="topic-images">
+                <script type="text/javascript">
+                    function checkIcon(checkedIcon) {
+                        let modal = document.getElementById('topic-icons-list');
+                        let inputs = modal.getElementsByTagName('input');
+                        for(var i = 0; i < inputs.length; i++) {
+                            if(inputs[i].type == "checkbox") {
+                                inputs[i].checked = false; 
+                            }  
+                        }
+                        checkedIcon.checked = true; 
+                    }
+                </script>
+                <div class="topic-images">
                     <ul id='topic-icons-list'>
                         @for ($i = 0; $i < count($icons); $i++)
                         <li><input type="checkbox" id="cb{{ $i }}" value="{{$icons[$i]}}" onclick="checkIcon(this)" />
                             <label for="cb{{ $i }}">
                                 <img id="{{$icons[$i]}}" src="{{ URL::asset($icons[$i]) }}" class='topic-icon'/>
-                            @if (file_exists(substr($icons[$i], 0, -4).'-complete.svg')) 
-                                <img id="{{substr($icons[$i], 0, -4).'-complete.svg'}}" src="{{ URL::asset(substr($icons[$i], 0, -4).'-complete.svg') }}" class='topic-icon'/>
-                            @endif
                             </label>
                         </li>
                         @endfor
@@ -317,21 +309,11 @@ $(document).ready(function(){
       $('#successMessage').fadeOut('fast');
     }, 4000); // <-- time in milliseconds
 
-    $('#upload-icon1').change( function() {
+    $('#upload-icon').change( function() {
       if (this.files && this.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
-          let img = document.getElementById('custom-img1');
-          img.setAttribute('src', e.target.result);
-        }
-        reader.readAsDataURL(this.files[0]);
-      }
-    });
-    $('#upload-icon2').change( function() {
-      if (this.files && this.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          let img = document.getElementById('custom-img2');
+          let img = document.getElementById('custom-img');
           img.setAttribute('src', e.target.result);
         }
         reader.readAsDataURL(this.files[0]);
@@ -339,23 +321,17 @@ $(document).ready(function(){
     });
 
     $('#upload-icon-button').click( function() {
-        let icon1 = document.getElementById('upload-icon1').files;
-        let icon2 = document.getElementById('upload-icon2').files;
-        if(icon1.length == 0 || icon2.length == 0) {
+        let icons = document.getElementById('upload-icon').files;
+        if(icons.length == 0) {
             alert('Please, choose icons!');
             return;
         }
-        let files = [icon1[0], icon2[0]];
-        if(files[0].type != 'image/svg+xml') {
-            alert('Invalid type of file. The file must be image/svg+xml, not '+files[0].type);
-            return;
-        } else if(files[1].type != 'image/svg+xml') {
-            alert('Invalid type of file. The file must be image/svg+xml, not '+files[1].type);
+        if(icons[0].type != 'image/svg+xml') {
+            alert('Invalid type of file. The file must be image/svg+xml, not '+icons[0].type);
             return;
         }
         let formData = new FormData();
-        formData.append('icon1', files[0]);
-        formData.append('icon2', files[1]);
+        formData.append('icon', icons[0]);
         formData.append('_token', "{{ csrf_token() }}");
         $.ajax({
             url: "{{ route('file.upload-icon') }}",

@@ -12,11 +12,11 @@
 
 #addImageModal label {
   border: 1px solid #fff;
-  padding: 10px;
   display: block;
   position: relative;
-  margin: 10px;
   cursor: pointer;
+  padding: 4px;
+  margin: 4px;
 }
 
 #addImageModal label:before {
@@ -64,10 +64,21 @@ form.create-topic label#change-image {
 }
 
 .topic-icon {
-  width: 105px;
+  width: 100px;
   padding: 0;
   margin: 0;
 }
 .backButton {
   float:left;
+}
+.show-img {
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  margin: 0;
+}
+
+.topic-icons-list {
+  padding: 0;
+  margin: 0;
 }

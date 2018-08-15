@@ -17,11 +17,11 @@ class FileController extends Controller
         $json = array();
         try {
             $time = time();
-            $newName1 = $time.".svg";
-            $newName2 = $time."-complete.svg";
-            $request->file('icon1')->move('images/icons', $newName1);
-            $request->file('icon2')->move('images/icons', $newName2);
-            $json['path'] = 'images/icons/'.$newName1;
+            $new_name = $time.".svg";
+            $new_name_complete = $time."-gold.svg";
+            $request->file('icon')->move('images/icons', $new_name);
+            //$request->file('icon')->move('images/icons', $new_name_complete);
+            $json['path'] = 'images/icons/'.$new_name;
         } catch (Exception $e) {
             $json['path'] = 'Caught exception: '.$e->getMessage();
         }
@@ -38,13 +38,15 @@ class FileController extends Controller
     {
         $json = array();
         try {
-            if($request->icon && strpos($request->icon, 'images/icons/') === 0) {
-                unlink($request->icon);
+            if($request->icon) {
+                if(strpos($request->icon, 'images/icons/') === 0) {
+                   unlink($request->icon); 
+                }
+                /*$complete_icon = str_replace(".svg","-gold.svg",$request->icon);
+                if(strpos($complete_icon, 'images/icons/') === 0) {
+                    unlink($complete_icon);
+                }*/
             } 
-            $completeIcon = str_replace(".svg","-complete.svg",$request->icon);
-            if($request->icon && strpos($completeIcon, 'images/icons/') === 0) {
-                unlink($completeIcon);
-            }
             $json['icon'] = $request->icon;
         } catch (Exception $e) {
             $json['icon'] = 'Caught exception: '.$e->getMessage();

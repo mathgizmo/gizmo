@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
     }
 
     setTopicIconComplete(image) {
-        let link = `url(`+this.adminUrl+`/${image}`.slice(0, -4)+`-complete.svg)`;
+        let link = `url(`+this.adminUrl+`/${image}`.slice(0, -4)+`-gold.svg)`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
