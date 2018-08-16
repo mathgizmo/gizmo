@@ -8,16 +8,16 @@
       <mat-card class="unit" *ngFor="let unit of level.units; let unitIndex = 'index'">
         <h4 class="unit-title subtitle">{{unit.title}}</h4>
         <div class="topics-container">
-          <div *ngFor="let topic of unit.topics; let topicIndex = 'index'" class="topic">
+          <div *ngFor="let topic of unit.topics; let topicIndex = 'index'" class="topic" [class.locked]="topic.status == 0 ? true : null">
             <a [routerLink]="topic.status == 0 ? '' : '/topic/'+topic.id" routerLinkActive="active" [class.disabled]="topic.status == 0 ? true : null" class="topic-picture">
-
-              <div *ngIf="topic.status == 0" class="topic-img locked" [style.background-image]="setTopicIcon(topic.icon_src)">
+              <div [class.complete]="topic.status == 1 ? true : null" class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)">
               </div>
-              <div *ngIf="topic.status == 1" class="topic-img complete" [style.background-image]="setTopicIconComplete(topic.icon_src)">
+              <!-- Old template with 2 different images
+              <div *ngIf="topic.status == 1" class="topic-img" [style.background-image]="setTopicIconComplete(topic.icon_src)">
               </div>
-              <div *ngIf="topic.status == 2" class="topic-img normal" [style.background-image]="setTopicIcon(topic.icon_src)">
+              <div *ngIf="topic.status != 1" class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)">
               </div>
-
+               -->
             </a>
             <div class="topic-progress"> {{topic.progress.done}} of {{topic.progress.total}} done</div>
             <div>

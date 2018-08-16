@@ -13,7 +13,6 @@ import { environment } from '../../../environments/environment';
 
 export class HomeComponent implements OnInit {
     topicsTree: any = [];
-    topicIcon: any;
     private readonly adminUrl = environment.adminUrl;
 
     constructor(private topicService: TopicService, private sanitizer: DomSanitizer) { 
@@ -32,9 +31,11 @@ export class HomeComponent implements OnInit {
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
+    /* Gold Icon
     setTopicIconComplete(image) {
         let link = `url(`+this.adminUrl+`/${image}`.slice(0, -4)+`-gold.svg)`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
+    */
 
 }

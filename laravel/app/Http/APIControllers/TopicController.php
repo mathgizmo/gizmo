@@ -155,6 +155,13 @@ class TopicController extends Controller
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         $topic = DB::table('topic')->where('id', $id)->first();
+        try {
+            if($topic['icon_src'] == '' || !file_exists('../admin/'.$topic['icon_src'])) {
+                $topic['icon_src'] = 'images/default-icon.svg';
+            }
+        } catch (Exception $e) {
+            $topic['icon_src'] = 'images/default-icon.svg';
+        }
         $unit = DB::table('unit')->where('id', $topic['unit_id'])->first();
         $level = DB::table('level')->where('id', $unit['level_id'])->first();
         $topic['unit'] = $unit['title'];
