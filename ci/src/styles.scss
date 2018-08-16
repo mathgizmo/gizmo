@@ -11,26 +11,15 @@
 
 /** Icons colors here :) **/
 .normal {
-
 }
 .complete {
-    background-color: #ffff0070;
-    position: absolute;
-    left: 6px;
-    right: 6px;
-    border-radius: 50%;
-    bottom: 6px;
-    top: 6px;
+    -webkit-filter: grayscale(100%) sepia(100%) saturate(250%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%) sepia(100%) saturate(250%);
+
 }
 .locked {
-    background-color: #ffff;
-    position: absolute;
-    left: 6px;
-    right: 6px;
-    border-radius: 50%;
-    bottom: 6px;
-    top: 6px;
-    opacity: 0.4;
+    -webkit-filter: opacity(40%); /* Safari 6.0 - 9.0 */
+    filter: opacity(40%);
 }
 /** End of Icons colors */
 
@@ -61,7 +50,7 @@ h1, h2, h3, h4 {
 
 .button, .mat-button {
   font-family: 'Quicksand'!important;
-  font-weight: 500 !important; 
+  font-weight: 500 !important;
   font-size: 32px !important;
   color: $white !important;
   background-color: $teal !important;
@@ -99,7 +88,7 @@ h1, h2, h3, h4 {
   font-weight: 600;
   font-size: 20px;
   color: $navy;
-} 
+}
 
 .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
   font-family: 'Open Sans';
@@ -113,7 +102,7 @@ h1, h2, h3, h4 {
   font-weight: 600;
   font-size: 16px;
   color: $navy;
-} 
+}
 
 .topic-progress {
   font-family: 'Open Sans';
@@ -185,7 +174,7 @@ h1, h2, h3, h4 {
 .arrowRowContainer {
     display: inline-block;
     box-shadow: 5px 5px 7px 0px black;
-    background: 
+    background:
     url(/assets/images/arrow.png);
     background-size: 100% 100%;
 }
@@ -197,7 +186,7 @@ h1, h2, h3, h4 {
 }
 
 .fill-remaining-space {
-  // This fills the remaining space, by using flexbox. 
+  // This fills the remaining space, by using flexbox.
   // Every toolbar row uses a flexbox row layout.
   flex: 1 1 auto;
 }
@@ -250,21 +239,21 @@ h1, h2, h3, h4 {
     }
 
     .backButton, .lesson-progress {
-        margin: 0 8px;  
+        margin: 0 8px;
     }
 
     .lesson-progress {
-        width: calc(100% - 16px) !important; 
+        width: calc(100% - 16px) !important;
     }
 }
 
-@media screen and (max-width: 350px) { 
+@media screen and (max-width: 350px) {
     .level, .unit {
         margin: 6px !important;
         padding: 6px !important;
     }
     .backButton, .lesson-progress {
-        margin: 0 6px;  
+        margin: 0 6px;
     }
     .continue-button, .error-button, .send-button, .cancel-button  {
         margin: 4px !important;
@@ -272,7 +261,7 @@ h1, h2, h3, h4 {
     }
 }
 
-@media screen and (max-width: 1024px) { 
+@media screen and (max-width: 1024px) {
     body {
         font-size: 12px;
     }
@@ -292,7 +281,7 @@ h1, h2, h3, h4 {
 
     .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
       font-size: 12px;
-    } 
+    }
 
     .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
       font-size: 12px;
@@ -300,7 +289,7 @@ h1, h2, h3, h4 {
 
     .topic-title, .topic-progress {
       font-size: 9px;
-    } 
+    }
 
     .arrowButtonContainer {
         width: 100px;
@@ -309,7 +298,7 @@ h1, h2, h3, h4 {
     }
 }
 
-@media screen and (max-width: 768px) { 
+@media screen and (max-width: 768px) {
     body {
         font-size: 11px;
     }
@@ -329,7 +318,7 @@ h1, h2, h3, h4 {
 
     .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
       font-size: 11px;
-    } 
+    }
 
     .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
       font-size: 11px;
@@ -337,7 +326,7 @@ h1, h2, h3, h4 {
 
     .topic-title, .topic-progress {
       font-size: 8px;
-    } 
+    }
 
     .arrowButtonContainer {
         width: 80px;
