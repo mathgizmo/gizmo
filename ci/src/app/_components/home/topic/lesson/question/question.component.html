@@ -1,4 +1,4 @@
-<span>
+<div class="question-container">
     <h2 [innerHtml]="question.question" *ngIf="!is_chart" class="question"></h2>
     <span  *ngIf="is_chart" >
         <h2 [innerHtml]="questionForChart" *ngIf="is_chart" class="question"></h2>
@@ -43,10 +43,13 @@
             {{warningMessage}}
         </span>
     </div>
+</div>
+<div class="buttons-container">
     <button (click)="checkAnswer()" id="continue-button" class="button moving-forward-button"
         mat-raised-button
         style="color: #000; background-color: #f5f5f5; ">
         <span>Continue</span>
     </button>
-</span>
+</div>
+
 

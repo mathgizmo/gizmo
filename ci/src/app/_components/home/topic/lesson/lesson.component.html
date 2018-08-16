@@ -1,13 +1,13 @@
-﻿<div class="jumbotron"> 
-<div class="container">
+﻿ <a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="back">
+    {{backLinkText}}
+ </a>
 
-<span>
- <a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
- <span class="grey-theme">
-    <mat-progress-bar  color="accent" class="lesson-progress" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
-    <label *ngIf="question_num > 0" style="display: flex; justify-content: center;">{{correct_answers}}/{{question_num}}</label> 
- </span>
-<div class="text-center">
+<div class="text-center lesson-cotainer">
+    <h2 class="title">{{titleText}}</h2>
+    <div class="lesson-progress-container">
+        <mat-progress-bar color="warn" class="lesson-progress" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
+        <label class="lesson-progress-label" *ngIf="question_num > 0">{{correct_answers}}/{{question_num}}</label>
+    </div>
     <div *ngIf="question !== null">
         <app-question 
             [question]='question' 
@@ -30,7 +30,6 @@
                     mat-raised-button
                     style="margin: 16px; color: #000; background-color: #f5f5f5;"
                     class="button moving-forward-button">
-                    <mat-icon>done all</mat-icon>
                     <span>Go to next lesson</span>
                 </button>
             </a>
@@ -43,7 +42,6 @@
                     mat-raised-button
                     class="button"
                     style="margin: 16px; color: #000; background-color: #f5f5f5;">
-                    <mat-icon>done all</mat-icon>
                     <span>Go back to topic</span>
                 </button>
             </a>
@@ -60,14 +58,9 @@
                     mat-raised-button
                     style="margin: 16px; color: #000; background-color: #f5f5f5;"
                     class="button moving-forward-button">
-                    <mat-icon>done all</mat-icon>
                     <span>Go to next topic</span>
                 </button>
             </a>
         </div>
-    </div>
-</div>   
-</span>
-
-</div>
+    </div>  
 </div>

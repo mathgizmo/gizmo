@@ -37,6 +37,9 @@ export class LessonComponent implements OnInit {
     question: any = null;
     answers: string[] = null;
 
+    backLinkText: string = '<-Back';
+    titleText: string = 'Lesson';
+
     constructor(
             private router: Router,
             private topicService: TopicService,
@@ -67,6 +70,10 @@ export class LessonComponent implements OnInit {
                     this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
+                        this.backLinkText = lessonTree.level + " > " 
+                        + lessonTree.unit;
+                        this.titleText = lessonTree.topic.title + ": " 
+                          +lessonTree.title;
                         this.randomisation = lessonTree['randomisation'];
                         if(this.randomisation) {
                           //randomize array

@@ -106,6 +106,19 @@ h1, h2, h3, h4 {
     filter: grayscale(100%) sepia(100%) saturate(250%);
 }
 
+.back {
+    color: $white;
+    font-size: 14px;
+    background-color: transparent;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    top: 22px;
+    left: 72px;
+    z-index: 10;
+}
+
 // add border radius to all cards
 .mat-card {
     border-radius: 25px !important;
@@ -244,6 +257,17 @@ h1, h2, h3, h4 {
 @media screen and (max-width: 1024px) {
     body {
         font-size: 12px;
+    }
+
+    .back {
+        top: 24px;
+        left: 64px;
+        font-size: 10px;
+        text-decoration: none;
+        color: $white;
+    }
+    .back:hover {
+        text-decoration: none !important;
     }
 
     .title {

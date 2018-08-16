@@ -240,6 +240,12 @@ class TopicController extends Controller
         if(!$lesson) {
             return $this->error('lesson not found');
         }
+
+        $unit = DB::table('unit')->where('id', $topic['unit_id'])->first();
+        $level = DB::table('level')->where('id', $unit['level_id'])->first();
+        $lesson['unit'] = $unit['title'];
+        $lesson['level'] = $level['title'];
+
         $lesson['questions'] = DB::table('question')->where('lesson_id', $lesson_id)->get();
         $questions = [];
         foreach($lesson['questions'] as $index => $question) {
