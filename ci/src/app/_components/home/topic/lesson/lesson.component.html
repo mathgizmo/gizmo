@@ -19,8 +19,10 @@
             <h2 class="question">Loading....!</h2>
         </div>
         <div *ngIf="initial_loading == 0 && lesson_id != -1">
-            <h2 class="subtitle">Congratulations!</h2>
-            <h3 class="question">You have finished this lesson.</h3>
+            <div class="question-container">
+                <h2 class="subtitle">Congratulations!</h2>
+                <h3 class="question">You have finished this lesson.</h3>
+            </div>
             <a
                 class="button-container"
                 routerLink="/topic/{{topic_id}}/lesson/{{next}}"
@@ -47,8 +49,10 @@
             </a>
         </div>
         <div *ngIf="initial_loading == 0 && lesson_id == -1">
-            <h2 class="subtitle">Congratulations!</h2>
-            <h3 class="question">You have finished this topic.</h3>
+            <div class="question-container">
+                <h2 class="subtitle">Congratulations!</h2>
+                <h3 class="question">You have finished this topic.</h3>
+            </div>
             <a
                 class="button-container"
                 routerLink="/topic/{{next}}"
