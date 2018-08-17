@@ -31,7 +31,7 @@ h1, h2, h3, h4 {
   font-family: 'Quicksand';
   font-weight: 500;
   font-size: 42px;
-  color: $white;
+  //color: $white;
 }
 
 .button, .mat-button {
@@ -66,21 +66,21 @@ h1, h2, h3, h4 {
   font-family: 'Quicksand';
   font-weight: 500;
   font-size: 26px;
-  color: $navy;
+  //color: $navy;
 }
 
 .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
   font-family: 'Open Sans';
   font-weight: 600;
   font-size: 20px;
-  color: $navy;
+  //color: $navy;
 }
 
 .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
   font-family: 'Open Sans';
   font-weight: 300;
   font-size: 20px;
-  color: $navy;
+  //color: $navy;
 }
 
 .topic-title {
@@ -120,7 +120,7 @@ h1, h2, h3, h4 {
 }
 
 // add border radius to all cards
-.mat-card {
+.mat-card, .mat-dialog-container {
     border-radius: 25px !important;
 }
 
@@ -500,13 +500,51 @@ $mat-red: (
         A700: white
     )
 );
-$grey-primary: mat-palette($mat-grey, 700);
-$grey-accent:  mat-palette($mat-green);
-$grey-warn: mat-palette($mat-red);
-$grey-theme:   mat-light-theme($grey-primary, $grey-accent, $grey-warn);
 /* Include the alternative theme styles inside of a block with a CSS class. You can make this
 CSS class whatever you want. Any component inside of an element with
 .grey-theme class will be affected by this alternate theme instead of the default theme. */
+$grey-primary: mat-palette($mat-grey, 700);
+$grey-accent:  mat-palette($mat-green);
+$grey-warn: mat-palette($mat-red);
+$grey-theme: mat-light-theme($grey-primary, $grey-accent, $grey-warn);
 .grey-theme {
   @include angular-material-theme($grey-theme);
+}
+
+$mat-white: (
+    50: #ffffff,
+    100: #ffffff,
+    200: #ffffff,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #ffffff,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white
+    )
+);
+$white-primary: mat-palette($mat-white);
+$white-theme: mat-light-theme($white-primary, $accent, $warn);
+.white-theme {
+  @include angular-material-theme($white-theme);
 }

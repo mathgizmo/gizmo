@@ -1,7 +1,12 @@
 @import '../../../../../../colors';
 
-.title, .subtitle, .question, .answer, .lesson-progress-label, .button {
-  color: $white;
+.question-container, .title, .subtitle, .question, .answer, .lesson-progress-label, .button {
+  color: $white !important;
+}
+
+.input {
+  color: $navy;
+  border-color: $teal;
 }
 
 .question-container {
@@ -23,14 +28,13 @@
   justify-content: center;
   flex-direction: column;
   font-size: 20px !important;
-
   .order-container {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     .order-item {
-      background-color: rgba(17, 17, 17, 0.5);
+      background-color: rgba(0, 38, 66, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -70,6 +74,19 @@
 
 .button {
   font-size: 34px !important;
+  margin-bottom: 24px !important;
+}
+
+:host /deep/ .white-theme .mat-radio-outer-circle,
+:host /deep/ .white-theme .mat-checkbox-frame {
+  border-color: $white;
+  border-width: 4px;
+}
+:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-outer-circle {
+  border-width: 0;
+}
+:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-inner-circle {
+  transform: scale(1);
 }
 
 @media screen and (max-width: 1024px) {

@@ -4,7 +4,7 @@
     <mat-form-field (change)="ngOnChanges()">
       <input matInput [(ngModel)]="inputValue" type="number"
         [step]="stepInput" [max]="maxInputValue" [min]="minInputValue" />
-      <mat-progress-bar class='progress' [value]="((value-startValue)/(maxValue-startValue)*100).toFixed(0)">
+      <mat-progress-bar class='progress' color="accent" [value]="((value-startValue)/(maxValue-startValue)*100).toFixed(0)">
       </mat-progress-bar>
     </mat-form-field>
     <span *ngIf="valueDisplay == 2" >
@@ -18,12 +18,12 @@
       <mat-slider  *ngIf="type != 4" 
         (change)="ngOnChanges()" [(ngModel)]="value"
         [step]="step" [max]="maxValue" min="0" 
-        color="primary" class='slider-control'>
+        color="accent" class='slider-control'>
       </mat-slider>
       <mat-slider *ngIf="type == 4" 
         (change)="ngOnChanges()" [(ngModel)]="value"
         [step]="step" [max]="endValue" [min]="startValue" 
-        color="primary" class='slider-control' id='inputValue'>
+        color="accent" class='slider-control' id='inputValue'>
       </mat-slider>
 
       <div class="value-label-container">
