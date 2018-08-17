@@ -100,6 +100,8 @@ h1, h2, h3, h4 {
 .locked {
     -webkit-filter: opacity(40%); /* Safari 6.0 - 9.0 */
     filter: opacity(40%);
+    pointer-events: none;
+    cursor: default;
 }
 .complete {
     -webkit-filter: grayscale(100%) sepia(100%) saturate(250%); /* Safari 6.0 - 9.0 */
