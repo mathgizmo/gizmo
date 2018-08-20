@@ -5,20 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Unit;
-use App\Http\Requests;
 
 class UnitController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id', $request->level_id)->get();
-        //$topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
         return view('unit_views.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
     }
 
@@ -33,7 +32,6 @@ class UnitController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id', $lid)->get();
         $total_unit = Unit::all()->count();
-
         return view('unit_views.create', [
             'levels' => $levels,
             'units' => $units,
@@ -50,28 +48,24 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
-            // Store topic title and unit_id into topic table
+        // Store topic title and unit_id into topic table
         $lid = $request->level_id;
-        //$uid = $request->unit_id;
-        //$tid = $request->topic_id;
         $this->validate($request, [
          'level_id'    => 'required',
          'unit_title'=> 'required',
-         ]);
-
-         DB::table('unit')->insert([
+        ]);
+        DB::table('unit')->insert([
          'title' => $request['unit_title'],
          'dependency' => $request['dependency'] ?: false,
+         'dev_mode' => $request['dev_mode'] ?: false,
          'level_id' => $request['level_id'],
          'order_no' => $request['order_no'],
          'created_at' => date('Y-m-d H:i:s'),
          'modified_at' => date('Y-m-d H:i:s')
         ]);
-
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id', $lid)->get();
         $total_unit = Unit::all()->count();
-
         \Session::flash('flash_message', 'successfully saved.');
         return view('unit_views.create', [
             'levels' => $levels,
@@ -84,12 +78,10 @@ class UnitController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
         return "Under Construction";
     }
 
@@ -107,7 +99,6 @@ class UnitController extends Controller
             ->where('unit.id', '=', $id)->first();
         $levels = DB::table('level')->select('id', 'title')->where('id', $unit->lid)->get();
         $total_unit = Unit::all()->count();
-
         return view('unit_views.edit', [
             'levels'=>$levels,
             'unit'=>$unit,
@@ -124,29 +115,23 @@ class UnitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $lid = $request->level_id;
-        //$uid = $request->unit_id;
-        //$tid = $request->topic_id;
         $this->validate($request, [
             'level_id'    => 'required',
-             //'unit_id'    => 'required',
-            'unit_title'=> 'required',
+            'unit_title'=> 'required'
         ]);
-
         DB::table('unit')->where('id', $id)->update([
             'title' => $request['unit_title'],
             'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
             'level_id' => $request['level_id'],
             'order_no' => $request['order_no'],
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id', $request->level_id)->get();
         $total_unit = Unit::all()->count();
-
         return view('unit_views.create', [
             'levels' => $levels,
             'units' => $units,
@@ -158,7 +143,8 @@ class UnitController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $id)

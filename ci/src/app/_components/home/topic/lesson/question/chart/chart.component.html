@@ -1,16 +1,16 @@
-<h2 id="chart-container"></h2>
+<h2 id="chart-container" (window:resize)="onResize($event)"></h2>
 <div id="controls" >
   <span *ngIf="control == 1">
     <mat-form-field (change)="ngOnChanges()">
       <input matInput [(ngModel)]="inputValue" type="number"
         [step]="stepInput" [max]="maxInputValue" [min]="minInputValue" />
-      <mat-progress-bar class='progress' [value]="((value-startValue)/(maxValue-startValue)*100).toFixed(0)">
+        <mat-progress-bar class='progress' [value]="((value-startValue)/(maxValue-startValue)*100).toFixed(0)">
       </mat-progress-bar>
     </mat-form-field>
     <span *ngIf="valueDisplay == 2" >
       <span class='max-value'>/{{maxValue}}</span>
     </span>
-    <span *ngIf="valueDisplay == 4">%</span>
+    <span *ngIf="valueDisplay == 4"> %</span>
   </span>
 
   <span *ngIf="control == 2">

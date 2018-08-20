@@ -1,15 +1,39 @@
-h1 {
-  color: #369;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 250%;
-}
-.toolbar {
+@import '../../colors';
+
+
+.menu {
 	background-color: transparent;
+  display: inline-block;
+  color: $white;
 	padding: 0;
 	margin: 0;
+  position: fixed;
+  top: 10px;
+  left: 20px;
+  z-index: 10;
 }
 
-// loader
+.menu-icon {
+  width: 40px;
+}
+
+.menu-item {
+  font-family: 'Quicksand' !important;
+  color: $navy;
+  margin: 0;
+}
+
+@media screen and (max-width: 1024px) { 
+  .menu-icon {
+    width: 32px;
+  }
+}
+
+@media screen and (max-width: 768px) { 
+  
+}
+
+/** loader */
 .loader {
     background-color: rgba(0, 0, 0, 0.1);
     position: fixed;
@@ -41,7 +65,7 @@ h1 {
   margin: 0 auto;
   width: 15%;
   height: 15%;
-  background-color: #333;
+  background-color: $white;
   border-radius: 100%;
   -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
           animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;

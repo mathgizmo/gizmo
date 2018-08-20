@@ -1,6 +1,8 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { TopicService } from '../../_services/index';
+import { environment } from '../../../environments/environment';
 
 @Component({
     moduleId: module.id,
@@ -11,8 +13,10 @@ import { TopicService } from '../../_services/index';
 
 export class HomeComponent implements OnInit {
     topicsTree: any = [];
+    private readonly adminUrl = environment.adminUrl;
 
-    constructor(private topicService: TopicService) { }
+    constructor(private topicService: TopicService, private sanitizer: DomSanitizer) { 
+    }
 
     ngOnInit() {
         // get topics tree from API
@@ -21,5 +25,17 @@ export class HomeComponent implements OnInit {
                 this.topicsTree = topicsTree;
             });
     }
+
+    setTopicIcon(image) {
+        let link = `url(`+this.adminUrl+`/${image})`;
+        return this.sanitizer.bypassSecurityTrustStyle(link);
+    }
+
+    /* Gold Icon
+    setTopicIconComplete(image) {
+        let link = `url(`+this.adminUrl+`/${image}`.slice(0, -4)+`-gold.svg)`;
+        return this.sanitizer.bypassSecurityTrustStyle(link);
+    }
+    */
 
 }

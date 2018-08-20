@@ -159,8 +159,6 @@
                             </div>
                         </div>
 
-
-
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                <a class="btn btn-default" href="{{ route('lesson_views.index') }}">Back</a>

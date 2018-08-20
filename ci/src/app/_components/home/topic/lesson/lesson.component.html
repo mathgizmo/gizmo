@@ -1,8 +1,13 @@
-﻿<span class="grey-theme">
- <a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="backButton left"><-Back</a>
-<mat-progress-bar color="accent" class="lesson-progress" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
-<label *ngIf="question_num > 0" style="display: flex; justify-content: center;">{{correct_answers}}/{{question_num}}</label>
-<div class="text-center">
+﻿ <a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="back">
+    {{backLinkText}}
+ </a>
+
+<div class="text-center lesson-cotainer">
+    <h2 class="title">{{titleText}}</h2>
+    <div class="lesson-progress-container">
+        <mat-progress-bar color="warn" class="lesson-progress" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
+        <label class="lesson-progress-label" *ngIf="question_num > 0">{{correct_answers}}/{{question_num}}</label>
+    </div>
     <div *ngIf="question !== null">
         <app-question 
             [question]='question' 
@@ -11,11 +16,13 @@
     </div>
     <div *ngIf="question === null">
         <div *ngIf="initial_loading == 1">
-            <h2>Loading....!</h2>
+            <h2 class="question">Loading....!</h2>
         </div>
         <div *ngIf="initial_loading == 0 && lesson_id != -1">
-            <h2>Congratulations!</h2>
-            <h3>You have finished this lesson.</h3>
+            <div class="question-container">
+                <h2 class="subtitle">Congratulations!</h2>
+                <h3 class="question">You have finished this lesson.</h3>
+            </div>
             <a
                 class="button-container"
                 routerLink="/topic/{{topic_id}}/lesson/{{next}}"
@@ -23,8 +30,8 @@
                 *ngIf="next != 0">
                 <button
                     mat-raised-button
-                    style="margin: 16px; color: #000; background-color: #f5f5f5;">
-                    <mat-icon>done all</mat-icon>
+                    style="margin: 16px; color: #000; background-color: #f5f5f5;"
+                    class="button moving-forward-button">
                     <span>Go to next lesson</span>
                 </button>
             </a>
@@ -35,15 +42,17 @@
                 *ngIf="next == 0">
                 <button
                     mat-raised-button
+                    class="button moving-forward-button"
                     style="margin: 16px; color: #000; background-color: #f5f5f5;">
-                    <mat-icon>done all</mat-icon>
                     <span>Go back to topic</span>
                 </button>
             </a>
         </div>
         <div *ngIf="initial_loading == 0 && lesson_id == -1">
-            <h2>Congratulations!</h2>
-            <h3>You have finished this topic.</h3>
+            <div class="question-container">
+                <h2 class="subtitle">Congratulations!</h2>
+                <h3 class="question">You have finished this topic.</h3>
+            </div>
             <a
                 class="button-container"
                 routerLink="/topic/{{next}}"
@@ -51,12 +60,11 @@
                 *ngIf="next != 0">
                 <button
                     mat-raised-button
-                    style="margin: 16px; color: #000; background-color: #f5f5f5;">
-                    <mat-icon>done all</mat-icon>
+                    style="margin: 16px; color: #000; background-color: #f5f5f5;"
+                    class="button moving-forward-button">
                     <span>Go to next topic</span>
                 </button>
             </a>
         </div>
-    </div>
-</div>   
-</span>
+    </div>  
+</div>

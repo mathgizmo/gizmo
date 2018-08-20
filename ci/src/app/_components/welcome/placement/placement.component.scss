@@ -1,25 +1,43 @@
+@import '../../../../colors';
+
+.placement {
+	margin: 60px 10px;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	text-align: center;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+.title {
+	color: $navy;
+}
+
 .button {
-	margin-bottom: 8px !important;
-	padding: 0;
-	width: 100px;
 	text-decoration: none;
 }
 
 .ok-button, .next-button {
 	color: #fafafa;
-	background-color: #31698a;
+	background-color: $teal !important;
 }
 
 .yes-button {
 	color: #fafafa;
-	background-color: #6dc066;
+	background-color: $green !important;
 }
 
 .no-button {
 	color: #fafafa;
-	background-color: #ff4444;
+	background-color: $red !important;
 }
 
 .not-sure-button, .skip-button {
-	background-color: #e6e6fa;
+	background-color: #e6e6fa !important;
+	color: $navy !important;
+}
+
+.mat-card-actions .mat-button, .mat-card-actions .mat-raised-button {
+    margin: 4px;
 }

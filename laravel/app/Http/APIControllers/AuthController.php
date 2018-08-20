@@ -13,12 +13,15 @@ use Mail;
 
 class AuthController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function authenticate(Request $request)
     {
         auth()->shouldUse('api');
         // grab credentials from the request
         $credentials = $request->only('email', 'password');
-
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
@@ -33,11 +36,14 @@ class AuthController extends Controller
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student_id);
         $student = Student::find($student_id);
         $question_num = $student->question_num?:5;
-
         // all good so return the token
         return $this->success(compact('token', 'question_num'));
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function register(Request $request)
     {
         $fields = ['email', 'password', 'name'];
@@ -46,7 +52,6 @@ class AuthController extends Controller
         foreach($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
         }
-
         $validator = Validator::make(
             $credentials,
             [
@@ -55,24 +60,24 @@ class AuthController extends Controller
                 'password' => 'required|min:6',
             ]
             );
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return $this->error($validator->messages());
         }
-
         $result = Student::create([
             'name' => $credentials['name'],
             'email' => $credentials['email'],
             'password' => bcrypt($credentials['password']),
         ]);
-
         if($result) {
             return $this->success($result);
         }
-
         return $this->success($error);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function passwordResetEmail(Request $request) {
         $fields = ['email', 'url'];
         // grab credentials from the request
@@ -80,7 +85,6 @@ class AuthController extends Controller
         foreach($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
         }
-
         $validator = Validator::make(
             $credentials,
             [
@@ -92,24 +96,19 @@ class AuthController extends Controller
         {
             return $this->error($validator->messages());
         }
-
         $email = $credentials['email'];
-
         $student = Student::where('email', '=' , $email)->first();
         if(!$student) {
             return $this->error('We can not find email you provided in our database! You can register a new account with this email.');
         }
-
         // delete existings resets if exists
         PasswordResets::where('email', $email)->delete();
-
         $url = $credentials['url'];
         $token = str_random(64);
         $result = PasswordResets::create([
             'email' => $email,
             'token' => $token
         ]);
-
         if($result) {
             $data = array('token'=>$token, 'email' => $email, 'url' => $url);
             Mail::queue('mail', $data, function($message) use ($data) {
@@ -122,6 +121,10 @@ class AuthController extends Controller
         return $this->success($error);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function resetPassword(Request $request) {
         $fields = ['password', 'token'];
         // grab credentials from the request
@@ -129,7 +132,6 @@ class AuthController extends Controller
         foreach($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
         }
-
         $validator = Validator::make(
             $credentials,
             [
@@ -141,22 +143,18 @@ class AuthController extends Controller
         {
             return $this->error($validator->messages());
         }
-
         $token = $credentials['token'];
         $pr = PasswordResets::where('token', $token)->first(['email', 'created_at']);
         $email = $pr['email'];
         if(!$email) {
             return $this->error('Invalid reset password link!');
         }
-
         $dateCreated = strtotime($pr['created_at']);
         $expireInterval = 86400; // token expire interval in seconds (24 h)
         $currentTime = time();
-
         if($currentTime  - $dateCreated > $expireInterval) {
             return $this->error('The time to reset password has expired!');
         }
-
         $password = bcrypt($credentials['password']);
         $updatedRows = Student::where('email', $email)->update(['password' => $password]);
         if($updatedRows > 0) {

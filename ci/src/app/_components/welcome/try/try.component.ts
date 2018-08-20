@@ -4,14 +4,25 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-try',
-  template: '<button mat-button class="try-button">Try without registration</button>',
+  template: '<button mat-button class="button try-button">Try without registration</button>',
   host: { '(click)': 'onTry()'},
   styles: [`
     .try-button {
       width: 100%;
       height: 100%;
-      padding: 0;
       margin: 0;
+      background-color: #11A02E !important;
+      font-size: 18px !important;
+    }
+    @media screen and (max-width: 1024px) { 
+      .try-button {
+        font-size: 12px !important;
+      }
+    }
+    @media screen and (max-width: 768px) { 
+      .try-button {
+        font-size: 8px !important;
+      }
     }
   `]
 })

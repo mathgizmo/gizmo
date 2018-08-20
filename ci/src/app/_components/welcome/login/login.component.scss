@@ -1,3 +1,5 @@
+@import '../../../../colors';
+
 .auth-container {
 	margin: 8px;
 	display: flex;
@@ -7,7 +9,7 @@
 	flex-wrap: wrap;
 	div {
 		width: 100%;
-		max-width: 400px;
+		max-width: 500px;
 		min-width: 200px;
 	}
 }
@@ -20,10 +22,7 @@
 	flex-wrap: wrap;
 } 
 .login-button {
-	background-color: #31698a;
-	margin: 8px;
-	padding: 0;
-	width: 100px;
+	background-color: $teal;
 	color: #fafafa;
 	text-decoration: none;
 }

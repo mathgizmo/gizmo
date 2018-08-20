@@ -94,12 +94,15 @@
                             </div>
                       </div>
 
-                    <div class="form-group{{ $errors->has('image_id') ? ' has-error' : '' }}">
-                        <label for="image_id" class="col-md-4 control-label">Image</label>
+                    <div class="form-group{{ $errors->has('icon_src') ? ' has-error' : '' }}">
+                        <label for="icon_src" class="col-md-4 control-label">Image</label>
 
                         <div class="col-md-6">
-                            <label id="change-image"><img id="show-img" class="{{$topic->image_id}}" src="{{ URL::asset('images/img_trans.gif') }}" /><a href="#" class="btn" data-toggle="modal" data-target="#addImageModal">Change Image</a></label>
-                            <input type="hidden" name="image_id" value="">
+                            <label id="change-image">
+                                <img class="show-img" src="{{ URL::asset($topic->icon_src) }}" width="100px" />
+                                <a href="#addImageModal" class="btn" data-toggle="modal" data-target="#addImageModal">Change Image</a>
+                            </label>
+                            <input type="hidden" name="icon_src" value="">
                         </div>
                     </div>
                 <div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
@@ -109,8 +112,19 @@
                         <label for="type" class="col-md-3"> <input {{ ($topic->dependency == true) ? 'checked="checked"' : ''}} type="checkbox" name="dependency" value="1"></label>
                         @if ($errors->has('dependency'))
                             <span class="help-block">
-                                                <strong>{{ $errors->first('dependency') }}</strong>
-                                            </span>
+                                <strong>{{ $errors->first('dependency') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
+                    <label for="type" class="col-md-4 control-label">Topic in development</label>
+                    <div class="col-md-6 radio">
+                        <label for="type" class="col-md-3"> <input {{ ($topic->dev_mode == true) ? 'checked="checked"' : ''}} type="checkbox" name="dev_mode" value="1"></label>
+                        @if ($errors->has('dev_mode'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('dev_mode') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
@@ -161,23 +175,148 @@
                 <h4 class="modal-title" id="myModalLabel">Add Topic Image</h4>
             </div>
             <div class="modal-body">
+                
+                <div style="display: flex; flex-direction: row; justify-content: center;">
+                    <img id="custom-img" src="{{ URL::asset('images/default-icon.svg') }}" style='z-index: 999; margin: 4px; height: 100px; width: 100px;'/>
+                    <span style="margin: 4px;">
+                        <span>Choose topic icon</span>
+                        <input type="file" name="icon" accept=".SVG" class="form-control-file" id="upload-icon" style="margin: 4px;">
+                        <button class="btn btn-primary" id='upload-icon-button' style="text-align:center; margin-top: 4px;">Upload Icon</button>
+                    </span>
+                </div>
+                
+                <script type="text/javascript">
+                    function checkIcon(checkedIcon) {
+                        let modal = document.getElementById('topic-icons-list');
+                        let inputs = modal.getElementsByTagName('input');
+                        for(var i = 0; i < inputs.length; i++) {
+                            if(inputs[i].type == "checkbox") {
+                                inputs[i].checked = false; 
+                            }  
+                        }
+                        checkedIcon.checked = true; 
+                    }
+                </script>
                 <div class="topic-images">
-                    <ul>
-                          @for ($i = 1; $i <= 20; $i++)
-                          <li><input type="checkbox" id="cb{{ $i }}" value="cb{{ $i }}-img" />
-                            <label for="cb{{ $i }}"><img id="cb{{ $i }}-img" src="{{ URL::asset('images/img_trans.gif') }}" /></label>
+                    <ul id='topic-icons-list'>
+                        @for ($i = 0; $i < count($icons); $i++)
+                        <li><input type="checkbox" id="cb{{ $i }}" value="{{$icons[$i]}}" onclick="checkIcon(this)" />
+                            <label for="cb{{ $i }}">
+                                <img id="{{$icons[$i]}}" src="{{ URL::asset($icons[$i]) }}" class='topic-icon'/>
+                            <!-- @if (file_exists(substr($icons[$i], 0, -4).'-gold.svg')) 
+                                <img id="{{substr($icons[$i], 0, -4).'-gold.svg'}}" src="{{ URL::asset(substr($icons[$i], 0, -4).'-complete.svg') }}" class='topic-icon'/>
+                            @endif -->
+                            </label>
                         </li>
                         @endfor
                     </ul>
                 </div>
+
             </div>
             <div class="modal-footer">
+                <script>
+                    function deleteIcon() {
+                        let modal = document.getElementById('topic-icons-list');
+                        let inputs = modal.getElementsByTagName('input');
+                        let icon = '';
+
+                        for(var i = 0; i < inputs.length; i++) {
+                            if(inputs[i].type == "checkbox" && inputs[i].checked) {
+                                icon = inputs[i].value;
+                                inputs[i].parentNode.remove();
+                            }  
+                        }
+                        let formData = new FormData();
+                        formData.append('icon', icon);
+                        formData.append('_token', "{{ csrf_token() }}");
+                        $.ajax({
+                            url: "{{ route('file.delete-icon') }}",
+                            type: "POST",
+                            data: formData,
+                            cache: false,
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false, 
+                            success: function(data, textStatus, jqXHR) {
+                                //console.log(data);
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                console.log('ERROR');
+                            }
+                        });
+                    }
+                </script>
+                <button id="delete-image" type="button" data-toggle="confirmation" data-placement="top" data-on-confirm="deleteIcon()" class="btn btn-danger pull-left" >Delete Image</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="save-image" type="button" class="btn btn-primary">Add Image</button>
+                <button id="save-image" type="button" class="btn btn-primary">Attach Image</button>
             </div>
         </div>
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+
+<script>
+$(document).ready(function(){
+    $('#upload-icon').change( function() {
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          let img = document.getElementById('custom-img');
+          img.setAttribute('src', e.target.result);
+        }
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+
+    $('#upload-icon-button').click( function() {
+        let icons = document.getElementById('upload-icon').files;
+        if(icons.length == 0) {
+            alert('Please, choose icons!');
+            return;
+        }
+        if(icons[0].type != 'image/svg+xml') {
+            alert('Invalid type of file. The file must be image/svg+xml, not '+icons[0].type);
+            return;
+        }
+        let formData = new FormData();
+        formData.append('icon', icons[0]);
+        formData.append('_token', "{{ csrf_token() }}");
+        $.ajax({
+            url: "{{ route('file.upload-icon') }}",
+            type: "POST",
+            data: formData,
+            cache: false,
+            dataType: 'json',
+            processData: false,
+            contentType: false, 
+            success: function(data, textStatus, jqXHR) {
+                $('#topic-icons-list')
+                    .load('{{ route('topic_views.create') }} #topic-icons-list > *');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('textStatus: ' + textStatus + '\njqXHR:' +jqXHR + '\errorThrown:' + errorThrown);
+            }
+        });
+    });
+
+    $(function () {
+        $("#addImageModal button#save-image").on('click', function() {
+            $('#addImageModal').modal('hide');
+            $('form#topic label#change-image img').removeClass();
+
+            $('form#topic label#add-image').hide();
+            $('form#topic label#change-image').show();
+
+            var topicIcon = $('#addImageModal input[type=checkbox]:checked').val();
+            $('form#topic label#change-image img').addClass(topicIcon);
+            $('form#topic input[name=icon_src').val(topicIcon);
+            $('form#topic label#change-image img').attr("src", "{{ URL::asset('/') }}"+topicIcon);
+        });
+    });
+});
+</script>
 
 @endsection

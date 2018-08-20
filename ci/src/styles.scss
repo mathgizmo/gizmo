@@ -1,35 +1,129 @@
 /* You can add global styles to this file, and also import other style files */
+@import './colors';
 @import '~@angular/material/theming';
 @import url('//fonts.googleapis.com/icon?family=Material+Icons');
 
+// import fonts
+@import url('https://fonts.googleapis.com/css?family=Quicksand:500');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
+
 @include mat-core();
-
-$primary: mat-palette($mat-lime, 500);
-$accent:  mat-palette($mat-lime, 500, A200, A400);
-$warn:    mat-palette($mat-red, 500);
-
-$theme: mat-light-theme($primary, $accent, $warn);
-
-@include angular-material-theme($theme);
-
-// Define an alternate theme.
-$grey-primary: mat-palette($mat-grey, 700);
-$grey-accent:  mat-palette($mat-green, A400);
-$grey-theme:   mat-light-theme($grey-primary, $grey-accent, $warn);
-/* Include the alternative theme styles inside of a block with a CSS class. You can make this
-CSS class whatever you want. Any component inside of an element with
-.grey-theme class will be affected by this alternate theme instead of the default theme. */
-.grey-theme {
-  @include angular-material-theme($grey-theme);
-}
 
 body {
     font-weight: normal;
-    background-color: #eee;
+    background-color: $teal;
+    font-family: 'Open Sans';
+    font-weight: 300;
+    font-size: 20px;
+    color: $navy;
+}
+
+.jumbotron {
+    background-color: transparent;
 }
 
 h1, h2, h3, h4 {
-    font-weight: normal;
+    font-family: 'Open Sans';
+    font-weight: 600;
+}
+
+.title {
+  font-family: 'Quicksand';
+  font-weight: 500;
+  font-size: 42px;
+  //color: $white;
+}
+
+.button, .mat-button {
+  font-family: 'Quicksand'!important;
+  font-weight: 500 !important;
+  font-size: 32px !important;
+  color: $white !important;
+  background-color: $teal !important;
+  border-radius: 50px !important;
+  padding: 10px 25px !important;
+}
+
+.completion-button {
+  background-color: $gold !important;
+}
+
+.moving-forward-button {
+  background-color: $green !important;
+}
+
+.error-button {
+  background-color: $red !important;
+}
+
+.mat-button-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.subtitle {
+  font-family: 'Quicksand';
+  font-weight: 500;
+  font-size: 26px;
+  //color: $navy;
+}
+
+.question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
+  font-family: 'Open Sans';
+  font-weight: 600;
+  font-size: 20px;
+  //color: $navy;
+}
+
+.answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-size: 20px;
+  //color: $navy;
+}
+
+.topic-title {
+  font-family: 'Open Sans';
+  font-weight: 600;
+  font-size: 16px;
+  color: $navy;
+}
+
+.topic-progress {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-size: 16px;
+  color: $navy;
+}
+
+.locked {
+    -webkit-filter: opacity(40%); /* Safari 6.0 - 9.0 */
+    filter: opacity(40%);
+    pointer-events: none;
+    cursor: default;
+}
+.complete {
+    -webkit-filter: grayscale(100%) sepia(100%) saturate(250%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%) sepia(100%) saturate(250%);
+}
+
+.back {
+    color: $white;
+    font-size: 14px;
+    background-color: transparent;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    top: 22px;
+    left: 72px;
+    z-index: 10;
+}
+
+// add border radius to all cards
+.mat-card, .mat-dialog-container {
+    border-radius: 25px !important;
 }
 
 .help-block {
@@ -68,175 +162,15 @@ h1, h2, h3, h4 {
     border-radius: 50%;
 }
 
-.cb1-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -51px -50px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb2-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -194px -50px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb3-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -338px -50px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb4-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -483px -50px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-
-.cb5-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -49px -192px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb6-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -193px -192px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb7-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -337px -192px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb8-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -482px -194px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-
-.cb9-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -50px -336px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb10-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -193px -337px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb11-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -337px -338px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb12-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -482px -338px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-
-.cb13-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -50px -481px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb14-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -193px -481px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb15-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -337px -481px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb16-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -482px -482px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb17-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -50px -625px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb18-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -193px -626px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb19-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -337px -626px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb20-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/img_topics.jpg) -482px -626px;
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
-}
-
-.cb0-img {
-    width: 79px !important;
-    height: 79px !important;
-    background: url(/assets/images/no_image.png);
-    margin: 17px 0px 17px 0px;
-    border-radius: 8px;
+.topic-img {
+    width: 115px;
+    height: 115px;
+    background-size: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    background-repeat: no-repeat;
+    //background-image: url(/assets/images/default-icon.svg);
 }
 
 .greenButton {
@@ -245,51 +179,9 @@ h1, h2, h3, h4 {
     border-radius: 25px;
     width:80px;
 }
-.arrow {
-
-}
-.arrowRowContainer {
-    display: inline-block;
-    box-shadow: 5px 5px 7px 0px black;
-    background: 
-    url(/assets/images/arrow.png);
-    background-size: 100% 100%;
-}
-.arrowButtonContainer {
-    width:100px;
-    padding: 25px;
-    margin: 1px;
-
-}
-.greenout {
-    background: 
-    linear-gradient(
-        rgba(0, 128, 0, 0.3),
-        rgba(0, 128, 0, 0.3)
-    );
-    background-size: 100% 100%;
-
-}
-.yellowout {
-    background: 
-    linear-gradient(
-      rgba(128, 128, 0, 0.3), 
-      rgba(128, 128, 0, 0.3)
-    );
-    background-size: 100% 100%;
-}
-
-.redout {
-    background: 
-    linear-gradient(
-      rgba(128, 0, 0, 0.7), 
-      rgba(128, 0, 0, 0.7)
-    );
-    background-size: 100% 100%;
-}
 
 .fill-remaining-space {
-  // This fills the remaining space, by using flexbox. 
+  // This fills the remaining space, by using flexbox.
   // Every toolbar row uses a flexbox row layout.
   flex: 1 1 auto;
 }
@@ -318,12 +210,6 @@ h1, h2, h3, h4 {
     box-shadow: 4px 4px 5px 2px black;
 }
 
-.bottom_progress {
-    position: absolute; 
-    bottom: 0; 
-    width: 100%
-}
-
 .center {
     margin: auto;
     width: 50%;
@@ -332,50 +218,302 @@ h1, h2, h3, h4 {
     width: 150px;
 }
 
-/*** set from admin in ckEditor
-.question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
-  font-size: 24px;
-} 
-*/
-
-.answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
-  font-size: 16px;
-}
-
 .chart-value-label {
   font-size: 16px;
   font-weight: bold;
 }
 
-@media screen and (max-width: 600px) {
-    .container, .topics-container, .topic {
-        margin: 0 !important;
-        padding: 0 !important;
+@media screen and (max-width: 1024px) {
+    body {
+        font-size: 12px;
     }
 
-    .container, .topics-container {
-        width: 100%;
+    .back {
+        top: 24px;
+        left: 64px;
+        font-size: 10px;
+        text-decoration: none;
+        color: $white;
+    }
+    .back:hover {
+        text-decoration: none !important;
     }
 
-    .backButton, .lesson-progress {
-        margin: 0 8px;  
+    .title {
+      font-size: 28px;
     }
 
-    .lesson-progress {
-        width: calc(100% - 16px) !important; 
+    .button, .mat-button {
+      font-size: 21px !important;
+      padding: 4px 14px !important;
+    }
+
+    .subtitle {
+      font-size: 16.8px;
+    }
+
+    .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
+      font-size: 12px;
+    }
+
+    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+      font-size: 12px;
+    }
+
+    .topic-title, .topic-progress {
+      font-size: 9px;
     }
 }
 
-@media screen and (max-width: 350px) { 
-    .level, .unit {
-        margin: 6px !important;
-        padding: 6px !important;
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 11px;
     }
-    .backButton, .lesson-progress {
-        margin: 0 6px;  
+
+    .title {
+      font-size: 20px;
     }
-    .continue-button, .error-button, .send-button, .cancel-button  {
-        margin: 4px !important;
-        padding: 2px !important;
+
+    .button, .mat-button {
+      font-size: 16px !important;
+      padding: 2px 12px !important;
     }
+
+    .subtitle {
+      font-size: 12px;
+    }
+
+    .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
+      font-size: 11px;
+    }
+
+    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+      font-size: 11px;
+    }
+
+    .topic-title, .topic-progress {
+      font-size: 8px;
+    }
+
+}
+
+
+/** THEMING */
+$mat-navy: (
+    50: #e0e5e8,
+    100: #b3bec6,
+    200: #8093a1,
+    300: #4d677b,
+    400: #26475e,
+    500: #002642,
+    600: #00223c,
+    700: #001c33,
+    800: #00172b,
+    900: #000d1d,
+    A100: #5b8bff,
+    A200: #2867ff,
+    A400: #0048f4,
+    A700: #0040da,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white
+    )
+);
+
+$mat-teal: (
+    50: #e6f6f8,
+    100: #c0e9ec,
+    200: #97dbe0,
+    300: #6dcdd4,
+    400: #4dc2ca,
+    500: #2eb7c1,
+    600: #29b0bb,
+    700: #23a7b3,
+    800: #1d9fab,
+    900: #12909e,
+    A100: #cffaff,
+    A200: #9cf4ff,
+    A400: #69efff,
+    A700: #50ecff,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white
+    )
+);
+
+$mat-gold: (
+    50: #fff6e7,
+    100: #ffe8c2,
+    200: #ffd899,
+    300: #ffc870,
+    400: #ffbd52,
+    500: #ffb133,
+    600: #ffaa2e,
+    700: #ffa127,
+    800: #ff9820,
+    900: #ff8814,
+    A100: #ffffff,
+    A200: #fffdfb,
+    A400: #ffe1c8,
+    A700: #ffd3ae,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white
+    )
+);
+
+$primary: mat-palette($mat-navy);
+$accent:  mat-palette($mat-teal);
+$warn:    mat-palette($mat-gold);
+$theme: mat-light-theme($primary, $accent, $warn);
+@include angular-material-theme($theme);
+
+// Define an alternate theme
+$mat-green: (
+    50: #e2f4e6,
+    100: #b8e3c0,
+    200: #88d097,
+    300: #58bd6d,
+    400: #35ae4d,
+    500: #11a02e,
+    600: #0f9829,
+    700: #0c8e23,
+    800: #0a841d,
+    900: #057312,
+    A100: #a2ffa9,
+    A200: #6fff79,
+    A400: #3cff4a,
+    A700: #23ff32,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white
+    )
+);
+$mat-red: (
+    50: #fde4e5,
+    100: #fabbbd,
+    200: #f68e92,
+    300: #f26066,
+    400: #f03e45,
+    500: #ed1c24,
+    600: #eb1920,
+    700: #e8141b,
+    800: #e51116,
+    900: #e0090d,
+    A100: #ffffff,
+    A200: #ffd7d7,
+    A400: #ffa4a5,
+    A700: #ff8b8c,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white
+    )
+);
+/* Include the alternative theme styles inside of a block with a CSS class. You can make this
+CSS class whatever you want. Any component inside of an element with
+.grey-theme class will be affected by this alternate theme instead of the default theme. */
+$grey-primary: mat-palette($mat-grey, 700);
+$grey-accent:  mat-palette($mat-green);
+$grey-warn: mat-palette($mat-red);
+$grey-theme: mat-light-theme($grey-primary, $grey-accent, $grey-warn);
+.grey-theme {
+  @include angular-material-theme($grey-theme);
+}
+
+$mat-white: (
+    50: #ffffff,
+    100: #ffffff,
+    200: #ffffff,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #ffffff,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white
+    )
+);
+$white-primary: mat-palette($mat-white);
+$white-theme: mat-light-theme($white-primary, $accent, $warn);
+.white-theme {
+  @include angular-material-theme($white-theme);
 }

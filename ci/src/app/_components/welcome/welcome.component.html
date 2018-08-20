@@ -1,8 +1,34 @@
 ﻿<div class="welcome">
-  <h2 class="center">Welcome!</h2>
-  <div class="buttons-container">
-    <a mat-button routerLink="/register" class="register-button">Register account</a>
-    <a mat-button routerLink="/login" class="login-button">Login</a>
-    <app-try class="try-button"></app-try>
-  </div>
+  <span class="left">
+  	<div class="logo-container">
+  		<img src="./assets/images/logo-blue.svg" alt="Health Numeracy Project" class="logo">
+  	</div>
+  	<div class="left-container">
+  		<h2 class="header">
+  			Welcome to Health Numeracy Learning Object!
+  		</h2>
+  		<div class="copy">
+  			Improve your numeracy skills. Sharpen your reasoning. Learn something new.
+  		</div>
+  		<div class="line hide"></div>
+  		<div class="copy hide">
+  			Some text here
+  		</div>
+	  	<div class="buttons-container">
+		    <a mat-button routerLink="/register" class="button register-button">Sign Up</a>
+		    <a mat-button routerLink="/login" class="button login-button">Login</a>
+		    <app-try class="try-button"></app-try>
+	  	</div>
+	  	<div class="bottom-text hide">
+	  		Some text here
+	  	</div>
+	  	<span class="circle"></span>
+  	</div>
+  </span>
+  <span class="right">
+  	<span class="center right-text">
+      Once you log in, you will see all topics, organized into units and levels. Each topic contains a sequence of lessons. To complete a lesson, you need to answer two correct questions (this number can be changed in your settings).
+      There are different ways to advance through the material. You can take a placement test and skip some topics. Or, once inside a topic, you can test out of it and move to the next topic. You can always go back to any topic or any lesson you have completed, to review it.
+  	</span>
+  </span>
 </div>

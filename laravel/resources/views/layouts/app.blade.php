@@ -93,13 +93,18 @@
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-confirmation/1.0.7/bootstrap-confirmation.min.js" crossorigin="anonymous"></script>
+	{{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
     <script type="text/javascript">
     $(document).ready(function () {
+        // enable bootstrap-confirmation
+        $('[data-toggle=confirmation]').confirmation({
+          rootSelector: '[data-toggle=confirmation]',
+        });
 
-        var repMode = $("#reply_mode option:selected").val();
-        setTF(repMode);
+		var repMode = $("#reply_mode option:selected").val();
+		setTF(repMode);
 
         $("#reply_mode").on('change', function(){
             setTF($(this).val());
@@ -123,73 +128,51 @@
             var selection = $(this).val();
             $(this).prev('input').val(selection);
         });
+	});
 
+	</script>
 
-    });
+		<script type="text/javascript">
+		$('#level_id').on('change',function(){
+			$value=$(this).val();
+			$.ajax({
+				type : 'get',
+				url  : '{{URL:: to('/question_views/create')}}',
+				data : {'level_id':$value},
+				success: function(data){
+					$('#unit_id').html(data);
+					}
+				});
+			});
+		$('#unit_id').on('change',function(){
+			$value=$(this).val();
+			$.ajax({
+				type : 'get',
+				url  : '{{URL:: to('/question_views/create')}}',
+				data : {'unit_id':$value},
+				success: function(data){
+					//alert(data);
+					$('#topic_id').html(data);
+					}
+				});
+			});
 
-    </script>
+	$('#topic_id').on('change',function(){
+		$value=$(this).val();
+		$.ajax({
+			type : 'get',
+			url  : '{{URL:: to('/question_views/create')}}',
+			data : {'topic_id':$value},
+			success: function(data){
+				//alert(data);
+				$('#lesson_id').html(data);
+			}
+		});
+	});
 
-        <script type="text/javascript">
-        $('#level_id').on('change', function(){
-            $value=$(this).val();
-            $.ajax({
-                type : 'get',
-                url  : '{{URL:: to('/question_views/create')}}',
-                data : {'level_id':$value},
-                success: function(data){
-                    $('#unit_id').html(data);
-                    }
-                });
-            });
-        $('#unit_id').on('change', function(){
-            $value=$(this).val();
-            $.ajax({
-                type : 'get',
-                url  : '{{URL:: to('/question_views/create')}}',
-                data : {'unit_id':$value},
-                success: function(data){
-                    //alert(data);
-                    $('#topic_id').html(data);
-                    }
-                });
-            });
+	</script>
 
-    $('#topic_id').on('change', function(){
-        $value=$(this).val();
-        $.ajax({
-            type : 'get',
-            url  : '{{URL:: to('/question_views/create')}}',
-            data : {'topic_id':$value},
-            success: function(data){
-                //alert(data);
-                $('#lesson_id').html(data);
-            }
-        });
-    });
-
-    $(function () {
-
-        $("#addImageModal button#save-image").on('click', function() {
-            $('#addImageModal').modal('hide');
-            $('form#topic label#change-image img').removeClass();
-
-            $('form#topic label#add-image').hide();
-            $('form#topic label#change-image').show();
-
-            var intVal = $('#addImageModal input[type=checkbox]:checked').val();
-            $('form#topic label#change-image img').addClass(intVal);
-            $('form#topic input[name=image_id').val(intVal);
-        });
-
-        $("#addImageModal input[type=checkbox]").on("click", function() {
-            $('#addImageModal input[type=checkbox]').prop('checked', false);
-            $(this).prop('checked', true);
-        });
-
-    });
-    </script>
-
-    @yield('scripts')
+	@yield('scripts')
 
 </body>
 </html>

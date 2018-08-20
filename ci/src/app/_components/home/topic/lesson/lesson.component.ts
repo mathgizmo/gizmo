@@ -37,6 +37,9 @@ export class LessonComponent implements OnInit {
     question: any = null;
     answers: string[] = null;
 
+    backLinkText: string = '<-Back';
+    titleText: string = 'Lesson';
+
     constructor(
             private router: Router,
             private topicService: TopicService,
@@ -67,6 +70,10 @@ export class LessonComponent implements OnInit {
                     this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
+                        this.backLinkText = lessonTree.level + " > " 
+                        + lessonTree.unit;
+                        this.titleText = lessonTree.topic.title + ": " 
+                          +lessonTree.title;
                         this.randomisation = lessonTree['randomisation'];
                         if(this.randomisation) {
                           //randomize array
@@ -164,7 +171,7 @@ export class LessonComponent implements OnInit {
            this.lessonTree['questions'] = [];
         }
         let dialogRef = this.dialog.open(GoodDialogComponent, {
-            width: '300px',
+            //width: '400px',
             data: { }
         });
 
@@ -189,7 +196,7 @@ export class LessonComponent implements OnInit {
               this.lessonTree['questions'].push(this.question);
           }
           let dialogRef = this.dialog.open(BadDialogComponent, {
-              width: '300px',
+              //width: '800px',
               data: { data: this.question.answers.filter(function(answer){
                   if (answer.is_correct == 1) return true;
                   return false;
@@ -201,7 +208,7 @@ export class LessonComponent implements OnInit {
           dialogRef.afterClosed().subscribe(result => {
               if (result) {
                   let reportDialogRef = this.dialog.open(ReportDialogComponent, {
-                      //width: '300px',
+                      //width: '800px',
                       data: {question_id: this.question.id, answers: this.answers}
                   });
                   

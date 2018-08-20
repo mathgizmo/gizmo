@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\PlacementQuestion;
 use App\Unit;
-
-use App\Http\Requests;
 
 class PlacementController extends Controller
 {
@@ -52,7 +49,6 @@ class PlacementController extends Controller
         $this->validate($request, [
          'unit_id' => 'required'
          ]);
-
         $placement = new PlacementQuestion;
         $placement->order = $request['order'];
         $placement->question = $request['question'];
@@ -60,7 +56,6 @@ class PlacementController extends Controller
         $unit = Unit::find($request['unit_id']);
         $placement->unit()->associate($unit);
         $placement->save();
-
         $placements = PlacementQuestion::with('unit')->get();
         \Session::flash('flash_message', 'successfully saved.');
         return view('placement_views.index', ['placements'=>$placements]);
@@ -69,12 +64,10 @@ class PlacementController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
         return "Under Construction";
     }
 
@@ -89,7 +82,6 @@ class PlacementController extends Controller
         $placement = PlacementQuestion::find($id);
         $total_placements = PlacementQuestion::all()->count();
         $units = Unit::all();
-
         return view('placement_views.edit', [
             'placement' => $placement,
             'total_placements' => $total_placements,
@@ -109,7 +101,6 @@ class PlacementController extends Controller
         $this->validate($request, [
          'unit_id' => 'required'
          ]);
-
         $placement = PlacementQuestion::find($id);
         $placement->order = $request['order'];
         $placement->question = $request['question'];
@@ -117,7 +108,6 @@ class PlacementController extends Controller
         $unit = Unit::find($request['unit_id']);
         $placement->unit()->associate($unit);
         $placement->save();
-
         return redirect('/placement_views')
             ->with(array('message'=> 'Updated successfully'));
     }
