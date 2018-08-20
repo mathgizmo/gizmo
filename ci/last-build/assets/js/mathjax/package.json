@@ -1,27 +1,28 @@
 {
-  "_from": "mathjax@2.7.2",
-  "_id": "mathjax@2.7.2",
+  "_from": "mathjax@2.7.4",
+  "_id": "mathjax@2.7.4",
   "_inBundle": false,
-  "_integrity": "sha512-Z9te7r3lsjZibugO1uKsdyqICKXVNr7M1Ll2GtjJu9cUKvOvwDqEp0YIjBD4H58NNuPg5DP5/AQ2Tu8K52Mqng==",
+  "_integrity": "sha512-B6SLtoETmV08kqTepRyz8eqMRGFzllPy2QASKFdFl0g0YB6SNgQVnWae11RaF3/y8ZKLTJNJ7hLbMIqmBEkLzw==",
   "_location": "/mathjax",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "mathjax@2.7.2",
+    "raw": "mathjax@2.7.4",
     "name": "mathjax",
     "escapedName": "mathjax",
-    "rawSpec": "2.7.2",
+    "rawSpec": "2.7.4",
     "saveSpec": null,
-    "fetchSpec": "2.7.2"
+    "fetchSpec": "2.7.4"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/mathjax/-/mathjax-2.7.2.tgz",
-  "_shasum": "97d78bbebfb65a8621ce33fb7c1f10917355a878",
-  "_spec": "mathjax@2.7.2",
-  "_where": "C:\\Wamp64\\www\\gizmo\\ci",
+  "_resolved": "https://registry.npmjs.org/mathjax/-/mathjax-2.7.4.tgz",
+  "_shasum": "a88c55392b69a9715813cdc041ce02de6548a603",
+  "_spec": "mathjax@2.7.4",
+  "_where": "/var/www/vhosts/gizmo/ci",
   "bugs": {
     "url": "http://github.com/mathjax/MathJax/issues"
   },
@@ -56,5 +57,5 @@
   "scripts": {
     "test": "echo 'No tests here!'"
   },
-  "version": "2.7.2"
+  "version": "2.7.4"
 }
