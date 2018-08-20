@@ -26,6 +26,16 @@ input {
   background-color: rgba(255,255,255,0.4);
 }
 
+:host /deep/ .mat-progress-bar .mat-progress-bar-fill::after {
+    border-radius: 200px !important;
+}
+:host /deep/ .mat-progress-bar .mat-progress-bar-buffer {
+  background-color: #8ED8DD;
+}
+:host /deep/ .mat-progress-bar .mat-progress-bar-background {
+  display: none;
+}
+
 .center {
   display: flex; 
   justify-content: center;

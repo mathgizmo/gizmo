@@ -41,7 +41,7 @@ class ProfileController extends Controller
             $update,
             [
                 'name' => 'max:255',
-                'email' => 'email|max:255|unique:students, email, ' . $student->id,
+                'email' => 'email|max:255|unique:students,email,'.$student->id, // DO NOT ADD SPACES TO THIS STRING!!!
                 'password' => 'min:6',
             ]
         );

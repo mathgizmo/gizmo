@@ -1,3 +1,5 @@
+@import '../../../../../../colors';
+
 .send-button {
 	background-color: #31698a;
 }
@@ -20,4 +22,20 @@
 
 .custom-answer, input {
 	width: 100%;
+}
+
+.mat-dialog-content {
+	height: 145px;
+}
+
+:host /deep/ .mat-radio-outer-circle,
+:host /deep/ .mat-checkbox-frame {
+  border-color: $navy;
+  border-width: 4px;
+}
+:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-outer-circle {
+  border-width: 0;
+}
+:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-inner-circle {
+  transform: scale(1);
 }

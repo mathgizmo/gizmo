@@ -58,6 +58,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         .addEventListener('click', this.setClickPosition.bind(this));
     }
 
+    onResize(event) {
+      this.buildChart();
+    }
+
     ngOnDestroy() {
       this.destroyDotsChart();
       document.getElementById('chart-container')
@@ -274,16 +278,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         case 1:
           // Chart (type 1 - rectangle)
           chartHtml += '<svg style="height: '
-            + this.chartHeight + '; width:' + this.chartHeight + ';">';
-          chartHtml += '<rect id="rect2" style="height:'
-            + this.chartHeight +' !important; width: 100%;';
-          chartHtml += ' fill: ' + this.mainColor + '; stroke: ' + 
+            + this.chartHeight + 'px; width:' + this.chartHeight + 'px;">';
+          chartHtml += '<rect id="rect2" height="'+this.chartHeight 
+            +'" width="'+this.chartHeight+'" style="fill: ' 
+            + this.mainColor + '; stroke: ' + 
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
-          chartHtml += '<rect id="rect1" style="y: ' +
-            (1 - valuePercent) * this.chartHeight + '; height:' +
-            valuePercent*this.chartHeight +' !important; width: 100%;';
-          chartHtml += ' fill: ' + this.selectedColor + '; stroke: ' + 
+          chartHtml += '<rect id="rect1" y="'
+            +(1 - valuePercent) * this.chartHeight 
+            +'" height="'+valuePercent*this.chartHeight 
+            +'" width="'+this.chartHeight+'" style="fill: ' 
+            + this.selectedColor + '; stroke: ' + 
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
 
@@ -320,12 +325,11 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           let x = radius + radius*Math.sin(angle);
           let  y = radius - radius*Math.cos(angle);
           chartHtml += '<svg style="height: '
-            + this.chartHeight + '; width:' + this.chartHeight + ';">';
+            + this.chartHeight + 'px; width:' + this.chartHeight + 'px;">';
           if(valuePercent <= 0.999) {
-            chartHtml += '<circle id="circle2" style="r: ' + radius 
-              + ' !important; cx: '+ radius + ' !important; cy: ' 
-              + radius + ' !important;';
-            chartHtml += ' fill: ' + this.mainColor + '; stroke: ' + 
+            chartHtml += '<circle id="circle2" r="'+radius
+            +'" cx="'+radius+'" cy="'+radius+'" style="fill: ' 
+            + this.mainColor + '; stroke: ' + 
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '" />';
             chartHtml += '<path id="circle1" d="M'+ radius +','+ radius 
               + ' L' + radius + ',0 A' + radius + ',' + radius;
@@ -339,11 +343,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
             chartHtml += '></path>'; 
           } else {
-            chartHtml += '<circle id="circle1" style="r: ' + radius 
-              + ' !important; cx: '+ radius + ' !important; cy: ' 
-              + radius + ' !important;'
-              chartHtml += 'fill: ' + this.selectedColor + '; stroke: ' + 
-              this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
+            chartHtml += '<circle id="circle1" r="'+radius
+            +'" cx="'+radius+'" cy="'+radius+'"style="fill: ' 
+            + this.selectedColor + '; stroke: ' + 
+            this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
           chartHtml += '</svg>';
             

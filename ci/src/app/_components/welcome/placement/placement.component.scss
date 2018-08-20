@@ -37,3 +37,7 @@
 	background-color: #e6e6fa !important;
 	color: $navy !important;
 }
+
+.mat-card-actions .mat-button, .mat-card-actions .mat-raised-button {
+    margin: 4px;
+}

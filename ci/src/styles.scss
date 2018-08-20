@@ -223,39 +223,6 @@ h1, h2, h3, h4 {
   font-weight: bold;
 }
 
-@media screen and (max-width: 600px) {
-    .container, .topics-container, .topic {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .container, .topics-container {
-        width: 100%;
-    }
-
-    .backButton, .lesson-progress {
-        margin: 0 8px;
-    }
-
-    .lesson-progress {
-        width: calc(100% - 16px) !important;
-    }
-}
-
-@media screen and (max-width: 350px) {
-    .level, .unit {
-        margin: 6px !important;
-        padding: 6px !important;
-    }
-    .backButton, .lesson-progress {
-        margin: 0 6px;
-    }
-    .continue-button, .error-button, .send-button, .cancel-button  {
-        margin: 4px !important;
-        padding: 2px !important;
-    }
-}
-
 @media screen and (max-width: 1024px) {
     body {
         font-size: 12px;

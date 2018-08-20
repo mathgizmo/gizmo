@@ -1,7 +1,4 @@
-﻿<div class="jumbotron">
-<div class="container">
-
-<div *ngIf="topicsTree.length" class="topics">
+﻿<div *ngIf="topicsTree.length" class="topics">
   <div *ngFor="let level of topicsTree; let levelIndex = 'index'" >
     <h3 class="level-title title">{{level.title}}</h3>
     <mat-card *ngIf="level.units.length" class="level">
@@ -27,7 +24,4 @@
       </mat-card>
     </mat-card>
   </div>
-</div>
-
-</div>
 </div>
