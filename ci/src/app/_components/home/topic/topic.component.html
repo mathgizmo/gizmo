@@ -2,7 +2,7 @@
 <div class="text-center topic-container">
     <h2 class="title">{{topicTree.title}}</h2>
     <div *ngIf="topicTree.lessons && topicTree.lessons.length" class="lessons-container">
-        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = 'index'" class="lesson" [class.available-lesson]="lesson.status == 2 ? true : null" >
+        <div *ngFor="let lesson of topicTree.lessons; let levelIndex = 'index'" class="lesson">
             <a [routerLink]="'/topic/'+topicTree.id+'/lesson/'+lesson.id" routerLinkActive="active" [class.locked]="lesson.status == 0 ? true : null">
                 <div [class.complete]="lesson.status == 1 ? true : null" class="topic-img" [style.background-image]="setTopicIcon(topicTree.icon_src)">
                 </div>

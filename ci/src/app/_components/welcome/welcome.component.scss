@@ -3,6 +3,10 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand:500');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
 
+.hide {
+	display: none;
+}
+
 .welcome {
 	background-color: #FFF;
 	width: 100%;
@@ -125,7 +129,8 @@
 		background-repeat: no-repeat;
 		.right-text {
 			color: white;
-			font-size: 34px;
+			font-size: 24px; //font-size: 34px;
+			width: 80%;
 			height: 100vh;
 			z-index: 1;
 		}
@@ -192,7 +197,7 @@
 		}
 		.right {
 			.right-text {
-				font-size: 22.5px;
+				font-size: 18px; //font-size: 22.5px;
 			}
 		}
 	}
