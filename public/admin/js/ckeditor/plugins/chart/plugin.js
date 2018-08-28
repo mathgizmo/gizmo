@@ -199,8 +199,8 @@ CKEDITOR.plugins.add( 'chart', {
                                 id : 'marks',
                                 label : 'Marks List',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /(([0-9]+([.][0-9]*)?|[.][0-9]+)(, *([0-9]+([.][0-9]*)?|[.][0-9]+)))*/, 
-                                        "Marks must be a comma separated list of numbers" ),
+                                    .regex( /((\d)+)(,\s*(\d|%|\/)+)*(?<!%)$/, 
+                                        "Marks must be a comma separated list" ),
                                 required : false,
                                 'default' : '0, 0.5, 1',
                                 commit : function( data )
@@ -392,7 +392,7 @@ CKEDITOR.plugins.add( 'chart', {
                         if (chartStr.indexOf('marks:') >= 0) {
                            this.getContentElement('general', 'marks').setValue(
                                 chartStr.match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
-                                .replace('marks:', '').split(',').map(Number)
+                                .replace('marks:', '').split(',')
                             );
                         }
                         if (chartStr.indexOf('step:') >= 0) {

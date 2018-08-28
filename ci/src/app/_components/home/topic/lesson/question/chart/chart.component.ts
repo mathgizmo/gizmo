@@ -32,6 +32,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private endValue = 1;
     private step: number = 0.5;
     private marksList: number[]= [0, 0.5, 1];
+    private marksLabelsList: number[]= [0, 0.5, 1];
 
     private accuracyControl: number = 2; // number of decimals (0 - integer)
     private accuracyChart: number = 2; // number of decimals (0 - integer)
@@ -177,12 +178,22 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .replace('accuracy-control-value:', '');
         }
         if (chart['0'].indexOf('marks:') >= 0) {
-          this.marksList = chart['0']
+          this.marksLabelsList = chart['0']
             .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
-            .replace('marks:', '').split(',').map(Number);
+            .replace('marks:', '').split(',');
+          //this.marksList = this.marksLabelsList.map(Number);
           const precision = Math.max(this.accuracyControl, this.accuracyChart); //used in anonymous function below
-          this.marksList = this.marksList.map(function(elem){
-            return Number(elem.toFixed(precision));
+          const startValue = +this.marksLabelsList[0];
+          const endValue = +this.marksLabelsList[this.marksLabelsList.length-1];
+          this.marksList = this.marksLabelsList.map(function(elem) {
+            if((""+elem).includes('/')) {
+              let values = (""+elem).split('/').map(Number);
+              elem = (values[0]/values[1])*(endValue-startValue)+startValue;
+            } else if((""+elem).includes('%')) {
+              let value = +(""+elem).replace('%', '')/100;
+              elem = value*(endValue-startValue)+startValue;
+            }
+            return +(+elem).toFixed(precision);
           });
           this.startValue = Math.min.apply(null, this.marksList);
           this.endValue = this.maxValue = Math.max.apply(null, this.marksList);
@@ -448,6 +459,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             let position = (i*width/(this.endValue-this.startValue))+indentation;
             let point = Number((i+this.startValue).toFixed(precision));
             if(this.marksList.includes(point)) {
+              let label = this.marksLabelsList[this.marksList.indexOf(point)];
               chartHtml += '<circle cx="' + position + '" cy="25" r="' 
                 + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
               let textPosition = ((point-this.startValue)/(this.endValue
@@ -456,12 +468,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 chartHtml += '<text x="' + (this.markDiameter/2)
                 + '" y="50" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="start">' 
-                + point + '</text>';
+                + label + '</text>';
               } else {
                 chartHtml += '<text x="' + textPosition
                 + '" y="50" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="middle">' 
-                + point + '</text>';
+                + label + '</text>';
               }
             } else {
               chartHtml += '<circle cx="' + position + '" cy="25" r="' 
