@@ -47,6 +47,9 @@ CKEDITOR.plugins.add( 'chart', {
                                     // disable unused fields
                                     if(type == 4) {
                                         dialog.getContentElement('general', 'marks').enable();
+                                        dialog.getContentElement('general', 'calculate').enable();
+                                        dialog.getContentElement('general', 'start').enable();
+                                        dialog.getContentElement('general', 'end').enable();
                                         dialog.getContentElement('general', 'max').disable();
                                         dialog.getContentElement('optional', 
                                             'mark-diameter').enable();
@@ -54,6 +57,9 @@ CKEDITOR.plugins.add( 'chart', {
                                             'point-diameter').enable();
                                     } else {
                                         dialog.getContentElement('general', 'marks').disable();
+                                        dialog.getContentElement('general', 'calculate').disable();
+                                        dialog.getContentElement('general', 'start').disable();
+                                        dialog.getContentElement('general', 'end').disable();
                                         dialog.getContentElement('general', 'max').enable();
                                         dialog.getContentElement('optional', 
                                             'mark-diameter').disable();
@@ -154,13 +160,13 @@ CKEDITOR.plugins.add( 'chart', {
                                     setTimeout(function() {
                                         let dialog = CKEDITOR.dialog.getCurrent();
                                         let max = dialog.getContentElement('general', 'max');
-                                        let maxValue = parseFloat(max.getValue());
-                                        let thisValue = parseFloat(this.getValue());
                                         if(max.isEnabled()) {
+                                            let maxValue = parseFloat(max.getValue());
+                                            let thisValue = parseFloat(this.getValue());
                                             if (thisValue > maxValue) {
                                                 alert("Value ("+thisValue
                                                     +") must be less than Max Value ("+maxValue+")");
-                                            } 
+                                            }
                                         }
                                     }, 50);
 
@@ -196,16 +202,54 @@ CKEDITOR.plugins.add( 'chart', {
                             },
                             {
                                 type : 'text',
+                                id : 'start',
+                                label : 'Start Value',
+                                validate : CKEDITOR.dialog.validate
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                        "Start Value must be a real number" ),
+                                required : false,
+                                'default': '0',
+                                commit : function( data )
+                                {
+                                    data.startValue = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'text',
+                                id : 'end',
+                                label : 'End Value',
+                                validate : CKEDITOR.dialog.validate
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                        "End Value must be a real number" ),
+                                required : false,
+                                'default': 1,
+                                commit : function( data )
+                                {
+                                    data.endValue = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'text',
                                 id : 'marks',
                                 label : 'Marks List',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /(([0-9]+([.][0-9]*)?|[.][0-9]+)(, *([0-9]+([.][0-9]*)?|[.][0-9]+)))*/, 
-                                        "Marks must be a comma separated list of numbers" ),
+                                    .regex( /((\d|%|\/)+)(,\s*(\d|%|\/)+)*/, 
+                                        "Marks must be a comma separated list" ),
                                 required : false,
                                 'default' : '0, 0.5, 1',
                                 commit : function( data )
                                 {
                                     data.marks = this.getValue();
+                                }
+                            },
+                            {
+                                type: 'checkbox',
+                                id: 'calculate',
+                                label: 'Calculate fraction and percentage based on start/end',
+                                'default': 'checked',
+                                commit : function( data )
+                                {
+                                    data.calculateMarks = this.getValue();
                                 }
                             }
                         ]
@@ -216,17 +260,17 @@ CKEDITOR.plugins.add( 'chart', {
                         elements: [
                             {
                                 type : 'html',
-                                html: 'Main Color: <input class="jscolor" id="main-color" value="F7F7F7">',
+                                html: 'Main Color: <input class="jscolor" id="main-color" value="8ED8DD">',
                                 required : false,
                             },
                             {
                                 type : 'html',
-                                html: 'Selected Color: <input class="jscolor" id="selected-color" value="FF4444">',
+                                html: 'Selected Color: <input class="jscolor" id="selected-color" value="FFB133">',
                                 required : false,
                             },
                             {
                                 type : 'html',
-                                html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="111">',
+                                html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="FFFFFF">',
                                 required : false,
                             },
                             {
@@ -307,7 +351,10 @@ CKEDITOR.plugins.add( 'chart', {
 
                     // set data
                     if(data.type == 4) {
+                        chartHtml += 'start:'+data.startValue+'; ';
+                        chartHtml += 'end:'+data.endValue+'; ';
                         chartHtml += 'marks:'+data.marks+'; ';
+                        chartHtml += 'calculate:'+data.calculateMarks+'; '; 
                     } else {
                         if (data.type == 1 || data.type == 2 || data.type == 3) {
                             chartHtml += 'max:'+data.max + '; ';
@@ -370,30 +417,52 @@ CKEDITOR.plugins.add( 'chart', {
                     if(chartStr) {
                         if (chartStr.indexOf('type:') >= 0) {
                             this.getContentElement('types', 'type').setValue(
-                                parseFloat(chartStr.match(
+                                chartStr.match(
                                     new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
-                                .replace('type:', ''))
+                                .replace('type:', '')
                             );
                         } 
                         if (chartStr.indexOf('value:') >= 0) {
                             this.getContentElement('general', 'value').setValue(
-                                parseFloat(chartStr.match(
+                                chartStr.match(
                                     new RegExp(/value:([^;]*)(?=(;|$))/g))['0']
-                                .replace('value:', ''))
+                                .replace('value:', '')
                             );
                         }
                         if (chartStr.indexOf('max:') >= 0) {
                             this.getContentElement('general', 'max').setValue(
-                                parseFloat(chartStr.match(
+                                chartStr.match(
                                     new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
-                                .replace('max:', ''))
+                                .replace('max:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('start:') >= 0) {
+                            this.getContentElement('general', 'start').setValue(
+                                chartStr.match(
+                                    new RegExp(/start:([^;]*)(?=(;|$))/g))['0']
+                                .replace('start:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('end:') >= 0) {
+                            this.getContentElement('general', 'end').setValue(
+                                chartStr.match(
+                                    new RegExp(/end:([^;]*)(?=(;|$))/g))['0']
+                                .replace('end:', '')
                             );
                         }
                         if (chartStr.indexOf('marks:') >= 0) {
                            this.getContentElement('general', 'marks').setValue(
                                 chartStr.match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
-                                .replace('marks:', '').split(',').map(Number)
+                                .replace('marks:', '').split(',')
                             );
+                        }
+                        if (chartStr.indexOf('calculate:') >= 0) {
+                           if(chartStr.match(new RegExp(/calculate:([^;]*)(?=(;|$))/g))['0']
+                                .replace('calculate:', '').split(',') == 'true') {
+                                this.getContentElement('general', 'calculate').setValue(true);
+                           } else {
+                                this.getContentElement('general', 'calculate').setValue(false);
+                           }
                         }
                         if (chartStr.indexOf('step:') >= 0) {
                             this.getContentElement('general', 'step').setValue(

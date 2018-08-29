@@ -13,9 +13,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     @Input() question: string;
     @Input() chartHeight: number; // dimension of chart area in px
 
-    private mainColor: string = "#f7f7f7";
-    private selectedColor: string = "#ff4444";
-    private strokeColor: string = "#111";
+    private mainColor: string = "#8ED8DD";
+    private selectedColor: string = "#FFB133";
+    private strokeColor: string = "#FFFFFF";
     private strokeWidth: number = 1;
     private markDiameter: number = 3;
     private pointDiameter: number = 1;
@@ -32,6 +32,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private endValue = 1;
     private step: number = 0.5;
     private marksList: number[]= [0, 0.5, 1];
+    private marksLabelsList: number[]= [0, 0.5, 1];
 
     private accuracyControl: number = 2; // number of decimals (0 - integer)
     private accuracyChart: number = 2; // number of decimals (0 - integer)
@@ -176,16 +177,49 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/accuracy-control-value:([^;]*)(?=(;|$))/g))['0']
             .replace('accuracy-control-value:', '');
         }
+        if (chart['0'].indexOf('start:') >= 0) {
+          this.startValue = parseFloat(chart['0']
+            .match(new RegExp(/start:([^;]*)(?=(;|$))/g))['0']
+            .replace('start:', ''));
+        } else if(this.type == 4) {
+          let marks = chart['0'].match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+            .replace('marks:', '').split(',');
+          this.startValue = +marks[0];
+        }
+        if (chart['0'].indexOf('end:') >= 0) {
+          this.endValue = this.maxValue = parseFloat(chart['0']
+            .match(new RegExp(/end:([^;]*)(?=(;|$))/g))['0']
+            .replace('end:', ''));
+        } else if(this.type == 4) {
+          let marks = chart['0'].match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+            .replace('marks:', '').split(',');
+          this.endValue = this.maxValue = +marks[marks.length-1];
+        }
         if (chart['0'].indexOf('marks:') >= 0) {
-          this.marksList = chart['0']
+          this.marksLabelsList = chart['0']
             .match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
-            .replace('marks:', '').split(',').map(Number);
-          const precision = Math.max(this.accuracyControl, this.accuracyChart); //used in anonymous function below
-          this.marksList = this.marksList.map(function(elem){
-            return Number(elem.toFixed(precision));
+            .replace('marks:', '').split(',');
+          //constants used in anonymous function below
+          const precision = Math.max(this.accuracyControl, this.accuracyChart);
+          const startValue = this.startValue;
+          const endValue = this.endValue;
+          let calc = false;
+          if(chart['0'].match(new RegExp(/calculate:([^;]*)(?=(;|$))/g))['0']
+            .replace('calculate:', '').split(',') == "true") {
+            calc = true;
+          }
+          const calculate = calc;
+          this.marksList = this.marksLabelsList.map(function(elem) {
+            if((""+elem).includes('/')) {
+              let values = (""+elem).split('/').map(Number);
+              elem = (values[0]/values[1]);
+              if(calculate) elem = elem*(endValue-startValue)+startValue;
+            } else if((""+elem).includes('%')) {
+              elem = +(""+elem).replace('%', '')/100;
+              if(calculate) elem = elem*(endValue-startValue)+startValue;
+            }
+            return +(+elem).toFixed(precision);
           });
-          this.startValue = Math.min.apply(null, this.marksList);
-          this.endValue = this.maxValue = Math.max.apply(null, this.marksList);
         }
         if (chart['0'].indexOf('max:') >= 0) {
           this.maxValue = parseFloat(chart['0']
@@ -197,21 +231,21 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
             .replace('main-color:', '');
         } else { 
-          this.mainColor = "#f7f7f7";
+          this.mainColor = "#8ED8DD";
         }
         if (chart['0'].indexOf('selected-color:') >= 0) {
           this.selectedColor = chart['0']
             .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
             .replace('selected-color:', '');
         } else { 
-          this.selectedColor = "#ff4444";
+          this.selectedColor = "#FFB133";
         }
         if (chart['0'].indexOf('stroke-color:') >= 0) {
           this.strokeColor = chart['0']
             .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-color:', '');
         } else { 
-          this.strokeColor = "#111";
+          this.strokeColor = "#FFFFFF";
         }
         if (chart['0'].indexOf('stroke-width:') >= 0) {
           this.strokeWidth = +chart['0']
@@ -448,6 +482,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             let position = (i*width/(this.endValue-this.startValue))+indentation;
             let point = Number((i+this.startValue).toFixed(precision));
             if(this.marksList.includes(point)) {
+              let label = this.marksLabelsList[this.marksList.indexOf(point)];
               chartHtml += '<circle cx="' + position + '" cy="25" r="' 
                 + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
               let textPosition = ((point-this.startValue)/(this.endValue
@@ -456,12 +491,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 chartHtml += '<text x="' + (this.markDiameter/2)
                 + '" y="50" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="start">' 
-                + point + '</text>';
+                + label + '</text>';
               } else {
                 chartHtml += '<text x="' + textPosition
                 + '" y="50" fill="' + this.strokeColor 
                 +'" font-size="16" text-anchor="middle">' 
-                + point + '</text>';
+                + label + '</text>';
               }
             } else {
               chartHtml += '<circle cx="' + position + '" cy="25" r="' 
@@ -470,10 +505,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="25" r="' 
             + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
-          chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
-            + '" y="50" fill="' + this.strokeColor 
-            +'" font-size="16" text-anchor="end">' 
-            + this.marksList[this.marksList.length-1] + '</text>';
+          if(this.marksList[this.marksList.length-1].toFixed(precision) 
+            == this.endValue.toFixed(precision)) {
+            let label = this.marksLabelsList[this.marksList.length-1];
+            chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
+              + '" y="50" fill="' + this.strokeColor 
+              +'" font-size="16" text-anchor="end">' 
+              + label + '</text>';
+          }
           let currentPointX = (this.value-this.startValue)/(this.endValue
             -this.startValue)*width + indentation;
           chartHtml += '<circle cx="' + currentPointX + '" cy="25" r="' 
@@ -499,10 +538,11 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             } else if (this.valueDisplayChart == 2) {
               currentPointLabel += this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
             } else if (this.valueDisplayChart == 3) {
-              currentPointLabel += (this.value/this.maxValue).toFixed(this.accuracyChart);
+              currentPointLabel += ((this.value-this.startValue)
+                /(this.maxValue-this.startValue)).toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 4) { 
-              currentPointLabel += (this.value/this.maxValue*100)
-                .toFixed(this.accuracyChart) + '%';
+              currentPointLabel += ((this.value-this.startValue)
+                /(this.maxValue-this.startValue)*100).toFixed(this.accuracyChart) + '%';
             }
             currentPointLabel +=  '</text>';
             chartHtml += currentPointLabel;
