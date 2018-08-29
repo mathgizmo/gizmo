@@ -113,7 +113,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     // function to build charts
     private buildChart() {
       if ( !this.initialized ) {
-        console.log(this.question);
         let chart = this.question
           .match(new RegExp(/[^{}]+(?=\}%%)/g));
         if (chart['0'].indexOf('type:') >= 0) {
@@ -182,11 +181,19 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.startValue = parseFloat(chart['0']
             .match(new RegExp(/start:([^;]*)(?=(;|$))/g))['0']
             .replace('start:', ''));
+        } else if(this.type == 4) {
+          let marks = chart['0'].match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+            .replace('marks:', '').split(',');
+          this.startValue = +marks[0];
         }
         if (chart['0'].indexOf('end:') >= 0) {
           this.endValue = this.maxValue = parseFloat(chart['0']
             .match(new RegExp(/end:([^;]*)(?=(;|$))/g))['0']
             .replace('end:', ''));
+        } else if(this.type == 4) {
+          let marks = chart['0'].match(new RegExp(/marks:([^;]*)(?=(;|$))/g))['0']
+            .replace('marks:', '').split(',');
+          this.endValue = this.maxValue = +marks[marks.length-1];
         }
         if (chart['0'].indexOf('marks:') >= 0) {
           this.marksLabelsList = chart['0']
