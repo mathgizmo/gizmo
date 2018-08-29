@@ -260,17 +260,17 @@ CKEDITOR.plugins.add( 'chart', {
                         elements: [
                             {
                                 type : 'html',
-                                html: 'Main Color: <input class="jscolor" id="main-color" value="F7F7F7">',
+                                html: 'Main Color: <input class="jscolor" id="main-color" value="8ED8DD">',
                                 required : false,
                             },
                             {
                                 type : 'html',
-                                html: 'Selected Color: <input class="jscolor" id="selected-color" value="FF4444">',
+                                html: 'Selected Color: <input class="jscolor" id="selected-color" value="FFB133">',
                                 required : false,
                             },
                             {
                                 type : 'html',
-                                html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="111">',
+                                html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="FFFFFF">',
                                 required : false,
                             },
                             {

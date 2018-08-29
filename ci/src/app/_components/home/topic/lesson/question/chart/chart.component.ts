@@ -13,9 +13,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     @Input() question: string;
     @Input() chartHeight: number; // dimension of chart area in px
 
-    private mainColor: string = "#f7f7f7";
-    private selectedColor: string = "#ff4444";
-    private strokeColor: string = "#111";
+    private mainColor: string = "#8ED8DD";
+    private selectedColor: string = "#FFB133";
+    private strokeColor: string = "#FFFFFF";
     private strokeWidth: number = 1;
     private markDiameter: number = 3;
     private pointDiameter: number = 1;
@@ -113,6 +113,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     // function to build charts
     private buildChart() {
       if ( !this.initialized ) {
+        console.log(this.question);
         let chart = this.question
           .match(new RegExp(/[^{}]+(?=\}%%)/g));
         if (chart['0'].indexOf('type:') >= 0) {
@@ -223,21 +224,21 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
             .replace('main-color:', '');
         } else { 
-          this.mainColor = "#f7f7f7";
+          this.mainColor = "#8ED8DD";
         }
         if (chart['0'].indexOf('selected-color:') >= 0) {
           this.selectedColor = chart['0']
             .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
             .replace('selected-color:', '');
         } else { 
-          this.selectedColor = "#ff4444";
+          this.selectedColor = "#FFB133";
         }
         if (chart['0'].indexOf('stroke-color:') >= 0) {
           this.strokeColor = chart['0']
             .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-color:', '');
         } else { 
-          this.strokeColor = "#111";
+          this.strokeColor = "#FFFFFF";
         }
         if (chart['0'].indexOf('stroke-width:') >= 0) {
           this.strokeWidth = +chart['0']
@@ -497,9 +498,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
           chartHtml += '<circle cx="' + (width+indentation) + '" cy="25" r="' 
             + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
-          let label = this.marksLabelsList[this.marksList.length-1];
           if(this.marksList[this.marksList.length-1].toFixed(precision) 
             == this.endValue.toFixed(precision)) {
+            let label = this.marksLabelsList[this.marksList.length-1];
             chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
               + '" y="50" fill="' + this.strokeColor 
               +'" font-size="16" text-anchor="end">' 

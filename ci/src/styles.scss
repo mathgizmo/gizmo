@@ -69,14 +69,14 @@ h1, h2, h3, h4 {
   //color: $navy;
 }
 
-.question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
+.question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
   font-family: 'Open Sans';
   font-weight: 600;
-  font-size: 20px;
+  font-size: 26px;
   //color: $navy;
 }
 
-.answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+.answer:not([class^='mjx']), .answer *:not([class^='mjx']), .answer p:not([class^='mjx']) {
   font-family: 'Open Sans';
   font-weight: 300;
   font-size: 20px;
@@ -252,11 +252,11 @@ h1, h2, h3, h4 {
       font-size: 16.8px;
     }
 
-    .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
-      font-size: 12px;
+    .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+      font-size: 17px;
     }
 
-    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
+    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .answer p:not([class^='mjx']) {
       font-size: 12px;
     }
 
@@ -283,12 +283,12 @@ h1, h2, h3, h4 {
       font-size: 12px;
     }
 
-    .question:not([class^='mjx']), .question *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .question p:not([class^='mjx']) {
-      font-size: 11px;
+    .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+      font-size: 14px;
     }
 
-    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .jumbotron:not([class^='mjx']) .answer p:not([class^='mjx']) {
-      font-size: 11px;
+    .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .answer p:not([class^='mjx']) {
+      font-size: 12px;
     }
 
     .topic-title, .topic-progress {

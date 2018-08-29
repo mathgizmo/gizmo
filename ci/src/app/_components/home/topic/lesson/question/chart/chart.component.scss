@@ -71,10 +71,17 @@ input {
   font-weight: bold;
 }
 
+.question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+  font-size: 26px !important;
+}
+
 @media screen and (max-width: 1024px) { 
   .progress {
     height: 5px;
     top: 22px;
+  }
+  .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+    font-size: 17px !important;
   }
 }
 
@@ -82,5 +89,8 @@ input {
   .progress {
     height: 4px;
     top: 19px;
+  }
+  .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+    font-size: 14px !important;
   }
 }
