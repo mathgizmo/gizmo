@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 
 import { TopicService } from '../../_services/index';
 import { environment } from '../../../environments/environment';
@@ -15,7 +16,8 @@ export class HomeComponent implements OnInit {
     topicsTree: any = [];
     private readonly adminUrl = environment.adminUrl;
 
-    constructor(private topicService: TopicService, private sanitizer: DomSanitizer) { 
+    constructor(private topicService: TopicService, 
+        private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute) { 
     }
 
     ngOnInit() {
@@ -23,6 +25,12 @@ export class HomeComponent implements OnInit {
         this.topicService.getTopics()
             .subscribe(topicsTree => {
                 this.topicsTree = topicsTree;
+                this.activatedRoute.params.subscribe(params => {
+                    setTimeout(() => {
+                        document.getElementById('topic'+params['id'])
+                        .scrollIntoView();
+                    }, 60);
+                });
             });
     }
 

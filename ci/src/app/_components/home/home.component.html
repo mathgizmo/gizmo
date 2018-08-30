@@ -4,7 +4,7 @@
     <mat-card *ngIf="level.units.length" class="level">
       <mat-card class="unit" *ngFor="let unit of level.units; let unitIndex = 'index'">
         <h4 class="unit-title subtitle">{{unit.title}}</h4>
-          <div *ngFor="let topic of unit.topics; let topicIndex = 'index'" class="topics-container" [class.locked]="topic.status == 0 ? true : null">
+          <div *ngFor="let topic of unit.topics; let topicIndex = 'index'" class="topics-container" [class.locked]="topic.status == 0 ? true : null" [id]="'topic'+topic.id">
             <a [routerLink]="topic.status == 0 ? '' : '/topic/'+topic.id" routerLinkActive="active" [class.disabled]="topic.status == 0 ? true : null" class="topic">
               <div [class.complete]="topic.status == 1 ? true : null" class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)">
               </div>

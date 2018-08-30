@@ -1,4 +1,4 @@
-﻿<a routerLink="/" routerLinkActive="active" class="back">{{backLinkText}}</a>
+﻿<a [routerLink]="'/home/'+id" routerLinkActive="active" class="back">{{backLinkText}}</a>
 <div class="text-center topic-container">
     <h2 class="title">{{topicTree.title}}</h2>
     <div *ngIf="topicTree.lessons && topicTree.lessons.length" class="lessons-container">

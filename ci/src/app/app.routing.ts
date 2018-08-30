@@ -21,6 +21,7 @@ const appRoutes: Routes = [
     { path: 'placement', component: PlacementComponent, canActivate: [AuthGuard] },
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'home/:id', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard] },
     { path: 'topic/:topic_id/lesson/:lesson_id', component: LessonComponent,
         canActivate: [AuthGuard] },
