@@ -27,8 +27,10 @@ export class HomeComponent implements OnInit {
                 this.topicsTree = topicsTree;
                 this.activatedRoute.params.subscribe(params => {
                     setTimeout(() => {
-                        document.getElementById('topic'+params['id'])
-                        .scrollIntoView();
+                        //console.log(window.history);
+                        if(document.getElementById('topic'+params['id'])) 
+                            document.getElementById('topic'+params['id'])
+                                .scrollIntoView();
                     }, 60);
                 });
             });

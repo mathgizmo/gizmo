@@ -318,7 +318,7 @@ export class LessonComponent implements OnInit {
                     }
                     if (this.question.rounding) {
                         this.answers[i] = this.answers[i].replace(/[^\d.-]/g,'');
-                        let temp = correctAnswer.split(".");
+                        let temp = (""+correctAnswer).split(".");
                         var roundTo = 0;
                         if (temp[1] != undefined) {
                             roundTo = temp[1].length;
