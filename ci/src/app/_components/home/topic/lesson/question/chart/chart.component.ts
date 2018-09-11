@@ -60,6 +60,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     }
 
     onResize(event) {
+      this.destroyDotsChart();
       this.buildChart();
     }
 
@@ -307,35 +308,41 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
       let chartHtml = '';
       let valuePercent = this.value/this.maxValue;
       let chartContainer = document.getElementById('chart-container');
+      let chartValueLabelFontSize = 16;
+        if(window.innerWidth < 450) {
+          chartValueLabelFontSize = 11;
+      }
+      let size = Math.min(this.chartHeight, window.innerWidth*0.5);
       switch (this.type) {
         default:
         case 1:
           // Chart (type 1 - rectangle)
-          chartHtml += '<svg style="height: '
-            + this.chartHeight + 'px; width:' + this.chartHeight + 'px;">';
-          chartHtml += '<rect id="rect2" height="'+this.chartHeight 
-            +'" width="'+this.chartHeight+'" style="fill: ' 
+          chartHtml += '<svg style="height: ' + size + 'px; width:' + size + 'px;">';
+          chartHtml += '<rect id="rect2" height="'+size
+            +'" width="'+size+'" style="fill: ' 
             + this.mainColor + '; stroke: ' + 
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
           chartHtml += '<rect id="rect1" y="'
-            +(1 - valuePercent) * this.chartHeight 
-            +'" height="'+valuePercent*this.chartHeight 
-            +'" width="'+this.chartHeight+'" style="fill: ' 
+            +(1 - valuePercent) * size 
+            +'" height="'+valuePercent*size 
+            +'" width="'+size+'" style="fill: ' 
             + this.selectedColor + '; stroke: ' + 
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
 
           if(this.valueDisplayChart > 0) {
             let x, y;
-            x = this.chartHeight/2;
+            x = size/2;
             if(this.value < this.maxValue/10) {
-              y = this.chartHeight - (this.value/this.maxValue*this.chartHeight)-5;
+              y = size - (this.value/this.maxValue*size)-5;
             } else {
-              y = this.chartHeight - 0.5*(this.value/this.maxValue*this.chartHeight)+5;
+              y = size - 0.5*(this.value/this.maxValue*size)+5;
             }
             let valueLabel = '<text text-anchor="middle" x=' + x + ' y=' + y
-              + ' fill="' + this.strokeColor +'" class="chart-value-label">';
+              + ' fill="' + this.strokeColor 
+              +'" class="chart-value-label" style="font-size: '
+              +chartValueLabelFontSize+'px;">';
             if(this.valueDisplayChart == 1) {
               valueLabel += this.value.toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 2) {
@@ -354,12 +361,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           break;
         case 2:
           // Chart (type 2 - circle)
-          let radius = this.chartHeight/2;
+          let radius = size/2;
           let angle = 2*Math.PI*valuePercent;
           let x = radius + radius*Math.sin(angle);
           let  y = radius - radius*Math.cos(angle);
           chartHtml += '<svg style="height: '
-            + this.chartHeight + 'px; width:' + this.chartHeight + 'px;">';
+            + size + 'px; width:' + size + 'px;">';
           if(valuePercent <= 0.999) {
             chartHtml += '<circle id="circle2" r="'+radius
             +'" cx="'+radius+'" cy="'+radius+'" style="fill: ' 
@@ -385,24 +392,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           chartHtml += '</svg>';
             
           if(this.valueDisplayChart > 0) {
-            var chartValueLabelFontSize = 16;
-            setTimeout(()=>{
-              let fontSize = $('.chart-value-label:first')
-                .css('font-size');
-              fontSize.includes('px') 
-                ? chartValueLabelFontSize = +(fontSize.replace('px',''))
-                : chartValueLabelFontSize = 16;
-            }, 10);
             let valueLabel = document.createElement("label");
             valueLabel.classList.add("chart-value-label");
             valueLabel.style.position = "absolute";
             valueLabel.style.color = this.strokeColor;
+            valueLabel.style.fontSize = chartValueLabelFontSize + "px";
             if(this.value/this.maxValue < 0.5) {
               valueLabel.style.left = ((chartContainer.clientWidth
-                -this.chartHeight)/2+8+x) + "px";
+                -size)/2+8+x) + "px";
             } else {
               valueLabel.style.right = ((chartContainer.clientWidth
-                -this.chartHeight)/2+(+this.chartHeight+8)-x) + "px";
+                -size)/2+(+size+8)-x) + "px";
             }
             if(this.value/this.maxValue < 0.25 || this.value/this.maxValue > 0.75) {
               valueLabel.style.top = y-chartValueLabelFontSize + "px";
@@ -436,6 +436,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             if(this.valueDisplayChart > 0) {
               let valueLabel = document.createElement("label");
               valueLabel.classList.add('chart-value-label');
+              valueLabel.style.color = this.strokeColor;
+              valueLabel.style.fontSize = chartValueLabelFontSize + "px";
               if(this.valueDisplayChart == 1) {
                 valueLabel.innerHTML = ''+ this.value.toFixed(this.accuracyChart);
               } else if (this.valueDisplayChart == 2) {
@@ -451,7 +453,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
    
           });
           canvas.style.height = this.chartHeight+'px';
-          canvas.style.width = chartContainer.style.width;
+          canvas.style.width = this.chartHeight*2+'px';
+          canvas.style.maxWidth = '100%';
+          canvas.style.maxHeight = window.innerWidth*0.5+'px';
+
           let ctx = canvas.getContext("2d");
           for(let i = 0; i < this.maxValue; i++) {
             if(this.dots[i] == undefined){
@@ -490,12 +495,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               if(i == 0) {
                 chartHtml += '<text x="' + (this.markDiameter/2)
                 + '" y="50" fill="' + this.strokeColor 
-                +'" font-size="16" text-anchor="start">' 
+                +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="start">' 
                 + label + '</text>';
               } else {
                 chartHtml += '<text x="' + textPosition
-                + '" y="50" fill="' + this.strokeColor 
-                +'" font-size="16" text-anchor="middle">' 
+                + '" y="50" fill="'+this.strokeColor 
+                +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="middle">' 
                 + label + '</text>';
               }
             } else {
@@ -510,7 +515,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             let label = this.marksLabelsList[this.marksList.length-1];
             chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
               + '" y="50" fill="' + this.strokeColor 
-              +'" font-size="16" text-anchor="end">' 
+              +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="end">' 
               + label + '</text>';
           }
           let currentPointX = (this.value-this.startValue)/(this.endValue
@@ -532,7 +537,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               currentPointLabel += 'x=' + currentPointX + ' text-anchor="middle"';
             }
             currentPointLabel += '" y="15" fill="' + this.strokeColor 
-              +'"  class="chart-value-label">';
+              +'"  class="chart-value-label" style="font-size: '+chartValueLabelFontSize+'px;">';
             if(this.valueDisplayChart == 1) {
               currentPointLabel += this.value.toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 2) {
