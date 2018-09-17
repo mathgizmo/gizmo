@@ -16,8 +16,8 @@ export class HomeComponent implements OnInit {
     topicsTree: any = [];
     private readonly adminUrl = environment.adminUrl;
 
-    constructor(private topicService: TopicService, 
-        private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute) { 
+    constructor(private topicService: TopicService,
+        private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit() {
@@ -27,8 +27,7 @@ export class HomeComponent implements OnInit {
                 this.topicsTree = topicsTree;
                 this.activatedRoute.params.subscribe(params => {
                     setTimeout(() => {
-                        //console.log(window.history);
-                        if(document.getElementById('topic'+params['id'])) 
+                        if(document.getElementById('topic'+params['id']))
                             document.getElementById('topic'+params['id'])
                                 .scrollIntoView();
                     }, 60);
