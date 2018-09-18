@@ -36,10 +36,8 @@ export class TopicComponent implements OnInit {
             this.topicService.getTopic(this.id)
                 .subscribe(topicTree => {
                     this.topicTree = topicTree;
-                    this.backLinkText = this.topicTree.level + " > " 
-                        + this.topicTree.unit;
-                    let lessons = this.topicTree.lessons;
-                    this.topicDone = (this.topicTree.status == 1);
+                    this.backLinkText = this.topicTree.level + ' > ' + this.topicTree.unit;
+                    this.topicDone = (this.topicTree.status === 1);
                 });
          });
     }

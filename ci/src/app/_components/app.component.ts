@@ -31,7 +31,7 @@ export class AppComponent {
                     map(() => activatedRoute)
                 )
                 .subscribe((event) => {
-                    if (router.url == "/login") {
+                    if (router.url === '/login') {
                         this.showMenu = false;
                     }
                     else {

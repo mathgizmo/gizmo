@@ -1,6 +1,5 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
 
 import { TopicService } from '../../_services/index';
 import { environment } from '../../../environments/environment';
@@ -12,32 +11,33 @@ import { environment } from '../../../environments/environment';
     styleUrls: ['home.component.scss']
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy  {
     topicsTree: any = [];
     private readonly adminUrl = environment.adminUrl;
 
-    constructor(private topicService: TopicService, 
-        private sanitizer: DomSanitizer, private activatedRoute: ActivatedRoute) { 
+    constructor(private topicService: TopicService,
+                private sanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
-        // get topics tree from API
-        this.topicService.getTopics()
-            .subscribe(topicsTree => {
-                this.topicsTree = topicsTree;
-                this.activatedRoute.params.subscribe(params => {
-                    setTimeout(() => {
-                        //console.log(window.history);
-                        if(document.getElementById('topic'+params['id'])) 
-                            document.getElementById('topic'+params['id'])
-                                .scrollIntoView();
-                    }, 60);
-                });
-            });
+        this.topicService.getTopics().subscribe(topicsTree => {
+            this.topicsTree = topicsTree;
+            setTimeout(() => {
+                if (!isNaN(+localStorage.getItem('home-scroll'))) {
+                    window.scroll(0, +localStorage.getItem('home-scroll'));
+                }
+            }, 10);
+        });
+    }
+
+    ngOnDestroy() {
+        const doc = document.documentElement;
+        const top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+        localStorage.setItem('home-scroll', JSON.stringify(top));
     }
 
     setTopicIcon(image) {
-        let link = `url(`+this.adminUrl+`/${image})`;
+        const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
