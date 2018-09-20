@@ -13,9 +13,6 @@ import { SortablejsModule } from 'angular-sortablejs';
 
 import { BaseRequestOptions, HttpModule } from '@angular/http'; // ??? Fake BackEnd
 
-// import { RouteReuseStrategy } from '@angular/router';
-// import { CustomReuseStrategy } from './_services/index';
-
 import { AppRoutingModule } from './app.routing';
 import { AuthGuard } from './_guards/index';
 
@@ -101,10 +98,6 @@ import { PlacementComponent, QuestionNumDialogComponent } from './_components/we
           useClass: HTTPListener,
           multi: true
         },
-        /*{
-            provide: RouteReuseStrategy,
-            useClass: CustomReuseStrategy
-        },*/
 
         // providers used to create fake backend
         // fakeBackendProvider,

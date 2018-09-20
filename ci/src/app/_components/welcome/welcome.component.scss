@@ -42,19 +42,16 @@
 			display: flex;
 			align-items: center;
 			flex-direction: column;
-			.header {
-				font-size: 34px;
-				color: $gold;
-				width: 400px;
+			.header, .copy, .buttons-container {
+				width: 100%;
 				margin: 0;
-				padding: 0;
+				padding: 0 83px;
+				font-size: 34px;
 				z-index: 1;
 			}
-			.copy {
-				font-size: 34px;
-				margin: 0;
-				width: 400px;
-				z-index: 1;
+			.header {
+				text-align: center;
+				color: $gold;
 			}
 			.line {
 				background-color: $teal;
@@ -68,18 +65,22 @@
 				z-index: 1;
 			}
 			.buttons-container {
-				margin: 0;
-				margin-top: 22px;
-				width: 400px;
+				margin-top: 32px;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				flex-direction: row;
 				flex-wrap: wrap;
-				z-index: 1;
+				.row {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
 				.register-button, .login-button, .try-button {
 					font-size: 34px !important;
-					margin: 4px 0;
+					margin: 8px;
 					width: 240px;
 					//color: #fafafa;
 					text-decoration: none;
@@ -130,10 +131,22 @@
 		.right-text {
 			color: white;
 			font-size: 24px; //font-size: 34px;
-			width: 80%;
+			width: 100%;
 			height: 100vh;
 			z-index: 1;
+			opacity: 0;
+			padding: 0 10%;
+			transition: 0.35s;
+			display: block;
+			.right-text-title {
+				padding-top: 5%;
+				padding-bottom: 1%;
+			}
 		}
+	}
+	.right:hover .right-text {
+		opacity: 100;
+		background-color: $teal;
 	}
 }
 
@@ -147,25 +160,46 @@
 	flex-wrap: wrap;
 }
 
-@media screen and (max-width: 1024px) { 
+@media screen and (max-width: 1200px) {
+	.welcome {
+		.left {
+			.left-container {
+				.header, .copy, .buttons-container {
+					font-size: 26px;
+				}
+				.buttons-container {
+					margin-top: 22px;
+					.register-button, .login-button, .try-button {
+						font-size: 26px !important;
+						margin: 6px;
+						width: 200px;
+					}
+				}
+			}
+		}
+		.right {
+			.right-text {
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 1024px) {
 	.welcome {
 		.left {
 			.logo-container {
-
+				height: 15%;
 				.logo {
-					left: 54.5px; 
+					left: 54.5px;
 					top: 19px;
 				    width: 118px;
 				}
 			}
 			.left-container {
-				.header {
+				height: 85%;
+				.header, .copy, .buttons-container {
 					font-size: 22.5px;
-					width: 260px;
-				}
-				.copy {
-					font-size: 22.5px;
-					width: 260px;
+					padding: 0 54.5px;
 				}
 				.line {
 					margin-top: 12px;
@@ -175,10 +209,9 @@
 				}
 				.buttons-container {
 					margin-top: 22px;
-					width: 260px;
 					.register-button, .login-button, .try-button {
 						font-size: 22.5px !important;
-						margin: 4px 0;
+						margin: 6px;
 						width: 158px;
 					}
 				}
@@ -207,6 +240,7 @@
 	.welcome {
 		.left {
 			.logo-container {
+				height: 10%;
 				.logo {
 					left: 38.5px; 
 					top: 14px;
@@ -214,13 +248,10 @@
 				}
 			}
 			.left-container {
-				.header {
+				height: 90%;
+				.header, .copy, .buttons-container {
 					font-size: 16px;
-					width: 180px;
-				}
-				.copy {
-					font-size: 16px;
-					width: 180px;
+					padding: 0 38.5px;
 				}
 				.line {
 					margin-top: 12px;
@@ -230,10 +261,9 @@
 				}
 				.buttons-container {
 					margin-top: 22px;
-					width: 180px;
 					.register-button, .login-button, .try-button {
 						font-size: 16px !important;
-						margin: 4px 0;
+						margin: 4px;
 						width: 112px;
 					}
 				}
@@ -272,17 +302,13 @@
 			}
 			.left-container {
 				height: 88%;
-				.header {
-					width: 80%;
-				}
-				.copy {
-					width: 80%;
+				.header, .copy, .buttons-container {
+					padding: 0 38.5px;
 				}
 				.line {
 					width: 82%;
 				}
 				.buttons-container {
-					width: 80%;
 					flex-direction: column;
 					.register-button, .login-button, .try-button {
 						width: 200px;
@@ -317,18 +343,14 @@
 			}
 			.left-container {
 				height: 80%;
-				.header {
-					width: 80%;
-				}
-				.copy {
-					width: 80%;
+				.header, .copy, .buttons-container {
+					margin: 0 38.5px;
 				}
 				.line {
 					width: 82%;
 				}
 				.buttons-container {
 					margin-top: 12px;
-					width: 80%;
 					flex-direction: column;
 					.register-button, .login-button, .try-button {
 						width: 200px;
@@ -359,8 +381,16 @@
 					margin-top: 12px;
 					width: 98%;
 					flex-direction: row;
-					.register-button, .login-button, .try-button {
-						width: 28%;
+					.row {
+						margin-right: 1px;
+						width: 65%;
+						.register-button, .login-button {
+							width: 47%;//28%;
+							margin: 0 4px;
+						}
+					}
+					.try-button {
+						width: 32%;
 						margin: 0 4px;
 					}
 				}

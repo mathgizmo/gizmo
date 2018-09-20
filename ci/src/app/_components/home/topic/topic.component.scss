@@ -26,9 +26,8 @@ a:focus, a:hover {
 }
 
 .lesson-title {
-	margin-top: 8px;
+	margin-top: 2px;
 	color: $white;
-	font-size: 26px !important;
 }
 
 .lessons-container {
@@ -50,10 +49,10 @@ a:focus, a:hover {
 	text-align: center;
 }
 
-.topic-img {
+/*.topic-img {
 	width: 15vw;
 	height: 15vw;
-}
+}*/
 
 .lesson a:hover {
 	text-decoration: none;
@@ -74,9 +73,6 @@ a:focus, a:hover {
 	.title {
 		font-size: 28px;
 	}
-	.lesson-title {
-		font-size: 18px !important;
-	}
 	.button {
 		font-size: 22px !important;
 	}
@@ -88,9 +84,6 @@ a:focus, a:hover {
 @media screen and (max-width: 768px) { 
 	.title {
 		font-size: 19.5px;
-	}
-	.lesson-title {
-		font-size: 12px !important;
 	}
 	.button {
 		font-size: 16px !important;

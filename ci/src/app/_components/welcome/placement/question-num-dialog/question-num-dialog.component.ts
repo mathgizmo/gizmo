@@ -16,7 +16,7 @@ export class QuestionNumDialogComponent {
         private userService: UserService,
         public dialogRef: MatDialogRef<QuestionNumDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.user.questionNum = +localStorage.getItem('question_num') || 5;
+        this.user.questionNum = +localStorage.getItem('question_num') || 3;
     }
 
     onClick(): void {

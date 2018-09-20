@@ -14,6 +14,11 @@ import { Router } from '@angular/router';
       background-color: #11A02E !important;
       font-size: 18px !important;
     }
+    @media screen and (max-width: 1200px) {
+        .try-button {
+            font-size: 14px !important;
+        }
+    }
     @media screen and (max-width: 1024px) { 
       .try-button {
         font-size: 12px !important;

@@ -12,7 +12,7 @@ import { ProfileComponent } from './_components/profile/profile.component';
 import { PlacementComponent } from './_components/welcome/placement/placement.component';
 import { QuestionPreviewComponent } from './_components/previews/index';
 
-export const routes: Routes = [
+const routes: Routes = [
     { path: 'welcome', component: WelcomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
@@ -21,7 +21,6 @@ export const routes: Routes = [
     { path: 'placement', component: PlacementComponent, canActivate: [AuthGuard] },
     { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-    // { path: 'home/:id', component: HomeComponent, canActivate: [AuthGuard] },
     { path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard] },
     { path: 'topic/:topic_id/lesson/:lesson_id', component: LessonComponent,
         canActivate: [AuthGuard] },

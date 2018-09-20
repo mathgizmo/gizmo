@@ -83,7 +83,7 @@ h1, h2, h3, h4 {
   //color: $navy;
 }
 
-.topic-title {
+.topic-title, .lesson-title {
   font-family: 'Open Sans';
   font-weight: 600;
   font-size: 16px;
@@ -260,7 +260,7 @@ h1, h2, h3, h4 {
       font-size: 12px;
     }
 
-    .topic-title, .topic-progress {
+    .topic-title, .topic-progress, .lesson-title {
       font-size: 9px;
     }
 }
@@ -291,7 +291,7 @@ h1, h2, h3, h4 {
       font-size: 12px;
     }
 
-    .topic-title, .topic-progress {
+    .topic-title, .topic-progress, .lesson-title {
       font-size: 8px;
     }
 
