@@ -398,10 +398,10 @@
                 let answers = data["answer[]"];
                 if(Array.isArray(answers)) {
                     for(let i = 0; i < answers.length; i++) {
-                        src += '&answer' + (i+1) + '=' + answers[i];
+                        src += '&answer' + (i+1) + '=' + encodeURIComponent(answers[i]);
                     }
                 } else {
-                    src += '&answer1=' + answers;
+                    src += '&answer1=' + encodeURIComponent(answers);
                 }
                 $('.modal').on('shown.bs.modal', function(){
                     $(this).find('iframe').attr('src', src)

@@ -410,43 +410,20 @@
                 });
                 let src = document.getElementById('preview_url').innerHTML;
                 src = src.replace(/\s/g, '');
-                console.log(src);
                 src += 'question?reply_mode='
                     + data["reply_mode"] + '&question='
                     + encodeURIComponent(question.getData());
                 let answers = data["answer[]"];
                 if(Array.isArray(answers)) {
                     for(let i = 0; i < answers.length; i++) {
-                        src += '&answer' + (i+1) + '=' + answers[i];
+                        src += '&answer' + (i+1) + '=' + encodeURIComponent(answers[i]);
                     }
                 } else {
-                    src += '&answer1=' + answers;
+                    src += '&answer1=' + encodeURIComponent(answers);
                 }
                 $('.modal').on('shown.bs.modal', function(){
                     $(this).find('iframe').attr('src', src)
                 });
-
-                /*$.ajax({
-                  type: 'POST',
-                  url: window.location.origin + '/admin/question/preview',
-                  data: {
-                    "_token": data["_token"],
-                    "level_id": data["level_id"],
-                    "unit_id": data["unit_id"],
-                    "topic_id": data["topic_id"],
-                    "lesson_id": data["lesson_id"],
-                    "question": data["question"],
-                    "answer[]": data["answer[]"],
-                    "reply_mode": data["reply_mode"]
-                  },
-                  dataType: 'JSON',
-                  success: function(response){
-                    console.log(response);
-                  },
-                  error: function(jqXHR, textStatus, errorThrown) {
-                    //console.log(textStatus + ' : ' + errorThrown);
-                  }
-                });*/
             });
 
             $(document).on('change', '[name="is_correct[]"]', function () {
