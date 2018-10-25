@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { AuthenticationService } from '../../_services/index';
 
@@ -16,6 +16,7 @@ export class WelcomeComponent implements OnInit {
 
     constructor(
         private router: Router,
+        private activatedRoute: ActivatedRoute,
         private authenticationService: AuthenticationService) {
     }
 
@@ -35,5 +36,14 @@ export class WelcomeComponent implements OnInit {
                     this.loading = false;
                 }
             });
+    }
+
+    scrollToInstruction() {
+        this.activatedRoute.params.subscribe(params => {
+            setTimeout(() => {
+                document.getElementById('instruction')
+                .scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 60);
+        });
     }
 }
