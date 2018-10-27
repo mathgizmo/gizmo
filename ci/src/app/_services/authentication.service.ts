@@ -32,7 +32,7 @@ export class AuthenticationService {
                         // store username and jwt token in local storage to keep user logged in between page refreshes
                         localStorage.setItem('currentUser',
                             JSON.stringify({ username: username, token: token }));
-                        let question_num = 5;
+                        let question_num = 3;
                         if (response['message'] && response['message']['question_num'] !== undefined) {
                             question_num = response['message']['question_num'];
                         }
