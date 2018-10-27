@@ -4,160 +4,160 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
 
 .hide {
-	display: none;
+    display: none;
 }
 
 .welcome {
-	background-color: #FFF;
-	width: 100%;
-	height:100vh;
-	padding: 0;
-	margin: 0;
-	font-family: 'Open Sans';
+    background-color: #FFF;
+    width: 100%;
+    height:100vh;
+    padding: 0;
+    margin: 0;
+    font-family: 'Open Sans';
     font-weight: 300;
     color: $navy;
-	.left {
-		float: left;
-		width: 50%;
-		height: 100%;
-		overflow: none;
-		.logo-container {
-			margin: 0;
-			padding: 0;
-			height: 20%;
-			.logo {
-				display: block;
-				position: relative;
-				left: 83px; 
-				top: 29px;
-			    width: 180px;
-			    margin: 0;
-			    padding: 0;
-			}
-		}
-		.left-container {
-			margin: 0;
-			padding: 0;
-			height: 80%;
-			display: flex;
-			align-items: center;
-			flex-direction: column;
-			.header, .copy, .buttons-container {
-				width: 100%;
-				margin: 0;
-				padding: 0 83px;
-				font-size: 34px;
-				z-index: 1;
-			}
-			.header {
-				text-align: center;
-				color: $gold;
-			}
-			.line {
-				background-color: $teal;
-				display: block;
-				margin: 0 auto;
-				padding: 0;
-				margin-top: 12px;
-				margin-bottom: 12px;
-				height: 2px;
-				width: 407px;
-				z-index: 1;
-			}
-			.buttons-container {
-				margin-top: 32px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				flex-direction: row;
-				flex-wrap: wrap;
-				.row {
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					flex-direction: row;
-					flex-wrap: wrap;
-				}
-				.register-button, .login-button, .try-button {
-					font-size: 34px !important;
-					margin: 8px;
-					width: 240px;
-					//color: #fafafa;
-					text-decoration: none;
-				}
-				.login-button {
-					background-color: $teal !important;
-				}	
-				.register-button {
-					background-color: $gold !important;
-				}
-				.try-button {
-					//background-color: #daa520;
-				}
-			}
-			.bottom-text {
-				font-size: 12px;
-				display: block;
-				margin: 0 auto;
-				margin-top: 12px;
-				padding: 0;
-				text-align: center;
-				max-width: 240px;
-				z-index: 1;
-			}
-			.circle {
-				width: 240px;
-			    height: 120px;
-			    background-color: $teal;
-			    border-top-right-radius: 120px;
-			    border-bottom: 0;
-			    display: block;
-				position: absolute;
-				bottom: 0;
-				left: -120px;
-				z-index: 0; 
-			}
-		}
-	}
-	.right {
-		float: right;
-		width: 50%;
-		height: 100%;
-		background-color: $teal;
-		background-image: url("/assets/images/welcome-bg.png");
-		background-size: contain;
-		background-position: center bottom;
-		background-repeat: no-repeat;
-		.right-text {
-			color: white;
-			font-size: 24px; //font-size: 34px;
-			width: 100%;
-			height: 100vh;
-			z-index: 1;
-			opacity: 0;
-			padding: 0 10%;
-			transition: 0.35s;
-			display: block;
-			.right-text-title {
-				padding-top: 5%;
-				padding-bottom: 1%;
-			}
-		}
-	}
-	.right:hover .right-text {
-		opacity: 100;
-		background-color: $teal;
-	}
+    .left {
+        float: left;
+        width: 50%;
+        height: 100%;
+        overflow: none;
+        .logo-container {
+            margin: 0;
+            padding: 0;
+            height: 20%;
+            .logo {
+                display: block;
+                position: relative;
+                left: 83px;
+                top: 29px;
+                width: 180px;
+                margin: 0;
+                padding: 0;
+            }
+        }
+        .left-container {
+            margin: 0;
+            padding: 0;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            .header, .copy, .buttons-container {
+                width: 100%;
+                margin: 0;
+                padding: 0 83px;
+                font-size: 34px;
+                z-index: 1;
+            }
+            .header {
+                text-align: center;
+                color: $gold;
+            }
+            .line {
+                background-color: $teal;
+                display: block;
+                margin: 0 auto;
+                padding: 0;
+                margin-top: 12px;
+                margin-bottom: 12px;
+                height: 2px;
+                width: 407px;
+                z-index: 1;
+            }
+            .buttons-container {
+                margin-top: 32px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
+                flex-wrap: wrap;
+                .row {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                .register-button, .login-button, .try-button {
+                    font-size: 34px !important;
+                    margin: 8px;
+                    width: 240px;
+                    //color: #fafafa;
+                    text-decoration: none;
+                }
+                .login-button {
+                    background-color: $teal !important;
+                }
+                .register-button {
+                    background-color: $gold !important;
+                }
+                .try-button {
+                    //background-color: #daa520;
+                }
+            }
+            .bottom-text {
+                font-size: 12px;
+                display: block;
+                margin: 0 auto;
+                margin-top: 12px;
+                padding: 0;
+                text-align: center;
+                max-width: 240px;
+                z-index: 1;
+            }
+            .circle {
+                width: 240px;
+                height: 120px;
+                background-color: $teal;
+                border-top-right-radius: 120px;
+                border-bottom: 0;
+                display: block;
+                position: absolute;
+                bottom: 0;
+                left: -120px;
+                z-index: 0;
+            }
+        }
+    }
+    .right {
+        float: right;
+        width: 50%;
+        height: 100%;
+        background-color: $teal;
+        background-image: url("/assets/images/welcome-bg.png");
+        background-size: contain;
+        background-position: center bottom;
+        background-repeat: no-repeat;
+        .right-text {
+            color: white;
+            font-size: 24px; //font-size: 34px;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+            opacity: 0;
+            padding: 0 10%;
+            transition: 0.35s;
+            display: block;
+            .right-text-title {
+                padding-top: 5%;
+                padding-bottom: 1%;
+            }
+        }
+    }
+    .right:hover .right-text, .right:focus-within .right-text {
+        opacity: 100;
+        background-color: $teal;
+    }
 }
 
 .center {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	align-content: center;
-	text-align: center;
-	flex-direction: row;
-	flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 
@@ -166,7 +166,7 @@
   position: relative;
   width: 100%;
   height: 100px;
-  display: none;
+  display: block;
 }
 .scroll a {
   cursor: pointer;
@@ -261,275 +261,275 @@
 }
 
 @media screen and (max-width: 1200px) {
-	.welcome {
-		.left {
-			.left-container {
-				.header, .copy, .buttons-container {
-					font-size: 26px;
-				}
-				.buttons-container {
-					margin-top: 22px;
-					.register-button, .login-button, .try-button {
-						font-size: 26px !important;
-						margin: 6px;
-						width: 200px;
-					}
-				}
-			}
-		}
-		.right {
-			.right-text {
-			}
-		}
-	}
+    .welcome {
+        .left {
+            .left-container {
+                .header, .copy, .buttons-container {
+                    font-size: 26px;
+                }
+                .buttons-container {
+                    margin-top: 22px;
+                    .register-button, .login-button, .try-button {
+                        font-size: 26px !important;
+                        margin: 6px;
+                        width: 200px;
+                    }
+                }
+            }
+        }
+        .right {
+            .right-text {
+            }
+        }
+    }
 }
 
 @media screen and (max-width: 1024px) {
-	.welcome {
-		.left {
-			.logo-container {
-				height: 15%;
-				.logo {
-					left: 54.5px;
-					top: 19px;
-				    width: 118px;
-				}
-			}
-			.left-container {
-				height: 85%;
-				.header, .copy, .buttons-container {
-					font-size: 22.5px;
-					padding: 0 54.5px;
-				}
-				.line {
-					margin-top: 12px;
-					margin-bottom: 12px;
-					height: 2px;
-					width: 268px;
-				}
-				.buttons-container {
-					margin-top: 22px;
-					.register-button, .login-button, .try-button {
-						font-size: 22.5px !important;
-						margin: 6px;
-						width: 158px;
-					}
-				}
-				.bottom-text {
-					font-size: 10px;
-					margin-top: 12px;
-					max-width: 158px;
-				}
-				.circle {
-					width: 180px;
-				    height: 90px;
-				    border-top-right-radius: 90px;
-				    left: -90px;
-				}
-			}
-		}
-		.right {
-			.right-text {
-				font-size: 18px; //font-size: 22.5px;
-			}
-		}
-	}
+    .welcome {
+        .left {
+            .logo-container {
+                height: 15%;
+                .logo {
+                    left: 54.5px;
+                    top: 19px;
+                    width: 118px;
+                }
+            }
+            .left-container {
+                height: 85%;
+                .header, .copy, .buttons-container {
+                    font-size: 22.5px;
+                    padding: 0 54.5px;
+                }
+                .line {
+                    margin-top: 12px;
+                    margin-bottom: 12px;
+                    height: 2px;
+                    width: 268px;
+                }
+                .buttons-container {
+                    margin-top: 22px;
+                    .register-button, .login-button, .try-button {
+                        font-size: 22.5px !important;
+                        margin: 6px;
+                        width: 158px;
+                    }
+                }
+                .bottom-text {
+                    font-size: 10px;
+                    margin-top: 12px;
+                    max-width: 158px;
+                }
+                .circle {
+                    width: 180px;
+                    height: 90px;
+                    border-top-right-radius: 90px;
+                    left: -90px;
+                }
+            }
+        }
+        .right {
+            .right-text {
+                font-size: 18px; //font-size: 22.5px;
+            }
+        }
+    }
 }
 
-@media screen and (max-width: 768px) { 
-	.welcome {
-		.left {
-			.logo-container {
-				height: 10%;
-				.logo {
-					left: 38.5px; 
-					top: 14px;
-				    width: 83.6px;
-				}
-			}
-			.left-container {
-				height: 90%;
-				.header, .copy, .buttons-container {
-					font-size: 16px;
-					padding: 0 38.5px;
-				}
-				.line {
-					margin-top: 12px;
-					margin-bottom: 12px;
-					height: 2px;
-					width: 189px;
-				}
-				.buttons-container {
-					margin-top: 22px;
-					.register-button, .login-button, .try-button {
-						font-size: 16px !important;
-						margin: 4px;
-						width: 112px;
-					}
-				}
-				.bottom-text {
-					font-size: 10px;
-					margin-top: 12px;
-					max-width: 112px;
-				}
-				.circle {
-					width: 130px;
-				    height: 65px;
-				    border-top-right-radius: 65px;
-				    left: -65px;
-				}
-			}
-		}
-		.right {
-			.right-text {
-				font-size: 16px;
-			}
-		}
-	}
+@media screen and (max-width: 768px) {
+    .welcome {
+        .left {
+            .logo-container {
+                height: 10%;
+                .logo {
+                    left: 38.5px;
+                    top: 14px;
+                    width: 83.6px;
+                }
+            }
+            .left-container {
+                height: 90%;
+                .header, .copy, .buttons-container {
+                    font-size: 16px;
+                    padding: 0 38.5px;
+                }
+                .line {
+                    margin-top: 12px;
+                    margin-bottom: 12px;
+                    height: 2px;
+                    width: 189px;
+                }
+                .buttons-container {
+                    margin-top: 22px;
+                    .register-button, .login-button, .try-button {
+                        font-size: 16px !important;
+                        margin: 4px;
+                        width: 112px;
+                    }
+                }
+                .bottom-text {
+                    font-size: 10px;
+                    margin-top: 12px;
+                    max-width: 112px;
+                }
+                .circle {
+                    width: 130px;
+                    height: 65px;
+                    border-top-right-radius: 65px;
+                    left: -65px;
+                }
+            }
+        }
+        .right {
+            .right-text {
+                font-size: 16px;
+            }
+        }
+    }
 }
 
 @media screen and (orientation: portrait) {
-	.welcome {
-		.left {
-			width: 100%;
-			height: 50%;
-			.logo-container {
-				height: 12%;
-				.logo {
-					left: 38.5px; 
-					top: 14px;
-				    width: 83.6px;
-				}
-			}
-			.left-container {
-				height: 88%;
-				margin-top: 15px;
-				.header, .copy, .buttons-container {
-					padding: 0 38.5px;
-				}
-				.line {
-					width: 82%;
-				}
-				.buttons-container {
-					flex-direction: column;
-					.register-button, .login-button, .try-button {
-						width: 200px;
-					}
-				}
-				.bottom-text {
-					max-width: 200px;
-				}
-				.circle {
-				}
-			}
-		}
-		.right {
-			width: 100%;
-			height: 50%;
-			.right-text {
-				height: 50vh;
-			}
-		}
-	}
+    .welcome {
+        .left {
+            width: 100%;
+            height: 50%;
+            .logo-container {
+                height: 12%;
+                .logo {
+                    left: 38.5px;
+                    top: 14px;
+                    width: 83.6px;
+                }
+            }
+            .left-container {
+                height: 88%;
+                margin-top: 15px;
+                .header, .copy, .buttons-container {
+                    padding: 0 38.5px;
+                }
+                .line {
+                    width: 82%;
+                }
+                .buttons-container {
+                    flex-direction: column;
+                    .register-button, .login-button, .try-button {
+                        width: 200px;
+                    }
+                }
+                .bottom-text {
+                    max-width: 200px;
+                }
+                .circle {
+                }
+            }
+        }
+        .right {
+            width: 100%;
+            height: 50%;
+            .right-text {
+                height: 50vh;
+            }
+        }
+    }
 }
 @media screen and (max-height: 700px) and (orientation: portrait) {
-	.welcome {
-		.left {
-			height: 100%;
-			.left-container {
-				margin-top: 0;
-			}
-		}
-		.right {
-			height: 100%;
-			.right-text {
-				height: 100vh;
-			}
-		}
-	}
-	.scroll {
-		display: block;
-	}
+    .welcome {
+        .left {
+            height: 100%;
+            .left-container {
+                margin-top: 0;
+            }
+        }
+        .right {
+            height: 100%;
+            .right-text {
+                height: 100vh;
+            }
+        }
+    }
+    .scroll {
+        display: block;
+    }
 }
 
 @media screen and (max-height: 500px) and (orientation: landscape) {
-	.welcome {
-		.left {
-			width: 100%;
-			.logo-container {
-				height: 20%;
-				.logo {
-					left: 38.5px; 
-					top: 14px;
-				    width: 83.6px;
-				}
-			}
-			.left-container {
-				height: 80%;
-				.header, .copy, .buttons-container {
-					margin: 0 38.5px;
-				}
-				.line {
-					width: 82%;
-				}
-				.buttons-container {
-					margin-top: 12px;
-					flex-direction: column;
-					.register-button, .login-button, .try-button {
-						width: 200px;
-					}
-				}
-				.bottom-text {
-					margin-top: 4px;
-					max-width: 200px;
-				}
-				.circle {
-				}
-			}
-		}
-		.right {
-			width: 100%;
-			background-size: 100%;
-			.right-text {
-			}
-		}
-	}
-	.scroll {
-		display: block;
-	}
+    .welcome {
+        .left {
+            width: 100%;
+            .logo-container {
+                height: 20%;
+                .logo {
+                    left: 38.5px;
+                    top: 14px;
+                    width: 83.6px;
+                }
+            }
+            .left-container {
+                height: 80%;
+                .header, .copy, .buttons-container {
+                    margin: 0 38.5px;
+                }
+                .line {
+                    width: 82%;
+                }
+                .buttons-container {
+                    margin-top: 12px;
+                    flex-direction: column;
+                    .register-button, .login-button, .try-button {
+                        width: 200px;
+                    }
+                }
+                .bottom-text {
+                    margin-top: 4px;
+                    max-width: 200px;
+                }
+                .circle {
+                }
+            }
+        }
+        .right {
+            width: 100%;
+            background-size: 100%;
+            .right-text {
+            }
+        }
+    }
+    .scroll {
+        display: block;
+    }
 }
 
-@media screen and (max-height: 450px) { 
-	.welcome {
-		.left {
-			.left-container {
-				.buttons-container {
-					margin-top: 12px;
-					width: 98%;
-					flex-direction: row;
-					.row {
-						margin-right: 1px;
-						width: 65%;
-						.register-button, .login-button {
-							width: 47%;//28%;
-							margin: 0 4px;
-						}
-					}
-					.try-button {
-						width: 32%;
-						margin: 0 4px;
-					}
-				}
-				.bottom-text {
-					margin-top: 4px;
-					max-width: 200px;
-				}
-			}
-		}
-	}
-	.scroll {
-		a {
-			margin-top: 60px;
-		}
-	}
+@media screen and (max-height: 450px) {
+    .welcome {
+        .left {
+            .left-container {
+                .buttons-container {
+                    margin-top: 12px;
+                    width: 98%;
+                    flex-direction: row;
+                    .row {
+                        margin-right: 1px;
+                        width: 65%;
+                        .register-button, .login-button {
+                            width: 47%;//28%;
+                            margin: 0 4px;
+                        }
+                    }
+                    .try-button {
+                        width: 32%;
+                        margin: 0 4px;
+                    }
+                }
+                .bottom-text {
+                    margin-top: 4px;
+                    max-width: 200px;
+                }
+            }
+        }
+    }
+    .scroll {
+        a {
+            margin-top: 60px;
+        }
+    }
 }

@@ -43,6 +43,7 @@ export class WelcomeComponent implements OnInit {
             setTimeout(() => {
                 document.getElementById('instruction')
                 .scrollIntoView({ behavior: 'smooth', block: 'center' });
+                document.getElementById('instruction').focus();
             }, 60);
         });
     }
