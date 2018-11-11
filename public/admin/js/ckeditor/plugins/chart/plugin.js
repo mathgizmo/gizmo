@@ -1,6 +1,6 @@
 CKEDITOR.plugins.add( 'chart', {
     init: function( editor ) {
-        
+
         editor.addCommand( 'chartDialog', new CKEDITOR.dialogCommand( 'chartDialog' ) );
 
         editor.ui.addButton( 'chartButton',
@@ -27,7 +27,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 type : 'select',
                                 id : 'type',
                                 label : 'Chart type',
-                                items : [ 
+                                items : [
                                     [ 'Rectangle (Type 1)', '1' ],
                                     [ 'Pie (Type 2)', '2' ],
                                     [ 'Dots (Type 3)', '3' ],
@@ -51,9 +51,9 @@ CKEDITOR.plugins.add( 'chart', {
                                         dialog.getContentElement('general', 'start').enable();
                                         dialog.getContentElement('general', 'end').enable();
                                         dialog.getContentElement('general', 'max').disable();
-                                        dialog.getContentElement('optional', 
+                                        dialog.getContentElement('optional',
                                             'mark-diameter').enable();
-                                        dialog.getContentElement('optional', 
+                                        dialog.getContentElement('optional',
                                             'point-diameter').enable();
                                     } else {
                                         dialog.getContentElement('general', 'marks').disable();
@@ -61,9 +61,9 @@ CKEDITOR.plugins.add( 'chart', {
                                         dialog.getContentElement('general', 'start').disable();
                                         dialog.getContentElement('general', 'end').disable();
                                         dialog.getContentElement('general', 'max').enable();
-                                        dialog.getContentElement('optional', 
+                                        dialog.getContentElement('optional',
                                             'mark-diameter').disable();
-                                        dialog.getContentElement('optional', 
+                                        dialog.getContentElement('optional',
                                             'point-diameter').disable();
                                     }
                                     // set defaults
@@ -79,7 +79,7 @@ CKEDITOR.plugins.add( 'chart', {
                                     }
                                     if (type == 4) {
                                         step.setValue('0.5');
-                                        dialog.getContentElement('optional', 
+                                        dialog.getContentElement('optional',
                                             'stroke-width').setValue('3');
                                     }
                                 }
@@ -88,7 +88,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 type : 'select',
                                 id : 'control',
                                 label : 'Control type',
-                                items : [ 
+                                items : [
                                     [ 'No Control', '0' ],
                                     [ 'Input', '1' ],
                                     [ 'Slider', '2' ]
@@ -104,12 +104,12 @@ CKEDITOR.plugins.add( 'chart', {
                                 type : 'select',
                                 id : 'value-display-chart',
                                 label : 'Value on chart displayed as:',
-                                items : [ 
+                                items : [
                                     [ 'Do not show', '0' ],
                                     [ 'Plain Value', '1' ],
                                     [ 'Fraction', '2' ],
                                     [ 'Decimal', '3' ],
-                                    [ 'Percentage', '4' ]  
+                                    [ 'Percentage', '4' ]
                                 ],
                                 'default' : '1',
                                 required : true,
@@ -122,12 +122,12 @@ CKEDITOR.plugins.add( 'chart', {
                                 type : 'select',
                                 id : 'value-display',
                                 label : 'Value on control displayed as:',
-                                items : [ 
+                                items : [
                                     [ 'Do not show', '0' ],
                                     [ 'Plain Value', '1' ],
                                     [ 'Fraction', '2' ],
                                     [ 'Decimal', '3' ],
-                                    [ 'Percentage', '4' ]  
+                                    [ 'Percentage', '4' ]
                                 ],
                                 'default' : '1',
                                 required : true,
@@ -149,7 +149,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 label : 'Value',
                                 'default' : '0',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/,
                                         "Value must be a real number" ),
                                 required : true,
                                 commit : function( data )
@@ -170,14 +170,14 @@ CKEDITOR.plugins.add( 'chart', {
                                         }
                                     }, 50);
 
-                                }  
+                                }
                             },
                             {
                                 type : 'text',
                                 id : 'max',
                                 label : 'Max Value',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/,
                                         "Max Value must be a real number" ),
                                 required : false,
                                 'default': 1,
@@ -188,10 +188,24 @@ CKEDITOR.plugins.add( 'chart', {
                             },
                             {
                                 type : 'text',
+                                id : 'controllbase',
+                                label : 'Max Value for controll slider',
+                                validate : CKEDITOR.dialog.validate
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/,
+                                        "Max Value for slider must be a real number" ),
+                                required : false,
+                                'default': 0,
+                                commit : function( data )
+                                {
+                                    data.controllbase = this.getValue();
+                                }
+                            },
+                            {
+                                type : 'text',
                                 id : 'step',
                                 label : 'Step',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/,
                                         "Step must be a real number" ),
                                 required : false,
                                 'default': 0.01,
@@ -205,7 +219,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 id : 'start',
                                 label : 'Start Value',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/,
                                         "Start Value must be a real number" ),
                                 required : false,
                                 'default': '0',
@@ -219,7 +233,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 id : 'end',
                                 label : 'End Value',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/, 
+                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/,
                                         "End Value must be a real number" ),
                                 required : false,
                                 'default': 1,
@@ -233,7 +247,7 @@ CKEDITOR.plugins.add( 'chart', {
                                 id : 'marks',
                                 label : 'Marks List',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /((\d|%|\/)+)(,\s*(\d|%|\/)+)*/, 
+                                    .regex( /((\d|%|\/)+)(,\s*(\d|%|\/)+)*/,
                                         "Marks must be a comma separated list" ),
                                 required : false,
                                 'default' : '0, 0.5, 1',
@@ -354,30 +368,31 @@ CKEDITOR.plugins.add( 'chart', {
                         chartHtml += 'start:'+data.startValue+'; ';
                         chartHtml += 'end:'+data.endValue+'; ';
                         chartHtml += 'marks:'+data.marks+'; ';
-                        chartHtml += 'calculate:'+data.calculateMarks+'; '; 
+                        chartHtml += 'calculate:'+data.calculateMarks+'; ';
                     } else {
                         if (data.type == 1 || data.type == 2 || data.type == 3) {
                             chartHtml += 'max:'+data.max + '; ';
+                            chartHtml += 'controllbase:'+data.controllbase + '; ';
                         }
                     }
                     chartHtml += 'step:'+data.step+'; ';
-                    
+
                     // set styles
-                    data.mainColor = '#'  + 
+                    data.mainColor = '#'  +
                         document.getElementById('main-color').value;
-                    chartHtml += 'main-color: ' + data.mainColor.trim() + '; '; 
-                    data.selectedColor = '#'  + 
+                    chartHtml += 'main-color: ' + data.mainColor.trim() + '; ';
+                    data.selectedColor = '#'  +
                         document.getElementById('selected-color').value;
-                    chartHtml += 'selected-color: ' + data.selectedColor.trim() + '; '; 
-                    data.strokeColor = '#'  + 
+                    chartHtml += 'selected-color: ' + data.selectedColor.trim() + '; ';
+                    data.strokeColor = '#'  +
                         document.getElementById('stroke-color').value;
-                    chartHtml += 'stroke-color: ' + data.strokeColor.trim() + '; '; 
-                    if(data.strokeWidth > 0) 
+                    chartHtml += 'stroke-color: ' + data.strokeColor.trim() + '; ';
+                    if(data.strokeWidth > 0)
                         chartHtml += 'stroke-width:'+data.strokeWidth+'; ';
                     if(data.type == 4) {
-                        if(data.markDiameter > 0) 
+                        if(data.markDiameter > 0)
                             chartHtml += 'mark-diameter:'+data.markDiameter+'; ';
-                        if(data.pointDiameter > 0) 
+                        if(data.pointDiameter > 0)
                             chartHtml += 'point-diameter:'+data.pointDiameter+'; ';
                     }
 
@@ -408,7 +423,7 @@ CKEDITOR.plugins.add( 'chart', {
                     // load for create question
                     if(!load) CKEDITOR.scriptLoader.load( '../js/jscolor.js' );
 
-                    // If redownload jscolor.js - change this.zIndex (in jscolor.js) 
+                    // If redownload jscolor.js - change this.zIndex (in jscolor.js)
                     //to 12000 to show color picker over ckeditor dialog!!!
 
                     // try to parse existing chart string
@@ -421,7 +436,7 @@ CKEDITOR.plugins.add( 'chart', {
                                     new RegExp(/type:([^;]*)(?=(;|$))/g))['0']
                                 .replace('type:', '')
                             );
-                        } 
+                        }
                         if (chartStr.indexOf('value:') >= 0) {
                             this.getContentElement('general', 'value').setValue(
                                 chartStr.match(
@@ -434,6 +449,13 @@ CKEDITOR.plugins.add( 'chart', {
                                 chartStr.match(
                                     new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
                                 .replace('max:', '')
+                            );
+                        }
+                        if (chartStr.indexOf('controllbase:') >= 0) {
+                            this.getContentElement('general', 'controllbase').setValue(
+                                chartStr.match(
+                                    new RegExp(/controllbase:([^;]*)(?=(;|$))/g))['0']
+                                .replace('controllbase:', '')
                             );
                         }
                         if (chartStr.indexOf('start:') >= 0) {
@@ -482,7 +504,7 @@ CKEDITOR.plugins.add( 'chart', {
                             .replace('selected-color:', '').replace('#', '').trim();
                         }
                         if (chartStr.indexOf('stroke-color:') >= 0) {
-                            document.getElementById('stroke-color').value = 
+                            document.getElementById('stroke-color').value =
                                 chartStr.match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
                             .replace('stroke-color:', '').replace('#', '').trim();
                         }
@@ -545,12 +567,12 @@ CKEDITOR.plugins.add( 'chart', {
 
                         // disable unused fields for default type
                         if(this.getContentElement('types', 'type').getValue() != 4) {
-                            this.getContentElement('general', 'marks').disable(); 
+                            this.getContentElement('general', 'marks').disable();
                             this.getContentElement('optional', 'mark-diameter').disable();
                             this.getContentElement('optional', 'point-diameter').disable();
                         }
-                    } 
-                     
+                    }
+
                 }
                 /* this function trigered when tab changed
                 onLoad : function() {

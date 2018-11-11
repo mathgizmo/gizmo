@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, OnDestroy, ChangeDetectionStrategy, 
+import { Component, Inject, OnInit, OnDestroy, ChangeDetectionStrategy,
     Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import {MatSliderModule} from '@angular/material/slider';
 
@@ -9,7 +9,7 @@ import {MatSliderModule} from '@angular/material/slider';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartComponent implements OnDestroy, OnChanges, OnInit {
-    
+
     @Input() question: string;
     @Input() chartHeight: number; // dimension of chart area in px
 
@@ -28,6 +28,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private valueDisplay: number = 1;
     private value: number = 0.50;
     private maxValue: number = 0;
+    private controllbaseValue: number = 0;
     private startValue = 0;
     private endValue = 1;
     private step: number = 0.5;
@@ -47,7 +48,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
-   
+
     constructor(private ref:ChangeDetectorRef){
       this.dots = [];
       if(!this.chartHeight)
@@ -101,14 +102,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 }
               }
               Math.abs(this.value - this.endValue) < diff ?
-                this.value = this.endValue : this.value = Math.round(point*Math.pow(10, 
-                  accuracy))/Math.pow(10, accuracy); 
+                this.value = this.endValue : this.value = Math.round(point*Math.pow(10,
+                  accuracy))/Math.pow(10, accuracy);
             }
-          } 
+          }
           resolve();
-        }).then(() => { 
-          this.buildChart(); 
-        });  
+        }).then(() => {
+          this.buildChart();
+        });
     }
 
     // function to build charts
@@ -148,7 +149,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           if(this.valueDisplay == 3 || this.valueDisplay == 4) {
             this.accuracyControl = Math.round(this.maxValue/this.step).toString().length;
             if(this.valueDisplay == 4) {
-              (this.accuracyControl >= 2) 
+              (this.accuracyControl >= 2)
                 ? this.accuracyControl -= 2
                 : this.accuracyControl = 0;
             }
@@ -156,17 +157,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             Number.isInteger(this.step) ? this.accuracyControl = 0
             : this.accuracyControl = (this.step + "").split(".")[1].length;
           }
-          if(this.valueDisplayChart == 3 || this.valueDisplayChart == 4) { 
+          if(this.valueDisplayChart == 3 || this.valueDisplayChart == 4) {
             this.accuracyChart = Math.round(this.maxValue/this.step).toString().length;
             if(this.valueDisplayChart == 4) {
-              (this.accuracyChart >= 2) 
+              (this.accuracyChart >= 2)
                 ? this.accuracyChart -= 2
                 : this.accuracyChart = 0;
             }
           } else {
             Number.isInteger(this.step) ? this.accuracyChart = 0
             : this.accuracyChart = (this.step + "").split(".")[1].length;
-          }  
+          }
         }
         if (chart['0'].indexOf('accuracy-chart-value:') >= 0) {
           this.accuracyChart = +chart['0']
@@ -227,46 +228,51 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             .match(new RegExp(/max:([^;]*)(?=(;|$))/g))['0']
             .replace('max:', ''));
         }
+        if (this.valueDisplay == 2 && chart['0'].indexOf('controllbase:') >= 0) {
+            this.controllbaseValue = parseFloat(chart['0']
+              .match(new RegExp(/controllbase:([^;]*)(?=(;|$))/g))['0']
+              .replace('controllbase:', ''));
+          }
         if (chart['0'].indexOf('main-color:') >= 0) {
           this.mainColor = chart['0']
             .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
             .replace('main-color:', '');
-        } else { 
+        } else {
           this.mainColor = "#8ED8DD";
         }
         if (chart['0'].indexOf('selected-color:') >= 0) {
           this.selectedColor = chart['0']
             .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
             .replace('selected-color:', '');
-        } else { 
+        } else {
           this.selectedColor = "#FFB133";
         }
         if (chart['0'].indexOf('stroke-color:') >= 0) {
           this.strokeColor = chart['0']
             .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-color:', '');
-        } else { 
+        } else {
           this.strokeColor = "#FFFFFF";
         }
         if (chart['0'].indexOf('stroke-width:') >= 0) {
           this.strokeWidth = +chart['0']
             .match(new RegExp(/stroke-width:([^;]*)(?=(;|$))/g))['0']
             .replace('stroke-width:', '');
-        } else { 
+        } else {
           this.strokeWidth = 1;
         }
         if (chart['0'].indexOf('mark-diameter:') >= 0) {
           this.markDiameter = +chart['0']
             .match(new RegExp(/mark-diameter:([^;]*)(?=(;|$))/g))['0']
             .replace('mark-diameter:', '');
-        } else { 
+        } else {
           this.markDiameter = 3;
         }
         if (chart['0'].indexOf('point-diameter:') >= 0) {
           this.pointDiameter = +chart['0']
             .match(new RegExp(/point-diameter:([^;]*)(?=(;|$))/g))['0']
             .replace('point-diameter:', '');
-        } else { 
+        } else {
           this.pointDiameter = 1;
         }
         if (chart['0'].indexOf('control:') >= 0) {
@@ -319,15 +325,15 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           // Chart (type 1 - rectangle)
           chartHtml += '<svg style="height: ' + size + 'px; width:' + size + 'px;">';
           chartHtml += '<rect id="rect2" height="'+size
-            +'" width="'+size+'" style="fill: ' 
-            + this.mainColor + '; stroke: ' + 
+            +'" width="'+size+'" style="fill: '
+            + this.mainColor + '; stroke: ' +
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
           chartHtml += '<rect id="rect1" y="'
-            +(1 - valuePercent) * size 
-            +'" height="'+valuePercent*size 
-            +'" width="'+size+'" style="fill: ' 
-            + this.selectedColor + '; stroke: ' + 
+            +(1 - valuePercent) * size
+            +'" height="'+valuePercent*size
+            +'" width="'+size+'" style="fill: '
+            + this.selectedColor + '; stroke: ' +
           this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
           chartHtml +=  '></rect>';
 
@@ -340,7 +346,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               y = size - 0.5*(this.value/this.maxValue*size)+5;
             }
             let valueLabel = '<text text-anchor="middle" x=' + x + ' y=' + y
-              + ' fill="' + this.strokeColor 
+              + ' fill="' + this.strokeColor
               +'" class="chart-value-label" style="font-size: '
               +chartValueLabelFontSize+'px;">';
             if(this.valueDisplayChart == 1) {
@@ -350,7 +356,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             } else if (this.valueDisplayChart == 3) {
               valueLabel += (this.value/this.maxValue).toFixed(this.accuracyChart);
             } else if (this.valueDisplayChart == 4) {
-              valueLabel += (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%' 
+              valueLabel += (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%'
             }
             valueLabel +=  '</text>';
             chartHtml += valueLabel;
@@ -369,28 +375,28 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             + size + 'px; width:' + size + 'px;">';
           if(valuePercent <= 0.999) {
             chartHtml += '<circle id="circle2" r="'+radius
-            +'" cx="'+radius+'" cy="'+radius+'" style="fill: ' 
-            + this.mainColor + '; stroke: ' + 
+            +'" cx="'+radius+'" cy="'+radius+'" style="fill: '
+            + this.mainColor + '; stroke: ' +
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '" />';
-            chartHtml += '<path id="circle1" d="M'+ radius +','+ radius 
+            chartHtml += '<path id="circle1" d="M'+ radius +','+ radius
               + ' L' + radius + ',0 A' + radius + ',' + radius;
             if(valuePercent <= 0.5){
               chartHtml += ' 1 0,1';
             } else {
-              chartHtml += ' 1 1,1';  
+              chartHtml += ' 1 1,1';
             }
             chartHtml += ' ' + x + ', ' + y +' z"';
-            chartHtml += 'style="fill: ' + this.selectedColor + '; stroke: ' + 
+            chartHtml += 'style="fill: ' + this.selectedColor + '; stroke: ' +
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
-            chartHtml += '></path>'; 
+            chartHtml += '></path>';
           } else {
             chartHtml += '<circle id="circle1" r="'+radius
-            +'" cx="'+radius+'" cy="'+radius+'"style="fill: ' 
-            + this.selectedColor + '; stroke: ' + 
+            +'" cx="'+radius+'" cy="'+radius+'"style="fill: '
+            + this.selectedColor + '; stroke: ' +
             this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"/>';
           }
           chartHtml += '</svg>';
-            
+
           if(this.valueDisplayChart > 0) {
             let valueLabel = document.createElement("label");
             valueLabel.classList.add("chart-value-label");
@@ -450,7 +456,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               }
               chartContainer.appendChild(valueLabel);
             }
-   
+
           });
           canvas.style.height = this.chartHeight+'px';
           canvas.style.width = this.chartHeight*2+'px';
@@ -478,8 +484,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           let width  = chartContainer.offsetWidth;
           let indentation = this.pointDiameter + 5;
           chartHtml += '<svg style="width:' + width + 'px; height: 50px;">';
-          chartHtml += '<line x1="' + indentation + '" y1="25" x2="' 
-            + (width-indentation) + '" y2="25" style="stroke:' 
+          chartHtml += '<line x1="' + indentation + '" y1="25" x2="'
+            + (width-indentation) + '" y2="25" style="stroke:'
             + this.mainColor + '; stroke-width:'
             + this.strokeWidth + '" />';
           width -= indentation*2;
@@ -488,43 +494,43 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             let point = Number((i+this.startValue).toFixed(precision));
             if(this.marksList.includes(point)) {
               let label = this.marksLabelsList[this.marksList.indexOf(point)];
-              chartHtml += '<circle cx="' + position + '" cy="25" r="' 
+              chartHtml += '<circle cx="' + position + '" cy="25" r="'
                 + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
               let textPosition = ((point-this.startValue)/(this.endValue
                 -this.startValue)*width + indentation);
               if(i == 0) {
                 chartHtml += '<text x="' + (this.markDiameter/2)
-                + '" y="50" fill="' + this.strokeColor 
-                +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="start">' 
+                + '" y="50" fill="' + this.strokeColor
+                +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="start">'
                 + label + '</text>';
               } else {
                 chartHtml += '<text x="' + textPosition
-                + '" y="50" fill="'+this.strokeColor 
-                +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="middle">' 
+                + '" y="50" fill="'+this.strokeColor
+                +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="middle">'
                 + label + '</text>';
               }
             } else {
-              chartHtml += '<circle cx="' + position + '" cy="25" r="' 
+              chartHtml += '<circle cx="' + position + '" cy="25" r="'
                 + (this.pointDiameter/2) + '" fill="' + this.strokeColor + '" />';
-            } 
+            }
           }
-          chartHtml += '<circle cx="' + (width+indentation) + '" cy="25" r="' 
+          chartHtml += '<circle cx="' + (width+indentation) + '" cy="25" r="'
             + (this.markDiameter/2) + '" fill="' + this.strokeColor + '" />';
-          if(this.marksList[this.marksList.length-1].toFixed(precision) 
+          if(this.marksList[this.marksList.length-1].toFixed(precision)
             == this.endValue.toFixed(precision)) {
             let label = this.marksLabelsList[this.marksList.length-1];
             chartHtml += '<text x="' + (width+indentation*2-(this.markDiameter/2))
-              + '" y="50" fill="' + this.strokeColor 
-              +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="end">' 
+              + '" y="50" fill="' + this.strokeColor
+              +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="end">'
               + label + '</text>';
           }
           let currentPointX = (this.value-this.startValue)/(this.endValue
             -this.startValue)*width + indentation;
-          chartHtml += '<circle cx="' + currentPointX + '" cy="25" r="' 
+          chartHtml += '<circle cx="' + currentPointX + '" cy="25" r="'
             + this.markDiameter + '" fill="' + this.selectedColor + '" />';
 
           if(this.valueDisplayChart > 0) {
-            let currentPointLabel = '<text ';  
+            let currentPointLabel = '<text ';
             let currentValueFixed = Number((this.value).toFixed(precision));
             let startValueFixed = Number((this.startValue).toFixed(precision));
             let endValueFixed = Number((this.endValue).toFixed(precision));
@@ -536,7 +542,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             } else {
               currentPointLabel += 'x=' + currentPointX + ' text-anchor="middle"';
             }
-            currentPointLabel += '" y="15" fill="' + this.strokeColor 
+            currentPointLabel += '" y="15" fill="' + this.strokeColor
               +'"  class="chart-value-label" style="font-size: '+chartValueLabelFontSize+'px;">';
             if(this.valueDisplayChart == 1) {
               currentPointLabel += this.value.toFixed(this.accuracyChart);
@@ -545,7 +551,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             } else if (this.valueDisplayChart == 3) {
               currentPointLabel += ((this.value-this.startValue)
                 /(this.maxValue-this.startValue)).toFixed(this.accuracyChart);
-            } else if (this.valueDisplayChart == 4) { 
+            } else if (this.valueDisplayChart == 4) {
               currentPointLabel += ((this.value-this.startValue)
                 /(this.maxValue-this.startValue)*100).toFixed(this.accuracyChart) + '%';
             }
@@ -553,7 +559,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             chartHtml += currentPointLabel;
           }
           chartHtml += '</svg>';
-          chartContainer.innerHTML = chartHtml;  
+          chartContainer.innerHTML = chartHtml;
           break;
       }
       this.ref.detectChanges();
@@ -585,7 +591,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
         }
         Math.abs(this.value - this.maxValue) < diff ?
-          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
+          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10,
             accuracy))/Math.pow(10, accuracy);
       } else if (this.type == 2) {
         let x = event.pageX - pos.x;
@@ -615,7 +621,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
         }
         Math.abs(this.value - this.maxValue) < diff ?
-          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10, 
+          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10,
             accuracy))/Math.pow(10, accuracy);
       } else if (this.type == 4) {
         let x = event.pageX - pos.x;
@@ -636,12 +642,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
         }
         Math.abs(this.value - this.endValue) < diff ?
-          this.value = this.endValue : this.value = Math.round(point*Math.pow(10, 
+          this.value = this.endValue : this.value = Math.round(point*Math.pow(10,
             accuracy))/Math.pow(10, accuracy);
 
-        if(this.value < this.startValue) 
+        if(this.value < this.startValue)
           this.value = this.startValue;
-        else if (this.value > this.endValue) 
+        else if (this.value > this.endValue)
           this.value = this.endValue;
       }
       if(this.type == 1 || this.type == 2 || this.type == 4) {
@@ -653,18 +659,18 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             this.inputValue = Math.round((this.value-this.startValue)
               /(this.maxValue-this.startValue)*Math.pow(10, accuracy+2))/Math.pow(10, accuracy);
           } else {
-            this.inputValue = Math.round(this.value*Math.pow(10, 
+            this.inputValue = Math.round(this.value*Math.pow(10,
               accuracy))/Math.pow(10, accuracy);
           }
           resolve();
-        }).then(() => { 
-          this.buildChart(); 
+        }).then(() => {
+          this.buildChart();
         });
-      }  
+      }
     }
 
     // function to draw Dots Chart
-    private drawDotsChart(dotsNum: number, 
+    private drawDotsChart(dotsNum: number,
       maxDotsNum: number, ctx: CanvasRenderingContext2D,
       canvas: HTMLCanvasElement) {
       for (let i = 0; i < dotsNum; i++) {
@@ -710,7 +716,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     // remove dot chart rebuild function if it exists
     private destroyDotsChart() {
       if (this.dotsChartRebuildFunctionId)
-        clearInterval(this.dotsChartRebuildFunctionId); 
+        clearInterval(this.dotsChartRebuildFunctionId);
     }
 
 }

@@ -15,24 +15,32 @@
 
   <span *ngIf="control == 2">
     <span>
-      <mat-slider  *ngIf="type != 4" 
+      <mat-slider  *ngIf="type != 4"
         (change)="ngOnChanges()" [(ngModel)]="value"
-        [step]="step" [max]="maxValue" min="0" 
+        [step]="step" [max]="maxValue" min="0"
         color="primary" class='slider-control'>
       </mat-slider>
-      <mat-slider *ngIf="type == 4" 
+      <mat-slider *ngIf="type == 4"
         (change)="ngOnChanges()" [(ngModel)]="value"
-        [step]="step" [max]="endValue" [min]="startValue" 
+        [step]="step" [max]="endValue" [min]="startValue"
         color="primary" class='slider-control' id='inputValue'>
       </mat-slider>
 
       <div class="value-label-container">
-        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2)">
+        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && !controllbaseValue">
           <span>
             Value = {{value.toFixed(accuracyControl)}}
           </span>
           <span *ngIf="valueDisplay == 2">
             / {{maxValue}}
+          </span>
+        </label>
+        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue">
+          <span>
+            Value = {{value.toFixed(accuracyControl)*controllbaseValue/maxValue}}
+          </span>
+          <span *ngIf="valueDisplay == 2">
+            / {{controllbaseValue}}
           </span>
         </label>
         <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
@@ -50,12 +58,20 @@
 
 <span *ngIf="(control != 1 && control != 2)">
     <div id="value-label-container">
-      <label *ngIf="(valueDisplay == 1 || valueDisplay == 2)">
+      <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && !controllbaseValue">
         <span>
           Value = {{value.toFixed(accuracyControl)}}
         </span>
         <span *ngIf="valueDisplay == 2">
           / {{maxValue}}
+        </span>
+      </label>
+      <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue">
+        <span>
+          Value = {{value.toFixed(accuracyControl)*controllbaseValue/maxValue}}
+        </span>
+        <span *ngIf="valueDisplay == 2">
+          / {{controllbaseValue}}
         </span>
       </label>
       <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
