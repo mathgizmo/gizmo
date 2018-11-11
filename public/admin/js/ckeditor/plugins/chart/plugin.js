@@ -191,8 +191,8 @@ CKEDITOR.plugins.add( 'chart', {
                                 id : 'controllbase',
                                 label : 'Max Value for controll slider',
                                 validate : CKEDITOR.dialog.validate
-                                    .regex( /([0-9]+([.][0-9]*)?|[.][0-9]+)/,
-                                        "Max Value for slider must be a real number" ),
+                                    .regex( /^[\s\d]*$/,
+                                        "Max Value for controll must be a real number" ),
                                 required : false,
                                 'default': 0,
                                 commit : function( data )
