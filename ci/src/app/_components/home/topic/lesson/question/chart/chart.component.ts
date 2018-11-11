@@ -503,7 +503,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 + '" y="50" fill="' + this.strokeColor
                 +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="start">'
                 + label + '</text>';
-              } else {
+              } else if( i < (this.endValue-this.startValue) - this.step) {
                 chartHtml += '<text x="' + textPosition
                 + '" y="50" fill="'+this.strokeColor
                 +'" style="font-size: '+chartValueLabelFontSize+'px;" text-anchor="middle">'
