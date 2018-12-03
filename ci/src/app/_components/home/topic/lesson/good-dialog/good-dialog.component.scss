@@ -2,7 +2,7 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content: center;
+	justify-content: space-between;
 	align-items: flex-start;
 }
 
@@ -12,4 +12,17 @@
 
 .continue-button {
 	background-color: #fef65b;
+}
+
+.dialog-content {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.popup-image {
+		width: 90%;
+		margin: 0;
+		padding: 0;
+	}
 }

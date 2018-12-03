@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { GoodDialogComponent } from './good-dialog/good-dialog.component';
 import { BadDialogComponent} from './bad-dialog/bad-dialog.component';
 import { ReportDialogComponent } from './report-dialog/report-dialog.component';
+import { FeedbackDialogComponent } from './feedback-dialog/feedback-dialog.component';
 
 @Component({
     moduleId: module.id,
@@ -176,6 +177,17 @@ export class LessonComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                let reportDialogRef = this.dialog.open(FeedbackDialogComponent, {
+                    //width: '800px',
+                    data: {question_id: this.question.id, answers: this.answers}
+                });
+                
+                reportDialogRef.afterClosed().subscribe(result => {
+                    console.log(result);
+                    this.topicService.sendFeedback(result.question_id, result.text).subscribe();
+                });
+            }
             if (this.lessonTree['questions'].length) {
                 this.nextQuestion();
             } else {

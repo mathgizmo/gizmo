@@ -32,7 +32,12 @@ export class TopicService {
 
     // notify api about question error
     reportError(question_id, answers, option, custom) {
-        let request = { answers: answers, options: option, comment: custom };
+        let request = { is_feedback: false, answers: answers, options: option, comment: custom };
+        return this.http.post('/report_error/'+question_id, request);
+    }
+
+    sendFeedback(question_id, text) {
+        let request = { is_feedback: true, comment: text };
         return this.http.post('/report_error/'+question_id, request);
     }
 }

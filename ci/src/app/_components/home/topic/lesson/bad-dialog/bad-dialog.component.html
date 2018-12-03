@@ -1,5 +1,6 @@
-<h2 mat-dialog-title class="subtitle">Incorrect :(</h2>
-<mat-dialog-content>
+<!-- <h2 mat-dialog-title class="subtitle">Incorrect :(</h2> -->
+<mat-dialog-content class="dialog-content">
+    <img src="./assets/images/popup_image_incorrect.svg" alt="Correct" class="popup-image">
     <div *ngIf="(answers.length == 1) && showAnswer" class="answer">
         Correct answer is: {{answers[0].value}}
     </div>

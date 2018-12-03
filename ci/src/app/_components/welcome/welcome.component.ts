@@ -40,11 +40,13 @@ export class WelcomeComponent implements OnInit {
 
     scrollToInstruction() {
         this.activatedRoute.params.subscribe(params => {
+            const instruction = document.getElementById('instruction');
             setTimeout(() => {
-                document.getElementById('instruction')
-                .scrollIntoView({ behavior: 'smooth', block: 'center' });
-                document.getElementById('instruction').focus();
+                instruction.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 60);
+            setTimeout(() => {
+                instruction.focus();
+            }, 500);
         });
     }
 }

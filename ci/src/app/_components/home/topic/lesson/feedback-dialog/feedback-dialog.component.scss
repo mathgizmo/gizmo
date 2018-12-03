@@ -1,0 +1,40 @@
+@import '../../../../../../colors';
+
+.send-button {
+	background-color: #31698a;
+}
+
+.cancel-button {
+	background-color: #6dc066 !important;
+}
+
+.buttons-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.button {
+	margin: 0 4px 12px 4px;
+}
+
+.text {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+:host /deep/ .mat-radio-outer-circle,
+:host /deep/ .mat-checkbox-frame {
+  border-color: $navy;
+  border-width: 4px;
+}
+:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-outer-circle {
+  border-width: 0;
+}
+:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-inner-circle {
+  transform: scale(1);
+}

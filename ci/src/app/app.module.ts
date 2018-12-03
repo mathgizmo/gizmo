@@ -26,7 +26,7 @@ import { TryComponent } from './_components/welcome/try/try.component';
 import { HomeComponent } from './_components/home/index';
 import { TopicComponent } from './_components/home/topic/index';
 import { LessonComponent, GoodDialogComponent, BadDialogComponent,
-    ReportDialogComponent, ChartComponent } from './_components/home/topic/lesson/index';
+    ReportDialogComponent, FeedbackDialogComponent, ChartComponent } from './_components/home/topic/lesson/index';
 import { ProfileComponent } from './_components/profile/profile.component';
 import { ResetPasswordComponent } from './_components/welcome/login/reset-password/reset-password.component';
 import { QuestionComponent } from './_components/home/topic/lesson/question/question.component';
@@ -71,6 +71,7 @@ import { PlacementComponent, QuestionNumDialogComponent } from './_components/we
         GoodDialogComponent,
         BadDialogComponent,
         ReportDialogComponent,
+        FeedbackDialogComponent,
         ChartComponent,
         ProfileComponent,
         TryComponent,
@@ -85,6 +86,7 @@ import { PlacementComponent, QuestionNumDialogComponent } from './_components/we
         GoodDialogComponent,
         BadDialogComponent,
         ReportDialogComponent,
+        FeedbackDialogComponent,
         QuestionNumDialogComponent
     ],
     providers: [

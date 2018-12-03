@@ -21,16 +21,24 @@ class ReportErrorController extends Controller
             return $this->error('Invalid question.');
         }
         $student = JWTAuth::parseToken()->authenticate();
-        $answers = request('answers');
-        if (!is_array($answers)) {
-            $answers = [$answers];
+        if(request('is_feedback')) {
+            $answers = "";
+            $options = "Feedback";
+        } else {
+            $options = request('options');
+            $answers = request('answers');
+            if (!is_array($answers)) {
+                $answers = [$answers];
+            }
+            $answers = implode(";", $answers);
         }
         ReportError::create([
             'student_id' => $student->id,
             'question_id' => $question,
-            'answers' => implode(";", $answers),
-            'options' => request('options'),
+            'answers' => $answers,
+            'options' => $options,
             'comment' => request('comment'),
+            'is_feedback' => request('is_feedback'),
         ]);
         if (Setting::getValueByKey('admin_email')) {
             try {
