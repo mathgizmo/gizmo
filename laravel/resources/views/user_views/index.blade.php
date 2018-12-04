@@ -22,9 +22,24 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="col-md">ID</th>
-                                    <th class="col-md">Name</th>
-                                    <th class="col-md">Email</th>
+                                    <th class="col-md">
+                                        ID
+                                        <a href="{{ route('users.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                            <i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                        </a>
+                                    </th>
+                                    <th class="col-md">
+                                        Name
+                                        <a href="{{ route('users.index', array_merge(request()->all(), ['sort' => 'name', 'order' => ((request()->sort == 'name' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                            <i class="fa fa-fw fa-sort{{ (request()->sort == 'name' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'name' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                        </a>
+                                    </th>
+                                    <th class="col-md">
+                                        Email
+                                        <a href="{{ route('users.index', array_merge(request()->all(), ['sort' => 'email', 'order' => ((request()->sort == 'email' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                            <i class="fa fa-fw fa-sort{{ (request()->sort == 'email' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'email' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                        </a>
+                                    </th>
                                     <th class="col-md"></th>
                                 </tr>
                                 </thead>

@@ -13,9 +13,13 @@ class LevelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $levels = Level::All();
+        if ($request->has('sort') and $request->has('order')) {
+            $levels = Level::orderBy($request->sort, $request->order)->get();
+        } else {
+            $levels = Level::All();
+        }
         return view('level_views.index', ['levels'=>$levels]);
     }
 

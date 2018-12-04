@@ -19,7 +19,12 @@ class LessonController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
         $topics = DB::select('select * from topic');
-        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
+        if ($request->has('sort') and $request->has('order')) {
+            $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)
+                ->orderBy($request->sort, $request->order)->get();
+        } else {
+            $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
+        }
         return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
     }
 

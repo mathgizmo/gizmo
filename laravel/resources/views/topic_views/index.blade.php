@@ -84,13 +84,42 @@
 									<table class="table table-striped">
 										<thead>
 											<tr>
-												<th class="col-md">Image</th>
-												<th class="col-md">Order No</th>
-												<th class="col-md">ID</th>
-												<th class="col-md">Title</th>
-												<th class="col-md">Short Name</th>
-												<th class="col-md">Dependency</th>
-												<th class="col-md-3">OPTIONS</th>
+												<th class="col-md">
+													Image
+												</th>
+												<th class="col-md">
+													ID
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    	<i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                	</a>
+												</th>
+												<th class="col-md">
+													Order No
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'order_no', 'order' => ((request()->sort == 'order_no' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    	<i class="fa fa-fw fa-sort{{ (request()->sort == 'order_no' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'order_no' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                	</a>
+												</th>
+												<th class="col-md">
+													Title
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'title', 'order' => ((request()->sort == 'title' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    	<i class="fa fa-fw fa-sort{{ (request()->sort == 'title' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'title' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                	</a>
+												</th>
+												<th class="col-md">
+													Short Name
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'short_name', 'order' => ((request()->sort == 'short_name' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    	<i class="fa fa-fw fa-sort{{ (request()->sort == 'short_name' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'short_name' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                	</a>
+												</th>
+												<th class="col-md">
+													Dependency
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'dependency', 'order' => ((request()->sort == 'dependency' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    	<i class="fa fa-fw fa-sort{{ (request()->sort == 'dependency' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'dependency' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                	</a>
+												</th>
+												<th class="col-md-3">
+													OPTIONS
+												</th>
 											</tr>
 										</thead>
 
@@ -99,8 +128,8 @@
 							@foreach($topics as $topic)
 								<tr>
 									<td><img class="show-img" src="{{ URL::asset($topic->icon_src) }}" /></td>
-									<td>{{$topic->order_no}}</td>
 									<td>{{$topic->id}}</td>
+									<td>{{$topic->order_no}}</td>
 									<td>{{$topic->title}}</td>
 									<td>{{$topic->short_name}}</td>
 									<td>{{($topic->dependency == true) ? 'Yes' : 'No'}}</td>

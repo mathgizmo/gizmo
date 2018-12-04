@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-
+use Illuminate\Http\Request;
 use App\Http\Requests;
 
 class UserController extends Controller
@@ -11,10 +11,14 @@ class UserController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->checkAccess(auth()->user()->is_admin);
-        $users = User::latest()->get();
+        if ($request->has('sort') and $request->has('order')) {
+            $users = User::orderBy($request->sort, $request->order)->get();
+        } else {
+            $users = User::latest()->get();
+        }
         return view('user_views.index', compact('users'));
     }
 

@@ -13,9 +13,14 @@ class PlacementController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $placements = PlacementQuestion::with('unit')->get();
+        if ($request->has('sort') and $request->has('order')) {
+            $placements = PlacementQuestion::with('unit')
+                ->orderBy($request->sort, $request->order)->get();
+        } else {
+            $placements = PlacementQuestion::with('unit')->get();
+        }
         return view('placement_views.index', ['placements'=>$placements]);
     }
 

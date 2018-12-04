@@ -17,7 +17,12 @@ class UnitController extends Controller
     public function index(Request $request)
     {
         $levels = DB::select('select * from level');
-        $units = DB::table('unit')->where('level_id', $request->level_id)->get();
+        if ($request->has('sort') and $request->has('order')) {
+            $units = DB::table('unit')->where('level_id', $request->level_id)
+                ->orderBy($request->sort, $request->order)->get();
+        } else {
+            $units = DB::table('unit')->where('level_id', $request->level_id)->get();
+        }
         return view('unit_views.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
     }
 

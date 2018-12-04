@@ -31,12 +31,37 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th class="col-md">ID</th>
-                                            <th class="col-md">Order No</th>
-                                            <th class="col-md">Question</th>
-                                            <th class="col-md">Unit</th>
-                                            <th class="col-md">Active</th>
-                                            <th class="col-md-3">OPTIONS</th>
+                                            <th class="col-md">
+                                                ID
+                                                <a href="{{ route('placement_views.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    <i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                </a>
+                                            </th>
+                                            <th class="col-md">
+                                                Order No
+                                                <a href="{{ route('placement_views.index', array_merge(request()->all(), ['sort' => 'order', 'order' => ((request()->sort == 'order' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    <i class="fa fa-fw fa-sort{{ (request()->sort == 'order' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'order' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                </a>
+                                            </th>
+                                            <th class="col-md">
+                                                Question
+                                                <a href="{{ route('placement_views.index', array_merge(request()->all(), ['sort' => 'question', 'order' => ((request()->sort == 'question' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    <i class="fa fa-fw fa-sort{{ (request()->sort == 'question' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'question' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                </a>
+                                            </th>
+                                            <th class="col-md">
+                                                Unit
+                                                </a>
+                                            </th>
+                                            <th class="col-md">
+                                                Active
+                                                <a href="{{ route('placement_views.index', array_merge(request()->all(), ['sort' => 'is_active', 'order' => ((request()->sort == 'is_active' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                    <i class="fa fa-fw fa-sort{{ (request()->sort == 'is_active' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'is_active' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                                </a>
+                                            </th>
+                                            <th class="col-md-3">
+                                                OPTIONS
+                                            </th>
                                         </tr>
                                     </thead>
 

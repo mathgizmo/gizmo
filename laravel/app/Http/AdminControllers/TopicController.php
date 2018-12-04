@@ -18,7 +18,12 @@ class TopicController extends Controller
     {
         $levels = DB::select('select * from level');
         $units = DB::select('select * from unit');
-        $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
+        if ($request->has('sort') and $request->has('order')) {
+            $topics = DB::table('topic')->where('unit_id', $request->unit_id)
+            ->orderBy($request->sort, $request->order)->get();
+        } else {
+            $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
+        }
         foreach ($topics as $key => $value) {
             if(!file_exists($topics[$key]->icon_src)) {
                 $topics[$key]->icon_src = 'images/default-icon.svg';
