@@ -64,6 +64,54 @@
 
 
                                     <tbody>
+
+                                        <tr style="background: #999999;">
+                                            <td>
+                                                <input type="number" min="0" name="id" id="id-filter" style="width: 50px;">
+                                            </td>
+                                            <td>
+                                                <input type="number"  min="0" name="order_no" id="order-filter" style="width: 60px;">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="title" id="title-filter" style="width: 100%;">
+                                            </td>
+                                            <td></td>
+                                            <td class="text-right">
+                                                <a href="javascript:void(0);" onclick="filter()" class="btn btn-primary">Filter</a>
+                                                <script type="text/javascript">
+                                                    function filter() {
+                                                        let url = new URL(window.location.href);
+                                                        const id = document.getElementById("id-filter").value;
+                                                        const order = document.getElementById("order-filter").value;
+                                                        const title = document.getElementById("title-filter").value;
+                                                        if(id) {
+                                                            url.searchParams.set('id', id);
+                                                        } else if (url.searchParams.get('id')) {
+                                                            url.searchParams.delete('id');
+                                                        }
+                                                        if(order) {
+                                                            url.searchParams.set('order_no', order);
+                                                        } else if (url.searchParams.get('order_no')) {
+                                                            url.searchParams.delete('order_no');
+                                                        }
+                                                        if(title) {
+                                                            url.searchParams.set('title', title);
+                                                        } else if (url.searchParams.get('title')) {
+                                                            url.searchParams.delete('title');
+                                                        }
+                                                        window.location.href = url.toString();
+                                                    } 
+                                                    function initFilters() {
+                                                        const url = new URL(window.location.href);
+                                                        document.getElementById("id-filter").value = url.searchParams.get('id');
+                                                        document.getElementById("order-filter").value = url.searchParams.get('order_no');
+                                                        document.getElementById("title-filter").value = url.searchParams.get('title');
+                                                    }
+                                                    window.onload = initFilters;
+                                                </script>
+                                            </td>
+                                        </tr>
+
                                         @foreach($levels as $level)
                                         <tr>
                                             <td>{{$level->id}}</td>

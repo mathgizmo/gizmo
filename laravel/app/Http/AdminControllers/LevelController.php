@@ -15,11 +15,20 @@ class LevelController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->has('sort') and $request->has('order')) {
-            $levels = Level::orderBy($request->sort, $request->order)->get();
-        } else {
-            $levels = Level::All();
-        }
+        $query = Level::query();
+        $query->when($request->has('id'), function ($q) {
+            return $q->where('id', request('id'));
+        });
+        $query->when($request->has('order_no'), function ($q) {
+            return $q->where('order_no', request('order_no'));
+        });
+        $query->when($request->has('title'), function ($q) {
+            return $q->where('title', 'LIKE', '%'.request('title').'%');
+        });
+        $query->when($request->has('sort') and $request->has('order'), function ($q) {
+            return $q->orderBy(request('sort'), request('order'));
+        });
+        $levels = $query->get();
         return view('level_views.index', ['levels'=>$levels]);
     }
 

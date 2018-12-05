@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Lesson;
+use App\Topic;
+use App\Level;
+use App\Unit;
 
 class LessonController extends Controller
 {
@@ -16,15 +19,25 @@ class LessonController extends Controller
      */
     public function index(Request $request)
     {
-        $levels = DB::select('select * from level');
-        $units = DB::select('select * from unit');
-        $topics = DB::select('select * from topic');
-        if ($request->has('sort') and $request->has('order')) {
-            $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)
-                ->orderBy($request->sort, $request->order)->get();
-        } else {
-            $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
-        }
+        $levels = Level::all();
+        $units = Unit::all();
+        $topics = Topic::all();
+
+        $query = Lesson::query()->where('topic_id', $request->topic_id);
+        $query->when($request->has('id'), function ($q) {
+            return $q->where('id', request('id'));
+        });
+        $query->when($request->has('order_no'), function ($q) {
+            return $q->where('order_no', request('order_no'));
+        });
+        $query->when($request->has('title'), function ($q) {
+            return $q->where('title', 'LIKE', '%'.request('title').'%');
+        });
+        $query->when($request->has('sort') and $request->has('order'), function ($q) {
+            return $q->orderBy(request('sort'), request('order'));
+        });
+        $lessons = $query->get();
+
         return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
     }
 

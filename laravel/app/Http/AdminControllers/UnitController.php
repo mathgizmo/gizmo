@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Unit;
+use App\Level;
 
 class UnitController extends Controller
 {
@@ -16,13 +17,23 @@ class UnitController extends Controller
      */
     public function index(Request $request)
     {
-        $levels = DB::select('select * from level');
-        if ($request->has('sort') and $request->has('order')) {
-            $units = DB::table('unit')->where('level_id', $request->level_id)
-                ->orderBy($request->sort, $request->order)->get();
-        } else {
-            $units = DB::table('unit')->where('level_id', $request->level_id)->get();
-        }
+        $levels = Level::all();
+
+        $query = Unit::query()->where('level_id', $request->level_id);
+        $query->when($request->has('id'), function ($q) {
+            return $q->where('id', request('id'));
+        });
+        $query->when($request->has('order_no'), function ($q) {
+            return $q->where('order_no', request('order_no'));
+        });
+        $query->when($request->has('title'), function ($q) {
+            return $q->where('title', 'LIKE', '%'.request('title').'%');
+        });
+        $query->when($request->has('sort') and $request->has('order'), function ($q) {
+            return $q->orderBy(request('sort'), request('order'));
+        });
+        $units = $query->get();
+
         return view('unit_views.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
     }
 

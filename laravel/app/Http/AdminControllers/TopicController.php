@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Topic;
+use App\Level;
+use App\Unit;
 
 class TopicController extends Controller
 {
@@ -16,14 +18,27 @@ class TopicController extends Controller
      */
     public function index(Request $request)
     {
-        $levels = DB::select('select * from level');
-        $units = DB::select('select * from unit');
-        if ($request->has('sort') and $request->has('order')) {
-            $topics = DB::table('topic')->where('unit_id', $request->unit_id)
-            ->orderBy($request->sort, $request->order)->get();
-        } else {
-            $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
-        }
+        $levels = Level::all();
+        $units = Unit::all();
+
+        $query = Topic::query()->where('unit_id', $request->unit_id);
+        $query->when($request->has('id'), function ($q) {
+            return $q->where('id', request('id'));
+        });
+        $query->when($request->has('order_no'), function ($q) {
+            return $q->where('order_no', request('order_no'));
+        });
+        $query->when($request->has('title'), function ($q) {
+            return $q->where('title', 'LIKE', '%'.request('title').'%');
+        });
+        $query->when($request->has('short_name'), function ($q) {
+            return $q->where('short_name', 'LIKE', '%'.request('short_name').'%');
+        });
+        $query->when($request->has('sort') and $request->has('order'), function ($q) {
+            return $q->orderBy(request('sort'), request('order'));
+        });
+        $topics = $query->get();
+
         foreach ($topics as $key => $value) {
             if(!file_exists($topics[$key]->icon_src)) {
                 $topics[$key]->icon_src = 'images/default-icon.svg';

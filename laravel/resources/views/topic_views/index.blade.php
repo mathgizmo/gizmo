@@ -125,6 +125,66 @@
 
 
 						<tbody>
+							
+							<tr style="background: #999999;">
+                                <td></td>
+                                <td>
+                                    <input type="number" min="0" name="id" id="id-filter" style="width: 50px;">
+                                </td>
+                                <td>
+                                    <input type="number"  min="0" name="order_no" id="order-filter" style="width: 90px;">
+                                </td>
+                                <td>
+                                    <input type="text" name="title" id="title-filter" style="width: 100%;">
+                                </td>
+                                <td>
+                                	<input type="text" name="short_name" id="short-name-filter" style="width: 100%;">
+                                </td>
+                                <td style="width: 120px;"></td>
+                                <td class="text-right">
+                                    <a href="javascript:void(0);" onclick="filter()" class="btn btn-primary">Filter</a>
+                                    <script type="text/javascript">
+                                        function filter() {
+                                            let url = new URL(window.location.href);
+                                            const id = document.getElementById("id-filter").value;
+                                            const order = document.getElementById("order-filter").value;
+                                            const title = document.getElementById("title-filter").value;
+                                            const shortName = document.getElementById("short-name-filter").value;
+                                            
+                                            if(id) {
+                                                url.searchParams.set('id', id);
+                                            } else if (url.searchParams.get('id')) {
+                                                url.searchParams.delete('id');
+                                            }
+                                            if(order) {
+                                                url.searchParams.set('order_no', order);
+                                            } else if (url.searchParams.get('order_no')) {
+                                                url.searchParams.delete('order_no');
+                                            }
+                                            if(title) {
+                                                url.searchParams.set('title', title);
+                                            } else if (url.searchParams.get('title')) {
+                                                url.searchParams.delete('title');
+                                            }
+                                            if(shortName) {
+                                                url.searchParams.set('short_name', shortName);
+                                            } else if (url.searchParams.get('short_name')) {
+                                                url.searchParams.delete('short_name');
+                                            }
+                                            window.location.href = url.toString();
+                                        } 
+                                        function initFilters() {
+                                            const url = new URL(window.location.href);
+                                            document.getElementById("id-filter").value = url.searchParams.get('id');
+                                            document.getElementById("order-filter").value = url.searchParams.get('order_no');
+                                            document.getElementById("title-filter").value = url.searchParams.get('title');
+                                            document.getElementById("short-name-filter").value = url.searchParams.get('short_name');
+                                        }
+                                        window.onload = initFilters;
+                                    </script>
+                                </td>
+                            </tr>
+
 							@foreach($topics as $topic)
 								<tr>
 									<td><img class="show-img" src="{{ URL::asset($topic->icon_src) }}" /></td>
@@ -133,7 +193,7 @@
 									<td>{{$topic->title}}</td>
 									<td>{{$topic->short_name}}</td>
 									<td>{{($topic->dependency == true) ? 'Yes' : 'No'}}</td>
-									<td class="text-center">
+									<td class="text-right">
 
 											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
 											<a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
