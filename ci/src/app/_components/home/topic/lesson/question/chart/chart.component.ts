@@ -49,6 +49,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
 
+    private selectedDragableElement: any = null;
+
     constructor(private ref:ChangeDetectorRef){
       this.dots = [];
       if(!this.chartHeight)
@@ -56,8 +58,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     }
 
     ngOnInit() {
-      document.getElementById('chart-container')
-        .addEventListener('click', this.setClickPosition.bind(this));
+      const chart = document.getElementById('chart-container');
+      chart.addEventListener('click', this.setClickPosition.bind(this));
+      chart.addEventListener('mousedown', this.startDrag.bind(this));
+      chart.addEventListener('mousemove', this.drag.bind(this));
+      chart.addEventListener('mouseup', this.endDrag.bind(this));
+      chart.addEventListener('mouseleave', this.endDrag.bind(this));
     }
 
     onResize(event) {
@@ -67,8 +73,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
     ngOnDestroy() {
       this.destroyDotsChart();
-      document.getElementById('chart-container')
-        .removeEventListener('click', this.setClickPosition.bind(this));
+      const chart = document.getElementById('chart-container');
+      chart.removeEventListener('click', this.setClickPosition.bind(this));
+      chart.removeEventListener('mousedown', this.startDrag.bind(this));
+      chart.removeEventListener('mousemove', this.drag.bind(this));
+      chart.removeEventListener('mouseup', this.endDrag.bind(this));
+      chart.removeEventListener('mouseleave', this.endDrag.bind(this));
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -311,7 +321,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
       if(this.value < this.startValue) this.value = this.startValue;
       if(this.value > this.maxValue) this.value = this.maxValue;
       if(this.type == 3) this.value = Math.round(this.value);
-      let chartHtml = '';
       let valuePercent = this.value/this.maxValue;
       let chartContainer = document.getElementById('chart-container');
       let chartValueLabelFontSize = 16;
@@ -319,23 +328,32 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           chartValueLabelFontSize = 11;
       }
       let size = Math.min(this.chartHeight, window.innerWidth*0.5);
+      let chartHtml = '';
+      const svgns = "http://www.w3.org/2000/svg";
       switch (this.type) {
         default:
         case 1:
           // Chart (type 1 - rectangle)
-          chartHtml += '<svg style="height: ' + size + 'px; width:' + size + 'px;">';
-          chartHtml += '<rect id="rect2" height="'+size
-            +'" width="'+size+'" style="fill: '
-            + this.mainColor + '; stroke: ' +
-            this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
-          chartHtml +=  '></rect>';
-          chartHtml += '<rect id="rect1" y="'
-            +(1 - valuePercent) * size
-            +'" height="'+valuePercent*size
-            +'" width="'+size+'" style="fill: '
-            + this.selectedColor + '; stroke: ' +
-          this.strokeColor + '; stroke-width: '+ this.strokeWidth + '"';
-          chartHtml +=  '></rect>';
+          let svg = document.createElementNS(svgns, 'svg');
+          svg.style.height = svg.style.width = size + 'px';
+          
+          let rect2 = document.createElementNS(svgns, 'rect');
+          rect2.setAttributeNS(null, 'id', 'rect2');
+          rect2.setAttributeNS(null, 'height', ''+size);
+          rect2.setAttributeNS(null, 'width', ''+size);
+          rect2.setAttributeNS(null, 'style', 'fill: ' + this.mainColor + '; stroke: ' 
+            + this.strokeColor + '; stroke-width: '+ this.strokeWidth + ';');
+          svg.appendChild(rect2);
+
+          let rect1 = document.createElementNS(svgns, 'rect');
+          rect1.setAttributeNS(null, 'id', 'rect1');
+          rect1.setAttributeNS(null, 'height', ''+valuePercent*size);
+          rect1.setAttributeNS(null, 'width', ''+size);
+          rect1.setAttributeNS(null, 'y', ''+(1-valuePercent)*size);
+          rect1.setAttributeNS(null, 'style', 'fill: ' + this.selectedColor + '; stroke: ' 
+            + this.strokeColor + '; stroke-width: '+ this.strokeWidth + ';');
+          rect1.setAttributeNS(null, 'class', 'draggable');
+          svg.appendChild(rect1);
 
           if(this.valueDisplayChart > 0) {
             let x, y;
@@ -345,25 +363,34 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             } else {
               y = size - 0.5*(this.value/this.maxValue*size)+5;
             }
-            let valueLabel = '<text text-anchor="middle" x=' + x + ' y=' + y
-              + ' fill="' + this.strokeColor
-              +'" class="chart-value-label" style="font-size: '
-              +chartValueLabelFontSize+'px;">';
-            if(this.valueDisplayChart == 1) {
-              valueLabel += this.value.toFixed(this.accuracyChart);
-            } else if (this.valueDisplayChart == 2) {
-              valueLabel += this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
-            } else if (this.valueDisplayChart == 3) {
-              valueLabel += (this.value/this.maxValue).toFixed(this.accuracyChart);
-            } else if (this.valueDisplayChart == 4) {
-              valueLabel += (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%'
+            let valueLabel = document.createElementNS(svgns, 'text');
+            valueLabel.setAttributeNS(null, 'text-anchor', 'middle'); 
+            valueLabel.setAttributeNS(null, 'x', ''+x); 
+            valueLabel.setAttributeNS(null, 'y', ''+y); 
+            valueLabel.setAttributeNS(null, 'fill', ''+this.strokeColor); 
+            valueLabel.setAttributeNS(null, 'class', 'chart-value-label');
+            valueLabel.setAttributeNS(null, 'style', 'font-size: '
+              +chartValueLabelFontSize+'px;');
+            switch (this.valueDisplayChart) {
+              default:
+              case 1:
+                valueLabel.innerHTML = this.value.toFixed(this.accuracyChart);
+                break;
+              case 2:
+                valueLabel.innerHTML = this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
+                break;
+              case 3:
+                valueLabel.innerHTML = (this.value/this.maxValue).toFixed(this.accuracyChart);
+                break;
+              case 4:
+                valueLabel.innerHTML = (this.value/this.maxValue*100).toFixed(this.accuracyChart) + '%';
+                break;
             }
-            valueLabel +=  '</text>';
-            chartHtml += valueLabel;
+            svg.appendChild(valueLabel);
           }
 
-          chartHtml += '</svg>';
-          chartContainer.innerHTML = chartHtml;
+          chartContainer.innerHTML = '';
+          chartContainer.appendChild(svg);
           break;
         case 2:
           // Chart (type 2 - circle)
@@ -378,7 +405,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             +'" cx="'+radius+'" cy="'+radius+'" style="fill: '
             + this.mainColor + '; stroke: ' +
               this.strokeColor + '; stroke-width: '+ this.strokeWidth + '" />';
-            chartHtml += '<path id="circle1" d="M'+ radius +','+ radius
+            chartHtml += '<path id="circle1" class="draggable" d="M'+ radius +','+ radius
               + ' L' + radius + ',0 A' + radius + ',' + radius;
             if(valuePercent <= 0.5){
               chartHtml += ' 1 0,1';
@@ -526,7 +553,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           }
           let currentPointX = (this.value-this.startValue)/(this.endValue
             -this.startValue)*width + indentation;
-          chartHtml += '<circle cx="' + currentPointX + '" cy="25" r="'
+          chartHtml += '<circle class="draggable" cx="' + currentPointX + '" cy="25" r="'
             + this.markDiameter + '" fill="' + this.selectedColor + '" />';
 
           if(this.valueDisplayChart > 0) {
@@ -563,110 +590,6 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           break;
       }
       this.ref.detectChanges();
-    }
-
-    // function to set value by clicking on top slider
-    private setClickPosition(event) {
-      let chartContainer = document.getElementById('chart-container');
-      let pos = getAbsolutePosition(chartContainer);
-
-      let accuracy = this.accuracyControl;
-      if(this.valueDisplay == 3 || this.valueDisplay == 4) {
-        accuracy = Math.max(accuracy, 5);
-      }
-
-      if (this.type == 1) {
-        let y = event.pageY - pos.y;
-        let height  = chartContainer.offsetHeight;
-        this.value = this.maxValue - y*this.maxValue / height;
-
-        // find the closest point
-        let point = 0;
-        let diff = Math.abs(this.value - point);
-        for (let i = 0; i <= this.maxValue; i+= this.step) {
-          let newdiff = Math.abs(this.value - i);
-          if (newdiff < diff) {
-            diff = newdiff;
-            point = i;
-          }
-        }
-        Math.abs(this.value - this.maxValue) < diff ?
-          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10,
-            accuracy))/Math.pow(10, accuracy);
-      } else if (this.type == 2) {
-        let x = event.pageX - pos.x;
-        let y = event.pageY - pos.y;
-        let height  = chartContainer.offsetHeight;
-        let width  = chartContainer.offsetWidth;
-        let x0 = width/2;
-        let y0 = height/2;
-        let xc = x - x0;
-        let yc = y0 - y;
-        let angle = Math.atan(xc/yc);
-        this.value = angle/(2*Math.PI)*this.maxValue; // I
-        if( (xc>0 && yc<0) || (xc<=0 && yc<0) ) { // II-III
-          this.value += 0.5*this.maxValue;
-        } else if(xc<0 && yc>=0) { // IV
-          this.value += this.maxValue;
-        }
-
-        // find the closest point
-        let point = 0;
-        let diff = Math.abs(this.value - point);
-        for (let i = 0; i <= this.maxValue; i+= this.step) {
-          let newdiff = Math.abs(this.value - i);
-          if (newdiff < diff) {
-            diff = newdiff;
-            point = i;
-          }
-        }
-        Math.abs(this.value - this.maxValue) < diff ?
-          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10,
-            accuracy))/Math.pow(10, accuracy);
-      } else if (this.type == 4) {
-        let x = event.pageX - pos.x;
-        let circleDiameter = 2*this.dotRadius;
-        let indentation = circleDiameter + 5;
-        let width  = chartContainer.offsetWidth - indentation*2;
-        this.value = (x - indentation)*(this.endValue
-          -this.startValue) / width + this.startValue;
-
-        // find the closest point
-        let point = this.startValue;
-        let diff = Math.abs(this.value - point);
-        for (let i = this.startValue; i <= this.endValue; i+= this.step) {
-          let newdiff = Math.abs(this.value - i);
-          if (newdiff < diff) {
-            diff = newdiff;
-            point = i;
-          }
-        }
-        Math.abs(this.value - this.endValue) < diff ?
-          this.value = this.endValue : this.value = Math.round(point*Math.pow(10,
-            accuracy))/Math.pow(10, accuracy);
-
-        if(this.value < this.startValue)
-          this.value = this.startValue;
-        else if (this.value > this.endValue)
-          this.value = this.endValue;
-      }
-      if(this.type == 1 || this.type == 2 || this.type == 4) {
-        let promise = new Promise((resolve) => {
-          if(this.control == 1 && this.valueDisplay == 3) {
-            this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*Math.pow(10, accuracy))/Math.pow(10, accuracy);
-          } else if(this.control == 1 && this.valueDisplay == 4){
-            this.inputValue = Math.round((this.value-this.startValue)
-              /(this.maxValue-this.startValue)*Math.pow(10, accuracy+2))/Math.pow(10, accuracy);
-          } else {
-            this.inputValue = Math.round(this.value*Math.pow(10,
-              accuracy))/Math.pow(10, accuracy);
-          }
-          resolve();
-        }).then(() => {
-          this.buildChart();
-        });
-      }
     }
 
     // function to draw Dots Chart
@@ -717,6 +640,124 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private destroyDotsChart() {
       if (this.dotsChartRebuildFunctionId)
         clearInterval(this.dotsChartRebuildFunctionId);
+    }
+
+    // drag animation
+    private startDrag(event) {
+      if (event.target.classList.contains('draggable')) {
+        this.selectedDragableElement = event.target;
+      }
+    }
+    private drag(event) {
+      if (this.selectedDragableElement) {
+        this.setClickPosition(event);
+      }
+    }
+    private endDrag(event) {
+      this.selectedDragableElement = null;
+    }
+
+    // function to set value by clicking on top slider
+    private setClickPosition(event) {
+      let chartContainer = document.getElementById('chart-container');
+      let pos = getAbsolutePosition(chartContainer);
+
+      let accuracy = this.accuracyControl;
+      if(this.valueDisplay == 3 || this.valueDisplay == 4) {
+        accuracy = Math.max(accuracy, 5);
+      }
+
+      let x = event.pageX - pos.x;
+      let y = event.pageY - pos.y;
+
+      if (this.type == 1) {
+        let height  = chartContainer.offsetHeight;
+        this.value = this.maxValue - y*this.maxValue / height;
+
+        // find the closest point
+        let point = 0;
+        let diff = Math.abs(this.value - point);
+        for (let i = 0; i <= this.maxValue; i+= this.step) {
+          let newdiff = Math.abs(this.value - i);
+          if (newdiff < diff) {
+            diff = newdiff;
+            point = i;
+          }
+        }
+        Math.abs(this.value - this.maxValue) < diff ?
+          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10,
+            accuracy))/Math.pow(10, accuracy);
+      } else if (this.type == 2) {
+        let height  = chartContainer.offsetHeight;
+        let width  = chartContainer.offsetWidth;
+        let x0 = width/2;
+        let y0 = height/2;
+        let xc = x - x0;
+        let yc = y0 - y;
+        let angle = Math.atan(xc/yc);
+        this.value = angle/(2*Math.PI)*this.maxValue; // I
+        if( (xc>0 && yc<0) || (xc<=0 && yc<0) ) { // II-III
+          this.value += 0.5*this.maxValue;
+        } else if(xc<0 && yc>=0) { // IV
+          this.value += this.maxValue;
+        }
+
+        // find the closest point
+        let point = 0;
+        let diff = Math.abs(this.value - point);
+        for (let i = 0; i <= this.maxValue; i+= this.step) {
+          let newdiff = Math.abs(this.value - i);
+          if (newdiff < diff) {
+            diff = newdiff;
+            point = i;
+          }
+        }
+        Math.abs(this.value - this.maxValue) < diff ?
+          this.value = this.maxValue : this.value = Math.round(point*Math.pow(10,
+            accuracy))/Math.pow(10, accuracy);
+      } else if (this.type == 4) {
+        let circleDiameter = 2*this.dotRadius;
+        let indentation = circleDiameter + 5;
+        let width  = chartContainer.offsetWidth - indentation*2;
+        this.value = (x - indentation)*(this.endValue
+          -this.startValue) / width + this.startValue;
+
+        // find the closest point
+        let point = this.startValue;
+        let diff = Math.abs(this.value - point);
+        for (let i = this.startValue; i <= this.endValue; i+= this.step) {
+          let newdiff = Math.abs(this.value - i);
+          if (newdiff < diff) {
+            diff = newdiff;
+            point = i;
+          }
+        }
+        Math.abs(this.value - this.endValue) < diff ?
+          this.value = this.endValue : this.value = Math.round(point*Math.pow(10,
+            accuracy))/Math.pow(10, accuracy);
+
+        if(this.value < this.startValue)
+          this.value = this.startValue;
+        else if (this.value > this.endValue)
+          this.value = this.endValue;
+      }
+      if(this.type == 1 || this.type == 2 || this.type == 4) {
+        let promise = new Promise((resolve) => {
+          if(this.control == 1 && this.valueDisplay == 3) {
+            this.inputValue = Math.round((this.value-this.startValue)
+              /(this.maxValue-this.startValue)*Math.pow(10, accuracy))/Math.pow(10, accuracy);
+          } else if(this.control == 1 && this.valueDisplay == 4){
+            this.inputValue = Math.round((this.value-this.startValue)
+              /(this.maxValue-this.startValue)*Math.pow(10, accuracy+2))/Math.pow(10, accuracy);
+          } else {
+            this.inputValue = Math.round(this.value*Math.pow(10,
+              accuracy))/Math.pow(10, accuracy);
+          }
+          resolve();
+        }).then(() => {
+          this.buildChart();
+        });
+      }
     }
 
 }

@@ -223,6 +223,10 @@ h1, h2, h3, h4 {
   font-weight: bold;
 }
 
+.draggable {
+  cursor: pointer;
+}
+
 @media screen and (max-width: 1024px) {
     body {
         font-size: 12px;
