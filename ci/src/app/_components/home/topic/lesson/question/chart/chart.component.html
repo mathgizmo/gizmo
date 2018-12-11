@@ -37,7 +37,7 @@
         </label>
         <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue">
           <span>
-            Value = {{value.toFixed(accuracyControl)*controllbaseValue/maxValue}}
+            Value = {{(value*controllbaseValue/maxValue).toFixed(accuracyControl)}}
           </span>
           <span *ngIf="valueDisplay == 2">
             / {{controllbaseValue}}
@@ -68,7 +68,7 @@
       </label>
       <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue">
         <span>
-          Value = {{value.toFixed(accuracyControl)*controllbaseValue/maxValue}}
+          Value = {{(value*controllbaseValue/maxValue).toFixed(accuracyControl)}}
         </span>
         <span *ngIf="valueDisplay == 2">
           / {{controllbaseValue}}
