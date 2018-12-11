@@ -50,6 +50,7 @@
                             <div class="col-md-6">
                                     <select class="form-control" name="unit_id" id="unit_id">
                                 @if (count($units) > 0)
+                                    <option value="">Select From ...</option>
                                     @foreach($units as $unit)
                                             <option value="{{$unit->id}}"
                                             >{{$unit->title}}</option>
@@ -68,6 +69,7 @@
                                 <div class="col-md-6">
                                     <select class="form-control" name="topic_id" id="topic_id">
                                 @if (count($topics) > 0)
+                                        <option value="">Select From ...</option>
                                         @foreach($topics as $topic)
                                             <option value="{{$topic->id}}"
                                             >{{$topic->title}}</option>

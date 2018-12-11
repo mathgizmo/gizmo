@@ -19,7 +19,12 @@ class UnitController extends Controller
     {
         $levels = Level::all();
 
-        $query = Unit::query()->where('level_id', $request->level_id);
+        $query = Unit::query();
+
+        $query->when($request->has('level_id') && ($request->level_id >= 0), function ($q) {
+            return $q->where('level_id', request('level_id'));
+        });
+
         $query->when($request->has('id'), function ($q) {
             return $q->where('id', request('id'));
         });

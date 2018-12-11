@@ -21,7 +21,17 @@ class TopicController extends Controller
         $levels = Level::all();
         $units = Unit::all();
 
-        $query = Topic::query()->where('unit_id', $request->unit_id);
+        $query = Topic::query();
+
+        if ($request->has('unit_id') && $request->unit_id >= 0) {
+            $query->where('unit_id', $request->unit_id);
+        } else if ($request->has('level_id') && $request->level_id >= 0) {
+            $query->whereIn('unit_id', function($query) { 
+                $query->select('id')->from(with(new Unit)->getTable())
+                ->where('level_id', request('level_id'));
+            });
+        }
+
         $query->when($request->has('id'), function ($q) {
             return $q->where('id', request('id'));
         });
