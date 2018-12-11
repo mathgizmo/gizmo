@@ -133,27 +133,27 @@
                                 <tr>
                                     <th class="col-md">Actions</th>
                                     <th class="col-md">
-                                        Level <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'level_id', 'order' => ((request()->sort == 'level_id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Level <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'level_id', 'order' => ((request()->sort == 'level_id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'level_id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'level_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'level_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                     <th class="col-md">
-                                        Unit <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'unit_id', 'order' => ((request()->sort == 'unit_id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Unit <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'unit_id', 'order' => ((request()->sort == 'unit_id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'unit_id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'unit_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'unit_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                     <th class="col-md">
-                                        Topic <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'topic_id', 'order' => ((request()->sort == 'topic_id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Topic <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'topic_id', 'order' => ((request()->sort == 'topic_id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'topic_id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'topic_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'topic_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                     <th class="col-md">
-                                        Lesson <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'lesson_id', 'order' => ((request()->sort == 'lesson_id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Lesson <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'lesson_id', 'order' => ((request()->sort == 'lesson_id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'lesson_id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'lesson_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'lesson_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                     <th class="col-md">
-                                        Question <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'question', 'order' => ((request()->sort == 'question' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Question <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'question', 'order' => ((request()->sort == 'question' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'question' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'question' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'question' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                     <th class="col-md">
-                                        ReplyMode <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'reply_mode', 'order' => ((request()->sort == 'reply_mode' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        ReplyMode <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'reply_mode', 'order' => ((request()->sort == 'reply_mode' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'reply_mode' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'reply_mode' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'reply_mode' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                 </tr>

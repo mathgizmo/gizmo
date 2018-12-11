@@ -89,31 +89,31 @@
 												</th>
 												<th class="col-md">
 													ID
-													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     	<i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 	</a>
 												</th>
 												<th class="col-md">
 													Order No
-													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'order_no', 'order' => ((request()->sort == 'order_no' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'order_no', 'order' => ((request()->sort == 'order_no' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'order_no' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     	<i class="fa fa-fw fa-sort{{ (request()->sort == 'order_no' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'order_no' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 	</a>
 												</th>
 												<th class="col-md">
 													Title
-													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'title', 'order' => ((request()->sort == 'title' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'title', 'order' => ((request()->sort == 'title' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'title' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     	<i class="fa fa-fw fa-sort{{ (request()->sort == 'title' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'title' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 	</a>
 												</th>
 												<th class="col-md">
 													Short Name
-													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'short_name', 'order' => ((request()->sort == 'short_name' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'short_name', 'order' => ((request()->sort == 'short_name' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'short_name' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     	<i class="fa fa-fw fa-sort{{ (request()->sort == 'short_name' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'short_name' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 	</a>
 												</th>
 												<th class="col-md">
 													Dependency
-													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'dependency', 'order' => ((request()->sort == 'dependency' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+													<a href="{{ route('topic_views.index', array_merge(request()->all(), ['sort' => 'dependency', 'order' => ((request()->sort == 'dependency' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'dependency' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     	<i class="fa fa-fw fa-sort{{ (request()->sort == 'dependency' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'dependency' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 	</a>
 												</th>
