@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\ReportError;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class ReportErrorController extends Controller
 {
@@ -15,12 +17,13 @@ class ReportErrorController extends Controller
      */
     public function index(Request $request, $type)
     {
-        if ($request->has('sort') and $request->has('order')) {
-            $error_reports = ReportError::where('declined', $type == 'new' ? 0 : 1)
-                ->orderBy($request->sort, $request->order)->latest()->get();
+        $query = ReportError::query()->where('declined', $type == 'new' ? 0 : 1);
+        if($request->has('sort') and $request->has('order')) {
+            $query->orderBy(request('sort'), request('order'));
         } else {
-            $error_reports = ReportError::where('declined', $type == 'new' ? 0 : 1)->latest()->get();
+           $query->latest();
         }
+        $error_reports = $query->paginate(10)->appends(Input::except('page'));
         return view('error_report_views.index', compact('error_reports', 'type'));
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use App\Topic;
 use App\Level;
 use App\Unit;
@@ -47,7 +48,8 @@ class TopicController extends Controller
         $query->when($request->has('sort') and $request->has('order'), function ($q) {
             return $q->orderBy(request('sort'), request('order'));
         });
-        $topics = $query->get();
+
+        $topics = $query->paginate(10)->appends(Input::except('page'));
 
         foreach ($topics as $key => $value) {
             if(!file_exists($topics[$key]->icon_src)) {

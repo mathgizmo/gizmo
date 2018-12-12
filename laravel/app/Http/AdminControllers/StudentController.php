@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Student;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class StudentController extends Controller
 {
     public function index()
     {
-        $students = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking`
+         $query = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking`
             WHERE students_tracking.student_id = students.id ORDER by id DESC LIMIT 1) as `date`'))
             ->where('email', 'NOT LIKE', '%@somemail.com')
             ->filter(request()->all())
-            ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc')
-            ->get();
+            ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc');
+
+        $students = $query->paginate(10)->appends(Input::except('page'));
         return view('student_view.index', compact('students'));
     }
 

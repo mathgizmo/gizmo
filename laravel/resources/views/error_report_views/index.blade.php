@@ -13,6 +13,11 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
+                        {{ $error_reports->links() }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -80,6 +85,11 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ $error_reports->links() }}
                     </div>
                 </div>
             </div>
