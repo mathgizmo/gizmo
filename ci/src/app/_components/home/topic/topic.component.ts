@@ -13,7 +13,7 @@ import { environment } from '../../../../environments/environment';
 })
 
 export class TopicComponent implements OnInit {
-    backLinkText: string = '<-Back';
+    backLinkText = 'Back';
     topicTree: any = [];
     id: number;
     private sub: any;
@@ -43,7 +43,7 @@ export class TopicComponent implements OnInit {
     }
 
     setTopicIcon(image) {
-        let link = `url(`+this.adminUrl+`/${image})`;
+        const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
