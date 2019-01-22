@@ -530,7 +530,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               const textPosition = ((point - this.startValue) / (this.endValue
                 - this.startValue) * width + indentation);
               if (i == 0) {
-                chartHtml += '<text x="' + (this.markDiameter / 2)
+                chartHtml += '<text x="' + padding
                 + '" y="50" fill="' + this.strokeColor
                 + '" style="font-size: ' + chartValueLabelFontSize + 'px;" text-anchor="start">'
                 + label + '</text>';
