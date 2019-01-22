@@ -279,7 +279,7 @@ export class LessonComponent implements OnInit {
                 }
                 for (let i = 0; i < this.question.answers.length; i++) {
                   const expr = parser.parse(this.question.answers[i].value);
-                  if (! (expr.evaluate({ x: xValue }) == this.answers[i]) ) {
+                  if (! (expr.evaluate({ x: xValue }) == this.answers[i].trim()) ) {
                     return false;
                   }
                 }
@@ -334,7 +334,7 @@ export class LessonComponent implements OnInit {
                         this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + '';
                     }
                     if (this.question.answers[i].is_correct &&
-                      correctAnswer != this.answers[i]) {
+                      correctAnswer != this.answers[i].trim()) {
                         return false;
                     }
                 }
