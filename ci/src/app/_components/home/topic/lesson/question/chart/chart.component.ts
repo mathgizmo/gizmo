@@ -508,6 +508,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           break;
         case 4:
           // Chart (type 4 - slider)
+          const maxPointsNumber = 100;
+          const hidePoints = ((this.endValue-this.startValue)/this.step > maxPointsNumber) ? true : false;
           const precision = Math.max(this.accuracyControl, this.accuracyChart);
           const padding = 20;
           let width  = chartContainer.offsetWidth;
@@ -539,8 +541,10 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 + label + '</text>';
               }
             } else {
-              chartHtml += '<circle cx="' + position + '" cy="25" r="'
+              if(!hidePoints) {
+                chartHtml += '<circle cx="' + position + '" cy="25" r="'
                 + (this.pointDiameter / 2) + '" fill="' + this.strokeColor + '" />';
+              }
             }
           }
           chartHtml += '<circle cx="' + (width + indentation) + '" cy="25" r="'
