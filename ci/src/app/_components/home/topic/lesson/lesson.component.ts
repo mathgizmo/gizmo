@@ -71,8 +71,8 @@ export class LessonComponent implements OnInit {
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
                         // this.backLinkText = lessonTree.level + ' > ' + lessonTree.unit;
-                        this.titleText = lessonTree.topic.title + ': '
-                          + lessonTree.title;
+                        (this.lesson_id !== -1) ? this.titleText = lessonTree.topic.title + ': '
+                          + lessonTree.title : this.titleText = 'Test Out Topic: ' + lessonTree.title;
                         this.randomisation = lessonTree['randomisation'];
                         if (this.randomisation) {
                           // randomize array
@@ -93,10 +93,12 @@ export class LessonComponent implements OnInit {
                             this.question_num = this.lessonTree['questions'].length;
                         }
                         this.nextQuestion();
-                        this.trackingService.startLesson(this.lesson_id)
-                          .subscribe(start_time => {
-                            this.start_time = start_time;
-                        });
+                        if (this.lesson_id !== -1) {
+                            this.trackingService.startLesson(this.lesson_id)
+                                .subscribe(start_time => {
+                                    this.start_time = start_time;
+                                });
+                        }
                         if (this.lesson_id == -1) {
                           this.question_num = lessonTree['questions'].length;
                         }
