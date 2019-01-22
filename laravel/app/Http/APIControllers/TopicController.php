@@ -265,7 +265,7 @@ class TopicController extends Controller
                         ->where('id', '>', $lesson['id']);
                     });
                 })
-            ->first());
+            ->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->first());
         $lesson['next_lesson_id'] = isset($next['id']) ? $next['id'] : 0;
         DB::connection()->setFetchMode($mode);
         return $this->success($lesson);
