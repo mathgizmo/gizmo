@@ -227,6 +227,22 @@ h1, h2, h3, h4 {
   cursor: pointer;
 }
 
+.movable, good-dialog, bad-dialog, feedback-dialog, report-dialog {
+  cursor: move;
+}
+
+.no-select, good-dialog, bad-dialog {
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.hide {
+    display: none;
+}
+
 @media screen and (max-width: 1024px) {
     body {
         font-size: 12px;

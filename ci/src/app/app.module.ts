@@ -34,6 +34,8 @@ import { QuestionComponent } from './_components/home/topic/lesson/question/ques
 import { QuestionPreviewComponent } from './_components/previews/question-preview/question-preview.component';
 import { PlacementComponent, QuestionNumDialogComponent } from './_components/welcome/placement/index';
 
+import { DraggableDirective } from './_directives/Draggable/draggable.directive';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -80,7 +82,8 @@ import { PlacementComponent, QuestionNumDialogComponent } from './_components/we
         QuestionComponent,
         QuestionPreviewComponent,
         PlacementComponent,
-        QuestionNumDialogComponent
+        QuestionNumDialogComponent,
+        DraggableDirective
     ],
     entryComponents: [
         GoodDialogComponent,

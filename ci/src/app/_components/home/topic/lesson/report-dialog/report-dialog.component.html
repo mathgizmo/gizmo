@@ -1,4 +1,4 @@
-<h2 mat-dialog-title class="subtitle">Please specify reason</h2>
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle">Please specify reason</h2>
 <mat-dialog-content>
     <mat-radio-group class="radio-group" [(ngModel)]="selectedOption">
       <mat-radio-button class="radio-button" *ngFor="let option of options; let optionIndex = index" [value]="optionIndex" color="primary">
