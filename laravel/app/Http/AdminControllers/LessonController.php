@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use App\Lesson;
 use App\Topic;
 use App\Level;
@@ -23,7 +24,25 @@ class LessonController extends Controller
         $units = Unit::all();
         $topics = Topic::all();
 
-        $query = Lesson::query()->where('topic_id', $request->topic_id);
+        $query = Lesson::query();
+        
+        if ($request->has('topic_id') && $request->topic_id >= 0) {
+            $query->where('topic_id', $request->topic_id);
+        } else if ($request->has('unit_id') && $request->unit_id >= 0) {
+            $query->whereIn('topic_id', function($query) { 
+                $query->select('id')->from(with(new Topic)->getTable())
+                ->where('unit_id', request('unit_id'));
+            });
+        } else if ($request->has('level_id')  && $request->level_id >= 0) {
+            $query->whereIn('topic_id', function($query) { 
+                $query->select('id')->from(with(new Topic)->getTable())
+                ->whereIn('unit_id', function($query) { 
+                    $query->select('id')->from(with(new Unit)->getTable())
+                    ->where('level_id', request('level_id'));
+                });
+            });
+        }
+
         $query->when($request->has('id'), function ($q) {
             return $q->where('id', request('id'));
         });
@@ -36,7 +55,8 @@ class LessonController extends Controller
         $query->when($request->has('sort') and $request->has('order'), function ($q) {
             return $q->orderBy(request('sort'), request('order'));
         });
-        $lessons = $query->get();
+        
+        $lessons = $query->paginate(10)->appends(Input::except('page'));
 
         return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
     }

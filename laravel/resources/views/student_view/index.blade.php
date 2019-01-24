@@ -34,33 +34,38 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
+                        {{ $students->links() }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
                                     <th class="col-md"></th>
                                     <th class="col-md">
-                                        ID <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        ID <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
                                     </th>
                                     <th class="col-md">
-                                        Name <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'name', 'order' => ((request()->sort == 'name' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Name <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'name', 'order' => ((request()->sort == 'name' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'name' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'name' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'name' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
                                     </th>
                                     <th class="col-md">
-                                        Email <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'email', 'order' => ((request()->sort == 'email' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Email <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'email', 'order' => ((request()->sort == 'email' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'email' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'email' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'email' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
                                     </th>
                                     <th class="col-md">
-                                        Registration time <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'created_at', 'order' => ((request()->sort == 'created_at' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Registration time <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'created_at', 'order' => ((request()->sort == 'created_at' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'created_at' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'created_at' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'created_at' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
                                     </th>
                                     <th class="col-md">
-                                        Last action time <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'date', 'order' => ((request()->sort == 'date' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                        Last action time <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'date', 'order' => ((request()->sort == 'date' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'date' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'date' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'date' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
                                     </th>
@@ -103,6 +108,11 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ $students->links() }}
                     </div>
                 </div>
             </div>

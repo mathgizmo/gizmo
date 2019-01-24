@@ -34,25 +34,25 @@
                                         <tr>
                                             <th class="col-md">
                                                 ID
-                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     <i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 </a>
                                             </th>
                                             <th class="col-md">
                                                 Order No
-                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'order_no', 'order' => ((request()->sort == 'order_no' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'order_no', 'order' => ((request()->sort == 'order_no' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'order_no' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     <i class="fa fa-fw fa-sort{{ (request()->sort == 'order_no' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'order_no' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 </a>
                                             </th>
                                             <th class="col-md">
                                                 Title
-                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'title', 'order' => ((request()->sort == 'title' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'title', 'order' => ((request()->sort == 'title' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'title' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     <i class="fa fa-fw fa-sort{{ (request()->sort == 'title' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'title' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 </a>
                                             </th>
                                             <th class="col-md">
                                                 Dependency
-                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'dependency', 'order' => ((request()->sort == 'dependency' && request()->order == 'desc') ? 'asc' : 'desc')])) }}">
+                                                <a href="{{ route('level_views.index', array_merge(request()->all(), ['sort' => 'dependency', 'order' => ((request()->sort == 'dependency' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'dependency' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                                     <i class="fa fa-fw fa-sort{{ (request()->sort == 'dependency' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'dependency' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                                 </a>
                                             </th>
@@ -61,7 +61,6 @@
                                             </th>
                                         </tr>
                                     </thead>
-
 
                                     <tbody>
 
@@ -78,37 +77,6 @@
                                             <td></td>
                                             <td class="text-right">
                                                 <a href="javascript:void(0);" onclick="filter()" class="btn btn-primary">Filter</a>
-                                                <script type="text/javascript">
-                                                    function filter() {
-                                                        let url = new URL(window.location.href);
-                                                        const id = document.getElementById("id-filter").value;
-                                                        const order = document.getElementById("order-filter").value;
-                                                        const title = document.getElementById("title-filter").value;
-                                                        if(id) {
-                                                            url.searchParams.set('id', id);
-                                                        } else if (url.searchParams.get('id')) {
-                                                            url.searchParams.delete('id');
-                                                        }
-                                                        if(order) {
-                                                            url.searchParams.set('order_no', order);
-                                                        } else if (url.searchParams.get('order_no')) {
-                                                            url.searchParams.delete('order_no');
-                                                        }
-                                                        if(title) {
-                                                            url.searchParams.set('title', title);
-                                                        } else if (url.searchParams.get('title')) {
-                                                            url.searchParams.delete('title');
-                                                        }
-                                                        window.location.href = url.toString();
-                                                    } 
-                                                    function initFilters() {
-                                                        const url = new URL(window.location.href);
-                                                        document.getElementById("id-filter").value = url.searchParams.get('id');
-                                                        document.getElementById("order-filter").value = url.searchParams.get('order_no');
-                                                        document.getElementById("title-filter").value = url.searchParams.get('title');
-                                                    }
-                                                    window.onload = initFilters;
-                                                </script>
                                             </td>
                                         </tr>
 
@@ -149,13 +117,40 @@
 @endsection
 
 @section('scripts')
-
-<script>
-    $(document).ready(function(){
-        setTimeout(function() {
-            $('#successMessage').fadeOut('fast');
-}, 4000); // <-- time in milliseconds
-    });
-</script>
-
+    <script type="text/javascript">
+        $(document).ready(function(){
+            setTimeout(function() {
+                $('#successMessage').fadeOut('fast');
+            }, 4000); // <-- time in milliseconds
+        });
+        function filter() {
+            let url = new URL(window.location.href);
+            const id = document.getElementById("id-filter").value;
+            const order = document.getElementById("order-filter").value;
+            const title = document.getElementById("title-filter").value;
+            if(id) {
+                url.searchParams.set('id', id);
+            } else if (url.searchParams.get('id')) {
+                url.searchParams.delete('id');
+            }
+            if(order) {
+                url.searchParams.set('order_no', order);
+            } else if (url.searchParams.get('order_no')) {
+                url.searchParams.delete('order_no');
+            }
+            if(title) {
+                url.searchParams.set('title', title);
+            } else if (url.searchParams.get('title')) {
+                url.searchParams.delete('title');
+            }
+            window.location.href = url.toString();
+        } 
+        function initFilters() {
+            const url = new URL(window.location.href);
+            document.getElementById("id-filter").value = url.searchParams.get('id');
+            document.getElementById("order-filter").value = url.searchParams.get('order_no');
+            document.getElementById("title-filter").value = url.searchParams.get('title');
+        }
+        window.onload = initFilters;
+    </script>
 @endsection
