@@ -98,6 +98,7 @@ class StudentsTrackingController extends Controller
             'values (?, ?, ?)', array_values($progress_data));
         //find all topics from unit that are not done yet
         $topic_model = Topic::where("id", $topic_id)->first();
+        if(!$topic_model) { return; }
         $topics = DB::table('topic')->leftJoin('progresses', function ($join) use ($student) {
             $join->on('progresses.student_id', '=', DB::raw($student->id))
             ->on('progresses.entity_type', '=', DB::raw(1))
@@ -113,6 +114,7 @@ class StudentsTrackingController extends Controller
                 'values (?, ?, ?)', array_values($progress_data));
             //find all units from level that are not done yet
             $unit_model = Unit::where("id", $topic_model->unit_id)->first();
+            if(!$unit_model) { return; }
             $units = DB::table('unit')->leftJoin('progresses', function ($join) use ($student) {
                 $join->on('progresses.student_id', '=', DB::raw($student->id))
                 ->on('progresses.entity_type', '=', DB::raw(2))
@@ -128,6 +130,5 @@ class StudentsTrackingController extends Controller
                     'values (?, ?, ?)', array_values($progress_data));
             }
         }
-
     }
 }
