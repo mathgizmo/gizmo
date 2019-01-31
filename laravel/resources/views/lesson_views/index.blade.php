@@ -15,6 +15,13 @@
 
         <div class="panel-body">
 
+            @if(Session::has('message'))
+            <div id="successMessage" class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                <em> {!! session('message') !!}</em>
+            </div>
+            @endif
+
             <div class="row">
                 <div class="col-md-12">
                     <form class="form-horizontal" role="form" action="{{ route('lesson_views.index') }}" method="GET">
@@ -213,6 +220,11 @@
 @section('scripts')
 
 <script type="text/javascript">
+    $(document).ready(function(){
+        setTimeout(function() {
+            $('#successMessage').fadeOut('fast');
+        }, 4000); // <-- time in milliseconds
+    });
     function filter() {
         let url = new URL(window.location.href);
         const id = document.getElementById("id-filter").value;
