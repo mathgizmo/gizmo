@@ -72,7 +72,6 @@ class UnitController extends Controller
     public function store(Request $request)
     {
         // Store topic title and unit_id into topic table
-        $lid = $request->level_id;
         $this->validate($request, [
          'level_id'    => 'required',
          'unit_title'=> 'required',
@@ -86,16 +85,8 @@ class UnitController extends Controller
          'created_at' => date('Y-m-d H:i:s'),
          'modified_at' => date('Y-m-d H:i:s')
         ]);
-        $levels = DB::select('select * from level');
-        $units = DB::table('unit')->where('level_id', $lid)->get();
-        $total_unit = Unit::all()->count();
-        \Session::flash('flash_message', 'successfully saved.');
-        return view('unit_views.create', [
-            'levels' => $levels,
-            'units' => $units,
-            'lid' => $lid,
-            'total_unit' => $total_unit,
-        ]);
+        $level_id = $request->input('level_id');
+        return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Created successfully'));
     }
 
     /**
@@ -138,7 +129,6 @@ class UnitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $lid = $request->level_id;
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_title'=> 'required'
@@ -152,15 +142,8 @@ class UnitController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-        $levels = DB::select('select * from level');
-        $units = DB::table('unit')->where('level_id', $request->level_id)->get();
-        $total_unit = Unit::all()->count();
-        return view('unit_views.create', [
-            'levels' => $levels,
-            'units' => $units,
-            'lid' => $lid,
-            'total_unit' => $total_unit
-        ]);
+        $level_id = $request->input('level_id');
+        return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Updated successfully'));
     }
 
     /**

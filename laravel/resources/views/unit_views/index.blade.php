@@ -152,6 +152,11 @@
 
 @section('scripts')
 <script type="text/javascript">
+    $(document).ready(function(){
+        setTimeout(function() {
+            $('#successMessage').fadeOut('fast');
+        }, 4000); // <-- time in milliseconds
+    });
     function filter() {
         let url = new URL(window.location.href);
         const id = document.getElementById("id-filter").value;

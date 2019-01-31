@@ -6,12 +6,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Unit / Create </div>
                  <div class="panel-body">
-                 @if(Session::has('flash_message'))
+                    @if(Session::has('flash_message'))
                     <div id="successMessage" class="alert alert-success">
                         <span class="glyphicon glyphicon-ok"></span>
-                            <em> {!! session('flash_message') !!}</em>
+                        <em> {!! session('flash_message') !!}</em>
                     </div>
-                @endif
+                    @endif
                     <form class="form-horizontal" role="form" action="{{ route('unit_views.store') }}" method="POST">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -106,52 +106,6 @@
                              </div>
                         </div>
             </form>
-            @if (count($units) > 0)
-            <div class="row">
-                <div class="col.md.12">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th class="col-md">ID</th>
-                                <th class="col-md">Order No</th>
-                                <th class="col-md">Title</th>
-                                <th class="col-md">Dependency</th>
-                                <th class="col-md-3">OPTIONS</th>
-                            </tr>
-                        </thead>
-
-
-                        <tbody>
-                            @foreach($units as $unit)
-                                <tr>
-                                    <td>{{$unit->id}}</td>
-                                    <td>{{$unit->order_no}}</td>
-                                    <td>{{$unit->title}}</td>
-                                    <td>{{($unit->dependency == true) ? 'Yes' : 'No'}}</td>
-                                    <td class="text-right">
-
-                                        <!-- <a class="btn btn-primary" href="{{ route('unit_views.show', $unit->id) }}">View</a> -->
-                                        <a class="btn btn-warning" href="{{ route('unit_views.edit', $unit->id) }}">Edit</a>
-                                        <form action="{{ route('unit_views.destroy', $unit->id) }}"
-                                            method="POST" style="display: inline;"
-                                            onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <button class="btn btn-danger" type="submit">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                </div>
-            </div>
-            @endif
-
               </div>
             </div>
         </div>
@@ -164,10 +118,10 @@
 
 <script>
 $(document).ready(function(){
-        setTimeout(function() {
-          $('#successMessage').fadeOut('fast');
-        }, 4000); // <-- time in milliseconds
-    });
+    setTimeout(function() {
+      $('#successMessage').fadeOut('fast');
+    }, 4000); // <-- time in milliseconds
+});
 </script>
 
 @endsection

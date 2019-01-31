@@ -193,6 +193,9 @@
                                                     onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
                                                     <input type="hidden" name="_method" value="DELETE">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" name="level_id" value="{{ $level_id }}">
+                                                    <input type="hidden" name="unit_id" value="{{ $unit_id }}">
+                                                    <input type="hidden" name="topic_id" value="{{ $topic_id }}">
                                                     <button class="btn btn-danger" type="submit">Delete</button>
                                                     </form>
                                             </td>

@@ -6,7 +6,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Topic / Create </div>
                  <div class="panel-body">
-                     @if(Session::has('flash_message'))
+                    @if(Session::has('flash_message'))
                     <div id="successMessage" class="alert alert-success">
                         <span class="glyphicon glyphicon-ok"></span>
                         <em> {!! session('flash_message') !!}</em>
@@ -159,55 +159,6 @@
                          </div>
                     </div>
             </form>
-			@if (count($topics) > 0)
-			<div class="row">
-				<div class="col.md.12">
-					<div class="table-responsive">
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th class="col-md">Image</th>
-									<th class="col-md">Order No</th>
-									<th class="col-md">ID</th>
-									<th class="col-md">Title</th>
-									<th class="col-md">Short Name</th>
-									<th class="col-md">Dependency</th>
-									<th class="col-md-3">OPTIONS</th>
-								</tr>
-							</thead>
-
-						<tbody>
-							@foreach($topics as $topic)
-								<tr>
-									<td><img class="show-img" class="{{$topic->icon_src}}" src="{{ URL::asset($topic->icon_src) }}" /></td>
-									<td>{{$topic->order_no}}</td>
-									<td>{{$topic->id}}</td>
-									<td>{{$topic->title}}</td>
-									<td>{{$topic->short_name}}</td>
-									<td>{{($topic->dependency == true) ? 'Yes' : 'No'}}</td>
-									<td class="text-center">
-
-											<!-- <a class="btn btn-primary" href="{{ route('topic_views.show', $topic->id) }}">View</a> -->
-											<a class="btn btn-warning" href="{{ route('topic_views.edit', $topic->id) }}">Edit</a>
-											<form action="{{ route('topic_views.destroy', $topic->id) }}"
-												method="POST" style="display: inline;"
-												onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-												<input type="hidden" name="_method" value="DELETE">
-												<input type="hidden" name="_token" value="{{ csrf_token() }}">
-												<button class="btn btn-danger" type="submit">Delete</button>
-												</form>
-											</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-
-						</div>
-
-					</div>
-				</div>
-				@endif
-
               </div>
             </div>
         </div>

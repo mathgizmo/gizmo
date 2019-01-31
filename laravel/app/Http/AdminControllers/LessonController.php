@@ -58,7 +58,7 @@ class LessonController extends Controller
         
         $lessons = $query->paginate(10)->appends(Input::except('page'));
 
-        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
+        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
     }
 
     /**
@@ -111,7 +111,10 @@ class LessonController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-        return redirect('/lesson_views')->with(array('message'=> 'Created successfully'));
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        $topic_id = $request->input('topic_id');
+        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Created successfully'));
     }
 
     /**
@@ -177,21 +180,28 @@ class LessonController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-        return redirect('/lesson_views')->with(array('message'=> 'Updated successfully'));
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        $topic_id = $request->input('topic_id');
+        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Updated successfully'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      * The delete operation need to be performed
      * after selecting topic_id form the lesson table
      * for associated lesson id.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         DB::table('lesson')->where('id', $id)->delete();
-        return redirect('/lesson_views')->with(array('message'=> 'Deleted successfully'));
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        $topic_id = $request->input('topic_id');
+        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Deleted successfully'));
     }
 }

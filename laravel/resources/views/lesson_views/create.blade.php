@@ -7,6 +7,12 @@
                 <div class="panel-heading">Lesson / Create </div>
 
                  <div class="panel-body">
+                    @if(Session::has('flash_message'))
+                    <div id="successMessage" class="alert alert-success">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        <em> {!! session('flash_message') !!}</em>
+                    </div>
+                    @endif
                     <form class="form-horizontal" role="form" action="{{ route('lesson_views.store') }}" method="POST">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -165,5 +171,17 @@
         </div>
     </div>
 </div>
+
+@endsection
+
+@section('scripts')
+
+<script>
+$(document).ready(function(){
+    setTimeout(function() {
+      $('#successMessage').fadeOut('fast');
+    }, 4000); // <-- time in milliseconds
+});
+</script>
 
 @endsection
