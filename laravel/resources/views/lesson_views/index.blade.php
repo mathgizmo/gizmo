@@ -15,6 +15,13 @@
 
         <div class="panel-body">
 
+            @if(Session::has('message'))
+            <div id="successMessage" class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                <em> {!! session('message') !!}</em>
+            </div>
+            @endif
+
             <div class="row">
                 <div class="col-md-12">
                     <form class="form-horizontal" role="form" action="{{ route('lesson_views.index') }}" method="GET">
@@ -186,6 +193,9 @@
                                                     onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
                                                     <input type="hidden" name="_method" value="DELETE">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" name="level_id" value="{{ $level_id }}">
+                                                    <input type="hidden" name="unit_id" value="{{ $unit_id }}">
+                                                    <input type="hidden" name="topic_id" value="{{ $topic_id }}">
                                                     <button class="btn btn-danger" type="submit">Delete</button>
                                                     </form>
                                             </td>
@@ -213,6 +223,11 @@
 @section('scripts')
 
 <script type="text/javascript">
+    $(document).ready(function(){
+        setTimeout(function() {
+            $('#successMessage').fadeOut('fast');
+        }, 4000); // <-- time in milliseconds
+    });
     function filter() {
         let url = new URL(window.location.href);
         const id = document.getElementById("id-filter").value;

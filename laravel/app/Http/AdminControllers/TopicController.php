@@ -97,10 +97,6 @@ class TopicController extends Controller
      */
     public function store(Request $request)
     {
-        // Store topic title and unit_id into topic table
-        $lid = $request->level_id;
-        $uid = $request->unit_id;
-        //$tid = $request->topic_id;
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_id'    => 'required',
@@ -117,23 +113,10 @@ class TopicController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-        $icons = array();
-        $all = glob("images/icons/*.svg");
-        $complete = glob("images/icons/*-gold.svg");
-        foreach (array_diff($all, $complete) as $file) {
-          $icons[] = $file;
-        }
-        $levels = DB::select('select * from level');
-        $units = DB::select('select * from unit');
-        $topics = DB::table('topic')->where('unit_id', $uid)->get();
-        foreach ($topics as $key => $value) {
-            if(!file_exists($topics[$key]->icon_src)) {
-                $topics[$key]->icon_src = 'images/default-icon.svg';
-            }
-        }
-        $total_topic = Topic::all()->count();
-        \Session::flash('flash_message', 'successfully saved.');
-        return view('topic_views.create',['levels'=>$levels,'units'=>$units,'topics'=>$topics,'lid'=>$lid,'uid'=>$uid,'total_topic'=>$total_topic,'icons' => $icons]);
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
+            ->with(array('message'=> 'Created successfully'));
     }
 
     /**
@@ -189,10 +172,6 @@ class TopicController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        $lid = $request->level_id;
-        $uid = $request->unit_id;
-        //$tid = $request->topic_id;
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_id'    => 'required',
@@ -212,30 +191,10 @@ class TopicController extends Controller
             $update_array['icon_src'] = $request['icon_src'];
         }
         DB::table('topic')->where('id', $id)->update($update_array);
-        $levels = DB::select('select * from level');
-        $units = DB::select('select * from unit');
-        $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
-        $total_topic = Topic::all()->count();
-        $icons = array();
-        $all = glob("images/icons/*.svg");
-        $complete = glob("images/icons/*-gold.svg");
-        foreach (array_diff($all, $complete) as $file) {
-          $icons[] = $file;
-        }
-        foreach ($topics as $key => $value) {
-            if(!file_exists($topics[$key]->icon_src)) {
-                $topics[$key]->icon_src = 'images/default-icon.svg';
-            }
-        }
-        return view('topic_views.create', [
-            'levels' => $levels,
-            'units' => $units,
-            'topics' => $topics,
-            'lid' => $lid,
-            'uid' => $uid,
-            'total_topic' => $total_topic,
-            'icons' => $icons
-        ]);
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
+            ->with(array('message'=> 'Updated successfully'));
     }
 
     /**
@@ -247,9 +206,9 @@ class TopicController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        Topic::where('id', $id)->delete();
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        Topic::where('id', $id)->delete();
         return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
             ->with(array('message'=> 'Deleted successfully'));
     }

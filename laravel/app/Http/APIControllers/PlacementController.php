@@ -6,6 +6,7 @@ use App\PlacementQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use JWTAuth;
+use App\Unit;
 
 class PlacementController extends Controller
 {
@@ -121,6 +122,26 @@ class PlacementController extends Controller
             'entity_id' => $unit_id,
             'entity_type' => 2
         ]);
+        
+        //find all units from level that are not done yet
+        $unit_model = Unit::where("id", $unit_id)->first();
+        $units = DB::table('unit')->leftJoin('progresses', function ($join) use ($student) {
+            $join->on('progresses.student_id', '=', DB::raw($student->id))
+            ->on('progresses.entity_type', '=', DB::raw(2))
+            ->on('progresses.entity_id', '=', 'unit.id');
+        })
+        ->where(['level_id' => $unit_model->level_id, 'dependency' => 1])
+        ->whereNull('progresses.id')->get();
+        //if all units are done, mark level as done
+        if (!count($units)) {
+            // done level
+            DB::table('progresses')->insert([
+                'student_id' => $student->id,
+                'entity_id' => $unit_model->level_id,
+                'entity_type' => 3
+            ]);
+        }
+
         return $this->success("Unit ".$unit_id." done!");
     }
 }

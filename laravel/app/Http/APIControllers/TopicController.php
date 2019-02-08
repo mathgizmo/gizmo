@@ -19,7 +19,7 @@ class TopicController extends Controller
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         $lessons_done = [];
-        foreach(DB::table('lesson')->select('topic_id', DB::raw("COUNT(lesson.id) as total"), DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done"))
+        foreach(DB::table('lesson')->select('topic_id', DB::raw("SUM(IF(lesson.dev_mode = 0, 1, 0)) as total"), DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done"))
             ->leftJoin('progresses', function ($join) use ($student) {
                 $join->on('progresses.student_id', '=', DB::raw($student->id))
                 ->on('progresses.entity_type', '=', DB::raw(0))
@@ -131,7 +131,7 @@ class TopicController extends Controller
                 $topic['progress'] = [
                     'total' => $lessons_done[$topic['id']]['total'],
                     'done' => $lessons_done[$topic['id']]['done'],
-                    'percent' => round(100*$lessons_done[$topic['id']]['done']/$lessons_done[$topic['id']]['total'])
+                    'percent' => ($lessons_done[$topic['id']]['total'] == 0)? 100 : round(100*$lessons_done[$topic['id']]['done']/$lessons_done[$topic['id']]['total'])
                 ];
             }
             $response[$l_element_id]['units'][$u_element_id]['topics'][] = $topic;

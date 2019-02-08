@@ -65,9 +65,7 @@ class LevelController extends Controller
          'created_at' => date('Y-m-d H:i:s'),
          'updated_at' => date('Y-m-d H:i:s')
         ]);
-        $levels = DB::select('select * from level');
-        \Session::flash('flash_message', 'successfully saved.');
-        return view('level_views.index', ['levels'=>$levels]);
+        return redirect('/level_views')->with(array('message'=> 'Created successfully'));
     }
 
     /**

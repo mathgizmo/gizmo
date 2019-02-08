@@ -58,7 +58,7 @@ class LessonController extends Controller
         
         $lessons = $query->paginate(10)->appends(Input::except('page'));
 
-        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
+        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
     }
 
     /**
@@ -85,7 +85,6 @@ class LessonController extends Controller
             'tid' => $tid,
             'total_lesson' => $total_lesson
         ]);
-
     }
 
     /**
@@ -96,9 +95,6 @@ class LessonController extends Controller
      */
     public function store(Request $request)
     {
-        $lid = $request->level_id;
-        $uid = $request->unit_id;
-        $tid = $request->topic_id;
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_id'    => 'required',
@@ -115,22 +111,10 @@ class LessonController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-        $levels = DB::select('select * from level');
-        $units = DB::select('select * from unit');
-        $topics = DB::select('select * from topic');
-        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
-        $total_lesson = Lesson::all()->count();
-        \Session::flash('flash_message', 'successfully saved.');
-        return view('lesson_views.create', [
-            'levels' => $levels,
-            'units' => $units,
-            'topics' => $topics,
-            'lessons' => $lessons,
-            'lid' => $lid,
-            'uid' => $uid,
-            'tid' => $tid,
-            'total_lesson' => $total_lesson
-        ]);
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        $topic_id = $request->input('topic_id');
+        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Created successfully'));
     }
 
     /**
@@ -180,9 +164,6 @@ class LessonController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $lid = $request->level_id;
-        $uid = $request->unit_id;
-        $tid = $request->topic_id;
         $this->validate($request, [
          'level_id'    => 'required',
          'unit_id'    => 'required',
@@ -199,40 +180,28 @@ class LessonController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
-        $levels = DB::select('select * from level');
-        $units = DB::select('select * from unit');
-        $topics = DB::select('select * from topic');
-        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
-        $total_lesson = Lesson::all()->count();
-        return view('lesson_views.create', [
-            'levels' => $levels,
-            'units' => $units,
-            'topics' => $topics,
-            'lessons' => $lessons,
-            'lid' => $lid,
-            'uid' => $uid,
-            'tid' => $tid,
-            'total_lesson' => $total_lesson
-        ]);
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        $topic_id = $request->input('topic_id');
+        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Updated successfully'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      * The delete operation need to be performed
      * after selecting topic_id form the lesson table
      * for associated lesson id.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $levels = DB::select('select * from level');
-        $units = DB::select('select * from unit');
-        $topics = DB::select('select * from topic');
-        $topic_id = DB::table('lesson')->select('topic_id')->where('id', $id)->first();
         DB::table('lesson')->where('id', $id)->delete();
-        $lessons = DB::table('lesson')->where('topic_id', $topic_id->topic_id)->get();
-        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons]);
+        $level_id = $request->input('level_id');
+        $unit_id = $request->input('unit_id');
+        $topic_id = $request->input('topic_id');
+        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Deleted successfully'));
     }
 }

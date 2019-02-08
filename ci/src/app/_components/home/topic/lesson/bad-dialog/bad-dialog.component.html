@@ -1,4 +1,4 @@
-<!-- <h2 mat-dialog-title class="subtitle">Incorrect :(</h2> -->
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Incorrect :(</h2>
 <mat-dialog-content class="dialog-content">
     <img src="./assets/images/popup_image_incorrect.svg" alt="Correct" class="popup-image">
     <div *ngIf="(answers.length == 1) && showAnswer" class="answer">
