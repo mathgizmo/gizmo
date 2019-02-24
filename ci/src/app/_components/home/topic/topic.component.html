@@ -7,14 +7,14 @@
                 <div [class.complete]="lesson.status == 1 ? true : null" class="topic-img" [style.background-image]="setTopicIcon(topicTree.icon_src)">
                 </div>
                 <div class="subtitle lesson-title">{{lesson.title}}</div>
-            </a>
+            </a>   
         </div>
     </div>
     <div *ngIf="(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id != 0">
-        <h3 class="title">More lessons coming soon, please continue with next topic!</h3>
+        <h3 class="title">More lessons comming soon, please continue with next topic!</h3>
     </div>
     <div *ngIf="(topicTree.lessons == undefined || !topicTree.lessons.length) && topicTree.next_topic_id == 0">
-        <h3 class="title">More lessons coming soon!</h3>
+        <h3 class="title">More lessons comming soon!</h3>
     </div>
     <a
         class="button-container"
