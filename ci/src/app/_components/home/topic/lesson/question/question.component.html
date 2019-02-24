@@ -18,17 +18,17 @@
         <div *ngIf="question.answer_mode=='TF'">
             <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >
                 <mat-radio-button class="radio-button" value="True" color="primary">
-                    true
+                    True
                 </mat-radio-button>
                 <mat-radio-button class="radio-button" value="False" color="primary">
-                    false
+                    False
                 </mat-radio-button>
             </mat-radio-group>
         </div>
         <div *ngIf="question.answer_mode=='checkbox'">
             <div *ngFor="let answer of question.answers; let answerIndex = 'index'">
-                <mat-checkbox [(ngModel)]="answers[answerIndex]" color="primary"> 
-                    {{answer.value}} 
+                <mat-checkbox [(ngModel)]="answers[answerIndex]" color="primary">
+                    {{answer.value}}
                 </mat-checkbox>
             </div>
         </div>
