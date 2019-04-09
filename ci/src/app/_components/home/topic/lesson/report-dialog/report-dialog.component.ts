@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 
@@ -30,5 +30,25 @@ export class ReportDialogComponent {
 
     onNoClick(): void {
         this.dialogRef.close();
+    }
+
+    ngOnInit() {
+        this.keyClick = this.keyClick.bind(this);
+        document.addEventListener('keyup', this.keyClick);
+    }    
+
+    ngOnDestroy() {
+        document.removeEventListener('keyup', this.keyClick);
+    }
+
+    keyClick(event) {
+        if(event.key === "Enter") {
+          this.dialogRef.close({
+              option:this.options[this.selectedOption], 
+              text: this.custom, 
+              question_id: this.question_id, 
+              answers: this.answers
+          });
+        }
     }
 }

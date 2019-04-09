@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material';
 
 @Component({
@@ -6,7 +6,7 @@ import { MatProgressBarModule } from '@angular/material';
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.scss']
 })
-export class QuestionComponent implements OnInit {
+export class QuestionComponent implements OnInit, OnDestroy {
 
   private _question: any = null;
   @Input() set question(value: any) {
@@ -30,7 +30,19 @@ export class QuestionComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {
+    document.removeEventListener('keyup', this.keyClick);
+  }
+
+  keyClick(event) {
+    if(event.key === "Enter") {
+      this.checkAnswer();
+    }
+  }
+
   initQuestion() {
+    this.keyClick = this.keyClick.bind(this);
+    document.addEventListener('keyup', this.keyClick);
     this.answers = [];
     this.is_chart = false;
     if(this.question['question'].indexOf('%%chart{') >= 0){
@@ -76,6 +88,7 @@ export class QuestionComponent implements OnInit {
       this.warningMessage = "Please, answer the question!";
     } else {
       this.warning = false;
+      document.removeEventListener('keyup', this.keyClick);
       this.onAnswered.emit(this.answers);
     }
   }
