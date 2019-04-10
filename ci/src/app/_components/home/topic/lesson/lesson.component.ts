@@ -38,6 +38,9 @@ export class LessonComponent implements OnInit {
     question: any = null;
     answers: string[] = null;
 
+    all_questions: any = [];
+    current_question_index: number = 0;
+
     backLinkText = 'Back';
     titleText = 'Lesson';
 
@@ -67,6 +70,7 @@ export class LessonComponent implements OnInit {
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
+                    this.all_questions.splice(0, this.all_questions.length, ...lessonTree['questions']);
                     this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
@@ -114,12 +118,21 @@ export class LessonComponent implements OnInit {
     }
 
     nextQuestion() {
-      this.question = this.lessonTree['questions'].shift();
+      if(this.randomisation) {
+        if(this.question_num > 0 && (this.lessonTree['questions'].length < (this.question_num - this.correct_answers))) {
+          this.lessonTree['questions'].splice(0, this.lessonTree['questions'].length, ...this.all_questions);
+        }
+        this.question = this.lessonTree['questions'].shift();
+      } else {
+        if(this.current_question_index >= this.lessonTree['questions'].length || this.current_question_index < 0) {
+          this.current_question_index = 0;
+        }
+        this.question = this.lessonTree['questions'][this.current_question_index];
+      }
     }
 
     checkAnswer(answers: string[]) {
       this.answers = answers;
-
       // sort question answers
       if (this.question.question_order) {
         this.question.answers.sort( (a, b) => {
@@ -147,7 +160,6 @@ export class LessonComponent implements OnInit {
           // console.log("STR: "+this.answers);
         }
       }
-
       // convert percents to float for FB
       if (this.question.reply_mode == 'FB') {
         for (let i = 0; i < this.answers.length; i++) {
@@ -161,21 +173,21 @@ export class LessonComponent implements OnInit {
           } catch (err) {}
         }
       }
-
       if (this.isCorrect()) {
+        if(!this.randomisation) {
+          this.current_question_index++;
+        }
         this.correct_answers++;
         this.complete_percent = (this.correct_answers == 0) ? 0
             : this.correct_answers / this.question_num * 100;
         // if we have enough correct responses just remove rest of the questions
-        if (this.correct_answers == this.question_num
-                && this.question_num != 0) {
-           this.lessonTree['questions'] = [];
+        if (this.correct_answers == this.question_num && this.question_num != 0) {
+            this.lessonTree['questions'] = [];
         }
         const dialogRef = this.dialog.open(GoodDialogComponent, {
             // width: '400px',
             data: { }
         });
-
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 const reportDialogRef = this.dialog.open(FeedbackDialogComponent, {
@@ -193,10 +205,13 @@ export class LessonComponent implements OnInit {
             } else {
                 this.question = null;
                 this.trackingService.doneLesson(this.topic_id,
-                  this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                this.lesson_id, this.start_time, this.weak_questions).subscribe();
             }
         });
       } else {
+          if(!this.randomisation) {
+            this.current_question_index--;
+          }
           if (this.weak_questions.indexOf(this.question.id) === -1) {
               this.weak_questions.push(this.question.id);
           }
@@ -205,7 +220,7 @@ export class LessonComponent implements OnInit {
               this.incorrect_answers > this.max_incorrect_answers) {
                 this.router.navigate(['/topic/' + this.topic_id]);
           } else {
-              this.lessonTree['questions'].push(this.question);
+              if(this.randomisation) this.lessonTree['questions'].push(this.question);
           }
           const dialogRef = this.dialog.open(BadDialogComponent, {
               // width: '800px',
@@ -216,7 +231,6 @@ export class LessonComponent implements OnInit {
                   showAnswers: (this.lesson_id == -1) ? false : true
               }
           });
-
           dialogRef.afterClosed().subscribe(result => {
               if (result) {
                   const reportDialogRef = this.dialog.open(ReportDialogComponent, {
