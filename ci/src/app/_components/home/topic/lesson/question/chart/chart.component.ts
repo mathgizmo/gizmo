@@ -49,6 +49,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
     private dots;
 
+    private sliderChartSelected = 0;
+
     private selectedDragableElement: any = null;
 
     constructor(private ref: ChangeDetectorRef) {
@@ -189,6 +191,13 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           this.accuracyControl = +chart['0']
             .match(new RegExp(/accuracy-control-value:([^;]*)(?=(;|$))/g))['0']
             .replace('accuracy-control-value:', '');
+        }
+        if(this.type == 4) {
+          if (chart['0'].indexOf('slider-chart-selected:') >= 0) {
+          this.sliderChartSelected = parseFloat(chart['0']
+              .match(new RegExp(/slider-chart-selected:([^;]*)(?=(;|$))/g))['0']
+              .replace('slider-chart-selected:', ''));
+          }
         }
         if (chart['0'].indexOf('start:') >= 0) {
           this.startValue = parseFloat(chart['0']
@@ -514,12 +523,20 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           const padding = 20;
           let width  = chartContainer.offsetWidth;
           const indentation = this.pointDiameter + padding;
+          const currentPointX = (this.value - this.startValue) / (this.endValue
+            - this.startValue) * width + indentation;
           chartHtml += '<svg style="width:' + width + 'px; height: 50px; overflow: visible;">';
           chartHtml += '<line x1="' + indentation + '" y1="25" x2="'
             + (width - indentation) + '" y2="25" style="stroke:'
             + this.mainColor + '; stroke-width:'
             + this.strokeWidth + '" />';
           width -= indentation * 2;
+          if(this.sliderChartSelected == 1) {
+            chartHtml += '<line x1="' + indentation + '" y1="25" x2="'
+            + currentPointX + '" y2="25" style="stroke:'
+            + this.selectedColor + '; stroke-width:'
+            + (this.strokeWidth+2) + '" />';
+          }
           for (let i = 0; i < (this.endValue - this.startValue); i += this.step) {
             const position = (i * width / (this.endValue - this.startValue)) + indentation;
             const point = Number((i + this.startValue).toFixed(precision));
@@ -541,7 +558,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 + label + '</text>';
               }
             } else {
-              if(!hidePoints) {
+              if(!hidePoints && !(this.sliderChartSelected == 1)) {
                 chartHtml += '<circle cx="' + position + '" cy="25" r="'
                 + (this.pointDiameter / 2) + '" fill="' + this.strokeColor + '" />';
               }
@@ -557,8 +574,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
               + '" style="font-size: ' + chartValueLabelFontSize + 'px;" text-anchor="end">'
               + label + '</text>';
           }
-          const currentPointX = (this.value - this.startValue) / (this.endValue
-            - this.startValue) * width + indentation;
+          
           chartHtml += '<circle class="draggable" cx="' + currentPointX + '" cy="25" r="'
             + this.markDiameter + '" fill="' + this.selectedColor + '" />';
 

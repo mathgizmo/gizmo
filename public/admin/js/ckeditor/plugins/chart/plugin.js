@@ -55,6 +55,8 @@ CKEDITOR.plugins.add( 'chart', {
                                             'mark-diameter').enable();
                                         dialog.getContentElement('optional',
                                             'point-diameter').enable();
+                                        dialog.getContentElement('optional',
+                                            'slider-chart-selected').enable();
                                     } else {
                                         dialog.getContentElement('general', 'marks').disable();
                                         dialog.getContentElement('general', 'calculate').disable();
@@ -65,6 +67,8 @@ CKEDITOR.plugins.add( 'chart', {
                                             'mark-diameter').disable();
                                         dialog.getContentElement('optional',
                                             'point-diameter').disable();
+                                        dialog.getContentElement('optional',
+                                            'slider-chart-selected').disable();
                                     }
                                     // set defaults
                                     if(type == 3) {
@@ -349,6 +353,21 @@ CKEDITOR.plugins.add( 'chart', {
                                 {
                                     data.accuracyControl = this.getValue();
                                 }
+                            },
+                            {
+                                type : 'select',
+                                id : 'slider-chart-selected',
+                                label : 'Selected value style:',
+                                items : [
+                                    [ 'Dots', '0' ],
+                                    [ 'Coloured line', '1' ]
+                                ],
+                                'default' : '0',
+                                required : false,
+                                commit : function( data )
+                                {
+                                    data.sliderChartSelected = this.getValue();
+                                }
                             }
                         ]
                     }
@@ -405,6 +424,9 @@ CKEDITOR.plugins.add( 'chart', {
                     // set value display
                     chartHtml += 'value-display-chart:'+data.valueDisplayChart+'; ';
                     chartHtml += 'value-display:'+data.valueDisplayControl+'; ';
+
+                    // set slider chart selected value style
+                    chartHtml += 'slider-chart-selected:'+data.sliderChartSelected+'; ';
 
                     // set control
                     chartHtml += 'control: ' + data.control + '}%%';
@@ -570,6 +592,7 @@ CKEDITOR.plugins.add( 'chart', {
                             this.getContentElement('general', 'marks').disable();
                             this.getContentElement('optional', 'mark-diameter').disable();
                             this.getContentElement('optional', 'point-diameter').disable();
+                            dialog.getContentElement('optional', 'slider-chart-selected').disable();
                         }
                     }
 
