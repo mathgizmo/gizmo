@@ -4,6 +4,7 @@ import { TopicService } from '../../../../_services/index';
 import { TrackingService } from '../../../../_services/index';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { GoodDialogComponent } from './good-dialog/good-dialog.component';
 import { BadDialogComponent} from './bad-dialog/bad-dialog.component';
@@ -44,12 +45,17 @@ export class LessonComponent implements OnInit {
     backLinkText = 'Back';
     titleText = 'Lesson';
 
+    private isMobile = this.deviceService.isMobile();
+    private isTablet = this.deviceService.isTablet();
+    private isDesktop = this.deviceService.isDesktop();
+
     constructor(
             private router: Router,
             private topicService: TopicService,
             private trackingService: TrackingService,
             private route: ActivatedRoute,
-            public dialog: MatDialog
+            public dialog: MatDialog,
+            private deviceService: DeviceDetectorService
             ) {
 
         if (localStorage.getItem('question_num') != undefined) {
@@ -132,6 +138,10 @@ export class LessonComponent implements OnInit {
     }
 
     checkAnswer(answers: string[]) {
+      let dialogPosition = { bottom: '20%' };
+      if(this.isMobile || this.isTablet) {
+        dialogPosition = { bottom: '8px' };
+      }
       this.answers = answers;
       // sort question answers
       if (this.question.question_order) {
@@ -186,13 +196,15 @@ export class LessonComponent implements OnInit {
         }
         const dialogRef = this.dialog.open(GoodDialogComponent, {
             // width: '400px',
-            data: { }
+            data: { },
+            position: dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 const reportDialogRef = this.dialog.open(FeedbackDialogComponent, {
                     // width: '800px',
-                    data: {question_id: this.question.id, answers: this.answers}
+                    data: {question_id: this.question.id, answers: this.answers},
+                    position: dialogPosition
                 });
 
                 reportDialogRef.afterClosed().subscribe(result => {
@@ -224,6 +236,7 @@ export class LessonComponent implements OnInit {
           }
           const dialogRef = this.dialog.open(BadDialogComponent, {
               // width: '800px',
+              position: dialogPosition,
               data: { data: this.question.answers.filter(function(answer) {
                   if (answer.is_correct == 1) { return true; }
                   return false;
@@ -235,6 +248,7 @@ export class LessonComponent implements OnInit {
               if (result) {
                   const reportDialogRef = this.dialog.open(ReportDialogComponent, {
                       // width: '800px',
+                      position: dialogPosition,
                       data: {question_id: this.question.id, answers: this.answers}
                   });
 

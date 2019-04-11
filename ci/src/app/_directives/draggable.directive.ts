@@ -36,7 +36,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
   private setupEvents() {
     this.zone.runOutsideAngular(() => {
       
-      // mouse dragable
+      // mouse draggable
       let mousedown$ = fromEvent(this.handle, 'mousedown');
       let mousemove$ = fromEvent(document, 'mousemove');
       let mouseup$ = fromEvent(document, 'mouseup');
@@ -73,7 +73,7 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
        	this.delta = {x: 0, y: 0};
       });
 
-      // touch dragable
+      // touch draggable
       let touchstart$ = fromEvent(this.handle, 'touchstart');
       let touchmove$ = fromEvent(document, 'touchmove');
       let touchend$ = fromEvent(document, 'touchend');

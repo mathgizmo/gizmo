@@ -523,14 +523,14 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
           const padding = 20;
           let width  = chartContainer.offsetWidth;
           const indentation = this.pointDiameter + padding;
-          const currentPointX = (this.value - this.startValue) / (this.endValue
-            - this.startValue) * width + indentation;
           chartHtml += '<svg style="width:' + width + 'px; height: 50px; overflow: visible;">';
           chartHtml += '<line x1="' + indentation + '" y1="25" x2="'
             + (width - indentation) + '" y2="25" style="stroke:'
             + this.mainColor + '; stroke-width:'
             + this.strokeWidth + '" />';
           width -= indentation * 2;
+          const currentPointX = (this.value - this.startValue) / (this.endValue
+            - this.startValue) * width + indentation;
           if(this.sliderChartSelected == 1) {
             chartHtml += '<line x1="' + indentation + '" y1="25" x2="'
             + currentPointX + '" y2="25" style="stroke:'

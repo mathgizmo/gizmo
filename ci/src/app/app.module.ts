@@ -10,6 +10,7 @@ import { MatInputModule, MatButtonModule, MatSelectModule,
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { SortablejsModule } from 'angular-sortablejs';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { BaseRequestOptions, HttpModule } from '@angular/http'; // ??? Fake BackEnd
 
@@ -58,7 +59,8 @@ import { DraggableDirective } from './_directives/draggable.directive';
         MatCardModule,
         MatCheckboxModule,
         FlexLayoutModule,
-        SortablejsModule.forRoot({ animation: 150 })
+        SortablejsModule.forRoot({ animation: 150 }),
+        DeviceDetectorModule.forRoot()
     ],
     exports: [
     ],
