@@ -23,7 +23,7 @@ input {
 }
 
 .slider-control {
-  min-width: 250px;
+  min-width: 240px;
 }
 
 :host /deep/ .mat-slider-horizontal .mat-slider-track-background,
@@ -78,6 +78,12 @@ input {
 
 .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
   font-size: 26px !important;
+}
+
+.slider-value-label {
+  position: relative;
+  top: -16px;
+  margin-bottom: 8px;
 }
 
 @media screen and (max-width: 1024px) { 

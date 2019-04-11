@@ -27,7 +27,7 @@
       </mat-slider>
 
       <div class="value-label-container">
-        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && !controllbaseValue">
+        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && !controllbaseValue" class="slider-value-label">
           <span>
             Value = {{value.toFixed(accuracyControl)}}
           </span>
@@ -35,7 +35,7 @@
             / {{maxValue}}
           </span>
         </label>
-        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue">
+        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue" class="slider-value-label">
           <span>
             Value = {{(value*controllbaseValue/maxValue).toFixed(accuracyControl)}}
           </span>
@@ -43,7 +43,7 @@
             / {{controllbaseValue}}
           </span>
         </label>
-        <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
+        <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)" class="slider-value-label">
           <span *ngIf="valueDisplay == 3">
             Value = {{((value-startValue)/(maxValue-startValue)).toFixed(accuracyControl)}}
           </span>
