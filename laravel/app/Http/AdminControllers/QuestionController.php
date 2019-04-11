@@ -76,9 +76,6 @@ class QuestionController extends Controller
             $query = $query->where('reply_mode', $request->reply_mode);
         }
         if ($request->has('sort') and $request->has('order')) {
-            /* if($request->sort == 'lesson_id') {
-              $query = $query->orderBy('lesson_order', $request->order);
-            } */
             $query = $query->orderBy($request->sort, $request->order);
         } else {
             $query = $query->orderBy('question.id', 'desc');

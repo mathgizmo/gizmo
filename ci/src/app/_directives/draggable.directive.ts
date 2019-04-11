@@ -35,6 +35,8 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
 
   private setupEvents() {
     this.zone.runOutsideAngular(() => {
+      
+      // mouse dragable
       let mousedown$ = fromEvent(this.handle, 'mousedown');
       let mousemove$ = fromEvent(document, 'mousemove');
       let mouseup$ = fromEvent(document, 'mouseup');
@@ -70,6 +72,43 @@ export class DraggableDirective implements AfterViewInit, OnDestroy {
        	this.offset.y += this.delta.y;
        	this.delta = {x: 0, y: 0};
       });
+
+      // touch dragable
+      let touchstart$ = fromEvent(this.handle, 'touchstart');
+      let touchmove$ = fromEvent(document, 'touchmove');
+      let touchend$ = fromEvent(document, 'touchend');
+
+      let touchdrag$ = touchstart$.pipe(
+        switchMap((event: TouchEvent) => {
+          let startX = event.touches[0].clientX;
+          let startY = event.touches[0].clientY;  
+          return touchmove$.pipe(  
+            map((event: TouchEvent) => {
+              event.preventDefault();
+              this.delta = {
+                x: event.touches[0].clientX - startX,
+                y: event.touches[0].clientY - startY
+              };
+            }),
+            takeUntil(touchend$)
+       )
+        }),
+        takeUntil(this.destroy$)
+      );
+
+      touchdrag$.subscribe(() => {
+        if (this.delta.x === 0 && this.delta.y === 0) {
+          return;
+        }
+        this.translate();
+      });
+
+      touchend$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+         this.offset.x += this.delta.x;
+         this.offset.y += this.delta.y;
+         this.delta = {x: 0, y: 0};
+      });
+
     });
   }
 
