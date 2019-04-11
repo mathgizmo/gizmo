@@ -41,7 +41,7 @@ class QuestionController extends Controller
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
-            ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle');
+            ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle', 'lesson.order_no as lesson_order');
         if ($request->has('level_id')) {
             $level_id = $request->level_id;
             $query = $query->where('level_id', $request->level_id);
@@ -76,6 +76,9 @@ class QuestionController extends Controller
             $query = $query->where('reply_mode', $request->reply_mode);
         }
         if ($request->has('sort') and $request->has('order')) {
+            /* if($request->sort == 'lesson_id') {
+              $query = $query->orderBy('lesson_order', $request->order);
+            } */
             $query = $query->orderBy($request->sort, $request->order);
         } else {
             $query = $query->orderBy('question.id', 'desc');

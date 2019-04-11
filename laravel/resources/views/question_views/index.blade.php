@@ -145,8 +145,8 @@
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'topic_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'topic_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                     <th class="col-md">
-                                        Lesson <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'lesson_id', 'order' => ((request()->sort == 'lesson_id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'lesson_id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
-                                            <i class="fa fa-fw fa-sort{{ (request()->sort == 'lesson_id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'lesson_id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                        Lesson <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'lesson_order', 'order' => ((request()->sort == 'lesson_order' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'lesson_order' && request()->order == 'asc') ? '' : 'desc'))])) }}">
+                                            <i class="fa fa-fw fa-sort{{ (request()->sort == 'lesson_order' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'lesson_order' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
                                     <th class="col-md">
                                         Question <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'question', 'order' => ((request()->sort == 'question' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'question' && request()->order == 'asc') ? '' : 'desc'))])) }}">
