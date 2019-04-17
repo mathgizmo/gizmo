@@ -6,10 +6,10 @@ import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
-import { GoodDialogComponent } from './good-dialog/good-dialog.component';
-import { BadDialogComponent} from './bad-dialog/bad-dialog.component';
-import { ReportDialogComponent } from './report-dialog/report-dialog.component';
-import { FeedbackDialogComponent } from './feedback-dialog/feedback-dialog.component';
+import { GoodDialogComponent } from './dialog/good-dialog/good-dialog.component';
+import { BadDialogComponent} from './dialog/bad-dialog/bad-dialog.component';
+import { ReportDialogComponent } from './dialog/report-dialog/report-dialog.component';
+import { FeedbackDialogComponent } from './dialog/feedback-dialog/feedback-dialog.component';
 
 @Component({
     moduleId: module.id,
@@ -138,9 +138,9 @@ export class LessonComponent implements OnInit {
     }
 
     checkAnswer(answers: string[]) {
-      let dialogPosition = { bottom: '20%' };
+      let dialogPosition = { bottom: '18vh' };
       if(this.isMobile || this.isTablet) {
-        dialogPosition = { bottom: '8px' };
+        dialogPosition = { bottom: '2vh' };
       }
       this.answers = answers;
       // sort question answers
@@ -194,12 +194,13 @@ export class LessonComponent implements OnInit {
         if (this.correct_answers == this.question_num && this.question_num != 0) {
             this.lessonTree['questions'] = [];
         }
-        const dialogRef = this.dialog.open(GoodDialogComponent, {
-            // width: '400px',
+        const goodDialogRef = this.dialog.open(GoodDialogComponent, {
+            // width: '800px',
             data: { },
             position: dialogPosition
         });
-        dialogRef.afterClosed().subscribe(result => {
+
+        goodDialogRef.afterClosed().subscribe(result => {
             if (result) {
                 const reportDialogRef = this.dialog.open(FeedbackDialogComponent, {
                     // width: '800px',
@@ -208,7 +209,6 @@ export class LessonComponent implements OnInit {
                 });
 
                 reportDialogRef.afterClosed().subscribe(result => {
-                    console.log(result);
                     this.topicService.sendFeedback(result.question_id, result.text).subscribe();
                 });
             }

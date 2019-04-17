@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { BaseDialogComponent } from '../base-dialog.component';
+
 
 @Component({
     selector: 'report-dialog',
     templateUrl: 'report-dialog.component.html',
     styleUrls: ['report-dialog.component.scss']
 })
-export class ReportDialogComponent {
+export class ReportDialogComponent extends BaseDialogComponent<ReportDialogComponent> {
     custom: string;
     selectedOption: number;
     answers: string[];
@@ -23,32 +25,32 @@ export class ReportDialogComponent {
     constructor(
         public dialogRef: MatDialogRef<ReportDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
+        super(dialogRef, data);
         this.custom = "";
         this.answers = data.answers;
         this.question_id = data.question_id;
     }
 
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-
-    ngOnInit() {
-        this.keyClick = this.keyClick.bind(this);
-        document.addEventListener('keyup', this.keyClick);
-    }    
-
-    ngOnDestroy() {
-        document.removeEventListener('keyup', this.keyClick);
-    }
-
     keyClick(event) {
         if(event.key === "Enter") {
-          this.dialogRef.close({
-              option:this.options[this.selectedOption], 
-              text: this.custom, 
-              question_id: this.question_id, 
-              answers: this.answers
-          });
+            if(this.selectedOption) {
+                this.dialogRef.close({
+                  option:this.options[this.selectedOption], 
+                  text: this.custom, 
+                  question_id: this.question_id, 
+                  answers: this.answers
+              });
+            }
         }
+    }
+
+    resizeDialog() {
+        let width =  (this.orientation == 'portrait') ? '78vw' : '30vw';
+        let height = (this.orientation == 'portrait') ? '30vh' : '32vh';
+        if(window.innerHeight < 650 && this.orientation == 'landscape') {
+            height = '45vh';
+            width = '35vw';
+        }
+        this.updateDialogSize(width, height);
     }
 }

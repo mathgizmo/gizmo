@@ -1,0 +1,26 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Incorrect :(</h2>
+<mat-dialog-content class="dialog-content">
+    <img src="./assets/images/popup_image_incorrect.svg" alt="Correct" class="popup-image">
+    <div class="explanation">
+        <div *ngIf="(answers.length == 1) && showAnswer" class="answer">
+            <!-- Correct answer is: -->
+            A: {{answers[0].value}}
+        </div>
+        <div *ngIf="(answers.length != 1) && showAnswer" class="answer">
+            <!-- Correct answers are: -->
+            A: 
+            <ul>
+                <li *ngFor="let answer of answers; let answerIndex = 'index'">
+                    {{answer.value}}
+                </li>
+            </ul>
+        </div>
+        <div *ngIf="explanation!=''" class="topic-progress">
+            {{explanation}}
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button moving-forward-button continue-button'>Continue</button>
+    <button mat-button [mat-dialog-close]="true" class='button error-button'>Report Error!</button>
+</mat-dialog-actions>

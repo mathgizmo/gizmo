@@ -1,0 +1,42 @@
+.dialog-content {
+	margin: 0;
+	padding: 0;
+	height: 75%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	.popup-image {
+		height: 99%;
+		margin: 0 auto;
+		padding: 0;
+	}
+}
+
+.buttons-container {
+	height: 25%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: flex-end;
+	padding: 0;
+	margin: 0;
+	.button {
+		max-width: 47%;
+		padding: 0;
+		margin: 0;
+	}
+	.continue-button {
+		background-color: #fef65b;
+	}
+}
+
+@media (max-height: 650px) { 
+	.dialog-content {
+		height: 60%;
+	}
+	.buttons-container { 
+		height: 40%;
+	}
+}

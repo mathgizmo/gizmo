@@ -99,3 +99,9 @@ a:focus, a:hover {
 		}
 	}
 }
+
+@media (max-height: 500px) { 
+   .button {
+      font-size: 12px !important;
+    } 
+}

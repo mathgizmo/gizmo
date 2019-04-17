@@ -131,6 +131,17 @@ h1, h2, h3, h4 {
     border-radius: 25px !important;
 }
 
+.mat-dialog-container {
+    padding: 10px !important;
+}
+
+.mat-dialog-actions {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    min-height: 20px !important;
+}
+
 .help-block {
     font-size: 12px;
 }
@@ -248,6 +259,30 @@ h1, h2, h3, h4 {
     display: none;
 }
 
+.dialog-content {
+    font-size: 14px !important;
+    font-family: 'Open Sans';
+    font-weight: 300;
+}
+
+.dialog-title {
+    font-size: 18px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center;
+}
+
+.buttons-container { 
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.dialog-buttons-container {
+    .button, .error-button {
+        font-size: 18px !important;
+    }
+}
+
 @media screen and (max-width: 1024px) {
     body {
         font-size: 12px;
@@ -273,8 +308,32 @@ h1, h2, h3, h4 {
       padding: 4px 14px !important;
     }
 
+    .buttons-container {
+        .error-button {
+            font-size: 16px !important;
+        }
+    }
+
+    .dialog-buttons-container {
+        .button {
+            font-size: 18px !important;
+        }
+        .error-button {
+            font-size: 16px !important;
+        }
+    }
+
+    .dialog-content {
+        font-size: 12px !important;
+    }
+
     .subtitle {
       font-size: 16.8px;
+    }
+
+
+    .dialog-title {
+        font-size: 13px !important;
     }
 
     .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
@@ -304,6 +363,10 @@ h1, h2, h3, h4 {
       padding: 2px 12px !important;
     }
 
+    .dialog-content {
+        font-size: 11px !important;
+    }
+
     .subtitle {
       font-size: 12px;
     }
@@ -322,6 +385,41 @@ h1, h2, h3, h4 {
 
 }
 
+@media screen and (max-width: 480px) {
+    .button, .mat-button {
+      font-size: 14px !important;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .button, .mat-button {
+      font-size: 12px !important;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .button, .mat-button {
+      font-size: 12px !important;
+    }
+}
+
+@media (max-height: 650px) and (max-width: 650px) { 
+    .dialog-buttons-container {
+        .button, .error-button {
+            font-size: 11px !important;
+        }
+    }
+}
+
+@media (max-height: 500px) { 
+    .dialog-buttons-container {
+        .button, .error-button {
+            font-size: 9px !important;
+            padding: 0 2px !important;
+            margin: 0 !important;
+        }
+    }
+}
 
 /** THEMING */
 $mat-navy: (
