@@ -272,12 +272,9 @@ h1, h2, h3, h4 {
     text-align: center;
 }
 
-.buttons-container { 
+.dialog-buttons-container {
     padding: 0 !important;
     margin: 0 !important;
-}
-
-.dialog-buttons-container {
     .button, .error-button {
         font-size: 18px !important;
     }
@@ -306,12 +303,6 @@ h1, h2, h3, h4 {
     .button, .mat-button {
       font-size: 21px !important;
       padding: 4px 14px !important;
-    }
-
-    .buttons-container {
-        .error-button {
-            font-size: 16px !important;
-        }
     }
 
     .dialog-buttons-container {

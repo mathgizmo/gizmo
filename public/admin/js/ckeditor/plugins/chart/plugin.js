@@ -544,6 +544,13 @@ CKEDITOR.plugins.add( 'chart', {
                                 .replace('point-diameter:', '')
                             );
                         }
+                        if (chartStr.indexOf('slider-chart-selected:') >= 0) {
+                            this.getContentElement('optional', 'slider-chart-selected').setValue(
+                                chartStr.match(
+                                    new RegExp(/slider-chart-selected:([^;]*)(?=(;|$))/g))['0']
+                                .replace('slider-chart-selected:', '')
+                            );
+                        }
                         if (chartStr.indexOf('accuracy-chart-value:') >= 0) {
                             this.getContentElement('optional', 'accuracy-chart-value')
                                 .setValue(chartStr.match(
