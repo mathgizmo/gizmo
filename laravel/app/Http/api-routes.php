@@ -12,6 +12,7 @@
 */
 
 $api->get('/' , 'App\Http\APIControllers\HomeController@index');
+$api->get('/welcome' , 'App\Http\APIControllers\HomeController@getWelcomeTexts');
 $api->any('/authenticate' , 'App\Http\APIControllers\AuthController@authenticate');
 $api->any('/register' , 'App\Http\APIControllers\AuthController@register');
 $api->post('/password-reset-email' , 'App\Http\APIControllers\AuthController@passwordResetEmail');
