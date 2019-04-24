@@ -280,6 +280,26 @@ h1, h2, h3, h4 {
     }
 }
 
+.back-button {
+    //position: fixed;
+    //left: 0;
+    //top: 0;
+    color: white;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0;
+    padding: 8px;
+    border-radius: 0 0 24px 0;
+}
+.back-button:hover {
+    color: $navy;
+    background-color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+}
+.back-button-container {
+   margin-bottom: 16px;
+}
+
 @media screen and (max-width: 1024px) {
     body {
         font-size: 12px;

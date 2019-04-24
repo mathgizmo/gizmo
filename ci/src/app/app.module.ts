@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatSelectModule,
     MatIconModule, MatMenuModule, MatRadioModule,
     MatDialogModule, MatProgressBarModule, MatSliderModule,
-    MatToolbarModule, MatCardModule, MatCheckboxModule } from '@angular/material';
+    MatToolbarModule, MatCardModule, MatCheckboxModule, MatDividerModule } from '@angular/material';
 import { Angular2FontawesomeModule } from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import { SortablejsModule } from 'angular-sortablejs';
@@ -58,6 +58,7 @@ import { DraggableDirective } from './_directives/draggable.directive';
         MatToolbarModule,
         MatCardModule,
         MatCheckboxModule,
+        MatDividerModule,
         FlexLayoutModule,
         SortablejsModule.forRoot({ animation: 150 }),
         DeviceDetectorModule.forRoot()

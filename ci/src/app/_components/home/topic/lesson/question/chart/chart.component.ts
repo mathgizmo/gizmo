@@ -61,12 +61,17 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     }
 
     ngOnInit() {
+      this.setClickPosition = this.setClickPosition.bind(this);
+      this.startDrag = this.startDrag.bind(this);
+      this.drag = this.drag.bind(this);
+      this.endDrag = this.endDrag.bind(this);
       const chart = document.getElementById('chart-container');
-      chart.addEventListener('click', this.setClickPosition.bind(this));
-      chart.addEventListener('mousedown', this.startDrag.bind(this));
-      chart.addEventListener('mousemove', this.drag.bind(this));
-      chart.addEventListener('mouseup', this.endDrag.bind(this));
-      chart.addEventListener('mouseleave', this.endDrag.bind(this));
+      chart.addEventListener('click', this.setClickPosition);
+
+      chart.addEventListener('mousedown', this.startDrag);
+      chart.addEventListener('mousemove', this.drag);
+      chart.addEventListener('mouseup', this.endDrag);
+      chart.addEventListener('mouseleave', this.endDrag);
     }
 
     onResize(event) {
@@ -77,11 +82,11 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     ngOnDestroy() {
       this.destroyDotsChart();
       const chart = document.getElementById('chart-container');
-      chart.removeEventListener('click', this.setClickPosition.bind(this));
-      chart.removeEventListener('mousedown', this.startDrag.bind(this));
-      chart.removeEventListener('mousemove', this.drag.bind(this));
-      chart.removeEventListener('mouseup', this.endDrag.bind(this));
-      chart.removeEventListener('mouseleave', this.endDrag.bind(this));
+      chart.removeEventListener('click', this.setClickPosition);
+      chart.removeEventListener('mousedown', this.startDrag);
+      chart.removeEventListener('mousemove', this.drag);
+      chart.removeEventListener('mouseup', this.endDrag);
+      chart.removeEventListener('mouseleave', this.endDrag);
     }
 
     ngOnChanges(changes: SimpleChanges) {
