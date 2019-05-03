@@ -483,12 +483,11 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             // clear chart
             chartContainer.innerHTML = '';
             chartContainer.appendChild(this.chartElement);
-
+            this.chartValueLabelElement = document.createElement('label');
+            this.chartValueLabelElement.classList.add('chart-value-label');
+            this.chartValueLabelElement.style.color = this.strokeColor;
+            this.chartValueLabelElement.style.fontSize = chartValueLabelFontSize + 'px';
             if (this.valueDisplayChart > 0) {
-              this.chartValueLabelElement = document.createElement('label');
-              this.chartValueLabelElement.classList.add('chart-value-label');
-              this.chartValueLabelElement.style.color = this.strokeColor;
-              this.chartValueLabelElement.style.fontSize = chartValueLabelFontSize + 'px';
               if (this.valueDisplayChart == 1) {
                 this.chartValueLabelElement.innerHTML = '' + this.value.toFixed(this.accuracyChart);
               } else if (this.valueDisplayChart == 2) {
@@ -499,9 +498,12 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 this.chartValueLabelElement.innerHTML = '' + (this.value / this.maxValue * 100)
                   .toFixed(this.accuracyChart) + '%';
               }
-              chartContainer.appendChild(this.chartValueLabelElement);
+              this.chartValueLabelElement.innerHTML += '<br/><br/>';
             }
-
+            let dotStyle = 'display: inline-block; border-radius: 50%; height: 15px; width: 15px; border-style: solid; border-width: 1.5px; border-color: '+this.strokeColor+';';
+            this.chartValueLabelElement.innerHTML += '<span style="'+dotStyle+' background-color: '+this.selectedColor+';"></span> = '+this.value.toFixed(0)+'; ';
+            this.chartValueLabelElement.innerHTML += '<span style="'+dotStyle+' background-color: '+this.mainColor+';"></span> = '+(this.maxValue - this.value).toFixed(0);
+            chartContainer.appendChild(this.chartValueLabelElement);
           });
           this.chartElement.style.height = this.chartHeight + 'px';
           this.chartElement.style.width = this.chartHeight * 2 + 'px';
@@ -729,7 +731,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
     // drag animation
     private startDrag(event) {
-      this.selectedDragableElement = event.target;
+      //if (event.target.classList.contains('draggable')) {
+        this.selectedDragableElement = event.target;
+      //}
     }
     private drag(event) {
       if (this.selectedDragableElement) {
