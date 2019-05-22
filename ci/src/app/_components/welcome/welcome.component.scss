@@ -64,7 +64,6 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                height: 36vh;
             }
             .buttons-container {
                 margin-top: 32px;
@@ -272,9 +271,6 @@
                         width: 200px;
                     }
                 }
-                #subtitle {
-                    height: 30vh;
-                }
             }
         }
         .right {
@@ -408,9 +404,6 @@
                 }
                 .circle {
                 }
-                #subtitle {
-                    height: 20vh;
-                }
             }
         }
         .right {
@@ -512,18 +505,6 @@
     .scroll {
         a {
             margin-top: 60px;
-        }
-    }
-}
-
-@media screen and (max-width: 500px) {
-    .welcome {
-        .left {
-            .left-container {
-                #subtitle {
-                    height: 12vh;
-                }
-            }
         }
     }
 }

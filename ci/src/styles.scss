@@ -302,7 +302,13 @@ h1, h2, h3, h4 {
 
 .welcome iframe, .welcome video {
     width: 85%;
-    height: 100%;
+    height: 36vh;
+}
+
+@media screen and (max-width: 1366px) {
+  .welcome iframe, .welcome video {
+    height: 28vh;
+  }
 }
 
 @media screen and (max-width: 1024px) {
@@ -435,6 +441,18 @@ h1, h2, h3, h4 {
             margin: 0 !important;
         }
     }
+}
+
+@media screen and (orientation: portrait) {
+  .welcome iframe, .welcome video {
+    height: 20vh;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .welcome iframe, .welcome video {
+    height: 12vh;
+  }
 }
 
 /** THEMING */
