@@ -60,6 +60,12 @@
                 width: 407px;
                 z-index: 1;
             }
+            #subtitle {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                height: 36vh;
+            }
             .buttons-container {
                 margin-top: 32px;
                 display: flex;
@@ -259,12 +265,15 @@
                     font-size: 26px;
                 }
                 .buttons-container {
-                    margin-top: 22px;
+                    margin-top: 16px;
                     .register-button, .login-button, .try-button {
                         font-size: 26px !important;
                         margin: 6px;
                         width: 200px;
                     }
+                }
+                #subtitle {
+                    height: 30vh;
                 }
             }
         }
@@ -399,6 +408,9 @@
                 }
                 .circle {
                 }
+                #subtitle {
+                    height: 20vh;
+                }
             }
         }
         .right {
@@ -500,6 +512,18 @@
     .scroll {
         a {
             margin-top: 60px;
+        }
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .welcome {
+        .left {
+            .left-container {
+                #subtitle {
+                    height: 12vh;
+                }
+            }
         }
     }
 }

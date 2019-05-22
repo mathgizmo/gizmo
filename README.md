@@ -15,10 +15,9 @@ It consist of 3 main modules admin, API and hybrid app
 - Create file `.env` and put `APP_KEY=` in it. For email sending make sure that you have in your `.env` file next keys set: `MAIL_DRIVER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_ENCRYPTION`. For preview questions in admin you need `PREVIEW_URL` with link to your client base preview path. You can just rename `example.env` to `.env`.
 - Run `php artisan key:generate` to generate app key. Check `.env` file if key actually been generated.
 - Run `php artisan jwt:generate` to generate secret for API.
--
 
 #### Client
-- For Client App we use [Angular6](https://angular.io/) which require [NodeJS](https://nodejs.org/) version 8.9+ at least. Check your version by running `node -v` and `npm -v` in a terminal/console window.
+- For Client App we use [Angular](https://angular.io/) which require [NodeJS](https://nodejs.org/) version 8.9+ at least. Check your version by running `node -v` and `npm -v` in a terminal/console window.
 - Globally install [Angular CLI](https://angular.io/guide/quickstart) using command `npm install -g @angular/cli@latest`
 - Run `npm install` into `ci` folder to install required npm modules
 - Add URL to your local server API to `/ci/src/environments/environment.ts`

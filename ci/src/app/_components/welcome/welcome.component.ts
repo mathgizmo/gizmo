@@ -40,6 +40,8 @@ export class WelcomeComponent implements OnInit {
                             break;
                     }
                 }
+                document.getElementById('subtitle').innerHTML = this.subtitle;
+                document.getElementById('introduction').innerHTML = this.introduction;
             });
     }
 
