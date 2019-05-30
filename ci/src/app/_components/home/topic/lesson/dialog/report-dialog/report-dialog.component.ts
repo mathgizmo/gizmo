@@ -26,18 +26,18 @@ export class ReportDialogComponent extends BaseDialogComponent<ReportDialogCompo
         public dialogRef: MatDialogRef<ReportDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        this.custom = "";
+        this.custom = '';
         this.answers = data.answers;
         this.question_id = data.question_id;
     }
 
     keyClick(event) {
-        if(event.key === "Enter") {
-            if(this.selectedOption) {
+        if (event.key === 'Enter') {
+            if (this.selectedOption) {
                 this.dialogRef.close({
-                  option:this.options[this.selectedOption], 
-                  text: this.custom, 
-                  question_id: this.question_id, 
+                  option: this.options[this.selectedOption],
+                  text: this.custom,
+                  question_id: this.question_id,
                   answers: this.answers
               });
             }
@@ -45,9 +45,9 @@ export class ReportDialogComponent extends BaseDialogComponent<ReportDialogCompo
     }
 
     resizeDialog() {
-        let width =  (this.orientation == 'portrait') ? '78vw' : '30vw';
-        let height = (this.orientation == 'portrait') ? '30vh' : '32vh';
-        if(window.innerHeight < 650 && this.orientation == 'landscape') {
+        let width =  (this.orientation === 'portrait') ? '78vw' : '30vw';
+        let height = (this.orientation === 'portrait') ? '30vh' : '32vh';
+        if (window.innerHeight < 650 && this.orientation === 'landscape') {
             height = '45vh';
             width = '35vw';
         }

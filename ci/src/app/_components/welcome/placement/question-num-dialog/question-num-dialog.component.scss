@@ -3,6 +3,10 @@ form, form div, .input-container, .question-num-input, .buttons, .continue-butto
 	padding: 0;	
 }
 
+.title {
+	margin-top: 8px;
+}
+
 .buttons {
 	display: flex;
 	flex-direction: column;

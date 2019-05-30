@@ -19,7 +19,6 @@
     "@angular/core": "^7.2.6",
     "@angular/flex-layout": "^7.0.0-beta.23",
     "@angular/forms": "^7.2.6",
-    "@angular/http": "^7.2.6",
     "@angular/material": "^7.2.6",
     "@angular/platform-browser": "^7.2.6",
     "@angular/platform-browser-dynamic": "^7.2.6",

@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { UserService } from '../../../../_services/user.service';
-import { User } from '../../../../_models/user';
+import {Component, Inject} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {UserService} from '../../../../_services/user.service';
+import {User} from '../../../../_models/user';
 
 @Component({
     selector: 'question-num-dialog',
@@ -21,9 +21,9 @@ export class QuestionNumDialogComponent {
 
     onClick(): void {
         this.userService.changeProfile(this.user)
-        .subscribe( res => {
-          localStorage.setItem('question_num', ""+this.user.questionNum);
-        });
+            .subscribe(res => {
+                localStorage.setItem('question_num', '' + this.user.questionNum);
+            });
         this.dialogRef.close();
     }
 }

@@ -19,12 +19,12 @@ import { Router } from '@angular/router';
             font-size: 14px !important;
         }
     }
-    @media screen and (max-width: 1024px) { 
-      .try-button {
+    @media screen and (max-width: 1024px) {
+        .try-button {
         font-size: 12px !important;
       }
     }
-    @media screen and (max-width: 768px) { 
+    @media screen and (max-width: 768px) {
       .try-button {
         font-size: 8px !important;
       }
@@ -34,28 +34,23 @@ import { Router } from '@angular/router';
 
 export class TryComponent implements OnInit {
 
-  constructor(
-  	private authenticationService: AuthenticationService,
-  	private router: Router
-  	) { 
-  }
+  constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
   ngOnInit() {
-    // reset login status
     this.authenticationService.logout();
   }
 
-  public onTry():any {
-    let id = this.randomString();
-  	let email = id+'@somemail.com';
-  	let password = id;
-  	let username = id;
+  public onTry(): any {
+    const id = this.randomString();
+    const email = id + '@somemail.com';
+    const password = id;
+    const username = id;
     this.authenticationService.register(username, email, password)
         .subscribe(res => {
             if (res['success'] === true) {
                this.authenticationService.login(email, password)
-                 .subscribe(res => {
-                    if (res == true) {
+                 .subscribe(result => {
+                    if (result === true) {
                         this.router.navigate(['placement']);
                     }
                });
@@ -64,10 +59,10 @@ export class TryComponent implements OnInit {
   }
 
   private randomString() {
-    let length = 50; // max 64
-    let id = "";
-    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for(let i = 0; i < length; i++) {
+    const length = 50; // max 64
+    let id = '';
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < length; i++) {
         id += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
     }
     return id;

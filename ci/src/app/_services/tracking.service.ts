@@ -1,5 +1,4 @@
 ﻿import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 import { HttpService } from './http.service';
 
@@ -11,25 +10,23 @@ export class TrackingService {
 
     startLesson(lesson_id) {
         // notify api about lesson start
-        if(lesson_id == -1) {
+        if (lesson_id === -1) {
           /** TODO: change this HARDCODED value to testoutstart! */
-          //return this.http.post('/testoutstart', '')
-          return this.http.post('/', ''); 
-        }
-        else {
-            return this.http.post('/lesson/'+lesson_id+'/start', '');
+          // return this.http.post('/testoutstart', '')
+          return this.http.post('/', '');
+        } else {
+            return this.http.post('/lesson/' + lesson_id + '/start', '');
         }
     }
 
     doneLesson(topic_id, lesson_id, start_datetime, weak_questions) {
         // notify api about lesson done
-        let request = { start_datetime: start_datetime, 
+        const request = { start_datetime: start_datetime,
             weak_questions: weak_questions };
-        if(lesson_id == -1) {
-          return this.http.post('/topic/'+topic_id+'/testoutdone', request); 
-        }
-        else {
-          return this.http.post('/lesson/'+lesson_id+'/done', request);
+        if (lesson_id === -1) {
+          return this.http.post('/topic/' + topic_id + '/testoutdone', request);
+        } else {
+          return this.http.post('/lesson/' + lesson_id + '/done', request);
         }
     }
 }

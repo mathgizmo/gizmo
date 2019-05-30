@@ -1,8 +1,8 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+﻿import {Component, OnInit, OnDestroy} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 
-import { TopicService } from '../../_services/index';
-import { environment } from '../../../environments/environment';
+import {TopicService} from '../../_services/index';
+import {environment} from '../../../environments/environment';
 
 @Component({
     moduleId: module.id,
@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment';
     styleUrls: ['home.component.scss']
 })
 
-export class HomeComponent implements OnInit, OnDestroy  {
+export class HomeComponent implements OnInit, OnDestroy {
     topicsTree: any = [];
     private readonly adminUrl = environment.adminUrl;
 
@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy  {
 
     ngOnDestroy() {
         const doc = document.documentElement;
-        const top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+        const top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
         localStorage.setItem('home-scroll', JSON.stringify(top));
     }
 

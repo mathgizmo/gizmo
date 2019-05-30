@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
 
-import { HttpService } from './http.service';
+import {HttpService} from './http.service';
 
 @Injectable()
 export class WelcomeService {
 
-	constructor(private http: HttpService) { }
+    constructor(private http: HttpService) {
+    }
 
-	getWelcomeTexts() {
-	    return this.http.get('/welcome');
-	}
+    getWelcomeTexts() {
+        return this.http.get('/welcome');
+    }
 
 }

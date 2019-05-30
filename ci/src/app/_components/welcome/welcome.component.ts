@@ -1,7 +1,7 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+﻿import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
 
-import { WelcomeService } from '../../_services/index';
+import {WelcomeService} from '../../_services/index';
 
 @Component({
     moduleId: module.id,
@@ -25,7 +25,7 @@ export class WelcomeComponent implements OnInit {
         // get texts
         this.welcomeService.getWelcomeTexts()
             .subscribe(result => {
-                for(let i = 0; i < result.length; i++) {
+                for (let i = 0; i < result.length; i++) {
                     switch (result[i].key) {
                         case 'Home1':
                             this.title = result[i].value;
@@ -49,7 +49,7 @@ export class WelcomeComponent implements OnInit {
         this.activatedRoute.params.subscribe(params => {
             const instruction = document.getElementById('instruction');
             setTimeout(() => {
-                instruction.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                instruction.scrollIntoView({behavior: 'smooth', block: 'center'});
             }, 60);
             setTimeout(() => {
                 instruction.focus();
