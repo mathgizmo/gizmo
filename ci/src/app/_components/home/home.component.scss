@@ -1,8 +1,7 @@
 @import '../../../colors';
 
 .topics {
-	margin: 0 auto;
-	margin-top: 60px;
+	margin: 60px auto 0;
 	padding: 0;
 	width: 80vw;
 }
@@ -16,25 +15,18 @@ a:hover {
 }
 
 .level {
-	margin: 10px;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
-	background-color: rgba(255, 255, 255, 0.2);
 	text-align: center;
+	background-color: rgba(255, 255, 255, 0.2);
+	margin: 10px;
 	padding: 20px;
 }
 
-.unit-title {
-	display: flex;
-	justify-content: center;
-}
-
 .level-title {
-	margin: 0;
-	margin-left: 40px;
-	margin-top: 28px;
+	margin: 28px 0 0 40px;
 }
 
 .unit {
@@ -59,7 +51,6 @@ a:hover {
 	margin: 4px 6px;
 	display: flex;
 	justify-content: center;
-	flex-direction: column;
 	flex-wrap: wrap;
 	align-items: center;
 	text-align: center;
@@ -76,15 +67,14 @@ a:hover {
 	}
 }
 
-.topic-title, .topic-progress {
-	display: flex;
-	justify-content: center;
-	padding: 0;
-	margin: 0;
+.topic-title {
+	word-break: break-word;
+	max-width: 120px !important;
 }
 
 .topic-title, .topic-progress {
-	text-align: center;
+	padding: 0;
+	margin: 0;
 }
 
 @media screen and (max-width: 1024px) { 
