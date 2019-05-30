@@ -33,13 +33,13 @@ a:focus, a:hover {
 	height: 14px;
 	width: 100%;
 }
-:host /deep/ .mat-progress-bar.mat-warn .mat-progress-bar-fill::after {
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-fill::after {
     border-radius: 200px !important;
 }
-:host /deep/ .mat-progress-bar.mat-warn .mat-progress-bar-buffer {
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-buffer {
     background-color: #43bec7; //rgba(255,255,255,0.4);
 }
-:host /deep/ .mat-progress-bar.mat-warn .mat-progress-bar-background {
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-background {
 	display: none;
 }
 

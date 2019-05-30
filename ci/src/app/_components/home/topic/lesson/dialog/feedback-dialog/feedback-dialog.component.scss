@@ -56,14 +56,14 @@
 	}
 }
 
-:host /deep/ .mat-radio-outer-circle,
-:host /deep/ .mat-checkbox-frame {
+::ng-deep .mat-radio-outer-circle,
+::ng-deep .mat-checkbox-frame {
   border-color: $navy;
   border-width: 4px;
 }
-:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-outer-circle {
+::ng-deep .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-outer-circle {
   border-width: 0;
 }
-:host /deep/ .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-inner-circle {
+::ng-deep .mat-radio-checked .mat-radio-label .mat-radio-container .mat-radio-inner-circle {
   transform: scale(1);
 }

@@ -27,18 +27,18 @@ input {
   min-width: 240px;
 }
 
-:host /deep/ .mat-slider-horizontal .mat-slider-track-background,
-:host /deep/ .mat-slider-horizontal:hover .mat-slider-track-background {
+::ng-deep .mat-slider-horizontal .mat-slider-track-background,
+::ng-deep .mat-slider-horizontal:hover .mat-slider-track-background {
   background-color: rgba(255,255,255,0.4);
 }
 
-:host /deep/ .mat-progress-bar .mat-progress-bar-fill::after {
+::ng-deep .mat-progress-bar .mat-progress-bar-fill::after {
     border-radius: 200px !important;
 }
-:host /deep/ .mat-progress-bar .mat-progress-bar-buffer {
+::ng-deep .mat-progress-bar .mat-progress-bar-buffer {
   background-color: #8ED8DD;
 }
-:host /deep/ .mat-progress-bar .mat-progress-bar-background {
+::ng-deep .mat-progress-bar .mat-progress-bar-background {
   display: none;
 }
 
@@ -63,13 +63,13 @@ input {
   left: 0;
 }
 
-:host /deep/ .mat-progress-bar.mat-warn .mat-progress-bar-fill::after {
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-fill::after {
   border-radius: 10px !important;
 }
-:host /deep/ .mat-progress-bar.mat-warn .mat-progress-bar-buffer {
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-buffer {
   background-color: rgba(255,255,255,0.4);
 }
-:host /deep/ .mat-progress-bar.mat-warn .mat-progress-bar-background {
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-background {
   display: none;
 }
 

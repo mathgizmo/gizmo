@@ -78,8 +78,8 @@ a:hover {
 }
 
 @media screen and (max-width: 1024px) { 
-    .topic {
-		width: 110px;
+    .topic, .topic-title {
+		width: 110px !important;
 	}
 	.level-title {
 		margin-left: 38px;
@@ -90,8 +90,8 @@ a:hover {
     .topics {
 		width: calc(100% - 20px); 
 	}
-    .topic {
-		width: 100px;
+	.topic, .topic-title {
+		width: 100px !important;
 	}
 	.level-title {
 		margin-left: 36px;
