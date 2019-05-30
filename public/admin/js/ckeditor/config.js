@@ -37,7 +37,9 @@ CKEDITOR.editorConfig = function( config ) {
     config.extraPlugins = 'filebrowser,image,sourcedialog,dialog,dialogui,font,format,chart';
 
     config.filebrowserUploadUrl = '/admin/question_views/uploadImage';
+    config.filebrowserBrowseUrl = '/admin/js/ckeditor/plugins/imagebrowser/imagebrowser.html?imgroot=/admin/uploads';
 
     // Enable all default text formats
     config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre;address;div';
+
 };
