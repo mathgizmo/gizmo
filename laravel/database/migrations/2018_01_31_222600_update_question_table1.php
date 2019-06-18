@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class UpdateQuestionTable extends Migration
+class UpdateQuestionTable1 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class UpdateQuestionTable extends Migration
      */
     public function up()
     {
-        Schema::table('question', function (Blueprint $table) {
-            $table->boolean('conversion')->default(false);
-            $table->boolean('rounding')->default(false);
-        });
+        if (!Schema::hasColumn('question', 'conversion') && !Schema::hasColumn('question', 'rounding')) {
+        	Schema::table('question', function (Blueprint $table) {
+	            $table->boolean('conversion')->default(false);
+	            $table->boolean('rounding')->default(false);
+	        });
+        }   
     }
 
     /**

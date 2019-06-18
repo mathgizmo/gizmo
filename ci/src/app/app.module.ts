@@ -28,7 +28,7 @@ import {HomeComponent} from './_components/home/index';
 import {TopicComponent} from './_components/home/topic/index';
 import {
     LessonComponent, GoodDialogComponent, BadDialogComponent,
-    ReportDialogComponent, FeedbackDialogComponent, ChartComponent
+    ReportDialogComponent, FeedbackDialogComponent, BadChallengeDialogComponent, ChartComponent
 } from './_components/home/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {ResetPasswordComponent} from './_components/welcome/login/reset-password/reset-password.component';
@@ -77,6 +77,7 @@ import {DraggableDirective} from './_directives/draggable.directive';
         BadDialogComponent,
         ReportDialogComponent,
         FeedbackDialogComponent,
+        BadChallengeDialogComponent,
         ChartComponent,
         ProfileComponent,
         TryComponent,
@@ -93,7 +94,8 @@ import {DraggableDirective} from './_directives/draggable.directive';
         BadDialogComponent,
         ReportDialogComponent,
         FeedbackDialogComponent,
-        QuestionNumDialogComponent
+        QuestionNumDialogComponent,
+        BadChallengeDialogComponent
     ],
     providers: [
         AuthGuard,

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TopicService} from '../../../../_services/index';
 import {TrackingService} from '../../../../_services/index';
@@ -11,6 +11,10 @@ import {BadDialogComponent} from './dialog/bad-dialog/bad-dialog.component';
 import {ReportDialogComponent} from './dialog/report-dialog/report-dialog.component';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog/feedback-dialog.component';
 
+import { BadChallengeDialogComponent } from './dialog/bad-challenge-dialog/bad-challenge-dialog.component';
+
+import { QuestionComponent } from './question/question.component';
+
 @Component({
     moduleId: module.id,
     templateUrl: 'lesson.component.html',
@@ -21,6 +25,10 @@ export class LessonComponent implements OnInit {
     lessonTree: any = [];
     topic_id: number;
     lesson_id: number;
+    isChallenge: false;
+
+    @ViewChildren(QuestionComponent)
+    private questionComponents: QueryList<QuestionComponent>;
 
     weak_questions: string[] = [];
     start_time: any = '';
@@ -41,6 +49,8 @@ export class LessonComponent implements OnInit {
 
     all_questions: any = [];
     current_question_index = 0;
+
+    dialogPosition: any;
 
     backLinkText = 'Back';
     titleText = 'Lesson';
@@ -63,6 +73,11 @@ export class LessonComponent implements OnInit {
         } else {
             this.question_num = 4;
         }
+
+        this.dialogPosition = {bottom: '18vh'};
+        if (this.isMobile || this.isTablet) {
+            this.dialogPosition = {bottom: '2vh'};
+        }
     }
 
     ngOnInit() {
@@ -76,8 +91,8 @@ export class LessonComponent implements OnInit {
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
+                    this.isChallenge = lessonTree.challenge;
                     this.all_questions.splice(0, this.all_questions.length, ...lessonTree['questions']);
-                    this.lessonTree = lessonTree;
                     this.initial_loading = 0;
                     if (lessonTree['questions'].length) {
                         // this.backLinkText = lessonTree.level + ' > ' + lessonTree.unit;
@@ -99,6 +114,7 @@ export class LessonComponent implements OnInit {
                                 lessonTree['questions'][randomIndex] = temporaryValue;
                             }
                         }
+                        this.lessonTree = lessonTree;
                         if (this.question_num >= this.lessonTree['questions'].length) {
                             this.question_num = this.lessonTree['questions'].length;
                         }
@@ -118,6 +134,7 @@ export class LessonComponent implements OnInit {
                     } else {
                         this.next = lessonTree['next_lesson_id'];
                     }
+
                     this.correct_answers = this.complete_percent = 0;
                 });
         });
@@ -128,7 +145,11 @@ export class LessonComponent implements OnInit {
             if (this.question_num > 0 && (this.lessonTree['questions'].length < (this.question_num - this.correct_answers))) {
                 this.lessonTree['questions'].splice(0, this.lessonTree['questions'].length, ...this.all_questions);
             }
-            this.question = this.lessonTree['questions'].shift();
+            if (!this.isChallenge) {
+                this.question = this.lessonTree['questions'].shift();
+            } else {
+                this.question = this.lessonTree['questions'][0];
+            }
         } else {
             if (this.current_question_index >= this.lessonTree['questions'].length || this.current_question_index < 0) {
                 this.current_question_index = 0;
@@ -137,11 +158,57 @@ export class LessonComponent implements OnInit {
         }
     }
 
-    checkAnswer(answers: string[]) {
-        let dialogPosition = {bottom: '18vh'};
-        if (this.isMobile || this.isTablet) {
-            dialogPosition = {bottom: '2vh'};
-        }
+    checkAnswers() {
+        this.correct_answers = 0;
+        this.incorrect_answers = 0;
+        const checkAnswers = async () => {
+            const questionComponents = this.questionComponents.toArray();
+            for (let i = 0; i < questionComponents.length; i++) {
+                this.question = questionComponents[i].question;
+                const isCorrect = await this.isCorrect(questionComponents[i].answers);
+                if (isCorrect) {
+                    this.correct_answers++;
+                } else {
+                    this.incorrect_answers++;
+                }
+            }
+        };
+        checkAnswers().then( () => {
+            if (this.incorrect_answers === 0) {
+                this.lessonTree['questions'] = [];
+                this.question = null;
+                this.trackingService.doneLesson(this.topic_id,
+                    this.lesson_id, this.start_time, this.weak_questions).subscribe();
+            } else {
+                const dialogRef = this.dialog.open(BadChallengeDialogComponent, {
+                    position: this.dialogPosition,
+                    data: {
+                        data: this.correct_answers + ' out of '
+                            + (this.correct_answers + this.incorrect_answers) + ' correct',
+                        topic_id: this.topic_id,
+                        lesson_id: this.lesson_id,
+                    }
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                    if (result === 'report') {
+                        const question_id = this.all_questions[0].id;
+                        const reportDialogRef = this.dialog.open(ReportDialogComponent, {
+                            position: this.dialogPosition,
+                            data: {question_id: question_id, answers: null}
+                        });
+                        reportDialogRef.afterClosed().subscribe(res => {
+                            this.topicService.reportError(res.question_id,
+                                res.answers, res.option, res.text).subscribe();
+                        });
+                    } else if (result === 'retry') {
+                        this.ngOnInit();
+                    }
+                });
+            }
+        });
+    }
+
+    isCorrect(answers: string[]) {
         this.answers = answers;
         // sort question answers
         if (this.question.question_order) {
@@ -181,101 +248,12 @@ export class LessonComponent implements OnInit {
                         }
                     }
                 } catch (err) {
+                    return false;
                 }
             }
         }
-        if (this.isCorrect()) {
-            if (!this.randomisation) {
-                this.current_question_index++;
-            }
-            this.correct_answers++;
-            this.complete_percent = (this.correct_answers === 0) ? 0
-                : this.correct_answers / this.question_num * 100;
-            // if we have enough correct responses just remove rest of the questions
-            if (this.correct_answers === this.question_num && this.question_num !== 0) {
-                this.lessonTree['questions'] = [];
-            }
-            const goodDialogRef = this.dialog.open(GoodDialogComponent, {
-                // width: '800px',
-                data: {},
-                position: dialogPosition
-            });
 
-            goodDialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                    const reportDialogRef = this.dialog.open(FeedbackDialogComponent, {
-                        // width: '800px',
-                        data: {question_id: this.question.id, answers: this.answers},
-                        position: dialogPosition
-                    });
-
-                    reportDialogRef.afterClosed().subscribe(res => {
-                        this.topicService.sendFeedback(res.question_id, res.text).subscribe();
-                    });
-                }
-                if (this.lessonTree['questions'].length) {
-                    this.nextQuestion();
-                } else {
-                    this.question = null;
-                    this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
-                }
-            });
-        } else {
-            if (!this.randomisation) {
-                this.current_question_index--;
-            }
-            if (this.weak_questions.indexOf(this.question.id) === -1) {
-                this.weak_questions.push(this.question.id);
-            }
-            this.incorrect_answers++;
-            if (this.lesson_id === -1 &&
-                this.incorrect_answers > this.max_incorrect_answers) {
-                this.router.navigate(['/topic/' + this.topic_id]);
-            } else {
-                if (this.randomisation) { this.lessonTree['questions'].push(this.question); }
-            }
-            const dialogRef = this.dialog.open(BadDialogComponent, {
-                // width: '800px',
-                position: dialogPosition,
-                data: {
-                    data: this.question.answers.filter(function (answer) {
-                        if (answer.is_correct === 1) {
-                            return true;
-                        }
-                        return false;
-                    }), explanation: this.question.explanation,
-                    showAnswers: (this.lesson_id === -1) ? false : true
-                }
-            });
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                    const reportDialogRef = this.dialog.open(ReportDialogComponent, {
-                        // width: '800px',
-                        position: dialogPosition,
-                        data: {question_id: this.question.id, answers: this.answers}
-                    });
-
-                    reportDialogRef.afterClosed().subscribe(res => {
-                        this.topicService.reportError(res.question_id,
-                            res.answers, res.option, res.text).subscribe();
-                    });
-                }
-                if (this.lessonTree['questions'].length) {
-                    this.nextQuestion();
-                } else {
-                    this.question = null;
-                    this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
-                }
-            });
-            if (this.lesson_id !== -1) {
-                this.correct_answers = this.complete_percent = 0;
-            }
-        }
-    }
-
-    isCorrect() {
+        // check if answer is correct
         if (this.question.answer_mode === 'radio') {
             if (this.answers[0] === '') {
                 return false;
@@ -381,6 +359,98 @@ export class LessonComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    checkAnswer(answers: string[]) {
+        const isCorrect = this.isCorrect(answers);
+        if (isCorrect) {
+            if (!this.randomisation) {
+                this.current_question_index++;
+            }
+            this.correct_answers++;
+            this.complete_percent = (this.correct_answers === 0) ? 0
+                : this.correct_answers / this.question_num * 100;
+            // if we have enough correct responses just remove rest of the questions
+            if (this.correct_answers === this.question_num && this.question_num !== 0) {
+                this.lessonTree['questions'] = [];
+            }
+            const goodDialogRef = this.dialog.open(GoodDialogComponent, {
+                // width: '800px',
+                data: {},
+                position: this.dialogPosition
+            });
+            goodDialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    const reportDialogRef = this.dialog.open(FeedbackDialogComponent, {
+                        // width: '800px',
+                        data: {question_id: this.question.id, answers: this.answers},
+                        position: this.dialogPosition
+                    });
+
+                    reportDialogRef.afterClosed().subscribe(res => {
+                        this.topicService.sendFeedback(res.question_id, res.text).subscribe();
+                    });
+                }
+                if (this.lessonTree['questions'].length) {
+                    this.nextQuestion();
+                } else {
+                    this.question = null;
+                    this.trackingService.doneLesson(this.topic_id,
+                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                }
+            });
+        } else {
+            if (!this.randomisation) {
+                this.current_question_index--;
+            }
+            if (this.weak_questions.indexOf(this.question.id) === -1) {
+                this.weak_questions.push(this.question.id);
+            }
+            this.incorrect_answers++;
+            if (this.lesson_id === -1 &&
+                this.incorrect_answers > this.max_incorrect_answers) {
+                this.router.navigate(['/topic/' + this.topic_id]);
+            } else {
+                if (this.randomisation) { this.lessonTree['questions'].push(this.question); }
+            }
+            const dialogRef = this.dialog.open(BadDialogComponent, {
+                // width: '800px',
+                position: this.dialogPosition,
+                data: {
+                    data: this.question.answers.filter(function (answer) {
+                        if (answer.is_correct === 1) {
+                            return true;
+                        }
+                        return false;
+                    }), explanation: this.question.explanation,
+                    showAnswers: (this.lesson_id === -1) ? false : true
+                }
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    const reportDialogRef = this.dialog.open(ReportDialogComponent, {
+                        // width: '800px',
+                        position: this.dialogPosition,
+                        data: {question_id: this.question.id, answers: this.answers}
+                    });
+
+                    reportDialogRef.afterClosed().subscribe(res => {
+                        this.topicService.reportError(res.question_id,
+                            res.answers, res.option, res.text).subscribe();
+                    });
+                }
+                if (this.lessonTree['questions'].length) {
+                    this.nextQuestion();
+                } else {
+                    this.question = null;
+                    this.trackingService.doneLesson(this.topic_id,
+                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                }
+            });
+            if (this.lesson_id !== -1) {
+                this.correct_answers = this.complete_percent = 0;
+            }
+        }
     }
 
 }

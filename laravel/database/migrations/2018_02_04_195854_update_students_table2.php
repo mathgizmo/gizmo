@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateStudentsTable extends Migration
+class UpdateStudentsTable2 extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,11 @@ class UpdateStudentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('students', function (Blueprint $table) {
-            $table->boolean('is_super')->default(false);
-        });
+        if (!Schema::hasColumn('students', 'is_super')) {
+	        Schema::table('students', function (Blueprint $table) {
+	            $table->boolean('is_super')->default(false);
+	        });
+        } 
     }
 
     /**

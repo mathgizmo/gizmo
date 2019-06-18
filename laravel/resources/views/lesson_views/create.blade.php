@@ -101,10 +101,9 @@
                           </div>
 
                           <div class="form-group{{ $errors->has('randomisation') ? ' has-error' : '' }}">
-                            <label for="type" class="col-md-4 control-label">Turn on randomisation</label>
-
+                            <label for="randomisation" class="col-md-4 control-label">Turn on randomisation</label>
                             <div class="col-md-6 radio">
-                                <label for="type" class="col-md-3"> <input checked="checked" type="checkbox" name="randomisation" value="1"></label>
+                                <label for="randomisation" class="col-md-3"> <input checked="checked" type="checkbox" name="randomisation" value="1"></label>
                                 @if ($errors->has('randomisation'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('randomisation') }}</strong>
@@ -114,13 +113,25 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('dependency') ? ' has-error' : '' }}">
-                            <label for="type" class="col-md-4 control-label">This should be finished to continue</label>
-
+                            <label for="dependency" class="col-md-4 control-label">This should be finished to continue</label>
                             <div class="col-md-6 radio">
-                                <label for="type" class="col-md-3"> <input checked="checked" type="checkbox" name="dependency" value="1"></label>
+                                <label for="dependency" class="col-md-3"> <input checked="checked" type="checkbox" name="dependency" value="1"></label>
                                 @if ($errors->has('dependency'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('dependency') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('challenge') ? ' has-error' : '' }}">
+                            <label for="challenge" class="col-md-4 control-label">This is challenge</label>
+                            <div class="col-md-6 radio">
+                                <label for="challenge" class="col-md-3">
+                                    <input type="checkbox" name="challenge" value="1"></label>
+                                @if ($errors->has('challenge'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('challenge') }}</strong>
                                     </span>
                                 @endif
                             </div>

@@ -18,12 +18,14 @@ export class QuestionComponent implements OnInit, OnDestroy {
         return this._question;
     }
 
+    @Input() isChallenge = false;
+
     @Output() onAnswered = new EventEmitter<string[]>();
-    answers: string[] = [];
-    questionForChart = '';
-    is_chart = false;
-    warning = false;
-    warningMessage = 'Undefined exception';
+    public answers: string[] = [];
+    public questionForChart = '';
+    public is_chart = false;
+    public warning = false;
+    public warningMessage = 'Undefined exception';
 
     constructor() {
     }
