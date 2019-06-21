@@ -12,6 +12,7 @@ export class BadDialogComponent extends BaseDialogComponent<BadDialogComponent> 
     answers: string[];
     explanation: string;
     showAnswer: boolean;
+    showExplanation = false;
 
     constructor(
         public dialogRef: MatDialogRef<BadDialogComponent>,

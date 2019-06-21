@@ -5,10 +5,10 @@
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	.popup-image {
-		height: 80%;
+		height: 70%;
 		margin: 0;
 		padding: 0;
 	}
@@ -37,14 +37,37 @@
 	}
 }
 
+.explanation {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	.explanation-text {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 94%;
+	}
+	.explanation-button {
+		background:none;
+		color:inherit;
+		border:none;
+		padding: 0!important;
+		margin: 0;
+		font: inherit;
+		border-bottom:1px solid #444;
+		cursor: pointer;
+	}
+}
+
 @media (max-height: 650px) { 
 	.dialog-content {
-		height: 60%;
+		height: 65%;
 		.popup-image {
-			height: 75%;
+			height: 70%;
 		}
 	}
 	.buttons-container { 
-		height: 40%;
+		height: 35%;
 	}
 }
