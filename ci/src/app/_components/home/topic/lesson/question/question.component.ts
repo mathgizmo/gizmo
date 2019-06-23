@@ -1,4 +1,5 @@
-import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
+import { HostListener } from '@angular/core';
 import {MatProgressBarModule} from '@angular/material';
 
 @Component({
@@ -6,12 +7,11 @@ import {MatProgressBarModule} from '@angular/material';
     templateUrl: './question.component.html',
     styleUrls: ['./question.component.scss']
 })
-export class QuestionComponent implements OnInit, OnDestroy {
+export class QuestionComponent implements OnInit, OnChanges, OnDestroy {
 
     private _question: any = null;
     @Input() set question(value: any) {
         this._question = value;
-        this.initQuestion();
     }
 
     get question(): any {
@@ -19,6 +19,7 @@ export class QuestionComponent implements OnInit, OnDestroy {
     }
 
     @Input() isChallenge = false;
+    @Input() incorrectAnswersCount = 0;
 
     @Output() onAnswered = new EventEmitter<string[]>();
     public answers: string[] = [];
@@ -27,25 +28,29 @@ export class QuestionComponent implements OnInit, OnDestroy {
     public warning = false;
     public warningMessage = 'Undefined exception';
 
+    private emitted_answers = null;
+
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+            this.checkAnswer();
+        }
+    }
+
     constructor() {
     }
 
     ngOnInit() {
     }
 
-    ngOnDestroy() {
-        document.removeEventListener('keyup', this.keyClick);
+    ngOnChanges() {
+        this.initQuestion();
     }
 
-    keyClick(event) {
-        if (event.key === 'Enter') {
-            this.checkAnswer();
-        }
+    ngOnDestroy() {
     }
 
     initQuestion() {
-        this.keyClick = this.keyClick.bind(this);
-        document.addEventListener('keyup', this.keyClick);
         this.answers = [];
         this.is_chart = false;
         if (this.question['question'].indexOf('%%chart{') >= 0) {
@@ -85,14 +90,17 @@ export class QuestionComponent implements OnInit, OnDestroy {
     }
 
     checkAnswer() {
-        if (this.answers.length < 1 || this.answers.every(elem => elem === '') ||
-            (this.question.answer_mode === 'input' && this.answers.some(elem => elem === ''))) {
-            this.warning = true;
-            this.warningMessage = 'Please, answer the question!';
-        } else {
-            this.warning = false;
-            document.removeEventListener('keyup', this.keyClick);
-            this.onAnswered.emit(this.answers);
+        // check answer only if it changes (prevent double check on Enter press)
+        if (!this.isChallenge && this.emitted_answers !== this.answers) {
+            if (this.answers.length < 1 || this.answers.every(elem => elem === '') ||
+                (this.question.answer_mode === 'input' && this.answers.some(elem => elem === ''))) {
+                this.warning = true;
+                this.warningMessage = 'Please, answer the question!';
+            } else {
+                this.warning = false;
+                this.emitted_answers = this.answers;
+                this.onAnswered.emit(this.answers);
+            }
         }
     }
 
