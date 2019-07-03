@@ -425,7 +425,7 @@ h1, h2, h3, h4 {
     }
 }
 
-@media (max-height: 650px) and (max-width: 650px) { 
+@media (max-height: 650px) and (max-width: 650px) {
     .dialog-buttons-container {
         .button, .error-button {
             font-size: 11px !important;
@@ -433,7 +433,7 @@ h1, h2, h3, h4 {
     }
 }
 
-@media (max-height: 500px) { 
+@media (max-height: 500px) {
     .dialog-buttons-container {
         .button, .error-button {
             font-size: 9px !important;
@@ -673,4 +673,12 @@ $white-primary: mat-palette($mat-white);
 $white-theme: mat-light-theme($white-primary, $accent, $warn);
 .white-theme {
   @include angular-material-theme($white-theme);
+}
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
+
+.mat-radio-label {
+  white-space: normal !important;
 }
