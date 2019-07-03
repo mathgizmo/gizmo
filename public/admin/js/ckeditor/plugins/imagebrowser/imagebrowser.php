@@ -14,7 +14,7 @@ class imgbrowse {
 
   // return two-dimensional array with folders-list and images in specified $imgdr
   public function getMenuImgs() {
-    $re = ['menu'=>'', 'imgs'=>''];
+    $re = ['menu'=>[], 'imgs'=>[]];
     try{
       $obdr = new DirectoryIterator($_SERVER['DOCUMENT_ROOT'] .'/'. $this->root . $this->imgdr);// object of the dir
     }
@@ -30,11 +30,23 @@ class imgbrowse {
       $name = $fileobj->getFilename();
 
       // if image file, else, directory (but not . or ..), add data in $re
-      if($fileobj->isFile() && in_array($fileobj->getExtension(), $this->imgext)) $re['imgs'] .= '<span><img src="'. $site . $this->root . $this->imgdr . $name .'" alt="'. $name .'"/>'. $name .'</span>';
-      else if($fileobj->isDir() && !$fileobj->isDot()) $re['menu'] .= '<li><span title="'. $this->imgdr . $name .'">'. $name .'</span></li>';
+      if($fileobj->isFile() && in_array($fileobj->getExtension(), $this->imgext)) $re['imgs'][$name] = '<span><img src="'. $site . $this->root . $this->imgdr . $name .'" alt="'. $name .'"/>'. $name .'</span>';
+      else if($fileobj->isDir() && !$fileobj->isDot()) $re['menu'][$name] = '<li><span title="'. $this->imgdr . $name .'">'. $name .'</span></li>';
     }
-    if($re['menu'] != '') $re['menu'] = '<ul>'. $re['menu'] .'</ul>';
-    if($re['imgs'] == '') $re['imgs'] = '<h1>No Images</h1>';
+    if(count($re['menu'])) {
+        rsort($re['menu']);
+        $re['menu'] = '<ul>'. implode('', $re['menu']) .'</ul>';
+    }
+    else {
+        $re['menu'] = '';
+    }
+    if(count($re['imgs'])) {
+        rsort($re['imgs']);
+        $re['imgs'] = implode('', $re['imgs']);
+    }
+    else {
+        $re['imgs'] = '<h1>No Images</h1>';
+    }
     return $re;
   }
 }
