@@ -2,7 +2,7 @@
 # !.angular-cli.json
 
 # Local variables
-/src/environments/environment.ts
+/src/environments/*
 
 # compiled output
 /dist/*

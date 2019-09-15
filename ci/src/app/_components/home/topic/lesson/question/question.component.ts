@@ -1,5 +1,4 @@
-import {Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
-import { HostListener } from '@angular/core';
+import {Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter, HostListener} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material';
 
 @Component({

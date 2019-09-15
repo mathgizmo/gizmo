@@ -1,6 +1,5 @@
 <?php
 
-//use Doctrine\DBAL\Schema\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -13,9 +12,11 @@ class UpdateLessonTable3 extends Migration
      */
     public function up()
     {
-        Schema::table('lesson', function ($table) {
-            $table->boolean('challenge')->default(false);
-        });
+        if (!Schema::hasColumn('lesson', 'challenge')) {
+            Schema::table('lesson', function ($table) {
+                $table->boolean('challenge')->default(false);
+            });
+        }
     }
 
     /**
@@ -25,8 +26,10 @@ class UpdateLessonTable3 extends Migration
      */
     public function down()
     {
-        Schema::table('lesson', function ($table) {
-            $table->dropColumn('challenge');
-        });
+        if (Schema::hasColumn('lesson', 'challenge')) {
+            Schema::table('lesson', function ($table) {
+                $table->dropColumn('challenge');
+            });
+        }
     }
 }
