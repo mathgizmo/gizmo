@@ -43,8 +43,7 @@
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th class="col-md"></th>
-                                    <th class="col-md">
+                                    <th class="col-md" style="min-width: 56px;">
                                         ID <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'id', 'order' => ((request()->sort == 'id' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'id' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'id' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'id' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
@@ -69,12 +68,18 @@
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'date' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'date' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
                                     </th>
+                                    <th class="col-md"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($students as $student)
                                     <tr>
-                                            <td>
+                                        <td>{{ $student->id }}</td>
+                                        <td>{{ $student->name }}</td>
+                                        <td>{{ $student->email }}</td>
+                                        <td>{{ $student->created_at? $student->created_at->format('Y/m/d H:i') : '' }}</td>
+                                        <td>{{ $student->date != null ? date('H:i d.m.Y', strtotime($student->date)) : 'Never' }}</td>
+                                        <td style="min-width: 420px;">
                                             <div class="btn-group">
                                                 <a href="{{ route('students.show', $student->id) }}" class="btn btn-info">Show</a>
                                             </div>
@@ -98,11 +103,6 @@
                                                 <button class="btn btn-danger" type="submit">Delete</button>
                                             </form>
                                         </td>
-                                        <td>{{ $student->id }}</td>
-                                        <td>{{ $student->name }}</td>
-                                        <td>{{ $student->email }}</td>
-                                        <td>{{ $student->created_at? $student->created_at->format('Y/m/d H:i') : '' }}</td>
-                                        <td>{{ $student->date != null ? date('H:i d.m.Y', strtotime($student->date)) : 'Never' }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

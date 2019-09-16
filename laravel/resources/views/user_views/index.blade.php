@@ -50,8 +50,8 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>
-                                            <div class="btn-group">
-                                                <a href="users/{{ $user->id }}/edit" class="btn btn-info">Edit</a>
+                                            <div style="display: flex; flex-direction: row;">
+                                                <a href="users/{{ $user->id }}/edit" class="btn btn-info" style="margin-right: 4px;">Edit</a>
                                                 <form method="POST" action="users/{{ $user->id }}">
                                                     {{ csrf_field() }}
                                                     <input type="hidden" name="_method" value="delete">

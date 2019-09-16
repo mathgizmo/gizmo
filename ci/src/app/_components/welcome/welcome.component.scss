@@ -16,7 +16,6 @@
         float: left;
         width: 50%;
         height: 100%;
-        overflow: none;
         .logo-container {
             margin: 0;
             padding: 0;
@@ -52,10 +51,8 @@
             .line {
                 background-color: $teal;
                 display: block;
-                margin: 0 auto;
                 padding: 0;
-                margin-top: 12px;
-                margin-bottom: 12px;
+                margin: 12px auto;
                 height: 2px;
                 width: 407px;
                 z-index: 1;
