@@ -1,8 +1,16 @@
 <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Correct!</h2>
 <mat-dialog-content class="dialog-content">
-	<img src="./assets/images/popup_image_correct.svg" alt="Correct" class="popup-image">
+    <img *ngIf="!showExplanation" src="./assets/images/popup_image_correct.svg" alt="Correct" class="popup-image">
+    <div class="explanation">
+        <div *ngIf="explanation.trim() != '' && showExplanation" class="topic-progress explanation-text">
+            {{explanation}}
+        </div>
+        <div *ngIf="explanation.trim() != ''" class="explanation-button" (click)="showExplanation = !showExplanation;" >
+            {{ !showExplanation ? 'Show explanation' : 'Hide explanation'}}
+        </div>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
-	<button mat-button [mat-dialog-close]="false" class='button moving-forward-button continue-button'>Continue</button>
-	<button mat-button [mat-dialog-close]="true" class='button feedback-button'>Report Error</button>
+    <button mat-button [mat-dialog-close]="false" class='button moving-forward-button continue-button'>Continue</button>
+    <button mat-button [mat-dialog-close]="true" class='button feedback-button'>Report Error</button>
 </mat-dialog-actions>

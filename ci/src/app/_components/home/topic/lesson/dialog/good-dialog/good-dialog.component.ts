@@ -9,11 +9,14 @@ import {BaseDialogComponent} from '../base-dialog.component';
     styleUrls: ['good-dialog.component.scss']
 })
 export class GoodDialogComponent extends BaseDialogComponent<GoodDialogComponent> {
+    explanation: string;
+    showExplanation = false;
 
     constructor(
         public dialogRef: MatDialogRef<GoodDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
+        this.explanation = data.explanation;
     }
 
     resizeDialog() {

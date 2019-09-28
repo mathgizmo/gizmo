@@ -376,7 +376,7 @@ export class LessonComponent implements OnInit {
             }
             const goodDialogRef = this.dialog.open(GoodDialogComponent, {
                 // width: '800px',
-                data: {},
+                data: {explanation: this.question.explanation},
                 position: this.dialogPosition
             });
             goodDialogRef.afterClosed().subscribe(result => {
