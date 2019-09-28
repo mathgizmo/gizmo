@@ -156,6 +156,10 @@
                                         ReplyMode <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'reply_mode', 'order' => ((request()->sort == 'reply_mode' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'reply_mode' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'reply_mode' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'reply_mode' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a></th>
+                                    <th class="col-md">
+                                        Explanation <a href="{{ route('question_views.index', array_merge(request()->all(), ['sort' => 'explanation', 'order' => ((request()->sort == 'explanation' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'explanation' && request()->order == 'asc') ? '' : 'desc'))])) }}">
+                                            <i class="fa fa-fw fa-sort{{ (request()->sort == 'explanation' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'explanation' && request()->order == 'desc') ? '-desc' : '' }}"></i>
+                                        </a></th>
                                 </tr>
                                 </thead>
 
@@ -181,6 +185,7 @@
                                         <td>{{$question->title}}</td>
                                         <td>{{strip_tags ($question->question)}}</td>
                                         <td>{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
+                                        <td>{{trim($question->explanation) ? substr(trim($question->explanation), 0, 20).'...': ''}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
