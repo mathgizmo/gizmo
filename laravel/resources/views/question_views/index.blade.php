@@ -185,7 +185,7 @@
                                         <td>{{$question->title}}</td>
                                         <td>{{strip_tags ($question->question)}}</td>
                                         <td>{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
-                                        <td>{{trim($question->explanation) ? substr(trim($question->explanation), 0, 20).'...': ''}}</td>
+                                        <td title="{{$question->explanation}}">{{trim($question->explanation) ? substr(trim($question->explanation), 0, 20).'...': ''}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
