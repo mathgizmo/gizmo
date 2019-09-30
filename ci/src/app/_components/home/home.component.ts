@@ -22,6 +22,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.topicService.getTopics().subscribe(topicsTree => {
             this.topicsTree = topicsTree;
+            let found = false;
+            for(let item of this.topicsTree) {
+            	for(let unit of item.units) {
+					if (!found && unit.status != 1) {
+						setTimeout( () => {
+							$('#unit'+unit.id+'-topics').slideDown("slow");
+						}, 100);
+						found = true;
+						unit.show = true;
+            		} else {
+            			unit.show = false;
+            		}
+            	}
+            }
             setTimeout(() => {
                 if (!isNaN(+localStorage.getItem('home-scroll'))) {
                     window.scroll(0, +localStorage.getItem('home-scroll'));
@@ -47,5 +61,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
     */
+
+    slideToggle(item: any) {
+    	$('#unit'+item.id+'-topics').slideToggle("slow");
+    	item.show = !item.show;
+    }
 
 }

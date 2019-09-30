@@ -35,6 +35,10 @@ a:hover {
 	width: 100%;
 	background-color: rgba(255, 255, 255, 1);
 	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 }
 
 .topics-container {
@@ -77,12 +81,45 @@ a:hover {
 	margin: 0;
 }
 
+.arrow {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  border: solid $navy;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.unit-title {
+	margin: 0;
+	max-width: 84%;
+}
+
+.arrow, .unit-title {
+	cursor: pointer;
+}
+
+.arrow-up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.arrow-down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
 @media screen and (max-width: 1024px) { 
     .topic, .topic-title {
 		width: 110px !important;
 	}
 	.level-title {
 		margin-left: 38px;
+	}
+	.arrow {
+  		top: 14px;
+  		right: 18px;
 	}
 }
 
@@ -95,6 +132,10 @@ a:hover {
 	}
 	.level-title {
 		margin-left: 36px;
+	}
+	.arrow {
+  		top: 10px;
+  		right: 16px;
 	}
 }
 

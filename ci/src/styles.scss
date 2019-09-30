@@ -422,11 +422,9 @@ h1, h2, h3, h4 {
     .button, .mat-button {
       font-size: 12px !important;
     }
-}
-
-@media screen and (max-width: 400px) {
-    .button, .mat-button {
-      font-size: 12px !important;
+    .topic-img {
+        width: 90px;
+        height: 90px;
     }
 }
 
