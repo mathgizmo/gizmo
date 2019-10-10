@@ -361,6 +361,7 @@
     <script src="{{ URL::asset('js/ckeditor/ckeditor.js') }}"></script>
     <script>
         var question = CKEDITOR.replace('question');
+        var explanation = CKEDITOR.replace('explanation');
     </script>
     <script>
         $(document).ready(function(){

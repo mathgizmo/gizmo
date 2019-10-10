@@ -284,7 +284,7 @@
                             <label for="explanation" class="col-md-4 control-label">Explanation</label>
 
                             <div class="col-md-6">
-                                <textarea id="explanation" class="form-control"  name="explanation">{{$question->explanation}}</textarea>
+                                <textarea id="explanation" class="form-control" name="explanation">{{$question->explanation}}</textarea>
 
                                 @if ($errors->has('explanation'))
                                     <span class="help-block">
@@ -380,6 +380,7 @@
     <script src="{{ URL::asset('js/ckeditor/ckeditor.js') }}"></script>
     <script>
         var question = CKEDITOR.replace('question');
+        var explanation = CKEDITOR.replace('explanation');
     </script>
     <script>
         $(document).ready(function(){
