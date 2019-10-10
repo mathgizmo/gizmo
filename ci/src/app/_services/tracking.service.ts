@@ -29,4 +29,16 @@ export class TrackingService {
           return this.http.post('/lesson/' + lesson_id + '/done', request);
         }
     }
+
+    getLastVisitedLesson(student_id) {
+        return this.http.get('/lesson/last-visited/' + student_id);
+    }
+
+    getLastVisitedTopic(student_id) {
+        return this.http.get('/topic/last-visited/' + student_id);
+    }
+
+    getLastVisitedUnit(student_id) {
+        return this.http.get('/unit/last-visited/' + student_id);
+    }
 }

@@ -24,14 +24,14 @@ export class AuthenticationService {
             .pipe(
                 map((response: Response) => {
                     // login successful if there's a jwt token in the response
-                    const token = response && response['message'] &&
-                        response['message']['token'];
+                    const token = response && response['message'] && response['message']['token'];
+                    const user_id = response && response['message'] && response['message']['user_id'];
                     if (token) {
                         // set token property
                         this.token = token;
                         // store username and jwt token in local storage to keep user logged in between page refreshes
                         localStorage.setItem('currentUser',
-                            JSON.stringify({username: username, token: token}));
+                            JSON.stringify({user_id: user_id, username: username, token: token}));
                         let question_num = 3;
                         if (response['message'] && response['message']['question_num'] !== undefined) {
                             question_num = response['message']['question_num'];

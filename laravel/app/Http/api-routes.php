@@ -19,6 +19,10 @@ $api->post('/password-reset-email' , 'App\Http\APIControllers\AuthController@pas
 $api->post('/reset-password' , 'App\Http\APIControllers\AuthController@resetPassword');
 
 $api->group(['middleware' => 'api.auth'], function () use ($api) {
+    $api->get('/lesson/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedLesson');
+    $api->get('/topic/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedTopic');
+    $api->get('/unit/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedUnit');
+
     $api->get('/placement' , 'App\Http\APIControllers\PlacementController@get');
     $api->get('/placement/getTopicId/{unit_id}' , 'App\Http\APIControllers\PlacementController@getTopicId');
     $api->post('/placement/done-unit' , 'App\Http\APIControllers\PlacementController@doneUnit');

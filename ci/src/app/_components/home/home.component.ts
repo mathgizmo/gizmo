@@ -1,13 +1,13 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 
-import {TopicService} from '../../_services/index';
+import {TopicService, TrackingService} from '../../_services/index';
 import {environment} from '../../../environments/environment';
 
 @Component({
     moduleId: module.id,
     templateUrl: 'home.component.html',
-    providers: [TopicService],
+    providers: [TopicService, TrackingService],
     styleUrls: ['home.component.scss']
 })
 
@@ -16,25 +16,38 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly adminUrl = environment.adminUrl;
 
     constructor(private topicService: TopicService,
+                private trackingService: TrackingService,
                 private sanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
         this.topicService.getTopics().subscribe(topicsTree => {
             this.topicsTree = topicsTree;
-            let found = false;
-            for(let item of this.topicsTree) {
-            	for(let unit of item.units) {
-					if (!found && unit.status != 1) {
-						setTimeout( () => {
-							$('#unit'+unit.id+'-topics').slideDown("slow");
-						}, 100);
-						found = true;
-						unit.show = true;
-            		} else {
-            			unit.show = false;
-            		}
-            	}
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.user_id > 0) {
+                this.trackingService.getLastVisitedUnit(currentUser.user_id)
+                    .subscribe( res => {
+                        let found = false;
+                        for (const item of this.topicsTree) {
+                            for (const unit of item.units) {
+                                if (!found && unit.id === res.id) {
+                                    setTimeout(() => {
+                                        $('#unit' + unit.id + '-topics').slideDown("slow");
+                                    }, 100);
+                                    found = true;
+                                    unit.show = true;
+                                } else {
+                                    unit.show = false;
+                                }
+                            }
+                        }
+                        if (found) {
+                            $('html, body').animate({
+                                scrollTop: ($('#unit' + res.id).offset().top) - 8
+                            }, 1000); // JQuery scroll
+                            // document.getElementById('unit' + res.id).scrollIntoView(); // vanillaJS scroll
+                        }
+                    });
             }
             setTimeout(() => {
                 if (!isNaN(+localStorage.getItem('home-scroll'))) {
@@ -63,8 +76,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     */
 
     slideToggle(item: any) {
-    	$('#unit'+item.id+'-topics').slideToggle("slow");
-    	item.show = !item.show;
+        $('#unit' + item.id + '-topics').slideToggle('slow');
+        item.show = !item.show;
     }
 
 }

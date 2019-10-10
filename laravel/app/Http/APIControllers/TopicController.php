@@ -2,7 +2,10 @@
 
 namespace App\Http\APIControllers;
 
+use App\Lesson;
+use App\StudentsTracking;
 use App\Topic;
+use App\Unit;
 use Illuminate\Support\Facades\DB;
 use JWTAuth;
 
@@ -316,5 +319,39 @@ class TopicController extends Controller
         $student = JWTAuth::parseToken()->authenticate();
         StudentsTrackingController::topicProgressDone($model->id, $student);
         return $this->success('OK.');
+    }
+
+
+    /** return id of the last lesson visited by student
+     * @param $student_id
+     * @return Lesson
+     */
+    function getLastVisitedLesson($student_id) {
+        $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
+        $lesson = Lesson::where('id', $lesson_id)->first();
+        return $this->success($lesson);
+    }
+
+    /** return id of the last topic visited by student
+     * @param $student_id
+     * @return Topic
+     */
+    function getLastVisitedTopic($student_id) {
+        $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
+        $topic_id = Lesson::where('id', $lesson_id)->first()->topic_id;
+        $topic = Topic::where('id', $topic_id)->first();
+        return $this->success($topic);
+    }
+
+    /** return id of the last unit visited by student
+     * @param $student_id
+     * @return Unit
+     */
+    function getLastVisitedUnit($student_id) {
+        $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
+        $topic_id = Lesson::where('id', $lesson_id)->first()->topic_id;
+        $unit_id = Topic::where('id', $topic_id)->first()->unit_id;
+        $unit = Unit::where('id', $unit_id)->first();
+        return $this->success($unit);
     }
 }

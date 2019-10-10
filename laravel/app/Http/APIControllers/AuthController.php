@@ -36,8 +36,9 @@ class AuthController extends Controller
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student_id);
         $student = Student::find($student_id);
         $question_num = $student->question_num?:5;
+        $user_id = $student->id;
         // all good so return the token
-        return $this->success(compact('token', 'question_num'));
+        return $this->success(compact('token', 'question_num', 'user_id'));
     }
 
     /**
