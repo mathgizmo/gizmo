@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         );
         result.subscribe(res => {
             let found = false;
-            if (res.id > 0) {
+            if (res.id && res.id > 0) {
                 for (const item of this.topicsTree) {
                     for (const unit of item.units) {
                         if (!found && unit.id === res.id) {
@@ -61,9 +61,6 @@ export class HomeComponent implements OnInit, OnDestroy {
                         if (!found && unit.status !== 1) {
                             setTimeout(() => {
                                 $('#unit' + unit.id + '-topics').slideDown("slow");
-                                $('html, body').animate({
-                                    scrollTop: ($('#unit' + unit.id).offset().top) - 8
-                                }, 1000);
                             }, 100);
                             found = true;
                             unit.show = true;
