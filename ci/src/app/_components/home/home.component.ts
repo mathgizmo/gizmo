@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                             setTimeout(() => {
                                 $('#unit' + unit.id + '-topics').slideDown("slow");
                                 $('html, body').animate({
-                                    scrollTop: ($('#unit' + res.id).offset().top) - 8
+                                    scrollTop: ($('#unit' + unit.id).offset().top) - 8
                                 }, 1000);
                             }, 100);
                             found = true;
