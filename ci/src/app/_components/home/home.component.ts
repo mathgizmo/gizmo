@@ -49,18 +49,20 @@ export class HomeComponent implements OnInit, OnDestroy {
                         }
                     });
             }
+            /* old unused scroll pt.1/2
             setTimeout(() => {
                 if (!isNaN(+localStorage.getItem('home-scroll'))) {
                     window.scroll(0, +localStorage.getItem('home-scroll'));
                 }
-            }, 10);
+            }, 10); */
         });
     }
 
     ngOnDestroy() {
+        /* old unused scroll pt.2/2
         const doc = document.documentElement;
         const top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-        localStorage.setItem('home-scroll', JSON.stringify(top));
+        localStorage.setItem('home-scroll', JSON.stringify(top)); */
     }
 
     setTopicIcon(image) {

@@ -322,7 +322,7 @@ class TopicController extends Controller
     }
 
 
-    /** return id of the last lesson visited by student
+    /** return the last lesson visited by student
      * @param $student_id
      * @return Lesson
      */
@@ -332,7 +332,7 @@ class TopicController extends Controller
         return $this->success($lesson);
     }
 
-    /** return id of the last topic visited by student
+    /** return the last topic visited by student
      * @param $student_id
      * @return Topic
      */
@@ -343,7 +343,7 @@ class TopicController extends Controller
         return $this->success($topic);
     }
 
-    /** return id of the last unit visited by student
+    /** return the last unit visited by student
      * @param $student_id
      * @return Unit
      */
