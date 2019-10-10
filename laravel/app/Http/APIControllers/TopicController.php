@@ -327,9 +327,13 @@ class TopicController extends Controller
      * @return Lesson
      */
     function getLastVisitedLesson($student_id) {
-        $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
-        $lesson = Lesson::where('id', $lesson_id)->first();
-        return $this->success($lesson);
+        try {
+            $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
+            $lesson = Lesson::where('id', $lesson_id)->first();
+            return $this->success($lesson);
+        } catch (\Exception $e) {
+            abort(404);
+        }
     }
 
     /** return the last topic visited by student
@@ -337,10 +341,14 @@ class TopicController extends Controller
      * @return Topic
      */
     function getLastVisitedTopic($student_id) {
-        $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
-        $topic_id = Lesson::where('id', $lesson_id)->first()->topic_id;
-        $topic = Topic::where('id', $topic_id)->first();
-        return $this->success($topic);
+        try {
+            $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
+            $topic_id = Lesson::where('id', $lesson_id)->first()->topic_id;
+            $topic = Topic::where('id', $topic_id)->first();
+            return $this->success($topic);
+        } catch (\Exception $e) {
+            abort(404);
+        }
     }
 
     /** return the last unit visited by student
@@ -348,10 +356,14 @@ class TopicController extends Controller
      * @return Unit
      */
     function getLastVisitedUnit($student_id) {
-        $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
-        $topic_id = Lesson::where('id', $lesson_id)->first()->topic_id;
-        $unit_id = Topic::where('id', $topic_id)->first()->unit_id;
-        $unit = Unit::where('id', $unit_id)->first();
-        return $this->success($unit);
+        try {
+            $lesson_id = StudentsTracking::where('student_id', $student_id)->orderBy('start_datetime', 'DESC')->first()->lesson_id;
+            $topic_id = Lesson::where('id', $lesson_id)->first()->topic_id;
+            $unit_id = Topic::where('id', $topic_id)->first()->unit_id;
+            $unit = Unit::where('id', $unit_id)->first();
+            return $this->success($unit);
+        } catch (\Exception $e) {
+            abort(404);
+        }
     }
 }
