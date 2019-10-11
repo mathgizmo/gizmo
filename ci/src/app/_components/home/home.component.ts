@@ -2,7 +2,7 @@
 import {DomSanitizer} from '@angular/platform-browser';
 
 import { flatMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 
 import {TopicService, TrackingService} from '../../_services/index';
 import {environment} from '../../../environments/environment';
@@ -28,7 +28,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         const result = this.topicService.getTopics().pipe(
             flatMap(topicsTree => {
                 this.topicsTree = topicsTree;
-                if (currentUser && currentUser.user_id > 0) {
+                if (!isNaN(+localStorage.getItem('last-visited-unit-id'))) {
+                    return new Observable<object>((subscriber: Subscriber<object>) => subscriber.next({
+                        'id': +localStorage.getItem('last-visited-unit-id')
+                    }));
+                } else if (currentUser && currentUser.user_id > 0) {
                     return this.trackingService.getLastVisitedUnit(currentUser.user_id);
                 } else {
                     return new Observable<void>(observer => observer.complete());
@@ -42,7 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                     for (const unit of item.units) {
                         if (!found && unit.id === res.id) {
                             setTimeout(() => {
-                                $('#unit' + unit.id + '-topics').slideDown("slow");
+                                $('#unit' + unit.id + '-topics').slideDown('slow');
                                 $('html, body').animate({
                                     scrollTop: ($('#unit' + res.id).offset().top) - 8
                                 }, 1000);

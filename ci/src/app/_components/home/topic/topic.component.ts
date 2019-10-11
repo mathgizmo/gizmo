@@ -37,6 +37,7 @@ export class TopicComponent implements OnInit {
             this.topicService.getTopic(this.id)
                 .subscribe(topicTree => {
                     this.topicTree = topicTree;
+                    localStorage.setItem('last-visited-unit-id', this.topicTree.unit_id + '');
                     this.backLinkText = this.topicTree.level + ' > ' + this.topicTree.unit;
                     this.topicDone = (this.topicTree.status === 1);
                 });
