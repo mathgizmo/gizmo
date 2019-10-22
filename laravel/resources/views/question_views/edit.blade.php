@@ -294,10 +294,17 @@
                             </div>
                       </div>
                 <div class="form-group{{ $errors->has('rounding') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-4 control-label">Round user answer with same precision as correct answer</label>
+                    <label for="rounding" class="col-md-4 control-label">User answer rounding</label>
 
                     <div class="col-md-6 radio">
-                        <label for="type" class="col-md-3"> <input {{($question->rounding == true) ? 'checked="checked"' : ''}} type="checkbox" name="rounding" value="1"></label>
+                        <label for="rounding">
+                            <input type="radio" name="rounding" value="0" {{($question->rounding == false && $question->conversion == false) ? 'checked="checked"' : ''}} />
+                                Do not round <br>
+                            <input type="radio" name="rounding" value="1" {{($question->rounding == true && $question->conversion == false) ? 'checked="checked"' : ''}} />
+                                Round user answer with same precision as correct answer <br>
+                            <input type="radio" name="rounding" value="2" {{($question->conversion == true) ? 'checked="checked"' : ''}} />
+                                Round Answers up to N digits after point <br>
+                        </label>
                         @if ($errors->has('rounding'))
                             <span class="help-block">
                                     <strong>{{ $errors->first('rounding') }}</strong>
@@ -305,21 +312,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="form-group{{ $errors->has('conversion') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-4 control-label">Convert user answer to decimal value</label>
-
-                    <div class="col-md-6 radio">
-                        <label for="type" class="col-md-3">
-                            <input {{($question->conversion == true) ? 'checked="checked"' : ''}} type="checkbox" name="conversion" value="1" id='decimal-conversion' onchange="onDecimalConversionChange()"></label>
-                        @if ($errors->has('conversion'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('conversion') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div>
-
-                <div id="answers-round" class="form-group{{ $errors->has('answers_round') ? ' has-error' : '' }}">
+                <div id="answers-round" class="form-group{{ $errors->has('answers_round') ? ' has-error' : '' }}" style="display: {{$question->conversion ? 'block' : 'none' }};">
                     <label for="answers_round" class="col-md-4 control-label">Round answers up to N digits after point</label>
                     <div class="col-md-6">
                         <input id="answers_round" class="form-control" name="answers_round" value="{{ $question->answers_round }}" />
@@ -330,20 +323,6 @@
                         @endif
                     </div>
                 </div>
-                <script type="text/javascript">
-                    onDecimalConversionChange();
-                    function onDecimalConversionChange() {
-                        let conversion = document.getElementById("decimal-conversion");
-                        let answersRound = document.getElementById("answers-round");
-                        if(conversion.checked) {
-                            answersRound.style.display = 'block';
-                            if(!answersRound.value) answersRound.value = 0;
-                        } else {
-                            answersRound.style.display = 'none';
-                        }
-                    }
-                </script>
-
             <a class="btn btn-default" href="{{ route('question_views.index') }}">Back</a>
             <button class="btn btn-primary" type="button"
                 onclick="document.getElementById('update-type').value = 'new';
@@ -498,6 +477,16 @@
 
             $(document).on('keyup', '[name="answer[]"]', function() {
                 latex_generate();
+            });
+
+            $("input[name='rounding']").change( function () {
+                let answersRound = document.getElementById("answers-round");
+                if($("input[name='rounding']:checked").val() === '2') {
+                    answersRound.style.display = 'block';
+                    if(!answersRound.value) answersRound.value = 2;
+                } else {
+                    answersRound.style.display = 'none';
+                }
             });
         });
 

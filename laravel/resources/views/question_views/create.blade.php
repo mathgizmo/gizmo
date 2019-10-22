@@ -274,58 +274,31 @@
                                 @endif
                             </div>
                       </div>
-                    <div class="form-group{{ $errors->has('rounding') ? ' has-error' : '' }}">
-                        <label for="rounding" class="col-md-4 control-label">Round user answer with same precision as correct answer</label>
-
-                        <div class="col-md-6 radio">
-                            <label for="rounding" class="col-md-3">
-                                <input type="checkbox" name="rounding" value="1">
-                            </label>
-                            @if ($errors->has('rounding'))
-                                <span class="help-block">
+                      <div class="form-group{{ $errors->has('rounding') ? ' has-error' : '' }}">
+                            <label for="rounding" class="col-md-4 control-label">User answer rounding</label>
+                            <div class="col-md-6 radio">
+                                <label for="rounding">
+                                    <input type="radio" name="rounding" value="0" checked="checked"/>
+                                    Do not round <br>
+                                    <input type="radio" name="rounding" value="1"/>
+                                    Round user answer with same precision as correct answer <br>
+                                    <input type="radio" name="rounding" value="2" />
+                                    Round Answers up to N digits after point <br>
+                                </label>
+                                @if ($errors->has('rounding'))
+                                    <span class="help-block">
                                     <strong>{{ $errors->first('rounding') }}</strong>
                                 </span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="form-group{{ $errors->has('conversion') ? ' has-error' : '' }}">
-                        <label for="conversion" class="col-md-4 control-label">Convert user answer to decimal value</label>
+                                @endif
+                            </div>
+                      </div>
 
-                        <div class="col-md-6 radio">
-                            <label for="conversion" class="col-md-3">
-                                <input type="checkbox" name="conversion" value="1" id='decimal-conversion' onchange="onDecimalConversionChange()">
-                            </label>
-                            @if ($errors->has('conversion'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('conversion') }}</strong>
-                            </span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div id="answers-round" class="form-group{{ $errors->has('answers_round') ? ' has-error' : '' }}">
+                    <div id="answers-round" class="form-group{{ $errors->has('answers_round') ? ' has-error' : '' }}" style="display: none;">
                         <label for="answers_round" class="col-md-4 control-label">Round answers up to N digits after point</label>
                         <div class="col-md-6">
                             <input id="answers_round" class="form-control" name="answers_round" value="2" />
-                            @if ($errors->has('answers_round'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('answers_round') }}</strong>
-                                </span>
-                            @endif
                         </div>
                     </div>
-                    <script type="text/javascript">
-                        onDecimalConversionChange();
-                        function onDecimalConversionChange() {
-                            let conversion = document.getElementById("decimal-conversion");
-                            let answersRound = document.getElementById("answers-round");
-                            if(conversion.checked) {
-                                answersRound.style.display = 'block';
-                            } else {
-                                answersRound.style.display = 'none';
-                            }
-                        }
-                    </script>
 
         <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
@@ -483,6 +456,16 @@
 
             $(document).on('keyup', '[name="answer[]"]', function() {
                 latex_generate();
+            });
+
+            $("input[name='rounding']").change( function () {
+                let answersRound = document.getElementById("answers-round");
+                if($("input[name='rounding']:checked").val() === '2') {
+                    answersRound.style.display = 'block';
+                    if(!answersRound.value) answersRound.value = 2;
+                } else {
+                    answersRound.style.display = 'none';
+                }
             });
         });
 
