@@ -340,8 +340,7 @@ export class LessonComponent implements OnInit {
                             this.answers[i] = Math.round(+this.answers[i] * Math.pow(10,
                                 this.question.answers_round)) / Math.pow(10, this.question.answers_round) + '';
                         }
-                    }
-                    if (this.question.rounding) {
+                    } else if (this.question.rounding) {
                         this.answers[i] = this.answers[i].replace(/[^\d.-]/g, '');
                         const temp = ('' + correctAnswer).split('.');
                         let roundTo = 0;
@@ -351,7 +350,7 @@ export class LessonComponent implements OnInit {
                         this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + '';
                     }
                     if (this.question.answers[i].is_correct &&
-                        correctAnswer !== this.answers[i].trim()) {
+                        +correctAnswer !== +this.answers[i].trim()) {
                         return false;
                     }
                 }
