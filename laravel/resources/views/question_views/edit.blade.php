@@ -322,7 +322,7 @@
                 <div id="answers-round" class="form-group{{ $errors->has('answers_round') ? ' has-error' : '' }}">
                     <label for="answers_round" class="col-md-4 control-label">Round answers up to N digits after point</label>
                     <div class="col-md-6">
-                        <input id="answers_round" class="form-control" name="answers_round" value="{{ $question->answers_round }}"></input>
+                        <input id="answers_round" class="form-control" name="answers_round" value="{{ $question->answers_round }}" />
                         @if ($errors->has('answers_round'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('answers_round') }}</strong>
