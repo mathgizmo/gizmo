@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div class="form-group{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-4 control-label">Unit in development</label>
+                    <label for="type" class="col-md-4 control-label">Level in development</label>
                     <div class="col-md-6 radio">
                         <label for="type" class="col-md-3"> <input {{ ($unit->dev_mode == true) ? 'checked="checked"' : ''}} type="checkbox" name="dev_mode" value="1"></label>
                         @if ($errors->has('dev_mode'))

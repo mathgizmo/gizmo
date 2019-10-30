@@ -53,7 +53,7 @@ class TopicController extends Controller
         $units = [];
         $active_flag = true;
         $last_active_level_order = 0;
-        foreach (DB::select('select * from level order by order_no, id asc') as $level) {
+        foreach (DB::select('select * from level where dev_mode = 0 order by order_no, id asc') as $level) {
             $level['active_flag'] = 1;
             $level['last_active_order'] = 0;
             if ($active_flag && in_array($level['id'], $levels_done)) {
