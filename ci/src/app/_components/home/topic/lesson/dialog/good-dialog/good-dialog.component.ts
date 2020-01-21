@@ -25,4 +25,11 @@ export class GoodDialogComponent extends BaseDialogComponent<GoodDialogComponent
         this.updateDialogSize(width, height);
     }
 
+    showExplanationOnClick() {
+        this.showExplanation = !this.showExplanation;
+        setTimeout(function () {
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+        }, 50);
+    }
+
 }

@@ -21,15 +21,19 @@ export class BadDialogComponent extends BaseDialogComponent<BadDialogComponent> 
         this.answers = data.data;
         this.explanation = data.explanation;
         this.showAnswer = data.showAnswers;
-        setTimeout(function () {
-            MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
-        }, 50);
     }
 
     resizeDialog() {
         const width = (this.orientation === 'portrait') ? '80vw' : '35vw';
         const height = (this.orientation === 'portrait') ? '30vh' : '32.5vh';
         this.updateDialogSize(width, height);
+    }
+
+    showExplanationOnClick() {
+        this.showExplanation = !this.showExplanation;
+        setTimeout(function () {
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+        }, 50);
     }
 
 }

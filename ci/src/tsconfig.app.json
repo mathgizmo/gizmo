@@ -3,6 +3,9 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
+    "types": [
+      "mathjax"
+    ],
     "module": "es2015"
   },
   "exclude": [

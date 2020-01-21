@@ -312,7 +312,7 @@ export class LessonComponent implements OnInit {
                     if (this.answers[i] === '') {
                         return false;
                     }
-                    if (this.question.conversion) {
+                    if (this.question.conversion && this.question.reply_mode !== 'TF') {
                         // convert users answer
                         this.answers[i] = this.answers[i].replace(/[^\d.-\/]/g, '');
                         let temp = this.answers[i].split('/');
@@ -340,7 +340,7 @@ export class LessonComponent implements OnInit {
                             this.answers[i] = Math.round(+this.answers[i] * Math.pow(10,
                                 this.question.answers_round)) / Math.pow(10, this.question.answers_round) + '';
                         }
-                    } else if (this.question.rounding) {
+                    } else if (this.question.rounding && this.question.reply_mode !== 'TF') {
                         this.answers[i] = this.answers[i].replace(/[^\d.-]/g, '');
                         const temp = ('' + correctAnswer).split('.');
                         let roundTo = 0;
@@ -350,7 +350,7 @@ export class LessonComponent implements OnInit {
                         this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + '';
                     }
                     if (this.question.answers[i].is_correct &&
-                        +correctAnswer !== +this.answers[i].trim()) {
+                        correctAnswer != this.answers[i].trim()) { // do not change this row
                         return false;
                     }
                 }
