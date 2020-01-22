@@ -389,7 +389,7 @@
                     }
                 });
                 let src = document.getElementById('preview_url').innerHTML;
-                //src = src.replace(/\s/g, '');
+                src = src.replace(/\s/g, '');
                 src += 'question?reply_mode='
                     + data["reply_mode"] + '&question='
                     + encodeURIComponent(question.getData());
