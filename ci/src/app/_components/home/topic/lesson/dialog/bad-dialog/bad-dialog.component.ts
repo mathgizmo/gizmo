@@ -33,7 +33,7 @@ export class BadDialogComponent extends BaseDialogComponent<BadDialogComponent> 
         this.showExplanation = !this.showExplanation;
         setTimeout(function () {
             MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
-        }, 50);
+        }, 100);
     }
 
 }
