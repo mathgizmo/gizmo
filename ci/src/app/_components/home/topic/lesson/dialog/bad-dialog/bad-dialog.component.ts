@@ -13,6 +13,8 @@ export class BadDialogComponent extends BaseDialogComponent<BadDialogComponent> 
     explanation: string;
     showAnswer: boolean;
     showExplanation = false;
+    scrollButtonIsPressed = false;
+    showExplanationScrollButtons = false;
 
     constructor(
         public dialogRef: MatDialogRef<BadDialogComponent>,
@@ -31,9 +33,34 @@ export class BadDialogComponent extends BaseDialogComponent<BadDialogComponent> 
 
     showExplanationOnClick() {
         this.showExplanation = !this.showExplanation;
-        setTimeout(function () {
+        setTimeout(() => {
             MathJax.Hub.Queue(['Typeset', MathJax.Hub]);
+            this.showExplanationScrollButtons = document.getElementById('dialog-content').clientHeight
+                < document.getElementById('explanation').clientHeight;
         }, 100);
+    }
+
+    scrollExplanation(direction = 'down') {
+        const dialog = document.getElementById('dialog-content');
+        if (direction === 'up') {
+            dialog.scrollTop -= 5;
+        } else {
+            dialog.scrollTop += 5;
+        }
+        if (this.scrollButtonIsPressed) {
+            setTimeout( () => {
+                this.scrollExplanation(direction);
+            }, 50);
+        }
+    }
+
+    startScrollingExplanation(direction = 'down') {
+        this.scrollButtonIsPressed = true;
+        this.scrollExplanation(direction);
+    }
+
+    stopScrollingExplanation(direction = 'down') {
+        this.scrollButtonIsPressed = false;
     }
 
 }

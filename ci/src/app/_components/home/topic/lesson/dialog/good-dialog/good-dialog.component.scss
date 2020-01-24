@@ -56,12 +56,24 @@
         cursor: pointer;
     }
 }
+
+.explanation-buttons-container {
+    display: none;
+    * {
+        cursor: pointer;
+    }
+}
+
 @media (max-width: 768px) {
     .dialog-content {
         height: 75%;
     }
     .buttons-container {
         height: 25%;
+    }
+    .explanation-buttons-container {
+        display: flex;
+        flex-direction: column;
     }
 }
 
