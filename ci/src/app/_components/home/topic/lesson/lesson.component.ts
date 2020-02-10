@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TopicService} from '../../../../_services/index';
 import {TrackingService} from '../../../../_services/index';
-import {MatDialog} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {DeviceDetectorService} from 'ngx-device-detector';
 

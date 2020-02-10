@@ -2,7 +2,7 @@ import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {PlacementService} from '../../../_services/index';
 
-import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material';
+import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 import {QuestionNumDialogComponent} from './question-num-dialog/question-num-dialog.component';
 
 @Component({

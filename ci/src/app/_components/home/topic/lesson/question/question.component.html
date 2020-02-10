@@ -6,7 +6,7 @@
     </span>
     <span class="answer">
         <div *ngIf="question.answer_mode=='order'" [sortablejs]="answers" class="order-container">
-            <div *ngFor="let answer of answers" class="order-item">{{answer}}</div>
+            <div *ngFor="let answer of answers" class="order-item" style="cursor: pointer;">{{answer}}</div>
         </div>
         <div *ngIf="question.answer_mode=='radio'">
             <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >

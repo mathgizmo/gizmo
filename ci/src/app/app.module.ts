@@ -3,15 +3,22 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {
-    MatInputModule, MatButtonModule, MatSelectModule,
-    MatIconModule, MatMenuModule, MatRadioModule,
-    MatDialogModule, MatProgressBarModule, MatSliderModule,
-    MatToolbarModule, MatCardModule, MatCheckboxModule, MatDividerModule
-} from '@angular/material';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatSelectModule} from '@angular/material/select';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDividerModule} from '@angular/material/divider';
 import {Angular2FontawesomeModule} from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {SortablejsModule} from 'angular-sortablejs';
+import {SortablejsModule} from 'ngx-sortablejs';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 
 import {AppRoutingModule} from './app.routing';

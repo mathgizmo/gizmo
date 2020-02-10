@@ -1,5 +1,5 @@
 import {OnInit, OnDestroy, Inject, HostListener} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 export abstract class BaseDialogComponent<T> implements OnInit, OnDestroy {
 
