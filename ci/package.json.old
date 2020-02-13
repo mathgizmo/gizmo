@@ -1,0 +1,62 @@
+{
+  "name": "ci",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve  --open --base-href /gizmo/",
+    "build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/",
+    "lint": "ng lint",
+    "prod-build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/",
+    "test-build": "ng build --output-path=test-build/ --configuration=testing --base-href /gizmo/"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^8.2.14",
+    "@angular/cdk": "^8.2.3",
+    "@angular/common": "^8.2.14",
+    "@angular/compiler": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "@angular/flex-layout": "^8.0.0-beta.27",
+    "@angular/forms": "^8.2.14",
+    "@angular/material": "^8.2.3",
+    "@angular/platform-browser": "^8.2.14",
+    "@angular/platform-browser-dynamic": "^8.2.14",
+    "@angular/router": "^8.2.14",
+    "@types/jquery": "^3.3.31",
+    "@types/mathjax": "^0.0.36",
+    "ajv": "^6.11.0",
+    "angular-sortablejs": "^2.7.0",
+    "angular2-fontawesome": "^5.2.1",
+    "copy-webpack-plugin": "5.1.1",
+    "core-js": "~3.6.4",
+    "cryptiles": "^4.1.3",
+    "expr-eval": "^1.2.3",
+    "font-awesome": "^4.7.0",
+    "hammerjs": "^2.0.8",
+    "jquery": "^3.4.1",
+    "mathjax": "2.7.7",
+    "ngx-device-detector": "^1.3.20",
+    "npm-check-updates": "^4.0.1",
+    "rxjs": "^6.5.4",
+    "sortablejs": "^1.10.2",
+    "systemjs": "^6.1.9",
+    "url-parse": "^1.4.7",
+    "zone.js": "~0.9.1"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.803.23",
+    "@angular/cli": "^8.3.23",
+    "@angular/compiler-cli": "^8.2.14",
+    "@angular/language-service": "^8.2.14",
+    "@types/node": "^13.1.8",
+    "codelyzer": "~5.2.1",
+    "ts-node": "^8.6.2",
+    "tslint": "~5.20.1",
+    "tar": "^5.0.5",
+    "typescript": " >=3.1 < 3.5"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.1.2"
+  }
+}
