@@ -49,4 +49,30 @@ export class UserService {
                 })
             );
     }
+
+    public changeApplication(appId: number) {
+        const request = {
+            app_id: appId,
+        };
+        return this.http.post('/profile/application/', request)
+            .pipe(
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public getApplications() {
+        return this.http.get('/profile/application')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
 }

@@ -4,7 +4,7 @@ import {UserService} from '../../_services/user.service';
 import {AuthenticationService} from '../../_services/authentication.service';
 
 @Component({
-    selector: 'app-profle',
+    selector: 'app-profile',
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
     providers: [UserService]

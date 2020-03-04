@@ -40,5 +40,7 @@ $api->group(['middleware' => 'api.auth'], function () use ($api) {
 
     $api->get('/profile', 'App\Http\APIControllers\ProfileController@get');
     $api->post('/profile', 'App\Http\APIControllers\ProfileController@update');
+    $api->get('/profile/application', 'App\Http\APIControllers\ProfileController@getApplications');
+    $api->post('/profile/application', 'App\Http\APIControllers\ProfileController@updateApplication');
 });
 

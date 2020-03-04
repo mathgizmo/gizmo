@@ -2,6 +2,7 @@
 
 namespace App\Http\APIControllers;
 
+use App\Application;
 use App\Student;
 use Validator;
 use JWTAuth;
@@ -64,5 +65,27 @@ class ProfileController extends Controller
         }
         Student::find($student->id)->update($update);
         return $this->success('OK.');
+    }
+
+    public function getApplications() {
+        $items = Application::all();
+        foreach ($items as $item) {
+            $item->icon = $item->icon();
+        }
+        return $this->success([
+            'items' => $items
+        ]);
+    }
+
+    public function updateApplication() {
+        $student = JWTAuth::parseToken()->authenticate();
+        if (request()->has('app_id')) {
+            $user = Student::find($student->id);
+            $user->app_id = request('app_id');
+            $user->save();
+            return $this->success('OK.');
+        } else {
+            return $this->error('Error.');
+        }
     }
 }

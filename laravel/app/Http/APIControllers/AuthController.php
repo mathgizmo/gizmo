@@ -37,8 +37,8 @@ class AuthController extends Controller
         $student = Student::find($student_id);
         $question_num = $student->question_num?:5;
         $user_id = $student->id;
-        // all good so return the token
-        return $this->success(compact('token', 'question_num', 'user_id'));
+        $app_id = $student->app_id;
+        return $this->success(compact('token', 'question_num', 'user_id', 'app_id'));
     }
 
     /**
