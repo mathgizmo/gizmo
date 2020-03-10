@@ -18,14 +18,14 @@
             <!-- <app-try class="try-button"></app-try> -->
           </div>
           <div id="scroll-to-instruction" class="scroll">
-              <a (click)="scrollToInstruction()"><span id='scroll-icon'></span>How to use this learning tool</a>
+              <a (click)="scrollToInstruction()"><span id='scroll-icon'></span>{{introductionTitle}}</a>
           </div>
       </div>
   </span>
   <span class="right" id="instruction" tabindex="-1">
     <span class="center right-text">
         <div class="title right-text-title center">
-          How to use this learning tool
+          {{introductionTitle}}
         </div>
         <div id="introduction" class="right-text-description">
         </div>

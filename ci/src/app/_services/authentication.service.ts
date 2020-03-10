@@ -3,7 +3,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthenticationService {
@@ -12,7 +11,7 @@ export class AuthenticationService {
     private readonly baseUrl = environment.baseUrl;
     private headers?: HttpHeaders;
 
-    constructor(private http: HttpClient, private router: Router) {
+    constructor(private http: HttpClient) {
         // set token if saved in local storage
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.token = currentUser && currentUser.token;
