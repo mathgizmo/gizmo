@@ -62,11 +62,6 @@ export class LessonComponent implements OnInit {
     // test out variables
     private lessons_count: number;
     private current_question_order_no: number;
-    private readonly confident_level = {
-        NOT_CONFIDENT: 'Not confident',
-        SOMEWHAT_CONFIDENT: 'Somewhat confident',
-        CONFIDENT: 'Confident'
-    };
     public confident_value: number;
 
     public warning = false;

@@ -14,14 +14,14 @@
         </h2>
         <span class="answer">
             <mat-radio-group class="radio-group" [(ngModel)]="confident_value" (change)="confidentChanged()">
-                <mat-radio-button class="radio-button" value="{{-1}}" color="primary">
-                    {{confident_level.NOT_CONFIDENT}}
+                <mat-radio-button class="radio-button" value="-1" color="primary">
+                    Not confident
                 </mat-radio-button>
-                <mat-radio-button class="radio-button" value="{{1}}" color="primary">
-                    {{confident_level.SOMEWHAT_CONFIDENT}}
+                <mat-radio-button class="radio-button" value="1" color="primary">
+                    Somewhat confident
                 </mat-radio-button>
-                <mat-radio-button class="radio-button" value="{{2}}" color="primary">
-                    {{confident_level.CONFIDENT}}
+                <mat-radio-button class="radio-button" value="2" color="primary">
+                    Confident
                 </mat-radio-button>
             </mat-radio-group>
         </span>
