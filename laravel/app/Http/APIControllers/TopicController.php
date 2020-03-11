@@ -4,6 +4,7 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\Lesson;
+use App\Setting;
 use App\Student;
 use App\StudentsTracking;
 use App\Topic;
@@ -312,21 +313,34 @@ class TopicController extends Controller
         $topic['questions'] = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
             $q1->select('id')->from('lesson')->whereIn('id', function($q2) use($app_id, $topic_id) {
                 $q2->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
-            })->where('topic_id', $topic_id)->where('dependency', 1);
-        })->inRandomOrder()->take(4)->get();
+            })->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
+        })->inRandomOrder()->get(); // take(4)->get();
         if (count($topic['questions']) < 1) {
-            $topic['questions'] = DB::table('question')
+            /* $topic['questions'] = DB::table('question')
                 ->select('question.*')
                 ->join(DB::raw('(SELECT id FROM lesson WHERE topic_id = ' . $topic_id . ' AND dependency = 1 ORDER BY order_no DESC, id DESC LIMIT 2) l'), function($join)
                 {
                     $join->on('question.lesson_id', '=', 'l.id');
                 })
-                ->inRandomOrder()->take(4)->get();
+                ->inRandomOrder()->take(4)->get(); */
+            $topic['questions'] = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
+                $q1->select('id')->from('lesson')->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
+            })->inRandomOrder()->get();
         }
+        $lessons = $this->app->getLessons($topic_id);
         $questions = [];
         foreach($topic['questions'] as $id=>$question) {
             $questions[$question['id']] = $id;
             $topic['questions'][$id]['answers'] = [];
+            $lesson_id = $topic['questions'][$id]['lesson_id'];
+            $order_no = 0;
+            for($i = 0; $i < count($lessons); $i++) {
+                if ($lessons[$i]['id'] == $lesson_id) {
+                    $order_no = $i+1;
+                    break;
+                }
+            }
+            $topic['questions'][$id]['order_no'] = $order_no;
         }
         foreach(DB::table('answer')->whereIn('question_id', array_keys($questions))->get() as $answer) {
             $topic['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;
@@ -342,6 +356,9 @@ class TopicController extends Controller
         } else {
             $topic['next_topic_id'] = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
         }
+        $max_questions_num = Setting::where('key', 'topic_testout_max_questions_num')->first();
+        $topic['max_questions_num'] = $max_questions_num ? intval($max_questions_num->value) : 5;
+        $topic['lessons_count'] = count($lessons);
         DB::connection()->setFetchMode($mode);
         return $this->success($topic);
     }

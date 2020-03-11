@@ -59,6 +59,19 @@ export class LessonComponent implements OnInit {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
+    // test out variables
+    private lessons_count: number;
+    private current_question_order_no: number;
+    private readonly confident_level = {
+        NOT_CONFIDENT: 'Not confident',
+        SOMEWHAT_CONFIDENT: 'Somewhat confident',
+        CONFIDENT: 'Confident'
+    };
+    public confident_value: number;
+
+    public warning = false;
+    public warningMessage = 'Undefined exception';
+
     constructor(
         private router: Router,
         private topicService: TopicService,
@@ -67,13 +80,11 @@ export class LessonComponent implements OnInit {
         public dialog: MatDialog,
         private deviceService: DeviceDetectorService
     ) {
-
         if (localStorage.getItem('question_num') !== undefined) {
             this.question_num = Number(localStorage.getItem('question_num'));
         } else {
             this.question_num = 4;
         }
-
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -87,10 +98,13 @@ export class LessonComponent implements OnInit {
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
             this.lesson_id = (params['lesson_id'] === 'testout') ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
-
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
+                    if (this.lesson_id === -1) {
+                        this.lessons_count = +lessonTree['lessons_count'];
+                        this.current_question_order_no = Math.round(this.lessons_count / 2);
+                    }
                     this.isChallenge = lessonTree.challenge;
                     this.all_questions.splice(0, this.all_questions.length, ...lessonTree['questions']);
                     this.initial_loading = 0;
@@ -126,7 +140,7 @@ export class LessonComponent implements OnInit {
                                 });
                         }
                         if (this.lesson_id === -1) {
-                            this.question_num = lessonTree['questions'].length;
+                            this.question_num = lessonTree['max_questions_num']; // lessonTree['questions'].length;
                         }
                     }
                     if (this.lesson_id === -1) {
@@ -134,27 +148,62 @@ export class LessonComponent implements OnInit {
                     } else {
                         this.next = lessonTree['next_lesson_id'];
                     }
-
                     this.correct_answers = this.complete_percent = 0;
                 });
         });
     }
 
+    confidentChanged() {
+        if (isNaN(+this.confident_value) || this.confident_value === null) {
+            this.warning = true;
+            this.warningMessage = 'Please, select your confident level for this question!';
+            $('#continue-button').prop('disabled', true);
+        } else {
+            this.warning = false;
+            $('#continue-button').prop('disabled', false);
+        }
+    }
+
     nextQuestion() {
-        if (this.randomisation) {
-            if (this.question_num > 0 && (this.lessonTree['questions'].length < (this.question_num - this.correct_answers))) {
-                this.lessonTree['questions'].splice(0, this.lessonTree['questions'].length, ...this.all_questions);
+        if (this.lesson_id === -1) {
+            if (this.question_num <= (this.correct_answers + this.incorrect_answers)) {
+                this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
             }
-            if (!this.isChallenge) {
-                this.question = this.lessonTree['questions'].shift();
-            } else {
-                this.question = this.lessonTree['questions'][0];
+            let current_question_order_no = this.current_question_order_no;
+            if (current_question_order_no < 1) { current_question_order_no = 1; }
+            if (current_question_order_no > this.lessons_count) { current_question_order_no = this.lessons_count; }
+            let questions = this.lessonTree['questions'].filter((obj) => {
+                return obj.order_no === current_question_order_no;
+            });
+            if (questions.count < 1) {
+                questions = this.lessonTree['questions'];
+            }
+            this.question = questions[Math.floor(Math.random() * questions.length)];
+            this.lessonTree['questions'] = this.lessonTree['questions'].filter( (obj) => {
+                return obj.id !== this.question.id;
+            });
+            if (this.lesson_id === -1) {
+                this.confident_value = null;
+                setTimeout(() => {
+                    this.confidentChanged();
+                });
             }
         } else {
-            if (this.current_question_index >= this.lessonTree['questions'].length || this.current_question_index < 0) {
-                this.current_question_index = 0;
+            if (this.randomisation) {
+                if (this.question_num > 0 && (this.lessonTree['questions'].length < (this.question_num - this.correct_answers))) {
+                    this.lessonTree['questions'].splice(0, this.lessonTree['questions'].length, ...this.all_questions);
+                }
+                if (!this.isChallenge) {
+                    this.question = this.lessonTree['questions'].shift();
+                } else {
+                    this.question = this.lessonTree['questions'][0];
+                }
+            } else {
+                if (this.current_question_index >= this.lessonTree['questions'].length || this.current_question_index < 0) {
+                    this.current_question_index = 0;
+                }
+                this.question = this.lessonTree['questions'][this.current_question_index];
             }
-            this.question = this.lessonTree['questions'][this.current_question_index];
         }
     }
 
@@ -363,15 +412,23 @@ export class LessonComponent implements OnInit {
     checkAnswer(answers: string[]) {
         const isCorrect = this.isCorrect(answers);
         if (isCorrect) {
-            if (!this.randomisation) {
-                this.current_question_index++;
-            }
-            this.correct_answers++;
-            this.complete_percent = (this.correct_answers === 0) ? 0
-                : this.correct_answers / this.question_num * 100;
-            // if we have enough correct responses just remove rest of the questions
-            if (this.correct_answers === this.question_num && this.question_num !== 0) {
-                this.lessonTree['questions'] = [];
+            if (this.lesson_id === -1) {
+                this.current_question_order_no += !isNaN(+this.confident_value) ? +this.confident_value : 1;
+                if (this.current_question_order_no > this.lessons_count + 2) {
+                    this.lessonTree['questions'] = [];
+                }
+                this.correct_answers++;
+            } else {
+                if (!this.randomisation) {
+                    this.current_question_index++;
+                }
+                this.correct_answers++;
+                this.complete_percent = (this.correct_answers === 0) ? 0
+                    : this.correct_answers / this.question_num * 100;
+                // if we have enough correct responses just remove rest of the questions
+                if (this.correct_answers === this.question_num && this.question_num !== 0) {
+                    this.lessonTree['questions'] = [];
+                }
             }
             const goodDialogRef = this.dialog.open(GoodDialogComponent, {
                 // width: '800px',
@@ -385,7 +442,6 @@ export class LessonComponent implements OnInit {
                         data: {question_id: this.question.id, answers: this.answers},
                         position: this.dialogPosition
                     });
-
                     reportDialogRef.afterClosed().subscribe(res => {
                         this.topicService.sendFeedback(res.question_id, res.text).subscribe();
                     });
@@ -399,19 +455,18 @@ export class LessonComponent implements OnInit {
                 }
             });
         } else {
-            if (!this.randomisation) {
-                this.current_question_index--;
-            }
-            if (this.weak_questions.indexOf(this.question.id) === -1) {
-                this.weak_questions.push(this.question.id);
+            if (this.lesson_id === -1) {
+                this.current_question_order_no -= 2;
+                if (this.current_question_order_no < -1) {
+                    this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
+                }
+            } else {
+                this.randomisation ? this.lessonTree['questions'].push(this.question) : this.current_question_index--;
+                if (this.weak_questions.indexOf(this.question.id) === -1) {
+                    this.weak_questions.push(this.question.id);
+                }
             }
             this.incorrect_answers++;
-            if (this.lesson_id === -1 &&
-                this.incorrect_answers > this.max_incorrect_answers) {
-                this.router.navigate(['/topic/' + this.topic_id]);
-            } else {
-                if (this.randomisation) { this.lessonTree['questions'].push(this.question); }
-            }
             const dialogRef = this.dialog.open(BadDialogComponent, {
                 // width: '800px',
                 position: this.dialogPosition,
@@ -432,7 +487,6 @@ export class LessonComponent implements OnInit {
                         position: this.dialogPosition,
                         data: {question_id: this.question.id, answers: this.answers}
                     });
-
                     reportDialogRef.afterClosed().subscribe(res => {
                         this.topicService.reportError(res.question_id,
                             res.answers, res.option, res.text).subscribe();
@@ -446,9 +500,6 @@ export class LessonComponent implements OnInit {
                         this.lesson_id, this.start_time, this.weak_questions).subscribe();
                 }
             });
-            if (this.lesson_id !== -1) {
-                this.correct_answers = this.complete_percent = 0;
-            }
         }
     }
 

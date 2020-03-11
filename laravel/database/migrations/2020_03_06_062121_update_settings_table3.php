@@ -3,7 +3,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Setting;
 
-class UpdateSettingsTable2 extends Migration
+class UpdateSettingsTable3 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class UpdateSettingsTable2 extends Migration
     public function up()
     {
         DB::table('settings')->insert([
-            'key' => 'Home4',
-            'label' => 'Welcome Introduction Title',
-            'value' => 'How to use this learning tool'
+            'key' => 'topic_testout_max_questions_num',
+            'label' => 'Max number of questions per topic test out',
+            'value' => '5'
         ]);
     }
     
@@ -26,6 +26,6 @@ class UpdateSettingsTable2 extends Migration
      */
     public function down()
     {
-        Setting::where('key', 'Home4')->first()->delete();
+        Setting::where('key', 'topic_testout_max_questions_num')->first()->delete();
     }
 }

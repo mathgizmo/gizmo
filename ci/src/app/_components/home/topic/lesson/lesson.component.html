@@ -4,9 +4,33 @@
 
 <div class="text-center lesson-cotainer">
     <h2 class="title">{{titleText}}</h2>
-    <div class="lesson-progress-container" *ngIf="!isChallenge">
+    <div class="lesson-progress-container" *ngIf="!isChallenge && lesson_id !== -1">
         <mat-progress-bar color="warn" class="lesson-progress" *ngIf="question_num > 0" mode=determinate value={{complete_percent}} ></mat-progress-bar>
         <label class="lesson-progress-label" *ngIf="question_num > 0">{{correct_answers}}/{{question_num}}</label>
+    </div>
+    <div *ngIf="lesson_id === -1" class="question-container white-theme">
+        <h2 class="question">
+            How confident you are in your answer?
+        </h2>
+        <span class="answer">
+            <mat-radio-group class="radio-group" [(ngModel)]="confident_value" (change)="confidentChanged()">
+                <mat-radio-button class="radio-button" value="{{-1}}" color="primary">
+                    {{confident_level.NOT_CONFIDENT}}
+                </mat-radio-button>
+                <mat-radio-button class="radio-button" value="{{1}}" color="primary">
+                    {{confident_level.SOMEWHAT_CONFIDENT}}
+                </mat-radio-button>
+                <mat-radio-button class="radio-button" value="{{2}}" color="primary">
+                    {{confident_level.CONFIDENT}}
+                </mat-radio-button>
+            </mat-radio-group>
+        </span>
+        <div *ngIf="warning" class="warning">
+        <span class="alert alert-danger">
+            <mat-icon>warning</mat-icon>
+            {{warningMessage}}
+        </span>
+        </div>
     </div>
     <div *ngIf="question !== null && !isChallenge">
         <app-question 
