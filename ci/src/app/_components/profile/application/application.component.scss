@@ -46,6 +46,17 @@ mat-form-field {
   background-repeat: no-repeat;
 }
 
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  > * {
+    min-width: 50%;
+  }
+}
+
 .app-select-container {
   div:first-child {
     margin-right: 6px;

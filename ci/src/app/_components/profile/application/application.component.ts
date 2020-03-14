@@ -36,6 +36,7 @@ export class ProfileApplicationComponent implements OnInit {
             .subscribe(res => {
                 localStorage.setItem('app_id', appId + '');
                 this.selectedAppId = appId;
+                console.log(appId);
                 const redirectTo = localStorage.getItem('redirect_to');
                 if (redirectTo) {
                     localStorage.removeItem('redirect_to');
