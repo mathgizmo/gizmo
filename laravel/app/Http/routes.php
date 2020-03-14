@@ -19,6 +19,7 @@ Route::auth();
 
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/home', 'HomeController@index');
+    Route::resource('application_views', 'ApplicationController', ['except' => ['show']]);
     Route::resource('level_views', 'LevelController');
     Route::resource('unit_views', 'UnitController');
     Route::resource('topic_views', 'TopicController');

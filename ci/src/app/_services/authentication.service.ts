@@ -37,6 +37,8 @@ export class AuthenticationService {
                             question_num = response['message']['question_num'];
                         }
                         localStorage.setItem('question_num', question_num + '');
+                        const app_id = response && response['message'] && response['message']['app_id'];
+                        localStorage.setItem('app_id', app_id + '');
                         // return true to indicate successful login
                         return true;
                     } else {

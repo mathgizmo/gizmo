@@ -66,6 +66,10 @@ export class HttpService {
                         this.authenticationService.logout();
                         this.router.navigate(['login']);
                     }
+                    if (response['status_code'] === 453 || response['error']['status_code'] === 453) {
+                        localStorage.setItem('redirect_to', this.router.url + '');
+                        this.router.navigate(['profile/application']);
+                    }
                     return response['message'];
                 }),
                 finalize(() => {

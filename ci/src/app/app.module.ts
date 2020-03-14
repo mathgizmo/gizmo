@@ -38,6 +38,7 @@ import {
     ReportDialogComponent, FeedbackDialogComponent, BadChallengeDialogComponent, ChartComponent
 } from './_components/home/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
+import {ProfileApplicationComponent} from './_components/profile/application/application.component';
 import {ResetPasswordComponent} from './_components/welcome/login/reset-password/reset-password.component';
 import {QuestionComponent} from './_components/home/topic/lesson/question/question.component';
 
@@ -87,6 +88,7 @@ import {DraggableDirective} from './_directives/draggable.directive';
         BadChallengeDialogComponent,
         ChartComponent,
         ProfileComponent,
+        ProfileApplicationComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,

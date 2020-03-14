@@ -1,0 +1,64 @@
+.profile-application {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 60px auto 0;
+  width: 80vw;
+}
+
+mat-card {
+  margin: 10px;
+  padding: 15px;
+  min-width: 250px;
+  width: calc(100% - 20px);
+}
+
+mat-card:last-child {
+  margin-bottom: 28px;
+}
+
+.title {
+  display: block;
+  text-align: center;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.button-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.app-img {
+  width: 32px;
+  height: 32px;
+  background-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-repeat: no-repeat;
+}
+
+.app-select-container {
+  div:first-child {
+    margin-right: 6px;
+  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 600px) {
+  .profile-application {
+    width: 100vw;
+  }
+}

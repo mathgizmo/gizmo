@@ -14,6 +14,7 @@ export class WelcomeComponent implements OnInit {
     title: string;
     subtitle: string;
     introduction: string;
+    introductionTitle: string;
 
     constructor(
         private router: Router,
@@ -35,6 +36,9 @@ export class WelcomeComponent implements OnInit {
                             break;
                         case 'Home3':
                             this.introduction = result[i].value;
+                            break;
+                        case 'Home4':
+                            this.introductionTitle = result[i].value;
                             break;
                         default:
                             break;

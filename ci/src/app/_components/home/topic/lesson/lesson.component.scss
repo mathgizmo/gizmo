@@ -57,6 +57,15 @@ a:focus, a:hover {
 	font-size: 34px !important;
 }
 
+.warning {
+	margin: 16px 4px;
+	padding: 0;
+	span {
+		margin: 0;
+		padding: 12px;
+	}
+}
+
 @media screen and (max-width: 1024px) {
 	.title {
 		font-size: 26px;

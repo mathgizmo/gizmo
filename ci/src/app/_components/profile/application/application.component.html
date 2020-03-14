@@ -1,0 +1,26 @@
+<div class="profile-application">
+  <mat-card>
+    <span class="title">Change Application</span>
+    <form #changeApplication="ngForm" (ngSubmit)="onChangeApplication(app.value)">
+      <mat-form-field>
+        <mat-select required="required" placeholder="Application" #app [(value)]="selectedAppId">
+          <mat-option *ngFor="let application of applications" [value]="application.id">
+            <div class="app-select-container">
+              <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+              <div>{{application.name}}</div>
+            </div>
+
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="button-container" >
+        <button id="change-application-button"
+                mat-raised-button
+                type="submit"
+                class="button">
+          <span>Select</span>
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

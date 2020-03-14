@@ -37,7 +37,13 @@
             flex-direction: row;
             flex-wrap: wrap;
         }
+        .navbar ul#navigation > li > * {
+            margin: 0 !important;
+            padding-right: 6px !important;
+            padding-left: 6px !important;
+        }
     </style>
+    @yield('styles')
 </head>
 <body id="app-layout">
 <nav class="navbar navbar-default navbar-static-top">
@@ -46,10 +52,11 @@
         <ul class="nav navbar-nav" id="navigation">
             <li><a href="{{ Route('question_views.create') }}">Create Question</a></li>
             <li><a href="{{ url('/question_views') }}">Manage Questions</a></li>
-            <li><a href="{{ url('/level_views') }}">Manage Levels</a></li>
-            <li><a href="{{ url('/unit_views') }}">Manage Units</a></li>
-            <li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
             <li><a href="{{ url('/lesson_views') }}">Manage Lessons</a></li>
+            <li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
+            <li><a href="{{ url('/unit_views') }}">Manage Units</a></li>
+            <li><a href="{{ url('/level_views') }}">Manage Levels</a></li>
+            <li><a href="{{ url('/application_views') }}">Manage Applications</a></li>
             <li><a href="{{ url('/placement_views') }}">Manage Placements</a></li>
             @if(auth()->user()->is_admin)
                 <li><a href="{{ route('users.index') }}">Administrators</a></li>
