@@ -16,6 +16,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {Angular2FontawesomeModule} from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {SortablejsModule} from 'ngx-sortablejs';
@@ -68,6 +69,7 @@ import {DraggableDirective} from './_directives/draggable.directive';
         MatCardModule,
         MatCheckboxModule,
         MatDividerModule,
+        MatButtonToggleModule,
         FlexLayoutModule,
         SortablejsModule.forRoot({animation: 150}),
         DeviceDetectorModule.forRoot()
