@@ -10,11 +10,12 @@
         <label class="lesson-progress-label" *ngIf="question_num > 0">{{correct_answers}}/{{question_num}}</label>
     </div>
 
-    <div *ngIf="lesson_id === -1 && question !== null" class="question-container white-theme">
-        <h2 class="question">
-            How confident you are in your answer?
-        </h2>
-        <span class="answer">
+    <div *ngIf="lesson_id === -1 && question !== null" id="testout-confident-level">
+        <div class="question-container white-theme">
+            <h2 class="question">
+                How confident you are in your answer?
+            </h2>
+            <span class="answer">
             <mat-radio-group class="radio-group" [(ngModel)]="confident_value" (change)="confidentChanged()">
                 <mat-radio-button class="radio-button" value="-1" color="primary">
                     Not confident
@@ -27,12 +28,13 @@
                 </mat-radio-button>
             </mat-radio-group>
         </span>
-        <!-- <div *ngIf="warning" class="warning">
-            <span class="alert alert-danger">
-                <mat-icon>warning</mat-icon>
-                {{warningMessage}}
-            </span>
-        </div> -->
+            <!-- <div *ngIf="warning" class="warning">
+                <span class="alert alert-danger">
+                    <mat-icon>warning</mat-icon>
+                    {{warningMessage}}
+                </span>
+            </div> -->
+        </div>
     </div>
 
     <div *ngIf="question !== null && !isChallenge">

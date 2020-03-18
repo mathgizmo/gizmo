@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import {Component, OnInit, ViewChildren, QueryList, AfterViewChecked } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TopicService, TrackingService} from '../../../../_services';
 import {MatDialog} from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import { QuestionComponent } from './question/question.component';
     providers: [TopicService, TrackingService],
     styleUrls: ['./lesson.component.scss']
 })
-export class LessonComponent implements OnInit {
+export class LessonComponent implements OnInit, AfterViewChecked {
     lessonTree: any = [];
     topic_id: number;
     lesson_id: number;
@@ -79,6 +79,10 @@ export class LessonComponent implements OnInit {
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
         }
+    }
+
+    ngAfterViewChecked(): void {
+        $('#testout-confident-level > *').detach().prependTo('#question-confident-level');
     }
 
     ngOnInit() {
