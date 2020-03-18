@@ -1,17 +1,10 @@
 import {Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {TopicService} from '../../../../_services/index';
-import {TrackingService} from '../../../../_services/index';
+import {TopicService, TrackingService} from '../../../../_services';
 import {MatDialog} from '@angular/material/dialog';
 import {Router} from '@angular/router';
 import {DeviceDetectorService} from 'ngx-device-detector';
-
-import {GoodDialogComponent} from './dialog/good-dialog/good-dialog.component';
-import {BadDialogComponent} from './dialog/bad-dialog/bad-dialog.component';
-import {ReportDialogComponent} from './dialog/report-dialog/report-dialog.component';
-import {FeedbackDialogComponent} from './dialog/feedback-dialog/feedback-dialog.component';
-
-import { BadChallengeDialogComponent } from './dialog/bad-challenge-dialog/bad-challenge-dialog.component';
+import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent, FeedbackDialogComponent, BadChallengeDialogComponent } from './dialog';
 
 import { QuestionComponent } from './question/question.component';
 
@@ -63,9 +56,11 @@ export class LessonComponent implements OnInit {
     private lessons_count: number;
     private current_question_order_no: number;
     public confident_value: number;
+    public next_title: string;
+    public testout_completed = false;
 
-    public warning = false;
-    public warningMessage = 'Undefined exception';
+    // public warning = false;
+    // public warningMessage = 'Undefined exception';
 
     constructor(
         private router: Router,
@@ -150,11 +145,11 @@ export class LessonComponent implements OnInit {
 
     confidentChanged() {
         if (isNaN(+this.confident_value) || this.confident_value === null) {
-            this.warning = true;
-            this.warningMessage = 'Please, select your confident level for this question!';
+            // this.warning = true;
+            // this.warningMessage = 'Please, select your confident level for this question!';
             $('#continue-button').prop('disabled', true);
         } else {
-            this.warning = false;
+            // this.warning = false;
             $('#continue-button').prop('disabled', false);
         }
     }
@@ -162,7 +157,12 @@ export class LessonComponent implements OnInit {
     nextQuestion() {
         if (this.lesson_id === -1) {
             if (this.question_num <= (this.correct_answers + this.incorrect_answers)) {
-                this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
+                this.next = this.question.lesson_id;
+                this.next_title = this.lessonTree['questions'].filter( (obj) => {
+                    return obj.lesson_id === this.question.lesson_id;
+                })[0].lesson_title;
+                this.question = null;
+                return;
             }
             let current_question_order_no = this.current_question_order_no;
             if (current_question_order_no < 1) { current_question_order_no = 1; }
@@ -170,7 +170,7 @@ export class LessonComponent implements OnInit {
             let questions = this.lessonTree['questions'].filter((obj) => {
                 return obj.order_no === current_question_order_no;
             });
-            if (questions.count < 1) {
+            if (questions.length < 1) {
                 questions = this.lessonTree['questions'];
             }
             this.question = questions[Math.floor(Math.random() * questions.length)];
@@ -411,6 +411,7 @@ export class LessonComponent implements OnInit {
                 this.current_question_order_no += !isNaN(+this.confident_value) ? +this.confident_value : 1;
                 if (this.current_question_order_no > this.lessons_count + 2) {
                     this.lessonTree['questions'] = [];
+                    this.testout_completed = true;
                 }
                 this.correct_answers++;
             } else {
@@ -453,7 +454,13 @@ export class LessonComponent implements OnInit {
             if (this.lesson_id === -1) {
                 this.current_question_order_no -= 2;
                 if (this.current_question_order_no < -1) {
-                    this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
+                    this.next = this.question.lesson_id;
+                    this.next_title = this.lessonTree['questions'].filter( (obj) => {
+                        return obj.lesson_id === this.question.lesson_id;
+                    })[0].lesson_title;
+                    this.question = null;
+                    return;
+                    // this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
                 }
             } else {
                 this.randomisation ? this.lessonTree['questions'].push(this.question) : this.current_question_index--;

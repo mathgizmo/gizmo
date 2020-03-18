@@ -341,6 +341,7 @@ class TopicController extends Controller
                 }
             }
             $topic['questions'][$id]['order_no'] = $order_no;
+            $topic['questions'][$id]['lesson_title'] = Lesson::where('id', $topic['questions'][$id]['lesson_id'])->first()->title;
         }
         foreach(DB::table('answer')->whereIn('question_id', array_keys($questions))->get() as $answer) {
             $topic['questions'][$questions[$answer['question_id']]]['answers'][] = $answer;

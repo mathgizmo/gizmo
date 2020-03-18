@@ -20,9 +20,9 @@
         class="button-container"
         routerLink="/topic/{{topicTree.id}}/lesson/testout"
         routerLinkActive="active"
-        *ngIf="topicTree.lessons && topicTree.lessons.length && !topicDone">
+        *ngIf="topicTree.lessons && topicTree.lessons.length">
         <button mat-raised-button class="button completion-button">
-            <span>Test out to finish topic</span>
+            <span>Placement test</span>
         </button>
     </a>
     <a
