@@ -6,12 +6,6 @@ use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
-    /**
-     * Upload topic icon 
-     *
-     * @param  Request  $request
-     * @return Response
-     */
     public function uploadTopicIcon(Request $request)
     {
         $json = array();
@@ -28,12 +22,6 @@ class FileController extends Controller
         return json_encode($json);
     }
 
-    /**
-     * Delete topic icon 
-     *
-     * @param  Request  $request
-     * @return Response
-     */
     public function deleteTopicIcon(Request $request)
     {
         $json = array();

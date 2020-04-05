@@ -9,9 +9,15 @@ use Illuminate\Support\Facades\Input;
 
 class StudentController extends Controller
 {
+    public function __construct()
+    {
+        // $this->authorizeResource(Student::class);
+    }
+
     public function index()
     {
-         $query = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking`
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $query = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking`
             WHERE students_tracking.student_id = students.id ORDER by id DESC LIMIT 1) as `date`'))
             ->where('email', 'NOT LIKE', '%@somemail.com')
             ->filter(request()->all())
@@ -21,21 +27,15 @@ class StudentController extends Controller
         return view('student_view.index', compact('students'));
     }
 
-    /**
-     * @param Student $student
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function show(Student $student)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         return view('student_view.show', compact('student'));
     }
 
-    /**
-     * @param Student $student
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function superUpdate(Student $student)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $is_super = true;
         if ($student->is_super) {
             $is_super = false;
@@ -46,23 +46,16 @@ class StudentController extends Controller
         return back();
     }
 
-    /**
-     * @param Student $student
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function resetProgress(Student $student)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         DB::table('progresses')->where('student_id', $student->id)->delete();
         return back();
     }
 
-    /**
-     * @param Student $student
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
     public function delete(Student $student)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $student->delete();
         return back();
     }

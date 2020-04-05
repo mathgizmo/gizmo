@@ -12,20 +12,18 @@ use App\Unit;
 
 class LessonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(Lesson::class); // not working!
+    }
+
     public function index(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $levels = Level::all();
         $units = Unit::all();
         $topics = Topic::all();
-
         $query = Lesson::query();
-        
         if ($request->has('topic_id') && $request->topic_id >= 0) {
             $query->where('topic_id', $request->topic_id);
         } else if ($request->has('unit_id') && $request->unit_id >= 0) {
@@ -61,13 +59,10 @@ class LessonController extends Controller
         return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
-    {   $lid = "";
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $lid = "";
         $uid = "";
         $tid = "";
         $levels = DB::select('select * from level');
@@ -87,14 +82,9 @@ class LessonController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_id'    => 'required',
@@ -118,24 +108,14 @@ class LessonController extends Controller
         return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $lesson = DB::table('lesson')
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
@@ -156,15 +136,9 @@ class LessonController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
          'level_id'    => 'required',
          'unit_id'    => 'required',
@@ -188,18 +162,9 @@ class LessonController extends Controller
         return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     * The delete operation need to be performed
-     * after selecting topic_id form the lesson table
-     * for associated lesson id.
-     */
     public function destroy(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         DB::table('lesson')->where('id', $id)->delete();
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');

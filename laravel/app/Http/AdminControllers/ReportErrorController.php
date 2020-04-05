@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Input;
 class ReportErrorController extends Controller
 {
 
-    /**
-     * @param Request $request
-     * @param $type
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(ReportError::class);
+    }
+
     public function index(Request $request, $type)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = ReportError::query()->where('declined', $type == 'new' ? 0 : 1);
         if($request->has('sort') and $request->has('order')) {
             $query->orderBy(request('sort'), request('order'));
@@ -27,13 +28,9 @@ class ReportErrorController extends Controller
         return view('error_report_views.index', compact('error_reports', 'type'));
     }
 
-    /**
-     * @param $type
-     * @param $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function updateStatus($type, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         if (($model = ReportError::find($id)) == null) {
             return back();
         }

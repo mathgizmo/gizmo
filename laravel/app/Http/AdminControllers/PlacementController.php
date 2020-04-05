@@ -8,13 +8,14 @@ use App\Unit;
 
 class PlacementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(PlacementQuestion::class); // not working!
+    }
+
     public function index(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         if ($request->has('sort') and $request->has('order')) {
             $placements = PlacementQuestion::with('unit')
                 ->orderBy($request->sort, $request->order)->get();
@@ -24,13 +25,9 @@ class PlacementController extends Controller
         return view('placement_views.index', ['placements'=>$placements]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $total_placements = PlacementQuestion::all()->count();
         $placements = PlacementQuestion::with('unit')->get();
         $units = Unit::all();
@@ -43,14 +40,9 @@ class PlacementController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
          'unit_id' => 'required'
          ]);
@@ -66,24 +58,14 @@ class PlacementController extends Controller
         return view('placement_views.index', ['placements'=>$placements]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $placement = PlacementQuestion::find($id);
         $total_placements = PlacementQuestion::all()->count();
         $units = Unit::all();
@@ -94,15 +76,9 @@ class PlacementController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
          'unit_id' => 'required'
          ]);
@@ -117,14 +93,9 @@ class PlacementController extends Controller
             ->with(array('message'=> 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         PlacementQuestion::where('id', $id)->delete();
         return redirect('/placement_views')
             ->with(array('message'=> 'Deleted successfully'));

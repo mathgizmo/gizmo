@@ -40,6 +40,9 @@
                                             <i class="fa fa-fw fa-sort{{ (request()->sort == 'email' && request()->order == 'asc') ? '-asc' : '' }}{{ (request()->sort == 'email' && request()->order == 'desc') ? '-desc' : '' }}"></i>
                                         </a>
                                     </th>
+                                    <th class="col-md">
+                                        Role
+                                    </th>
                                     <th class="col-md"></th>
                                 </tr>
                                 </thead>
@@ -49,6 +52,7 @@
                                         <td>{{ $user->id }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
+                                        <td>{{ $user->roleName() }}</td>
                                         <td>
                                             <div style="display: flex; flex-direction: row;">
                                                 <a href="users/{{ $user->id }}/edit" class="btn btn-info" style="margin-right: 4px;">Edit</a>

@@ -168,16 +168,17 @@
                                 @foreach($questions as $question)
                                     <tr style="height:40px; overflow:hidden">
                                         <td class="text-right" style="width:200px">
-
                                             <a class="btn btn-primary" href="{{ route('question_views.show', $question->id) }}">View</a>
                                             <a class="btn btn-warning" href="{{ route('question_views.edit', $question->id) }}">Edit</a>
-                                            <form action="{{ route('question_views.destroy', $question->id) }}"
-                                                  method="POST" style="display: inline;"
-                                                  onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <button class="btn btn-danger" type="submit">Delete</button>
-                                            </form>
+                                            @if(auth()->user()->isAdmin())
+                                                <form action="{{ route('question_views.destroy', $question->id) }}"
+                                                      method="POST" style="display: inline;"
+                                                      onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <button class="btn btn-danger" type="submit">Delete</button>
+                                                </form>
+                                            @endif
                                         </td>
                                         <td>{{$question->ltitle}}</td>
                                         <td>{{$question->utitle}}</td>

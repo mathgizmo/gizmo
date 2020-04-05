@@ -43,13 +43,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="question" class="col-md-4 control-label">Is admin</label>
+                                <label for="role-select" class="col-md-4 control-label">Role</label>
                                 <div class="col-md-6">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="is_admin" value="1"{{ $user->is_admin == '1' ? ' checked' : ''}}>
-                                        </label>
-                                    </div>
+                                    <select class="form-control" id="role-select" name="role">
+                                        <option value="questions_editor" {{ $user->isQuestionsEditor() ? 'selected' : '' }}>Questions Editor</option>
+                                        <option value="admin" {{ $user->isAdmin() ? 'selected' : '' }}>Admin</option>
+                                        <option value="superadmin" {{ $user->isSuperAdmin() ? 'selected' : '' }}>Super Admin</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">

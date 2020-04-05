@@ -11,19 +11,17 @@ use App\Unit;
 
 class TopicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(Topic::class); // not working!
+    }
+
     public function index(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $levels = Level::all();
         $units = Unit::all();
-
         $query = Topic::query();
-
         if ($request->has('unit_id') && $request->unit_id >= 0) {
             $query->where('unit_id', $request->unit_id);
         } else if ($request->has('level_id') && $request->level_id >= 0) {
@@ -32,7 +30,6 @@ class TopicController extends Controller
                 ->where('level_id', request('level_id'));
             });
         }
-
         $query->when($request->has('id'), function ($q) {
             return $q->where('id', request('id'));
         });
@@ -59,13 +56,9 @@ class TopicController extends Controller
         return view('topic_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $lid = "";
         $uid = "";
         $levels = DB::select('select * from level');
@@ -89,14 +82,9 @@ class TopicController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_id'    => 'required',
@@ -119,24 +107,14 @@ class TopicController extends Controller
             ->with(array('message'=> 'Created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $topic = DB::table('topic')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
@@ -163,15 +141,9 @@ class TopicController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_id'    => 'required',
@@ -197,15 +169,9 @@ class TopicController extends Controller
             ->with(array('message'=> 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         Topic::where('id', $id)->delete();
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');

@@ -10,22 +10,19 @@ use App\Level;
 
 class UnitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(Unit::class); // not working!
+    }
+
     public function index(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $levels = Level::all();
-
         $query = Unit::query();
-
         $query->when($request->has('level_id') && ($request->level_id >= 0), function ($q) {
             return $q->where('level_id', request('level_id'));
         });
-
         $query->when($request->has('id'), function ($q) {
             return $q->where('id', request('id'));
         });
@@ -38,19 +35,13 @@ class UnitController extends Controller
         $query->when($request->has('sort') and $request->has('order'), function ($q) {
             return $q->orderBy(request('sort'), request('order'));
         });
-
         $units = $query->paginate(10)->appends(Input::except('page'));
-
         return view('unit_views.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $lid = "";
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id', $lid)->get();
@@ -63,14 +54,9 @@ class UnitController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         // Store topic title and unit_id into topic table
         $this->validate($request, [
          'level_id'    => 'required',
@@ -89,24 +75,14 @@ class UnitController extends Controller
         return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $unit = DB::table('unit')
             ->join('level', 'unit.level_id', '=', 'level.id')
             ->select('unit.*', 'level.title as ltitle', 'level.id as lid')
@@ -120,15 +96,9 @@ class UnitController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_title'=> 'required'
@@ -146,15 +116,9 @@ class UnitController extends Controller
         return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $level_id = $request->input('level_id');
         Unit::where('id', $id)->delete();
         return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Deleted successfully'));

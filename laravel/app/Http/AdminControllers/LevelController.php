@@ -8,13 +8,14 @@ use App\Level;
 
 class LevelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(Level::class); // not working!
+    }
+
     public function index(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = Level::query();
         $query->when($request->has('id'), function ($q) {
             return $q->where('id', request('id'));
@@ -32,13 +33,9 @@ class LevelController extends Controller
         return view('level_views.index', ['levels'=>$levels]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $total_level = Level::all()->count();
         $levels = Level::All();
         return view('level_views.create', array(
@@ -47,14 +44,9 @@ class LevelController extends Controller
         ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
          'title'=> 'required',
          ]);
@@ -69,24 +61,14 @@ class LevelController extends Controller
         return redirect('/level_views')->with(array('message'=> 'Created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $level = Level::find($id);
         $total_level = Level::all()->count();
         return view('level_views.edit', [
@@ -95,15 +77,9 @@ class LevelController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'title'  => 'required',
         ]);
@@ -118,14 +94,9 @@ class LevelController extends Controller
         return redirect('/level_views')->with(array('message'=> 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         Level::where('id', $id)->delete();
         return redirect('/level_views')->with(array('message'=> 'Deleted successfully'));
     }

@@ -9,8 +9,14 @@ use Illuminate\Support\Facades\DB;
 class ApplicationController extends Controller
 {
 
+    public function __construct()
+    {
+        // $this->authorizeResource(Application::class); // not working!
+    }
+
     public function index(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = Application::query();
         $query->when($request->has('id'), function ($q) {
             return $q->where('id', request('id'));
@@ -27,6 +33,7 @@ class ApplicationController extends Controller
 
     public function create()
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $icons = array();
         $all = glob("images/icons/*.svg");
         $complete = glob("images/icons/*-gold.svg");
@@ -42,6 +49,7 @@ class ApplicationController extends Controller
 
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'name' => 'required',
         ]);
@@ -57,6 +65,7 @@ class ApplicationController extends Controller
 
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $application = Application::find($id);
         $icons = array();
         $all = glob("images/icons/*.svg");
@@ -74,6 +83,7 @@ class ApplicationController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'name' => 'required',
         ]);
@@ -94,6 +104,7 @@ class ApplicationController extends Controller
 
     public function destroy($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $app = Application::where('id', $id)->first();
         $app->deleteTree();
         $app->delete();

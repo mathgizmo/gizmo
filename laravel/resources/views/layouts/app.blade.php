@@ -50,22 +50,26 @@
     <a class="navbar-brand" href="{{ url('/') }}">GiZmo</a>
     @if(auth()->check())
         <ul class="nav navbar-nav" id="navigation">
-            <li><a href="{{ Route('question_views.create') }}">Create Question</a></li>
-            <li><a href="{{ url('/question_views') }}">Manage Questions</a></li>
-            <li><a href="{{ url('/lesson_views') }}">Manage Lessons</a></li>
-            <li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
-            <li><a href="{{ url('/unit_views') }}">Manage Units</a></li>
-            <li><a href="{{ url('/level_views') }}">Manage Levels</a></li>
-            <li><a href="{{ url('/application_views') }}">Manage Applications</a></li>
-            <li><a href="{{ url('/placement_views') }}">Manage Placements</a></li>
-            @if(auth()->user()->is_admin)
+            @if(auth()->user()->isAdmin() || auth()->user()->isQuestionsEditor())
+                <li><a href="{{ Route('question_views.create') }}">Create Question</a></li>
+                <li><a href="{{ url('/question_views') }}">Manage Questions</a></li>
+            @endif
+            @if(auth()->user()->isAdmin())
+                <li><a href="{{ url('/lesson_views') }}">Manage Lessons</a></li>
+                <li><a href="{{ url('/topic_views') }}">Manage Topics</a></li>
+                <li><a href="{{ url('/unit_views') }}">Manage Units</a></li>
+                <li><a href="{{ url('/level_views') }}">Manage Levels</a></li>
+                <li><a href="{{ url('/application_views') }}">Manage Applications</a></li>
+                <li><a href="{{ url('/placement_views') }}">Manage Placements</a></li>
+            @endif
+            @if(auth()->user()->isSuperAdmin())
                 <li><a href="{{ route('users.index') }}">Administrators</a></li>
             @endif
-            <li><a href="{{ route('students.index') }}">Participants</a></li>
-            @if(auth()->user()->is_admin)
+            @if(auth()->user()->isAdmin())
+                <li><a href="{{ route('students.index') }}">Participants</a></li>
                 <li><a href="{{ route('settings.index') }}">Settings</a></li>
+                <li><a href="{{ route('error_report.index', 'new') }}">Error Report</a></li>
             @endif
-            <li><a href="{{ route('error_report.index', 'new') }}">Error Report</a></li>
         </ul>
     @endif
     <ul class="nav navbar-nav navbar-right">
