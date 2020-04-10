@@ -162,9 +162,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         if (this.lesson_id === -1) {
             if (this.question_num <= (this.correct_answers + this.incorrect_answers)) {
                 this.next = this.question.lesson_id;
-                this.next_title = this.lessonTree['questions'].filter( (obj) => {
-                    return obj.lesson_id === this.question.lesson_id;
-                })[0].lesson_title;
+                this.next_title = this.question.lesson_title;
                 this.question = null;
                 return;
             }
@@ -459,9 +457,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.current_question_order_no -= 2;
                 if (this.current_question_order_no < -1) {
                     this.next = this.question.lesson_id;
-                    this.next_title = this.lessonTree['questions'].filter( (obj) => {
-                        return obj.lesson_id === this.question.lesson_id;
-                    })[0].lesson_title;
+                    this.next_title = this.question.lesson_title;
                     this.question = null;
                     return;
                     // this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
