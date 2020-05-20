@@ -32,7 +32,7 @@ if [ ! -d "../laravel/storage/app/public/uploads" ]; then
   mkdir ../laravel/storage/app/public/uploads
   chmod 755 ../laravel/storage/app/public/uploads
 fi
-UPLOADS=$(./dropbox_uploader.sh -f .dropbox_uploader list /$DROP_BOX_FOLDER/uploads/ | awk '{ print $3}' | grep -v '^...' )
+UPLOADS=$(./dropbox_uploader.sh -f .dropbox_uploader list /$DROP_BOX_FOLDER/uploads/ | awk '{ print $3}' | grep -v '\.\.\.' )
 for u in $UPLOADS
 do
     echo "Copping $u ..."
