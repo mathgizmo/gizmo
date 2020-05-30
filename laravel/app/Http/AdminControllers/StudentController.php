@@ -24,13 +24,13 @@ class StudentController extends Controller
             ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc');
 
         $students = $query->paginate(10)->appends(Input::except('page'));
-        return view('student_view.index', compact('students'));
+        return view('students.index', compact('students'));
     }
 
     public function show(Student $student)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        return view('student_view.show', compact('student'));
+        return view('students.show', compact('student'));
     }
 
     public function superUpdate(Student $student)

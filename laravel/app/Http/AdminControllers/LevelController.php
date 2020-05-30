@@ -30,7 +30,7 @@ class LevelController extends Controller
             return $q->orderBy(request('sort'), request('order'));
         });
         $levels = $query->get();
-        return view('level_views.index', ['levels'=>$levels]);
+        return view('levels.index', ['levels'=>$levels]);
     }
 
     public function create()
@@ -38,7 +38,7 @@ class LevelController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $total_level = Level::all()->count();
         $levels = Level::All();
-        return view('level_views.create', array(
+        return view('levels.create', array(
             'levels' => $levels,
             'total_level' => $total_level
         ));
@@ -58,7 +58,7 @@ class LevelController extends Controller
          'created_at' => date('Y-m-d H:i:s'),
          'updated_at' => date('Y-m-d H:i:s')
         ]);
-        return redirect('/level_views')->with(array('message'=> 'Created successfully'));
+        return redirect('/levels')->with(array('message'=> 'Created successfully'));
     }
 
     public function show()
@@ -71,7 +71,7 @@ class LevelController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $level = Level::find($id);
         $total_level = Level::all()->count();
-        return view('level_views.edit', [
+        return view('levels.edit', [
             'level'=>$level,
             'total_level'=>$total_level,
         ]);
@@ -91,13 +91,13 @@ class LevelController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-        return redirect('/level_views')->with(array('message'=> 'Updated successfully'));
+        return redirect('/levels')->with(array('message'=> 'Updated successfully'));
     }
 
     public function destroy($id)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         Level::where('id', $id)->delete();
-        return redirect('/level_views')->with(array('message'=> 'Deleted successfully'));
+        return redirect('/levels')->with(array('message'=> 'Deleted successfully'));
     }
 }

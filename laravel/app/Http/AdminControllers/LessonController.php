@@ -27,14 +27,14 @@ class LessonController extends Controller
         if ($request->has('topic_id') && $request->topic_id >= 0) {
             $query->where('topic_id', $request->topic_id);
         } else if ($request->has('unit_id') && $request->unit_id >= 0) {
-            $query->whereIn('topic_id', function($query) { 
+            $query->whereIn('topic_id', function($query) {
                 $query->select('id')->from(with(new Topic)->getTable())
                 ->where('unit_id', request('unit_id'));
             });
         } else if ($request->has('level_id')  && $request->level_id >= 0) {
-            $query->whereIn('topic_id', function($query) { 
+            $query->whereIn('topic_id', function($query) {
                 $query->select('id')->from(with(new Topic)->getTable())
-                ->whereIn('unit_id', function($query) { 
+                ->whereIn('unit_id', function($query) {
                     $query->select('id')->from(with(new Unit)->getTable())
                     ->where('level_id', request('level_id'));
                 });
@@ -53,10 +53,10 @@ class LessonController extends Controller
         $query->when($request->has('sort') and $request->has('order'), function ($q) {
             return $q->orderBy(request('sort'), request('order'));
         });
-        
+
         $lessons = $query->paginate(10)->appends(Input::except('page'));
 
-        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
+        return view('lessons.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
     }
 
     public function create()
@@ -70,7 +70,7 @@ class LessonController extends Controller
         $topics = DB::select('select * from topic');
         $lessons = DB::table('lesson')->where('topic_id', $tid)->get();
         $total_lesson = Lesson::all()->count();
-        return view('lesson_views.create', [
+        return view('lessons.create', [
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,
@@ -105,7 +105,7 @@ class LessonController extends Controller
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
         $topic_id = $request->input('topic_id');
-        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Created successfully'));
+        return redirect('/lessons?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Created successfully'));
     }
 
     public function show()
@@ -127,7 +127,7 @@ class LessonController extends Controller
         $units = DB::table('unit')->select('id', 'title')->where('level_id', $lesson->lid)->get();
         $topics = DB::table('topic')->select('id', 'title')->where('unit_id', $lesson->uid)->get();
         $total_lesson = Lesson::all()->count();
-        return view('lesson_views.edit', [
+        return view('lessons.edit', [
             'lesson' => $lesson,
             'levels' => $levels,
             'units' => $units,
@@ -159,7 +159,7 @@ class LessonController extends Controller
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
         $topic_id = $request->input('topic_id');
-        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Updated successfully'));
+        return redirect('/lessons?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Updated successfully'));
     }
 
     public function destroy(Request $request, $id)
@@ -169,6 +169,6 @@ class LessonController extends Controller
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
         $topic_id = $request->input('topic_id');
-        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Deleted successfully'));
+        return redirect('/lessons?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Deleted successfully'));
     }
 }

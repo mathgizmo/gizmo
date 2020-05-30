@@ -13,22 +13,22 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::auth();
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/home', 'HomeController@index');
-    Route::resource('application_views', 'ApplicationController', ['except' => ['show']]);
-    Route::resource('level_views', 'LevelController');
-    Route::resource('unit_views', 'UnitController');
-    Route::resource('topic_views', 'TopicController');
-    Route::resource('lesson_views', 'LessonController');
-    Route::resource('question_views', 'QuestionController');
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::resource('applications', 'ApplicationController', ['except' => ['show']]);
+    Route::resource('levels', 'LevelController');
+    Route::resource('units', 'UnitController');
+    Route::resource('topics', 'TopicController');
+    Route::resource('lessons', 'LessonController');
+    Route::resource('questions', 'QuestionController');
     Route::resource('answer_views', 'AnswerController');
-    Route::resource('placement_views', 'PlacementController');
+    Route::resource('placements', 'PlacementController');
     Route::get('/create-answer/questions-bank', 'AnswerController@insertAnswerFromQuestions');
-    Route::any('/question_views/uploadImage', 'QuestionController@uploadImage');
+    Route::any('/questions/uploadImage', 'QuestionController@uploadImage');
 
     Route::get('users', 'UserController@index')->name('users.index');
     Route::get('users/create', 'UserController@create')->name('users.create');

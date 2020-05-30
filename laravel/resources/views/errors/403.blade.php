@@ -1,51 +1,36 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Unauthorized!</title>
+@extends('layouts.auth')
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+@section('title', 'Gizmo - Admin: Forbidden')
 
-        <style>
-            html, body {
-                height: 100%;
-            }
-
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                color: #B0BEC5;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato';
-            }
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 112px;
-            }
-            .subtitle {
-            	font-size: 72px;
-                margin-bottom: 40px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">403</div>
-                <div class="subtitle">This action is unauthorized!</div>
-            </div>
+@section('content')
+    <div id="layoutError">
+        <div id="layoutError_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="text-center mt-4">
+                                <h1 class="display-1">403</h1>
+                                <p class="lead">Forbidden</p>
+                                <p>Access to this resource is denied.</p>
+                                <a href="{{url('/home')}}"><i class="fas fa-arrow-left mr-1"></i>Return to Dashboard</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-    </body>
-</html>
+    </div>
+@endsection
+
+@section('styles')
+    <style>
+        body {
+            background-color: #FFFCF5 !important;
+        }
+        .logo-img {
+            filter: grayscale(50%) !important;
+            -webkit-filter: grayscale(50%) !important;
+        }
+    </style>
+@endsection

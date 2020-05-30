@@ -2,6 +2,7 @@
 
 namespace App\Http\APIControllers;
 
+use App\Application;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -37,6 +38,10 @@ class AuthController extends Controller
         $student = Student::find($student_id);
         $question_num = $student->question_num?:5;
         $user_id = $student->id;
+        if (!$student->app_id) {
+            $student->app_id = Application::first()->id;
+            $student->save();
+        }
         $app_id = $student->app_id;
         return $this->success(compact('token', 'question_num', 'user_id', 'app_id'));
     }

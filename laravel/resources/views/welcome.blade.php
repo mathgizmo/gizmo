@@ -1,69 +1,71 @@
-@extends('layouts.app')
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gizmo - Admin</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
+    <style>
+        html, body {
+            background-color: #fff;
+            color: #636b6f;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 200;
+            height: 100vh;
+            margin: 0;
+        }
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 col-md-offset-0">
-           <div class="jumbotron">
-                <h1>Health Numeracy Project</h1>
-                    <p class="lead">Master Statistics - the easy way</p>
-                        <p><a class="btn btn-primary btn-lg" href="#" role="button">Get Started</a></p>
-             </div>
-         </div>
-    </div>
-</div>
+        .full-height {
+            height: 100vh;
+        }
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 col-md-offset-0">
-            <div class="panel panel-default">
-                <div class="panel-heading">Welcome</div>
+        .position-ref {
+            position: relative;
+        }
 
-                <div class="panel-body">
-                     <div class="col-md-4">
-                        <h2>Place holder 1</h2>
-                            <p>
-                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eam tum adesse, cum dolor omnis absit;
- Non igitur de improbo, sed de callido improbo quaerimus, qualis Q. Quid, cum fictas fabulas, e quibus utilita
-s nulla elici potest, cum voluptate legimus? Inde igitur, inquit, ordiendum est. Varietates autem iniurasque f
-ortunae facile veteres philosophorum praeceptis instituta vita superabat. Duo Reges: constructio interrete. Sc
-io enim esse quosdam, qui quavis lingua philosophari possint;
-                            </p>
-                                <p>
-                                    <a class="btn btn-default" href="#">Learn more &raquo;</a>
-                                </p>
-                        </div>
+        .content {
+            text-align: center;
+        }
 
-                        <div class="col-md-4">
-                        <h2>Place holder 1</h2>
-                            <p>
-                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eam tum adesse, cum dolor omnis absit;
- Non igitur de improbo, sed de callido improbo quaerimus, qualis Q. Quid, cum fictas fabulas, e quibus utilita
-s nulla elici potest, cum voluptate legimus? Inde igitur, inquit, ordiendum est. Varietates autem iniurasque f
-ortunae facile veteres philosophorum praeceptis instituta vita superabat. Duo Reges: constructio interrete. Sc
-io enim esse quosdam, qui quavis lingua philosophari possint;
-                            </p>
-                                <p>
-                                    <a class="btn btn-default" href="#">Learn more &raquo;</a>
-                                </p>
-                        </div>
+        .title {
+            font-size: 84px;
+            margin: 4px;
+            padding: 0;
+        }
 
-                        <div class="col-md-4">
-                        <h2>Place holder 1</h2>
-                            <p>
-                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eam tum adesse, cum dolor omnis absit;
- Non igitur de improbo, sed de callido improbo quaerimus, qualis Q. Quid, cum fictas fabulas, e quibus utilita
-s nulla elici potest, cum voluptate legimus? Inde igitur, inquit, ordiendum est. Varietates autem iniurasque f
-ortunae facile veteres philosophorum praeceptis instituta vita superabat. Duo Reges: constructio interrete. Sc
-io enim esse quosdam, qui quavis lingua philosophari possint;
-                            </p>
-                                <p>
-                                    <a class="btn btn-default" href="#">Learn more &raquo;</a>
-                                </p>
-                        </div>
-                </div>
-            </div>
+        .links > a {
+            color: #636b6f;
+            padding: 0 25px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .1rem;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+    </style>
+</head>
+<body style="background-color: #FFFCF5;">
+<div class="d-flex justify-content-center align-items-center position-ref full-height" style="height: 100vh;">
+    <div class="content">
+        <div class="title" style="margin-top: -100px;">
+            <img src="{{asset('images/logo-blue.svg')}}" alt="Gizmo" height="85px;">
+        </div>
+        <div class="d-flex flex-column">
+            <h1>Health Numeracy Project</h1>
+            <p class="lead">Master Statistics - the easy way</p>
+            <p><a class="btn btn-dark btn-lg" href="https://www.healthnumeracyproject.com/gizmo/welcome" role="button">Get Started</a></p>
+        </div>
+        <div class="links">
+            @if (Auth::guest())
+                <a href="{{ url('/login') }}">Login as Admin</a>
+            @else
+                <a href="{{ url('/home') }}">Show Admin Dashboard</a>
+            @endif
         </div>
     </div>
 </div>
-@endsection
+</body>
+</html>
+

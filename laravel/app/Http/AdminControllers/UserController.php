@@ -22,13 +22,13 @@ class UserController extends Controller
         } else {
             $users = User::latest()->get();
         }
-        return view('user_views.index', compact('users'));
+        return view('users.index', compact('users'));
     }
 
     public function create()
     {
         $this->checkAccess(auth()->user()->isSuperAdmin());
-        return view('user_views.create');
+        return view('users.create');
     }
 
     public function store(Requests\UserRequest $request)
@@ -46,7 +46,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin());
-        return view('user_views.edit', compact('user'));
+        return view('users.edit', compact('user'));
     }
 
     public function update(User $user)

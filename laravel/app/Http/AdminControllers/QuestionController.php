@@ -26,7 +26,7 @@ class QuestionController extends Controller
             unset($options['_token']);
             session(['options' => $options]);
         } else if (is_array(session('options')) && count(session('options'))) {
-            return redirect()->route('question_views.index', session('options'));
+            return redirect()->route('questions.index', session('options'));
         }
         $levels = DB::select('select * from level');
         $reply_modes = DB::select('select * from reply_mode');
@@ -82,7 +82,7 @@ class QuestionController extends Controller
             $query = $query->orderBy('question.id', 'desc');
         }
         $questions = $query->paginate(10)->appends(Input::except('page'));
-        return view('question_views.index',
+        return view('questions.index',
             compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes', 'reply_modes'));
     }
 
@@ -147,7 +147,7 @@ class QuestionController extends Controller
         $lessons = DB::table('lesson')->select('id', 'title')->get();
         $qrmodes = DB::select('select * from reply_mode');
         $preview_url = Config::get('app.preview_url');
-        return view('question_views.create',
+        return view('questions.create',
             ['levels' => $levels, 'qrmodes' => $qrmodes, 'units' => $units, 'topics' => $topics, 'lessons' => $lessons, 'lid' => $lid, 'uid' => $uid, 'tid' => $tid, 'lsnid' => $lsnid, 'preview_url' => $preview_url]);
     }
 
@@ -198,7 +198,7 @@ class QuestionController extends Controller
         $qrmodes = DB::select('select * from reply_mode');
         \Session::flash('flash_message', 'successfully saved.');
         $preview_url = Config::get('app.preview_url');
-        return view('question_views.create', ['levels' => $levels,
+        return view('questions.create', ['levels' => $levels,
             'qrmodes' => $qrmodes, 'units' => $units, 'topics' => $topics, 'lessons' => $lessons, 'lid' => $lid, 'uid' => $uid, 'tid' => $tid, 'lsnid' => $lesson_id, 'preview_url' => $preview_url])->withInput($request->all());
     }
 
@@ -213,7 +213,7 @@ class QuestionController extends Controller
             ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle')
             ->where('question.id', '=', $id)->first();
         $answers = DB::select('select * from answer where question_id = ' . $id);
-        return view('question_views.show', ['question' => $question, 'answers' => $answers]);
+        return view('questions.show', ['question' => $question, 'answers' => $answers]);
     }
 
     public function edit($id)
@@ -234,7 +234,7 @@ class QuestionController extends Controller
         $lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $question->tid)->get();
         $qrmodes = DB::select('select * from reply_mode');
         $preview_url = Config::get('app.preview_url');
-        return view('question_views.edit', ['question' => $question, 'levels' => $levels,
+        return view('questions.edit', ['question' => $question, 'levels' => $levels,
             'units' => $units, 'topics' => $topics, 'lessons' => $lessons, 'qrmodes' => $qrmodes, 'answers' => $answers, 'preview_url' => $preview_url]);
     }
 
@@ -306,12 +306,12 @@ class QuestionController extends Controller
                 ->where('topic_id', $question->tid)->get();
             $qrmodes = DB::select('select * from reply_mode');
             $preview_url = Config::get('app.preview_url');
-            return view('question_views.edit', ['question' => $question,
+            return view('questions.edit', ['question' => $question,
                 'levels' => $levels, 'units' => $units, 'topics' => $topics,
                 'lessons' => $lessons, 'qrmodes' => $qrmodes, 'answers' => $answers,
                 'preview_url' => $preview_url]);
         } else {
-            return redirect(route('question_views.index'));
+            return redirect(route('questions.index'));
         }
     }
 
@@ -321,7 +321,7 @@ class QuestionController extends Controller
         try {
             DB::table('question')->where('id', $id)->delete();
         } finally {
-            return redirect()->route('question_views.index');
+            return redirect()->route('questions.index');
         }
     }
 

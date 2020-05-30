@@ -36,7 +36,7 @@ class UnitController extends Controller
             return $q->orderBy(request('sort'), request('order'));
         });
         $units = $query->paginate(10)->appends(Input::except('page'));
-        return view('unit_views.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
+        return view('units.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
     }
 
     public function create()
@@ -46,7 +46,7 @@ class UnitController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id', $lid)->get();
         $total_unit = Unit::all()->count();
-        return view('unit_views.create', [
+        return view('units.create', [
             'levels' => $levels,
             'units' => $units,
             'lid' => $lid,
@@ -72,7 +72,7 @@ class UnitController extends Controller
          'modified_at' => date('Y-m-d H:i:s')
         ]);
         $level_id = $request->input('level_id');
-        return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Created successfully'));
+        return redirect('/units?level_id='. $level_id)->with(array('message'=> 'Created successfully'));
     }
 
     public function show()
@@ -89,7 +89,7 @@ class UnitController extends Controller
             ->where('unit.id', '=', $id)->first();
         $levels = DB::table('level')->select('id', 'title')->where('id', $unit->lid)->get();
         $total_unit = Unit::all()->count();
-        return view('unit_views.edit', [
+        return view('units.edit', [
             'levels'=>$levels,
             'unit'=>$unit,
             'total_unit'=>$total_unit,
@@ -113,7 +113,7 @@ class UnitController extends Controller
             'modified_at' => date('Y-m-d H:i:s')
         ]);
         $level_id = $request->input('level_id');
-        return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Updated successfully'));
+        return redirect('/units?level_id='. $level_id)->with(array('message'=> 'Updated successfully'));
     }
 
     public function destroy(Request $request, $id)
@@ -121,6 +121,6 @@ class UnitController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $level_id = $request->input('level_id');
         Unit::where('id', $id)->delete();
-        return redirect('/unit_views?level_id='. $level_id)->with(array('message'=> 'Deleted successfully'));
+        return redirect('/units?level_id='. $level_id)->with(array('message'=> 'Deleted successfully'));
     }
 }

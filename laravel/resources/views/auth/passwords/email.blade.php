@@ -1,47 +1,46 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
-<!-- Main Content -->
+@section('title', 'Gizmo - Admin: Reset Password')
+
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
-                <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/email') }}">
-                        {{ csrf_field() }}
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}">
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-envelope"></i> Send Password Reset Link
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+    <div class="card shadow-lg border-0 rounded-lg mt-5">
+        <div class="card-header">
+            <h3 class="text-center font-weight-light my-4">
+                Password Recovery
+            </h3>
+        </div>
+        <div class="card-body">
+            @if (session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
                 </div>
-            </div>
+            @endif
+            <form role="form" method="POST" action="{{ url('/password/email') }}">
+                <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
+                    <label class="small mb-1" for="inputEmailAddress">
+                        Email
+                    </label>
+                    <input class="form-control py-4" id="inputEmailAddress" type="email" name="email" value="{{ old('email') }}"
+                           aria-describedby="emailHelp" placeholder="Enter email address"/>
+                    @if ($errors->has('email'))
+                        <span class="form-text">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
+                    <a class="small" href="../login">
+                        Return to login
+                    </a>
+                    <button type="submit" class="btn btn-dark">
+                        <i class="fa fa-btn fa-envelope"></i> Send Password Reset Link
+                    </button>
+                </div>
+                {{ csrf_field() }}
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <div class="small"><a href="../register">Need an account? Sign up!</a></div>
         </div>
     </div>
-</div>
 @endsection

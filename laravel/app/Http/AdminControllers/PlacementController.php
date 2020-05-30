@@ -22,18 +22,17 @@ class PlacementController extends Controller
         } else {
             $placements = PlacementQuestion::with('unit')->get();
         }
-        return view('placement_views.index', ['placements'=>$placements]);
+        return view('placements.index', ['placements'=>$placements]);
     }
 
     public function create()
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $total_placements = PlacementQuestion::all()->count();
-        $placements = PlacementQuestion::with('unit')->get();
         $units = Unit::all();
         $lid = "";
-        return view('placement_views.create', array(
-            'placements' => $placements,
+        return view('placements.create', array(
+            // 'placements' => PlacementQuestion::with('unit')->get(),
             'total_placements' => $total_placements,
             'units' => $units,
             'lid' => $lid
@@ -55,7 +54,7 @@ class PlacementController extends Controller
         $placement->save();
         $placements = PlacementQuestion::with('unit')->get();
         \Session::flash('flash_message', 'successfully saved.');
-        return view('placement_views.index', ['placements'=>$placements]);
+        return view('placements.index', ['placements'=>$placements]);
     }
 
     public function show()
@@ -69,7 +68,7 @@ class PlacementController extends Controller
         $placement = PlacementQuestion::find($id);
         $total_placements = PlacementQuestion::all()->count();
         $units = Unit::all();
-        return view('placement_views.edit', [
+        return view('placements.edit', [
             'placement' => $placement,
             'total_placements' => $total_placements,
             'units' => $units
@@ -89,7 +88,7 @@ class PlacementController extends Controller
         $unit = Unit::find($request['unit_id']);
         $placement->unit()->associate($unit);
         $placement->save();
-        return redirect('/placement_views')
+        return redirect('/placements')
             ->with(array('message'=> 'Updated successfully'));
     }
 
@@ -97,7 +96,7 @@ class PlacementController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         PlacementQuestion::where('id', $id)->delete();
-        return redirect('/placement_views')
+        return redirect('/placements')
             ->with(array('message'=> 'Deleted successfully'));
     }
 }

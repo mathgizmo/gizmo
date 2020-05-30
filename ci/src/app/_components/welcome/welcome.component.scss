@@ -19,7 +19,7 @@
         .logo-container {
             margin: 0;
             padding: 0;
-            height: 20%;
+            height: 120px;
             .logo {
                 display: block;
                 position: relative;
@@ -41,10 +41,11 @@
                 width: 100%;
                 margin: 0;
                 padding: 0 83px;
-                font-size: 34px;
+                font-size: 26px;
                 z-index: 1;
             }
             .header {
+                font-size: 34px;
                 text-align: center;
                 color: $gold;
             }
@@ -63,7 +64,7 @@
                 align-items: center;
             }
             .buttons-container {
-                margin-top: 32px;
+                margin-top: 16px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -77,10 +78,9 @@
                     flex-wrap: wrap;
                 }
                 .register-button, .login-button, .try-button {
-                    font-size: 34px !important;
-                    margin: 8px;
-                    width: 240px;
-                    //color: #fafafa;
+                    font-size: 26px !important;
+                    margin: 6px;
+                    width: 200px;
                     text-decoration: none;
                 }
                 .login-button {
@@ -118,21 +118,22 @@
         background-repeat: no-repeat;
         .right-text {
             color: white;
-            font-size: 24px; //font-size: 34px;
+            font-size: 24px;
             width: 100%;
             height: 100vh;
             z-index: 1;
-            padding: 0 10%;
+            padding: 0 24px;
             transition: 0.35s;
             display: block;
         }
-        .right-text-title {
-            padding-top: 5%;
-            padding-bottom: 1%;
-            color: white;
-        }
         .right-text-description {
             opacity: 0;
+            margin-bottom: 24px;
+        }
+        .right-text-title {
+            padding: 5% 0 1% 0;
+            color: white;
+            font-size: 26px;
         }
     }
     .right:hover .right-text, .right:focus-within .right-text {
@@ -151,6 +152,243 @@
     text-align: center;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+@media screen and (max-width: 1200px) {
+    .welcome {
+        .left {
+            .left-container {
+                .header {
+                    font-size: 26px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .welcome {
+        .left {
+            .logo-container {
+                height: 15%;
+                .logo {
+                    left: 54.5px;
+                    top: 19px;
+                    width: 118px;
+                }
+            }
+            .left-container {
+                height: 85%;
+                .header, .copy, .buttons-container {
+                    font-size: 22.5px;
+                    padding: 0 54.5px;
+                }
+                .line {
+                    margin-top: 12px;
+                    margin-bottom: 12px;
+                    height: 2px;
+                    width: 268px;
+                }
+                .buttons-container {
+                    margin-top: 22px;
+                    .register-button, .login-button, .try-button {
+                        font-size: 22.5px !important;
+                        margin: 6px;
+                        width: 158px;
+                    }
+                }
+                .circle {
+                    width: 180px;
+                    height: 90px;
+                    border-top-right-radius: 90px;
+                    left: -90px;
+                }
+            }
+        }
+        .right {
+            .right-text {
+                font-size: 18px; //font-size: 22.5px;
+            }
+        }
+    }
+}
+@media screen and (max-width: 768px) {
+    .welcome {
+        .left {
+            .logo-container {
+                height: 10%;
+                .logo {
+                    left: 38.5px;
+                    top: 14px;
+                    width: 83.6px;
+                }
+            }
+            .left-container {
+                height: 90%;
+                .header, .copy, .buttons-container {
+                    font-size: 16px;
+                    padding: 0 38.5px;
+                }
+                .line {
+                    margin-top: 12px;
+                    margin-bottom: 12px;
+                    height: 2px;
+                    width: 189px;
+                }
+                .buttons-container {
+                    margin-top: 22px;
+                    .register-button, .login-button, .try-button {
+                        font-size: 16px !important;
+                        margin: 4px;
+                        width: 112px;
+                    }
+                }
+                .circle {
+                    width: 130px;
+                    height: 65px;
+                    border-top-right-radius: 65px;
+                    left: -65px;
+                }
+            }
+        }
+        .right {
+            .right-text {
+                font-size: 16px;
+            }
+        }
+    }
+}
+@media screen and (orientation: portrait) {
+    .welcome {
+        .left {
+            width: 100%;
+            height: 50%;
+            .logo-container {
+                height: 12%;
+                .logo {
+                    left: 38.5px;
+                    top: 14px;
+                    width: 83.6px;
+                }
+            }
+            .left-container {
+                height: 88%;
+                margin-top: 15px;
+                .header, .copy, .buttons-container {
+                    padding: 0 38.5px;
+                }
+                .line {
+                    width: 82%;
+                }
+                .buttons-container {
+                    flex-direction: column;
+                    .register-button, .login-button, .try-button {
+                        width: 200px;
+                    }
+                }
+                .circle {
+                }
+            }
+        }
+        .right {
+            width: 100%;
+            height: 50%;
+            .right-text {
+                height: 50vh;
+            }
+        }
+    }
+}
+@media screen and (max-height: 700px) and (orientation: portrait) {
+    .welcome {
+        .left {
+            height: 100%;
+            .left-container {
+                margin-top: 0;
+            }
+        }
+        .right {
+            height: 100%;
+            .right-text {
+                height: 100vh;
+            }
+        }
+    }
+    .scroll {
+        display: block;
+    }
+}
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .welcome {
+        .left {
+            width: 100%;
+            .logo-container {
+                height: 20%;
+                .logo {
+                    left: 38.5px;
+                    top: 14px;
+                    width: 83.6px;
+                }
+            }
+            .left-container {
+                height: 80%;
+                .header, .copy, .buttons-container {
+                    margin: 0 38.5px;
+                }
+                .line {
+                    width: 82%;
+                }
+                .buttons-container {
+                    margin-top: 12px;
+                    flex-direction: column;
+                    .register-button, .login-button, .try-button {
+                        width: 200px;
+                    }
+                }
+                .circle {
+                }
+            }
+        }
+        .right {
+            width: 100%;
+            background-size: 100%;
+            .right-text {
+            }
+        }
+    }
+    .scroll {
+        display: block;
+    }
+}
+@media screen and (max-height: 450px) {
+    .welcome {
+        .left {
+            .left-container {
+                .buttons-container {
+                    margin-top: 12px;
+                    width: 98%;
+                    flex-direction: row;
+                    .row {
+                        margin-right: 1px;
+                        width: 65%;
+                        .register-button, .login-button {
+                            width: 47%;//28%;
+                            margin: 0 4px;
+                        }
+                    }
+                    .try-button {
+                        width: 32%;
+                        margin: 0 4px;
+                    }
+                }
+            }
+        }
+    }
+    .scroll {
+        a {
+            margin-top: 60px;
+        }
+    }
 }
 
 
@@ -251,257 +489,4 @@
   100% {
     opacity: 0;
   }
-}
-
-@media screen and (max-width: 1200px) {
-    .welcome {
-        .left {
-            .left-container {
-                .header, .copy, .buttons-container {
-                    font-size: 26px;
-                }
-                .buttons-container {
-                    margin-top: 16px;
-                    .register-button, .login-button, .try-button {
-                        font-size: 26px !important;
-                        margin: 6px;
-                        width: 200px;
-                    }
-                }
-            }
-        }
-        .right {
-            .right-text {
-            }
-        }
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    .welcome {
-        .left {
-            .logo-container {
-                height: 15%;
-                .logo {
-                    left: 54.5px;
-                    top: 19px;
-                    width: 118px;
-                }
-            }
-            .left-container {
-                height: 85%;
-                .header, .copy, .buttons-container {
-                    font-size: 22.5px;
-                    padding: 0 54.5px;
-                }
-                .line {
-                    margin-top: 12px;
-                    margin-bottom: 12px;
-                    height: 2px;
-                    width: 268px;
-                }
-                .buttons-container {
-                    margin-top: 22px;
-                    .register-button, .login-button, .try-button {
-                        font-size: 22.5px !important;
-                        margin: 6px;
-                        width: 158px;
-                    }
-                }
-                .circle {
-                    width: 180px;
-                    height: 90px;
-                    border-top-right-radius: 90px;
-                    left: -90px;
-                }
-            }
-        }
-        .right {
-            .right-text {
-                font-size: 18px; //font-size: 22.5px;
-            }
-        }
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .welcome {
-        .left {
-            .logo-container {
-                height: 10%;
-                .logo {
-                    left: 38.5px;
-                    top: 14px;
-                    width: 83.6px;
-                }
-            }
-            .left-container {
-                height: 90%;
-                .header, .copy, .buttons-container {
-                    font-size: 16px;
-                    padding: 0 38.5px;
-                }
-                .line {
-                    margin-top: 12px;
-                    margin-bottom: 12px;
-                    height: 2px;
-                    width: 189px;
-                }
-                .buttons-container {
-                    margin-top: 22px;
-                    .register-button, .login-button, .try-button {
-                        font-size: 16px !important;
-                        margin: 4px;
-                        width: 112px;
-                    }
-                }
-                .circle {
-                    width: 130px;
-                    height: 65px;
-                    border-top-right-radius: 65px;
-                    left: -65px;
-                }
-            }
-        }
-        .right {
-            .right-text {
-                font-size: 16px;
-            }
-        }
-    }
-}
-
-@media screen and (orientation: portrait) {
-    .welcome {
-        .left {
-            width: 100%;
-            height: 50%;
-            .logo-container {
-                height: 12%;
-                .logo {
-                    left: 38.5px;
-                    top: 14px;
-                    width: 83.6px;
-                }
-            }
-            .left-container {
-                height: 88%;
-                margin-top: 15px;
-                .header, .copy, .buttons-container {
-                    padding: 0 38.5px;
-                }
-                .line {
-                    width: 82%;
-                }
-                .buttons-container {
-                    flex-direction: column;
-                    .register-button, .login-button, .try-button {
-                        width: 200px;
-                    }
-                }
-                .circle {
-                }
-            }
-        }
-        .right {
-            width: 100%;
-            height: 50%;
-            .right-text {
-                height: 50vh;
-            }
-        }
-    }
-}
-@media screen and (max-height: 700px) and (orientation: portrait) {
-    .welcome {
-        .left {
-            height: 100%;
-            .left-container {
-                margin-top: 0;
-            }
-        }
-        .right {
-            height: 100%;
-            .right-text {
-                height: 100vh;
-            }
-        }
-    }
-    .scroll {
-        display: block;
-    }
-}
-
-@media screen and (max-height: 500px) and (orientation: landscape) {
-    .welcome {
-        .left {
-            width: 100%;
-            .logo-container {
-                height: 20%;
-                .logo {
-                    left: 38.5px;
-                    top: 14px;
-                    width: 83.6px;
-                }
-            }
-            .left-container {
-                height: 80%;
-                .header, .copy, .buttons-container {
-                    margin: 0 38.5px;
-                }
-                .line {
-                    width: 82%;
-                }
-                .buttons-container {
-                    margin-top: 12px;
-                    flex-direction: column;
-                    .register-button, .login-button, .try-button {
-                        width: 200px;
-                    }
-                }
-                .circle {
-                }
-            }
-        }
-        .right {
-            width: 100%;
-            background-size: 100%;
-            .right-text {
-            }
-        }
-    }
-    .scroll {
-        display: block;
-    }
-}
-
-@media screen and (max-height: 450px) {
-    .welcome {
-        .left {
-            .left-container {
-                .buttons-container {
-                    margin-top: 12px;
-                    width: 98%;
-                    flex-direction: row;
-                    .row {
-                        margin-right: 1px;
-                        width: 65%;
-                        .register-button, .login-button {
-                            width: 47%;//28%;
-                            margin: 0 4px;
-                        }
-                    }
-                    .try-button {
-                        width: 32%;
-                        margin: 0 4px;
-                    }
-                }
-            }
-        }
-    }
-    .scroll {
-        a {
-            margin-top: 60px;
-        }
-    }
 }

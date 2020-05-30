@@ -21,6 +21,8 @@ import {Angular2FontawesomeModule} from 'angular2-fontawesome/angular2-fontaweso
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {SortablejsModule} from 'ngx-sortablejs';
 import {DeviceDetectorModule} from 'ngx-device-detector';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
@@ -71,6 +73,7 @@ import {DraggableDirective} from './_directives/draggable.directive';
         MatDividerModule,
         MatButtonToggleModule,
         FlexLayoutModule,
+        PerfectScrollbarModule,
         SortablejsModule.forRoot({animation: 150}),
         DeviceDetectorModule.forRoot()
     ],
@@ -118,6 +121,12 @@ import {DraggableDirective} from './_directives/draggable.directive';
             provide: HTTP_INTERCEPTORS,
             useClass: HTTPListener,
             multi: true
+        },
+        {
+            provide: PERFECT_SCROLLBAR_CONFIG,
+            useValue: {
+                suppressScrollX: true
+            }
         },
     ],
     bootstrap: [AppComponent]

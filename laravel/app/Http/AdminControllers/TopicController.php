@@ -25,7 +25,7 @@ class TopicController extends Controller
         if ($request->has('unit_id') && $request->unit_id >= 0) {
             $query->where('unit_id', $request->unit_id);
         } else if ($request->has('level_id') && $request->level_id >= 0) {
-            $query->whereIn('unit_id', function($query) { 
+            $query->whereIn('unit_id', function($query) {
                 $query->select('id')->from(with(new Unit)->getTable())
                 ->where('level_id', request('level_id'));
             });
@@ -53,7 +53,7 @@ class TopicController extends Controller
                 $topics[$key]->icon_src = 'images/default-icon.svg';
             }
         }
-        return view('topic_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
+        return view('topics.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
     }
 
     public function create()
@@ -71,7 +71,7 @@ class TopicController extends Controller
         foreach (array_diff($all, $complete) as $file) {
           $icons[] = $file;
         }
-        return view('topic_views.create', array(
+        return view('topics.create', array(
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,
@@ -103,7 +103,7 @@ class TopicController extends Controller
         ]);
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
+        return redirect('/topics?level_id='. $level_id . '&unit_id='. $unit_id)
             ->with(array('message'=> 'Created successfully'));
     }
 
@@ -132,7 +132,7 @@ class TopicController extends Controller
         if(!file_exists($topic->icon_src)) {
             $topic->icon_src = 'images/default-icon.svg';
         }
-        return view('topic_views.edit', [
+        return view('topics.edit', [
             'levels'=>$levels,
             'units'=>$units,
             'topic'=>$topic,
@@ -165,7 +165,7 @@ class TopicController extends Controller
         DB::table('topic')->where('id', $id)->update($update_array);
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
+        return redirect('/topics?level_id='. $level_id . '&unit_id='. $unit_id)
             ->with(array('message'=> 'Updated successfully'));
     }
 
@@ -175,7 +175,7 @@ class TopicController extends Controller
         Topic::where('id', $id)->delete();
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
+        return redirect('/topics?level_id='. $level_id . '&unit_id='. $unit_id)
             ->with(array('message'=> 'Deleted successfully'));
     }
 

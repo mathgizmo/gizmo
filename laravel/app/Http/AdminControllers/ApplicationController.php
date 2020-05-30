@@ -28,7 +28,7 @@ class ApplicationController extends Controller
             return $q->orderBy(request('sort'), request('order'));
         });
         $applications = $query->get();
-        return view('application_views.index', ['applications' => $applications]);
+        return view('applications.index', ['applications' => $applications]);
     }
 
     public function create()
@@ -41,7 +41,7 @@ class ApplicationController extends Controller
             $icons[] = $file;
         }
         $tree = (new Application())->getTree();
-        return view('application_views.create', array(
+        return view('applications.create', array(
             'icons' => $icons,
             'tree' => $tree
         ));
@@ -60,7 +60,7 @@ class ApplicationController extends Controller
         }
         $application->save();
         $application->updateTree($request);
-        return redirect('/application_views')->with(array('message' => 'Created successfully'));
+        return redirect('/applications')->with(array('message' => 'Created successfully'));
     }
 
     public function edit($id)
@@ -74,7 +74,7 @@ class ApplicationController extends Controller
             $icons[] = $file;
         }
         $tree = $application->getTree();
-        return view('application_views.edit', [
+        return view('applications.edit', [
             'application' => $application,
             'icons' => $icons,
             'tree' => $tree
@@ -89,7 +89,7 @@ class ApplicationController extends Controller
         ]);
         $application = Application::where('id', $id)->first();
         if (!$application) {
-            return redirect('/application_views')->with(array('message' => 'Can\'t update'));
+            return redirect('/applications')->with(array('message' => 'Can\'t update'));
         }
         if (isset($request['name']) && $request['name']) {
             $application->name = $request['name'];
@@ -99,7 +99,7 @@ class ApplicationController extends Controller
         }
         $application->save();
         $application->updateTree($request);
-        return redirect('/application_views')->with(array('message' => 'Updated successfully'));
+        return redirect('/applications')->with(array('message' => 'Updated successfully'));
     }
 
     public function destroy($id)
@@ -108,6 +108,6 @@ class ApplicationController extends Controller
         $app = Application::where('id', $id)->first();
         $app->deleteTree();
         $app->delete();
-        return redirect('/application_views')->with(array('message' => 'Deleted successfully'));
+        return redirect('/applications')->with(array('message' => 'Deleted successfully'));
     }
 }

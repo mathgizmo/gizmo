@@ -25,7 +25,7 @@ class ReportErrorController extends Controller
            $query->latest();
         }
         $error_reports = $query->paginate(10)->appends(Input::except('page'));
-        return view('error_report_views.index', compact('error_reports', 'type'));
+        return view('error_reports.index', compact('error_reports', 'type'));
     }
 
     public function updateStatus($type, $id)
