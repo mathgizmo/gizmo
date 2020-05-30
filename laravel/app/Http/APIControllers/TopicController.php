@@ -198,7 +198,7 @@ class TopicController extends Controller
         if(!$topic) {
             return $this->error('topic not found');
         }
-        $topic['lessons'] = $this->app->getLessons($id, $student->is_admin());
+        $topic['lessons'] = $this->app->getLessons($id, $student->isAdmin());
         $lessons_ids = [];
         foreach($topic['lessons'] as $id => $lesson) {
             $lessons_ids[] = $lesson['id'];

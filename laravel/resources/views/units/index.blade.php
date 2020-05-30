@@ -156,6 +156,7 @@
             } else if (url.searchParams.get('title')) {
                 url.searchParams.delete('title');
             }
+            url.searchParams.delete('page');
             window.location.href = url.toString();
         }
 

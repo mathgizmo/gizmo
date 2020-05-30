@@ -14,10 +14,7 @@ use Mail;
 
 class AuthController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return mixed
-     */
+
     public function authenticate(Request $request)
     {
         auth()->shouldUse('api');
@@ -46,10 +43,6 @@ class AuthController extends Controller
         return $this->success(compact('token', 'question_num', 'user_id', 'app_id'));
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function register(Request $request)
     {
         $fields = ['email', 'password', 'name'];
@@ -71,6 +64,8 @@ class AuthController extends Controller
         }
         $result = Student::create([
             'name' => $credentials['name'],
+            'first_name' => $request['first_name'] ?: null,
+            'last_name' => $request['last_name'] ?: null,
             'email' => $credentials['email'],
             'password' => bcrypt($credentials['password']),
         ]);
@@ -80,10 +75,6 @@ class AuthController extends Controller
         return $this->success($error);
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function passwordResetEmail(Request $request) {
         $fields = ['email', 'url'];
         // grab credentials from the request
@@ -127,10 +118,6 @@ class AuthController extends Controller
         return $this->success($error);
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function resetPassword(Request $request) {
         $fields = ['password', 'token'];
         // grab credentials from the request

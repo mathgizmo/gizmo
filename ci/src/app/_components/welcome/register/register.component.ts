@@ -25,7 +25,8 @@ export class RegisterComponent implements OnInit {
 
     register() {
         this.loading = true;
-        this.authenticationService.register(this.model.username, this.model.email, this.model.password)
+        this.authenticationService.register(this.model.username, this.model.email,
+            this.model.password, this.model.first_name, this.model.last_name)
             .subscribe(result => {
                 if (result['success'] === true) {
                     this.authenticationService.login(this.model.email, this.model.password).subscribe(res => {

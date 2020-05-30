@@ -26,6 +26,8 @@ export class ProfileComponent implements OnInit {
         this.userService.getProfile()
             .subscribe(res => {
                 this.user.username = res['name'];
+                this.user.first_name = res['first_name'];
+                this.user.last_name = res['last_name'];
                 this.user.email = res['email'];
                 this.user.questionNum = res['question_num'];
                 localStorage.setItem('question_num', res['question_num']);

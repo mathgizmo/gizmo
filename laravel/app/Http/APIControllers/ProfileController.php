@@ -9,28 +9,31 @@ use JWTAuth;
 
 class ProfileController extends Controller
 {
-    /**
-     * @return mixed
-     */
+
     public function get()
     {
         $student = JWTAuth::parseToken()->authenticate();
         return $this->success([
             'name' => $student->name,
+            'first_name' => $student->first_name,
+            'last_name' => $student->last_name,
             'email' => $student->email,
             'question_num' => $student->question_num,
         ]);
     }
 
-    /**
-     * @return mixed
-     */
     public function update()
     {
         $student = JWTAuth::parseToken()->authenticate();
         $update = [];
         if (request()->has('name')) {
             $update['name'] = request('name');
+        }
+        if (request()->has('first_name')) {
+            $update['first_name'] = request('first_name');
+        }
+        if (request()->has('last_name')) {
+            $update['last_name'] = request('last_name');
         }
         if (request()->has('email')) {
             $update['email'] = request('email');

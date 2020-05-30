@@ -49,8 +49,8 @@ export class AuthenticationService {
             );
     }
 
-    register(username: string, email: string, password: string): Observable<any> {
-        const request = {email: email, name: username, password: password};
+    register(username: string, email: string, password: string, first_name: string = null, last_name: string = null): Observable<any> {
+        const request = {email: email, name: username, password: password, first_name: first_name, last_name: last_name};
         return this.http.post(this.apiUrl + '/register', request, {headers: this.headers})
             .pipe(
                 map((response: Response) => {

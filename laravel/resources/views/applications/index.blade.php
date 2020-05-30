@@ -105,6 +105,7 @@
             } else if (url.searchParams.get('name')) {
                 url.searchParams.delete('name');
             }
+            url.searchParams.delete('page');
             window.location.href = url.toString();
         }
         function initFilters() {

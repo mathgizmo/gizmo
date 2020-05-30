@@ -24,6 +24,8 @@ export class UserService {
     public changeProfile(user: User) {
         const request = {
             name: user.username,
+            first_name: user.first_name,
+            last_name: user.last_name,
             email: user.email,
             question_num: user.questionNum
         };

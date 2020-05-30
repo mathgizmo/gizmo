@@ -194,6 +194,7 @@
         } else if (url.searchParams.get('short_name')) {
             url.searchParams.delete('short_name');
         }
+        url.searchParams.delete('page');
         window.location.href = url.toString();
     }
     function init() {

@@ -21,10 +21,26 @@
             </div>
             <div class="row">
                 <div class="col-md-2 form-control-label ml-3 font-weight-bold">
-                    <label for="name">Name</label>
+                    <label for="name">Username</label>
                 </div>
                 <div class="col-md-8">
                     <p class="form-control-static"> {{ $student->name }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                    <label for="first_name">First Name</label>
+                </div>
+                <div class="col-md-8">
+                    <p class="form-control-static"> {{ $student->first_name ?: 'none' }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                    <label for="last_name">Last Name</label>
+                </div>
+                <div class="col-md-8">
+                    <p class="form-control-static"> {{ $student->last_name ?: 'none' }}</p>
                 </div>
             </div>
             <div class="row">
@@ -43,6 +59,39 @@
                     <p class="form-control-static"> {{ $student->students_tracking->last() != null ? date('H:i d.m.Y', strtotime($student->students_tracking->last()->date)) : 'Never' }}</p>
                 </div>
             </div>
+            <form class="row mb-3" action="{{ route('students.super', $student->id) }}" method="POST">
+                <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                    <label for="is_super">Super Access</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="is_super" name="is_super" class="form-control" onchange="this.parentElement.parentElement.submit();" style="max-width: 300px;">
+                        <option {{ $student->is_super ? 'selected="selected"' : '' }} value="1">Yes</option>
+                        <option {{ $student->is_super ? '' : 'selected="selected"' }} value="0">No</option>
+                    </select>
+                </div>
+                <input type="hidden" name="_method" value="PATCH">
+                {{ csrf_field() }}
+            </form>
+            <form class="row mb-3" action="{{ route('students.teacher', $student->id) }}" method="POST">
+                <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                    <label for="is_teacher">Teacher</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="is_teacher" name="is_teacher" class="form-control" onchange="this.parentElement.parentElement.submit();" style="max-width: 300px;">
+                        <option {{ $student->is_teacher ? 'selected="selected"' : '' }} value="1">Yes</option>
+                        <option {{ $student->is_teacher ? '' : 'selected="selected"' }} value="0">No</option>
+                    </select>
+                </div>
+                <input type="hidden" name="_method" value="PATCH">
+                {{ csrf_field() }}
+            </form>
+            <form class="d-flex flex-row mx-3 mb-3" action="{{ route('students.reset', $student->id) }}"
+                  method="POST" style="display: inline;"
+                  onsubmit="if(confirm('This will remove all participant progress? Are you sure?')) { return true } else {return false };">
+                <input type="hidden" name="_method" value="POST">
+                {{ csrf_field() }}
+                <button class="btn btn-danger btn-sm" type="submit">Reset Progress</button>
+            </form>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>

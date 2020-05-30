@@ -29,4 +29,9 @@
 		color: #fafafa;
 		text-decoration: none;
 	}
-} 
+}
+
+.required:after {
+	content: "*";
+	color: darkred;
+}

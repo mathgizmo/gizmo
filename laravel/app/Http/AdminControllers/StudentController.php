@@ -27,21 +27,26 @@ class StudentController extends Controller
         return view('students.index', compact('students'));
     }
 
-    public function show(Student $student)
+    public function edit(Student $student)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        return view('students.show', compact('student'));
+        return view('students.edit', compact('student'));
     }
 
-    public function superUpdate(Student $student)
+    public function superUpdate(Request $request, Student $student)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $is_super = true;
-        if ($student->is_super) {
-            $is_super = false;
-        }
         $student->update([
-            'is_super' => $is_super,
+            'is_super' => $request['is_super'] ? true : false,
+        ]);
+        return back();
+    }
+
+    public function teacherUpdate(Request $request, Student $student)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $student->update([
+            'is_teacher' => $request['is_teacher'] ? true : false,
         ]);
         return back();
     }
