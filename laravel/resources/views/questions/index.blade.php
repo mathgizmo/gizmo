@@ -8,7 +8,10 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header font-weight-bold d-flex flex-row">Manage Questions</div>
+        <div class="card-header font-weight-bold d-flex flex-row justify-content-between">
+            Manage Questions
+            <a class="btn btn-dark btn-sm" href="{{ route('questions.create') }}">+ add question</a>
+        </div>
         <div class="card-body p-0">
             <form class="filters-container d-flex flex-column flex-wrap m-2" role="form" action="{{ route('questions.index') }}" method="GET">
                 <div class="d-flex justify-content-start flex-row flex-wrap mb-2">

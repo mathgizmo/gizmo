@@ -25,7 +25,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('topics', 'TopicController');
     Route::resource('lessons', 'LessonController');
     Route::resource('questions', 'QuestionController');
-    Route::resource('answer_views', 'AnswerController');
     Route::resource('placements', 'PlacementController');
     Route::get('/create-answer/questions-bank', 'AnswerController@insertAnswerFromQuestions');
     Route::any('/questions/uploadImage', 'QuestionController@uploadImage');

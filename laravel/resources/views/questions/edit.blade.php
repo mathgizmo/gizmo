@@ -222,8 +222,8 @@
                             </div>
                             <div class="col-md-1">
                                 <div class="radio">
-                                    <label>
-                                        <input type="checkbox" name="is_correct[]"
+                                    <label class="align-middle m-0">
+                                        <input type="checkbox" name="is_correct[]" class="align-middle"
                                                value="{{ $key }}"{{ $answer->is_correct ? ' checked' : ''}}>
                                     </label>
                                 </div>

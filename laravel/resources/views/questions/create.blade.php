@@ -208,8 +208,8 @@
                         </div>
                         <div class="col-md-1">
                             <div class="radio">
-                                <label>
-                                    <input type="checkbox" name="is_correct[]" value="0" {{ old('is_correct') == 0 ? ' checked' : '' }}>
+                                <label class="align-middle m-0">
+                                    <input type="checkbox" name="is_correct[]" class="align-middle" value="0" {{ old('is_correct') == 0 ? ' checked' : '' }}>
                                 </label>
                             </div>
                         </div>

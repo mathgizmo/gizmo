@@ -1,5 +1,13 @@
 <div id="layoutSidenav_nav">
     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+        <div class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand" href="{{ url('/home') }}">
+                <img src="{{asset('images/logo-blue.svg')}}" alt="GiZmo" height="36px;" style="filter: grayscale(100%) brightness(150%);-webkit-filter: grayscale(100%) brightness(150%);">
+            </a>
+            <button class="sidebarToggle btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
         <div class="sb-sidenav-menu">
             <div class="nav">
                 {{-- <div class="sb-sidenav-menu-heading">Gizmo Admin</div> --}}
@@ -130,8 +138,11 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <div class="small">Logged in as:</div>
-            {{ Auth::user()->name }}
+            <a class="pull-right text-decoration-none text-white" href="{{ url('/logout') }}">
+                <div class="small" style="color: rgba(255, 255, 255, 0.5);">Logged in as:</div>
+                {{ Auth::user()->name }}
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
         </div>
     </nav>
 </div>
