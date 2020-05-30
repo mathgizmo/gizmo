@@ -40,25 +40,28 @@
                         <input type="hidden" name="icon" value="">
                     </div>
                 </div>
-                <div class="tree m-0 p-0">
+                <div class="tree m-0 p-0 ml-2 mb-3">
                     <ul>
                         @foreach($tree as $level)
                             <li>
+                                <i class="expand-icon fas fa-{{empty(array_filter($level->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}"></i>
                                 <input type="checkbox"
                                        name="level[{{$level->id}}]" {{$level->checked ? 'checked="checked"' : '' }} />
-                                <label>{{$level->text}}</label>
+                                <label class="can-expand">{{$level->text}}</label>
                                 <ul class="{{$level->collapsed ? 'collapse' : ''}}">
                                     @foreach($level->children as $unit)
                                         <li>
+                                            <i class="expand-icon fas fa-{{empty(array_filter($unit->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}"></i>
                                             <input type="checkbox"
                                                    name="unit[{{$unit->id}}]" {{$unit->checked ? 'checked="checked"' : '' }} />
-                                            <label>{{$unit->text}}</label>
+                                            <label class="can-expand">{{$unit->text}}</label>
                                             <ul class="{{$unit->collapsed ? 'collapse' : ''}}">
                                                 @foreach($unit->children as $topic)
                                                     <li>
+                                                        <i class="expand-icon fas fa-{{empty(array_filter($topic->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}"></i>
                                                         <input type="checkbox"
                                                                name="topic[{{$topic->id}}]" {{$topic->checked ? 'checked="checked"' : '' }} />
-                                                        <label>{{$topic->text}}</label>
+                                                        <label class="can-expand">{{$topic->text}}</label>
                                                         <ul class="{{$topic->collapsed ? 'collapse' : ''}}">
                                                             @foreach($topic->children as $lesson)
                                                                 <li>
@@ -185,6 +188,14 @@
     <script>
         $('ul label').click(function () {
             $(this).next().toggleClass('collapse');
+            const iconElem = this.parentElement.querySelector(".expand-icon");
+            if (iconElem.getAttribute('data-icon') === 'plus') {
+                iconElem.classList.remove('fa-plus');
+                iconElem.classList.add('fa-minus');
+            } else {
+                iconElem.classList.remove('fa-minus');
+                iconElem.classList.add('fa-plus');
+            }
         });
 
         $('input[type="checkbox"]').change(function (e) {
@@ -290,13 +301,43 @@
 
 @section('styles')
     <style>
-        .tree ul {
-            list-style: none;
-            margin: 5px 20px;
+        .can-expand {
+            cursor: pointer;
         }
-
+        .tree, .tree ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .tree ul {
+            margin-left: 10px;
+        }
         .tree li {
-            margin: 10px 0;
+            margin: 0;
+            padding: 0 7px;
+            line-height: 20px;
+            border-left:1px solid rgb(100,100,100);
+        }
+        .tree li:last-child {
+            border-left:none;
+        }
+        .tree li:before {
+            position:relative;
+            top:-0.3em;
+            height:1em;
+            width:12px;
+            color:white;
+            border-bottom:1px solid rgb(100,100,100);
+            content:"";
+            display:inline-block;
+            left:-7px;
+        }
+        .tree li:last-child:before {
+            border-left:1px solid rgb(100,100,100);
+        }
+        .fa-minus, .fa-plus {
+            font-size: 10px;
+            margin-bottom: 2px;
         }
         @media screen and (max-width: 600px) {
             .col-md-8 {

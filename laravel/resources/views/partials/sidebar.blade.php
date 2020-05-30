@@ -138,7 +138,7 @@
             </div>
         </div>
         <div class="sb-sidenav-footer">
-            <a class="pull-right text-decoration-none text-white" href="{{ url('/logout') }}">
+            <a class="text-decoration-none text-white" href="{{ url('/logout') }}">
                 <div class="small" style="color: rgba(255, 255, 255, 0.5);">Logged in as:</div>
                 {{ Auth::user()->name }}
                 <i class="fas fa-sign-out-alt"></i>
