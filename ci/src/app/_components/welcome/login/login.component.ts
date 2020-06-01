@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
                 if (result === true) {
                     if (isNaN(+localStorage.getItem('app_id'))) {
                         localStorage.setItem('redirect_to', '/');
-                        this.router.navigate(['profile/application']);
+                        this.router.navigate(['to-do']);
                     } else {
                         this.router.navigate(['/']);
                     }

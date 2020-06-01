@@ -1,0 +1,41 @@
+<div class="profile-application">
+  <mat-card *ngIf="!showCompletedApplications">
+    <span class="title">Assignments To Do</span>
+    <div class="applications-list">
+      <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
+        <mat-button-toggle *ngFor="let application of applications" [value]="application.id" (click)="onChangeApplication(application.id)" >
+          <div class="app-select-container">
+            <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+            <div class="app-title">
+              <strong>{{application.name}}</strong>
+              <span *ngIf="application.due_date" class="due-date">Due Date: {{application.due_date}}</span>
+            </div>
+          </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <div class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications" >
+        See Completed Assignments
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card *ngIf="showCompletedApplications" >
+    <span class="title">Completed Assignments</span>
+    <div class="applications-list">
+      <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
+        <mat-button-toggle *ngFor="let application of completedApplications" [value]="application.id" (click)="onChangeApplication(application.id)" >
+          <div class="app-select-container">
+            <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+            <div class="app-title">
+              <strong>{{application.name}}</strong>
+              <span *ngIf="application.due_date" class="due-date">Due Date: {{application.due_date}}</span>
+            </div>
+          </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <div class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications" >
+        See Assignments To Do
+      </div>
+    </div>
+  </mat-card>
+</div>

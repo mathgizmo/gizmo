@@ -4,12 +4,12 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('students.index')  }}">Manage Students</a></li>
-    <li class="breadcrumb-item active">Student Details</li>
+    <li class="breadcrumb-item active">Edit Student</li>
 @endsection
 
 @section('content')
     <div class="card">
-        <div class="card-header font-weight-bold d-flex flex-row">Student Details</div>
+        <div class="card-header font-weight-bold d-flex flex-row">Edit Student</div>
         <div class="card-body p-0">
             <div class="row mt-3">
                 <div class="col-md-2 form-control-label ml-3 font-weight-bold">

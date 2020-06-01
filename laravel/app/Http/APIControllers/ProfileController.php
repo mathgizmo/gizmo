@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\Progress;
 use App\Student;
 use Validator;
 use JWTAuth;
@@ -71,12 +72,15 @@ class ProfileController extends Controller
     }
 
     public function getApplications() {
+        $student = JWTAuth::parseToken()->authenticate();
         $items = Application::all();
         foreach ($items as $item) {
             $item->icon = $item->icon();
+            $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)->where('student_id', $student->id)->count() > 0;
+            $item->due_date = null;
         }
         return $this->success([
-            'items' => $items
+            'items' => $items->sortBy('due_date')
         ]);
     }
 

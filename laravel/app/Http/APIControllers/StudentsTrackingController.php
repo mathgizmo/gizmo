@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\Level;
 use App\Progress;
 use App\Student;
 use App\StudentsTracking;
@@ -63,25 +64,27 @@ class StudentsTrackingController extends Controller
         ]);
         $progress_data = [
             'student_id' => $this->student->id,
-            'entity_type' => 0,
-            'entity_id' => $lesson
+            'entity_type' => 'lesson',
+            'entity_id' => $lesson,
         ];
         $progress = Progress::where($progress_data)->get();
         if ($progress->count() == 0) {
             DB::enableQueryLog();
-            Progress::create($progress_data);
-            //find all lessons from topic that are not done yet
+            try {
+                Progress::create($progress_data);
+            } catch (\Exception $e) { }
+            // find all lessons from topic that are not done yet
             $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
                 $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
             })->where('topic_id', $model->topic_id)->where('dev_mode', 0);
             if ($lessons_query->count() > 0) {
                 $is_topic_done = $lessons_query->count() <= $lessons_query->whereIn('id', function($q) use($student) {
-                        $q->select('entity_id')->from('progresses')->where('entity_type', 0)->where('student_id', $student->id);
+                        $q->select('entity_id')->from('progresses')->where('entity_type', 'lesson')->where('student_id', $student->id);
                     })->count();
             } else {
                 $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
                     $join->on('progresses.student_id', '=', DB::raw($student->id))
-                        ->on('progresses.entity_type', '=', DB::raw(0))
+                        ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
                         ->on('progresses.entity_id', '=', 'lesson.id');
                 })->where(['topic_id' => $model->topic_id, 'dependency' => 1])->where('dev_mode', 0)->whereNull('progresses.id')->get();
                 $is_topic_done = !count($lessons);
@@ -99,13 +102,14 @@ class StudentsTrackingController extends Controller
         $student = Student::where('id', $student->id)->first();
         $app_id = $student ? $student->app_id : null;
         //mark topic as done
-        $progress_data = [
-            'student_id' => $student->id,
-            'entity_type' => 1,
-            'entity_id' => $topic_id
-        ];
-        DB::insert('INSERT IGNORE INTO progresses(student_id, entity_type, entity_id) '.
-            'values (?, ?, ?)', array_values($progress_data));
+        try {
+            DB::table('progresses')->insert([
+                'student_id' => $student->id,
+                'entity_type' => 'topic',
+                'entity_id' => $topic_id,
+                'app_id' => $app_id
+            ]);
+        } catch (\Exception $e) { }
         //find all topics from unit that are not done yet
         $topic_model = Topic::where("id", $topic_id)->first();
         if(!$topic_model) { return; }
@@ -119,23 +123,36 @@ class StudentsTrackingController extends Controller
             });
         })->where('unit_id', $topic_model->unit_id)->where('dev_mode', 0);
         if ($topic_query->count() > 0) {
-            $is_unit_done = $topic_query->count() <= $topic_query->whereIn('id', function($q) use($student) {
-                    $q->select('entity_id')->from('progresses')->where('entity_type', 1)->where('student_id', $student->id);
+            $is_unit_done = $topic_query->count() <= $topic_query->whereIn('id', function($q) use($student, $app_id) {
+                    $q->select('entity_id')->from('progresses')
+                        ->where('entity_type', 'topic')
+                        ->where('student_id', $student->id)
+                        ->where(function ($q) use ($app_id) {
+                            $q->where('app_id', $app_id)->orWhereNull('app_id');
+                        });
                 })->count();
         } else {
-            $topics = DB::table('topic')->leftJoin('progresses', function ($join) use ($student) {
+            $topics_count = DB::table('topic')->leftJoin('progresses', function ($join) use ($student) {
                 $join->on('progresses.student_id', '=', DB::raw($student->id))
-                    ->on('progresses.entity_type', '=', DB::raw(1))
+                    ->on('progresses.entity_type', '=', DB::raw('"topic"'))
                     ->on('progresses.entity_id', '=', 'topic.id');
-            })->where(['unit_id' => $topic_model->unit_id, 'dependency' => 1])->whereNull('progresses.id')->get();
-            $is_unit_done = !count($topics);
+            })->where(['unit_id' => $topic_model->unit_id, 'dependency' => 1])->whereNull('progresses.id')
+                ->where(function ($q) use ($app_id) {
+                    $q->where('progresses.app_id', $app_id)->orWhereNull('progresses.app_id');
+                })->count();
+            $is_unit_done = !$topics_count;
         }
         // if all topics are done, mark unit as done
         if ($is_unit_done) {
-            $progress_data['entity_type'] = 2;
-            $progress_data['entity_id'] = $topic_model->unit_id;
-            DB::insert('INSERT IGNORE INTO progresses(student_id, entity_type, entity_id) '.
-                'values (?, ?, ?)', array_values($progress_data));
+            try {
+                DB::table('progresses')->insert([
+                    'student_id' => $student->id,
+                    'entity_type' => 'unit',
+                    'entity_id' => $topic_model->unit_id,
+                    'app_id' => $app_id
+                ]);
+            } catch (\Exception $e) { }
+
             //find all units from level that are not done yet
             $unit_model = Unit::where('id', $topic_model->unit_id)->first();
             if(!$unit_model) { return; }
@@ -156,23 +173,61 @@ class StudentsTrackingController extends Controller
             })->where('level_id', $unit_model->level_id)->where('dev_mode', 0);
 
             if ($unit_query->count() > 0) {
-                $is_level_done = $unit_query->count() <= $unit_query->whereIn('id', function($q) use($student) {
-                        $q->select('entity_id')->from('progresses')->where('entity_type', 2)->where('student_id', $student->id);
+                $is_level_done = $unit_query->count() <= $unit_query->whereIn('id', function($q) use($student, $app_id) {
+                        $q->select('entity_id')->from('progresses')
+                            ->where('entity_type', 'unit')
+                            ->where('student_id', $student->id)
+                            ->where(function ($q) use ($app_id) {
+                                $q->where('app_id', $app_id)->orWhereNull('app_id');
+                            });
                     })->count();
             } else {
                 $units = DB::table('unit')->leftJoin('progresses', function ($join) use ($student) {
                     $join->on('progresses.student_id', '=', DB::raw($student->id))
-                        ->on('progresses.entity_type', '=', DB::raw(2))
+                        ->on('progresses.entity_type', '=', DB::raw('"unit"'))
                         ->on('progresses.entity_id', '=', 'unit.id');
-                })->where(['level_id' => $unit_model->level_id, 'dependency' => 1])->whereNull('progresses.id')->get();
+                })->where(['level_id' => $unit_model->level_id, 'dependency' => 1])->whereNull('progresses.id')
+                    ->where(function ($q) use ($app_id) {
+                        $q->where('progresses.app_id', $app_id)->orWhereNull('progresses.app_id');
+                    })->get();
                 $is_level_done = !count($units);
             }
             //if all units are done, mark level as done
             if ($is_level_done) {
-                $progress_data['entity_type'] = 3;
-                $progress_data['entity_id'] = $unit_model->level_id;
-                DB::insert('INSERT IGNORE INTO progresses(student_id, entity_type, entity_id) '.
-                    'values (?, ?, ?)', array_values($progress_data));
+                try {
+                    DB::table('progresses')->insert([
+                        'student_id' => $student->id,
+                        'entity_type' => 'level',
+                        'entity_id' => $unit_model->level_id,
+                        'app_id' => $app_id
+                    ]);
+                } catch (\Exception $e) { }
+
+                //find all levels from application that are not done yet
+                $level_model = Level::where('id', $unit_model->level_id)->first();
+                if (!$level_model) { return; }
+                $level_query = (Application::where('id', $app_id)->first())->getLevelsQuery()->where('dev_mode', 0);
+                if ($level_query->count() > 0) {
+                    $is_app_done = $level_query->count() <= $level_query->whereIn('id', function($q) use($student, $app_id) {
+                            $q->select('entity_id')->from('progresses')
+                                ->where('entity_type', 'level')
+                                ->where('student_id', $student->id)
+                                ->where(function ($q) use ($app_id) {
+                                    $q->where('app_id', $app_id)->orWhereNull('app_id');
+                                });
+                        })->count();
+                    //if all levels are done, mark app as done
+                    if ($is_app_done) {
+                        try {
+                            DB::table('progresses')->insert([
+                                'student_id' => $student->id,
+                                'entity_type' => 'application',
+                                'entity_id' => $app_id,
+                                'app_id' => $app_id
+                            ]);
+                        } catch (\Exception $e) { }
+                    }
+                }
             }
         }
     }

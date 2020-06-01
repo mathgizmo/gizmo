@@ -9,7 +9,7 @@ import {TopicComponent} from './_components/home/topic/index';
 import {LessonComponent} from './_components/home/topic/lesson/index';
 import {AuthGuard} from './_guards/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {ProfileApplicationComponent} from './_components/profile/application/application.component';
+import {ToDoComponent} from './_components/to-do/to-do.component';
 import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 
@@ -21,7 +21,7 @@ const routes: Routes = [
     {path: 'reset-password/:token', component: ResetPasswordComponent},
     {path: 'placement', component: PlacementComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
-    {path: 'profile/application', component: ProfileApplicationComponent, canActivate: [AuthGuard]},
+    {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: '', component: HomeComponent, canActivate: [AuthGuard]},
     {path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard]},
     {

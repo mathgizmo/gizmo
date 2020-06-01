@@ -162,8 +162,12 @@ class Application extends Model
 
     public function getLevels() {
         // DB::select('select * from level where dev_mode = 0 order by order_no, id asc'); // all levels
+        return $this->getLevelsQuery()->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
+    }
+
+    public function getLevelsQuery() {
         $app_id = $this->id;
-        $items = DB::table('level')->where(function ($query) use($app_id) {
+        return DB::table('level')->where(function ($query) use($app_id) {
             $query->whereIn('id', function($q1) use($app_id) {
                 $q1->select('model_id')->from('application_has_models')->where('model_type', 'level')->where('app_id', $app_id);
             })->orWhereIn('id', function($q2) use($app_id) {
@@ -185,14 +189,21 @@ class Application extends Model
                     });
                 });
             });
-        })->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
-        return $items;
+        });
     }
 
     public function getUnits($level_id = null) {
         // DB::select('select * from unit where dev_mode = 0 order by order_no, id asc'); // all units
+        $items = $this->getUnitsQuery();
+        if ($level_id) {
+            $items->where('level_id', $level_id);
+        }
+        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
+    }
+
+    public function getUnitsQuery() {
         $app_id = $this->id;
-        $items = DB::table('unit')->where(function ($query) use($app_id) {
+        return DB::table('unit')->where(function ($query) use($app_id) {
             $query->whereIn('id', function($q1) use($app_id) {
                 $q1->select('model_id')->from('application_has_models')->where('model_type', 'unit')->where('app_id', $app_id);
             })->orWhereIn('id', function($q2) use($app_id) {
@@ -211,16 +222,20 @@ class Application extends Model
                 });
             });
         });
-        if ($level_id) {
-            $items->where('level_id', $level_id);
-        }
-        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
     }
 
     public function getTopics($unit_id = null) {
         // DB::select('select * from topic where dev_mode = 0 order by order_no, id asc'); // all topics
+        $items = $this->getTopicsQuery();
+        if ($unit_id) {
+            $items->where('unit_id', $unit_id);
+        }
+        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
+    }
+
+    public function getTopicsQuery() {
         $app_id = $this->id;
-        $items = DB::table('topic')->where(function ($query) use($app_id) {
+        return DB::table('topic')->where(function ($query) use($app_id) {
             $query->whereIn('id', function($q1) use($app_id) {
                 $q1->select('model_id')->from('application_has_models')->where('model_type', 'topic')->where('app_id', $app_id);
             })->orWhereIn('id', function($q2) use($app_id) {
@@ -239,10 +254,6 @@ class Application extends Model
                 });
             });
         });
-        if ($unit_id) {
-            $items->where('unit_id', $unit_id);
-        }
-        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
     }
 
     public function getLessons($topic_id = null, $is_admin = false) {

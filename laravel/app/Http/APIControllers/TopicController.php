@@ -35,29 +35,21 @@ class TopicController extends Controller
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         $lessons_done = [];
-        /* old lessons done marking
-        foreach(DB::table('lesson')->select('topic_id', DB::raw("SUM(IF(lesson.dev_mode = 0, 1, 0)) as total"), DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done"))
-            ->leftJoin('progresses', function ($join) use ($student) {
-                $join->on('progresses.student_id', '=', DB::raw($student->id))
-                ->on('progresses.entity_type', '=', DB::raw(0))
-                ->on('progresses.entity_id', '=', 'lesson.id');
-            })
-            ->groupBy('topic_id')->get() as $topic) {
-                $lessons_done[$topic['topic_id']] = $topic;
-        } */
         $topics_done = [];
         $units_done = [];
         $levels_done = [];
         foreach(DB::table('progresses')->select('entity_id', 'entity_type')->where(['student_id' => $student->id])
-            ->whereIn('entity_type', [1,2,3])->get() as $row) {
+            ->whereIn('entity_type', ['topic','unit','level'])->where(function ($q) use ($app_id) {
+                $q->where('app_id', $app_id)->orWhereNull('app_id');
+            })->get() as $row) {
             switch ($row['entity_type']) {
-                case 1:
+                case 'topic':
                     $topics_done[] = $row['entity_id'];
                     break;
-                case 2:
+                case 'unit':
                     $units_done[] = $row['entity_id'];
                     break;
-                case 3:
+                case 'level':
                     $levels_done[] = $row['entity_id'];
                     break;
             }
@@ -123,13 +115,18 @@ class TopicController extends Controller
                 if ($lessons_query->count() > 0) {
                     $lessons_done[$topic['id']]['total'] = $lessons_query->count();
                     $lessons_done[$topic['id']]['done'] = $lessons_query->whereIn('id', function($q) use($student) {
-                        $q->select('entity_id')->from('progresses')->where('entity_type', 0)->where('student_id', $student->id);
+                        $q->select('entity_id')->from('progresses')->where('entity_type', 'lesson')->where('student_id', $student->id);
                     })->count();
                 } else {
-                    $lessons_done[$topic['id']] = DB::table('lesson')->select('topic_id', DB::raw("SUM(IF(lesson.dev_mode = 0, 1, 0)) as total"), DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done"))
+                    $lessons_done[$topic['id']] = DB::table('lesson')
+                        ->select(
+                            'topic_id',
+                            DB::raw("SUM(IF(lesson.dev_mode = 0, 1, 0)) as total"),
+                            DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done")
+                        )
                         ->leftJoin('progresses', function ($join) use ($student) {
                             $join->on('progresses.student_id', '=', DB::raw($student->id))
-                                ->on('progresses.entity_type', '=', DB::raw(0))
+                                ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
                                 ->on('progresses.entity_id', '=', 'lesson.id');
                         })->where('topic_id', $topic['id'])->first();
                 }
@@ -181,6 +178,7 @@ class TopicController extends Controller
             return $this->error('id must be integer');
         }
         $student = $this->student;
+        $app_id = $this->app->id;
         $mode = DB::connection()->getFetchMode();
         DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
         $topic = DB::table('topic')->where('id', $id)->first();
@@ -205,12 +203,18 @@ class TopicController extends Controller
             $topic['lessons'][$id]['status'] = 0;
         }
         $lessons_done = [];
-        foreach(DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 0])
+        foreach(DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 'lesson'])
             ->whereIn('entity_id', $lessons_ids)->get() as $row) {
                 $lessons_done[] = $row['entity_id'];
         }
-        $topic['status'] = count(DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 1])
-            ->where('entity_id', $topic['id'])->get());
+        $topic['status'] = count(
+            DB::table('progresses')->select('entity_id')
+                ->where(['student_id' => $student->id, 'entity_type' => 'topic'])
+                ->where('entity_id', $topic['id'])
+                ->where(function ($q) use ($app_id) {
+                    $q->where('app_id', $app_id)->orWhereNull('app_id');
+                })->get()
+        );
         $active_flag = true;
         $last_active_order = 0;
         foreach ($topic['lessons'] as $id => $lesson) {
@@ -316,13 +320,6 @@ class TopicController extends Controller
             })->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
         })->inRandomOrder()->get(); // take(4)->get();
         if (count($topic['questions']) < 1) {
-            /* $topic['questions'] = DB::table('question')
-                ->select('question.*')
-                ->join(DB::raw('(SELECT id FROM lesson WHERE topic_id = ' . $topic_id . ' AND dependency = 1 ORDER BY order_no DESC, id DESC LIMIT 2) l'), function($join)
-                {
-                    $join->on('question.lesson_id', '=', 'l.id');
-                })
-                ->inRandomOrder()->take(4)->get(); */
             $topic['questions'] = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
                 $q1->select('id')->from('lesson')->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
             })->inRandomOrder()->get();
