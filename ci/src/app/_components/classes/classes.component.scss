@@ -1,0 +1,134 @@
+@import '../../../colors';
+
+.profile-classes {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 60px auto 0;
+  width: 80vw;
+}
+
+.class-teacher, .classes-list, .search-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.classes-list {
+  flex-direction: row;
+}
+.search-container {
+  justify-content: space-between;
+  padding: 8px 16px 0;
+  margin-bottom: 16px;
+}
+.search-container > mat-form-field {
+  width: 49%;
+}
+
+.class-teacher {
+  flex-direction: row;
+  color: dimgrey;
+  font-size: 18px;
+}
+
+.class-list-item {
+  margin: 8px;
+  color: $navy;
+}
+
+.class-title {
+  text-align: center;
+  color: $navy;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-classes > mat-card {
+  margin: 10px;
+  padding: 15px;
+  min-width: 250px;
+  width: calc(100% - 20px);
+  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-classes > mat-card:last-child {
+  margin-bottom: 28px;
+}
+
+.title {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.class-list-item:last-child {
+  margin-bottom: 24px;
+}
+
+.add-class-button {
+  background: #ffffff !important;
+  color: $navy !important;
+  font-size: 18px !important;
+}
+
+@media all and (min-width: 40em) {
+  .class-list-item {
+    width: 50%;
+  }
+}
+@media all and (min-width: 60em) {
+  .class-list-item {
+    width: 33.33%;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .class-teacher, .button, button, .add-class-button {
+    font-size: 14px !important;
+  }
+  .class-list-item:last-child {
+    margin-bottom: 18px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .classes-list {
+    flex-direction: column;
+  }
+  .class-list-item {
+    width: 90%;
+  }
+  .class-teacher, .button, button, .add-class-button {
+    font-size: 12px !important;
+  }
+  .class-list-item:last-child {
+    margin-bottom: 16px;
+  }
+  .search-container {
+    flex-direction: column;
+  }
+  .search-container > mat-form-field {
+    width: 98%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .profile-classes {
+    width: 100vw;
+  }
+  .class-list-item {
+    width: 98%;
+  }
+  .class-teacher, .button, button, .add-class-button {
+    font-size: 9px !important;
+  }
+}

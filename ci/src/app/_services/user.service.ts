@@ -1,5 +1,8 @@
 ﻿import {Injectable} from '@angular/core';
 import {map, catchError} from 'rxjs/operators';
+import {HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {ClassModel} from '../_models/class';
 
 import {User} from '../_models/index';
 import {HttpService} from './http.service';
@@ -71,6 +74,42 @@ export class UserService {
                 map((response: Response) => {
                     return response['items'];
                 }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public getClasses() {
+        return this.http.get('/profile/classes')
+            .pipe(
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public subscribeClass(classId: number) {
+        const request = {
+            class_id: classId,
+        };
+        return this.http.post('/profile/classes/' + classId + '/subscribe', request)
+            .pipe(
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public unsubscribeClass(classId: number) {
+        const request = {
+            class_id: classId,
+        };
+        return this.http.post('/profile/classes/' + classId + '/unsubscribe', request)
+            .pipe(
                 catchError(error => {
                     console.log(error);
                     throw Error(error);

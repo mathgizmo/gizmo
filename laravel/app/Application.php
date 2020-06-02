@@ -15,6 +15,10 @@ class Application extends Model
         return $this->hasMany('App\Student', 'app_id', 'id');
     }
 
+    public function classes() {
+        return $this->belongsToMany('App\ClassOfStudents', 'classes_applications', 'app_id', 'class_id');
+    }
+
     public function levels() {
         return $this->belongsToMany('App\Level', 'application_has_models', 'app_id', 'model_id')->where('model_type', 'level');
     }
@@ -36,6 +40,16 @@ class Application extends Model
             return $this->icon;
         }
         return '/images/default-icon.svg';
+    }
+
+    public function getDueDate($class_id = null) {
+        if ($class_id) {
+            $model = DB::table('classes_applications')->where('class_id', $class_id)->where('app_id', $this->id)->first();
+            if ($model) {
+                return $model->due_date;
+            }
+        }
+        return $this->due_date;
     }
 
     public function getTree() {

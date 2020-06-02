@@ -64,4 +64,36 @@ class StudentController extends Controller
         $student->delete();
         return back();
     }
+
+    public function find(Request $request) {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $student = null;
+        $query = Student::query();
+        if ($request['is_teacher']) {
+            $query->where('is_teacher', true);
+        }
+        if ($request['id']) {
+            $student = $query->where('id', $request['id'])->get();
+        }
+        if ($student) {
+            return $student;
+        } else {
+            $limit = $request['limit'] == 'all' ? null : ((int) $request['limit'] > 0 ? (int) $request['limit'] : 5);
+            $pattern = $request['pattern'];
+            $query->where(function ($q) use($pattern) {
+                $q->where('name', 'LIKE', $pattern.'%')
+                    ->orWhere('first_name', 'LIKE', $pattern.'%')
+                    ->orWhere('last_name', 'LIKE', $pattern.'%');
+            });
+            $names = explode(' ', $pattern);
+            if (count($names) > 1) {
+                $query->orWhere(function ($q) use($names) {
+                    $q->where('first_name', 'LIKE', $names[0].'%')
+                        ->where('last_name', 'LIKE', $names[1].'%');
+                });
+            }
+            if ($limit) $query->limit($limit);
+            return $query->get();
+        }
+    }
 }

@@ -1,0 +1,58 @@
+<div class="profile-classes">
+    <mat-card *ngIf="!addClass">
+        <span class="title">My Classes</span>
+        <div class="classes-list">
+                <mat-card class="class-list-item" *ngFor="let classItem of myClasses">
+                    <mat-card-title class="class-title subtitle">{{classItem.name}}</mat-card-title>
+                    <mat-card-subtitle *ngIf="classItem.teacher" class="class-teacher">
+                        <div class="teacher-label">Teacher:&nbsp;</div>
+                        <div class="teacher-name"> {{classItem.teacher}}</div>
+                    </mat-card-subtitle>
+                    <mat-card-actions class="button-container">
+                        <button mat-stroked-button (click)="onUnsubscribe(classItem.id)">Unsubscribe</button>
+                    </mat-card-actions>
+                </mat-card>
+        </div>
+        <div *ngIf="availableClasses.length > 0" class="button-container">
+            <button mat-button class="button add-class-button" (click)="onAddClass()">Add More</button>
+        </div>
+    </mat-card>
+    <mat-card *ngIf="addClass">
+        <span class="title">Select Class</span>
+        <mat-card class="search-container">
+            <mat-form-field>
+                <input matInput
+                       name="name"
+                       pattern="[a-zA-Z0-9]{2,255}"
+                       placeholder="Class Name"
+                       [(ngModel)]="nameFilter"
+                       (change)="filter()"
+                       class="answer" />
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput
+                       name="teacher"
+                       pattern="[a-zA-Z0-9]{2,255}"
+                       placeholder="Class Teacher"
+                       [(ngModel)]="teacherFilter"
+                       (change)="filter()"
+                       class="answer" />
+            </mat-form-field>
+        </mat-card>
+        <div class="classes-list">
+            <mat-card class="class-list-item" *ngFor="let classItem of availableClasses">
+                <mat-card-title class="class-title subtitle">{{classItem.name}}</mat-card-title>
+                <mat-card-subtitle *ngIf="classItem.teacher" class="class-teacher">
+                    <div class="teacher-label">Teacher:&nbsp;</div>
+                    <div class="teacher-name"> {{classItem.teacher}}</div>
+                </mat-card-subtitle>
+                <mat-card-actions class="button-container">
+                    <button mat-stroked-button (click)="onSubscribe(classItem.id)">Subscribe</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="button-container">
+            <button mat-button class="button add-class-button" (click)="addClass=false">Cancel</button>
+        </div>
+    </mat-card>
+</div>

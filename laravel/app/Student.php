@@ -7,20 +7,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Student extends Authenticatable
 {
     protected $table = 'students';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+
     protected $fillable = [
         'first_name', 'last_name', 'name', 'email', 'password', 'question_num', 'is_teacher', 'is_super', 'is_admin'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'is_admin'
     ];
@@ -59,6 +50,10 @@ class Student extends Authenticatable
     public function students_tracking()
     {
         return $this->hasMany(StudentsTracking::class, 'student_id', 'id');
+    }
+
+    public function classes() {
+        return $this->belongsToMany('App\ClassOfStudents', 'classes_students', 'student_id', 'class_id');
     }
 
     public function isTeacher()

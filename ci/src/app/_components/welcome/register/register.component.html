@@ -9,13 +9,21 @@
                 <div *ngIf="f.submitted && !username.valid" class="help-block">Username is required</div>
             </div>
             <div class="form-row">
-                <div class="form-group">
-                    <label for="first_name">First Name</label>
-                    <input type="text" class="form-control answer" name="first_name" id="first_name" [(ngModel)]="model.first_name" />
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="mb-1" for="first_name">
+                            First Name
+                        </label>
+                        <input type="text" class="form-control answer" name="first_name" id="first_name" [(ngModel)]="model.first_name" />
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="last_name">Last Name</label>
-                    <input type="text" class="form-control answer" name="last_name" id="last_name" [(ngModel)]="model.last_name" />
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="mb-1" for="last_name">
+                            Last Name
+                        </label>
+                        <input type="text" class="form-control answer" name="last_name" id="last_name" [(ngModel)]="model.last_name" />
+                    </div>
                 </div>
             </div>
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">

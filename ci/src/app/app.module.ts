@@ -42,6 +42,8 @@ import {
 } from './_components/home/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent} from './_components/to-do/to-do.component';
+import {ClassesComponent} from './_components/classes/classes.component';
+import {UnsubscribeDialogComponent} from './_components/classes/unsubscribe-dialog/unsubscribe-dialog.component';
 import {ResetPasswordComponent} from './_components/welcome/login/reset-password/reset-password.component';
 import {QuestionComponent} from './_components/home/topic/lesson/question/question.component';
 
@@ -94,6 +96,8 @@ import {DraggableDirective} from './_directives/draggable.directive';
         ChartComponent,
         ProfileComponent,
         ToDoComponent,
+        ClassesComponent,
+        UnsubscribeDialogComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
@@ -109,7 +113,8 @@ import {DraggableDirective} from './_directives/draggable.directive';
         ReportDialogComponent,
         FeedbackDialogComponent,
         QuestionNumDialogComponent,
-        BadChallengeDialogComponent
+        BadChallengeDialogComponent,
+        UnsubscribeDialogComponent
     ],
     providers: [
         AuthGuard,

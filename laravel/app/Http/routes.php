@@ -20,6 +20,7 @@ Route::auth();
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::resource('applications', 'ApplicationController', ['except' => ['show']]);
+    Route::get('applications/search', 'ApplicationController@find')->name('applications.search');
     Route::resource('levels', 'LevelController');
     Route::resource('units', 'UnitController');
     Route::resource('topics', 'TopicController');
@@ -38,11 +39,14 @@ Route::group(['middleware' => 'auth'], function() {
     Route::delete('users/{user}', 'UserController@destroy')->name('users.destroy');
 
     Route::get('students', 'StudentController@index')->name('students.index');
+    Route::get('students/search', 'StudentController@find')->name('students.search');
     Route::get('students/{student}/edit', 'StudentController@edit')->name('students.edit');
     Route::patch('students/super/{student}', 'StudentController@superUpdate')->name('students.super');
     Route::patch('students/teacher/{student}', 'StudentController@teacherUpdate')->name('students.teacher');
     Route::post('students/reset/{student}', 'StudentController@resetProgress')->name('students.reset');
     Route::post('students/delete/{student}', 'StudentController@delete')->name('students.delete');
+
+    Route::resource('classes', 'ClassController', ['except' => ['show']]);
 
     Route::get('settings', 'SettingController@index')->name('settings.index');
     Route::patch('settings', 'SettingController@update')->name('settings.update');

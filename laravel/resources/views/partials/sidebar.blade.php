@@ -70,13 +70,16 @@
                         <i class="fas fa-angle-down"></i>
                     </div>
                 </a>
-                <div class="collapse {{ Route::is('students.*') || Route::is('applications.*') ? 'show' : '' }}" id="collapseClassManagement" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                <div class="collapse {{ Route::is('students.*') || Route::is('applications.*') || Route::is('classes.*') ? 'show' : '' }}" id="collapseClassManagement" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="{{ route('students.index') }}">
                             Participants
                         </a>
                         <a class="nav-link" href="{{ url('/applications') }}">
                             Manage Assignments
+                        </a>
+                        <a class="nav-link" href="{{ url('/classes') }}">
+                            Manage Classes
                         </a>
                     </nav>
                 </div>

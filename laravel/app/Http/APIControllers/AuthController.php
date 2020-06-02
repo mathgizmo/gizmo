@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\ClassOfStudents;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -36,7 +37,7 @@ class AuthController extends Controller
         $question_num = $student->question_num?:5;
         $user_id = $student->id;
         if (!$student->app_id) {
-            $student->app_id = Application::first()->id;
+            $student->app_id = ClassOfStudents::first()->applications()->first()->id;
             $student->save();
         }
         $app_id = $student->app_id;
@@ -70,6 +71,10 @@ class AuthController extends Controller
             'password' => bcrypt($credentials['password']),
         ]);
         if($result) {
+            DB::table('classes_students')->insert([
+                'class_id' => 1,
+                'student_id' => $result->id
+            ]);
             return $this->success($result);
         }
         return $this->success($error);

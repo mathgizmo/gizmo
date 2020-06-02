@@ -10,6 +10,7 @@ import {LessonComponent} from './_components/home/topic/lesson/index';
 import {AuthGuard} from './_guards/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent} from './_components/to-do/to-do.component';
+import {ClassesComponent} from './_components/classes/classes.component';
 import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 
@@ -22,6 +23,7 @@ const routes: Routes = [
     {path: 'placement', component: PlacementComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
+    {path: 'classes', component: ClassesComponent, canActivate: [AuthGuard]},
     {path: '', component: HomeComponent, canActivate: [AuthGuard]},
     {path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard]},
     {

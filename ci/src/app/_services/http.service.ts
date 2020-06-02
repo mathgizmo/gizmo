@@ -46,7 +46,7 @@ export class HttpService {
             );
     }
 
-    get(url: string, auth: boolean = true) {
+    get(url: string, auth: boolean = true, params = null) {
         if (auth) {
             // add authorization header with jwt token
             this.headers = new HttpHeaders({
@@ -58,7 +58,7 @@ export class HttpService {
             this.headers = new HttpHeaders({'Content-Type': 'application/json'});
         }
         // get from api
-        return this.http.get(this.apiUrl + url, {headers: this.headers})
+        return this.http.get(this.apiUrl + url, {headers: this.headers, params: params})
             .pipe(
                 map((response: Response) => response['message']),
                 catchError((response: Response) => {

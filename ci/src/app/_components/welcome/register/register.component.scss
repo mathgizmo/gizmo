@@ -35,3 +35,22 @@
 	content: "*";
 	color: darkred;
 }
+
+.col-md-6 {
+	padding: 0;
+}
+
+.col-md-6:first-child {
+	padding-right: 8px;
+}
+
+.col-md-6:last-child {
+	padding-left: 8px;
+}
+
+@media screen and (max-width: 992px) {
+	.col-md-6 {
+		padding: 0 !important;
+	}
+}
+

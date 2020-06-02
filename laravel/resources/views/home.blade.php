@@ -51,6 +51,9 @@
         <a class="btn btn-outline-dark mr-2" href="{{ url('/applications') }}">
             Manage Assignments
         </a>
+        <a class="btn btn-outline-dark mr-2" href="{{ url('/classes') }}">
+            Manage Classes
+        </a>
     </div>
     @endif
     @if(auth()->user()->isSuperAdmin())

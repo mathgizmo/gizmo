@@ -110,4 +110,20 @@ class ApplicationController extends Controller
         $app->delete();
         return redirect('/applications')->with(array('message' => 'Deleted successfully'));
     }
+
+    public function find(Request $request)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        if ($request['id']) {
+            $app = Application::where('id', $request['id'])->get();
+            if ($app) {
+                return $app;
+            }
+        }
+        $limit = $request['limit'] == 'all' ? null : ((int)$request['limit'] > 0 ? (int)$request['limit'] : 5);
+        $pattern = $request['pattern'];
+        $query = Application::query()->where('name', 'LIKE', '%'.$pattern.'%');
+        if ($limit) $query->limit($limit);
+        return $query->get();
+    }
 }
