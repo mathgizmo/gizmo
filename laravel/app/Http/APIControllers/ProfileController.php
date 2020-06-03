@@ -90,7 +90,7 @@ class ProfileController extends Controller
             $item->due_date = $item->getDueDate($item->class ? $item->class->id : null);
         }
         return $this->success([
-            'items' => $items->sortBy('due_date')
+            'items' => array_values($items->sortBy('due_date')->toArray())
         ]);
     }
 

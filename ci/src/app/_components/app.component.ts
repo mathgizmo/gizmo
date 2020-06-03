@@ -4,6 +4,8 @@ import {map, filter} from 'rxjs/operators';
 import {HTTPStatus, AuthenticationService} from '../_services/index';
 import {User} from '../_models/user';
 
+declare var $: any;
+
 @Component({
     moduleId: module.id,
     selector: 'app-root',

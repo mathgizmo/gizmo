@@ -13,7 +13,7 @@
           </div>
         </mat-button-toggle>
       </mat-button-toggle-group>
-      <div class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications" >
+      <div *ngIf="completedApplications.length > 0" class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications" >
         See Completed Assignments
       </div>
     </div>

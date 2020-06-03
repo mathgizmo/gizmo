@@ -1,0 +1,63 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container"
+    class="subtitle hide">Edit Class!</h2>
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{title}}</div>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" name="name" placeholder="Name" [(ngModel)]="assignment.name" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="icon">Icon:</label>
+        <input id="icon" name="icon" [(ngModel)]="assignment.icon" type="hidden" />
+        <div *ngIf="!showImages" class="app-img" [style.background-image]="setIcon(assignment.icon ? assignment.icon : 'images/default-icon.svg')" (click)="showImages=!showImages"></div>
+        <div *ngIf="showImages" class="icons-list">
+            <div *ngFor="let icon of icons">
+                <div class="app-img" [style.background-image]="setIcon(icon)" (click)="onImageSelected(icon)"></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="due_date">Due Date:</label>
+        <input id="due_date" type="date" name="due_date" [(ngModel)]="assignment.due_date" class="form-control"/>
+    </div>
+    <form novalidate #form="ngForm" id="tree-form" class="tree m-0 p-0 ml-2 mb-3">
+        <ul>
+            <li *ngFor="let level of tree">
+                <i class="expand-icon fa" [ngClass]="hasCheckedChildren(level) ? 'fa-plus' : 'fa-minus'"></i>
+                <input type="checkbox" name="level[{{level.id}}]" [attr.checked]="level.checked ? 'checked' : null"
+                       #levelCheckbox (change)="onTreeElementChecked(levelCheckbox)" />
+                <label class="can-expand" #levelLabel (click)="onExpandTree(levelLabel)">{{level.text}}</label>
+                <ul class="{{level.collapsed ? 'collapse' : ''}}">
+                    <li *ngFor="let unit of level.children">
+                        <i class="expand-icon fa" [ngClass]="hasCheckedChildren(unit) ? 'fa-plus' : 'fa-minus'"></i>
+                        <input type="checkbox" name="unit[{{unit.id}}]" [attr.checked]="unit.checked ? 'checked' : null"
+                               #unitCheckbox (change)="onTreeElementChecked(unitCheckbox)" />
+                        <label class="can-expand"  #unitLabel (click)="onExpandTree(unitLabel)">{{unit.text}}</label>
+                        <ul [ngClass]="{'collapse' : unit.collapsed }">
+                            <li *ngFor="let topic of unit.children">
+                                <i class="expand-icon fa" [ngClass]="hasCheckedChildren(topic) ? 'fa-plus' : 'fa-minus'"></i>
+                                <input type="checkbox" name="topic[{{topic.id}}]" [attr.checked]="topic.checked ? 'checked' : null"
+                                       #topicCheckbox (change)="onTreeElementChecked(topicCheckbox)" />
+                                <label class="can-expand" #topicLabel (click)="onExpandTree(topicLabel)">{{topic.text}}</label>
+                                <ul [ngClass]="{'collapse' : topic.collapsed }">
+                                    <li *ngFor="let lesson of topic.children">
+                                        <input type="checkbox" name="lesson[{{lesson.id}}]" [attr.checked]="lesson.checked ? 'checked' : null"
+                                               #lessonCheckbox (change)="onTreeElementChecked(lessonCheckbox)" />
+                                        <label>{{lesson.text}}</label>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button' type="button">Cancel</button>
+    <button mat-button class='button moving-forward-button continue-button'
+            type="button" (click)="onSave()">Save
+    </button>
+</mat-dialog-actions>
+

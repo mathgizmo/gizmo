@@ -50,9 +50,10 @@ import {ClassStudentsDialogComponent} from './_components/classes/manage-classes
 import {EditClassDialogComponent} from './_components/classes/manage-classes/edit-class-dialog/edit-class-dialog.component';
 import {ManageClassesComponent} from './_components/classes/manage-classes/manage-classes.component';
 import {ClassAssignmentsDialogComponent} from './_components/classes/manage-classes/class-assignments-dialog/class-assignments-dialog.component';
+import {ManageAssignmentsComponent} from './_components/assignments/manage-assignments/manage-assignments.component';
+import {EditAssignmentDialogComponent} from './_components/assignments/manage-assignments/edit-assignment-dialog/edit-assignment-dialog.component'
 import {ResetPasswordComponent} from './_components/welcome/login/reset-password/reset-password.component';
 import {QuestionComponent} from './_components/home/topic/lesson/question/question.component';
-
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
@@ -110,6 +111,8 @@ import { TableFilterPipe } from './_pipes/index';
         EditClassDialogComponent,
         ClassStudentsDialogComponent,
         ClassAssignmentsDialogComponent,
+        ManageAssignmentsComponent,
+        EditAssignmentDialogComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
@@ -130,7 +133,8 @@ import { TableFilterPipe } from './_pipes/index';
         YesNoDialogComponent,
         EditClassDialogComponent,
         ClassStudentsDialogComponent,
-        ClassAssignmentsDialogComponent
+        ClassAssignmentsDialogComponent,
+        EditAssignmentDialogComponent
     ],
     providers: [
         AuthGuard,

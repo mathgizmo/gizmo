@@ -9,7 +9,7 @@
                     <th mat-sort-header="id" scope="col">ID</th>
                     <th mat-sort-header="name" scope="col">Name</th>
                     <th mat-sort-header="due_date" scope="col">Due Date</th>
-                    <th class="text-right">
+                    <th *ngIf="available_assignments.length > 0" class="text-right">
                         <button class="btn btn-dark" style="margin-right: 8px;" (click)="addAssignment=!addAssignment">Add Assignment</button>
                     </th>
                 </tr>

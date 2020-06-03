@@ -4,7 +4,7 @@ import {ClassesManagementService} from '../../../_services/classes-management.se
 import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.component';
 import {YesNoDialogComponent} from '../yes-no-dialog/yes-no-dialog.component';
 import {ClassStudentsDialogComponent} from './class-students-dialog/class-students-dialog.component';
-import {ClassAssignmentsDialogComponent} from './class-assignments-dialog/class-assignments-dialog.component'
+import {ClassAssignmentsDialogComponent} from './class-assignments-dialog/class-assignments-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 

@@ -12,6 +12,7 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent} from './_components/to-do/to-do.component';
 import {MyClassesComponent} from './_components/classes/my-classes/my-classes.component';
 import {ManageClassesComponent} from './_components/classes/manage-classes/manage-classes.component';
+import {ManageAssignmentsComponent} from './_components/assignments/manage-assignments/manage-assignments.component';
 import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 
@@ -26,6 +27,8 @@ const routes: Routes = [
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'my-classes', component: MyClassesComponent, canActivate: [AuthGuard]},
     {path: 'manage-classes', component: ManageClassesComponent, canActivate: [AuthGuard], data: { roles: ['teacher', 'admin'] }
+    },
+    {path: 'manage-assignments', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: { roles: ['teacher', 'admin'] }
     },
     {path: '', component: HomeComponent, canActivate: [AuthGuard]},
     {path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard]},

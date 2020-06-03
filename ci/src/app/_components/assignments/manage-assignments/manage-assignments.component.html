@@ -1,0 +1,43 @@
+<div class="profile-assignments">
+    <mat-card>
+        <span class="title">Manage Assignments</span>
+        <form novalidate #form="ngForm">
+            <div class="table-responsive">
+                <table matSort (matSortChange)="sortData($event)" class="table">
+                    <thead>
+                    <tr>
+                        <th mat-sort-header="id" scope="col">ID</th>
+                        <th mat-sort-header="name" scope="col">Name</th>
+                        <th mat-sort-header="due_date" scope="col">Due Date</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="background: #999999;">
+                        <td>
+                            <input type="number" min="0" name="id" id="id-filter" [(ngModel)]="id" [value]="" style="width: 48px;">
+                        </td>
+                        <td>
+                            <input type="text" name="name" id="name-filter" [(ngModel)]="name" [value]="" style="width: 100%;">
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <button class="btn btn-dark" style="margin-right: 8px;" (click)="onAddAssignment()">Add Assignment</button>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let item of assignments | tableFilter: form.value">
+                        <th scope="row">{{item.id}}</th>
+                        <td>{{item.name}}</td>
+                        <td>{{item.due_date}}</td>
+                        <td class="text-right">
+                            <button class="btn btn-dark" style="margin-right: 8px;" (click)="onEditAssignment(item)">Edit</button>
+                            <button class="btn btn-danger" type="button" (click)="onDeleteAssignment(item.id)">Remove</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+    </mat-card>
+</div>

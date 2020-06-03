@@ -126,7 +126,8 @@ class Application extends Model
         if (is_array($request['unit'])) {
             foreach ($request['unit'] as $key => $value) {
                 $unit = Unit::where('id', $key)->first();
-                if (!$unit || DB::table('application_has_models')->where('model_type', 'level')->where('model_id', $unit->level_id)->count() > 0) {
+                if (!$unit || DB::table('application_has_models')->where('app_id', $this->id)
+                        ->where('model_type', 'level')->where('model_id', $unit->level_id)->count() > 0) {
                     continue;
                 }
                 DB::table('application_has_models')->insert(
@@ -138,10 +139,12 @@ class Application extends Model
             foreach ($request['topic'] as $key => $value) {
                 $topic = Topic::where('id', $key)->first();
                 if (!$topic || !$topic->unit ||
-                    DB::table('application_has_models')->where(function ($query) use ($topic) {
-                        $query->where('model_type', 'unit')->where('model_id', $topic->unit_id);
-                    })->orWhere(function ($query) use ($topic) {
-                        $query->where('model_type', 'level')->where('model_id', $topic->unit->level_id);
+                    DB::table('application_has_models')->where('app_id', $this->id)->where( function ($q1) use ($topic) {
+                        $q1->where(function ($q2) use ($topic) {
+                            $q2->where('model_type', 'unit')->where('model_id', $topic->unit_id);
+                        })->orWhere(function ($q3) use ($topic) {
+                            $q3->where('model_type', 'level')->where('model_id', $topic->unit->level_id);
+                        });
                     })->count() > 0) {
                     continue;
                 }
@@ -154,12 +157,14 @@ class Application extends Model
             foreach ($request['lesson'] as $key => $value) {
                 $lesson = Lesson::where('id', $key)->first();
                 if (!$lesson || !$lesson->topic || !$lesson->topic->unit ||
-                    DB::table('application_has_models')->where(function ($query) use ($lesson) {
-                        $query->where('model_type', 'topic')->where('model_id', $lesson->topic_id);
-                    })->orWhere(function ($query) use ($lesson) {
-                        $query->where('model_type', 'unit')->where('model_id', $lesson->topic->unit_id);
-                    })->orWhere(function ($query) use ($lesson) {
-                        $query->where('model_type', 'level')->where('model_id', $lesson->topic->unit->level_id);
+                    DB::table('application_has_models')->where('app_id', $this->id)->where( function ($q1) use ($lesson) {
+                        $q1->where(function ($q2) use ($lesson) {
+                            $q2->where('model_type', 'topic')->where('model_id', $lesson->topic_id);
+                        })->orWhere(function ($q3) use ($lesson) {
+                            $q3->where('model_type', 'unit')->where('model_id', $lesson->topic->unit_id);
+                        })->orWhere(function ($q4) use ($lesson) {
+                            $q4->where('model_type', 'level')->where('model_id', $lesson->topic->unit->level_id);
+                        });
                     })->count() > 0) {
                     continue;
                 }

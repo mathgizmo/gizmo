@@ -56,5 +56,13 @@ $api->group(['middleware' => 'api.auth'], function () use ($api) {
     $api->put('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@changeAssignmentDueDate');
     $api->delete('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@deleteAssignmentFromClass');
 
+    $api->get('/assignments', 'App\Http\APIControllers\ApplicationController@all');
+    $api->post('/assignments', 'App\Http\APIControllers\ApplicationController@store');
+    $api->put('/assignments/{app_id}', 'App\Http\APIControllers\ApplicationController@update');
+    $api->delete('/assignments/{app_id}', 'App\Http\APIControllers\ApplicationController@delete');
+    $api->get('/assignments/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');
+
+    $api->get('/available-icons', 'App\Http\APIControllers\ApplicationController@getAvailableIcons');
+
 });
 
