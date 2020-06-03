@@ -34,14 +34,29 @@ class AuthController extends Controller
         $student_id = JWTAuth::getPayload($token)->get('sub');
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student_id);
         $student = Student::find($student_id);
-        $question_num = $student->question_num?:5;
-        $user_id = $student->id;
+        $student->question_num = $student->question_num ?: 5;
         if (!$student->app_id) {
             $student->app_id = ClassOfStudents::first()->applications()->first()->id;
             $student->save();
         }
         $app_id = $student->app_id;
-        return $this->success(compact('token', 'question_num', 'user_id', 'app_id'));
+        $role = 'student';
+        if ($student->is_teacher) {
+            $role = 'teacher';
+        }
+        if ($student->is_admin) {
+            $role = 'admin';
+        }
+        $user = json_encode([
+            'user_id' => $student->id,
+            'username' => $student->name,
+            'first_name' => $student->first_name,
+            'last_name' => $student->last_name,
+            'email' => $student->email,
+            'role' => $role,
+            'question_num' => $student->question_num
+        ]);
+        return $this->success(compact('token', 'app_id', 'user'));
     }
 
     public function register(Request $request)
@@ -70,11 +85,15 @@ class AuthController extends Controller
             'email' => $credentials['email'],
             'password' => bcrypt($credentials['password']),
         ]);
-        if($result) {
+        if ($result) {
             DB::table('classes_students')->insert([
                 'class_id' => 1,
                 'student_id' => $result->id
             ]);
+            $app = Application::where('id', 1)->first();
+            if ($app) {
+                Student::where('id', $result->id)->update(['app_id' => $app->id]);
+            }
             return $this->success($result);
         }
         return $this->success($error);

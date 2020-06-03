@@ -1,0 +1,57 @@
+<h2 mat-dialog-title class="subtitle hide">Assignments!</h2>
+<mat-dialog-content *ngIf="!addAssignment" class="dialog-content">
+    <div class="subtitle text-center">Assignments of {{class.name}}</div>
+    <form novalidate #form="ngForm">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="id" scope="col">ID</th>
+                    <th mat-sort-header="name" scope="col">Name</th>
+                    <th mat-sort-header="due_date" scope="col">Due Date</th>
+                    <th class="text-right">
+                        <button class="btn btn-dark" style="margin-right: 8px;" (click)="addAssignment=!addAssignment">Add Assignment</button>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of assignments">
+                    <th scope="row">{{item.id}}</th>
+                    <td>{{item.name}}</td>
+                    <td style="width: 100px;">
+                        <input type="date" name="due_date" #dueDate [value]="item.due_date" (change)="onDueDateChanged(item, dueDate.value)" class="form-control" />
+                    </td>
+                    <td class="text-right">
+                        <button class="btn btn-danger" type="button" (click)="onDeleteAssignment(item)">Remove</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-content *ngIf="addAssignment" class="dialog-content">
+    <div class="subtitle text-center">Select Assignments for {{class.name}}</div>
+    <form novalidate #form="ngForm">
+        <mat-form-field class="name-search">
+            <input matInput
+                   name="name"
+                   pattern="[a-zA-Z0-9]{2,255}"
+                   placeholder="Search Assignment by Name..."
+                   [(ngModel)]="nameFilter"
+                   class="answer" />
+        </mat-form-field>
+        <div class="classes-list">
+            <div class="class-list-item" *ngFor="let item of available_assignments | tableFilter: form.value" (click)="onAddAssignment(item)">
+                <div class="app-img" [style.background-image]="setIcon(item.icon)"></div>
+                <div class="class-title"><strong>{{item.name}}</strong></div>
+                <div class="button-container">
+                    <button class="button" mat-stroked-button>Select</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class="button" type="button">Cancel</button>
+</mat-dialog-actions>

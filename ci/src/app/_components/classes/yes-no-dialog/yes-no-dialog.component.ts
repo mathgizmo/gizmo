@@ -4,14 +4,14 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../home/topic/lesson/dialog/base-dialog.component';
 
 @Component({
-    selector: 'unsubscribe-dialog',
-    templateUrl: 'unsubscribe-dialog.component.html',
-    styleUrls: ['unsubscribe-dialog.component.scss']
+    selector: 'yes-no-dialog',
+    templateUrl: 'yes-no-dialog.component.html',
+    styleUrls: ['yes-no-dialog.component.scss']
 })
-export class UnsubscribeDialogComponent extends BaseDialogComponent<UnsubscribeDialogComponent> {
+export class YesNoDialogComponent extends BaseDialogComponent<YesNoDialogComponent> {
 
     constructor(
-        public dialogRef: MatDialogRef<UnsubscribeDialogComponent>,
+        public dialogRef: MatDialogRef<YesNoDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
     }

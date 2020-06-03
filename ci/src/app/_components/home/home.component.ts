@@ -4,7 +4,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import { flatMap } from 'rxjs/operators';
 import { Observable, Subscriber } from 'rxjs';
 
-import {TopicService, TrackingService} from '../../_services/index';
+import {AuthenticationService, TopicService, TrackingService} from '../../_services/index';
 import {environment} from '../../../environments/environment';
 
 @Component({
@@ -20,11 +20,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     constructor(private topicService: TopicService,
                 private trackingService: TrackingService,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer,
+                private authenticationService: AuthenticationService) {
     }
 
     ngOnInit() {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const user = this.authenticationService.userValue;
         const result = this.topicService.getTopics().pipe(
             flatMap(topicsTree => {
                 this.topicsTree = topicsTree;
@@ -32,8 +33,8 @@ export class HomeComponent implements OnInit, OnDestroy {
                     return new Observable<object>((subscriber: Subscriber<object>) => subscriber.next({
                         'id': +localStorage.getItem('last-visited-unit-id')
                     }));
-                } else if (currentUser && currentUser.user_id > 0) {
-                    return this.trackingService.getLastVisitedUnit(currentUser.user_id);
+                } else if (user && user.user_id > 0) {
+                    return this.trackingService.getLastVisitedUnit(user.user_id);
                 } else {
                     return new Observable<void>(observer => observer.complete());
                 }
@@ -77,19 +78,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                 }
             }
         });
-        /* old unused scroll pt.1/2
-        setTimeout(() => {
-            if (!isNaN(+localStorage.getItem('home-scroll'))) {
-                window.scroll(0, +localStorage.getItem('home-scroll'));
-            }
-        }, 10); */
     }
 
     ngOnDestroy() {
-        /* old unused scroll pt.2/2
-        const doc = document.documentElement;
-        const top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-        localStorage.setItem('home-scroll', JSON.stringify(top)); */
     }
 
     setTopicIcon(image) {

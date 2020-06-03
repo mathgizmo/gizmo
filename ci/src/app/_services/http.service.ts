@@ -18,46 +18,15 @@ export class HttpService {
         private authenticationService: AuthenticationService) {
     }
 
-    post(url: string, body: any, auth: boolean = true) {
-        if (auth) {
-            // add authorization header with jwt token
-            this.headers = new HttpHeaders({
-                'Authorization': 'Bearer '
-                    + this.authenticationService.token, 'Content-Type': 'application/json'
-            });
-        } else {
-            // add authorization header with jwt token
-            this.headers = new HttpHeaders({'Content-Type': 'application/json'});
-        }
-
-        // post to api
-        return this.http.post(this.apiUrl + url, body, {headers: this.headers})
-            .pipe(
-                map((response: Response) => response['message']),
-                catchError((response: Response) => {
-                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
-                        this.authenticationService.logout();
-                        this.router.navigate(['login']);
-                    }
-                    return response['message'];
-                }),
-                finalize(() => {
-                })
-            );
-    }
-
     get(url: string, auth: boolean = true, params = null) {
         if (auth) {
-            // add authorization header with jwt token
             this.headers = new HttpHeaders({
                 'Authorization': 'Bearer '
                     + this.authenticationService.token, 'Content-Type': 'application/json'
             });
         } else {
-            // add authorization header with jwt token
             this.headers = new HttpHeaders({'Content-Type': 'application/json'});
         }
-        // get from api
         return this.http.get(this.apiUrl + url, {headers: this.headers, params: params})
             .pipe(
                 map((response: Response) => response['message']),
@@ -76,4 +45,77 @@ export class HttpService {
                 })
             );
     }
+
+    post(url: string, body: any = null, auth: boolean = true, params = null) {
+        if (auth) {
+            this.headers = new HttpHeaders({
+                'Authorization': 'Bearer '
+                    + this.authenticationService.token, 'Content-Type': 'application/json'
+            });
+        } else {
+            this.headers = new HttpHeaders({'Content-Type': 'application/json'});
+        }
+        return this.http.post(this.apiUrl + url, body, {headers: this.headers, params: params})
+            .pipe(
+                map((response: Response) => response['message']),
+                catchError((response: Response) => {
+                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    }
+                    return response['message'];
+                }),
+                finalize(() => {
+                })
+            );
+    }
+
+    put(url: string, body: any = null, auth: boolean = true, params = null) {
+        if (auth) {
+            this.headers = new HttpHeaders({
+                'Authorization': 'Bearer '
+                    + this.authenticationService.token, 'Content-Type': 'application/json'
+            });
+        } else {
+            this.headers = new HttpHeaders({'Content-Type': 'application/json'});
+        }
+        return this.http.put(this.apiUrl + url, body, {headers: this.headers, params: params})
+            .pipe(
+                map((response: Response) => response['message']),
+                catchError((response: Response) => {
+                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    }
+                    return response['message'];
+                }),
+                finalize(() => {
+                })
+            );
+    }
+
+    delete(url: string, auth: boolean = true, params = null) {
+        if (auth) {
+            this.headers = new HttpHeaders({
+                'Authorization': 'Bearer '
+                    + this.authenticationService.token, 'Content-Type': 'application/json'
+            });
+        } else {
+            this.headers = new HttpHeaders({'Content-Type': 'application/json'});
+        }
+        return this.http.delete(this.apiUrl + url, {headers: this.headers, params: params})
+            .pipe(
+                map((response: Response) => response['message']),
+                catchError((response: Response) => {
+                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    }
+                    return response['message'];
+                }),
+                finalize(() => {
+                })
+            );
+    }
+
 }

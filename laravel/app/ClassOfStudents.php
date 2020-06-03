@@ -23,5 +23,12 @@ class ClassOfStudents extends Model
         return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id');
     }
 
+    public function delete()
+    {
+        DB::table('classes_applications')->where('class_id', $this->id)->delete();
+        DB::table('classes_students')->where('class_id', $this->id)->delete();
+        return parent::delete();
+    }
+
     public $timestamps = false;
 }

@@ -3,6 +3,13 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {Angular2FontawesomeModule} from 'angular2-fontawesome/angular2-fontawesome';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {SortablejsModule} from 'ngx-sortablejs';
+import {DeviceDetectorModule} from 'ngx-device-detector';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
@@ -17,12 +24,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {Angular2FontawesomeModule} from 'angular2-fontawesome/angular2-fontawesome';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {SortablejsModule} from 'ngx-sortablejs';
-import {DeviceDetectorModule} from 'ngx-device-detector';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import {MatSortModule} from '@angular/material/sort';
 
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
@@ -42,8 +44,12 @@ import {
 } from './_components/home/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent} from './_components/to-do/to-do.component';
-import {ClassesComponent} from './_components/classes/classes.component';
-import {UnsubscribeDialogComponent} from './_components/classes/unsubscribe-dialog/unsubscribe-dialog.component';
+import {YesNoDialogComponent} from './_components/classes/yes-no-dialog/yes-no-dialog.component';
+import {MyClassesComponent} from './_components/classes/my-classes/my-classes.component';
+import {ClassStudentsDialogComponent} from './_components/classes/manage-classes/class-students-dialog/class-students-dialog.component';
+import {EditClassDialogComponent} from './_components/classes/manage-classes/edit-class-dialog/edit-class-dialog.component';
+import {ManageClassesComponent} from './_components/classes/manage-classes/manage-classes.component';
+import {ClassAssignmentsDialogComponent} from './_components/classes/manage-classes/class-assignments-dialog/class-assignments-dialog.component';
 import {ResetPasswordComponent} from './_components/welcome/login/reset-password/reset-password.component';
 import {QuestionComponent} from './_components/home/topic/lesson/question/question.component';
 
@@ -51,6 +57,7 @@ import {QuestionPreviewComponent} from './_components/previews/question-preview/
 import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
 import {DraggableDirective} from './_directives/draggable.directive';
+import { TableFilterPipe } from './_pipes/index';
 
 @NgModule({
     imports: [
@@ -74,6 +81,7 @@ import {DraggableDirective} from './_directives/draggable.directive';
         MatCheckboxModule,
         MatDividerModule,
         MatButtonToggleModule,
+        MatSortModule,
         FlexLayoutModule,
         PerfectScrollbarModule,
         SortablejsModule.forRoot({animation: 150}),
@@ -96,8 +104,12 @@ import {DraggableDirective} from './_directives/draggable.directive';
         ChartComponent,
         ProfileComponent,
         ToDoComponent,
-        ClassesComponent,
-        UnsubscribeDialogComponent,
+        MyClassesComponent,
+        ManageClassesComponent,
+        YesNoDialogComponent,
+        EditClassDialogComponent,
+        ClassStudentsDialogComponent,
+        ClassAssignmentsDialogComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
@@ -105,7 +117,8 @@ import {DraggableDirective} from './_directives/draggable.directive';
         QuestionPreviewComponent,
         PlacementComponent,
         QuestionNumDialogComponent,
-        DraggableDirective
+        DraggableDirective,
+        TableFilterPipe
     ],
     entryComponents: [
         GoodDialogComponent,
@@ -114,7 +127,10 @@ import {DraggableDirective} from './_directives/draggable.directive';
         FeedbackDialogComponent,
         QuestionNumDialogComponent,
         BadChallengeDialogComponent,
-        UnsubscribeDialogComponent
+        YesNoDialogComponent,
+        EditClassDialogComponent,
+        ClassStudentsDialogComponent,
+        ClassAssignmentsDialogComponent
     ],
     providers: [
         AuthGuard,

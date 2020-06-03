@@ -1,21 +1,33 @@
 ﻿import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {User} from '../_models/user';
 
 @Injectable()
 export class AuthenticationService {
     public token: string;
+
+    private userSubject: BehaviorSubject<User>;
+    public user: Observable<User>;
+
     private readonly apiUrl = environment.apiUrl;
     private readonly baseUrl = environment.baseUrl;
     private headers?: HttpHeaders;
 
     constructor(private http: HttpClient) {
         // set token if saved in local storage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
+        this.token = localStorage.getItem('token');
         this.headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.userSubject = new BehaviorSubject<User>(user);
+        this.user = this.userSubject.asObservable();
+    }
+
+    public get userValue(): User {
+        return this.userSubject.value;
     }
 
     login(username: string, password: string): Observable<any> {
@@ -24,20 +36,21 @@ export class AuthenticationService {
             .pipe(
                 map((response: Response) => {
                     // login successful if there's a jwt token in the response
+                    const user = response && response['message'] && response['message']['user'] && JSON.parse(response['message']['user']);
+                    const app_id = response && response['message'] && response['message']['app_id'];
                     const token = response && response['message'] && response['message']['token'];
-                    const user_id = response && response['message'] && response['message']['user_id'];
                     if (token) {
                         // set token property
                         this.token = token;
                         // store username and jwt token in local storage to keep user logged in between page refreshes
-                        localStorage.setItem('currentUser',
-                            JSON.stringify({user_id: user_id, username: username, token: token}));
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('user', JSON.stringify(user));
+                        this.userSubject.next(user);
                         let question_num = 3;
-                        if (response['message'] && response['message']['question_num'] !== undefined) {
-                            question_num = response['message']['question_num'];
+                        if (user.question_num !== undefined) {
+                            question_num = user.question_num;
                         }
                         localStorage.setItem('question_num', question_num + '');
-                        const app_id = response && response['message'] && response['message']['app_id'];
                         localStorage.setItem('app_id', app_id + '');
                         // return true to indicate successful login
                         return true;
@@ -62,9 +75,10 @@ export class AuthenticationService {
     }
 
     logout(): void {
-        // clear token remove user from local storage to log user out
         this.token = null;
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        this.userSubject.next(null);
     }
 
     sendPasswordResetEmail(email: string): Observable<any> {

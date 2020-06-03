@@ -90,17 +90,19 @@ class ClassController extends Controller
         }
         $class->update($request->only('name', 'teacher_id', 'subscription_type', 'invitations'));
         $old_apps = $class->applications()->get()->keyBy('id');
-        foreach ($request['application'] as $key => $value) {
-            if ($old_apps->where('id', $key)->count() > 0) {
-                $old_apps->forget($key);
-                DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $key)
-                    ->update(['due_date' => $value['due_date']]);
-            } else {
-                DB::table('classes_applications')->insert([
-                    'class_id' => $class->id,
-                    'app_id' => $key,
-                    'due_date' => $value['due_date']
-                ]);
+        if ($request['application']) {
+            foreach ($request['application'] as $key => $value) {
+                if ($old_apps->where('id', $key)->count() > 0) {
+                    $old_apps->forget($key);
+                    DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $key)
+                        ->update(['due_date' => $value['due_date']]);
+                } else {
+                    DB::table('classes_applications')->insert([
+                        'class_id' => $class->id,
+                        'app_id' => $key,
+                        'due_date' => $value['due_date']
+                    ]);
+                }
             }
         }
         DB::table('classes_applications')

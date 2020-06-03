@@ -2,8 +2,8 @@
 	<h4 mat-dialog-title class="title">Number of correct answers</h4>
 	<div class="question">Please set the number of correct answers which you will need to complete a lesson (put 0 to answer all questions; suggested number: 3). You can change this value at any time in your profile. </div>
 	<mat-form-field class='input-container'>
-		<input matInput name='question_num' 
-		pattern='[0-9]{1,2}' [(ngModel)]='user.questionNum'  
+		<input matInput name='question_num'
+		pattern='[0-9]{1,2}' [(ngModel)]='user.question_num'
 		class='question-num-input answer' />
 	</mat-form-field>
 	<mat-dialog-actions class='buttons'>

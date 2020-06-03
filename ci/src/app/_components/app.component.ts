@@ -1,7 +1,8 @@
 ﻿import {Component} from '@angular/core';
 import {Router, NavigationEnd, ActivatedRoute} from '@angular/router';
 import {map, filter} from 'rxjs/operators';
-import {HTTPStatus} from '../_services/index';
+import {HTTPStatus, AuthenticationService} from '../_services/index';
+import {User} from '../_models/user';
 
 @Component({
     moduleId: module.id,
@@ -14,15 +15,14 @@ export class AppComponent {
     HTTPActivity: boolean;
 
     public showMenu = this.isLoggedIn();
+    public user: User;
 
     protected isLoggedIn() {
-        return !!localStorage.getItem('currentUser');
+        return !!this.user;
     }
 
-    constructor(
-        private router: Router,
-        private activatedRoute: ActivatedRoute,
-        private httpStatus: HTTPStatus) {
+    constructor(private router: Router, private activatedRoute: ActivatedRoute,
+                private httpStatus: HTTPStatus, private authenticationService: AuthenticationService) {
         this.httpStatus.getHttpStatus()
             .subscribe((status: boolean) => {
                 this.HTTPActivity = status;
@@ -39,5 +39,6 @@ export class AppComponent {
                     this.showMenu = this.isLoggedIn();
                 }
             });
+        this.authenticationService.user.subscribe(x => this.user = x);
     }
 }

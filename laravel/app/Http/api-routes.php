@@ -45,5 +45,16 @@ $api->group(['middleware' => 'api.auth'], function () use ($api) {
     $api->get('/profile/classes', 'App\Http\APIControllers\ProfileController@getClasses');
     $api->post('/profile/classes/{class_id}/subscribe', 'App\Http\APIControllers\ProfileController@subscribeClass');
     $api->post('/profile/classes/{class_id}/unsubscribe', 'App\Http\APIControllers\ProfileController@unsubscribeClass');
+
+    $api->get('/classes', 'App\Http\APIControllers\ClassController@all');
+    $api->post('/classes', 'App\Http\APIControllers\ClassController@store');
+    $api->put('/classes/{class_id}', 'App\Http\APIControllers\ClassController@update');
+    $api->delete('/classes/{class_id}', 'App\Http\APIControllers\ClassController@delete');
+    $api->get('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@getStudents');
+    $api->get('/classes/{class_id}/assignments', 'App\Http\APIControllers\ClassController@getAssignments');
+    $api->post('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@addAssignmentToClass');
+    $api->put('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@changeAssignmentDueDate');
+    $api->delete('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@deleteAssignmentFromClass');
+
 });
 

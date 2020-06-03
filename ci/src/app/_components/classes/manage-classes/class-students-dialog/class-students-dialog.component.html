@@ -1,0 +1,49 @@
+<h2 mat-dialog-title class="subtitle hide">Students!</h2>
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">Students of {{class.name}}</div>
+    <form novalidate #form="ngForm">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="id" scope="col">ID</th>
+                    <th mat-sort-header="name" scope="col">Name</th>
+                    <th mat-sort-header="first_name" scope="col">First Name</th>
+                    <th mat-sort-header="last_name" scope="col">Last Name</th>
+                    <th mat-sort-header="email" scope="col">Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="background: #999999;">
+                    <td>
+                        <input type="number" min="0" name="id" [(ngModel)]="id" [value]="" style="width: 48px;">
+                    </td>
+                    <td>
+                        <input type="text" name="name" [(ngModel)]="name" [value]="">
+                    </td>
+                    <td>
+                        <input type="text" name="first_name" [(ngModel)]="first_name" [value]="">
+                    </td>
+                    <td>
+                        <input type="text" name="last_name" [(ngModel)]="last_name" [value]="">
+                    </td>
+                    <td>
+                        <input type="text" name="email" [(ngModel)]="email" [value]="">
+                    </td>
+                </tr>
+                <tr *ngFor="let item of students | tableFilter: form.value">
+                    <th scope="row">{{item.id}}</th>
+                    <td>{{item.name}}</td>
+                    <td>{{item.first_name }}</td>
+                    <td>{{item.last_name }}</td>
+                    <td>{{item.email }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class="button" type="button">Cancel</button>
+</mat-dialog-actions>
+

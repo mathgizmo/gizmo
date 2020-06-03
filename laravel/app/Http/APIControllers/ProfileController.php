@@ -125,15 +125,16 @@ class ProfileController extends Controller
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
         }
         return $this->success([
-            'my_classes' => $my_classes->toArray(),
-            'available_classes' => $available_classes->toArray(),
+            'my_classes' => array_values($my_classes->toArray()),
+            'available_classes' => array_values($available_classes->toArray()),
         ]);
     }
 
     public function subscribeClass($class_id) {
         $student = JWTAuth::parseToken()->authenticate();
         $class = ClassOfStudents::where('id', $class_id)->first();
-        if ($class) {
+        $exists = DB::table('classes_students')->where('class_id', $class_id)->where('student_id', $student->id)->first();
+        if ($class && !$exists) {
             DB::table('classes_students')->insert([
                 'class_id' => $class_id,
                 'student_id' => $student->id

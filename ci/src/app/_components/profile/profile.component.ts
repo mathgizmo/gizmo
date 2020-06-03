@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit {
                 this.user.first_name = res['first_name'];
                 this.user.last_name = res['last_name'];
                 this.user.email = res['email'];
-                this.user.questionNum = res['question_num'];
+                this.user.question_num = res['question_num'];
                 localStorage.setItem('question_num', res['question_num']);
             });
     }
@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit {
                     this.warningMessage = res['email'][0];
                     this.badEmail = true;
                 } else {
-                    localStorage.setItem('question_num', '' + this.user.questionNum);
+                    localStorage.setItem('question_num', '' + this.user.question_num);
                     this.badEmail = false;
                 }
             });

@@ -1,4 +1,4 @@
-@import '../../../colors';
+@import '../../../../colors';
 
 .profile-classes {
   display: flex;
@@ -13,13 +13,12 @@
 
 .class-teacher, .classes-list, .search-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
   flex-wrap: wrap;
 }
 
 .classes-list {
   flex-direction: row;
+  justify-content: center;
 }
 .search-container {
   justify-content: space-between;
@@ -51,6 +50,10 @@
   justify-content: center;
 }
 
+.mat-card-actions, .mat-card-subtitle, .mat-card-content {
+  margin-bottom: 0;
+}
+
 .profile-classes > mat-card {
   margin: 10px;
   padding: 15px;
@@ -74,7 +77,7 @@
   margin-bottom: 24px;
 }
 
-.add-class-button {
+.button {
   background: #ffffff !important;
   color: $navy !important;
   font-size: 18px !important;
@@ -92,7 +95,7 @@
 }
 
 @media screen and (max-width: 1100px) {
-  .class-teacher, .button, button, .add-class-button {
+  .class-teacher, .button, button {
     font-size: 14px !important;
   }
   .class-list-item:last-child {
@@ -107,7 +110,7 @@
   .class-list-item {
     width: 90%;
   }
-  .class-teacher, .button, button, .add-class-button {
+  .class-teacher, .button, button {
     font-size: 12px !important;
   }
   .class-list-item:last-child {
@@ -128,7 +131,7 @@
   .class-list-item {
     width: 98%;
   }
-  .class-teacher, .button, button, .add-class-button {
+  .class-teacher, .button, button {
     font-size: 9px !important;
   }
 }

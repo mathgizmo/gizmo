@@ -1,72 +1,17 @@
 ﻿import {Injectable} from '@angular/core';
 import {map, catchError} from 'rxjs/operators';
 
-import {User} from '../_models/index';
 import {HttpService} from './http.service';
 
 @Injectable()
-export class UserService {
+export class ClassesManagementService {
 
     constructor(
         private http: HttpService) {
     }
 
-    public getProfile() {
-        return this.http.get('/profile')
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
-    }
-
-    public changeProfile(user: User) {
-        const request = {
-            name: user.username,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-            question_num: user.question_num
-        };
-        return this.http.post('/profile', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
-    }
-
-    public changePassword(newPassword: string, confirmedPassword: string) {
-        const request = {
-            password: newPassword,
-            confirm_password: confirmedPassword
-        };
-        return this.http.post('/profile', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
-    }
-
-    public changeApplication(appId: number) {
-        const request = {
-            app_id: appId,
-        };
-        return this.http.post('/profile/application/', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
-    }
-
-    public getApplications() {
-        return this.http.get('/profile/application')
+    public getClasses() {
+        return this.http.get('/classes')
             .pipe(
                 map((response: Response) => {
                     return response['items'];
@@ -78,8 +23,34 @@ export class UserService {
             );
     }
 
-    public getClasses() {
-        return this.http.get('/profile/classes')
+    public addClass(item) {
+        return this.http.post('/classes/', item)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public updateClass(class_id, item) {
+        return this.http.put('/classes/' + class_id, item)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public deleteClass(class_id) {
+        return this.http.delete('/classes/' + class_id)
             .pipe(
                 catchError(error => {
                     console.log(error);
@@ -88,11 +59,21 @@ export class UserService {
             );
     }
 
-    public subscribeClass(classId: number) {
-        const request = {
-            class_id: classId,
-        };
-        return this.http.post('/profile/classes/' + classId + '/subscribe', request)
+    public getStudents(class_id) {
+        return this.http.get('/classes/' + class_id + '/students')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public getAssignments(class_id) {
+        return this.http.get('/classes/' + class_id + '/assignments')
             .pipe(
                 catchError(error => {
                     console.log(error);
@@ -101,11 +82,8 @@ export class UserService {
             );
     }
 
-    public unsubscribeClass(classId: number) {
-        const request = {
-            class_id: classId,
-        };
-        return this.http.post('/profile/classes/' + classId + '/unsubscribe', request)
+    public changeAssignmentDueDate(class_id, item) {
+        return this.http.put('/classes/' + class_id + '/assignments/' + item.id, item)
             .pipe(
                 catchError(error => {
                     console.log(error);
@@ -113,4 +91,25 @@ export class UserService {
                 })
             );
     }
+
+    public addAssignmentToClass(class_id, app_id) {
+        return this.http.post('/classes/' + class_id + '/assignments/' + app_id)
+            .pipe(
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    public deleteAssignmentFromClass(class_id, app_id) {
+        return this.http.delete('/classes/' + class_id + '/assignments/' + app_id)
+            .pipe(
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
 }
