@@ -55,14 +55,17 @@
         <div class="d-flex flex-column">
             <h1>Health Numeracy Project</h1>
             <p class="lead">Master Statistics - the easy way</p>
-            <p><a class="btn btn-dark btn-lg" href="https://www.healthnumeracyproject.com/gizmo/welcome" role="button">Get Started</a></p>
-        </div>
-        <div class="links">
-            @if (Auth::guest())
-                <a href="{{ url('/login') }}">Login as Admin</a>
-            @else
-                <a href="{{ url('/home') }}">Show Admin Dashboard</a>
-            @endif
+            <p>
+                @if (Auth::guest())
+                    <a class="btn btn-dark btn-lg" href="{{ url('/login') }}" role="button">
+                        Login
+                    </a>
+                @else
+                    <a class="btn btn-dark btn-lg" href="{{ url('/home') }}" role="button">
+                        Show Dashboard
+                    </a>
+                @endif
+            </p>
         </div>
     </div>
 </div>
