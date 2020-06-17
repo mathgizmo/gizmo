@@ -47,7 +47,7 @@
                                 Manage Units
                             </a>
                             <a class="nav-link" href="{{ url('/levels') }}">
-                                Manage Levels
+                                Manage Modules
                             </a>
                             <a class="nav-link" href="{{ url('/placements') }}">
                                 Manage Placements

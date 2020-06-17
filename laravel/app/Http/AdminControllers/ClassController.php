@@ -70,8 +70,7 @@ class ClassController extends Controller
         }
         return view('classes.edit', [
             'class' => $class,
-            'applications' => $class->applications()->get(),
-            'students' => $class->students()->orderBy('last_name', 'ASC')->orderBy('name', 'ASC')->get()
+            'applications' => $class->applications()->get()
         ]);
     }
 
@@ -115,11 +114,21 @@ class ClassController extends Controller
     public function destroy($id)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        if ($id == 1) {
-            abort('403', 'Default class can\'t be deleted!');
-        }
         ClassOfStudents::where('id', $id)->delete();
         return redirect()->route('classes.index')->with(array('message'=> 'Deleted successfully'));
+    }
+
+    public function getStudents($class_id)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $class = ClassOfStudents::where('id', $class_id)->first();
+        if (!$class) {
+            abort('404', 'Class Not Exists!');
+        }
+        return view('classes.students.index', [
+            'class' => $class,
+            'students' => $class->students()->orderBy('last_name', 'ASC')->orderBy('name', 'ASC')->get()
+        ]);
     }
 
 }

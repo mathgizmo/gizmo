@@ -14,7 +14,6 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
 
     assignment = {
         'name': '',
-        'due_date': null,
         'icon': null,
         'tree': null
     };

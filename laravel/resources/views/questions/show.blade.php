@@ -13,7 +13,7 @@
         <div class="card-body p-0">
             <div class="row mt-3">
                 <div class="col-md-2 form-control-label ml-3 font-weight-bold">
-                    <label>Level</label>
+                    <label>Module</label>
                 </div>
                 <div class="col-md-8">
                     <p class="form-control-static">{{$question->ltitle}}</p>

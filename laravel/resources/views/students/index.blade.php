@@ -111,7 +111,7 @@
                             <td style="max-width: 40px;">{{ $student->is_teacher ? 'Yes' : 'No' }}</td>
                             <td class="flex flex-row justify-content-end mb-2">
                                 <div class="btn-group">
-                                    <a href="{{ route('students.edit', $student->id) }}" class="btn btn-info">Edit</a>
+                                    <a href="{{ route('students.edit', $student->id) }}" class="btn btn-dark">Edit</a>
                                 </div>
                                 <form action="{{ route('students.delete', $student->id) }}"
                                       method="POST" style="display: inline;"

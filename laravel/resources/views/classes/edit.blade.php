@@ -49,7 +49,6 @@
                     </div>
                 </div>
 
-                @if($class->id !== 1)
                 <div class="form-group row mt-3 {{ $errors->has('subscription_type') ? ' has-error' : '' }}">
                     <label for="subscription_type" class="col-md-2 form-control-label ml-3 font-weight-bold">Subscription Type</label>
                     <div class="col-md-8">
@@ -67,7 +66,6 @@
                                   placeholder="Please enter comma separated email list">{{ old('invitations', $class->invitations) }}</textarea>
                     </div>
                 </div>
-                @endif
 
                 <div class="form-group row mt-3">
                     <label for="application-input" class="col-md-2 form-control-label ml-3 font-weight-bold">Assignments</label>
@@ -89,24 +87,6 @@
                         </ul>
                     </div>
                 </div>
-
-                @if($class->id !== 1)
-                <div class="form-group row mt-3">
-                    <label class="col-md-2 form-control-label ml-3 font-weight-bold">Students</label>
-                    <div class="col-md-8">
-                        <ul id="students" class="list-group">
-                            @foreach($students as $student)
-                                <li class="list-group-item d-flex flex-row justify-content-between align-items-center">
-                                    <a href="{{route('students.edit', $student->id)}}" target="_blank" class="font-weight-bold text-decoration-none text-dark">
-                                        {{$student->first_name.' '.$student->last_name.' ('.$student->name.')'}}
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                @endif
-
             </div>
 
             <div class="card-footer">

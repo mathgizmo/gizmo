@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Gizmo - Admin: Manage Levels')
+@section('title', 'Gizmo - Admin: Manage Modules')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active">Manage Levels</li>
+    <li class="breadcrumb-item active">Manage Modules</li>
 @endsection
 
 @section('content')
@@ -15,8 +15,8 @@
     @endif
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row justify-content-between">
-            Manage Levels
-            <a class="btn btn-dark btn-sm" href="{{ route('levels.create') }}">+ add level</a>
+            Manage Modules
+            <a class="btn btn-dark btn-sm" href="{{ route('levels.create') }}">+ add module</a>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">

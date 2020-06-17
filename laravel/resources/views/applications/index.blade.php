@@ -38,6 +38,9 @@
                                 <i class="fa fa-fw fa-sort{{ (request()->sort == 'name' && request()->order == 'asc') ? '-up' : '' }}{{ (request()->sort == 'name' && request()->order == 'desc') ? '-down' : '' }}"></i>
                             </a>
                         </th>
+                        <th style="min-width: 120px;">
+                            Teacher
+                        </th>
                         <th style="min-width: 180px;"></th>
                     </tr>
                     </thead>
@@ -52,6 +55,7 @@
                         <td>
                             <input type="text" name="name" id="name-filter" style="width: 100%;">
                         </td>
+                        <td></td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -64,6 +68,7 @@
                             </td>
                             <td>{{$application->id}}</td>
                             <td>{{$application->name}}</td>
+                            <td>{{$application->teacher ? $application->teacher->name : ''}}</td>
                             <td class="text-right">
                                 <a class="btn btn-dark" href="{{ route('applications.edit', $application->id) }}">Edit</a>
                                 <form action="{{ route('applications.destroy', $application->id) }}"

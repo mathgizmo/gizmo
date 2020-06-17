@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Gizmo - Admin: Manage Levels')
+@section('title', 'Gizmo - Admin: Manage Modules')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('levels.index')  }}">Manage Levels</a></li>
-    <li class="breadcrumb-item active">Create Level</li>
+    <li class="breadcrumb-item"><a href="{{ route('levels.index')  }}">Manage Modules</a></li>
+    <li class="breadcrumb-item active">Create Module</li>
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
         </div>
     @endif
     <div class="card">
-        <div class="card-header font-weight-bold d-flex flex-row">Create Level</div>
+        <div class="card-header font-weight-bold d-flex flex-row">Create Module</div>
         <form role="form" action="{{ route('levels.store') }}" method="POST">
             <div class="card-body p-0">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -25,7 +25,7 @@
 
                     <div class="col-md-8">
                         <textarea id="title" class="form-control" name="title"
-                                  placeholder="Enter Level Title">{{ old('title') }}</textarea>
+                                  placeholder="Enter Title">{{ old('title') }}</textarea>
 
                         @if ($errors->has('title'))
                             <span class="form-text">
@@ -71,8 +71,7 @@
                     </div>
                 </div>
                 <div class="form-group row{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Level in
-                        development</label>
+                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Module in development</label>
                     <div class="col-md-8 radio">
                         <label for="type" class="col-md-3"> <input checked="checked" type="checkbox" name="dev_mode"
                                                                    value="1"></label>

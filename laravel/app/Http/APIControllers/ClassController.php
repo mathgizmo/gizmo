@@ -5,6 +5,8 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\ClassOfStudents;
 use App\Http\Requests\Request;
+use App\Progress;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use JWTAuth;
@@ -75,8 +77,32 @@ class ClassController extends Controller
     public function getStudents($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
-            $items = $class->students()->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email'])->toArray();
-            return $this->success(['items' => array_values($items)]);
+            $students = $class->students()->orderBy('name')->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email']);
+            foreach ($students as $student) {
+                $items = Application::whereHas('classes', function ($q1) use ($student, $class_id) {
+                    $q1->whereHas('students', function ($q2) use ($student) {
+                        $q2->where('students.id', $student->id);
+                    })->where('classes.id', $class_id);
+                })->get();
+                $finished_count = 0; $past_due_count = 0;
+                foreach ($items as $item) {
+                    $item->icon = $item->icon();
+                    $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                            ->where('student_id', $student->id)->count() > 0;
+                    $item->due_date = $item->getDueDate($class_id);
+                    $item->is_past_due = !$item->is_completed && $item->due_date < date("Y-m-d");
+                    if ($item->is_completed) {
+                        $finished_count++;
+                    }
+                    if ($item->is_past_due) {
+                        $past_due_count++;
+                    }
+                }
+                $student->assignments = array_values($items->sortBy('due_date')->toArray());
+                $student->assignments_finished_count = $finished_count;
+                $student->assignments_past_due_count = $past_due_count;
+            }
+            return $this->success(['items' => array_values($students->toArray())]);
         }
         return $this->error('Error.');
     }

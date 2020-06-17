@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('students/delete/{student}', 'StudentController@delete')->name('students.delete');
 
     Route::resource('classes', 'ClassController', ['except' => ['show']]);
+    Route::get('classes/{class_id}/students', 'ClassController@getStudents')->name('classes.students.index');
 
     Route::get('settings', 'SettingController@index')->name('settings.index');
     Route::patch('settings', 'SettingController@update')->name('settings.update');

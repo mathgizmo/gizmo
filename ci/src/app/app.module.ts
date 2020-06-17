@@ -47,6 +47,7 @@ import {ToDoComponent} from './_components/to-do/to-do.component';
 import {YesNoDialogComponent} from './_components/classes/yes-no-dialog/yes-no-dialog.component';
 import {MyClassesComponent} from './_components/classes/my-classes/my-classes.component';
 import {ClassStudentsDialogComponent} from './_components/classes/manage-classes/class-students-dialog/class-students-dialog.component';
+import {StudentAssignmentsDialogComponent} from './_components/classes/manage-classes/class-students-dialog/student-assignments-dialog/student-assignments-dialog.component';
 import {EditClassDialogComponent} from './_components/classes/manage-classes/edit-class-dialog/edit-class-dialog.component';
 import {ManageClassesComponent} from './_components/classes/manage-classes/manage-classes.component';
 import {ClassAssignmentsDialogComponent} from './_components/classes/manage-classes/class-assignments-dialog/class-assignments-dialog.component';
@@ -110,6 +111,7 @@ import { TableFilterPipe } from './_pipes/index';
         YesNoDialogComponent,
         EditClassDialogComponent,
         ClassStudentsDialogComponent,
+        StudentAssignmentsDialogComponent,
         ClassAssignmentsDialogComponent,
         ManageAssignmentsComponent,
         EditAssignmentDialogComponent,
@@ -133,6 +135,7 @@ import { TableFilterPipe } from './_pipes/index';
         YesNoDialogComponent,
         EditClassDialogComponent,
         ClassStudentsDialogComponent,
+        StudentAssignmentsDialogComponent,
         ClassAssignmentsDialogComponent,
         EditAssignmentDialogComponent
     ],

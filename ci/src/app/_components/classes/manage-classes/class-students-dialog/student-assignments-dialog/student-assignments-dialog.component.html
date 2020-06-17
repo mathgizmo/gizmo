@@ -1,0 +1,29 @@
+<h2 mat-dialog-title class="subtitle hide">Assignments!</h2>
+<mat-dialog-content class="dialog-content">
+    <div class="subtitle text-center">Assignments of {{student.name}}</div>
+    <form novalidate #form="ngForm">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="id" scope="col">ID</th>
+                    <th mat-sort-header="name" scope="col">Name</th>
+                    <th mat-sort-header="due_date" scope="col">Due Date</th>
+                    <th mat-sort-header="is_completed" scope="col">Is Completed</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of assignments" [class.completed]="item.is_completed" [class.past-due]="item.is_past_due">
+                    <th scope="row">{{item.id}}</th>
+                    <td>{{item.name}}</td>
+                    <td>{{item.due_date}}</td>
+                    <td>{{item.is_completed ? 'Yes' : 'No'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class="button" type="button">Cancel</button>
+</mat-dialog-actions>

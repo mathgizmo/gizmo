@@ -3,7 +3,13 @@
     <div class="subtitle text-center">{{title}}</div>
         <div class="form-group">
             <label for="name">Class Name:</label>
-            <input id="name" name="name" placeholder="Class Name" [(ngModel)]="class.name" class="form-control" />
+            <input id="name" name="name" placeholder="Class Name" [(ngModel)]="class.name" #name="ngModel" required class="form-control" />
+        </div>
+        <div *ngIf="name.invalid && (name.dirty || name.touched)"
+             class="alert alert-danger">
+            <div *ngIf="name.errors.required">
+                Name is required.
+            </div>
         </div>
         <div class="form-group">
             <label for="subscription_type">Subscription Type:</label>
@@ -22,6 +28,7 @@
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Cancel</button>
-    <button mat-button [mat-dialog-close]="class" class='button moving-forward-button continue-button' type="button">Save</button>
+    <button *ngIf="name.invalid" mat-button class='button moving-forward-button continue-button' type="button" disabled>Save</button>
+    <button *ngIf="!name.invalid" mat-button [mat-dialog-close]="class" class='button moving-forward-button continue-button' type="button">Save</button>
 </mat-dialog-actions>
 

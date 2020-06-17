@@ -30,7 +30,7 @@
                 Manage Units
             </a>
             <a class="btn btn-outline-dark mr-2 mb-2" href="{{ url('/levels') }}">
-                Manage Levels
+                Manage Modules
             </a>
             <a class="btn btn-outline-dark mr-2 mb-2" href="{{ url('/placements') }}">
                 Manage Placements

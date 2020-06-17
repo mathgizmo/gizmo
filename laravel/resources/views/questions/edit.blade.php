@@ -17,7 +17,7 @@
                 <input type="hidden" name="_type" value="update" id="update-type">
 
                 <div class="form-group row mt-3 row {{ $errors->has('level_id') ? ' has-error' : '' }}">
-                    <label for="level_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Level</label>
+                    <label for="level_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Module</label>
 
                     <div class="col-md-8">
                         <select class="form-control" name="level_id" id="level_id">

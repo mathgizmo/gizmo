@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Gizmo - Admin: Manage Levels')
+@section('title', 'Gizmo - Admin: Manage Modules')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('levels.index')  }}">Manage Levels</a></li>
-    <li class="breadcrumb-item active">Edit Level</li>
+    <li class="breadcrumb-item"><a href="{{ route('levels.index')  }}">Manage Modules</a></li>
+    <li class="breadcrumb-item active">Edit Module</li>
 @endsection
 
 @section('content')
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row">
-            Edit Level
+            Edit Module
         </div>
         <form role="form"
               action="{{ route('levels.update', $level->id) }}" method="POST">
@@ -49,8 +49,7 @@
                     </div>
                 </div>
                 <div class="form-group row{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Unit in
-                        development</label>
+                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Module in development</label>
                     <div class="col-md-8 radio">
                         <label for="type" class="col-md-3"> <input
                                     {{ ($level->dev_mode == true) ? 'checked="checked"' : ''}} type="checkbox"

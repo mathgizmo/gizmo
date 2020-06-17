@@ -11,6 +11,10 @@ class Application extends Model
 
     // protected $fillable = ['id', 'name'];
 
+    public function teacher() {
+        return $this->belongsTo('App\Student', 'teacher_id');
+    }
+
     public function students() {
         return $this->hasMany('App\Student', 'app_id', 'id');
     }
@@ -49,7 +53,7 @@ class Application extends Model
                 return $model->due_date;
             }
         }
-        return $this->due_date;
+        return null;
     }
 
     public function getTree() {
@@ -115,63 +119,68 @@ class Application extends Model
     }
 
     public function updateTree($request) {
-        DB::table('application_has_models')->where('app_id', $this->id)->delete();
-        if (is_array($request['level'])) {
-            foreach ($request['level'] as $key => $value) {
-                DB::table('application_has_models')->insert(
-                    ['app_id' => $this->id, 'model_type' => 'level', 'model_id' => $key]
-                );
-            }
-        }
-        if (is_array($request['unit'])) {
-            foreach ($request['unit'] as $key => $value) {
-                $unit = Unit::where('id', $key)->first();
-                if (!$unit || DB::table('application_has_models')->where('app_id', $this->id)
-                        ->where('model_type', 'level')->where('model_id', $unit->level_id)->count() > 0) {
-                    continue;
+        try {
+            DB::table('application_has_models')->where('app_id', $this->id)->delete();
+            if (is_array($request['level'])) {
+                foreach ($request['level'] as $key => $value) {
+                    DB::table('application_has_models')->insert(
+                        ['app_id' => $this->id, 'model_type' => 'level', 'model_id' => $key]
+                    );
                 }
-                DB::table('application_has_models')->insert(
-                    ['app_id' => $this->id, 'model_type' => 'unit', 'model_id' => $key]
-                );
             }
-        }
-        if (is_array($request['topic'])) {
-            foreach ($request['topic'] as $key => $value) {
-                $topic = Topic::where('id', $key)->first();
-                if (!$topic || !$topic->unit ||
-                    DB::table('application_has_models')->where('app_id', $this->id)->where( function ($q1) use ($topic) {
-                        $q1->where(function ($q2) use ($topic) {
-                            $q2->where('model_type', 'unit')->where('model_id', $topic->unit_id);
-                        })->orWhere(function ($q3) use ($topic) {
-                            $q3->where('model_type', 'level')->where('model_id', $topic->unit->level_id);
-                        });
-                    })->count() > 0) {
-                    continue;
+            if (is_array($request['unit'])) {
+                foreach ($request['unit'] as $key => $value) {
+                    $unit = Unit::where('id', $key)->first();
+                    if (!$unit || DB::table('application_has_models')->where('app_id', $this->id)
+                            ->where('model_type', 'level')->where('model_id', $unit->level_id)->count() > 0) {
+                        continue;
+                    }
+                    DB::table('application_has_models')->insert(
+                        ['app_id' => $this->id, 'model_type' => 'unit', 'model_id' => $key]
+                    );
                 }
-                DB::table('application_has_models')->insert(
-                    ['app_id' => $this->id, 'model_type' => 'topic', 'model_id' => $key]
-                );
             }
-        }
-        if (is_array($request['lesson'])) {
-            foreach ($request['lesson'] as $key => $value) {
-                $lesson = Lesson::where('id', $key)->first();
-                if (!$lesson || !$lesson->topic || !$lesson->topic->unit ||
-                    DB::table('application_has_models')->where('app_id', $this->id)->where( function ($q1) use ($lesson) {
-                        $q1->where(function ($q2) use ($lesson) {
-                            $q2->where('model_type', 'topic')->where('model_id', $lesson->topic_id);
-                        })->orWhere(function ($q3) use ($lesson) {
-                            $q3->where('model_type', 'unit')->where('model_id', $lesson->topic->unit_id);
-                        })->orWhere(function ($q4) use ($lesson) {
-                            $q4->where('model_type', 'level')->where('model_id', $lesson->topic->unit->level_id);
-                        });
-                    })->count() > 0) {
-                    continue;
+            if (is_array($request['topic'])) {
+                foreach ($request['topic'] as $key => $value) {
+                    $topic = Topic::where('id', $key)->first();
+                    if (!$topic || !$topic->unit ||
+                        DB::table('application_has_models')->where('app_id', $this->id)->where( function ($q1) use ($topic) {
+                            $q1->where(function ($q2) use ($topic) {
+                                $q2->where('model_type', 'unit')->where('model_id', $topic->unit_id);
+                            })->orWhere(function ($q3) use ($topic) {
+                                $q3->where('model_type', 'level')->where('model_id', $topic->unit->level_id);
+                            });
+                        })->count() > 0) {
+                        continue;
+                    }
+                    DB::table('application_has_models')->insert(
+                        ['app_id' => $this->id, 'model_type' => 'topic', 'model_id' => $key]
+                    );
                 }
-                DB::table('application_has_models')->insert(
-                    ['app_id' => $this->id, 'model_type' => 'lesson', 'model_id' => $key]
-                );
             }
+            if (is_array($request['lesson'])) {
+                foreach ($request['lesson'] as $key => $value) {
+                    $lesson = Lesson::where('id', $key)->first();
+                    if (!$lesson || !$lesson->topic || !$lesson->topic->unit ||
+                        DB::table('application_has_models')->where('app_id', $this->id)->where( function ($q1) use ($lesson) {
+                            $q1->where(function ($q2) use ($lesson) {
+                                $q2->where('model_type', 'topic')->where('model_id', $lesson->topic_id);
+                            })->orWhere(function ($q3) use ($lesson) {
+                                $q3->where('model_type', 'unit')->where('model_id', $lesson->topic->unit_id);
+                            })->orWhere(function ($q4) use ($lesson) {
+                                $q4->where('model_type', 'level')->where('model_id', $lesson->topic->unit->level_id);
+                            });
+                        })->count() > 0) {
+                        continue;
+                    }
+                    DB::table('application_has_models')->insert(
+                        ['app_id' => $this->id, 'model_type' => 'lesson', 'model_id' => $key]
+                    );
+                }
+            }
+            return true;
+        } catch (\Exception $e) {
+            return false;
         }
     }
 

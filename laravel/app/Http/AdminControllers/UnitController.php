@@ -87,7 +87,7 @@ class UnitController extends Controller
             ->join('level', 'unit.level_id', '=', 'level.id')
             ->select('unit.*', 'level.title as ltitle', 'level.id as lid')
             ->where('unit.id', '=', $id)->first();
-        $levels = DB::table('level')->select('id', 'title')->where('id', $unit->lid)->get();
+        $levels = DB::select('select * from level');
         $total_unit = Unit::all()->count();
         return view('units.edit', [
             'levels'=>$levels,

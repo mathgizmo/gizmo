@@ -5,8 +5,8 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\Http\Requests\Request;
 use Illuminate\Support\Facades\DB;
-use Validator;
-use JWTAuth;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ApplicationController extends Controller
 {
@@ -26,13 +26,19 @@ class ApplicationController extends Controller
 
     public function store() {
         try {
+            $validator = Validator::make(
+                request()->all(),
+                [
+                    'name' => 'required|max:255',
+                ]
+            );
+            if ($validator->fails()) {
+                return $this->error($validator->messages());
+            }
             $app = new Application();
             $app->name = request('name');
             if (request('icon')) {
                 $app->icon = request('icon');
-            }
-            if (request('due_date')) {
-                $app->due_date = request('due_date');
             }
             $app->teacher_id = $this->user->id;
             $app->save();
@@ -46,6 +52,15 @@ class ApplicationController extends Controller
 
     public function update($app_id) {
         try {
+            $validator = Validator::make(
+                request()->all(),
+                [
+                    'name' => 'required|max:255',
+                ]
+            );
+            if ($validator->fails()) {
+                return $this->error($validator->messages());
+            }
             $app = Application::where('id', $app_id)->where('teacher_id', $this->user->id)->first();
             if ($app) {
                 if (request()->has('name')) {

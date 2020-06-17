@@ -1,8 +1,10 @@
 import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../home/topic/lesson/dialog/base-dialog.component';
-import {Sort} from "@angular/material/sort";
+import {Sort} from '@angular/material/sort';
+import {StudentAssignmentsDialogComponent} from './student-assignments-dialog/student-assignments-dialog.component';
+import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
     selector: 'class-students-dialog',
@@ -20,7 +22,14 @@ export class ClassStudentsDialogComponent extends BaseDialogComponent<ClassStude
     public last_name: string;
     public email: string;
 
+    dialogPosition: any;
+    private isMobile = this.deviceService.isMobile();
+    private isTablet = this.deviceService.isTablet();
+    private isDesktop = this.deviceService.isDesktop();
+
     constructor(
+        public dialog: MatDialog,
+        private deviceService: DeviceDetectorService,
         public dialogRef: MatDialogRef<ClassStudentsDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
@@ -55,9 +64,19 @@ export class ClassStudentsDialogComponent extends BaseDialogComponent<ClassStude
                 case 'first_name': return compare(a.first_name, b.first_name, isAsc);
                 case 'last_name': return compare(a.last_name, b.last_name, isAsc);
                 case 'email': return compare(a.email, b.email, isAsc);
+                case  'assignments_finished_count': return compare(a.assignments_finished_count, b.assignments_finished_count, isAsc);
+                case  'assignments_past_due_count': return compare(a.assignments_past_due_count, b.assignments_past_due_count, isAsc);
                 default: return 0;
             }
         });
+    }
+
+    showAssignments(student) {
+        const dialogRef = this.dialog.open(StudentAssignmentsDialogComponent, {
+            data: { 'assignments': student.assignments, 'student': student},
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(result => {});
     }
 }
 

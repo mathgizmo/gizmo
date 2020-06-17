@@ -16,7 +16,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 <div class="form-group row mt-3 {{ $errors->has('level_id') ? ' has-error' : '' }}">
-                    <label for="level_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Level</label>
+                    <label for="level_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Module</label>
 
                     <div class="col-md-8">
                         <select class="form-control" name="level_id" id="level_id">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="form-group row{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Level in development</label>
+                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Unit in development</label>
                     <div class="col-md-8 radio">
                         <label for="type" class="col-md-3"> <input {{ ($unit->dev_mode == true) ? 'checked="checked"' : ''}} type="checkbox" name="dev_mode" value="1"></label>
                         @if ($errors->has('dev_mode'))

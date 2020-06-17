@@ -36,7 +36,7 @@ class AuthController extends Controller
         $student = Student::find($student_id);
         $student->question_num = $student->question_num ?: 5;
         if (!$student->app_id) {
-            $student->app_id = ClassOfStudents::first()->applications()->first()->id;
+            $student->app_id = Application::first()->id;
             $student->save();
         }
         $app_id = $student->app_id;
@@ -86,14 +86,6 @@ class AuthController extends Controller
             'password' => bcrypt($credentials['password']),
         ]);
         if ($result) {
-            DB::table('classes_students')->insert([
-                'class_id' => 1,
-                'student_id' => $result->id
-            ]);
-            $app = Application::where('id', 1)->first();
-            if ($app) {
-                Student::where('id', $result->id)->update(['app_id' => $app->id]);
-            }
             return $this->success($result);
         }
         return $this->success($error);

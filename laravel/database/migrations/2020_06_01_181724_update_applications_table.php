@@ -15,7 +15,7 @@ class UpdateApplicationsTable extends Migration
     {
         Schema::table('applications', function (Blueprint $table) {
             $table->unsignedInteger('teacher_id')->nullable();
-            $table->date('due_date')->nullable();
+            // $table->date('due_date')->nullable();
         });
 
         // create default class

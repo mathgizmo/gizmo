@@ -78,8 +78,8 @@
                             <td>{{$class->teacher ? $class->teacher->name : ''}}</td>
                             <td>{{$class->subscription_type == 'closed' ? 'Closed' : ($class->subscription_type == 'invitation' ? 'Invitation Only' : 'Open')}}</td>
                             <td class="text-right" style="min-width: 260px;">
+                                <a class="btn btn-outline-dark" href="{{ route('classes.students.index', $class->id) }}">Manage Students</a>
                                 <a class="btn btn-dark" href="{{ route('classes.edit', $class->id) }}">Edit</a>
-                                @if($class->id !== 1)
                                 <form action="{{ route('classes.destroy', $class->id) }}"
                                       method="POST" style="display: inline;"
                                       onsubmit="if(confirm('Delete? Are you sure?')) { return true } else {return false };">
@@ -87,7 +87,6 @@
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     <button class="btn btn-danger" type="submit">Delete</button>
                                 </form>
-                                @endif()
                             </td>
                         </tr>
                     @endforeach

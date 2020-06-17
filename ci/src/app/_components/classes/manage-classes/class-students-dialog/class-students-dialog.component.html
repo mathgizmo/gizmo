@@ -11,6 +11,8 @@
                     <th mat-sort-header="first_name" scope="col">First Name</th>
                     <th mat-sort-header="last_name" scope="col">Last Name</th>
                     <th mat-sort-header="email" scope="col">Email</th>
+                    <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
+                    <th mat-sort-header="assignments_past_due_count" scope="col">Past Due Assignments</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,13 +32,17 @@
                     <td>
                         <input type="text" name="email" [(ngModel)]="email" [value]="">
                     </td>
+                    <td></td>
+                    <td></td>
                 </tr>
-                <tr *ngFor="let item of students | tableFilter: form.value">
+                <tr *ngFor="let item of students | tableFilter: form.value" (click)="showAssignments(item)" style="cursor: pointer;">
                     <th scope="row">{{item.id}}</th>
                     <td>{{item.name}}</td>
                     <td>{{item.first_name }}</td>
                     <td>{{item.last_name }}</td>
                     <td>{{item.email }}</td>
+                    <td>{{item.assignments_finished_count }}</td>
+                    <td>{{item.assignments_past_due_count }}</td>
                 </tr>
                 </tbody>
             </table>

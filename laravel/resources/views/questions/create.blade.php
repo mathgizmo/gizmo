@@ -20,7 +20,7 @@
             @endif
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group row mt-3 {{ $errors->has('level_id') ? ' has-error' : '' }}">
-                    <label for="level_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Level</label>
+                    <label for="level_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Module</label>
 
                     <div class="col-md-8">
                         <select class="form-control" name="level_id" id="level_id">

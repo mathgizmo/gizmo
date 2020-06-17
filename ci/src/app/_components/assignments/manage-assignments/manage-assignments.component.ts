@@ -53,7 +53,9 @@ export class ManageAssignmentsComponent implements OnInit {
                     if (result) {
                         this.assignmentService.addAssignment(result)
                             .subscribe(item => {
-                                this.assignments.unshift(item);
+                                if (item) {
+                                    this.assignments.unshift(item);
+                                }
                             });
                     }
                 });
@@ -105,7 +107,6 @@ export class ManageAssignmentsComponent implements OnInit {
             switch (sort.active) {
                 case 'id': return compare(a.id, b.id, isAsc);
                 case 'name': return compare(a.name, b.name, isAsc);
-                case 'due_date': return compare(a.due_date, b.due_date, isAsc);
                 default: return 0;
             }
         });

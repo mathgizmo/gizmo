@@ -38,6 +38,7 @@
 }
 
 .explanation {
+	color: black;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -74,7 +75,7 @@
 			height: 70%;
 		}
 	}
-	.buttons-container { 
+	.buttons-container {
 		height: 35%;
 	}
 }

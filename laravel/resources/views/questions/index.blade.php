@@ -17,7 +17,7 @@
                 <div class="d-flex justify-content-start flex-row flex-wrap mb-2">
                     <div class="filter input-group mr-2 {{ $errors->has('level_id') ? ' has-error' : '' }}">
                         <div class="input-group-prepend">
-                            <label for="level_id" class="input-group-text">Level</label>
+                            <label for="level_id" class="input-group-text">Module</label>
                         </div>
                         <select class="form-control" name="level_id" id="level_id">
                             @if (count($levels) > 0)
