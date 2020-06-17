@@ -28,6 +28,9 @@ export class QuestionComponent implements OnInit, OnChanges, OnDestroy {
 
     private emitted_answers = null;
 
+
+    @Input() ignoreAnswer = false;
+
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         if (event.key === 'Enter') {
@@ -90,7 +93,11 @@ export class QuestionComponent implements OnInit, OnChanges, OnDestroy {
     checkAnswer() {
         // check answer only if it changes (prevent double check on Enter press)
         if (!this.isChallenge && this.emitted_answers !== this.answers) {
-            if (this.answers.length < 1 || this.answers.every(elem => elem === '') ||
+            if (this.ignoreAnswer) {
+                this.warning = false;
+                this.emitted_answers = this.answers;
+                this.onAnswered.emit(this.answers);
+            } else if (this.answers.length < 1 || this.answers.every(elem => elem === '') ||
                 (this.question.answer_mode === 'input' && this.answers.some(elem => elem === ''))) {
                 this.warning = true;
                 this.warningMessage = 'Please, answer the question!';

@@ -63,6 +63,8 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     // public warning = false;
     // public warningMessage = 'Undefined exception';
 
+    public ignoreAnswer = false; // ignore answer because user already answered this question wrong
+
     constructor(
         private router: Router,
         private topicService: TopicService,
@@ -409,6 +411,17 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     }
 
     checkAnswer(answers: string[]) {
+        if (this.ignoreAnswer) {
+            this.ignoreAnswer = false;
+            if (this.lessonTree['questions'].length) {
+                this.nextQuestion();
+            } else {
+                this.question = null;
+                this.trackingService.doneLesson(this.topic_id,
+                    this.lesson_id, this.start_time, this.weak_questions).subscribe();
+            }
+            return;
+        }
         const isCorrect = this.isCorrect(answers);
         if (isCorrect) {
             if (this.lesson_id === -1) {
@@ -481,10 +494,14 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                         }
                         return false;
                     }), explanation: this.question.explanation,
-                    showAnswers: (this.lesson_id === -1) ? false : true
+                    showAnswers: (this.lesson_id !== -1)
                 }
             });
             dialogRef.afterClosed().subscribe(result => {
+                if (result === 'show-explanation') {
+                    this.ignoreAnswer = true;
+                    return;
+                }
                 if (result) {
                     const reportDialogRef = this.dialog.open(ReportDialogComponent, {
                         // width: '800px',

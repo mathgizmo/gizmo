@@ -1,5 +1,8 @@
 <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Incorrect :(</h2>
 <mat-dialog-content class="dialog-content" id="dialog-content">
+    <div [mat-dialog-close]="'show-explanation'" class="close-button" *ngIf="explanation.trim() != '' && showExplanation" >
+        <i class="fa fa-close"></i>
+    </div>
     <img *ngIf="!showExplanation" src="./assets/images/popup_image_incorrect.svg" alt="Incorrect" class="popup-image">
     <div class="explanation" id="explanation">
         <div *ngIf="(answers.length == 1) && showAnswer" class="answer">
@@ -8,7 +11,7 @@
         </div>
         <div *ngIf="(answers.length != 1) && showAnswer" class="answer">
             <!-- Correct answers are: -->
-            A: 
+            A:
             <ul>
                 <li *ngFor="let answer of answers; let answerIndex = 'index'">
                     {{answer.value}}

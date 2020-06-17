@@ -7,6 +7,7 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
+	position: relative;
 	.popup-image {
 		height: 70%;
 		margin: 0;
@@ -66,6 +67,13 @@
 	* {
 		cursor: pointer;
 	}
+}
+
+.close-button {
+	position: absolute;
+	top: 0;
+	right: 8px;
+	cursor: pointer;
 }
 
 @media (max-height: 620px) {

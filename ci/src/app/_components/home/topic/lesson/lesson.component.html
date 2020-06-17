@@ -41,6 +41,7 @@
         <app-question
                 [question]='question'
                 [incorrectAnswersCount]='incorrect_answers'
+                [ignoreAnswer]="ignoreAnswer"
                 (onAnswered)="checkAnswer($event)"
         ></app-question>
         <!-- We need incorrectAnswersCount input to trigger OnChanges hook on wrong answer -->
