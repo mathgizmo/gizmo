@@ -114,9 +114,10 @@
         </div>
         <div *ngIf="initial_loading == 0 && lesson_id == -1 && !testout_completed">
             <div class="question-container">
-                <h2 class="subtitle">Placement test failed :(</h2>
-                <h3 class="question">Based on your responses, you have been placed in {{next_title}}. Feel free to play with
-                    earlier lessons if you feel you need more practice.</h3>
+                <!-- <h2 class="subtitle">Placement test failed :(</h2> -->
+                <h3 class="question">Based on your responses, you have been placed in {{next_title}}.
+                    <span *ngIf="next > first_lesson_id">Feel free to play with earlier lessons if you feel you need more practice.</span>
+                </h3>
             </div>
             <a
                     class="button-container"

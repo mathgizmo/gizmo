@@ -357,6 +357,7 @@ class TopicController extends Controller
         $max_questions_num = Setting::where('key', 'topic_testout_max_questions_num')->first();
         $topic['max_questions_num'] = $max_questions_num ? intval($max_questions_num->value) : 5;
         $topic['lessons_count'] = count($lessons);
+        $topic['first_lesson_id'] = $lessons[0]['id'];
         DB::connection()->setFetchMode($mode);
         return $this->success($topic);
     }

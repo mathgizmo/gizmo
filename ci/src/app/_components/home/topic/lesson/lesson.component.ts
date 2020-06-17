@@ -58,6 +58,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     public confident_value: number;
     public next_title: string;
     public testout_completed = false;
+    public first_lesson_id = 1;
 
     // public warning = false;
     // public warningMessage = 'Undefined exception';
@@ -98,6 +99,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     if (this.lesson_id === -1) {
                         this.lessons_count = +lessonTree['lessons_count'];
                         this.current_question_order_no = Math.round(this.lessons_count / 2);
+                        this.first_lesson_id = +lessonTree['first_lesson_id'];
                     }
                     this.isChallenge = lessonTree.challenge;
                     this.all_questions.splice(0, this.all_questions.length, ...lessonTree['questions']);
