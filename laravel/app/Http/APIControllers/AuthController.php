@@ -44,9 +44,6 @@ class AuthController extends Controller
         if ($student->is_teacher) {
             $role = 'teacher';
         }
-        if ($student->is_admin) {
-            $role = 'admin';
-        }
         $user = json_encode([
             'user_id' => $student->id,
             'username' => $student->name,

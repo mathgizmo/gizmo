@@ -26,9 +26,9 @@ const routes: Routes = [
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'my-classes', component: MyClassesComponent, canActivate: [AuthGuard]},
-    {path: 'manage-classes', component: ManageClassesComponent, canActivate: [AuthGuard], data: { roles: ['teacher', 'admin'] }
+    {path: 'manage-classes', component: ManageClassesComponent, canActivate: [AuthGuard], data: { roles: ['teacher'] }
     },
-    {path: 'manage-assignments', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: { roles: ['teacher', 'admin'] }
+    {path: 'manage-assignments', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: { roles: ['teacher'] }
     },
     {path: '', component: HomeComponent, canActivate: [AuthGuard]},
     {path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard]},

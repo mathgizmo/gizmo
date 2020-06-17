@@ -84,10 +84,20 @@ class ProfileController extends Controller
             $item->icon = $item->icon();
             $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
                     ->where('student_id', $student->id)->count() > 0;
-            $item->class = $item->classes()->whereHas('students', function ($q) use ($student) {
+            $item->classes = $item->classes()->whereHas('students', function ($q) use ($student) {
                 $q->where('students.id', $student->id);
-            })->first();
-            $item->due_date = $item->getDueDate($item->class ? $item->class->id : null);
+            })->get();
+            $item->class = null;
+            $item->due_date = null;
+            if ($item->classes) {
+                foreach ($item->classes as $class) {
+                    $class->due_date = $item->getDueDate($class->id);
+                    if (!$item->due_date || $class->due_date < $item->due_date) {
+                        $item->due_date = $class->due_date;
+                        $item->class = $class;
+                    }
+                }
+            }
         }
         return $this->success([
             'items' => array_values($items->sortBy('due_date')->toArray())
