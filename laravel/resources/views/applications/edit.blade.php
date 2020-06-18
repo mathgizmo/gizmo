@@ -44,21 +44,21 @@
                     <ul>
                         @foreach($tree as $level)
                             <li>
-                                <i class="expand-icon fas fa-{{empty(array_filter($level->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}"></i>
+                                <i class="expand-icon can-expand fas fa-{{empty(array_filter($level->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
                                 <input type="checkbox"
                                        name="level[{{$level->id}}]" {{$level->checked ? 'checked="checked"' : '' }} />
                                 <label class="can-expand">{{$level->text}}</label>
                                 <ul class="{{$level->collapsed ? 'collapse' : ''}}">
                                     @foreach($level->children as $unit)
                                         <li>
-                                            <i class="expand-icon fas fa-{{empty(array_filter($unit->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}"></i>
+                                            <i class="expand-icon can-expand fas fa-{{empty(array_filter($unit->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
                                             <input type="checkbox"
                                                    name="unit[{{$unit->id}}]" {{$unit->checked ? 'checked="checked"' : '' }} />
                                             <label class="can-expand">{{$unit->text}}</label>
                                             <ul class="{{$unit->collapsed ? 'collapse' : ''}}">
                                                 @foreach($unit->children as $topic)
                                                     <li>
-                                                        <i class="expand-icon fas fa-{{empty(array_filter($topic->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}"></i>
+                                                        <i class="expand-icon can-expand fas fa-{{empty(array_filter($topic->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
                                                         <input type="checkbox"
                                                                name="topic[{{$topic->id}}]" {{$topic->checked ? 'checked="checked"' : '' }} />
                                                         <label class="can-expand">{{$topic->text}}</label>
@@ -197,6 +197,16 @@
                 iconElem.classList.add('fa-plus');
             }
         });
+        function expand(iconElem) {
+            $(iconElem).next().next().next().toggleClass('collapse');
+            if (iconElem.getAttribute('data-icon') === 'plus') {
+                iconElem.classList.remove('fa-plus');
+                iconElem.classList.add('fa-minus');
+            } else {
+                iconElem.classList.remove('fa-minus');
+                iconElem.classList.add('fa-plus');
+            }
+        }
 
         $('input[type="checkbox"]').change(function (e) {
             var checked = $(this).prop("checked"),
