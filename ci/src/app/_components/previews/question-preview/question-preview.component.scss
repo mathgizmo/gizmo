@@ -1,0 +1,7 @@
+::ng-deep app-question .buttons-container, ::ng-deep #main-menu {
+  display: none !important;
+}
+
+::ng-deep app-question .question-container {
+  margin: 16px !important;
+}

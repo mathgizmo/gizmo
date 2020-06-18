@@ -575,6 +575,9 @@
 
 @section('styles')
     <style>
+        .modal-dialog {
+            min-width: 60vw !important;
+        }
         @media screen and (max-width: 600px) {
             .col-md-8, .form-group row.answer > div {
                 margin: 0 16px;

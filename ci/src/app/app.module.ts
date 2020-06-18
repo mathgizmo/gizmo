@@ -59,7 +59,7 @@ import {QuestionPreviewComponent} from './_components/previews/question-preview/
 import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
 import {DraggableDirective} from './_directives/draggable.directive';
-import { TableFilterPipe } from './_pipes/index';
+import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
 
 @NgModule({
     imports: [
@@ -123,7 +123,8 @@ import { TableFilterPipe } from './_pipes/index';
         PlacementComponent,
         QuestionNumDialogComponent,
         DraggableDirective,
-        TableFilterPipe
+        TableFilterPipe,
+        SafeHtmlPipe
     ],
     entryComponents: [
         GoodDialogComponent,
