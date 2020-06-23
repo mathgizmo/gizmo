@@ -8,11 +8,12 @@
 	justify-content: flex-start;
 	align-items: center;
 	position: relative;
-	.popup-image {
-		height: 70%;
-		margin: 0;
-		padding: 0;
-	}
+}
+
+.popup-image {
+	height: 70%;
+	margin: 0;
+	padding: 0;
 }
 
 .buttons-container {
@@ -79,9 +80,9 @@
 @media (max-height: 620px) {
 	.dialog-content {
 		height: 65%;
-		.popup-image {
-			height: 70%;
-		}
+	}
+	.popup-image {
+		height: 70%;
 	}
 	.buttons-container {
 		height: 35%;

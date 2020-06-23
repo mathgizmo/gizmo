@@ -24,9 +24,20 @@ class ApplicationController extends Controller
         $query->when($request->has('name'), function ($q) {
             return $q->where('name', 'LIKE', '%' . request('name') . '%');
         });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
+        if ($request->has('teacher')) {
+            $teacher = $request['teacher'];
+            $query->whereHas('teacher', function ($q) use ($teacher) {
+                $q->where('name', 'LIKE', '%'.$teacher.'%');
+            });
+        }
+        if ($request->has('sort') and $request->has('order')) {
+            if (request('sort') == 'teacher') {
+                $query->leftJoin('students', 'students.id', '=', 'applications.teacher_id')
+                    ->orderBy('students.name', request('order'))->select('applications.*');
+            } else {
+                $query->orderBy(request('sort'), request('order'));
+            }
+        }
         $applications = $query->get();
         return view('applications.index', ['applications' => $applications]);
     }
@@ -106,6 +117,7 @@ class ApplicationController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $app = Application::where('id', $id)->first();
+        DB::table('classes_applications')->where('app_id', $id)->delete();
         $app->deleteTree();
         $app->delete();
         return redirect('/applications')->with(array('message' => 'Deleted successfully'));

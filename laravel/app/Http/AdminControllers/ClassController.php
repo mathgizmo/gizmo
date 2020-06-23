@@ -29,8 +29,16 @@ class ClassController extends Controller
                 $q->where('name', 'LIKE', '%'.$teacher.'%');
             });
         }
+        if ($request->has('subscription_type')) {
+            $query->where('subscription_type', request('subscription_type'));
+        }
         if ($request->has('sort') and $request->has('order')) {
-            $query->orderBy(request('sort'), request('order'));
+            if (request('sort') == 'teacher') {
+                $query->leftJoin('students', 'students.id', '=', 'classes.teacher_id')
+                    ->orderBy('students.name', request('order'))->select('classes.*');
+            } else {
+                $query->orderBy(request('sort'), request('order'));
+            }
         }
         return view('classes.index', ['classes' => $query->paginate(10)->appends(Input::except('page'))]);
     }
@@ -114,6 +122,8 @@ class ClassController extends Controller
     public function destroy($id)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        DB::table('classes_applications')->where('class_id', $id)->delete();
+        DB::table('classes_students')->where('class_id', $id)->delete();
         ClassOfStudents::where('id', $id)->delete();
         return redirect()->route('classes.index')->with(array('message'=> 'Deleted successfully'));
     }

@@ -74,8 +74,8 @@ class ApplicationController extends Controller
                 }
                 $app->save();
                 parse_str(request('tree'), $tree);
-                $app->updateTree($tree);
-                return $this->success(['item' => $app]);
+                $success = $app->updateTree($tree);
+                return $this->success(['item' => $app, 'success' => $success]);
             }
         } catch (\Exception $e) {}
         return $this->error('Error.');

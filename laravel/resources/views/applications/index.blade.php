@@ -40,6 +40,9 @@
                         </th>
                         <th style="min-width: 120px;">
                             Teacher
+                            <a href="{{ route('applications.index', array_merge(request()->all(), ['sort' => 'teacher', 'order' => ((request()->sort == 'teacher' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'teacher' && request()->order == 'asc') ? '' : 'desc'))])) }}">
+                                <i class="fa fa-fw fa-sort{{ (request()->sort == 'teacher' && request()->order == 'asc') ? '-up' : '' }}{{ (request()->sort == 'teacher' && request()->order == 'desc') ? '-down' : '' }}"></i>
+                            </a>
                         </th>
                         <th style="min-width: 180px;"></th>
                     </tr>
@@ -55,7 +58,10 @@
                         <td>
                             <input type="text" name="name" id="name-filter" style="width: 100%;">
                         </td>
-                        <td></td>
+                        <td>
+                            <input type="text" name="teacher" id="teacher-filter" list="teachers-datalist" style="width: 100%;">
+                            <datalist id="teachers-datalist"></datalist>
+                        </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -100,6 +106,7 @@
             let url = new URL(window.location.href);
             const id = document.getElementById("id-filter").value;
             const name = document.getElementById("name-filter").value;
+            const teacher = document.getElementById("teacher-filter").value;
             if(id) {
                 url.searchParams.set('id', id);
             } else if (url.searchParams.get('id')) {
@@ -110,6 +117,11 @@
             } else if (url.searchParams.get('name')) {
                 url.searchParams.delete('name');
             }
+            if(teacher) {
+                url.searchParams.set('teacher', teacher);
+            } else if (url.searchParams.get('teacher')) {
+                url.searchParams.delete('teacher');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -117,7 +129,27 @@
             const url = new URL(window.location.href);
             document.getElementById("id-filter").value = url.searchParams.get('id');
             document.getElementById("name-filter").value = url.searchParams.get('name');
+            document.getElementById("teacher-filter").value = url.searchParams.get('teacher');
         }
         window.onload = initFilters;
+
+        $('#teacher-filter').keyup(function() {
+            const pattern = $('#teacher-filter').val();
+            if(pattern) {
+                $.ajax({
+                    url: "{{route('students.search')}}?pattern="+pattern+'&is_teacher=1&limit=5',
+                    type: "GET",
+                    success: function(data, textStatus, jqXHR) {
+                        const dl = document.getElementById('teachers-datalist');
+                        dl.innerHTML = '';
+                        data.forEach((item, index) => {
+                            const option = document.createElement('option');
+                            option.value = item.name;
+                            dl.appendChild(option);
+                        });
+                    }
+                });
+            }
+        });
     </script>
 @endsection

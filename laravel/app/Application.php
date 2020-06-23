@@ -121,14 +121,14 @@ class Application extends Model
     public function updateTree($request) {
         try {
             DB::table('application_has_models')->where('app_id', $this->id)->delete();
-            if (is_array($request['level'])) {
+            if ((is_array($request) ? array_key_exists('level', $request) : $request['level']) && is_array($request['level'])) {
                 foreach ($request['level'] as $key => $value) {
                     DB::table('application_has_models')->insert(
                         ['app_id' => $this->id, 'model_type' => 'level', 'model_id' => $key]
                     );
                 }
             }
-            if (is_array($request['unit'])) {
+            if ((is_array($request) ? array_key_exists('unit', $request) : $request['unit']) && is_array($request['unit'])) {
                 foreach ($request['unit'] as $key => $value) {
                     $unit = Unit::where('id', $key)->first();
                     if (!$unit || DB::table('application_has_models')->where('app_id', $this->id)
@@ -140,7 +140,7 @@ class Application extends Model
                     );
                 }
             }
-            if (is_array($request['topic'])) {
+            if ((is_array($request) ? array_key_exists('topic', $request) : $request['topic']) && is_array($request['topic'])) {
                 foreach ($request['topic'] as $key => $value) {
                     $topic = Topic::where('id', $key)->first();
                     if (!$topic || !$topic->unit ||
@@ -158,7 +158,7 @@ class Application extends Model
                     );
                 }
             }
-            if (is_array($request['lesson'])) {
+            if ((is_array($request) ? array_key_exists('lesson', $request) : $request['lesson']) && is_array($request['lesson'])) {
                 foreach ($request['lesson'] as $key => $value) {
                     $lesson = Lesson::where('id', $key)->first();
                     if (!$lesson || !$lesson->topic || !$lesson->topic->unit ||

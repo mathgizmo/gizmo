@@ -19,7 +19,7 @@
             </ul>
         </div>
         <div *ngIf="explanation.trim() != '' && showExplanation" [innerHTML]="explanation">
-        </div> <!-- class="topic-progress explanation-text" -->
+        </div>
         <div *ngIf="explanation.trim() != ''" class="explanation-button" (click)="showExplanationOnClick()" >
             {{ !showExplanation ? 'Show explanation' : 'Hide explanation'}}
         </div>

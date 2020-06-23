@@ -65,6 +65,12 @@
                             <datalist id="teachers-datalist"></datalist>
                         </td>
                         <td>
+                            <select class="form-control" name="subscription_type" id="subscription-type-filter">
+                                <option></option>
+                                <option value="open">Open</option>
+                                <option value="invitation">Invitation</option>
+                                <option value="closed">Closed</option>
+                            </select>
                         </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
@@ -113,6 +119,7 @@
             const id = document.getElementById("id-filter").value;
             const name = document.getElementById("name-filter").value;
             const teacher = document.getElementById("teacher-filter").value;
+            const subscription_type = document.getElementById("subscription-type-filter").value;
             if(id) {
                 url.searchParams.set('id', id);
             } else if (url.searchParams.get('id')) {
@@ -128,6 +135,11 @@
             } else if (url.searchParams.get('teacher')) {
                 url.searchParams.delete('teacher');
             }
+            if(subscription_type) {
+                url.searchParams.set('subscription_type', subscription_type);
+            } else if (url.searchParams.get('subscription_type')) {
+                url.searchParams.delete('subscription_type');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -136,6 +148,8 @@
             document.getElementById("id-filter").value = url.searchParams.get('id');
             document.getElementById("name-filter").value = url.searchParams.get('name');
             document.getElementById("teacher-filter").value = url.searchParams.get('teacher');
+            document.getElementById("subscription-type-filter").value = url.searchParams.get('subscription_type');
+
         }
         window.onload = initFilters;
 

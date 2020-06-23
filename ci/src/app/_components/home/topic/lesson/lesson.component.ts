@@ -498,7 +498,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 }
             });
             dialogRef.afterClosed().subscribe(result => {
-                if (result === 'show-explanation') {
+                if (result === 'show-explanation' || result === undefined) {
                     this.ignoreAnswer = true;
                     return;
                 }
