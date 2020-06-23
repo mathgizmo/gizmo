@@ -6,7 +6,7 @@
             <table matSort (matSortChange)="sortData($event)" class="table">
                 <thead>
                 <tr>
-                    <th mat-sort-header="id" scope="col">ID</th>
+                    <th scope="col">Icon</th>
                     <th mat-sort-header="name" scope="col">Name</th>
                     <th mat-sort-header="due_date" scope="col">Due Date</th>
                     <th mat-sort-header="is_completed" scope="col">Is Completed</th>
@@ -14,7 +14,7 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of assignments" [class.completed]="item.is_completed" [class.past-due]="item.is_past_due">
-                    <th scope="row">{{item.id}}</th>
+                    <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
                     <td>{{item.name}}</td>
                     <td>{{item.due_date}}</td>
                     <td>{{item.is_completed ? 'Yes' : 'No'}}</td>
@@ -25,5 +25,5 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
-    <button mat-button [mat-dialog-close]="false" class="button" type="button">Cancel</button>
+    <button mat-button [mat-dialog-close]="false" class="button button-white" type="button">Cancel</button>
 </mat-dialog-actions>

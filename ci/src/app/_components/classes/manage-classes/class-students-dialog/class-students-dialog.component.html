@@ -6,7 +6,6 @@
             <table matSort (matSortChange)="sortData($event)" class="table">
                 <thead>
                 <tr>
-                    <th mat-sort-header="id" scope="col">ID</th>
                     <th mat-sort-header="name" scope="col">Name</th>
                     <th mat-sort-header="first_name" scope="col">First Name</th>
                     <th mat-sort-header="last_name" scope="col">Last Name</th>
@@ -16,27 +15,27 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr style="background: #999999;">
+                <tr>
                     <td>
-                        <input type="number" min="0" name="id" [(ngModel)]="id" [value]="" style="width: 48px;">
+                        <input matInput placeholder="Name" class="filter-item"
+                               type="text" name="name" [(ngModel)]="name" [value]="" />
                     </td>
                     <td>
-                        <input type="text" name="name" [(ngModel)]="name" [value]="">
+                        <input matInput placeholder="First Name" class="filter-item"
+                               type="text" name="first_name" [(ngModel)]="first_name" [value]="" />
                     </td>
                     <td>
-                        <input type="text" name="first_name" [(ngModel)]="first_name" [value]="">
+                        <input matInput placeholder="Last Name" class="filter-item"
+                               type="text" name="last_name" [(ngModel)]="last_name" [value]="" />
                     </td>
                     <td>
-                        <input type="text" name="last_name" [(ngModel)]="last_name" [value]="">
-                    </td>
-                    <td>
-                        <input type="text" name="email" [(ngModel)]="email" [value]="">
+                        <input matInput placeholder="Email" class="filter-item"
+                               type="text" name="email" [(ngModel)]="email" [value]="" />
                     </td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr *ngFor="let item of students | tableFilter: form.value" (click)="showAssignments(item)" style="cursor: pointer;">
-                    <th scope="row">{{item.id}}</th>
                     <td>{{item.name}}</td>
                     <td>{{item.first_name }}</td>
                     <td>{{item.last_name }}</td>
@@ -50,6 +49,6 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
-    <button mat-button [mat-dialog-close]="false" class="button" type="button">Cancel</button>
+    <button mat-button [mat-dialog-close]="false" class="button button-white" type="button">Cancel</button>
 </mat-dialog-actions>
 

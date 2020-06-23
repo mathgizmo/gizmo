@@ -1,5 +1,3 @@
-@import '../../../../../colors';
-
 .dialog-content {
     width: 100%;
     margin: 0;
@@ -11,9 +9,12 @@
     display: block !important;
     width: 100% !important;
 }
-.button {
-    background: #ffffff !important;
-    color: $navy !important;
+
+.filter-item, .filter-item:focus {
+    width: 100%;
+    border: none;
+    outline: none;
+    overflow: visible;
 }
 
 td {

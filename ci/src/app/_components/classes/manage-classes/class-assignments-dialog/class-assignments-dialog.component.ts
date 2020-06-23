@@ -114,12 +114,35 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
         });
     }
 
+    sortAvailableAssignments(sort: Sort) {
+        const data = this.available_assignments.slice();
+        if (!sort.active || sort.direction === '') {
+            this.available_assignments = data;
+            return;
+        }
+        this.available_assignments = data.sort((a, b) => {
+            const isAsc = sort.direction === 'asc';
+            switch (sort.active) {
+                case 'id': return compare(a.id, b.id, isAsc);
+                case 'name': return compare(a.name, b.name, isAsc);
+                default: return 0;
+            }
+        });
+    }
+
     setIcon(image) {
+        if (!image) {
+            image = 'images/default-icon.svg';
+        }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
+    if (typeof a === 'string' || typeof b === 'string') {
+        a = ('' + a).toLowerCase();
+        b = ('' + b).toLowerCase();
+    }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

@@ -52,6 +52,9 @@ export class ToDoComponent implements OnInit {
     }
 
     setIcon(image) {
+        if (!image) {
+            image = 'images/default-icon.svg';
+        }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }

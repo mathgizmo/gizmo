@@ -16,7 +16,6 @@ export class ClassStudentsDialogComponent extends BaseDialogComponent<ClassStude
     students = [];
     class: any;
 
-    public id: number;
     public name: string;
     public first_name: string;
     public last_name: string;
@@ -81,5 +80,9 @@ export class ClassStudentsDialogComponent extends BaseDialogComponent<ClassStude
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
+    if (typeof a === 'string' || typeof b === 'string') {
+        a = ('' + a).toLowerCase();
+        b = ('' + b).toLowerCase();
+    }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

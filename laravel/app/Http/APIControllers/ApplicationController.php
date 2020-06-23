@@ -72,6 +72,9 @@ class ApplicationController extends Controller
                 if (request()->has('invitations')) {
                     $app->due_date = request('due_date');
                 }
+                if (request('icon')) {
+                    $app->icon = request('icon');
+                }
                 $app->save();
                 parse_str(request('tree'), $tree);
                 $success = $app->updateTree($tree);

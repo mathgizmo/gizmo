@@ -45,6 +45,33 @@ h1, h2, h3, h4 {
   padding: 10px 25px !important;
 }
 
+.button-small {
+  padding: 1px 10px !important;
+}
+
+.button-outline {
+  background: $white !important;
+  color: $navy !important;
+  border: solid 1px $navy !important;
+}
+
+.button-dark {
+  background: $navy !important;
+  color: $white !important;
+  border: solid 1px $navy !important;
+}
+
+.button-white {
+  background: $white !important;
+  color: $navy !important;
+}
+
+.button-danger {
+  background: $danger !important;
+  color: $white !important;
+  border: solid 1px $red !important;
+}
+
 .completion-button {
   background-color: $gold !important;
 }
@@ -419,6 +446,10 @@ h1, h2, h3, h4 {
       padding: 4px 14px !important;
     }
 
+    .button-small {
+      padding: 1px 6px !important;
+    }
+
     .dialog-buttons-container {
         .button {
             font-size: 18px !important;
@@ -466,6 +497,10 @@ h1, h2, h3, h4 {
     .button, .mat-button {
       font-size: 16px !important;
       padding: 2px 12px !important;
+    }
+
+    .button-small {
+      padding: 0 4px !important;
     }
 
     .dialog-content {

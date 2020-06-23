@@ -11,13 +11,12 @@
     display: block !important;
     width: 100% !important;
 }
-.button {
-    background: #ffffff !important;
-    color: $navy !important;
-}
 
-.name-search {
+.filter-item, .filter-item:focus {
     width: 100%;
+    border: none;
+    outline: none;
+    overflow: visible;
 }
 
 td {
@@ -45,33 +44,7 @@ td {
     background-repeat: no-repeat;
 }
 
-.classes-list, .search-container, .class-list-item {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.classes-list {
-    flex-direction: row;
-    justify-content: center;
-}
-
-.class-list-item {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    margin: 16px;
-    color: $navy;
-}
-
-.class-title {
-    text-align: center;
-    color: $navy;
-    margin-bottom: 8px;
-}
-
 .button {
-    background: #ffffff !important;
-    color: $navy !important;
     font-size: 18px !important;
 }
 
@@ -82,21 +55,12 @@ td {
 }
 
 @media screen and (max-width: 768px) {
-    .classes-list {
-        flex-direction: column;
-    }
-    .class-list-item {
-        width: 90%;
-    }
     .button, button {
         font-size: 12px !important;
     }
 }
 
 @media screen and (max-width: 600px) {
-    .class-list-item {
-        width: 98%;
-    }
     .button, button {
         font-size: 9px !important;
     }

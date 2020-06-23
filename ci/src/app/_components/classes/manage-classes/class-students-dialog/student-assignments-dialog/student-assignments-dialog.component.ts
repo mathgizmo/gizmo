@@ -67,11 +67,18 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
     }
 
     setIcon(image) {
+        if (!image) {
+            image = 'images/default-icon.svg';
+        }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
+    if (typeof a === 'string' || typeof b === 'string') {
+        a = ('' + a).toLowerCase();
+        b = ('' + b).toLowerCase();
+    }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

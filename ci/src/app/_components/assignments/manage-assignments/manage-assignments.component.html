@@ -6,29 +6,28 @@
                 <table matSort (matSortChange)="sortData($event)" class="table">
                     <thead>
                     <tr>
-                        <th mat-sort-header="id" scope="col">ID</th>
+                        <th scope="col">Icon</th>
                         <th mat-sort-header="name" scope="col">Name</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr style="background: #999999;">
+                    <tr>
+                        <td></td>
                         <td>
-                            <input type="number" min="0" name="id" id="id-filter" [(ngModel)]="id" [value]="" style="width: 48px;">
-                        </td>
-                        <td>
-                            <input type="text" name="name" id="name-filter" [(ngModel)]="name" [value]="" style="width: 100%;">
+                            <input matInput class="filter-item" placeholder="Name"
+                                   type="text" name="name" id="name-filter" [(ngModel)]="name" [value]="">
                         </td>
                         <td class="text-right">
-                            <button class="btn btn-dark" style="margin-right: 8px;" (click)="onAddAssignment()">Add Assignment</button>
+                            <button mat-button class="button button-outline button-small" (click)="onAddAssignment()">Add Assignment</button>
                         </td>
                     </tr>
                     <tr *ngFor="let item of assignments | tableFilter: form.value">
-                        <th scope="row">{{item.id}}</th>
+                        <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
                         <td>{{item.name}}</td>
                         <td class="text-right">
-                            <button class="btn btn-dark" style="margin-right: 8px;" (click)="onEditAssignment(item)">Edit</button>
-                            <button class="btn btn-danger" type="button" (click)="onDeleteAssignment(item.id)">Remove</button>
+                            <button mat-stroked-button class="button button-outline button-small" style="margin-right: 8px;" (click)="onEditAssignment(item)">Edit</button>
+                            <button mat-stroked-button class="button button-danger button-small" type="button" (click)="onDeleteAssignment(item.id)">Remove</button>
                         </td>
                     </tr>
                     </tbody>

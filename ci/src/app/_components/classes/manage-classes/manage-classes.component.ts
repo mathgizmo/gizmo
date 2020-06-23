@@ -17,7 +17,6 @@ import {MatDialog} from '@angular/material/dialog';
 export class ManageClassesComponent implements OnInit {
 
     public classes = [];
-    public id: number;
     public name: string;
     public subscription_type: string;
 
@@ -128,5 +127,9 @@ export class ManageClassesComponent implements OnInit {
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
+    if (typeof a === 'string' || typeof b === 'string') {
+        a = ('' + a).toLowerCase();
+        b = ('' + b).toLowerCase();
+    }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

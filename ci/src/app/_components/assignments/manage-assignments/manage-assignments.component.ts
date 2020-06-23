@@ -5,6 +5,8 @@ import {EditAssignmentDialogComponent} from './edit-assignment-dialog/edit-assig
 import {YesNoDialogComponent} from '../../classes/yes-no-dialog/yes-no-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
+import {DomSanitizer} from '@angular/platform-browser';
+import {environment} from '../../../../environments/environment';
 
 @Component({
     selector: 'manage-assignments',
@@ -16,7 +18,6 @@ export class ManageAssignmentsComponent implements OnInit {
 
     public assignments = [];
     public icons = [];
-    public id: number;
     public name: string;
 
     dialogPosition: any;
@@ -24,7 +25,9 @@ export class ManageAssignmentsComponent implements OnInit {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
-    constructor(private assignmentService: AssignmentService, public dialog: MatDialog, private deviceService: DeviceDetectorService) {
+    private readonly adminUrl = environment.adminUrl;
+
+    constructor(private assignmentService: AssignmentService, private sanitizer: DomSanitizer, public dialog: MatDialog, private deviceService: DeviceDetectorService) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -112,8 +115,20 @@ export class ManageAssignmentsComponent implements OnInit {
         });
     }
 
+    setIcon(image) {
+        if (!image) {
+            image = 'images/default-icon.svg';
+        }
+        const link = `url(` + this.adminUrl + `/${image})`;
+        return this.sanitizer.bypassSecurityTrustStyle(link);
+    }
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
+    if (typeof a === 'string' || typeof b === 'string') {
+        a = ('' + a).toLowerCase();
+        b = ('' + b).toLowerCase();
+    }
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
