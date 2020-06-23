@@ -23,9 +23,9 @@
                 </tbody>
             </table>
         </div>
-        <!-- <div *ngIf="availableClasses.length > 0" class="button-container">
-            <button mat-button class="button button-outline" (click)="onAddClass()">Add More</button>
-        </div> -->
+        <div *ngIf="availableClasses.length > 0 && myClasses.length < 1" class="button-container">
+            <button mat-button class="button button-outline" (click)="onAddClass()">Add Class</button>
+        </div>
     </mat-card>
     <mat-card *ngIf="addClass">
         <span class="title">Select Class</span>
