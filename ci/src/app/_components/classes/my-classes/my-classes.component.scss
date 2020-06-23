@@ -9,129 +9,77 @@
   padding: 0;
   margin: 60px auto 0;
   width: 80vw;
+  mat-card {
+    margin: 10px;
+    padding: 15px;
+    min-width: 250px;
+    width: calc(100% - 20px);
+  }
+  mat-card:last-child {
+    margin-bottom: 28px;
+  }
 }
 
-.class-teacher, .classes-list, .search-container {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.classes-list {
-  flex-direction: row;
-  justify-content: center;
-}
-.search-container {
-  justify-content: space-between;
-  padding: 8px 16px 0;
-  margin-bottom: 16px;
-}
-.search-container > mat-form-field {
-  width: 49%;
-}
-
-.class-teacher {
-  flex-direction: row;
-  color: dimgrey;
-  font-size: 18px;
-}
-
-.class-list-item {
-  margin: 8px;
-  color: $navy;
-}
-
-.class-title {
-  text-align: center;
-  color: $navy;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-}
-
-.mat-card-actions, .mat-card-subtitle, .mat-card-content {
-  margin-bottom: 0;
-}
-
-.profile-classes > mat-card {
-  margin: 10px;
-  padding: 15px;
-  min-width: 250px;
-  width: calc(100% - 20px);
-  color: white;
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.profile-classes > mat-card:last-child {
-  margin-bottom: 28px;
+.filter-item, .filter-item:focus {
+  width: 100%;
+  border: none;
+  outline: none;
+  overflow: visible;
 }
 
 .title {
   display: block;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
-.class-list-item:last-child {
-  margin-bottom: 24px;
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .button {
   background: #ffffff !important;
   color: $navy !important;
   font-size: 18px !important;
+  border: solid 1px $navy;
 }
 
-@media all and (min-width: 40em) {
-  .class-list-item {
-    width: 50%;
-  }
+.button-small {
+  padding: 1px 10px !important;
 }
-@media all and (min-width: 60em) {
-  .class-list-item {
-    width: 33.33%;
-  }
+
+td {
+  max-width: 30vw !important;
+  word-wrap: break-word !important;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 1100px) {
-  .class-teacher, .button, button {
+  .button, button {
     font-size: 14px !important;
-  }
-  .class-list-item:last-child {
-    margin-bottom: 18px;
   }
 }
 
-@media screen and (max-width: 768px) {
-  .classes-list {
-    flex-direction: column;
-  }
-  .class-list-item {
-    width: 90%;
-  }
-  .class-teacher, .button, button {
+@media screen and (max-width: 767px) {
+  .button, button {
     font-size: 12px !important;
   }
-  .class-list-item:last-child {
-    margin-bottom: 16px;
-  }
-  .search-container {
-    flex-direction: column;
-  }
-  .search-container > mat-form-field {
-    width: 98%;
+  .table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th {
+    white-space: normal !important;
   }
 }
 
 @media screen and (max-width: 600px) {
   .profile-classes {
-    width: 100vw;
+    width: 96vw;
   }
-  .class-list-item {
-    width: 98%;
-  }
-  .class-teacher, .button, button {
+  .button, button {
     font-size: 9px !important;
+  }
+  .table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th {
+    white-space: normal !important;
   }
 }

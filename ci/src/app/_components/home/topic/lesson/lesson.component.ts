@@ -449,6 +449,10 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 position: this.dialogPosition
             });
             goodDialogRef.afterClosed().subscribe(result => {
+                if (result === 'show-explanation' || result === undefined) {
+                    this.ignoreAnswer = true;
+                    return;
+                }
                 if (result) {
                     const reportDialogRef = this.dialog.open(FeedbackDialogComponent, {
                         // width: '800px',

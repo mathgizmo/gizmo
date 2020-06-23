@@ -1,17 +1,25 @@
 <div class="profile-classes">
     <mat-card *ngIf="!addClass">
         <span class="title">My Classes</span>
-        <div class="classes-list">
-                <mat-card class="class-list-item" *ngFor="let classItem of myClasses">
-                    <mat-card-title class="class-title subtitle">{{classItem.name}}</mat-card-title>
-                    <mat-card-subtitle *ngIf="classItem.teacher" class="class-teacher" style="justify-content: center !important;">
-                        <div class="teacher-label">Teacher:&nbsp;</div>
-                        <div class="teacher-name"> {{classItem.teacher}}</div>
-                    </mat-card-subtitle>
-                    <mat-card-actions class="button-container">
-                        <button class="button" mat-stroked-button (click)="onUnsubscribe(classItem.id)">Unsubscribe</button>
-                    </mat-card-actions>
-                </mat-card>
+        <div class="table-responsive" *ngIf="myClasses.length > 0">
+            <table matSort (matSortChange)="sortMyClasses($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="name" scope="col">Class</th>
+                    <th mat-sort-header="teacher" scope="col">Teacher</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of myClasses">
+                    <td>{{item.name}}</td>
+                    <td>{{item.teacher}}</td>
+                    <td class="text-right">
+                        <button class="button button-small" mat-stroked-button (click)="onUnsubscribe(item.id)">Unsubscribe</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <div *ngIf="availableClasses.length > 0" class="button-container">
             <button mat-button class="button" (click)="onAddClass()">Add More</button>
@@ -20,35 +28,44 @@
     <mat-card *ngIf="addClass">
         <span class="title">Select Class</span>
         <form novalidate #form="ngForm">
-        <mat-card class="search-container">
-            <mat-form-field>
-                <input matInput
-                       name="name"
-                       pattern="[a-zA-Z0-9]{2,255}"
-                       placeholder="Class Name"
-                       [(ngModel)]="nameFilter"
-                       class="answer" />
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput
-                       name="teacher"
-                       pattern="[a-zA-Z0-9]{2,255}"
-                       placeholder="Class Teacher"
-                       [(ngModel)]="teacherFilter"
-                       class="answer" />
-            </mat-form-field>
-        </mat-card>
-        <div class="classes-list">
-            <mat-card class="class-list-item" *ngFor="let classItem of availableClasses | tableFilter: form.value">
-                <mat-card-title class="class-title subtitle">{{classItem.name}}</mat-card-title>
-                <mat-card-subtitle *ngIf="classItem.teacher" class="class-teacher" style="justify-content: center !important;">
-                    <div class="teacher-label">Teacher:&nbsp;</div>
-                    <div class="teacher-name"> {{classItem.teacher}}</div>
-                </mat-card-subtitle>
-                <mat-card-actions class="button-container">
-                    <button class="button" mat-stroked-button (click)="onSubscribe(classItem.id)">Subscribe</button>
-                </mat-card-actions>
-            </mat-card>
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortAvailableClasses($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="name" scope="col">Class</th>
+                    <th mat-sort-header="teacher" scope="col">Teacher</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <input matInput
+                               name="name"
+                               pattern="[a-zA-Z0-9]{2,255}"
+                               placeholder="Search by Class Name"
+                               [(ngModel)]="nameFilter"
+                               class="answer filter-item" />
+                    </td>
+                    <td>
+                        <input matInput
+                               name="teacher"
+                               pattern="[a-zA-Z0-9]{2,255}"
+                               placeholder="Search by Teacher"
+                               [(ngModel)]="teacherFilter"
+                               class="answer filter-item" />
+                    </td>
+                    <td></td>
+                </tr>
+                <tr *ngFor="let item of availableClasses | tableFilter: form.value">
+                    <td>{{item.name}}</td>
+                    <td>{{item.teacher}}</td>
+                    <td class="text-right">
+                        <button class="button button-small" mat-stroked-button (click)="onSubscribe(item.id)">Subscribe</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         </form>
         <div class="button-container">
