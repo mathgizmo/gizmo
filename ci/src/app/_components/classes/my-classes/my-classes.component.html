@@ -7,7 +7,9 @@
                 <tr>
                     <th mat-sort-header="name" scope="col">Class</th>
                     <th mat-sort-header="teacher" scope="col">Teacher</th>
-                    <th scope="col"></th>
+                    <td class="text-right">
+                        <button *ngIf="availableClasses.length > 0" mat-button class="button button-small button-outline" (click)="onAddClass()">Add Class</button>
+                    </td>
                 </tr>
                 </thead>
                 <tbody>
@@ -21,9 +23,9 @@
                 </tbody>
             </table>
         </div>
-        <div *ngIf="availableClasses.length > 0" class="button-container">
+        <!-- <div *ngIf="availableClasses.length > 0" class="button-container">
             <button mat-button class="button button-outline" (click)="onAddClass()">Add More</button>
-        </div>
+        </div> -->
     </mat-card>
     <mat-card *ngIf="addClass">
         <span class="title">Select Class</span>
@@ -69,7 +71,7 @@
         </div>
         </form>
         <div class="button-container">
-            <button mat-button class="button button-outline" (click)="addClass=false">Cancel</button>
+            <button mat-button class="button button-white" (click)="addClass=false">Cancel</button>
         </div>
     </mat-card>
 </div>
