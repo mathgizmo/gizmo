@@ -1,7 +1,7 @@
 <div class="profile-classes">
-    <mat-card *ngIf="!addClass">
+    <mat-card *ngIf="!addClass && myClasses.length > 0">
         <span class="title">My Classes</span>
-        <div class="table-responsive" *ngIf="myClasses.length > 0">
+        <div class="table-responsive">
             <table matSort (matSortChange)="sortMyClasses($event)" class="table">
                 <thead>
                 <tr>
@@ -23,11 +23,8 @@
                 </tbody>
             </table>
         </div>
-        <div *ngIf="availableClasses.length > 0 && myClasses.length < 1" class="button-container">
-            <button mat-button class="button button-outline" (click)="onAddClass()">Add Class</button>
-        </div>
     </mat-card>
-    <mat-card *ngIf="addClass">
+    <mat-card *ngIf="addClass || myClasses.length < 1">
         <span class="title">Select Class</span>
         <form novalidate #form="ngForm">
         <div class="table-responsive">
@@ -70,7 +67,7 @@
             </table>
         </div>
         </form>
-        <div class="button-container">
+        <div *ngIf="myClasses.length > 0" class="button-container">
             <button mat-button class="button button-white" (click)="addClass=false">Cancel</button>
         </div>
     </mat-card>

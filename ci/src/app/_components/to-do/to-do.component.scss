@@ -42,6 +42,7 @@ mat-card:last-child {
 .toggle-button {
   margin: 16px 0;
   cursor: pointer;
+  color: #666666;
 }
 
 mat-form-field {
@@ -53,6 +54,8 @@ mat-form-field {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  flex-direction: column;
+  margin: 12px 0;
 }
 
 .app-img {

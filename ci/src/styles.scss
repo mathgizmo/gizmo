@@ -43,6 +43,12 @@ h1, h2, h3, h4 {
   background-color: $teal !important;
   border-radius: 50px !important;
   padding: 10px 25px !important;
+  text-decoration: none;
+}
+
+a.button:hover, a.button:focus {
+  text-decoration: none;
+  outline: none;
 }
 
 .button-small {
