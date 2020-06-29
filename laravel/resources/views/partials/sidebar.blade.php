@@ -49,9 +49,9 @@
                             <a class="nav-link" href="{{ url('/levels') }}">
                                 Manage Modules
                             </a>
-                            <a class="nav-link" href="{{ url('/placements') }}">
+                            {{-- <a class="nav-link" href="{{ url('/placements') }}">
                                 Manage Placements
-                            </a>
+                            </a> --}}
                             <a class="nav-link" href="{{ route('error_report.index', 'new') }}">
                                 Error Report
                             </a>

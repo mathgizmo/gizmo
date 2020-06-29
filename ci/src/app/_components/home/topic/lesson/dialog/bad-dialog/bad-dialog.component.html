@@ -1,6 +1,6 @@
 <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Incorrect :(</h2>
 <mat-dialog-content class="dialog-content" id="dialog-content">
-    <div [mat-dialog-close]="'show-explanation'" class="close-button" *ngIf="explanation.trim() != '' && showExplanation" >
+    <div [mat-dialog-close]="'show-explanation'" class="close-button" >
         <i class="fa fa-close"></i>
     </div>
     <img *ngIf="!showExplanation" src="./assets/images/popup_image_incorrect.svg" alt="Incorrect" class="popup-image">

@@ -281,10 +281,8 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.answers.sort((a, b) => {
                     return +a - +b;
                 });
-                // console.log("NUM: "+this.answers);
             } else {
                 this.answers.sort();
-                // console.log("STR: "+this.answers);
             }
         }
         // convert percents to float for FB
@@ -304,7 +302,14 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         }
 
         // check if answer is correct
-        if (this.question.answer_mode === 'radio') {
+        if (this.question.answer_mode === 'order') {
+            for (let i = 0; i < this.question.answers.length; i++) {
+                if (this.question.answers[i].value !== this.answers[i]) {
+                    return false;
+                }
+            }
+            return true;
+        } else if (this.question.answer_mode === 'radio') {
             if (this.answers[0] === '') {
                 return false;
             }

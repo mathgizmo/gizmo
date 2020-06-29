@@ -1,4 +1,6 @@
+// @ts-ignore
 import {Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter, HostListener} from '@angular/core';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-question',
@@ -107,6 +109,10 @@ export class QuestionComponent implements OnInit, OnChanges, OnDestroy {
                 this.onAnswered.emit(this.answers);
             }
         }
+    }
+
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.answers, event.previousIndex, event.currentIndex);
     }
 
     // function to shuffle answers in order

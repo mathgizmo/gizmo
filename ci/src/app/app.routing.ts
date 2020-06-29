@@ -13,7 +13,7 @@ import {ToDoComponent} from './_components/to-do/to-do.component';
 import {MyClassesComponent} from './_components/classes/my-classes/my-classes.component';
 import {ManageClassesComponent} from './_components/classes/manage-classes/manage-classes.component';
 import {ManageAssignmentsComponent} from './_components/assignments/manage-assignments/manage-assignments.component';
-import {PlacementComponent} from './_components/welcome/placement/placement.component';
+// import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 
 const routes: Routes = [
@@ -22,7 +22,7 @@ const routes: Routes = [
     {path: 'register', component: RegisterComponent},
     {path: 'forgot-password', component: ForgotPasswordComponent},
     {path: 'reset-password/:token', component: ResetPasswordComponent},
-    {path: 'placement', component: PlacementComponent, canActivate: [AuthGuard]},
+    // {path: 'placement', component: PlacementComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'my-classes', component: MyClassesComponent, canActivate: [AuthGuard]},

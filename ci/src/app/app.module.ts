@@ -5,7 +5,6 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Angular2FontawesomeModule} from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {SortablejsModule} from 'ngx-sortablejs';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -25,6 +24,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSortModule} from '@angular/material/sort';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
@@ -56,7 +56,7 @@ import {EditAssignmentDialogComponent} from './_components/assignments/manage-as
 import {ResetPasswordComponent} from './_components/welcome/login/reset-password/reset-password.component';
 import {QuestionComponent} from './_components/home/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
-import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
+// import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
 import {DraggableDirective} from './_directives/draggable.directive';
 import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
@@ -84,9 +84,9 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         MatDividerModule,
         MatButtonToggleModule,
         MatSortModule,
+        DragDropModule,
         FlexLayoutModule,
         PerfectScrollbarModule,
-        SortablejsModule.forRoot({animation: 150}),
         DeviceDetectorModule.forRoot()
     ],
     exports: [],
@@ -120,8 +120,8 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         ResetPasswordComponent,
         QuestionComponent,
         QuestionPreviewComponent,
-        PlacementComponent,
-        QuestionNumDialogComponent,
+        // PlacementComponent,
+        // QuestionNumDialogComponent,
         DraggableDirective,
         TableFilterPipe,
         SafeHtmlPipe
@@ -131,7 +131,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         BadDialogComponent,
         ReportDialogComponent,
         FeedbackDialogComponent,
-        QuestionNumDialogComponent,
+        // QuestionNumDialogComponent,
         BadChallengeDialogComponent,
         YesNoDialogComponent,
         EditClassDialogComponent,

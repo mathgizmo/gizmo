@@ -31,7 +31,7 @@ export class RegisterComponent implements OnInit {
                 if (result['success'] === true) {
                     this.authenticationService.login(this.model.email, this.model.password).subscribe(res => {
                         if (res === true) {
-                            this.router.navigate(['placement']);
+                            this.router.navigate(['']);
                         }
                     });
                 } else {

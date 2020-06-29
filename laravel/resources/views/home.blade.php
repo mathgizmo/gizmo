@@ -32,9 +32,9 @@
             <a class="btn btn-outline-dark mr-2 mb-2" href="{{ url('/levels') }}">
                 Manage Modules
             </a>
-            <a class="btn btn-outline-dark mr-2 mb-2" href="{{ url('/placements') }}">
+            {{-- <a class="btn btn-outline-dark mr-2 mb-2" href="{{ url('/placements') }}">
                 Manage Placements
-            </a>
+            </a> --}}
             <a class="btn btn-outline-dark mr-2 mb-2" href="{{ route('error_report.index', 'new') }}">
                 Error Report
             </a>
