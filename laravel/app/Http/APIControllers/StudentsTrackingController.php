@@ -9,6 +9,7 @@ use App\Student;
 use App\StudentsTracking;
 use App\Topic;
 use App\Unit;
+use Carbon\Carbon;
 use JWTAuth;
 use App\Lesson;
 use Illuminate\Support\Facades\DB;
@@ -65,13 +66,13 @@ class StudentsTrackingController extends Controller
         $progress_data = [
             'student_id' => $this->student->id,
             'entity_type' => 'lesson',
-            'entity_id' => $lesson,
+            'entity_id' => $lesson
         ];
         $progress = Progress::where($progress_data)->get();
         if ($progress->count() == 0) {
             DB::enableQueryLog();
             try {
-                Progress::create($progress_data);
+                Progress::create(array_merge($progress_data, ['completed_at' => Carbon::now()->toDateString()]));
             } catch (\Exception $e) { }
             // find all lessons from topic that are not done yet
             $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
@@ -101,13 +102,15 @@ class StudentsTrackingController extends Controller
     {
         $student = Student::where('id', $student->id)->first();
         $app_id = $student ? $student->app_id : null;
+        $completed_at = Carbon::now()->toDateString();
         //mark topic as done
         try {
             DB::table('progresses')->insert([
                 'student_id' => $student->id,
                 'entity_type' => 'topic',
                 'entity_id' => $topic_id,
-                'app_id' => $app_id
+                'app_id' => $app_id,
+                'completed_at' => $completed_at
             ]);
         } catch (\Exception $e) { }
         //find all topics from unit that are not done yet
@@ -149,7 +152,8 @@ class StudentsTrackingController extends Controller
                     'student_id' => $student->id,
                     'entity_type' => 'unit',
                     'entity_id' => $topic_model->unit_id,
-                    'app_id' => $app_id
+                    'app_id' => $app_id,
+                    'completed_at' => $completed_at
                 ]);
             } catch (\Exception $e) { }
 
@@ -199,7 +203,8 @@ class StudentsTrackingController extends Controller
                         'student_id' => $student->id,
                         'entity_type' => 'level',
                         'entity_id' => $unit_model->level_id,
-                        'app_id' => $app_id
+                        'app_id' => $app_id,
+                        'completed_at' => $completed_at
                     ]);
                 } catch (\Exception $e) { }
 
@@ -223,7 +228,8 @@ class StudentsTrackingController extends Controller
                                 'student_id' => $student->id,
                                 'entity_type' => 'application',
                                 'entity_id' => $app_id,
-                                'app_id' => $app_id
+                                'app_id' => $app_id,
+                                'completed_at' => $completed_at
                             ]);
                         } catch (\Exception $e) { }
                     }

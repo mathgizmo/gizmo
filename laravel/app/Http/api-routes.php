@@ -40,8 +40,8 @@ $api->group(['middleware' => 'api.auth'], function () use ($api) {
 
     $api->get('/profile', 'App\Http\APIControllers\ProfileController@get');
     $api->post('/profile', 'App\Http\APIControllers\ProfileController@update');
-    $api->get('/profile/application', 'App\Http\APIControllers\ProfileController@getApplications');
-    $api->post('/profile/application', 'App\Http\APIControllers\ProfileController@updateApplication');
+    $api->get('/profile/todo', 'App\Http\APIControllers\ProfileController@getToDos');
+    $api->post('/profile/todo', 'App\Http\APIControllers\ProfileController@updateToDos');
     $api->get('/profile/classes', 'App\Http\APIControllers\ProfileController@getClasses');
     $api->post('/profile/classes/{class_id}/subscribe', 'App\Http\APIControllers\ProfileController@subscribeClass');
     $api->post('/profile/classes/{class_id}/unsubscribe', 'App\Http\APIControllers\ProfileController@unsubscribeClass');

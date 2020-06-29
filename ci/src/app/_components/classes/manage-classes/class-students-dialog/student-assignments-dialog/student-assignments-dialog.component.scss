@@ -37,6 +37,10 @@ td {
     background: #f08080;
 }
 
+.completed-past-due {
+    background: #ffc3a0;
+}
+
 @media screen and (max-width: 1100px) {
     .button, button {
         font-size: 14px !important;

@@ -90,6 +90,16 @@ mat-form-field {
   flex-wrap: wrap;
 }
 
+.date-container {
+  margin-left: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  line-height: 1.2;
+}
+
 @media screen and (max-width: 600px) {
   .profile-application {
     width: 100vw;

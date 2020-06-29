@@ -90,7 +90,9 @@ class ClassController extends Controller
                     $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
                             ->where('student_id', $student->id)->count() > 0;
                     $item->due_date = $item->getDueDate($class_id);
-                    $item->is_past_due = !$item->is_completed && $item->due_date && $item->due_date < date("Y-m-d");
+                    $item->completed_at = $item->getCompletedDate($student->id);
+                    $item->is_past_due = (!$item->is_completed && $item->due_date && $item->due_date < date("Y-m-d")) ||
+                        ($item->is_completed && $item->due_date && $item->completed_at && $item->due_date < $item->completed_at);
                     if ($item->is_completed) {
                         $finished_count++;
                     }

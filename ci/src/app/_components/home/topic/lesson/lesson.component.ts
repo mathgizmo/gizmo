@@ -405,7 +405,8 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                         this.answers[i] = Number(this.answers[i]).toFixed(roundTo) + '';
                     }
                     if (this.question.answers[i].is_correct &&
-                        correctAnswer != this.answers[i].trim()) { // do not change this row
+                        // tslint:disable-next-line:triple-equals
+                        correctAnswer != this.answers[i].trim()) {
                         return false;
                     }
                 }

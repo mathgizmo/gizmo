@@ -24,18 +24,18 @@ export class ToDoComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.userService.getApplications()
+        this.userService.getToDos()
             .subscribe(response => {
                 this.applications = response.filter(app => !app.is_completed);
                 this.completedApplications = response.filter(app => app.is_completed);
             });
     }
 
-    onChangeApplication(appId: number) {
+    onChangeToDo(appId: number) {
         if (!appId) {
             return;
         }
-        this.userService.changeApplication(appId)
+        this.userService.changeToDo(appId)
             .subscribe(res => {
                 localStorage.setItem('app_id', appId + '');
                 this.selectedAppId = appId;

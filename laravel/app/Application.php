@@ -56,6 +56,16 @@ class Application extends Model
         return null;
     }
 
+    public function getCompletedDate($student_id)
+    {
+        $model = Progress::where('entity_type', 'application')->where('entity_id', $this->id)
+            ->where('student_id', $student_id)->orderBy('completed_at', 'ASC')->first();
+        if ($model) {
+            return $model->completed_at;
+        }
+        return null;
+    }
+
     public function getTree() {
         $levels = $this->levels()->get()->keyBy('id');
         $units = $this->units()->get()->keyBy('id');

@@ -52,11 +52,11 @@ export class UserService {
             );
     }
 
-    public changeApplication(appId: number) {
+    public changeToDo(appId: number) {
         const request = {
             app_id: appId,
         };
-        return this.http.post('/profile/application/', request)
+        return this.http.post('/profile/todo/', request)
             .pipe(
                 catchError(error => {
                     console.log(error);
@@ -65,8 +65,8 @@ export class UserService {
             );
     }
 
-    public getApplications() {
-        return this.http.get('/profile/application')
+    public getToDos() {
+        return this.http.get('/profile/todo')
             .pipe(
                 map((response: Response) => {
                     return response['items'];

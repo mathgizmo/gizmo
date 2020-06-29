@@ -73,7 +73,7 @@ class ProfileController extends Controller
         return $this->success('OK.');
     }
 
-    public function getApplications() {
+    public function getToDos() {
         $student = JWTAuth::parseToken()->authenticate();
         $items = Application::whereHas('classes', function ($q1) use ($student) {
             $q1->whereHas('students', function ($q2) use ($student) {
@@ -94,6 +94,7 @@ class ProfileController extends Controller
                     $class->due_date = $item->getDueDate($class->id);
                     if (!$item->due_date || $class->due_date < $item->due_date) {
                         $item->due_date = $class->due_date;
+                        $item->completed_at = $item->getCompletedDate($student->id);
                         $item->class = $class;
                     }
                 }
@@ -104,7 +105,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function updateApplication() {
+    public function updateToDos() {
         $student = JWTAuth::parseToken()->authenticate();
         if (request()->has('app_id')) {
             $user = Student::find($student->id);
