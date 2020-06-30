@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\ClassOfStudents;
 use App\Mail\PasswordResetMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

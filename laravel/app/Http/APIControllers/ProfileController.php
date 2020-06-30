@@ -140,6 +140,23 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function getClassInvitations() {
+        $student = JWTAuth::parseToken()->authenticate();
+        $my_classes = ClassOfStudents::whereHas('students', function ($q) use ($student) {
+            $q->where('students.id', $student->id);
+        })->orderBy('name')->get();
+        $class_invitations = ClassOfStudents::where(function ($q1) use ($student) {
+            $q1->where('subscription_type', 'invitation')->where('invitations', 'LIKE', '%'.$student->email.'%');
+        })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get();
+        foreach ($class_invitations as $item) {
+            $teacher = Student::where('id', $item->teacher_id)->first();
+            $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
+        }
+        return $this->success([
+            'items' => array_values($class_invitations->toArray()),
+        ]);
+    }
+
     public function subscribeClass($class_id) {
         $student = JWTAuth::parseToken()->authenticate();
         $class = ClassOfStudents::where('id', $class_id)->first();

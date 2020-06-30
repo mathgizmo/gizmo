@@ -11,6 +11,7 @@ import {AuthGuard} from './_guards/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent} from './_components/to-do/to-do.component';
 import {MyClassesComponent} from './_components/classes/my-classes/my-classes.component';
+import {MyInvitationsComponent} from './_components/classes/my-invitations/my-invitations.component';
 import {ManageClassesComponent} from './_components/classes/manage-classes/manage-classes.component';
 import {ManageAssignmentsComponent} from './_components/assignments/manage-assignments/manage-assignments.component';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
@@ -26,6 +27,7 @@ const routes: Routes = [
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'my-classes', component: MyClassesComponent, canActivate: [AuthGuard]},
+    {path: 'my-invitations', component: MyInvitationsComponent, canActivate: [AuthGuard]},
     {path: 'manage-classes', component: ManageClassesComponent, canActivate: [AuthGuard], data: { roles: ['teacher'] }
     },
     {path: 'manage-assignments', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: { roles: ['teacher'] }

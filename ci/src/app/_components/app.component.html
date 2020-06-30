@@ -9,6 +9,7 @@
         <a mat-menu-item routerLink="" class="menu-item">Home</a>
         <a mat-menu-item routerLink="to-do" class="menu-item">To Do</a>
         <a mat-menu-item routerLink="my-classes" class="menu-item">My Classes</a>
+        <a mat-menu-item routerLink="my-invitations" class="menu-item">My Invitations</a>
         <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="manage-classes" class="menu-item">Manage Classes</a>
         <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="manage-assignments" class="menu-item">Manage Assignments</a>
         <a mat-menu-item routerLink="profile" class="menu-item">Profile</a>

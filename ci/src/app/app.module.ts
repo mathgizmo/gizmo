@@ -46,6 +46,7 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent} from './_components/to-do/to-do.component';
 import {YesNoDialogComponent} from './_components/classes/yes-no-dialog/yes-no-dialog.component';
 import {MyClassesComponent} from './_components/classes/my-classes/my-classes.component';
+import {MyInvitationsComponent} from './_components/classes/my-invitations/my-invitations.component';
 import {ClassStudentsDialogComponent} from './_components/classes/manage-classes/class-students-dialog/class-students-dialog.component';
 import {StudentAssignmentsDialogComponent} from './_components/classes/manage-classes/class-students-dialog/student-assignments-dialog/student-assignments-dialog.component';
 import {EditClassDialogComponent} from './_components/classes/manage-classes/edit-class-dialog/edit-class-dialog.component';
@@ -107,6 +108,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         ProfileComponent,
         ToDoComponent,
         MyClassesComponent,
+        MyInvitationsComponent,
         ManageClassesComponent,
         YesNoDialogComponent,
         EditClassDialogComponent,

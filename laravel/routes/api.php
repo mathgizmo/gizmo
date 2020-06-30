@@ -45,6 +45,7 @@ $api->version('v1', function ($api) {
         $api->get('/profile/todo', 'App\Http\APIControllers\ProfileController@getToDos');
         $api->post('/profile/todo', 'App\Http\APIControllers\ProfileController@updateToDos');
         $api->get('/profile/classes', 'App\Http\APIControllers\ProfileController@getClasses');
+        $api->get('/profile/classes/invitations', 'App\Http\APIControllers\ProfileController@getClassInvitations');
         $api->post('/profile/classes/{class_id}/subscribe', 'App\Http\APIControllers\ProfileController@subscribeClass');
         $api->post('/profile/classes/{class_id}/unsubscribe', 'App\Http\APIControllers\ProfileController@unsubscribeClass');
 

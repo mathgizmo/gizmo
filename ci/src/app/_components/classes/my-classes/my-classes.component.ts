@@ -3,7 +3,7 @@ import {UserService} from '../../../_services/user.service';
 import {YesNoDialogComponent} from '../yes-no-dialog/yes-no-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
-import {Sort} from "@angular/material/sort";
+import {Sort} from '@angular/material/sort';
 
 @Component({
     selector: 'my-classes',

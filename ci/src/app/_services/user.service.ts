@@ -88,6 +88,19 @@ export class UserService {
             );
     }
 
+    public getClassInvitations() {
+        return this.http.get('/profile/classes/invitations')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
     public subscribeClass(classId: number) {
         const request = {
             class_id: classId,

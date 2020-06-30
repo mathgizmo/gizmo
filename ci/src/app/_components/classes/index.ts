@@ -1,4 +1,5 @@
 ﻿export * from './my-classes/my-classes.component';
+export * from './my-invitations/my-invitations.component';
 export * from './manage-classes/manage-classes.component';
 export * from './yes-no-dialog/yes-no-dialog.component';
 export * from './manage-classes/edit-class-dialog/edit-class-dialog.component';
