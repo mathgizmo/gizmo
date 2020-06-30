@@ -24,7 +24,15 @@ class StudentsTrackingController extends Controller
     {
         $auth_user = JWTAuth::parseToken()->authenticate();
         $this->student = Student::find($auth_user->id);
-        $this->app = Application::where('id', $this->student->app_id)->first();
+        if (request()->has('app_id')) {
+            $app_id = request('app_id');
+            $this->app = Application::where('id', $app_id)->first();
+            if (!$this->app) {
+                $this->app = Application::where('id', $this->student->app_id)->first();
+            }
+        } else {
+            $this->app = Application::where('id', $this->student->app_id)->first();
+        }
     }
 
     public function start($lesson)
@@ -69,38 +77,39 @@ class StudentsTrackingController extends Controller
             'entity_id' => $lesson
         ];
         if (Progress::where($progress_data)->count() == 0) {
-            DB::enableQueryLog();
             try {
                 Progress::create(array_merge($progress_data, ['completed_at' => Carbon::now()->toDateString()]));
             } catch (\Exception $e) { }
-            // find all lessons from topic that are not done yet
-            $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
-                $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
-            })->where('topic_id', $model->topic_id)->where('dev_mode', 0);
-            if ($lessons_query->count() > 0) {
-                $is_topic_done = $lessons_query->count() <= $lessons_query->whereIn('id', function($q) use($student) {
-                        $q->select('entity_id')->from('progresses')->where('entity_type', 'lesson')->where('student_id', $student->id);
-                    })->count();
-            } else {
-                $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
-                    $join->on('progresses.student_id', '=', DB::raw($student->id))
-                        ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
-                        ->on('progresses.entity_id', '=', 'lesson.id');
-                })->where(['topic_id' => $model->topic_id, 'dependency' => 1])->where('dev_mode', 0)->whereNull('progresses.id')->get()->all();
-                $is_topic_done = !count($lessons);
-            }
-            // if all lessons done
-            if ($is_topic_done) {
-                self::topicProgressDone($model->topic_id, $student);
-            }
+        }
+        // find all lessons from topic that are not done yet
+        $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
+            $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
+        })->where('topic_id', $model->topic_id)->where('dev_mode', 0);
+        if ($lessons_query->count() > 0) {
+            $is_topic_done = $lessons_query->count() <= $lessons_query->whereIn('id', function($q) use($student) {
+                    $q->select('entity_id')->from('progresses')->where('entity_type', 'lesson')->where('student_id', $student->id);
+                })->count();
+        } else {
+            $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
+                $join->on('progresses.student_id', '=', DB::raw($student->id))
+                    ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
+                    ->on('progresses.entity_id', '=', 'lesson.id');
+            })->where(['topic_id' => $model->topic_id, 'dependency' => 1])->where('dev_mode', 0)->whereNull('progresses.id')->get()->all();
+            $is_topic_done = !count($lessons);
+        }
+        // if all lessons done
+        if ($is_topic_done) {
+            self::topicProgressDone($model->topic_id, $student, $app_id);
         }
         return $this->success('OK.');
     }
 
-    public static function topicProgressDone($topic_id, $student)
+    public static function topicProgressDone($topic_id, $student, $app_id = null)
     {
         $student = Student::where('id', $student->id)->first();
-        $app_id = $student ? $student->app_id : null;
+        if (!$app_id) {
+            $app_id = $student ? $student->app_id : null;
+        }
         $completed_at = Carbon::now()->toDateString();
         //mark topic as done
         try {

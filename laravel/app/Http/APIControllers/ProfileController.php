@@ -22,6 +22,8 @@ class ProfileController extends Controller
             'last_name' => $student->last_name,
             'email' => $student->email,
             'question_num' => $student->question_num,
+            'app_id' => $student->app_id,
+            'applications' => Application::whereDoesntHave('teacher')->get()
         ]);
     }
 
@@ -104,7 +106,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function updateToDos() {
+    public function changeApplication() {
         $student = JWTAuth::parseToken()->authenticate();
         if (request()->has('app_id')) {
             $user = Student::find($student->id);

@@ -4,6 +4,9 @@ import { HttpService } from './http.service';
 
 @Injectable()
 export class TrackingService {
+
+    private appId = +localStorage.getItem('app_id');
+
     constructor(
         private http: HttpService) {
     }
@@ -24,9 +27,9 @@ export class TrackingService {
         const request = { start_datetime: start_datetime,
             weak_questions: weak_questions };
         if (lesson_id === -1) {
-          return this.http.post('/topic/' + topic_id + '/testoutdone', request);
+          return this.http.post('/topic/' + topic_id + '/testoutdone' + '?app_id=' + this.appId, request);
         } else {
-          return this.http.post('/lesson/' + lesson_id + '/done', request);
+          return this.http.post('/lesson/' + lesson_id + '/done' + '?app_id=' + this.appId, request);
         }
     }
 

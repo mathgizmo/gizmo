@@ -52,11 +52,11 @@ export class UserService {
             );
     }
 
-    public changeToDo(appId: number) {
+    public changeApplication(appId: number) {
         const request = {
             app_id: appId,
         };
-        return this.http.post('/profile/todo/', request)
+        return this.http.post('/profile/app/', request)
             .pipe(
                 catchError(error => {
                     console.log(error);

@@ -9,6 +9,59 @@
   width: 80vw;
 }
 
+.app-title {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: flex-start;
+  width: calc(100% - 70px);
+}
+
+.title {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.app-img {
+  width: 64px;
+  height: 64px;
+  background-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-repeat: no-repeat;
+}
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  > * {
+    min-width: 50%;
+  }
+}
+
+.app-select-container {
+  div:first-child {
+    margin-right: 6px;
+  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
 mat-card {
   margin: 10px;
   padding: 15px;
@@ -20,24 +73,17 @@ mat-card:last-child {
   margin-bottom: 28px;
 }
 
-.title {
-  display: block;
-  text-align: center;
-}
-
 mat-form-field {
   width: 100%;
-}
-
-.button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
 }
 
 @media screen and (max-width: 600px) {
   .profile {
     width: 100vw;
+  }
+  .applications-list {
+    > * {
+      min-width: 100%;
+    }
   }
 }

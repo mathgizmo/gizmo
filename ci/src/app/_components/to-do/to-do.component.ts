@@ -35,20 +35,8 @@ export class ToDoComponent implements OnInit {
         if (!appId) {
             return;
         }
-        this.userService.changeToDo(appId)
-            .subscribe(res => {
-                localStorage.setItem('app_id', appId + '');
-                this.selectedAppId = appId;
-                const redirectTo = localStorage.getItem('redirect_to');
-                if (redirectTo) {
-                    localStorage.removeItem('redirect_to');
-                    this.router.navigate([redirectTo]);
-                } else {
-                    this.router.navigate(['/']);
-                }
-            }, error => {
-                // console.log(error);
-            });
+        localStorage.setItem('app_id', appId + '');
+        this.router.navigate(['/']);
     }
 
     setIcon(image) {

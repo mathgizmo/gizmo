@@ -19,6 +19,9 @@
             <a class="btn btn-dark btn-sm" href="{{ route('applications.create') }}">+ add assignment</a>
         </div>
         <div class="card-body p-0">
+            <div class="d-flex justify-content-center mt-2" style="max-width: 100%;">
+                {{ $applications->links() }}
+            </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -90,6 +93,9 @@
                     </tbody>
                 </table>
 
+            </div>
+            <div class="d-flex justify-content-center mt-2" style="max-width: 100%;">
+                {{ $applications->links() }}
             </div>
         </div>
     </div>

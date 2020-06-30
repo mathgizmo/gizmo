@@ -78,6 +78,8 @@ export class AuthenticationService {
         this.token = null;
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('app_id');
+        localStorage.removeItem('question_num');
         this.userSubject.next(null);
     }
 

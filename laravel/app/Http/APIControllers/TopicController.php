@@ -22,7 +22,15 @@ class TopicController extends Controller
     {
         $auth_user = JWTAuth::parseToken()->authenticate();
         $this->student = Student::find($auth_user->id);
-        $this->app = Application::where('id', $this->student->app_id)->first();
+        if (request()->has('app_id')) {
+            $app_id = request('app_id');
+            $this->app = Application::where('id', $app_id)->first();
+            if (!$this->app) {
+                $this->app = Application::where('id', $this->student->app_id)->first();
+            }
+        } else {
+            $this->app = Application::where('id', $this->student->app_id)->first();
+        }
         if (!$this->app) {
             abort(453, 'Application Not Selected!');
         }
@@ -348,7 +356,7 @@ class TopicController extends Controller
         if (($model = Topic::find($topic)) == null) {
             return $this->error('Invalid topic.');
         }
-        StudentsTrackingController::topicProgressDone($model->id, $this->student);
+        StudentsTrackingController::topicProgressDone($model->id, $this->student, $this->app->id);
         return $this->success('OK.');
     }
 

@@ -43,4 +43,8 @@ export class AppComponent {
             });
         this.authenticationService.user.subscribe(x => this.user = x);
     }
+
+    onHomeClicked() {
+        localStorage.removeItem('app_id');
+    }
 }

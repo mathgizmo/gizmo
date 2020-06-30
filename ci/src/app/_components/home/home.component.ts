@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                     for (const unit of item.units) {
                         if (!found && unit.status !== 1) {
                             setTimeout(() => {
-                                $('#unit' + unit.id + '-topics').slideDown("slow");
+                                $('#unit' + unit.id + '-topics').slideDown('slow');
                             }, 100);
                             found = true;
                             unit.show = true;

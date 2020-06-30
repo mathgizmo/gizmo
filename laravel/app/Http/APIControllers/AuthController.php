@@ -34,7 +34,7 @@ class AuthController extends Controller
 
         $student->question_num = $student->question_num ?: 5;
         if (!$student->app_id) {
-            $student->app_id = Application::first()->id;
+            $student->app_id = Application::whereDoesntHave('teacher')->first()->id;
             $student->save();
         }
         $app_id = $student->app_id;

@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {User} from '../../_models/user';
 import {UserService} from '../../_services/user.service';
 import {AuthenticationService} from '../../_services/authentication.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {Router} from '@angular/router';
+import {environment} from '../../../environments/environment';
 
 @Component({
     selector: 'app-profile',
@@ -15,9 +18,15 @@ export class ProfileComponent implements OnInit {
     badEmail = false;
     warningMessage: string;
 
+    public applications = [];
+    public selectedAppId;
+    private readonly adminUrl = environment.adminUrl;
+
     constructor(
         private userService: UserService,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private sanitizer: DomSanitizer,
+        private router: Router
     ) {
         this.user = new User();
     }
@@ -25,12 +34,15 @@ export class ProfileComponent implements OnInit {
     ngOnInit() {
         this.userService.getProfile()
             .subscribe(res => {
+                localStorage.setItem('app_id', res['app_id']);
+                this.selectedAppId = res['app_id'];
                 this.user.username = res['name'];
                 this.user.first_name = res['first_name'];
                 this.user.last_name = res['last_name'];
                 this.user.email = res['email'];
                 this.user.question_num = res['question_num'];
                 localStorage.setItem('question_num', res['question_num']);
+                this.applications = res['applications'];
             });
     }
 
@@ -67,6 +79,34 @@ export class ProfileComponent implements OnInit {
                     console.log(error);
                 });
         }
+    }
+
+    onChangeApplication(appId: number) {
+        if (!appId) {
+            return;
+        }
+        this.userService.changeApplication(appId)
+            .subscribe(res => {
+                localStorage.setItem('app_id', appId + '');
+                this.selectedAppId = appId;
+                const redirectTo = localStorage.getItem('redirect_to');
+                if (redirectTo) {
+                    localStorage.removeItem('redirect_to');
+                    this.router.navigate([redirectTo]);
+                } else {
+                    this.router.navigate(['/']);
+                }
+            }, error => {
+                // console.log(error);
+            });
+    }
+
+    setIcon(image) {
+        if (!image) {
+            image = 'images/default-icon.svg';
+        }
+        const link = `url(` + this.adminUrl + `/${image})`;
+        return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
 }

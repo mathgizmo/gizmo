@@ -42,8 +42,8 @@ $api->version('v1', function ($api) {
 
         $api->get('/profile', 'App\Http\APIControllers\ProfileController@get');
         $api->post('/profile', 'App\Http\APIControllers\ProfileController@update');
+        $api->post('/profile/app', 'App\Http\APIControllers\ProfileController@changeApplication');
         $api->get('/profile/todo', 'App\Http\APIControllers\ProfileController@getToDos');
-        $api->post('/profile/todo', 'App\Http\APIControllers\ProfileController@updateToDos');
         $api->get('/profile/classes', 'App\Http\APIControllers\ProfileController@getClasses');
         $api->get('/profile/classes/invitations', 'App\Http\APIControllers\ProfileController@getClassInvitations');
         $api->post('/profile/classes/{class_id}/subscribe', 'App\Http\APIControllers\ProfileController@subscribeClass');

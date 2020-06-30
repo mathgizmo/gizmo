@@ -5,26 +5,28 @@ import { HttpService } from './http.service';
 @Injectable()
 export class TopicService {
 
+    private appId = +localStorage.getItem('app_id');
+
     constructor(
         private http: HttpService) {
     }
 
     // get topics from api
     getTopics() {
-        return this.http.get('/topic');
+        return this.http.get('/topic' + '?app_id=' + this.appId);
     }
 
     // get topic from api
     getTopic(id) {
-        return this.http.get('/topic/' + id);
+        return this.http.get('/topic/' + id + '?app_id=' + this.appId);
     }
 
     // get lesson from api
     getLesson(topic_id, lesson_id) {
         if (lesson_id === -1) {
-            return this.http.get('/topic/' + topic_id + '/testout');
+            return this.http.get('/topic/' + topic_id + '/testout' + '?app_id=' + this.appId);
         } else {
-          return this.http.get('/topic/' + topic_id + '/lesson/' + lesson_id);
+          return this.http.get('/topic/' + topic_id + '/lesson/' + lesson_id + '?app_id=' + this.appId);
         }
     }
 
