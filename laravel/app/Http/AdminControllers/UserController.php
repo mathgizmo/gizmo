@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 
 class UserController extends Controller
 {
@@ -31,9 +30,14 @@ class UserController extends Controller
         return view('users.create');
     }
 
-    public function store(Requests\UserRequest $request)
+    public function store(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin());
+        $this->validate($request, [
+            'email' => 'required|email|unique:users',
+            'name' => 'required|string',
+            'password' => 'required|string'
+        ]);
         User::create([
             'email' => $request->email,
             'name' => $request->name,

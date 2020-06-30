@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 
 class StudentController extends Controller
 {
@@ -23,7 +22,7 @@ class StudentController extends Controller
             ->filter(request()->all())
             ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc');
 
-        $students = $query->paginate(10)->appends(Input::except('page'));
+        $students = $query->paginate(10);
         return view('students.index', compact('students'));
     }
 

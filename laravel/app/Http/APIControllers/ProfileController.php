@@ -7,8 +7,8 @@ use App\ClassOfStudents;
 use App\Progress;
 use App\Student;
 use Illuminate\Support\Facades\DB;
-use Validator;
-use JWTAuth;
+use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ProfileController extends Controller
 {
@@ -48,12 +48,11 @@ class ProfileController extends Controller
             $update,
             [
                 'name' => 'max:255',
-                'email' => 'email|max:255|unique:students,email,'.$student->id, // DO NOT ADD SPACES TO THIS STRING!!!
+                'email' => 'email|max:255|unique:students,email,'.$student->id,
                 'password' => 'min:6',
             ]
         );
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return $this->error($validator->messages());
         }
         if (request()->has('password')) {

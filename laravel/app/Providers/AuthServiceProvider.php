@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Application;
 use App\Lesson;
 use App\Level;
+use App\MailTemplate;
 use App\PlacementQuestion;
 use App\Policies\ApplicationPolicy;
 use App\Policies\LessonPolicy;
+use App\Policies\MailTemplatePolicy;
 use App\Policies\PlacementPolicy;
 use App\Policies\QuestionPolicy;
 use App\Policies\ReportErrorPolicy;
@@ -41,12 +43,13 @@ class AuthServiceProvider extends ServiceProvider
         PlacementQuestion::class => PlacementPolicy::class,
         Student::class => StudentPolicy::class,
         Setting::class => SettingPolicy::class,
-        ReportError::class => ReportErrorPolicy::class, */
+        ReportError::class => ReportErrorPolicy::class,
+        MailTemplate::class => MailTemplatePolicy::class, */
     ];
 
     public function boot(GateContract $gate)
     {
-        $this->registerPolicies($gate);
+        // $this->registerPolicies($gate);
         Gate::before(function ($user, $ability) {
             return $user->isSuperAdmin() ? true : null; // super admin permission
         });

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\ReportError;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 
 class ReportErrorController extends Controller
 {
@@ -24,7 +22,7 @@ class ReportErrorController extends Controller
         } else {
            $query->latest();
         }
-        $error_reports = $query->paginate(10)->appends(Input::except('page'));
+        $error_reports = $query->paginate(10);
         return view('error_reports.index', compact('error_reports', 'type'));
     }
 

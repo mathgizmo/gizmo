@@ -95,13 +95,16 @@
                         <i class="fas fa-angle-down"></i>
                     </div>
                 </a>
-                <div class="collapse {{ Route::is('settings.*') || Route::is('users.*') ? 'show' : '' }}" id="collapseSettings" aria-labelledby="headingThree" data-parent="#sidenavAccordion">
+                <div class="collapse {{ Route::is('settings.*') || Route::is('users.*') || Route::is('mails.*') ? 'show' : '' }}" id="collapseSettings" aria-labelledby="headingThree" data-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="{{ route('settings.index') }}">
-                            Settings
+                        <a class="nav-link" href="{{ route('mails.index') }}">
+                            Mails
                         </a>
                         <a class="nav-link" href="{{ route('users.index') }}">
                             Administrators
+                        </a>
+                        <a class="nav-link" href="{{ route('settings.index') }}">
+                            Settings
                         </a>
                     </nav>
                 </div>

@@ -5,7 +5,7 @@ namespace App\Http\APIControllers;
 use App\PlacementQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Unit;
 
 class PlacementController extends Controller
@@ -37,7 +37,7 @@ class PlacementController extends Controller
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->where('unit.id', $unit_id)
             ->select('topic.id')
-            ->get();
+            ->get()->all();
         $middleTopicIndex = round(count($topics)/2);
         for ($i = 0; $i < $middleTopicIndex-1; $i++) {
             $topicId = $topics[$i]->id;
@@ -50,7 +50,7 @@ class PlacementController extends Controller
                 ->join('topic', 'lesson.topic_id', '=', 'topic.id')
                 ->where('topic.id', '=', $topicId)
                 ->select('lesson.id')
-                ->get();
+                ->get()->all();
             foreach ($lessons as $lesson) {
                 DB::table('progresses')->insert([
                     'student_id' => $student->id,
@@ -72,7 +72,7 @@ class PlacementController extends Controller
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->where('unit.id', $unit_id)
             ->select('lesson.id')
-            ->get();
+            ->get()->all();
         foreach ($lessons as $lesson) {
             DB::table('progresses')->insert([
                 'student_id' => $student->id,
@@ -85,7 +85,7 @@ class PlacementController extends Controller
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->where('unit.id', $unit_id)
             ->select('topic.id')
-            ->get();
+            ->get()->all();
         foreach ($topics as $topic) {
             DB::table('progresses')->insert([
                 'student_id' => $student->id,
@@ -108,7 +108,7 @@ class PlacementController extends Controller
             ->on('progresses.entity_id', '=', 'unit.id');
         })
         ->where(['level_id' => $unit_model->level_id, 'dependency' => 1])
-        ->whereNull('progresses.id')->get();
+        ->whereNull('progresses.id')->get()->all();
         //if all units are done, mark level as done
         if (!count($units)) {
             // done level

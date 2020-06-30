@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 use App\Unit;
 use App\Level;
 
@@ -35,7 +34,7 @@ class UnitController extends Controller
         $query->when($request->has('sort') and $request->has('order'), function ($q) {
             return $q->orderBy(request('sort'), request('order'));
         });
-        $units = $query->paginate(10)->appends(Input::except('page'));
+        $units = $query->paginate(10);
         return view('units.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
     }
 

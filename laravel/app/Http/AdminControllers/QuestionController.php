@@ -7,7 +7,6 @@ use App\Question;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 
 class QuestionController extends Controller
@@ -81,7 +80,7 @@ class QuestionController extends Controller
         } else {
             $query = $query->orderBy('question.id', 'desc');
         }
-        $questions = $query->paginate(10)->appends(Input::except('page'));
+        $questions = $query->paginate(10);
         return view('questions.index',
             compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes', 'reply_modes'));
     }
@@ -298,12 +297,9 @@ class QuestionController extends Controller
                 ->where('question.id', '=', $questionID)->first();
             $answers = DB::select('select * from answer where question_id = ' . $questionID);
             $levels = DB::select('select * from level');
-            $units = DB::table('unit')->select('id', 'title')
-                ->where('level_id', $question->lid)->get();
-            $topics = DB::table('topic')->select('id', 'title')
-                ->where('unit_id', $question->uid)->get();
-            $lessons = DB::table('lesson')->select('id', 'title')
-                ->where('topic_id', $question->tid)->get();
+            $units = DB::table('unit')->select('id', 'title')->where('level_id', $question->lid)->get();
+            $topics = DB::table('topic')->select('id', 'title')->where('unit_id', $question->uid)->get();
+            $lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $question->tid)->get();
             $qrmodes = DB::select('select * from reply_mode');
             $preview_url = Config::get('app.preview_url');
             return view('questions.edit', ['question' => $question,

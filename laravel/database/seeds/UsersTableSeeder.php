@@ -11,12 +11,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('admin'),
-            'is_admin' => true,
-            'created_at' => \Carbon\Carbon::now(),
-        ]);
+        if (App\User::count() < 1) {
+             DB::table('users')->insert([
+                'name' => 'admin',
+                'email' => 'admin@mail.com',
+                'password' => bcrypt('admin'),
+                'role' => 'superadmin'
+            ]);
+        }
     }
 }

@@ -2,27 +2,29 @@
 
 ### What is this repository for?
 
-We try to create app that allow people to learn math.
-It consist of 3 main modules admin, API and hybrid app
+We try to create the app that allow people to learn math.
 
 ### How do I get set up?
 
 #### Server
-- For admin part we use [Composer](https://getcomposer.org/), so go to laravel folder and run `composer install`
-- Also change copy `laravel/config/global/dbconf.php` file into `laravel/config/local` folder and set you db credential there. Do not save real credential in global folders.
-- To update your DB to current version go to laravel folder and run `php artisan migrate`
-- Make sure that apache has access to write into `laravel/bootstrap/cache` and `laravel/storage` folders.
-- Create file `.env` and put `APP_KEY=` in it. For email sending make sure that you have in your `.env` file next keys set: `MAIL_DRIVER`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_ENCRYPTION`. For preview questions in admin you need `PREVIEW_URL` with link to your client base preview path. You can just rename `example.env` to `.env`.
-- Run `php artisan key:generate` to generate app key. Check `.env` file if key actually been generated.
+- Install [Composer](https://getcomposer.org/).
+- Go to `laravel` folder and run `composer install` to install dependencies.
+- Create *.env* file (copy it from *.env.example*) and set your DB credentials: *DB_DATABASE*, *DB_PORT*, *DB_USERNAME*, *DB_PASSWORD*. 
+- To update your DB to current version run `php artisan migrate --seed`. If you get any error run `composer update`, then rerun command.
+- For email sending make sure you have in your *.env* file next keys set: *MAIL_HOST*, *MAIL_PORT*, *MAIL_USERNAME*, *MAIL_PASSWORD*. 
+- For preview questions in the admin you need *PREVIEW_URL* with a link to your client base preview path.
+- Fou production build change environment to production in your *.env* file: *APP_ENV=production*.
+- Run `php artisan key:generate` to generate app key. If you get any error on key generation, check if line *APP_KEY=* exists in *.env*, then rerun command.
 - Run `php artisan jwt:generate` to generate secret for API.
+- Make sure apache has access to write into `laravel/bootstrap/cache` and `laravel/storage` folders.
+- To clear your cache run `php artisan config:clear`, `php artisan view:clear`, `php artisan route:clear`, `php artisan cache:clear`
 
 #### Client
-- For Client App we use [Angular](https://angular.io/) which require [NodeJS](https://nodejs.org/) version 8.9+ at least. Check your version by running `node -v` and `npm -v` in a terminal/console window.
 - Globally install [Angular CLI](https://angular.io/guide/quickstart) using command `npm install -g @angular/cli@latest`
 - Run `npm install` into `ci` folder to install required npm modules
 - Add URL to your local server API to `/ci/src/environments/environment.ts` (copy it from `environment.example.ts`).
-- Run `npm start` or `ng serve  --open --base-href /gizmo/` for a dev server. The app will automatically reload if you change any of the source files.
-- Use `ng build --prod` into `ci` folder to build angular app and see your changes under apache (production build uses variables from `environment.prod.ts`, so set your globals there)
+- Run `npm start` for a dev server. The app will automatically reload if you change any of the source files.
+- Use `ng build --prod` into `ci` folder to build the angular app and see your changes under apache (production build uses variables from `environment.prod.ts`, so set your globals there)
 - If you want to generate a new component run `ng generate component component-name`. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ### To set up backups to dropbox

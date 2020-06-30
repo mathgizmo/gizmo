@@ -4,11 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ClassOfStudents;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 
 class ClassController extends Controller
 {
@@ -40,7 +36,7 @@ class ClassController extends Controller
                 $query->orderBy(request('sort'), request('order'));
             }
         }
-        return view('classes.index', ['classes' => $query->paginate(10)->appends(Input::except('page'))]);
+        return view('classes.index', ['classes' => $query->paginate(10)]);
     }
 
     public function create()
@@ -139,6 +135,23 @@ class ClassController extends Controller
             'class' => $class,
             'students' => $class->students()->orderBy('last_name', 'ASC')->orderBy('name', 'ASC')->get()
         ]);
+    }
+
+    public function find(Request $request) {
+        $class = null;
+        $query = ClassOfStudents::query();
+        if ($request['id']) {
+            $class = $query->where('id', $request['id'])->get();
+        }
+        if ($class) {
+            return $class;
+        } else {
+            $limit = $request['limit'] == 'all' ? null : ((int) $request['limit'] > 0 ? (int) $request['limit'] : 5);
+            $pattern = $request['pattern'];
+            $query->where('name', 'LIKE', $pattern.'%');
+            if ($limit) $query->limit($limit);
+            return $query->get();
+        }
     }
 
 }

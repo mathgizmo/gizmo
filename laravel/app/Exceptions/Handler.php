@@ -18,24 +18,28 @@ class Handler extends ExceptionHandler
         ValidationException::class,
     ];
 
-    public function report(Exception $e)
+    public function report(Exception $exception)
     {
-        parent::report($e);
+        parent::report($exception);
     }
-
-    public function render($request, Exception $e)
+    public function render($request, Exception $exception)
     {
-        if ($e instanceof AuthorizationException) {
+        if ($exception instanceof AuthorizationException) {
             return response()->view('errors.' . '403', [], 403);
         }
-        if ($this->isHttpException($e)) {
-            if ($e->getStatusCode() == 404) {
+        if ($this->isHttpException($exception)) {
+            if ($exception->getStatusCode() == 404) {
                 return response()->view('errors.' . '404', [], 404);
             }
-            if ($e->getStatusCode() == 500) {
+            if ($exception->getStatusCode() == 500) {
                 return response()->view('errors.' . '500', [], 500);
             }
         }
-        return parent::render($request, $e);
+        return parent::render($request, $exception);
+    }
+
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json($exception->errors(), $exception->status);
     }
 }

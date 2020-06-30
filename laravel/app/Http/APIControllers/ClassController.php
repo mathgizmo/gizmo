@@ -4,12 +4,9 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\ClassOfStudents;
-use App\Http\Requests\Request;
 use App\Progress;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Validator;
-use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ClassController extends Controller
 {
@@ -137,7 +134,6 @@ class ClassController extends Controller
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
                 'app_id' => $app_id
-                // 'due_date' => null
             ]);
             return $this->success('Ok.');
         }

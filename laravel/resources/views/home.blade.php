@@ -61,11 +61,14 @@
             <h4 class="h4">Settings</h4>
         </div>
     <div class="actions-container d-flex flex-wrap align-items-center mt-2">
-        <a class="btn btn-outline-dark mr-2" href="{{ route('settings.index') }}">
-            Settings
+        <a class="btn btn-outline-dark mr-2" href="{{ route('mails.index') }}">
+            Mails
         </a>
         <a class="btn btn-outline-dark mr-2" href="{{ route('users.index') }}">
             Administrators
+        </a>
+        <a class="btn btn-outline-dark mr-2" href="{{ route('settings.index') }}">
+            Settings
         </a>
     </div>
     @endif

@@ -2,37 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Question;
-use App\Answer;
-use App\Http\Requests;
 
 class AnswerController extends Controller
 {
-
-    public function index(Request $request) {
-    }
-
-    public function create() {
-    }
-
-    public function store(Request $request) {
-    }
-
-    public function show($id) {
-    }
-
-    public function edit($id) {
-    }
-
-    public function update(Request $request, $id) {
-    }
-
-    public function destroy(Request $request, $id) {
-    }
-
-
     /**
      * Insert answer from question table
      */

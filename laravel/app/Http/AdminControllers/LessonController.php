@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 use App\Lesson;
 use App\Topic;
 use App\Level;
@@ -54,7 +53,7 @@ class LessonController extends Controller
             return $q->orderBy(request('sort'), request('order'));
         });
 
-        $lessons = $query->paginate(10)->appends(Input::except('page'));
+        $lessons = $query->paginate(10);
 
         return view('lessons.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
     }

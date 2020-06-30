@@ -2,9 +2,10 @@
 
 namespace App;
 
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Student extends Authenticatable
+class Student extends Authenticatable implements JWTSubject
 {
     protected $table = 'students';
 
@@ -69,5 +70,15 @@ class Student extends Authenticatable
     public function isAdmin()
     {
         return $this->is_admin;
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

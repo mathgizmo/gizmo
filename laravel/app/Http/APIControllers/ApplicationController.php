@@ -3,8 +3,6 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
-use App\Http\Requests\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -26,11 +24,8 @@ class ApplicationController extends Controller
 
     public function store() {
         try {
-            $validator = Validator::make(
-                request()->all(),
-                [
-                    'name' => 'required|max:255',
-                ]
+            $validator = Validator::make(request()->all(),
+                [ 'name' => 'required|max:255' ]
             );
             if ($validator->fails()) {
                 return $this->error($validator->messages());
@@ -52,11 +47,8 @@ class ApplicationController extends Controller
 
     public function update($app_id) {
         try {
-            $validator = Validator::make(
-                request()->all(),
-                [
-                    'name' => 'required|max:255',
-                ]
+            $validator = Validator::make(request()->all(),
+                [ 'name' => 'required|max:255' ]
             );
             if ($validator->fails()) {
                 return $this->error($validator->messages());
