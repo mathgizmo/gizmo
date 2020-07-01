@@ -6,6 +6,7 @@ import { Observable, Subscriber } from 'rxjs';
 
 import {AuthenticationService, TopicService, TrackingService} from '../../_services/index';
 import {environment} from '../../../environments/environment';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
     moduleId: module.id,
@@ -18,13 +19,29 @@ export class HomeComponent implements OnInit, OnDestroy {
     topicsTree: any = [];
     private readonly adminUrl = environment.adminUrl;
 
-    constructor(private topicService: TopicService,
+    private routerEvent;
+
+    constructor(private router: Router,
+                private topicService: TopicService,
                 private trackingService: TrackingService,
                 private sanitizer: DomSanitizer,
                 private authenticationService: AuthenticationService) {
     }
 
     ngOnInit() {
+        this.routerEvent = this.router.events.subscribe((evt) => {
+            if (evt instanceof NavigationEnd) {
+                this.initData();
+            }
+        });
+        this.initData();
+    }
+
+    ngOnDestroy() {
+        this.routerEvent.unsubscribe();
+    }
+
+    initData() {
         const user = this.authenticationService.userValue;
         const result = this.topicService.getTopics().pipe(
             flatMap(topicsTree => {
@@ -78,9 +95,6 @@ export class HomeComponent implements OnInit, OnDestroy {
                 }
             }
         });
-    }
-
-    ngOnDestroy() {
     }
 
     setTopicIcon(image) {

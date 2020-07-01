@@ -13,6 +13,7 @@ export class TopicService {
 
     // get topics from api
     getTopics() {
+        this.appId = +localStorage.getItem('app_id'); // fix navigation to home from home
         return this.http.get('/topic' + '?app_id=' + this.appId);
     }
 
