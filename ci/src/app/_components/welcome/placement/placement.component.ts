@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
+/*import {Component, OnInit, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {PlacementService} from '../../../_services/index';
 
@@ -88,3 +88,4 @@ export class PlacementComponent implements OnInit {
     }
 
 }
+*/
