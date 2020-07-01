@@ -40,7 +40,7 @@ class ClassObserver
                                     'mail_type' => 'App\Mail\ClassInviteMail',
                                     'student_id' => $student->id,
                                     'class_id' => $class->id,
-                                    'created_at' => Carbon::now()->toDayDateTimeString()
+                                    'created_at' => Carbon::now()->toDateTimeString()
                                 ]);
                             }
                         }
