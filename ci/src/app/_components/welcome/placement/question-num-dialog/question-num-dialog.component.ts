@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+/*import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {UserService} from '../../../../_services/user.service';
 import {User} from '../../../../_models/user';
@@ -27,3 +27,4 @@ export class QuestionNumDialogComponent {
         this.dialogRef.close();
     }
 }
+*/
