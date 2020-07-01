@@ -118,8 +118,8 @@
         #class-variables, #class-container {
             display: none;
         }
-        .ck-content {
-            min-height: 400px !important;
+        .cke_contents {
+            min-height: 360px !important;
         }
         .info {
             background-color: #f0f7fb;

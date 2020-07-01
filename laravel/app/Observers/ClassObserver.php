@@ -4,7 +4,9 @@ namespace App\Observers;
 
 use App\ClassOfStudents;
 use App\Mail\ClassInviteMail;
+use App\MailsHistory;
 use App\Student;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -30,8 +32,16 @@ class ClassObserver
                         if ($student) {
                             $subscribed = DB::table('classes_students')->where('class_id', $class->id)
                                 ->where('student_id', $student->id)->exists();
-                            if (!$subscribed) {
+                            $emailed = DB::table('mails_history')->where('mail_type', 'App\Mail\ClassInviteMail')
+                                ->where('student_id', $student->id)->where('class_id', $class->id)->exists();
+                            if (!$subscribed && !$emailed) {
                                 Mail::to($student->email)->send(new ClassInviteMail($student, $class));
+                                DB::table('mails_history')->insert([
+                                    'mail_type' => 'App\Mail\ClassInviteMail',
+                                    'student_id' => $student->id,
+                                    'class_id' => $class->id,
+                                    'created_at' => Carbon::now()->toDayDateTimeString()
+                                ]);
                             }
                         }
                     } catch (\Exception $e) { }
