@@ -61,7 +61,7 @@ class ClassController extends Controller
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
                 'app_id' => $key,
-                'due_date' => $value['due_date']
+                'due_date' => $value['due_date'] ?: null
             ]);
         }
         return redirect()->route('classes.index')->with(array('message'=> 'Created successfully'));
@@ -100,12 +100,12 @@ class ClassController extends Controller
                 if ($old_apps->where('id', $key)->count() > 0) {
                     $old_apps->forget($key);
                     DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $key)
-                        ->update(['due_date' => $value['due_date']]);
+                        ->update(['due_date' => $value['due_date'] ?: null]);
                 } else {
                     DB::table('classes_applications')->insert([
                         'class_id' => $class->id,
                         'app_id' => $key,
-                        'due_date' => $value['due_date']
+                        'due_date' => $value['due_date'] ?: null
                     ]);
                 }
             }
