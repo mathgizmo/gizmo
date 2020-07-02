@@ -53,9 +53,27 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
         this.dialogRef.close(this.assignment);
     }
 
-    hasCheckedChildren(level) {
-        return (level.children.filter( (item) => {
-            return item.checked;
+    hasCheckedChildrenLevel(level) {
+        return (level.children.filter( (unit) => {
+            return unit.checked || (unit.children.filter( (topic) => {
+                return topic.checked || (topic.children.filter( (lesson) => {
+                    return lesson.checked;
+                })).length !== 0;
+            })).length !== 0;
+        })).length === 0;
+    }
+
+    hasCheckedChildrenUnit(unit) {
+        return (unit.children.filter( (topic) => {
+            return topic.checked || (topic.children.filter( (lesson) => {
+                return lesson.checked;
+            })).length !== 0;
+        })).length === 0;
+    }
+
+    hasCheckedChildrenTopic(topic) {
+        return (topic.children.filter( (lesson) => {
+            return lesson.checked;
         })).length === 0;
     }
 

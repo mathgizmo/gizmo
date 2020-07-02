@@ -23,8 +23,8 @@
                         <input id="name" type="text" class="form-control" name="name" value="{{ $application->name }}">
                         @if ($errors->has('name'))
                             <span class="form-text">
-                                                    <strong>{{ $errors->first('name') }}</strong>
-                                                </span>
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
@@ -44,21 +44,21 @@
                     <ul>
                         @foreach($tree as $level)
                             <li>
-                                <i class="expand-icon can-expand fas fa-{{empty(array_filter($level->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
+                                <i class="expand-icon can-expand fas fa-{{empty(array_filter($level->children, function($unit){return $unit->checked || array_filter($unit->children, function($topic){return $topic->checked || array_filter($topic->children, function($lesson){return $lesson->checked;});});})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
                                 <input type="checkbox"
                                        name="level[{{$level->id}}]" {{$level->checked ? 'checked="checked"' : '' }} />
                                 <label class="can-expand">{{$level->text}}</label>
                                 <ul class="{{$level->collapsed ? 'collapse' : ''}}">
                                     @foreach($level->children as $unit)
                                         <li>
-                                            <i class="expand-icon can-expand fas fa-{{empty(array_filter($unit->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
+                                            <i class="expand-icon can-expand fas fa-{{empty(array_filter($unit->children, function($topic){return $topic->checked || array_filter($topic->children, function($lesson){return $lesson->checked;});})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
                                             <input type="checkbox"
                                                    name="unit[{{$unit->id}}]" {{$unit->checked ? 'checked="checked"' : '' }} />
                                             <label class="can-expand">{{$unit->text}}</label>
                                             <ul class="{{$unit->collapsed ? 'collapse' : ''}}">
                                                 @foreach($unit->children as $topic)
                                                     <li>
-                                                        <i class="expand-icon can-expand fas fa-{{empty(array_filter($topic->children, function($obj){return $obj->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
+                                                        <i class="expand-icon can-expand fas fa-{{empty(array_filter($topic->children, function($lesson){return $lesson->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
                                                         <input type="checkbox"
                                                                name="topic[{{$topic->id}}]" {{$topic->checked ? 'checked="checked"' : '' }} />
                                                         <label class="can-expand">{{$topic->text}}</label>

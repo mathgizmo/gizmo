@@ -3,7 +3,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {Angular2FontawesomeModule} from 'angular2-fontawesome/angular2-fontawesome';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -68,7 +67,6 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         FormsModule,
         HttpClientModule,
         AppRoutingModule,
-        Angular2FontawesomeModule,
         BrowserAnimationsModule,
         MatInputModule,
         MatButtonModule,
