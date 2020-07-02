@@ -17,20 +17,21 @@ class LevelController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = Level::query();
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('order_no'), function ($q) {
-            return $q->where('order_no', request('order_no'));
-        });
-        $query->when($request->has('title'), function ($q) {
-            return $q->where('title', 'LIKE', '%'.request('title').'%');
-        });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
-        $levels = $query->get();
-        return view('levels.index', ['levels'=>$levels]);
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['order_no']) {
+            $query->where('order_no', $request['order_no']);
+        }
+        if ($request['title']) {
+            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+        }
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
+        }
+        return view('levels.index', [
+            'levels' => $query->get()
+        ]);
     }
 
     public function create()

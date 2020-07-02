@@ -16,9 +16,9 @@ class PlacementController extends Controller
     public function index(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        if ($request->has('sort') and $request->has('order')) {
+        if ($request['sort'] && $request['order']) {
             $placements = PlacementQuestion::with('unit')
-                ->orderBy($request->sort, $request->order)->get();
+                ->orderBy($request['sort'], $request['order'])->get();
         } else {
             $placements = PlacementQuestion::with('unit')->get();
         }

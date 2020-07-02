@@ -13,30 +13,32 @@ class ClassController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = ClassOfStudents::query();
-        if ($request->has('id')) {
-            $query->where('id', request('id'));
+        if ($request['id']) {
+            $query->where('id', $request['id']);
         }
-        if ($request->has('name')) {
-            $query->where('name', 'LIKE', '%'.request('name').'%');
+        if ($request['name']) {
+            $query->where('name', 'LIKE', '%'.$request['name'].'%');
         }
-        if ($request->has('teacher')) {
+        if ($request['teacher']) {
             $teacher = $request['teacher'];
             $query->whereHas('teacher', function ($q) use ($teacher) {
                 $q->where('name', 'LIKE', '%'.$teacher.'%');
             });
         }
-        if ($request->has('subscription_type')) {
-            $query->where('subscription_type', request('subscription_type'));
+        if ($request['subscription_type']) {
+            $query->where('subscription_type', $request['subscription_type']);
         }
-        if ($request->has('sort') and $request->has('order')) {
-            if (request('sort') == 'teacher') {
+        if ($request['sort'] && $request['order']) {
+            if ($request['sort'] == 'teacher') {
                 $query->leftJoin('students', 'students.id', '=', 'classes.teacher_id')
                     ->orderBy('students.name', request('order'))->select('classes.*');
             } else {
-                $query->orderBy(request('sort'), request('order'));
+                $query->orderBy($request['sort'], $request['order']);
             }
         }
-        return view('classes.index', ['classes' => $query->paginate(10)]);
+        return view('classes.index', [
+            'classes' => $query->paginate(10)
+        ]);
     }
 
     public function create()

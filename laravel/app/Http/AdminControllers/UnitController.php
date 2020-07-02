@@ -17,25 +17,27 @@ class UnitController extends Controller
     public function index(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $levels = Level::all();
         $query = Unit::query();
-        $query->when($request->has('level_id') && ($request->level_id >= 0), function ($q) {
-            return $q->where('level_id', request('level_id'));
-        });
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('order_no'), function ($q) {
-            return $q->where('order_no', request('order_no'));
-        });
-        $query->when($request->has('title'), function ($q) {
-            return $q->where('title', 'LIKE', '%'.request('title').'%');
-        });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
-        $units = $query->paginate(10);
-        return view('units.index', ['levels'=>$levels, 'units'=>$units, 'level_id' => $request->level_id]);
+        if ($request['level_id']) {
+            $query->where('level_id', $request['level_id']);
+        }
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['order_no']) {
+            $query->where('order_no', $request['order_no']);
+        }
+        if ($request['title']) {
+            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+        }
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
+        }
+        return view('units.index', [
+            'levels'=> Level::all(),
+            'units'=> $query->paginate(10),
+            'level_id' => $request['level_id']
+        ]);
     }
 
     public function create()

@@ -18,24 +18,24 @@ class ApplicationController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = Application::query();
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('name'), function ($q) {
-            return $q->where('name', 'LIKE', '%' . request('name') . '%');
-        });
-        if ($request->has('teacher')) {
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['name']) {
+            $query->where('name', 'LIKE', '%' . $request['name'] . '%');
+        }
+        if ($request['teacher']) {
             $teacher = $request['teacher'];
             $query->whereHas('teacher', function ($q) use ($teacher) {
                 $q->where('name', 'LIKE', '%'.$teacher.'%');
             });
         }
-        if ($request->has('sort') and $request->has('order')) {
-            if (request('sort') == 'teacher') {
+        if ($request['sort'] && $request['order']) {
+            if ($request['sort'] == 'teacher') {
                 $query->leftJoin('students', 'students.id', '=', 'applications.teacher_id')
                     ->orderBy('students.name', request('order'))->select('applications.*');
             } else {
-                $query->orderBy(request('sort'), request('order'));
+                $query->orderBy($request['sort'], $request['order']);
             }
         }
         return view('applications.index', ['applications' => $query->paginate(10)]);

@@ -18,39 +18,43 @@ class TopicController extends Controller
     public function index(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $levels = Level::all();
-        $units = Unit::all();
         $query = Topic::query();
-        if ($request->has('unit_id') && $request->unit_id >= 0) {
-            $query->where('unit_id', $request->unit_id);
-        } else if ($request->has('level_id') && $request->level_id >= 0) {
+        if ($request['unit_id'] && $request['unit_id'] >= 0) {
+            $query->where('unit_id', $request['unit_id']);
+        } else if ($request['level_id'] && $request['level_id'] >= 0) {
             $query->whereIn('unit_id', function($query) {
                 $query->select('id')->from(with(new Unit)->getTable())
                 ->where('level_id', request('level_id'));
             });
         }
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('order_no'), function ($q) {
-            return $q->where('order_no', request('order_no'));
-        });
-        $query->when($request->has('title'), function ($q) {
-            return $q->where('title', 'LIKE', '%'.request('title').'%');
-        });
-        $query->when($request->has('short_name'), function ($q) {
-            return $q->where('short_name', 'LIKE', '%'.request('short_name').'%');
-        });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['order_no']) {
+            $query->where('order_no', $request['order_no']);
+        }
+        if ($request['title']) {
+            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+        }
+        if ($request['short_name']) {
+            $query->where('short_name', 'LIKE', '%'.$request['short_name'].'%');
+        }
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
+        }
         $topics = $query->paginate(10);
         foreach ($topics as $key => $value) {
             if(!file_exists($topics[$key]->icon_src)) {
                 $topics[$key]->icon_src = 'images/default-icon.svg';
             }
         }
-        return view('topics.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
+        return view('topics.index', [
+            'levels' => Level::all(),
+            'units' => Unit::all(),
+            'topics' => $topics,
+            'unit_id' => $request['unit_id'],
+            'level_id' => $request['level_id']
+        ]);
     }
 
     public function create()

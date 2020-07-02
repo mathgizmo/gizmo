@@ -31,7 +31,7 @@ class PlacementController extends Controller
     }
 
     public function doneHalfUnit(Request $request) {
-        $unit_id = $request->unit_id;
+        $unit_id = $request['unit_id'];
         $student = JWTAuth::parseToken()->authenticate();
         $topics = DB::table('topic')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
@@ -64,7 +64,7 @@ class PlacementController extends Controller
     }
 
     public function doneUnit(Request $request) {
-        $unit_id = $request->unit_id;
+        $unit_id = $request['unit_id'];
         $student = JWTAuth::parseToken()->authenticate();
         // done lessons
         $lessons = DB::table('lesson')

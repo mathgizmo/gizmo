@@ -29,9 +29,9 @@ class QuestionController extends Controller
         }
         $levels = DB::select('select * from level');
         $reply_modes = DB::select('select * from reply_mode');
-        $units = DB::table('unit')->where('level_id', $request->level_id)->get();
-        $topics = DB::table('topic')->where('unit_id', $request->unit_id)->get();
-        $lessons = DB::table('lesson')->where('topic_id', $request->topic_id)->get();
+        $units = DB::table('unit')->where('level_id', $request['level_id'])->get();
+        $topics = DB::table('topic')->where('unit_id', $request['unit_id'])->get();
+        $lessons = DB::table('lesson')->where('topic_id', $request['topic_id'])->get();
         $qrmodes = [];
         foreach (DB::select('select * from reply_mode') as $reply_mode) {
             $qrmodes[$reply_mode->code] = $reply_mode->mode;
@@ -42,43 +42,43 @@ class QuestionController extends Controller
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
             ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle', 'lesson.order_no as lesson_order');
-        if ($request->has('level_id')) {
-            $level_id = $request->level_id;
-            $query = $query->where('level_id', $request->level_id);
+        if ($request['level_id']) {
+            $level_id = $request['level_id'];
+            $query->where('level_id', $request['level_id']);
         } else {
             $level_id = '';
         }
-        if ($request->has('unit_id')) {
-            $unit_id = $request->unit_id;
-            $query = $query->where('unit_id', $request->unit_id);
+        if ($request['unit_id']) {
+            $unit_id = $request['unit_id'];
+            $query->where('unit_id', $request['unit_id']);
         } else {
             $unit_id = '';
         }
-        if ($request->has('topic_id')) {
-            $topic_id = $request->topic_id;
-            $query = $query->where('topic_id', $request->topic_id);
+        if ($request['topic_id']) {
+            $topic_id = $request['topic_id'];
+            $query->where('topic_id', $request['topic_id']);
         } else {
             $topic_id = '';
         }
-        if ($request->has('lesson_id')) {
-            $lesson_id = $request->lesson_id;
-            $query = $query->where('lesson_id', $request->lesson_id);
+        if ($request['lesson_id']) {
+            $lesson_id = $request['lesson_id'];
+            $query->where('lesson_id', $request['lesson_id']);
         } else {
             $lesson_id = '';
         }
-        if ($request->has('question')) {
-            $query = $query->where('question', 'like', '%' . $request->question . '%');
+        if ($request['question']) {
+            $query->where('question', 'like', '%' . $request['question'] . '%');
         }
-        if ($request->has('type')) {
-            $query = $query->where('type', 'like', '%' . $request->type . '%');
+        if ($request['type']) {
+            $query->where('type', 'like', '%' . $request['type'] . '%');
         }
-        if ($request->has('reply_mode')) {
-            $query = $query->where('reply_mode', $request->reply_mode);
+        if ($request['reply_mode']) {
+            $query->where('reply_mode', $request['reply_mode']);
         }
-        if ($request->has('sort') and $request->has('order')) {
-            $query = $query->orderBy($request->sort, $request->order);
+        if ($request['sort'] &&  $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
         } else {
-            $query = $query->orderBy('question.id', 'desc');
+            $query->orderBy('question.id', 'DESC');
         }
         $questions = $query->paginate(10);
         return view('questions.index',
@@ -109,33 +109,38 @@ class QuestionController extends Controller
             $toutput = '<option value="" selected>Select From ...</option>';
             $loutput = '<option value="" selected>Select From ...</option>';
             $coutput = '<option value="" selected>No Related Data ...</option>';
-            $lid = $request->level_id;
-            $request->session()->put('slid', $lid);
-            $units = DB::table('unit')->select('id', 'title')->where('level_id', $lid)->get();
-            if ($units) {
-                foreach ($units as $unit) {
-                    $output .= '<option value="' . $unit->id . '">' . $unit->title . '</option>';
+            $lid = $request['level_id'];
+            if ($lid) {
+                $request->session()->put('slid', $lid);
+                $units = DB::table('unit')->select('id', 'title')->where('level_id', $lid)->get();
+                if ($units) {
+                    foreach ($units as $unit) {
+                        $output .= '<option value="' . $unit->id . '">' . $unit->title . '</option>';
+                    }
+                    return response()->json($output);
                 }
-                return response()->json($output);
             }
-            $uid = $request->unit_id;
-            $topics = DB::table('topic')->select('id', 'title')->where('unit_id', $uid)->get();
-            if ($topics) {
-                foreach ($topics as $topic) {
-                    $toutput .= '<option value="' . $topic->id . '">' . $topic->title . '</option>';
+            $uid = $request['unit_id'];
+            if ($uid) {
+                $topics = DB::table('topic')->select('id', 'title')->where('unit_id', $uid)->get();
+                if ($topics) {
+                    foreach ($topics as $topic) {
+                        $toutput .= '<option value="' . $topic->id . '">' . $topic->title . '</option>';
+                    }
+                    return response()->json($toutput);
                 }
-                return response()->json($toutput);
             }
-            $tid = $request->topic_id;
-            $lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $tid)->get();
-            if ($lessons) {
-                foreach ($lessons as $lesson) {
-                    $loutput .= '<option value="' . $lesson->id . '">' . $lesson->title . '</option>';
+            $tid = $request['topic_id'];
+            if ($tid) {
+                $lessons = DB::table('lesson')->select('id', 'title')->where('topic_id', $tid)->get();
+                if ($lessons) {
+                    foreach ($lessons as $lesson) {
+                        $loutput .= '<option value="' . $lesson->id . '">' . $lesson->title . '</option>';
+                    }
+                    return response()->json($loutput);
                 }
-                return response()->json($loutput);
-            } else {
-                return response()->json($coutput);
             }
+            return response()->json($coutput);
         };
         $lid = $request->session()->get('slid');
         $uid = "";
@@ -153,10 +158,10 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin() || auth()->user()->isQuestionsEditor());
-        $lid = $request->level_id;
-        $uid = $request->unit_id;
-        $tid = $request->topic_id;
-        $lesson_id = $request->lesson_id;
+        $lid = $request['level_id'];
+        $uid = $request['unit_id'];
+        $tid = $request['topic_id'];
+        $lesson_id = $request['lesson_id'];
         $this->validate($request, [
             'level_id' => 'required',
             'unit_id' => 'required',
@@ -181,11 +186,11 @@ class QuestionController extends Controller
         $type = $request['reply_mode'];
         $iterations = str_replace(['general', 'FB', 'TF', 'mcq', 'order', 'mcqms'],
             [1, 6, 1, 6, 6, 6], $type);
-        for ($i = 0; $i < ($iterations > count($request->answer) ? count($request->answer) : $iterations); $i++) {
-            $is_correct = in_array($i, $request->is_correct) ? 1 : 0;
+        for ($i = 0; $i < ($iterations > count($request['answer']) ? count($request['answer']) : $iterations); $i++) {
+            $is_correct = in_array($i, $request['is_correct']) ? 1 : 0;
             Answer::create([
-                'question_id' => $question->id,
-                'value' => $request->answer[$i],
+                'question_id' => $question['id'],
+                'value' => $request['answer'][$i],
                 'answer_order' => $i,
                 'is_correct' => $is_correct,
             ]);

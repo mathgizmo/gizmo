@@ -17,8 +17,8 @@ class ReportErrorController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = ReportError::query()->where('declined', $type == 'new' ? 0 : 1);
-        if($request->has('sort') and $request->has('order')) {
-            $query->orderBy(request('sort'), request('order'));
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
         } else {
            $query->latest();
         }

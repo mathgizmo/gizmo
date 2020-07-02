@@ -19,18 +19,15 @@ class LessonController extends Controller
     public function index(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $levels = Level::all();
-        $units = Unit::all();
-        $topics = Topic::all();
         $query = Lesson::query();
-        if ($request->has('topic_id') && $request->topic_id >= 0) {
-            $query->where('topic_id', $request->topic_id);
-        } else if ($request->has('unit_id') && $request->unit_id >= 0) {
+        if ($request['topic_id'] && $request['topic_id'] >= 0) {
+            $query->where('topic_id', $request['topic_id']);
+        } else if ($request['unit_id'] && $request['unit_id'] >= 0) {
             $query->whereIn('topic_id', function($query) {
                 $query->select('id')->from(with(new Topic)->getTable())
                 ->where('unit_id', request('unit_id'));
             });
-        } else if ($request->has('level_id')  && $request->level_id >= 0) {
+        } else if ($request['level_id']  && $request['level_id'] >= 0) {
             $query->whereIn('topic_id', function($query) {
                 $query->select('id')->from(with(new Topic)->getTable())
                 ->whereIn('unit_id', function($query) {
@@ -39,23 +36,27 @@ class LessonController extends Controller
                 });
             });
         }
-
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('order_no'), function ($q) {
-            return $q->where('order_no', request('order_no'));
-        });
-        $query->when($request->has('title'), function ($q) {
-            return $q->where('title', 'LIKE', '%'.request('title').'%');
-        });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
-
-        $lessons = $query->paginate(10);
-
-        return view('lessons.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['order_no']) {
+            $query->where('order_no', $request['order_no']);
+        }
+        if ($request['title']) {
+            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+        }
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
+        }
+        return view('lessons.index', [
+            'levels' => Level::all(),
+            'units' => Unit::all(),
+            'topics' => Topic::all(),
+            'lessons' => $query->paginate(10),
+            'unit_id' => $request['unit_id'],
+            'level_id' => $request['level_id'],
+            'topic_id' => $request['topic_id']
+        ]);
     }
 
     public function create()

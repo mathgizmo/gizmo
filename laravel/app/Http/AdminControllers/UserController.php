@@ -16,8 +16,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin());
-        if ($request->has('sort') and $request->has('order')) {
-            $users = User::orderBy($request->sort, $request->order)->get();
+
+        if ($request['sort'] && $request['order']) {
+            $users = User::orderBy($request['sort'], $request['order'])->get();
         } else {
             $users = User::latest()->get();
         }
@@ -39,10 +40,10 @@ class UserController extends Controller
             'password' => 'required|string'
         ]);
         User::create([
-            'email' => $request->email,
-            'name' => $request->name,
-            'password' => bcrypt($request->password),
-            'role' => $request->role
+            'email' => $request['email'],
+            'name' => $request['name'],
+            'password' => bcrypt($request['password']),
+            'role' => $request['role']
         ]);
         return redirect(route('users.index'))->with('status', 'User has been successfully added.');
     }
