@@ -1,5 +1,5 @@
 <div class="question-container white-theme">
-    <h2 [innerHtml]="question.question" *ngIf="!is_chart" class="question"></h2>
+    <h2 [innerHtml]="question.question | safeHtml" *ngIf="!is_chart" class="question"></h2>
     <span  *ngIf="is_chart" >
         <h2 [innerHtml]="questionForChart | safeHtml" *ngIf="is_chart" class="question"></h2>
         <chart [question]="question['question']" chartHeight="250" ></chart>
