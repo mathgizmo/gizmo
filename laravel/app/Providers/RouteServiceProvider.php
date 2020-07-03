@@ -17,8 +17,12 @@ class RouteServiceProvider extends ServiceProvider
 
     public function map()
     {
-        $this->mapApiRoutes();
-        $this->mapWebRoutes();
+        if (isset($_ENV['app']) && $_ENV['app'] == 'api') {
+            $this->mapApiRoutes();
+        }
+        else {
+            $this->mapWebRoutes();
+        }
     }
 
     protected function mapWebRoutes()
