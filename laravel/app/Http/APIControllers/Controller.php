@@ -22,6 +22,11 @@ class Controller extends BaseController
     }
     protected function error($message)
     {
-        return $this->response->array(['success' => false, 'message' => $message, 'status_code' => 200]);
+        // return $this->response->array(['success' => false, 'message' => $message, 'status_code' => 200]);
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'status_code' => 500
+        ], 500, [], JSON_NUMERIC_CHECK);
     }
 }

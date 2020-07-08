@@ -36,14 +36,14 @@ export class HTTPListener implements HttpInterceptor {
         req: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
+        this.status.setHttpStatus(true);
         return next.handle(req).pipe(
-            map(event => {
-                this.status.setHttpStatus(true);
+            /* map(event => {
                 return event;
             }),
             catchError(error => {
                 return throwError(error);
-            }),
+            }), */
             finalize(() => {
                 this.status.setHttpStatus(false);
             })
