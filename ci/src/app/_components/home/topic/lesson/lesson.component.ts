@@ -289,7 +289,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         if (this.question.reply_mode === 'FB') {
             for (let i = 0; i < this.answers.length; i++) {
                 try {
-                    if (this.answers[i].includes('%')) {
+                    if ((this.answers[i] + '').includes('%')) {
                         const answer = this.answers[i].replace('%', '');
                         if (!isNaN(+answer)) {
                             this.answers[i] = parseFloat(answer) / 100 + '';
@@ -328,7 +328,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 let depended_answers = true;
                 let xIndex = -1;
                 for (let i = 0; i < this.question.answers.length; i++) {
-                    if (this.question.answers[i].value.includes('x')) {
+                    if ((this.question.answers[i].value + '').includes('x')) {
                         if (this.question.answers[i].value === 'x') {
                             xIndex = i;
                         }
@@ -377,7 +377,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                             this.answers[i] = temp[0] + '';
                         }
                         // convert correct answer
-                        if (correctAnswer.includes('/')) {
+                        if ((correctAnswer + '').includes('/')) {
                             correctAnswer = correctAnswer.replace(/[^\d.-\/]/g, '');
                             temp = correctAnswer.split('/');
                             if (temp[1] !== undefined) {
