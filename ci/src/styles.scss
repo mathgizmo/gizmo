@@ -421,6 +421,15 @@ a.button:hover, a.button:focus {
 
 }
 
+/* .success-snackbar {
+  background: $teal !important;
+  color: $navy !important;
+} */
+.error-snackbar {
+  background: $danger !important;
+  color: $navy !important;
+}
+
 @media screen and (max-width: 1366px) {
   .welcome iframe, .welcome video {
     height: 28vh;

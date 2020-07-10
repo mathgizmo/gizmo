@@ -49,7 +49,7 @@ export class ManageAssignmentsComponent implements OnInit {
         this.assignmentService.getAppTree()
             .subscribe(tree => {
                 const dialogRef = this.dialog.open(EditAssignmentDialogComponent, {
-                    data: { 'title': 'Add Assignment', 'icons': this.icons, 'tree': tree },
+                    data: { 'title': 'Create Assignment', 'icons': this.icons, 'tree': tree },
                     position: this.dialogPosition
                 });
                 dialogRef.afterClosed().subscribe(result => {

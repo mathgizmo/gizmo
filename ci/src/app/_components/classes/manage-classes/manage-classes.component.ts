@@ -41,7 +41,7 @@ export class ManageClassesComponent implements OnInit {
 
     onAddClass() {
         const dialogRef = this.dialog.open(EditClassDialogComponent, {
-            data: { 'title': 'Add Class' },
+            data: { 'title': 'Create Class' },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {

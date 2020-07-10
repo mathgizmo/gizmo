@@ -7,19 +7,104 @@
   padding: 0;
   margin: 60px auto 0;
   width: 80vw;
+  @media screen and (max-width: 600px) {
+    width: 100vw;
+  }
+  .applications-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    > * {
+      width: 600px;
+      min-width: 60%;
+      max-width: 92%;
+    }
+    .app-select-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      .app-img {
+        width: 64px;
+        height: 64px;
+        background-size: 100%;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        background-repeat: no-repeat;
+      }
+      .app-title {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+        width: calc(100% - 90px);
+        margin: 12px;
+        @media screen and (max-width: 768px) {
+          flex-wrap: wrap;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        & > * {
+          white-space: initial;
+          word-wrap: break-word;
+          line-height: normal;
+          margin-bottom: 8px;
+          text-align: start;
+        }
+        & > *:first-child {
+          margin-right: 8px;
+        }
+        .date-container {
+          min-width: 200px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          line-height: 1.5;
+          @media screen and (max-width: 1024px) {
+            min-width: 160px;
+          }
+          @media screen and (max-width: 768px) {
+            align-items: flex-start;
+            justify-content: flex-start;
+          }
+        }
+        .due-date {
+          color: dimgrey;
+          text-align: right;
+          @media screen and (max-width: 768px) {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
 }
 
-.app-title {
+.toggle-button {
+  margin: 16px 0;
+  cursor: pointer;
+  color: #666666;
+}
+
+.button-container {
   display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  align-items: flex-start;
-  width: calc(100% - 70px);
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin: 12px 0;
 }
 
-.due-date {
-  float: right;
-  color: dimgrey;
+.title {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 mat-card {
@@ -33,80 +118,6 @@ mat-card:last-child {
   margin-bottom: 28px;
 }
 
-.title {
-  display: block;
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.toggle-button {
-  margin: 16px 0;
-  cursor: pointer;
-  color: #666666;
-}
-
 mat-form-field {
   width: 100%;
-}
-
-.button-container{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  flex-direction: column;
-  margin: 12px 0;
-}
-
-.app-img {
-  width: 64px;
-  height: 64px;
-  background-size: 100%;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  background-repeat: no-repeat;
-}
-
-.applications-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  > * {
-    min-width: 50%;
-  }
-}
-
-.app-select-container {
-  div:first-child {
-    margin-right: 6px;
-  }
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-}
-
-.date-container {
-  margin-left: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  line-height: 1.2;
-}
-
-@media screen and (max-width: 600px) {
-  .profile-application {
-    width: 100vw;
-  }
-  .applications-list {
-    > * {
-      min-width: 100%;
-    }
-  }
 }

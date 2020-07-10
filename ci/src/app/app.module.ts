@@ -23,6 +23,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSortModule} from '@angular/material/sort';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import {AppRoutingModule} from './app.routing';
@@ -83,6 +84,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         MatDividerModule,
         MatButtonToggleModule,
         MatSortModule,
+        MatSnackBarModule,
         DragDropModule,
         FlexLayoutModule,
         PerfectScrollbarModule,

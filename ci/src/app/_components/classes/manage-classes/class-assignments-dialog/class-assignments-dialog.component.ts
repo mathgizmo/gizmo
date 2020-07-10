@@ -1,5 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {BaseDialogComponent} from '../../../home/topic/lesson/dialog/base-dialog.component';
 import {Sort} from '@angular/material/sort';
@@ -31,6 +32,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
     private readonly adminUrl = environment.adminUrl;
 
     constructor(
+        public snackBar: MatSnackBar,
         private classService: ClassesManagementService,
         public dialog: MatDialog, private deviceService: DeviceDetectorService,
         private sanitizer: DomSanitizer,
@@ -69,7 +71,17 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
     onDueDateChanged(item, newDate) {
         item.due_date = newDate;
         this.classService.changeAssignmentDueDate(this.class.id, item)
-            .subscribe(assignments => {});
+            .subscribe(assignments => {
+                this.snackBar.open('Due Date Saved!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                this.snackBar.open('Error occurred while saving Due Date!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
+            });
     }
 
     onDeleteAssignment(item) {

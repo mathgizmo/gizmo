@@ -10,7 +10,7 @@
                     <th mat-sort-header="name" scope="col">Name</th>
                     <th mat-sort-header="due_date" scope="col">Due Date</th>
                     <th class="text-right">
-                        <button *ngIf="available_assignments.length > 0" class="button button-small button-outline" mat-button (click)="addAssignment=!addAssignment">Add Assignment</button>
+                        <button *ngIf="available_assignments.length > 0" class="button button-small button-outline" mat-button (click)="addAssignment=!addAssignment">Create Assignment</button>
                     </th>
                 </tr>
                 </thead>
@@ -64,5 +64,5 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
-    <button mat-button [mat-dialog-close]="false" class="button button-white" type="button">Cancel</button>
+    <button mat-button [mat-dialog-close]="false" class="button button-white" type="button">Close</button>
 </mat-dialog-actions>
