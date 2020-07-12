@@ -48,9 +48,25 @@ class Application extends Model
 
     public function getDueDate($class_id = null) {
         if ($class_id) {
-            $model = DB::table('classes_applications')->where('class_id', $class_id)->where('app_id', $this->id)->first();
+            $model = DB::table('classes_applications')
+                ->where('class_id', $class_id)
+                ->where('app_id', $this->id)
+                ->first();
             if ($model) {
                 return $model->due_date;
+            }
+        }
+        return null;
+    }
+
+    public function getClassRelatedData($class_id = null) {
+        if ($class_id) {
+            $model = DB::table('classes_applications')
+                ->where('class_id', $class_id)
+                ->where('app_id', $this->id)
+                ->first();
+            if ($model) {
+                return $model;
             }
         }
         return null;
@@ -66,22 +82,42 @@ class Application extends Model
         return null;
     }
 
-    public function getTree() {
+    public function getTree($hide_dev = false) {
         $levels = $this->levels()->get()->keyBy('id');
         $units = $this->units()->get()->keyBy('id');
         $topics = $this->topics()->get()->keyBy('id');
         $lessons = $this->lessons()->get()->keyBy('id');
         $tree = [];
-        foreach (Level::all() as $level) {
+        if ($hide_dev) {
+            $levels_list = Level::where('dev_mode', false)->orderBy('order_no', 'ASC')->get();
+        } else {
+            $levels_list = Level::orderBy('order_no', 'ASC')->get();
+        }
+        foreach ($levels_list as $level) {
             $unit_items = [];
             $level_is_collapsed = true;
-            foreach ($level->units()->get() as $unit) {
+            if ($hide_dev) {
+                $units_list = $level->units()->where('dev_mode', false)->orderBy('order_no', 'ASC')->get();
+            } else {
+                $units_list = $level->units()->orderBy('order_no', 'ASC')->get();
+            }
+            foreach ($units_list as $unit) {
                 $topic_items = [];
                 $unit_is_collapsed = true;
-                foreach ($unit->topics()->get() as $topic) {
+                if ($hide_dev) {
+                    $topics_list = $unit->topics()->where('dev_mode', false)->orderBy('order_no', 'ASC')->get();
+                } else {
+                    $topics_list = $unit->topics()->orderBy('order_no', 'ASC')->get();
+                }
+                foreach ($topics_list as $topic) {
                     $lesson_items = [];
                     $topic_is_collapsed = true;
-                    foreach ($topic->lessons()->get() as $lesson) {
+                    if ($hide_dev) {
+                        $lessons_list = $topic->lessons()->where('dev_mode', false)->orderBy('order_no', 'ASC')->get();
+                    } else {
+                        $lessons_list = $topic->lessons()->orderBy('order_no', 'ASC')->get();
+                    }
+                    foreach ($lessons_list as $lesson) {
                         $lesson_checked = ($lessons->where('id', $lesson->id)->first()) ? true : false;
                         if ($lesson_checked) {
                             $topic_is_collapsed = $unit_is_collapsed = $level_is_collapsed = false;

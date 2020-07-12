@@ -70,7 +70,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
 
     onDueDateChanged(item, newDate) {
         item.due_date = newDate;
-        this.classService.changeAssignmentDueDate(this.class.id, item)
+        this.classService.changeAssignment(this.class.id, item)
             .subscribe(assignments => {
                 this.snackBar.open('Due Date Saved!', '', {
                     duration: 3000,
@@ -78,6 +78,38 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
                 });
             }, error => {
                 this.snackBar.open('Error occurred while saving Due Date!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
+            });
+    }
+
+    onStartChanged(item, newStart) {
+        item.start_at = newStart;
+        this.classService.changeAssignment(this.class.id, item)
+            .subscribe(assignments => {
+                this.snackBar.open('Start Date & Time Saved!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                this.snackBar.open('Error occurred while saving Start Date & Time!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
+            });
+    }
+
+    onTimeToDueDateChanged(item, isTimeToDueDate) {
+        item.time_to_due_date = isTimeToDueDate;
+        this.classService.changeAssignment(this.class.id, item)
+            .subscribe(assignments => {
+                this.snackBar.open('Time to Due Date Saved!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                this.snackBar.open('Error occurred while saving Time to Due Date!', '', {
                     duration: 3000,
                     panelClass: ['error-snackbar']
                 });
@@ -121,6 +153,8 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
                 case 'id': return compare(a.id, b.id, isAsc);
                 case 'name': return compare(a.name, b.name, isAsc);
                 case 'due_date': return compare(a.due_date, b.due_date, isAsc);
+                case 'start_at': return compare(a.start_at, b.start_at, isAsc);
+                case 'time_to_due_date': return compare(a.time_to_due_date, b.time_to_due_date, isAsc);
                 default: return 0;
             }
         });

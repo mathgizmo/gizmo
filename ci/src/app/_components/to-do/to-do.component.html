@@ -3,12 +3,18 @@
     <span class="title">Assignments To Do</span>
     <div class="applications-list" *ngIf="applications.length > 0">
       <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
-        <mat-button-toggle *ngFor="let application of applications" [value]="application.id" (click)="onChangeToDo(application.id)" >
-          <div class="app-select-container">
+        <mat-button-toggle *ngFor="let application of applications" [value]="application.id" (click)="onChangeToDo(application)" >
+          <div class="app-select-container" [class.disabled]="application.is_blocked">
             <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
-            <div class="app-title">
-              <strong>{{application.name}}</strong>
-              <span *ngIf="application.due_date" class="due-date">Due Date: {{application.due_date}}</span>
+            <div class="app-data">
+              <span class="app-title">
+                <strong>{{application.name}}</strong>
+                <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
+              </span>
+              <span class="app-date">
+                <span *ngIf="application.is_blocked && application.start_at" class="due-date">Start At: {{application.start_at}}</span>
+                <span *ngIf="application.due_date" class="due-date">Due Date: {{application.due_date}}</span>
+              </span>
             </div>
           </div>
         </mat-button-toggle>
@@ -34,15 +40,18 @@
     <span class="title">Completed Assignments</span>
     <div class="applications-list">
       <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
-        <mat-button-toggle *ngFor="let application of completedApplications" [value]="application.id" (click)="onChangeToDo(application.id)" >
+        <mat-button-toggle *ngFor="let application of completedApplications" [value]="application.id" (click)="onChangeToDo(application)" >
           <div class="app-select-container">
             <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
-            <div class="app-title">
-              <strong>{{application.name}}</strong>
+            <div class="app-data">
+              <span class="app-title">
+                <strong>{{application.name}}</strong>
+                <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
+              </span>
               <div class="date-container">
-                <span *ngIf="application.due_date" class="due-date">
+                <!-- <span *ngIf="application.due_date" class="due-date">
                   Due Date: {{application.due_date}}
-                </span>
+                </span> -->
                 <span *ngIf="application.completed_at" class="due-date">
                   Completed Date: {{application.completed_at}}
                 </span>

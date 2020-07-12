@@ -6,6 +6,7 @@ use App\Application;
 use App\ClassOfStudents;
 use App\Progress;
 use App\Student;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -76,7 +77,26 @@ class ProfileController extends Controller
 
     public function getToDos() {
         $student = JWTAuth::parseToken()->authenticate();
-        $items = Application::whereHas('classes', function ($q1) use ($student) {
+        $items = [];
+        foreach (DB::table('classes_applications')->whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->get() as $row) {
+            $item = Application::where('id', $row->app_id)->first();
+            $item->class = ClassOfStudents::where('id', $row->class_id)->first();
+            $item->icon = $item->icon();
+            $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                    ->where('student_id', $student->id)->count() > 0;
+            $item->due_date = $row->due_date;
+            $item->time_to_due_date = $row->time_to_due_date;
+            $now = Carbon::now()->toDateTimeString();
+            $item->is_blocked = ($row->start_at && $now < $row->start_at) || ($item->time_to_due_date && $now > $item->due_date);
+            $item->start_at = $row->start_at && $now < $row->start_at ? Carbon::parse($row->start_at)->format('Y-m-d g:i A') : null;
+            $item->completed_at = $item->getCompletedDate($student->id);
+            array_push($items, $item);
+        }
+        return $this->success([
+            'items' => array_values(collect($items)->sortBy('due_date')->toArray())
+        ]);
+
+        /* $items = Application::whereHas('classes', function ($q1) use ($student) {
             $q1->whereHas('students', function ($q2) use ($student) {
                 $q2->where('students.id', $student->id);
             });
@@ -92,7 +112,8 @@ class ProfileController extends Controller
             $item->due_date = null;
             if ($item->classes) {
                 foreach ($item->classes as $class) {
-                    $class->due_date = $item->getDueDate($class->id);
+                    $class_data = $item->getClassRelatedData($class->id);
+                    $class->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
                     if (!$item->due_date || $class->due_date < $item->due_date) {
                         $item->due_date = $class->due_date;
                         $item->completed_at = $item->getCompletedDate($student->id);
@@ -103,7 +124,7 @@ class ProfileController extends Controller
         }
         return $this->success([
             'items' => array_values($items->sortBy('due_date')->toArray())
-        ]);
+        ]); */
     }
 
     public function changeApplication() {

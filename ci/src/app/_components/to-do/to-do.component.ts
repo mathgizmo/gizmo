@@ -31,11 +31,11 @@ export class ToDoComponent implements OnInit {
             });
     }
 
-    onChangeToDo(appId: number) {
-        if (!appId) {
+    onChangeToDo(app) {
+        if (!app || app.is_blocked) {
             return;
         }
-        localStorage.setItem('app_id', appId + '');
+        localStorage.setItem('app_id', app.id + '');
         this.router.navigate(['/']);
     }
 

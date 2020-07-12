@@ -5,6 +5,7 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\ClassOfStudents;
 use App\Progress;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -112,7 +113,10 @@ class ClassController extends Controller
             $items = $class->applications()->get();
             foreach ($items as $item) {
                 $item->icon = $item->icon();
-                $item->due_date = $item->getDueDate($class->id);
+                $class_data = $item->getClassRelatedData($class->id);
+                $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
+                $item->start_at = $class_data && $class_data->start_at ? Carbon::parse($class_data->start_at)->format('Y-m-d\TH:i') : null;
+                $item->time_to_due_date = $class_data && $class_data->time_to_due_date;
             }
             $available = Application::where('teacher_id', $this->user->id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())->orderBy('name')->get();
@@ -140,11 +144,15 @@ class ClassController extends Controller
         return $this->error('Error.');
     }
 
-    public function changeAssignmentDueDate($class_id, $app_id) {
+    public function changeAssignment($class_id, $app_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
             DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)
-                ->update(['due_date' => request('due_date')]);
+                ->update([
+                    'due_date' => request('due_date') ?: null,
+                    'start_at' => request('start_at') ?: null,
+                    'time_to_due_date' => request('time_to_due_date') ? true : false
+                ]);
             return $this->success('Ok.');
         }
         return $this->error('Error.');

@@ -82,7 +82,7 @@ export class ClassesManagementService {
             );
     }
 
-    public changeAssignmentDueDate(class_id, item) {
+    public changeAssignment(class_id, item) {
         return this.http.put('/classes/' + class_id + '/assignments/' + item.id, item)
             .pipe(
                 catchError(error => {

@@ -91,7 +91,7 @@ class ApplicationController extends Controller
         if (!$app) {
             $app = new Application();
         }
-        return $this->success(['items' => $app->getTree()]);
+        return $this->success(['items' => $app->getTree(true)]);
     }
 
     public function getAvailableIcons() {
