@@ -426,6 +426,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   display: none;
 }
 
+input[type="time"].form-control, input[type="date"].form-control {
+  line-height: unset !important;
+}
+
 /* .success-snackbar {
   background: $teal !important;
   color: $navy !important;
