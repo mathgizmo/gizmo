@@ -420,6 +420,12 @@ a.button:hover, a.button:focus {
   }
 }
 
+/* hide time picker (Chrome) */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background: none;
+  display: none;
+}
+
 /* .success-snackbar {
   background: $teal !important;
   color: $navy !important;
