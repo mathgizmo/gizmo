@@ -33,8 +33,10 @@ class AuthController extends Controller
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
 
         $student->question_num = $student->question_num ?: 5;
-        if (!$student->app_id) {
-            $student->app_id = Application::whereDoesntHave('teacher')->first()->id;
+        $app = Application::where('id', $student->app_id)->first();
+        if (!$app) {
+            $app = Application::whereDoesntHave('teacher')->first();
+            $student->app_id = $app->id ?: null;
             $student->save();
         }
         $app_id = $student->app_id;

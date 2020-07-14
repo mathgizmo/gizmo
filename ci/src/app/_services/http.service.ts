@@ -37,7 +37,7 @@ export class HttpService {
                     }
                     if (response['status_code'] === 453 || response['error']['status_code'] === 453) {
                         localStorage.setItem('redirect_to', this.router.url + '');
-                        this.router.navigate(['to-do']);
+                        this.router.navigate(['profile']);
                     }
                     return response['message'];
                 }),

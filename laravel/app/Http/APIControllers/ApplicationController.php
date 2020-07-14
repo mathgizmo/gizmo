@@ -58,12 +58,6 @@ class ApplicationController extends Controller
                 if (request()->has('name')) {
                     $app->name = request('name');
                 }
-                if (request()->has('subscription_type')) {
-                    $app->icon = request('icon');
-                }
-                if (request()->has('invitations')) {
-                    $app->due_date = request('due_date');
-                }
                 if (request('icon')) {
                     $app->icon = request('icon');
                 }

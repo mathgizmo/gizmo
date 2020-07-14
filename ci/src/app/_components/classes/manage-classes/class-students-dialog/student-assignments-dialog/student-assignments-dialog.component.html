@@ -8,15 +8,15 @@
                 <tr>
                     <th scope="col">Icon</th>
                     <th mat-sort-header="name" scope="col">Name</th>
-                    <th mat-sort-header="due_date" scope="col">Due Date</th>
-                    <th mat-sort-header="is_completed" scope="col">Completed Date</th>
+                    <th mat-sort-header="due_at" scope="col">Due At</th>
+                    <th mat-sort-header="completed_at" scope="col">Completed At</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of assignments" [class.completed]="item.is_completed && !item.is_past_due" [class.past-due]="item.is_past_due && !item.is_completed" [class.completed-past-due]="item.is_past_due && item.is_completed">
                     <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
                     <td>{{item.name}}</td>
-                    <td>{{item.due_date}}</td>
+                    <td>{{item.due_at}}</td>
                     <td>{{item.completed_at ? item.completed_at : 'N/A'}}</td>
                 </tr>
                 </tbody>

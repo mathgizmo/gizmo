@@ -59,8 +59,8 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
             switch (sort.active) {
                 case 'id': return compare(a.id, b.id, isAsc);
                 case 'name': return compare(a.name, b.name, isAsc);
-                case 'due_date': return compare(a.due_date, b.due_date, isAsc);
-                case 'is_completed': return compare(a.is_completed, b.is_completed, isAsc);
+                case 'due_at': return compare(a.due_at, b.due_at, isAsc);
+                case 'completed_at': return compare(a.completed_at, b.completed_at, isAsc);
                 default: return 0;
             }
         });

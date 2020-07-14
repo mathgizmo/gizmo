@@ -13,7 +13,7 @@
               </span>
               <span class="app-date">
                 <span *ngIf="application.is_blocked && application.start_at" class="due-date">Start At: {{application.start_at}}</span>
-                <span *ngIf="application.due_date" class="due-date">Due Date: {{application.due_date}}</span>
+                <span *ngIf="application.due_at" class="due-date">Due At: {{application.due_at}}</span>
               </span>
             </div>
           </div>
@@ -49,11 +49,8 @@
                 <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
               </span>
               <div class="date-container">
-                <!-- <span *ngIf="application.due_date" class="due-date">
-                  Due Date: {{application.due_date}}
-                </span> -->
                 <span *ngIf="application.completed_at" class="due-date">
-                  Completed Date: {{application.completed_at}}
+                  Completed At: {{application.completed_at}}
                 </span>
               </div>
             </div>

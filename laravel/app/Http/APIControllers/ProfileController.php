@@ -84,47 +84,28 @@ class ProfileController extends Controller
             $item->icon = $item->icon();
             $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
                     ->where('student_id', $student->id)->count() > 0;
-            $item->due_date = $row->due_date;
+            if ($row->due_date) {
+                $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
+            } else {
+                $due_at = null;
+            }
+            $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
             $item->time_to_due_date = $row->time_to_due_date;
             $now = Carbon::now()->toDateTimeString();
-            $item->is_blocked = ($row->start_at && $now < $row->start_at) || ($item->time_to_due_date && $now > $item->due_date);
-            $item->start_at = $row->start_at && $now < $row->start_at ? Carbon::parse($row->start_at)->format('Y-m-d g:i A') : null;
-            $item->completed_at = $item->getCompletedDate($student->id);
+            if ($row->start_date) {
+                $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
+            } else {
+                $start_at = null;
+            }
+            $item->is_blocked = ($start_at && $now < $start_at) || ($item->time_to_due_date && $now > $due_at);
+            $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+            $completed_at = $item->getCompletedDate($student->id);
+            $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
             array_push($items, $item);
         }
         return $this->success([
-            'items' => array_values(collect($items)->sortBy('due_date')->toArray())
+            'items' => array_values(collect($items)->sortBy('due_at')->toArray())
         ]);
-
-        /* $items = Application::whereHas('classes', function ($q1) use ($student) {
-            $q1->whereHas('students', function ($q2) use ($student) {
-                $q2->where('students.id', $student->id);
-            });
-        })->get();
-        foreach ($items as $item) {
-            $item->icon = $item->icon();
-            $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
-                    ->where('student_id', $student->id)->count() > 0;
-            $item->classes = $item->classes()->whereHas('students', function ($q) use ($student) {
-                $q->where('students.id', $student->id);
-            })->get();
-            $item->class = null;
-            $item->due_date = null;
-            if ($item->classes) {
-                foreach ($item->classes as $class) {
-                    $class_data = $item->getClassRelatedData($class->id);
-                    $class->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
-                    if (!$item->due_date || $class->due_date < $item->due_date) {
-                        $item->due_date = $class->due_date;
-                        $item->completed_at = $item->getCompletedDate($student->id);
-                        $item->class = $class;
-                    }
-                }
-            }
-        }
-        return $this->success([
-            'items' => array_values($items->sortBy('due_date')->toArray())
-        ]); */
     }
 
     public function changeApplication() {

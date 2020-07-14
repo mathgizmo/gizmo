@@ -87,10 +87,18 @@ class ClassController extends Controller
                     $item->icon = $item->icon();
                     $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
                             ->where('student_id', $student->id)->count() > 0;
-                    $item->due_date = $item->getDueDate($class_id);
-                    $item->completed_at = $item->getCompletedDate($student->id);
-                    $item->is_past_due = (!$item->is_completed && $item->due_date && $item->due_date < date("Y-m-d")) ||
-                        ($item->is_completed && $item->due_date && $item->completed_at && $item->due_date < $item->completed_at);
+                    $class_data = $item->getClassRelatedData($class_id);
+                    if ($class_data->due_date) {
+                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                    } else {
+                        $due_at = null;
+                    }
+                    $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                    $completed_at = $item->getCompletedDate($student->id);
+                    $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                    $now = Carbon::now()->toDateTimeString();
+                    $item->is_past_due = (!$item->is_completed && $due_at && $due_at < $now) ||
+                        ($item->is_completed && $due_at && $completed_at && $due_at < $completed_at);
                     if ($item->is_completed) {
                         $finished_count++;
                     }
@@ -114,8 +122,10 @@ class ClassController extends Controller
             foreach ($items as $item) {
                 $item->icon = $item->icon();
                 $class_data = $item->getClassRelatedData($class->id);
+                $item->start_date = $class_data && $class_data->start_date ? $class_data->start_date : null;
+                $item->start_time = $class_data && $class_data->start_time ? $class_data->start_time : null;
                 $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
-                $item->start_at = $class_data && $class_data->start_at ? Carbon::parse($class_data->start_at)->format('Y-m-d\TH:i') : null;
+                $item->due_time = $class_data && $class_data->due_time ? $class_data->due_time : null;
                 $item->time_to_due_date = $class_data && $class_data->time_to_due_date;
             }
             $available = Application::where('teacher_id', $this->user->id)
@@ -149,8 +159,10 @@ class ClassController extends Controller
         if ($class) {
             DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)
                 ->update([
+                    'start_date' => request('start_date') ?: null,
+                    'start_time' => request('start_time') ?: null,
                     'due_date' => request('due_date') ?: null,
-                    'start_at' => request('start_at') ?: null,
+                    'due_time' => request('due_time') ?: null,
                     'time_to_due_date' => request('time_to_due_date') ? true : false
                 ]);
             return $this->success('Ok.');

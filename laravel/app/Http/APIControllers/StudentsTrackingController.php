@@ -78,7 +78,7 @@ class StudentsTrackingController extends Controller
         ];
         if (Progress::where($progress_data)->count() == 0) {
             try {
-                Progress::create(array_merge($progress_data, ['completed_at' => Carbon::now()->toDateString()]));
+                Progress::create(array_merge($progress_data, ['completed_at' => Carbon::now()->toDateTimeString()]));
             } catch (\Exception $e) { }
         }
         // find all lessons from topic that are not done yet
@@ -110,7 +110,7 @@ class StudentsTrackingController extends Controller
         if (!$app_id) {
             $app_id = $student ? $student->app_id : null;
         }
-        $completed_at = Carbon::now()->toDateString();
+        $completed_at = Carbon::now()->toDateTimeString();
         //mark topic as done
         try {
             DB::table('progresses')->insert([
