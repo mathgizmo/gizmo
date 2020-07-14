@@ -134,6 +134,8 @@ THE SOFTWARE.
 
 @angular/material/slider
 
+@angular/material/snack-bar
+
 @angular/material/sort
 
 @angular/platform-browser
