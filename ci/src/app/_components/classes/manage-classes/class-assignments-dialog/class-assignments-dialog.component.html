@@ -12,7 +12,6 @@
                     <th mat-sort-header="start_time" scope="col">Start Time</th>
                     <th mat-sort-header="due_date" scope="col">Due Date</th>
                     <th mat-sort-header="due_time" scope="col">Due Time</th>
-                    <th mat-sort-header="time_to_due_date" scope="col">Time to Due Date</th>
                     <th class="text-right">
                         <button *ngIf="available_assignments.length > 0" class="button button-small button-outline" mat-button (click)="addAssignment=!addAssignment">Add Assignment</button>
                     </th>
@@ -35,9 +34,6 @@
                     <td class="date-container">
                         <input matInput *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />
                         <ng-template #noDueTime><span class="no-data">N/A</span></ng-template>
-                    </td>
-                    <td class="checkbox-container">
-                        <mat-checkbox name="time_to_due_date" [checked]="item.time_to_due_date" [value]="item.time_to_due_date" (change)="onTimeToDueDateChanged(item, $event.checked)"></mat-checkbox>
                     </td>
                     <td class="text-right">
                         <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onDeleteAssignment(item)">Remove</button>

@@ -132,22 +132,6 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
             });
     }
 
-    onTimeToDueDateChanged(item, isTimeToDueDate) {
-        item.time_to_due_date = isTimeToDueDate;
-        this.classService.changeAssignment(this.class.id, item)
-            .subscribe(assignments => {
-                this.snackBar.open('Time to Due Date Saved!', '', {
-                    duration: 3000,
-                    panelClass: ['success-snackbar']
-                });
-            }, error => {
-                this.snackBar.open('Error occurred while saving Time to Due Date!', '', {
-                    duration: 3000,
-                    panelClass: ['error-snackbar']
-                });
-            });
-    }
-
     onDeleteAssignment(item) {
         const dialogRef = this.dialog.open(YesNoDialogComponent, {
             data: { 'message': 'Are you sure that you want to delete this assignments from the class?'},
@@ -188,7 +172,6 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
                 case 'start_time': return compare(a.start_time, b.start_time, isAsc);
                 case 'due_date': return compare(a.due_date, b.due_date, isAsc);
                 case 'due_time': return compare(a.due_time, b.due_time, isAsc);
-                case 'time_to_due_date': return compare(a.time_to_due_date, b.time_to_due_date, isAsc);
                 default: return 0;
             }
         });

@@ -90,14 +90,13 @@ class ProfileController extends Controller
                 $due_at = null;
             }
             $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-            $item->time_to_due_date = $row->time_to_due_date;
             $now = Carbon::now()->toDateTimeString();
             if ($row->start_date) {
                 $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
             } else {
                 $start_at = null;
             }
-            $item->is_blocked = ($start_at && $now < $start_at) || ($item->time_to_due_date && $now > $due_at);
+            $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
             $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
             $completed_at = $item->getCompletedDate($student->id);
             $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
