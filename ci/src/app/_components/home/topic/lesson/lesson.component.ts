@@ -34,7 +34,6 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     complete_percent: number;
 
     incorrect_answers: number;
-    max_incorrect_answers = 1;
     randomisation = true;
 
     question: any = null;
@@ -300,7 +299,6 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 }
             }
         }
-
         // check if answer is correct
         if (this.question.answer_mode === 'order') {
             for (let i = 0; i < this.question.answers.length; i++) {
@@ -487,13 +485,14 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     return;
                     // this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
                 }
+                this.incorrect_answers++;
             } else {
                 this.randomisation ? this.lessonTree['questions'].push(this.question) : this.current_question_index--;
                 if (this.weak_questions.indexOf(this.question.id) === -1) {
                     this.weak_questions.push(this.question.id);
                 }
+                this.correct_answers = this.complete_percent = 0;
             }
-            this.incorrect_answers++;
             const dialogRef = this.dialog.open(BadDialogComponent, {
                 // width: '800px',
                 position: this.dialogPosition,
