@@ -22,17 +22,16 @@
                     <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
                     <td>{{item.name}}</td>
                     <td class="date-container">
-                        <input matInput type="date" name="start_date" #startDate [value]="item.start_date" (change)="onStartDateChanged(item, startDate.value)" class="form-control" />
+                        <input matInput type="date" name="start_date" #startDate [value]="item.start_date || currentDate" (change)="onStartDateChanged(item, startDate.value)" class="form-control" />
                     </td>
                     <td class="date-container">
-                        <input matInput *ngIf="item.start_date; else noStartTime" type="time" name="start_time" #startTime [value]="item.start_time" (change)="onStartTimeChanged(item, startTime.value)" class="form-control" />
-                        <ng-template #noStartTime><span class="no-data">N/A</span></ng-template>
+                        <input matInput type="time" name="start_time" #startTime [value]="item.start_time || '00:00'" (change)="onStartTimeChanged(item, startTime.value)" class="form-control" />
                     </td>
                     <td class="date-container">
                         <input matInput type="date" name="due_date" #dueDate [value]="item.due_date" (change)="onDueDateChanged(item, dueDate.value)" class="form-control" />
                     </td>
                     <td class="date-container">
-                        <input matInput *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />
+                        <input matInput *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time || '00:00'" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />
                         <ng-template #noDueTime><span class="no-data">N/A</span></ng-template>
                     </td>
                     <td class="text-right">

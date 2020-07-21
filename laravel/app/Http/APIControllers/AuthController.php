@@ -80,6 +80,9 @@ class AuthController extends Controller
             'last_name' => $request['last_name'] ?: null,
             'email' => $credentials['email'],
             'password' => bcrypt($credentials['password']),
+            'is_super' => false,
+            'is_teacher' => false,
+            'is_admin' => false
         ]);
         if ($result) {
             return $this->success($result);

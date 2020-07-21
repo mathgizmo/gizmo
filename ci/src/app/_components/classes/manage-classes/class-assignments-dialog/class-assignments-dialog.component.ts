@@ -24,6 +24,8 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
     addAssignment = false;
     nameFilter;
 
+    currentDate = (new Date()).toISOString().split('T')[0];
+
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
@@ -118,6 +120,9 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
 
     onStartTimeChanged(item, newStartTime) {
         item.start_time = newStartTime;
+        if (!item.start_date) {
+            item.start_date = this.currentDate;
+        }
         this.classService.changeAssignment(this.class.id, item)
             .subscribe(assignments => {
                 this.snackBar.open('Start Time Saved!', '', {
