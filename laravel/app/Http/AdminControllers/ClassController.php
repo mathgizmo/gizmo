@@ -37,7 +37,7 @@ class ClassController extends Controller
             }
         }
         return view('classes.index', [
-            'classes' => $query->paginate(10)
+            'classes' => $query->paginate(10)->appends(request()->query())
         ]);
     }
 

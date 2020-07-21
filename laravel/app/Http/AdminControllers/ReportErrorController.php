@@ -22,7 +22,7 @@ class ReportErrorController extends Controller
         } else {
            $query->latest();
         }
-        $error_reports = $query->paginate(10);
+        $error_reports = $query->paginate(10)->appends(request()->query());
         return view('error_reports.index', compact('error_reports', 'type'));
     }
 

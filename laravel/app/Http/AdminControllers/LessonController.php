@@ -52,7 +52,7 @@ class LessonController extends Controller
             'levels' => Level::all(),
             'units' => Unit::all(),
             'topics' => Topic::all(),
-            'lessons' => $query->paginate(10),
+            'lessons' => $query->paginate(10)->appends(request()->query()),
             'unit_id' => $request['unit_id'],
             'level_id' => $request['level_id'],
             'topic_id' => $request['topic_id']

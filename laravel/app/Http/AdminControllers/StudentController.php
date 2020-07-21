@@ -22,7 +22,7 @@ class StudentController extends Controller
             ->filter(request()->all())
             ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc');
 
-        $students = $query->paginate(10);
+        $students = $query->paginate(10)->appends(request()->query());
         return view('students.index', compact('students'));
     }
 

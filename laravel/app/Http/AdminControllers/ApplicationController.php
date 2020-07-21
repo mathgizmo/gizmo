@@ -38,7 +38,7 @@ class ApplicationController extends Controller
                 $query->orderBy($request['sort'], $request['order']);
             }
         }
-        return view('applications.index', ['applications' => $query->paginate(10)]);
+        return view('applications.index', ['applications' => $query->paginate(10)->appends(request()->query())]);
     }
 
     public function create()

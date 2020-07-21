@@ -42,7 +42,7 @@ class TopicController extends Controller
         if ($request['sort'] && $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
         }
-        $topics = $query->paginate(10);
+        $topics = $query->paginate(10)->appends(request()->query());;
         foreach ($topics as $key => $value) {
             if(!file_exists($topics[$key]->icon_src)) {
                 $topics[$key]->icon_src = 'images/default-icon.svg';

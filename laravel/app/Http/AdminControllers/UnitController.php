@@ -35,7 +35,7 @@ class UnitController extends Controller
         }
         return view('units.index', [
             'levels'=> Level::all(),
-            'units'=> $query->paginate(10),
+            'units'=> $query->paginate(10)->appends(request()->query()),
             'level_id' => $request['level_id']
         ]);
     }

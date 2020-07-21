@@ -80,7 +80,7 @@ class QuestionController extends Controller
         } else {
             $query->orderBy('question.id', 'DESC');
         }
-        $questions = $query->paginate(10);
+        $questions = $query->paginate(10)->appends(request()->query());
         return view('questions.index',
             compact('questions', 'levels', 'units', 'topics', 'lessons', 'level_id', 'unit_id', 'topic_id', 'lesson_id', 'qrmodes', 'reply_modes'));
     }
