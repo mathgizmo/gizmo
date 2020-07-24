@@ -89,6 +89,10 @@ class ProfileController extends Controller
             } else {
                 $due_at = null;
             }
+            $item->start_time = $row->start_time ?: '00:00:00';;
+            $item->start_date = $row->start_date;
+            $item->due_time = $row->due_time ?: '00:00:00';;
+            $item->due_date = $row->due_date;
             $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
             $now = Carbon::now()->toDateTimeString();
             if ($row->start_date) {

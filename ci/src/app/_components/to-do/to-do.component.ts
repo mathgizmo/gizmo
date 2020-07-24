@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
+import * as moment from 'moment';
 import {UserService} from '../../_services/user.service';
 import {environment} from '../../../environments/environment';
 
@@ -10,12 +11,13 @@ import {environment} from '../../../environments/environment';
     styleUrls: ['./to-do.component.scss'],
     providers: [UserService]
 })
-export class ToDoComponent implements OnInit {
+export class ToDoComponent implements OnInit, OnDestroy {
     public applications = [];
     public completedApplications = [];
     public selectedAppId = +localStorage.getItem('app_id');
     public showCompletedApplications = false;
     private readonly adminUrl = environment.adminUrl;
+    private checkAvailabilityIntervalId = null;
 
     constructor(
         private userService: UserService,
@@ -29,6 +31,24 @@ export class ToDoComponent implements OnInit {
                 this.applications = response.filter(app => !app.is_completed);
                 this.completedApplications = response.filter(app => app.is_completed);
             });
+        this.checkAvailabilityIntervalId = setInterval(() => {
+            const now = moment();
+            this.applications.forEach(app => {
+                if (app.start_date || app.due_date) {
+                    const start = app.start_date
+                        ? moment(app.start_date + ' ' + app.start_time, 'YYYY-MM-DD HH:mm:ss')
+                        : null;
+                    const due = app.due_date
+                        ? moment(app.due_date + ' ' + app.due_time, 'YYYY-MM-DD HH:mm:ss')
+                        : null;
+                    app.is_blocked = (start && start.isAfter(now)) || (due && due.isBefore(now));
+                }
+            });
+        }, 3000);
+    }
+
+    ngOnDestroy() {
+        clearInterval(this.checkAvailabilityIntervalId);
     }
 
     onChangeToDo(app) {
