@@ -343,11 +343,11 @@ class TopicController extends Controller
         $topic->questions = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
             $q1->select('id')->from('lesson')->whereIn('id', function($q2) use($app_id, $topic_id) {
                 $q2->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
-            })->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
+            })->where('topic_id', $topic_id)->where('dev_mode', 0);
         })->inRandomOrder()->get();
         if (count($topic->questions) < 1) {
             $topic->questions = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
-                $q1->select('id')->from('lesson')->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
+                $q1->select('id')->from('lesson')->where('topic_id', $topic_id)->where('dev_mode', 0);
             })->inRandomOrder()->get();
         }
         $lessons = $this->app->getLessons($topic_id)->toArray();

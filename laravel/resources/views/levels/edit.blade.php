@@ -33,9 +33,7 @@
                     </div>
                 </div>
                 <div class="form-group row{{ $errors->has('dependency') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">This should be finished
-                        to
-                        continue</label>
+                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">This should be finished to continue</label>
 
                     <div class="col-md-8 radio">
                         <label for="type" class="col-md-3"> <input
