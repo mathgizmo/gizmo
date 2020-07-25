@@ -13,7 +13,14 @@ class ApplicationController extends Controller
 
     public function __construct()
     {
-        $this->user = JWTAuth::parseToken()->authenticate();
+        try {
+            $this->user = JWTAuth::parseToken()->authenticate();
+            if (!$this->user) {
+                abort(401, 'Unauthorized!');
+            }
+        } catch (\Exception $e) {
+            abort(401, 'Unauthorized!');
+        }
     }
 
     public function all() {
@@ -36,6 +43,7 @@ class ApplicationController extends Controller
                 $app->icon = request('icon');
             }
             $app->teacher_id = $this->user->id;
+            $app->allow_any_order = request('allow_any_order') ?: null;
             $app->save();
             parse_str(request('tree'), $tree);
             $app->updateTree($tree);
@@ -61,6 +69,7 @@ class ApplicationController extends Controller
                 if (request('icon')) {
                     $app->icon = request('icon');
                 }
+                $app->allow_any_order = request('allow_any_order') ?: null;
                 $app->save();
                 parse_str(request('tree'), $tree);
                 $success = $app->updateTree($tree);

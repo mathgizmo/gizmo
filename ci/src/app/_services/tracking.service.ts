@@ -23,14 +23,19 @@ export class TrackingService {
     }
 
     doneLesson(topic_id, lesson_id, start_datetime, weak_questions) {
-        // notify api about lesson done
         const request = { start_datetime: start_datetime,
             weak_questions: weak_questions };
         if (lesson_id === -1) {
-          return this.http.post('/topic/' + topic_id + '/testoutdone' + '?app_id=' + this.appId, request);
+          return this.http.post('/topic/' + topic_id + '/testout/done' + '?app_id=' + this.appId, request);
         } else {
           return this.http.post('/lesson/' + lesson_id + '/done' + '?app_id=' + this.appId, request);
         }
+    }
+
+    finishTestout(topic_id, lesson_id, start_datetime, weak_questions) {
+        const request = { lesson_id: lesson_id, start_datetime: start_datetime,
+            weak_questions: weak_questions };
+        return this.http.post('/topic/' + topic_id + '/testout/done-lessons' + '?app_id=' + this.appId, request);
     }
 
     getLastVisitedLesson(student_id) {

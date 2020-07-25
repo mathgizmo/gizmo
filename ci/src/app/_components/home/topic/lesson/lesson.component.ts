@@ -27,6 +27,8 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     start_time: any = '';
     initial_loading = 1;
     next = 0;
+    unfinishedLessonsCount = 0;
+    isUnfinished = false;
     private sub: any;
 
     question_num: number;
@@ -58,6 +60,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     public next_title: string;
     public testout_completed = false;
     public first_lesson_id = 1;
+    public testout_empty = false;
 
     // public warning = false;
     // public warningMessage = 'Undefined exception';
@@ -98,6 +101,10 @@ export class LessonComponent implements OnInit, AfterViewChecked {
             this.topicService.getLesson(this.topic_id, this.lesson_id)
                 .subscribe(lessonTree => {
                     if (this.lesson_id === -1) {
+                        if (lessonTree.questions.length < 1) {
+                            this.testout_empty = true;
+                            this.titleText = this.titleText = 'Test Out Topic: ' + lessonTree.title;
+                        }
                         this.lessons_count = +lessonTree['lessons_count'];
                         this.current_question_order_no = Math.round(this.lessons_count / 2);
                         this.first_lesson_id = +lessonTree['first_lesson_id'];
@@ -144,6 +151,10 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                         this.next = lessonTree['next_topic_id'];
                     } else {
                         this.next = lessonTree['next_lesson_id'];
+                        if (lessonTree['unfinished_lessons_count']) {
+                            this.unfinishedLessonsCount = lessonTree['unfinished_lessons_count'];
+                            this.isUnfinished = lessonTree['is_unfinished'];
+                        }
                     }
                     this.correct_answers = this.complete_percent = 0;
                 });
@@ -167,6 +178,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.next = this.question.lesson_id;
                 this.next_title = this.question.lesson_title;
                 this.question = null;
+                this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions).subscribe();
                 return;
             }
             let current_question_order_no = this.current_question_order_no;
@@ -421,8 +433,6 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.nextQuestion();
             } else {
                 this.question = null;
-                this.trackingService.doneLesson(this.topic_id,
-                    this.lesson_id, this.start_time, this.weak_questions).subscribe();
             }
             return;
         }
@@ -473,6 +483,9 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.question = null;
                     this.trackingService.doneLesson(this.topic_id,
                         this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    if (this.lesson_id === -1) {
+                        this.trackingService.finishTestout(this.topic_id, null, this.start_time, this.weak_questions).subscribe();
+                    }
                 }
             });
         } else {

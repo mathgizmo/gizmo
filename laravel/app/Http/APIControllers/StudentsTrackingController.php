@@ -22,8 +22,18 @@ class StudentsTrackingController extends Controller
 
     public function __construct()
     {
-        $auth_user = JWTAuth::parseToken()->authenticate();
-        $this->student = Student::find($auth_user->id);
+        try {
+            $auth_user = JWTAuth::parseToken()->authenticate();
+            if (!$auth_user) {
+                abort(401, 'Unauthorized!');
+            }
+            $this->student = Student::find($auth_user->id);
+            if (!$this->student) {
+                abort(401, 'Unauthorized!');
+            }
+        } catch (\Exception $e) {
+            abort(401, 'Unauthorized!');
+        }
         if (request()->has('app_id')) {
             $app_id = request('app_id');
             $this->app = Application::where('id', $app_id)->first();
@@ -54,7 +64,52 @@ class StudentsTrackingController extends Controller
         return $this->success($now);
     }
 
-    public function done($lesson)
+    function doneTestoutLessons($topic_id) {
+        $topic = Topic::where('id', $topic_id)->first();
+        if (!$topic) {
+            return $this->error('Invalid topic.');
+        }
+        $lastLesson = Lesson::where('id', request()->lesson_id)->first();
+        $app_id = $this->app->id;
+        $student = $this->student;
+        // find all lessons from topic that are not done yet
+        $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
+            $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
+        })->where('topic_id', $topic_id)->where('dev_mode', 0);
+        if ($lessons_query->count() > 0) {
+            if ($lastLesson) {
+                $lessons = $lessons_query->where('order_no', '<', $lastLesson->order_no)->get();
+            } else {
+                $lessons = $lessons_query->get();
+            }
+        } else {
+            $lessons_rows = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
+                $join->on('progresses.student_id', '=', DB::raw($student->id))
+                    ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
+                    ->on('progresses.entity_id', '=', 'lesson.id');
+            })->where(['topic_id' => $topic_id])
+                ->where('dev_mode', 0)
+                ->whereNull('progresses.id')->get(['lesson.id', 'lesson.order_no'])->all();
+            if ($lastLesson) {
+                $lessons = collect($lessons_rows)->where('order_no', '<', $lastLesson->order_no);
+            } else {
+                $lessons = collect($lessons_rows);
+            }
+        }
+        foreach ($lessons as $lesson) {
+            $progress_data = [
+                'student_id' => $this->student->id,
+                'entity_type' => 'lesson',
+                'entity_id' => $lesson->id
+            ];
+            if (Progress::where($progress_data)->count() == 0) {
+                $this->done($lesson->id, true);
+            }
+        }
+        return $this->success('OK.');
+    }
+
+    public function done($lesson, $is_testout = false)
     {
         if (($model = Lesson::find($lesson)) == null) {
             return $this->error('Invalid lesson.');
@@ -70,6 +125,7 @@ class StudentsTrackingController extends Controller
             'weak_questions' => json_encode(request()->weak_questions ? request()->weak_questions : []),
             'ip' => request()->ip(),
             'user_agent' => request()->server('HTTP_USER_AGENT'),
+            'is_testout' => $is_testout
         ]);
         $progress_data = [
             'student_id' => $this->student->id,

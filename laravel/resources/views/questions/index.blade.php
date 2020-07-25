@@ -149,12 +149,12 @@
                     <tbody>
                     @foreach($questions as $question)
                         <tr style="height:40px; overflow:hidden">
-                            <td style="min-width: 120px;">{{$question->ltitle}}</td>
-                            <td style="min-width: 120px;">{{$question->utitle}}</td>
-                            <td style="min-width: 120px;">{{$question->ttitle}}</td>
-                            <td style="min-width: 120px;">{{$question->title}}</td>
-                            <td style="min-width: 120px;">{{strip_tags ($question->question)}}</td>
-                            <td style="min-width: 140px;">{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
+                            <td style="min-width: 90px;">{{$question->ltitle}}</td>
+                            <td style="min-width: 90px;">{{$question->utitle}}</td>
+                            <td style="min-width: 90px;">{{$question->ttitle}}</td>
+                            <td style="min-width: 90px;">{{$question->title}}</td>
+                            <td style="min-width: 90px;">{{strip_tags ($question->question)}}</td>
+                            <td style="min-width: 90px;">{{(isset($qrmodes[$question->reply_mode]) ? $qrmodes[$question->reply_mode] : 'Unknown')}}</td>
                             <td style="min-width: 140px;" title="{{$question->explanation}}">{{trim($question->explanation) ? substr(trim($question->explanation), 0, 20).'...': ''}}</td>
                             <td class="text-right" style="min-width:220px">
                                 <a class="btn btn-outline-dark" href="{{ route('questions.show', $question->id) }}">View</a>

@@ -14,7 +14,7 @@ import {environment} from '../../../environments/environment';
 export class ToDoComponent implements OnInit, OnDestroy {
     public applications = [];
     public completedApplications = [];
-    public selectedAppId = +localStorage.getItem('app_id');
+    public selectedAppId = null;
     public showCompletedApplications = false;
     private readonly adminUrl = environment.adminUrl;
     private checkAvailabilityIntervalId = null;

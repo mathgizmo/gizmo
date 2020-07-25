@@ -1,5 +1,5 @@
 import {Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter, HostListener} from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, CdkDragMove, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-question',

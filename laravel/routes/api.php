@@ -33,7 +33,8 @@ $api->version('v1', function ($api) {
         $api->any('/topic/{id}' , 'App\Http\APIControllers\TopicController@get');
         $api->any('/topic/{id}/lesson/{lesson_id}' , 'App\Http\APIControllers\TopicController@getLesson');
         $api->any('/topic/{id}/testout' , 'App\Http\APIControllers\TopicController@testout');
-        $api->any('/topic/{id}/testoutdone' , 'App\Http\APIControllers\TopicController@testoutdone');
+        $api->any('/topic/{id}/testout/done' , 'App\Http\APIControllers\TopicController@testoutDone');
+        $api->post('/topic/{id}/testout/done-lessons' , 'App\Http\APIControllers\StudentsTrackingController@doneTestoutLessons');
 
         $api->post('/lesson/{lesson}/start', 'App\Http\APIControllers\StudentsTrackingController@start');
         $api->post('/lesson/{lesson}/done', 'App\Http\APIControllers\StudentsTrackingController@done');

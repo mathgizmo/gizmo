@@ -99,6 +99,7 @@
                         <th>Lesson ID</th>
                         <th>Date</th>
                         <th>Action</th>
+                        <th></th>
                         <th>Start_datetime</th>
                         <th>Weak questions</th>
                         <th>Ip address</th>
@@ -110,7 +111,14 @@
                         <tr>
                             <td>{{ $students_tracking->lesson_id }}</td>
                             <td>{{ date('H:i d.m.Y', strtotime($students_tracking->date)) }}</td>
-                            <td>{{ $students_tracking->action }}</td>
+                            <td>
+                                {{ $students_tracking->action }}
+                            </td>
+                            <td>
+                                @if($students_tracking->action === 'done' && $students_tracking->is_testout)
+                                    <span class="badge badge-secondary">Testout</span>
+                                @endif
+                            </td>
                             <td>{{ $students_tracking->start_datetime }}</td>
                             <td>{{ $students_tracking->weak_questions }}</td>
                             <td>{{ $students_tracking->ip }}</td>
