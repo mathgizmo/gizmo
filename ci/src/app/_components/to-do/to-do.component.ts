@@ -34,7 +34,7 @@ export class ToDoComponent implements OnInit, OnDestroy {
         this.checkAvailabilityIntervalId = setInterval(() => {
             const now = moment();
             this.applications.forEach(app => {
-                if ((app.start_date || app.due_date) && !app.is_completed) {
+                if (app.start_date || app.due_date) {
                     const start = app.start_date
                         ? moment(app.start_date + ' ' + app.start_time, 'YYYY-MM-DD HH:mm:ss')
                         : null;
@@ -52,7 +52,7 @@ export class ToDoComponent implements OnInit, OnDestroy {
     }
 
     onChangeToDo(app) {
-        if (!app || (app.is_blocked && !app.is_completed)) {
+        if (!app || (app.is_blocked)) {
             return;
         }
         localStorage.setItem('app_id', app.id + '');
