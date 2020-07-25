@@ -1,8 +1,7 @@
 import {
     Component, Inject, OnInit, OnDestroy, ChangeDetectionStrategy,
-    Input, OnChanges, SimpleChanges, ChangeDetectorRef
+    Input, OnChanges, SimpleChanges, ChangeDetectorRef, NgZone
 } from '@angular/core';
-import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
     selector: 'chart',
@@ -49,7 +48,11 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     public minInputValue = 0;
 
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
+    private dotsChartRequestId;
+    private ctx: CanvasRenderingContext2D;
     public dots;
+    private minSpeed = -2; // the minimum speed, recommended: -maxSpeed
+    private maxSpeed = 2; // the maximum speed of the circles
 
     private sliderChartSelected = 0;
 
@@ -57,7 +60,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private chartElement: any = null;
     private chartValueLabelElement: any = null;
 
-    constructor(private ref: ChangeDetectorRef) {
+    constructor(private ref: ChangeDetectorRef, private ngZone: NgZone) {
         this.dots = [];
         if (!this.chartHeight) {
             this.chartHeight = 250;
@@ -495,51 +498,57 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
             case 3:
                 // Chart (type 3 - dots)
                 this.chartElement = document.createElement('canvas');
-                requestAnimationFrame(() => {
-                    // clear chart
-                    chartContainer.innerHTML = '';
-                    chartContainer.appendChild(this.chartElement);
-                    this.chartValueLabelElement = document.createElement('label');
-                    this.chartValueLabelElement.classList.add('chart-value-label');
-                    this.chartValueLabelElement.style.color = this.strokeColor;
-                    this.chartValueLabelElement.style.fontSize = chartValueLabelFontSize + 'px';
-                    if (this.valueDisplayChart > 0) {
-                        if (this.valueDisplayChart == 1) {
-                            this.chartValueLabelElement.innerHTML = '' + this.value.toFixed(this.accuracyChart);
-                        } else if (this.valueDisplayChart == 2) {
-                            this.chartValueLabelElement.innerHTML = '' + this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
-                        } else if (this.valueDisplayChart == 3) {
-                            this.chartValueLabelElement.innerHTML = '' + (this.value / this.maxValue).toFixed(this.accuracyChart);
-                        } else if (this.valueDisplayChart == 4) {
-                            this.chartValueLabelElement.innerHTML = '' + (this.value / this.maxValue * 100)
-                                .toFixed(this.accuracyChart) + '%';
-                        }
-                        this.chartValueLabelElement.innerHTML += '<br/><br/>';
+                // clear chart
+                chartContainer.innerHTML = '';
+                chartContainer.appendChild(this.chartElement);
+                this.chartValueLabelElement = document.createElement('label');
+                this.chartValueLabelElement.classList.add('chart-value-label');
+                this.chartValueLabelElement.style.color = this.strokeColor;
+                this.chartValueLabelElement.style.fontSize = chartValueLabelFontSize + 'px';
+                if (this.valueDisplayChart > 0) {
+                    if (this.valueDisplayChart == 1) {
+                        this.chartValueLabelElement.innerHTML = '' + this.value.toFixed(this.accuracyChart);
+                    } else if (this.valueDisplayChart == 2) {
+                        this.chartValueLabelElement.innerHTML = '' + this.value.toFixed(this.accuracyChart) + '/' + this.maxValue;
+                    } else if (this.valueDisplayChart == 3) {
+                        this.chartValueLabelElement.innerHTML = '' + (this.value / this.maxValue).toFixed(this.accuracyChart);
+                    } else if (this.valueDisplayChart == 4) {
+                        this.chartValueLabelElement.innerHTML = '' + (this.value / this.maxValue * 100)
+                            .toFixed(this.accuracyChart) + '%';
                     }
-                    let dotStyle = 'display: inline-block; border-radius: 50%; height: 15px; width: 15px; border-style: solid; border-width: 1.5px; border-color: ' + this.strokeColor + ';';
-                    this.chartValueLabelElement.innerHTML += '<span style="' + dotStyle + ' background-color: ' + this.selectedColor + ';"></span> = ' + this.value.toFixed(0) + '; ';
-                    this.chartValueLabelElement.innerHTML += '<span style="' + dotStyle + ' background-color: ' + this.mainColor + ';"></span> = ' + (this.maxValue - this.value).toFixed(0);
-                    chartContainer.appendChild(this.chartValueLabelElement);
-                });
+                    this.chartValueLabelElement.innerHTML += '<br/><br/>';
+                }
+                let dotStyle = 'display: inline-block; border-radius: 50%; height: 15px; width: 15px; border-style: solid; border-width: 1.5px; border-color: ' + this.strokeColor + ';';
+                this.chartValueLabelElement.innerHTML += '<span style="' + dotStyle + ' background-color: ' + this.selectedColor + ';"></span> = ' + this.value.toFixed(0) + '; ';
+                this.chartValueLabelElement.innerHTML += '<span style="' + dotStyle + ' background-color: ' + this.mainColor + ';"></span> = ' + (this.maxValue - this.value).toFixed(0);
+                chartContainer.appendChild(this.chartValueLabelElement);
                 this.chartElement.style.height = this.chartHeight + 'px';
                 this.chartElement.style.width = this.chartHeight * 2 + 'px';
                 this.chartElement.style.maxWidth = '100%';
                 this.chartElement.style.maxHeight = window.innerWidth * 0.5 + 'px';
 
-                const ctx = this.chartElement.getContext('2d');
+                this.ctx = this.chartElement.getContext('2d');
                 for (let i = 0; i < this.maxValue; i++) {
-                    if (this.dots[i] == undefined) {
+                    if (this.dots[i] === undefined) {
+                        let xSpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+                        let ySpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+                        while (xSpeed === 0 || ySpeed === 0) {
+                            xSpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+                            ySpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+                        }
                         this.dots[i] = {
                             x: Math.random() * (this.chartElement.width - this.dotRadius * 2),
                             y: Math.random() * (this.chartElement.height - this.dotRadius * 2),
-                            radius: this.dotRadius
+                            radius: this.dotRadius,
+                            xSpeed: xSpeed,
+                            ySpeed: ySpeed
                         };
                     }
                 }
+                this.ngZone.runOutsideAngular(() => this.drawDotsChart());
                 this.dotsChartRebuildFunctionId = setInterval(() => {
-                    ctx.clearRect(0, 0, this.chartElement.width, this.chartElement.height);
-                    this.drawDotsChart(this.value, this.maxValue, ctx, this.chartElement);
-                }, 80);
+                    this.drawDotsChart();
+                }, 50);
                 break;
             case 4:
                 // Chart (type 4 - slider)
@@ -675,15 +684,15 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     }
 
     // function to draw Dots Chart
-    private drawDotsChart(dotsNum: number,
-                          maxDotsNum: number, ctx: CanvasRenderingContext2D,
-                          canvas: HTMLCanvasElement) {
-        for (let i = 0; i < dotsNum; i++) {
-            this.dots[i] = this.drawDot(2, ctx, canvas, this.dots[i]);
+    private drawDotsChart() {
+        this.ctx.clearRect(0, 0, this.chartElement.width, this.chartElement.height);
+        for (let i = 0; i < this.value; i++) {
+            this.dots[i] = this.drawDot(2, this.ctx, this.chartElement, this.dots[i]);
         }
-        for (let i = dotsNum; i < maxDotsNum; i++) {
-            this.dots[i] = this.drawDot(1, ctx, canvas, this.dots[i]);
+        for (let i = this.value; i < this.maxValue; i++) {
+            this.dots[i] = this.drawDot(1, this.ctx, this.chartElement, this.dots[i]);
         }
+        this.dotsChartRequestId = requestAnimationFrame(() => this.drawDotsChart);
     }
 
     // function to draw one Dot
@@ -691,32 +700,45 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                     canvas: HTMLCanvasElement, dot) {
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = this.strokeWidth;
-        if (type == 1) {
+        if (type === 2) {
+            ctx.fillStyle = this.selectedColor;
+        } else {
             ctx.fillStyle = this.mainColor;
         }
-        if (type == 2) {
-            ctx.fillStyle = this.selectedColor;
-        }
-        dot.x += Math.random() * 2 - 1;
-        dot.y += Math.random() * 2 - 1;
-
-        // Check if dot goes beyond the field
+        ctx.beginPath();
         const dotDiameter = dot.radius * 2;
+        dot.x = dot.x + dot.xSpeed;
+        dot.y = dot.y + dot.ySpeed;
         if (dot.x > canvas.width - dotDiameter) {
             dot.x = canvas.width - dotDiameter;
-        }
-        if (dot.x < dotDiameter) {
+            dot.xSpeed = -dot.xSpeed;
+        } else if (dot.x < dotDiameter) {
             dot.x = dotDiameter;
+            dot.xSpeed = -dot.xSpeed;
         }
         if (dot.y > canvas.height - dotDiameter) {
             dot.y = canvas.height - dotDiameter;
-        }
-        if (dot.y < dotDiameter) {
+            dot.ySpeed = -dot.ySpeed;
+        } else if (dot.y < dotDiameter) {
             dot.y = dotDiameter;
+            dot.ySpeed = -dot.ySpeed;
         }
-
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2, true);
+        // random direction change
+        if (Math.random() > 0.95) {
+            dot.xSpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+            while (dot.xSpeed === 0) {
+                dot.xSpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+            }
+        } else if (Math.random() < 0.05) {
+            dot.ySpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+            while (dot.ySpeed === 0) {
+                dot.ySpeed = (Math.floor(Math.random() * (this.maxSpeed - this.minSpeed + 1)) + this.minSpeed) / 10;
+            }
+        }
+        // dot.x += Math.random() * 2 - 1;
+        // dot.y += Math.random() * 2 - 1;
+        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2, false);
+        ctx.closePath();
         ctx.fill();
         ctx.stroke();
         return dot;
@@ -726,6 +748,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private destroyDotsChart() {
         if (this.dotsChartRebuildFunctionId) {
             clearInterval(this.dotsChartRebuildFunctionId);
+        }
+        if (this.dotsChartRequestId) {
+            cancelAnimationFrame(this.dotsChartRequestId);
         }
     }
 
