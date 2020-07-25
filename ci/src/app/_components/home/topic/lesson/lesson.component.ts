@@ -17,6 +17,7 @@ import { QuestionComponent } from './question/question.component';
 export class LessonComponent implements OnInit, AfterViewChecked {
     lessonTree: any = [];
     topic_id: number;
+    next_topic_id: number;
     lesson_id: number;
     isChallenge: false;
 
@@ -151,6 +152,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                         this.next = lessonTree['next_topic_id'];
                     } else {
                         this.next = lessonTree['next_lesson_id'];
+                        this.next_topic_id = lessonTree['next_topic_id'];
                         if (lessonTree['unfinished_lessons_count']) {
                             this.unfinishedLessonsCount = lessonTree['unfinished_lessons_count'];
                             this.isUnfinished = lessonTree['is_unfinished'];

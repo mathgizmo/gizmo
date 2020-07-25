@@ -24,32 +24,32 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
 
     private dotRadius = 4;
 
-    private type = 1;
+    public type = 1;
     public control = 0; // ?? exception if private
     private valueDisplayChart = 1;
-    private valueDisplay = 1;
-    private value = 0.50;
-    private maxValue = 0;
-    private controllbaseValue = 0;
-    private startValue = 0;
-    private endValue = 1;
-    private step = 0.5;
+    public valueDisplay = 1;
+    public value = 0.50;
+    public maxValue = 0;
+    public controllbaseValue = 0;
+    public startValue = 0;
+    public endValue = 1;
+    public step = 0.5;
     private marksList: number[] = [0, 0.5, 1];
     private marksLabelsList: number[] = [0, 0.5, 1];
 
-    private accuracyControl = 2; // number of decimals (0 - integer)
+    public accuracyControl = 2; // number of decimals (0 - integer)
     private accuracyChart = 2; // number of decimals (0 - integer)
 
     private initialized = false;
     private oldQuestion: string;
 
-    private inputValue = 0;
-    private stepInput = 0.01;
-    private maxInputValue = 1;
-    private minInputValue = 0;
+    public inputValue = 0;
+    public stepInput = 0.01;
+    public maxInputValue = 1;
+    public minInputValue = 0;
 
     private dotsChartRebuildFunctionId; // id of function which rebuild dots chart
-    private dots;
+    public dots;
 
     private sliderChartSelected = 0;
 

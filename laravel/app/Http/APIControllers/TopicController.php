@@ -308,6 +308,7 @@ class TopicController extends Controller
                 })
             ->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->first();
         $lesson->next_lesson_id = isset($next->id) ? $next->id : 0;
+        $lesson->next_topic_id = null;
         $lesson->unfinished_lessons_count = 0;
         $lesson->is_unfinished = false;
         try {
@@ -329,6 +330,14 @@ class TopicController extends Controller
                     ->whereNull('progresses.id')->get(['lesson.id'])->all();
                 $lesson->unfinished_lessons_count = count($lessons);
                 $lesson->is_unfinished = collect($lessons)->where('id', $lesson_id)->count() > 0;
+            }
+            // find nex topic
+            $app_topics = $this->app->getTopics($topic->unit_id)->toArray();
+            if (count($app_topics) > 0) {
+                $next_topic = collect($app_topics)->filter(function ($item) use ($topic) {
+                    return $item->order_no > $topic->order_no;
+                })->first();
+                $lesson->next_topic_id = $next_topic ? $next_topic->id : null;
             }
         } catch (\Exception $e) { }
         return $this->success($lesson);
