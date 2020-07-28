@@ -54,6 +54,15 @@
     }
 }
 
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+    & > *:not(*:last-child) {
+        margin-bottom: 6px;
+    }
+}
+
 .can-expand, .expand-icon {
     cursor: pointer;
 }

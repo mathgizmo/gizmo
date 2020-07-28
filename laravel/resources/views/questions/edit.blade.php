@@ -305,8 +305,7 @@
                     </div>
                 </div>
                 <div class="form-group row {{ $errors->has('rounding') ? ' has-error' : '' }}">
-                    <label for="rounding" class="col-md-2 form-control-label ml-3 font-weight-bold">User answer
-                        rounding</label>
+                    <label for="rounding" class="col-md-2 form-control-label ml-3 font-weight-bold">User answer rounding</label>
                     <div class="col-md-8 radio">
                         <label for="rounding">
                             <input type="radio" name="rounding"

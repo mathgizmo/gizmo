@@ -55,6 +55,10 @@
             </li>
         </ul>
     </form>
+    <mat-radio-group [(ngModel)]="assignment.allow_any_order" class="radio-group form-group">
+        <mat-radio-button [value]="0">Lessons could be completed in their order</mat-radio-button>
+        <mat-radio-button [value]="1">Lessons could be completed in any order</mat-radio-button>
+    </mat-radio-group>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>

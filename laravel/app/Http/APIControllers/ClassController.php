@@ -16,7 +16,14 @@ class ClassController extends Controller
 
     public function __construct()
     {
-        $this->user = JWTAuth::parseToken()->authenticate();
+        try {
+            $this->user = JWTAuth::parseToken()->authenticate();
+            if (!$this->user) {
+                abort(401, 'Unauthorized!');
+            }
+        } catch (\Exception $e) {
+            abort(401, 'Unauthorized!');
+        }
     }
 
     public function all() {

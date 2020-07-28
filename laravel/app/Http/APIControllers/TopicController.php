@@ -20,8 +20,18 @@ class TopicController extends Controller
 
     public function __construct()
     {
-        $auth_user = JWTAuth::parseToken()->authenticate();
-        $this->student = Student::find($auth_user->id);
+        try {
+            $auth_user = JWTAuth::parseToken()->authenticate();
+            if (!$auth_user) {
+                abort(401, 'Unauthorized!');
+            }
+            $this->student = Student::find($auth_user->id);
+            if (!$this->student) {
+                abort(401, 'Unauthorized!');
+            }
+        } catch (\Exception $e) {
+            abort(401, 'Unauthorized!');
+        }
         if (request()->has('app_id')) {
             $app_id = request('app_id');
             $this->app = Application::where('id', $app_id)->first();
@@ -40,6 +50,7 @@ class TopicController extends Controller
     {
         $student = $this->student;
         $app_id = $this->app->id;
+        $any_order = $this->app->allow_any_order ?: false;
         $lessons_done = [];
         $topics_done = [];
         $units_done = [];
@@ -73,7 +84,7 @@ class TopicController extends Controller
             } else {
                 if ($active_flag || $last_active_level_order == $level->order_no) {
                     $level->status = 2;
-                    if ($level->dependency == 1 && $student->is_super == 0) {
+                    if ($level->dependency == 1 && $student->is_super == 0 && !$any_order) {
                         $active_flag = false;
                         $last_active_level_order = $level->order_no;
                     }
@@ -98,7 +109,7 @@ class TopicController extends Controller
             } else {
                 if ($response[$l_element_id]->active_flag || $response[$l_element_id]->last_active_order == $unit->order_no) {
                     $unit->status = 2;
-                    if ($unit->dependency == 1 && $student->is_super == 0) {
+                    if ($unit->dependency == 1 && $student->is_super == 0 && !$any_order) {
                         $response[$l_element_id]->active_flag = false;
                         $response[$l_element_id]->last_active_order = $unit->order_no;
                     }
@@ -151,7 +162,7 @@ class TopicController extends Controller
                 if ($response[$l_element_id]->units[$u_element_id]->active_flag ||
                     $response[$l_element_id]->units[$u_element_id]->last_active_order == $topic->order_no) {
                     $topic->status = 2;
-                    if ($topic->dependency == 1 && $student->is_super == 0) {
+                    if ($topic->dependency == 1 && $student->is_super == 0 && !$any_order) {
                         $response[$l_element_id]->units[$u_element_id]->active_flag = false;
                         $response[$l_element_id]->units[$u_element_id]->last_active_order = $topic->order_no;
                     }
@@ -180,6 +191,7 @@ class TopicController extends Controller
         }
         $student = $this->student;
         $app_id = $this->app->id;
+        $any_order = $this->app->allow_any_order ?: false;
         $topic = DB::table('topic')->where('id', $id)->first();
         try {
             if($topic->icon_src == '' || !file_exists('../admin/'.$topic->icon_src)) {
@@ -227,7 +239,7 @@ class TopicController extends Controller
                 }
                 else {
                     $topic->lessons[$id]->status = 2;
-                    if ($lesson->dependency == 1 && $lesson->dev_mode == 0 && $student->is_super == 0) {
+                    if ($lesson->dependency == 1 && $lesson->dev_mode == 0 && $student->is_super == 0 && !$any_order) {
                         $last_active_order = $lesson->order_no;
                         $active_flag = false;
                     }
@@ -296,6 +308,38 @@ class TopicController extends Controller
                 })
             ->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->first();
         $lesson->next_lesson_id = isset($next->id) ? $next->id : 0;
+        $lesson->next_topic_id = null;
+        $lesson->unfinished_lessons_count = 0;
+        $lesson->is_unfinished = false;
+        try {
+            // find all lessons from topic that are not done yet
+            $student = $this->student;
+            $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
+                $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
+            })->where('topic_id', $id)->where('dev_mode', 0);
+            if ($lessons_query->count() > 0) {
+                $lesson->unfinished_lessons_count = $lessons_query->count();
+                $lesson->is_unfinished = $lessons_query->where('id', $lesson_id)->count() > 0;
+            } else {
+                $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
+                    $join->on('progresses.student_id', '=', DB::raw($student->id))
+                        ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
+                        ->on('progresses.entity_id', '=', 'lesson.id');
+                })->where(['topic_id' => $id])
+                    ->where('dev_mode', 0)
+                    ->whereNull('progresses.id')->get(['lesson.id'])->all();
+                $lesson->unfinished_lessons_count = count($lessons);
+                $lesson->is_unfinished = collect($lessons)->where('id', $lesson_id)->count() > 0;
+            }
+            // find nex topic
+            $app_topics = $this->app->getTopics($topic->unit_id)->toArray();
+            if (count($app_topics) > 0) {
+                $next_topic = collect($app_topics)->filter(function ($item) use ($topic) {
+                    return $item->order_no > $topic->order_no;
+                })->first();
+                $lesson->next_topic_id = $next_topic ? $next_topic->id : null;
+            }
+        } catch (\Exception $e) { }
         return $this->success($lesson);
     }
 
@@ -308,11 +352,11 @@ class TopicController extends Controller
         $topic->questions = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
             $q1->select('id')->from('lesson')->whereIn('id', function($q2) use($app_id, $topic_id) {
                 $q2->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
-            })->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
+            })->where('topic_id', $topic_id)->where('dev_mode', 0);
         })->inRandomOrder()->get();
         if (count($topic->questions) < 1) {
             $topic->questions = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
-                $q1->select('id')->from('lesson')->where('topic_id', $topic_id)->where('dependency', 1)->where('dev_mode', 0);
+                $q1->select('id')->from('lesson')->where('topic_id', $topic_id)->where('dev_mode', 0);
             })->inRandomOrder()->get();
         }
         $lessons = $this->app->getLessons($topic_id)->toArray();
@@ -352,7 +396,7 @@ class TopicController extends Controller
         return $this->success($topic);
     }
 
-    function testoutdone($topic) {
+    function testoutDone($topic) {
         if (($model = Topic::find($topic)) == null) {
             return $this->error('Invalid topic.');
         }

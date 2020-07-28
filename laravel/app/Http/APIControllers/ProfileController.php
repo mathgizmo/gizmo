@@ -14,9 +14,23 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ProfileController extends Controller
 {
 
+    private $user;
+
+    public function __construct()
+    {
+        try {
+            $this->user = JWTAuth::parseToken()->authenticate();
+            if (!$this->user) {
+                abort(401, 'Unauthorized!');
+            }
+        } catch (\Exception $e) {
+            abort(401, 'Unauthorized!');
+        }
+    }
+    
     public function get()
     {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         return $this->success([
             'name' => $student->name,
             'first_name' => $student->first_name,
@@ -30,7 +44,7 @@ class ProfileController extends Controller
 
     public function update()
     {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         $update = [];
         if (request()->has('name')) {
             $update['name'] = request('name');
@@ -76,7 +90,7 @@ class ProfileController extends Controller
     }
 
     public function getToDos() {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         $items = [];
         foreach (DB::table('classes_applications')->whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->get() as $row) {
             $item = Application::where('id', $row->app_id)->first();
@@ -89,6 +103,10 @@ class ProfileController extends Controller
             } else {
                 $due_at = null;
             }
+            $item->start_time = $row->start_time ?: '00:00:00';
+            $item->start_date = $row->start_date;
+            $item->due_time = $row->due_time ?: '00:00:00';
+            $item->due_date = $row->due_date;
             $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
             $now = Carbon::now()->toDateTimeString();
             if ($row->start_date) {
@@ -108,7 +126,7 @@ class ProfileController extends Controller
     }
 
     public function changeApplication() {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         if (request()->has('app_id')) {
             $user = Student::find($student->id);
             $user->app_id = request('app_id');
@@ -120,7 +138,7 @@ class ProfileController extends Controller
     }
 
     public function getClasses() {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         $my_classes = ClassOfStudents::whereHas('students', function ($q) use ($student) {
             $q->where('students.id', $student->id);
         })->orderBy('name')->get();
@@ -144,7 +162,7 @@ class ProfileController extends Controller
     }
 
     public function getClassInvitations() {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         $my_classes = ClassOfStudents::whereHas('students', function ($q) use ($student) {
             $q->where('students.id', $student->id);
         })->orderBy('name')->get();
@@ -161,7 +179,7 @@ class ProfileController extends Controller
     }
 
     public function subscribeClass($class_id) {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         $class = ClassOfStudents::where('id', $class_id)->first();
         $exists = DB::table('classes_students')->where('class_id', $class_id)->where('student_id', $student->id)->first();
         if ($class && !$exists) {
@@ -176,7 +194,7 @@ class ProfileController extends Controller
     }
 
     public function unsubscribeClass($class_id) {
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         DB::table('classes_students')->where('class_id', $class_id)->where('student_id', $student->id)->delete();
         return $this->success('OK.');
     }

@@ -359,9 +359,33 @@ a.button:hover, a.button:focus {
   }
 }
 
+.order-list {
+  background: none !important;
+  border: none !important;
+  .order-item {
+    min-height: 52px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    background: rgba(0, 38, 66, 0.1) !important;
+    color: $white !important;
+    border: none !important;
+    padding: 10px 16px !important;
+    .mjx-chtml, .MathJax_CHTML {
+      width: 100% !important;
+    }
+  }
+  .order-item:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cdk-drag-preview {
+  border-radius: 16px !important;
+  color: $white !important;
+  padding: 10px 16px !important;
+}
 
 .question-container .question * {
-
   [data-tooltip] {
     position: relative;
     display: inline-block;

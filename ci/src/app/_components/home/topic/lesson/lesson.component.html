@@ -67,7 +67,9 @@
         <div *ngIf="initial_loading == 0 && lesson_id != -1">
             <div class="question-container">
                 <h2 class="subtitle">Congratulations!</h2>
-                <h3 class="question" *ngIf="!isChallenge">You have finished this lesson.</h3>
+                <h3 class="question" *ngIf="!isChallenge && ((unfinishedLessonsCount < 2 && isUnfinished) || (unfinishedLessonsCount < 1 && !isUnfinished))">You have finished this lesson.</h3>
+                <h3 class="question" *ngIf="!isChallenge && ((isUnfinished && unfinishedLessonsCount > 2) || (!isUnfinished && unfinishedLessonsCount > 1))">You have {{isUnfinished ? unfinishedLessonsCount - 1 : unfinishedLessonsCount}} unfinished lessons in this topic.</h3>
+                <h3 class="question" *ngIf="!isChallenge && ((isUnfinished && unfinishedLessonsCount == 2) || (!isUnfinished && unfinishedLessonsCount == 1))">You have unfinished lesson in this topic.</h3>
                 <h3 class="question" *ngIf="isChallenge">You have completed this challenge.</h3>
             </div>
             <a
@@ -86,12 +88,24 @@
                     class="button-container"
                     routerLink="/topic/{{topic_id}}"
                     routerLinkActive="active"
-                    *ngIf="next == 0 || isChallenge">
+                    *ngIf="(next == 0 || isChallenge) && !next_topic_id">
                 <button
                         mat-raised-button
                         class="button moving-forward-button"
                         style="margin: 16px; color: #000; background-color: #f5f5f5;">
                     <span>Go back to topic</span>
+                </button>
+            </a>
+            <a
+                    class="button-container"
+                    routerLink="/topic/{{next_topic_id}}"
+                    routerLinkActive="active"
+                    *ngIf="(next == 0 || isChallenge) && next_topic_id">
+                <button
+                        mat-raised-button
+                        class="button moving-forward-button"
+                        style="margin: 16px; color: #000; background-color: #f5f5f5;">
+                    <span>Go to next topic</span>
                 </button>
             </a>
         </div>
@@ -113,7 +127,25 @@
                 </button>
             </a>
         </div>
-        <div *ngIf="initial_loading == 0 && lesson_id == -1 && !testout_completed">
+        <div *ngIf="initial_loading == 0 && lesson_id == -1 && testout_empty">
+            <div class="question-container">
+                <h3 class="question">Sorry, but we don't have questions for you.
+                </h3>
+            </div>
+            <a
+                    class="button-container"
+                    routerLink="/topic/{{next}}"
+                    routerLinkActive="active"
+                    *ngIf="next != 0">
+                <button
+                        mat-raised-button
+                        style="margin: 16px; color: #000; background-color: #f5f5f5;"
+                        class="button moving-forward-button">
+                    <span>Go to next topic</span>
+                </button>
+            </a>
+        </div>
+        <div *ngIf="initial_loading == 0 && lesson_id == -1 && !testout_completed && !testout_empty">
             <div class="question-container">
                 <!-- <h2 class="subtitle">Placement test failed :(</h2> -->
                 <h3 class="question">Based on your responses, you have been placed in {{next_title}}.

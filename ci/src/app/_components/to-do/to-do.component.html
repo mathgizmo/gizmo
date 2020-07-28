@@ -41,7 +41,7 @@
     <div class="applications-list">
       <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
         <mat-button-toggle *ngFor="let application of completedApplications" [value]="application.id" (click)="onChangeToDo(application)" >
-          <div class="app-select-container">
+          <div class="app-select-container completed" [class.disabled]="application.is_blocked">
             <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
             <div class="app-data">
               <span class="app-title">

@@ -6,7 +6,7 @@
     </span>
     <span class="answer">
         <div cdkDropList (cdkDropListDropped)="drop($event)" *ngIf="question.answer_mode=='order'" class="order-list">
-            <div cdkDrag *ngFor="let answer of answers" class="order-item">{{answer}}</div>
+            <div cdkDrag *ngFor="let answer of answers;" class="order-item">{{answer}}</div>
         </div>
         <div *ngIf="question.answer_mode=='radio'">
             <mat-radio-group class="radio-group" [(ngModel)]="answers[0]" >
