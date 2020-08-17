@@ -4,6 +4,7 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\Lesson;
+use App\Level;
 use App\Setting;
 use App\Student;
 use App\StudentsTracking;
@@ -127,8 +128,11 @@ class TopicController extends Controller
                 })->where('topic_id', $topic->id)->where('dev_mode', 0);
                 if ($lessons_query->count() > 0) {
                     $lessons_done[$topic->id]['total'] = $lessons_query->count();
-                    $lessons_done[$topic->id]['done'] = $lessons_query->whereIn('id', function($q) use($student) {
-                        $q->select('entity_id')->from('progresses')->where('entity_type', 'lesson')->where('student_id', $student->id);
+                    $lessons_done[$topic->id]['done'] = $lessons_query->whereIn('id', function($q) use($student, $app_id) {
+                        $q->select('entity_id')->from('progresses')
+                            ->where('entity_type', 'lesson')
+                            ->where('student_id', $student->id)
+                            ->where('app_id', $app_id);
                     })->count();
                 } else {
                     $l_done = DB::table('lesson')
@@ -137,15 +141,17 @@ class TopicController extends Controller
                             DB::raw("SUM(IF(lesson.dev_mode = 0, 1, 0)) as total"),
                             DB::raw("SUM(IF(progresses.id IS NULL, 0, 1)) as done")
                         )
-                        ->leftJoin('progresses', function ($join) use ($student) {
+                        ->leftJoin('progresses', function ($join) use ($student, $app_id) {
                             $join->on('progresses.student_id', '=', DB::raw($student->id))
                                 ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
-                                ->on('progresses.entity_id', '=', 'lesson.id');
-                        })->where('topic_id', $topic->id)->first();
+                                ->on('progresses.entity_id', '=', 'lesson.id')
+                                ->on('progresses.app_id', '=', DB::raw($app_id));
+                        })
+                        ->where('topic_id', $topic->id)->first();
                     $lessons_done[$topic->id]['total'] = $l_done->total;
                     $lessons_done[$topic->id]['done'] = $l_done->done;
                 }
-            } catch (\Exception $e) {  }
+            } catch (\Exception $e) { }
             try {
                 if($topic->icon_src == '' || !file_exists('../admin/'.$topic->icon_src)) {
                     $topic->icon_src = 'images/default-icon.svg';
@@ -214,8 +220,10 @@ class TopicController extends Controller
             $topic->lessons[$id]->status = 0;
         }
         $lessons_done = [];
-        foreach (DB::table('progresses')->select('entity_id')->where(['student_id' => $student->id, 'entity_type' => 'lesson'])
-            ->whereIn('entity_id', $lessons_ids)->get() as $row) {
+        foreach (DB::table('progresses')->select('entity_id')
+                     ->where(['student_id' => $student->id, 'entity_type' => 'lesson', 'app_id' => $app_id])
+                     ->whereIn('entity_id', $lessons_ids)
+                     ->get() as $row) {
                 $lessons_done[] = $row->entity_id;
         }
         $topic->status = count(
@@ -321,26 +329,66 @@ class TopicController extends Controller
                 $lesson->unfinished_lessons_count = $lessons_query->count();
                 $lesson->is_unfinished = $lessons_query->where('id', $lesson_id)->count() > 0;
             } else {
-                $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
+                $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student, $app_id) {
                     $join->on('progresses.student_id', '=', DB::raw($student->id))
                         ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
-                        ->on('progresses.entity_id', '=', 'lesson.id');
+                        ->on('progresses.entity_id', '=', 'lesson.id')
+                        ->on('progresses.app_id', '=', DB::raw($app_id));
                 })->where(['topic_id' => $id])
                     ->where('dev_mode', 0)
                     ->whereNull('progresses.id')->get(['lesson.id'])->all();
                 $lesson->unfinished_lessons_count = count($lessons);
                 $lesson->is_unfinished = collect($lessons)->where('id', $lesson_id)->count() > 0;
             }
-            // find nex topic
-            $app_topics = $this->app->getTopics($topic->unit_id)->toArray();
-            if (count($app_topics) > 0) {
-                $next_topic = collect($app_topics)->filter(function ($item) use ($topic) {
-                    return $item->order_no > $topic->order_no;
-                })->first();
-                $lesson->next_topic_id = $next_topic ? $next_topic->id : null;
-            }
+            $lesson->next_topic_id = $this->getNextTopic($topic);
         } catch (\Exception $e) { }
         return $this->success($lesson);
+    }
+
+    private function getNextTopic($topic) {
+        // find next topic
+        $next_topic_id = null;
+        $app_topics = $this->app->getTopics($topic->unit_id)->toArray();
+        if (count($app_topics) > 0) {
+            $next_topic = collect($app_topics)->filter(function ($item) use ($topic) {
+                return $item->order_no > $topic->order_no;
+            })->first();
+            if ($next_topic) {
+                $next_topic_id = $next_topic->id;
+            }
+            if (!$next_topic_id) {
+                $topic_unit = Unit::where('id', $topic->unit_id)->first();
+                foreach ($this->app->getUnits($topic_unit->level_id) as $unit) {
+                    if ($unit->order_no < $topic_unit->order_no || $unit->id == $topic->unit_id) { continue; }
+                    $app_topics = $this->app->getTopics($unit->id)->toArray();
+                    if (count($app_topics) > 0) {
+                        $next_topic = collect($app_topics)->sortBy('order_no')->first();
+                        if ($next_topic) {
+                            $next_topic_id = $next_topic->id;
+                            break;
+                        }
+                    }
+                }
+                if (!$next_topic_id) {
+                    $topic_level = Level::where('id', $topic_unit->level_id)->first();
+                    foreach ($this->app->getLevels() as $level) {
+                        if ($level->order_no < $topic_level->order_no || $level->id == $unit->level_id) { continue; }
+                        foreach ($this->app->getUnits($level->id) as $unit) {
+                            if ($unit->id == $topic->unit_id) { continue; }
+                            $app_topics = $this->app->getTopics($unit->id)->toArray();
+                            if (count($app_topics) > 0) {
+                                $next_topic = collect($app_topics)->sortBy('order_no')->first();
+                                if ($next_topic) {
+                                    $next_topic_id = $next_topic->id;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return $next_topic_id;
     }
 
     function testout($topic_id) {
@@ -379,15 +427,10 @@ class TopicController extends Controller
             $topic->questions[$q_id]->answers[] = $answer;
         }
         $ids = collect(DB::select("SELECT t.id FROM topic t JOIN unit u ON t.unit_id = u.id JOIN level l ON u.level_id = l.id ORDER BY l.order_no, l.id, u.order_no, u.id, t.order_no, t.id"))->pluck('id')->toArray();
-        $topic_order_id = array_search($topic_id, $ids);
-        $app_topics = $this->app->getTopics($topic->unit_id)->toArray();
-        if (count($app_topics) > 0) {
-            $next = collect($app_topics)->filter(function ($item) use ($topic) {
-                return $item->order_no > $topic->order_no;
-            })->first();
-            $topic->next_topic_id = $next ? $next->id : 0;
-        } else {
-            $topic->next_topic_id  = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
+        $topic->next_topic_id = $this->getNextTopic($topic);
+        if (!$topic->next_topic_id) {
+            $topic_order_id = array_search($topic_id, $ids);
+            $topic->next_topic_id = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
         }
         $max_questions_num = Setting::where('key', 'topic_testout_max_questions_num')->first();
         $topic->max_questions_num = $max_questions_num ? intval($max_questions_num->value) : 5;

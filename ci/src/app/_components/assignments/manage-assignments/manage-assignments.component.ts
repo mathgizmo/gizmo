@@ -27,7 +27,8 @@ export class ManageAssignmentsComponent implements OnInit {
 
     private readonly adminUrl = environment.adminUrl;
 
-    constructor(private assignmentService: AssignmentService, private sanitizer: DomSanitizer, public dialog: MatDialog, private deviceService: DeviceDetectorService) {
+    constructor(private assignmentService: AssignmentService, private sanitizer: DomSanitizer,
+                public dialog: MatDialog, private deviceService: DeviceDetectorService) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};

@@ -56,9 +56,13 @@
         </ul>
     </form>
     <mat-radio-group [(ngModel)]="assignment.allow_any_order" class="radio-group form-group">
-        <mat-radio-button [value]="0">Lessons could be completed in their order</mat-radio-button>
-        <mat-radio-button [value]="1">Lessons could be completed in any order</mat-radio-button>
+        <mat-radio-button [value]="0">Topics/Lessons need to be completed in linear order</mat-radio-button>
+        <mat-radio-button [value]="1">Topics/Lessons can be completed in any order</mat-radio-button>
     </mat-radio-group>
+    <div class="form-group">
+        <label for="testout_attempts">Number of attempts to testout (-1 – means unlimited attempts; 0 – for not testout):</label>
+        <input id="testout_attempts" name="testout_attempts" [(ngModel)]="assignment.testout_attempts" required class="form-control"/>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>

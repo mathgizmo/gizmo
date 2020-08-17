@@ -13,7 +13,7 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
-    <button mat-button [mat-dialog-close]="false" class='button moving-forward-button continue-button'>Continue</button>
+    <button mat-button [mat-dialog-close]="true" class='button feedback-button'>Report Error</button>
     <div *ngIf="explanation.trim() != '' && showExplanation && showExplanationScrollButtons" class="explanation-buttons-container">
         <div (click)="scrollExplanation('up')" (press)="startScrollingExplanation('up')" (pressup)="stopScrollingExplanation('up')">
             <svg height="20px" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 2px;">
@@ -35,5 +35,5 @@
             </svg>
         </div>
     </div>
-    <button mat-button [mat-dialog-close]="true" class='button feedback-button'>Report Error</button>
+    <button mat-button [mat-dialog-close]="false" class='button moving-forward-button continue-button'>Continue</button>
 </mat-dialog-actions>

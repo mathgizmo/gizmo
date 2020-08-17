@@ -4,7 +4,12 @@ namespace App\Providers;
 
 use App\ClassOfStudents;
 use App\Observers\ClassObserver;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +21,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         ClassOfStudents::observe(ClassObserver::class);
+        /** DB log */
+        /* DB::listen(function ($query) {
+            $log = ['QUERY' => $query->sql, 'TIME' => $query->time];
+            $dbLog = new Logger('DB');
+            $dbLog->pushHandler(new StreamHandler(storage_path('logs/DB-'.Carbon::now()->toDateString().'.log')));
+            $dbLog->info('DBLog', $log);
+        }); */
     }
 
     /**

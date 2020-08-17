@@ -31,9 +31,7 @@ class ApplicationController extends Controller
 
     public function store() {
         try {
-            $validator = Validator::make(request()->all(),
-                [ 'name' => 'required|max:255' ]
-            );
+            $validator = Validator::make(request()->all(), [ 'name' => 'required|max:255' ]);
             if ($validator->fails()) {
                 return $this->error($validator->messages());
             }
@@ -44,6 +42,7 @@ class ApplicationController extends Controller
             }
             $app->teacher_id = $this->user->id;
             $app->allow_any_order = request('allow_any_order') ?: null;
+            $app->testout_attempts = request('testout_attempts') ?: -1;
             $app->save();
             parse_str(request('tree'), $tree);
             $app->updateTree($tree);
@@ -55,9 +54,7 @@ class ApplicationController extends Controller
 
     public function update($app_id) {
         try {
-            $validator = Validator::make(request()->all(),
-                [ 'name' => 'required|max:255' ]
-            );
+            $validator = Validator::make(request()->all(), ['name' => 'required|max:255']);
             if ($validator->fails()) {
                 return $this->error($validator->messages());
             }
@@ -70,6 +67,7 @@ class ApplicationController extends Controller
                     $app->icon = request('icon');
                 }
                 $app->allow_any_order = request('allow_any_order') ?: null;
+                $app->testout_attempts = request('testout_attempts') ?: -1;
                 $app->save();
                 parse_str(request('tree'), $tree);
                 $success = $app->updateTree($tree);

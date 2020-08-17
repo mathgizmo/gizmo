@@ -150,8 +150,15 @@ class ProfileController extends Controller
             $q1->where('subscription_type', 'open')->orWhere(function ($q2) use ($student) {
                 $q2->where('subscription_type', 'invitation')->where('invitations', 'LIKE', '%'.$student->email.'%');
             });
-        })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get();
+        })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
         foreach ($available_classes as $item) {
+            if ($item->subscription_type == 'invitation') {
+                $emails = explode(',', str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations)));
+                if (!in_array($student->email, $emails)) {
+                    $available_classes->forget($item->id);
+                    continue;
+                }
+            }
             $teacher = Student::where('id', $item->teacher_id)->first();
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
         }
@@ -168,8 +175,13 @@ class ProfileController extends Controller
         })->orderBy('name')->get();
         $class_invitations = ClassOfStudents::where(function ($q1) use ($student) {
             $q1->where('subscription_type', 'invitation')->where('invitations', 'LIKE', '%'.$student->email.'%');
-        })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get();
+        })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
         foreach ($class_invitations as $item) {
+            $emails = explode(',', str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations)));
+            if (!in_array($student->email, $emails)) {
+                $class_invitations->forget($item->id);
+                continue;
+            }
             $teacher = Student::where('id', $item->teacher_id)->first();
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
         }

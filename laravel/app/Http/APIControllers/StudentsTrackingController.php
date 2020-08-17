@@ -51,9 +51,11 @@ class StudentsTrackingController extends Controller
             return $this->error('Invalid lesson.');
         }
         $now = date("Y-m-d H:i:s");
+        $app_id = $this->app->id ?: null;
         StudentsTracking::create([
             'student_id' => $this->student->id,
             'lesson_id' => $lesson,
+            'app_id' => $app_id,
             'action' => 'start',
             'date' => $now,
             'start_datetime' => $now,
@@ -70,7 +72,7 @@ class StudentsTrackingController extends Controller
             return $this->error('Invalid topic.');
         }
         $lastLesson = Lesson::where('id', request()->lesson_id)->first();
-        $app_id = $this->app->id;
+        $app_id = $this->app->id ?: null;
         $student = $this->student;
         // find all lessons from topic that are not done yet
         $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
@@ -83,10 +85,11 @@ class StudentsTrackingController extends Controller
                 $lessons = $lessons_query->get();
             }
         } else {
-            $lessons_rows = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
+            $lessons_rows = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student, $app_id) {
                 $join->on('progresses.student_id', '=', DB::raw($student->id))
                     ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
-                    ->on('progresses.entity_id', '=', 'lesson.id');
+                    ->on('progresses.entity_id', '=', 'lesson.id')
+                    ->on('progresses.app_id', '=', DB::raw($app_id));
             })->where(['topic_id' => $topic_id])
                 ->where('dev_mode', 0)
                 ->whereNull('progresses.id')->get(['lesson.id', 'lesson.order_no'])->all();
@@ -100,7 +103,8 @@ class StudentsTrackingController extends Controller
             $progress_data = [
                 'student_id' => $this->student->id,
                 'entity_type' => 'lesson',
-                'entity_id' => $lesson->id
+                'entity_id' => $lesson->id,
+                'app_id' => $app_id
             ];
             if (Progress::where($progress_data)->count() == 0) {
                 $this->done($lesson->id, true);
@@ -114,11 +118,12 @@ class StudentsTrackingController extends Controller
         if (($model = Lesson::find($lesson)) == null) {
             return $this->error('Invalid lesson.');
         }
-        $app_id = $this->app->id;
+        $app_id = $this->app->id ?: null;
         $student = $this->student;
         StudentsTracking::create([
             'student_id' => $this->student->id,
             'lesson_id' => $lesson,
+            'app_id' => $app_id,
             'action' => 'done',
             'date' => date("Y-m-d H:i:s"),
             'start_datetime' => date("Y-m-d H:i:s", (request()->start_datetime ? strtotime(request()->start_datetime) : date('U'))),
@@ -130,7 +135,8 @@ class StudentsTrackingController extends Controller
         $progress_data = [
             'student_id' => $this->student->id,
             'entity_type' => 'lesson',
-            'entity_id' => $lesson
+            'entity_id' => $lesson,
+            'app_id' => $app_id
         ];
         if (Progress::where($progress_data)->count() == 0) {
             try {
@@ -142,15 +148,22 @@ class StudentsTrackingController extends Controller
             $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
         })->where('topic_id', $model->topic_id)->where('dev_mode', 0);
         if ($lessons_query->count() > 0) {
-            $is_topic_done = $lessons_query->count() <= $lessons_query->whereIn('id', function($q) use($student) {
-                    $q->select('entity_id')->from('progresses')->where('entity_type', 'lesson')->where('student_id', $student->id);
+            $is_topic_done = $lessons_query->count() <= $lessons_query->whereIn('id', function($q) use($student, $app_id) {
+                    $q->select('entity_id')->from('progresses')
+                        ->where('entity_type', 'lesson')
+                        ->where('student_id', $student->id)
+                        ->where('app_id', $app_id);
                 })->count();
         } else {
-            $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student) {
+            $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student, $app_id) {
                 $join->on('progresses.student_id', '=', DB::raw($student->id))
                     ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
-                    ->on('progresses.entity_id', '=', 'lesson.id');
-            })->where(['topic_id' => $model->topic_id, 'dependency' => 1])->where('dev_mode', 0)->whereNull('progresses.id')->get()->all();
+                    ->on('progresses.entity_id', '=', 'lesson.id')
+                    ->on('progresses.app_id', '=', DB::raw($app_id));
+            })
+                ->where(['topic_id' => $model->topic_id, 'dependency' => 1])
+                ->where('dev_mode', 0)
+                ->whereNull('progresses.id')->get()->all();
             $is_topic_done = !count($lessons);
         }
         // if all lessons done
@@ -194,19 +207,18 @@ class StudentsTrackingController extends Controller
                     $q->select('entity_id')->from('progresses')
                         ->where('entity_type', 'topic')
                         ->where('student_id', $student->id)
-                        ->where(function ($q) use ($app_id) {
-                            $q->where('app_id', $app_id)->orWhereNull('app_id');
-                        });
+                        ->where('app_id', $app_id);
                 })->count();
         } else {
-            $topics_count = DB::table('topic')->leftJoin('progresses', function ($join) use ($student) {
+            $topics_count = DB::table('topic')->leftJoin('progresses', function ($join) use ($student, $app_id) {
                 $join->on('progresses.student_id', '=', DB::raw($student->id))
                     ->on('progresses.entity_type', '=', DB::raw('"topic"'))
-                    ->on('progresses.entity_id', '=', 'topic.id');
-            })->where(['unit_id' => $topic_model->unit_id, 'dependency' => 1])->whereNull('progresses.id')
-                ->where(function ($q) use ($app_id) {
-                    $q->where('progresses.app_id', $app_id)->orWhereNull('progresses.app_id');
-                })->count();
+                    ->on('progresses.entity_id', '=', 'topic.id')
+                    ->on('progresses.app_id', '=', DB::raw($app_id));
+            })->where(['unit_id' => $topic_model->unit_id, 'dependency' => 1])
+                ->whereNull('progresses.id')
+                ->where('progresses.app_id', $app_id)
+                ->count();
             $is_unit_done = !$topics_count;
         }
         // if all topics are done, mark unit as done
@@ -243,19 +255,18 @@ class StudentsTrackingController extends Controller
                         $q->select('entity_id')->from('progresses')
                             ->where('entity_type', 'unit')
                             ->where('student_id', $student->id)
-                            ->where(function ($q) use ($app_id) {
-                                $q->where('app_id', $app_id)->orWhereNull('app_id');
-                            });
+                            ->where('app_id', $app_id);
                     })->count();
             } else {
-                $units = DB::table('unit')->leftJoin('progresses', function ($join) use ($student) {
+                $units = DB::table('unit')->leftJoin('progresses', function ($join) use ($student, $app_id) {
                     $join->on('progresses.student_id', '=', DB::raw($student->id))
                         ->on('progresses.entity_type', '=', DB::raw('"unit"'))
-                        ->on('progresses.entity_id', '=', 'unit.id');
-                })->where(['level_id' => $unit_model->level_id, 'dependency' => 1])->whereNull('progresses.id')
-                    ->where(function ($q) use ($app_id) {
-                        $q->where('progresses.app_id', $app_id)->orWhereNull('progresses.app_id');
-                    })->get()->all();
+                        ->on('progresses.entity_id', '=', 'unit.id')
+                        ->on('progresses.app_id', '=', DB::raw($app_id));
+                })
+                    ->where(['level_id' => $unit_model->level_id, 'dependency' => 1])
+                    ->whereNull('progresses.id')
+                    ->where('progresses.app_id', $app_id)->get()->all();
                 $is_level_done = !count($units);
             }
             //if all units are done, mark level as done
@@ -278,9 +289,7 @@ class StudentsTrackingController extends Controller
                             $q->select('entity_id')->from('progresses')
                                 ->where('entity_type', 'level')
                                 ->where('student_id', $student->id)
-                                ->where(function ($q) use ($app_id) {
-                                    $q->where('app_id', $app_id)->orWhereNull('app_id');
-                                });
+                                ->where('app_id', $app_id);
                         })->count();
                     //if all levels are done, mark app as done
                     if ($is_app_done) {

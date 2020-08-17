@@ -97,6 +97,7 @@
                     <thead>
                     <tr>
                         <th>Lesson ID</th>
+                        <th>App ID</th>
                         <th>Date</th>
                         <th>Action</th>
                         <th></th>
@@ -109,7 +110,18 @@
                     <tbody>
                     @foreach($student->students_tracking->sortByDesc('id') as $students_tracking)
                         <tr>
-                            <td>{{ $students_tracking->lesson_id }}</td>
+                            <td>
+                                <a href="{{route('lessons.edit', $students_tracking->lesson_id)}}" target="_blank">
+                                    {{ $students_tracking->lesson_id }}
+                                </a>
+                            </td>
+                            <td>
+                                @if($students_tracking->app_id)
+                                <a href="{{route('applications.edit', $students_tracking->app_id)}}" target="_blank">
+                                    {{ $students_tracking->app_id }}
+                                </a>
+                                @endif
+                            </td>
                             <td>{{ date('H:i d.m.Y', strtotime($students_tracking->date)) }}</td>
                             <td>
                                 {{ $students_tracking->action }}
@@ -134,6 +146,10 @@
 
 @section('styles')
     <style>
+        table a, table a:hover {
+            text-decoration: none;
+            color: black;
+        }
         @media screen and (max-width: 600px) {
             .col-md-8 {
                 margin: 0 16px;
