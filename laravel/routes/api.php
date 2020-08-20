@@ -59,6 +59,7 @@ $api->version('v1', function ($api) {
         $api->post('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@addAssignmentToClass');
         $api->put('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@changeAssignment');
         $api->delete('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@deleteAssignmentFromClass');
+        $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
 
         $api->get('/assignments', 'App\Http\APIControllers\ApplicationController@all');
         $api->post('/assignments', 'App\Http\APIControllers\ApplicationController@store');

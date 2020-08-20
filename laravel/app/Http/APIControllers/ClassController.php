@@ -43,7 +43,7 @@ class ClassController extends Controller
                 ])
             ]);
         } catch (\Exception $e) {
-            return $this->error('Error.');
+            return $this->error('Error.', 404);
         }
     }
 
@@ -64,7 +64,7 @@ class ClassController extends Controller
                 return $this->success(['item' => $class]);
             }
         } catch (\Exception $e) {}
-        return $this->error('Error.');
+        return $this->error('Error.', 404);
     }
 
     public function delete($class_id) {
@@ -76,7 +76,7 @@ class ClassController extends Controller
             $class->delete();
             return $this->success('Ok.');
         }
-        return $this->error('Error.');
+        return $this->error('Error.', 404);
     }
 
     public function getStudents($class_id) {
@@ -119,7 +119,48 @@ class ClassController extends Controller
             }
             return $this->success(['items' => array_values($students->toArray())]);
         }
-        return $this->error('Error.');
+        return $this->error('Error.', 404);
+    }
+
+    public function getReport($class_id) {
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        if ($class) {
+            $students = $class->students()->orderBy('name')
+                ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email']);
+            $apps = $class->applications()->get();
+            foreach ($students as $student) {
+                $assignments = [];
+                foreach ($apps as $app) {
+                    $is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
+                            ->where('student_id', $student->id)->count() > 0;
+                    $class_data = $app->getClassRelatedData($class_id);
+                    if ($class_data->due_date) {
+                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                    } else {
+                        $due_at = null;
+                    }
+                    $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                    $completed_at = $app->getCompletedDate($student->id);
+                    $now = Carbon::now()->toDateTimeString();
+                    $is_past_due = (!$is_completed && $due_at && $due_at < $now) ||
+                        ($is_completed && $due_at && $completed_at && $due_at < $completed_at);
+                    if ($is_completed) {
+                        $assignments[$app->id] = 'completed';
+                    } else if ($is_past_due) {
+                        $assignments[$app->id] = 'overdue';
+                    } else {
+                        $assignments[$app->id] = 'progress';
+                    }
+                }
+                $student->assignments = $assignments;
+            }
+            return $this->success([
+                'class' => $class,
+                'students' => array_values($students->toArray()),
+                'assignments' => array_values($apps->toArray()),
+            ]);
+        }
+        return $this->error('Error.', 404);
     }
 
     public function getAssignments($class_id) {

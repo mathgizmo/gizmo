@@ -60,6 +60,8 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     private chartElement: any = null;
     private chartValueLabelElement: any = null;
 
+    private sliderIncrementButtonIsPressed = false;
+
     constructor(private ref: ChangeDetectorRef, private ngZone: NgZone) {
         this.dots = [];
         if (!this.chartHeight) {
@@ -83,7 +85,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         this.destroyDotsChart();
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges() {
         if (this.oldQuestion != this.question) {
             this.oldQuestion = this.question;
             this.initialized = false;
@@ -122,6 +124,33 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
         }).then(() => {
             this.buildChart();
         });
+    }
+
+    incrementSliderValue(type = 'increment', continueIncrementing = true) {
+        if (type === 'decrement') {
+            this.value = this.value > this.startValue ? this.value - this.step : this.startValue;
+        } else {
+            this.value = this.value < this.maxValue ? this.value + this.step : this.maxValue;
+        }
+        if (continueIncrementing) {
+            if (this.sliderIncrementButtonIsPressed) {
+                setTimeout( () => {
+                    this.incrementSliderValue(type);
+                }, 50);
+            }
+        } else {
+            this.stopIncrementingSliderValue();
+        }
+    }
+
+    startIncrementingSliderValue(type = 'increment') {
+        this.sliderIncrementButtonIsPressed = true;
+        this.incrementSliderValue(type);
+    }
+
+    stopIncrementingSliderValue() {
+        this.sliderIncrementButtonIsPressed = false;
+        this.buildChart();
     }
 
     // function to build charts
@@ -497,6 +526,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 break;
             case 3:
                 // Chart (type 3 - dots)
+                this.destroyDotsChart();
                 this.chartElement = document.createElement('canvas');
                 // clear chart
                 chartContainer.innerHTML = '';

@@ -8,3 +8,5 @@ export * from './manage-assignments/manage-assignments.component';
 export * from './manage-assignments/edit-assignment-dialog/edit-assignment-dialog.component';
 
 export * from './dashboard/dashboard.component';
+
+export * from './class/report/class-report.component';

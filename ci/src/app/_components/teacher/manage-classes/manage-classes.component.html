@@ -34,6 +34,7 @@
                         <td>{{item.name}}</td>
                         <td>{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
                         <td class="text-right" style="min-width: 580px;">
+                            <a routerLink="../class-report/{{item.id}}" mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;">Report</a>
                             <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onManageStudents(item)">Review Progress</button>
                             <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onManageAssignments(item)">Manage Assignments</button>
                             <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditClass(item)">Edit</button>

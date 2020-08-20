@@ -1,26 +1,22 @@
 ﻿import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
+import {AuthGuard} from './_guards/index';
+
 import {WelcomeComponent, RegisterComponent, LoginComponent,
     ForgotPasswordComponent, ResetPasswordComponent} from './_components/auth/index';
-import {AssignmentComponent} from './_components/assignment/index';
-import {TopicComponent} from './_components/assignment/topic/index';
-import {LessonComponent} from './_components/assignment/topic/lesson/index';
-import {AuthGuard} from './_guards/index';
+import {AssignmentComponent, TopicComponent, LessonComponent} from './_components/assignment/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {ToDoComponent} from './_components/student/to-do/to-do.component';
-import {MyClassesComponent} from './_components/student/my-classes/my-classes.component';
-import {MyInvitationsComponent} from './_components/student/my-invitations/my-invitations.component';
-import {ManageClassesComponent} from './_components/teacher/manage-classes/manage-classes.component';
-import {ManageAssignmentsComponent} from './_components/teacher/manage-assignments/manage-assignments.component';
+import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
-import {DashboardComponent} from './_components/teacher/dashboard/dashboard.component';
+import {DashboardComponent, ClassReportComponent, ManageAssignmentsComponent, ManageClassesComponent} from './_components/teacher/index';
 
 const teacherRoutes = [
     {path: 'manage-classes', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'manage-assignments', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'class-report/:class_id', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
 ];
 
 const studentRoutes = [

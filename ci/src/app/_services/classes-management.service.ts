@@ -112,4 +112,8 @@ export class ClassesManagementService {
             );
     }
 
+    public getReport(class_id) {
+        return this.http.get('/classes/' + class_id + '/report');
+    }
+
 }

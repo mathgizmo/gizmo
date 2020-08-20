@@ -38,19 +38,12 @@ import {AssignmentComponent} from './_components/assignment/index';
 import {TopicComponent} from './_components/assignment/topic/index';
 import {LessonComponent, ChartComponent} from './_components/assignment/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {ToDoComponent} from './_components/student/to-do/to-do.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent} from './_components/dialogs/index';
-import {MyClassesComponent} from './_components/student/my-classes/my-classes.component';
-import {MyInvitationsComponent} from './_components/student/my-invitations/my-invitations.component';
-import {DashboardComponent} from './_components/teacher/dashboard/dashboard.component';
-import {ClassStudentsDialogComponent} from './_components/teacher/manage-classes/class-students-dialog/class-students-dialog.component';
-import {StudentAssignmentsDialogComponent} from './_components/teacher/manage-classes/class-students-dialog/student-assignments-dialog/student-assignments-dialog.component';
-import {EditClassDialogComponent} from './_components/teacher/manage-classes/edit-class-dialog/edit-class-dialog.component';
-import {ManageClassesComponent} from './_components/teacher/manage-classes/manage-classes.component';
-import {ClassAssignmentsDialogComponent} from './_components/teacher/manage-classes/class-assignments-dialog/class-assignments-dialog.component';
-import {ManageAssignmentsComponent} from './_components/teacher/manage-assignments/manage-assignments.component';
-import {EditAssignmentDialogComponent} from './_components/teacher/manage-assignments/edit-assignment-dialog/edit-assignment-dialog.component';
+import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
+import {DashboardComponent, ClassReportComponent, ClassStudentsDialogComponent, StudentAssignmentsDialogComponent,
+    EditClassDialogComponent, ManageClassesComponent, ClassAssignmentsDialogComponent, ManageAssignmentsComponent,
+    EditAssignmentDialogComponent} from './_components/teacher/index';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
@@ -119,6 +112,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         QuestionComponent,
         QuestionPreviewComponent,
         DashboardComponent,
+        ClassReportComponent,
         // PlacementComponent,
         // QuestionNumDialogComponent,
         DraggableDirective,
