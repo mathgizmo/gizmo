@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../_models/user';
-import {UserService} from '../../_services/user.service';
-import {AuthenticationService} from '../../_services/authentication.service';
+import {AuthenticationService, CountryService, UserService} from '../../_services/index';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
@@ -20,11 +19,13 @@ export class ProfileComponent implements OnInit {
 
     public applications = [];
     public selectedAppId;
+    public countries = [];
     private readonly adminUrl = environment.adminUrl;
 
     constructor(
         private userService: UserService,
         private authenticationService: AuthenticationService,
+        private countryService: CountryService,
         private sanitizer: DomSanitizer,
         private router: Router
     ) {
@@ -41,9 +42,13 @@ export class ProfileComponent implements OnInit {
                 this.user.last_name = res['last_name'];
                 this.user.email = res['email'];
                 this.user.question_num = res['question_num'];
+                this.user.country_id = res['country_id'];
                 localStorage.setItem('question_num', res['question_num']);
                 this.applications = res['applications'];
             });
+        this.countryService.getCountries().subscribe(countries => {
+            this.countries = countries;
+        });
     }
 
     onChangeProfile() {

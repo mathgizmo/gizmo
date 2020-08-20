@@ -7,4 +7,5 @@
     password: string;
     question_num: number;
     role: string;
+    country_id: number;
 }

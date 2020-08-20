@@ -54,6 +54,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('settings', 'SettingController@index')->name('settings.index');
     Route::patch('settings', 'SettingController@update')->name('settings.update');
 
+    Route::resource('dashboards', 'DashboardController');
+
     Route::get('error_report/{type}', 'ReportErrorController@index')->name('error_report.index');
     Route::get('error_report/{type}/{id}', 'ReportErrorController@updateStatus')->name('error_report.update_status');
 

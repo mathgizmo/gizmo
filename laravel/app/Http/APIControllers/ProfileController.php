@@ -38,7 +38,8 @@ class ProfileController extends Controller
             'email' => $student->email,
             'question_num' => $student->question_num,
             'app_id' => $student->app_id,
-            'applications' => Application::whereDoesntHave('teacher')->get()
+            'applications' => Application::whereDoesntHave('teacher')->get(),
+            'country_id' => $student->country_id
         ]);
     }
 
@@ -60,6 +61,9 @@ class ProfileController extends Controller
         }
         if (request()->has('password')) {
             $update['password'] = request('password');
+        }
+        if (request()->has('country_id')) {
+            $update['country_id'] = intval(request('country_id'));
         }
         $validator = Validator::make(
             $update,

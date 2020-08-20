@@ -1,0 +1,112 @@
+@import '../../../../colors';
+
+.auth-container, .role-select-container {
+	margin: 8px auto;
+	padding: 12px;
+	background-color: rgba(255, 255, 255, 0.2);
+	width: 96vw;
+	min-width: 200px;
+	.mat-card {
+		margin: 0 auto;
+		width: 100%;
+		min-width: 200px;
+		.title {
+			text-align: center;
+		}
+	}
+}
+
+.auth-container, .auth-container > .mat-card {
+	max-width: 550px;
+}
+
+.role-select-container, .role-select-container > .mat-card {
+	max-width: 800px;
+}
+
+.role-select-container {
+	.title {
+		text-align: center;
+	}
+	.card {
+		max-width: 300px;
+		min-width: 200px;
+		height: 300px;
+		margin: 16px;
+		cursor: pointer;
+		color: $navy;
+		.subtitle {
+			font-size: 32px;
+			text-align: center;
+		}
+		img {
+			width: 60%;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		&:hover {
+			box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		}
+	}
+}
+
+.list {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.text-white {
+	color: $white;
+}
+
+.alert {
+	display: flex;
+	align-items: center;
+	& > .material-icons {
+		margin-right: 4px;
+	}
+}
+
+.buttons-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	.register-button {
+		background-color: $teal;
+		color: #fafafa;
+		text-decoration: none;
+		@media (max-width: 992px) {
+			width: 100%;
+		}
+	}
+}
+
+.required:after {
+	content: "*";
+	color: darkred;
+}
+
+.col-md-6 {
+	padding: 0;
+}
+
+.col-md-6:first-child {
+	padding-right: 8px;
+}
+
+.col-md-6:last-child {
+	padding-left: 8px;
+}
+
+@media screen and (max-width: 992px) {
+	.col-md-6 {
+		padding: 0 !important;
+	}
+}
+

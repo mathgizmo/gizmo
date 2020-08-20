@@ -1,7 +1,7 @@
 ﻿import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {catchError, finalize, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {User} from '../_models/user';
 
@@ -52,26 +52,31 @@ export class AuthenticationService {
                         }
                         localStorage.setItem('question_num', question_num + '');
                         localStorage.setItem('app_id', app_id + '');
-                        // return true to indicate successful login
-                        return true;
+                        return user;
                     } else {
-                        // return false to indicate failed login
                         return false;
                     }
-                })
+                }),
+                catchError((response: Response) => {
+                    return response['message'];
+                }),
             );
     }
 
-    register(username: string, email: string, password: string, first_name: string = null, last_name: string = null): Observable<any> {
-        const request = {email: email, name: username, password: password, first_name: first_name, last_name: last_name};
-        return this.http.post(this.apiUrl + '/register', request, {headers: this.headers})
-            .pipe(
-                map((response: Response) => {
-                    // login successful if there's a jwt token in the response
-                    this.token = response && response['message'] && response['message']['token'];
-                    return response;
-                })
-            );
+    register(username: string, email: string, password: string,
+             first_name: string = null, last_name: string = null,
+             role: string = 'student', country_id: number = 1): Observable<any> {
+        return this.http.post(this.apiUrl + '/register', {
+            email: email,
+            name: username,
+            password: password,
+            first_name: first_name,
+            last_name: last_name,
+            role: role,
+            country_id: country_id
+        }, {
+            headers: this.headers
+        });
     }
 
     logout(): void {

@@ -44,7 +44,7 @@ export class AppComponent {
         this.authenticationService.user.subscribe(x => this.user = x);
     }
 
-    onHomeClicked() {
+    onAssignmentClicked() {
         localStorage.removeItem('app_id');
     }
 }

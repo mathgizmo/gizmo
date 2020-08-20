@@ -32,7 +32,7 @@
                     <label for="first_name">First Name</label>
                 </div>
                 <div class="col-md-8">
-                    <p class="form-control-static"> {{ $student->first_name ?: 'none' }}</p>
+                    <p class="form-control-static"> {{ $student->first_name ?: 'N/A' }}</p>
                 </div>
             </div>
             <div class="row">
@@ -40,7 +40,15 @@
                     <label for="last_name">Last Name</label>
                 </div>
                 <div class="col-md-8">
-                    <p class="form-control-static"> {{ $student->last_name ?: 'none' }}</p>
+                    <p class="form-control-static"> {{ $student->last_name ?: 'N/A' }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                    <label for="country">Country</label>
+                </div>
+                <div class="col-md-8">
+                    <p class="form-control-static"> {{ $student->country ? $student->country->title : 'N/A' }}</p>
                 </div>
             </div>
             <div class="row">

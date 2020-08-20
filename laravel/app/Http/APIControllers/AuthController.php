@@ -23,11 +23,11 @@ class AuthController extends Controller
         auth()->shouldUse('api');
         $credentials = $request->only('email', 'password');
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return $this->error('invalid_credentials');
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return $this->error('invalid_credentials', 401);
             }
         } catch (JWTException $e) {
-            throw new \Symfony\Component\HttpKernel\Exception\HttpException(500, 'Could Not Create Token');
+            return $this->error('Could Not Create Token', 500);
         }
         $student = auth()->user();
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
@@ -51,6 +51,7 @@ class AuthController extends Controller
             'last_name' => $student->last_name,
             'email' => $student->email,
             'role' => $role,
+            'country_id' => $student->country_id,
             'question_num' => $student->question_num
         ]);
         return $this->success(compact('token', 'app_id', 'user'));
@@ -72,22 +73,23 @@ class AuthController extends Controller
             ]
             );
         if ($validator->fails()) {
-            return $this->error($validator->messages());
+            return $this->error($validator->messages(), 400);
         }
-        $result = Student::create([
+        $student = Student::create([
             'name' => $credentials['name'],
-            'first_name' => $request['first_name'] ?: null,
-            'last_name' => $request['last_name'] ?: null,
+            'first_name' => request('first_name') ?: null,
+            'last_name' => request('last_name') ?: null,
             'email' => $credentials['email'],
             'password' => bcrypt($credentials['password']),
+            'country_id' => request('country_id') ? intval(request('country_id')): 1,
             'is_super' => false,
-            'is_teacher' => false,
+            'is_teacher' => request('role') == 'teacher',
             'is_admin' => false
         ]);
-        if ($result) {
-            return $this->success($result);
+        if ($student) {
+            return $this->success($student);
         }
-        return $this->error('Something went wrong!');
+        return $this->error('Something went wrong!', 400);
     }
 
     public function passwordResetEmail(Request $request) {

@@ -10,7 +10,7 @@ class Student extends Authenticatable implements JWTSubject
     protected $table = 'students';
 
     protected $fillable = [
-        'first_name', 'last_name', 'name', 'email', 'password', 'question_num', 'is_teacher', 'is_super', 'is_admin'
+        'first_name', 'last_name', 'name', 'email', 'password', 'question_num', 'country_id', 'is_teacher', 'is_super', 'is_admin'
     ];
 
     protected $hidden = [
@@ -55,6 +55,11 @@ class Student extends Authenticatable implements JWTSubject
 
     public function classes() {
         return $this->belongsToMany('App\ClassOfStudents', 'classes_students', 'student_id', 'class_id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo('App\Country', 'country_id');
     }
 
     public function isTeacher()

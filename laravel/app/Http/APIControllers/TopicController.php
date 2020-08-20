@@ -265,6 +265,8 @@ class TopicController extends Controller
         } else {
             $topic->next_topic_id = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
         }
+        $topic->testout_attempts = $this->app->getTestoutAttempts($this->student->id, $topic->id);
+        $topic->max_testout_attempts = $this->app->getMaxTestoutAttempts();
         return $this->success($topic);
     }
 
@@ -392,10 +394,12 @@ class TopicController extends Controller
     }
 
     function testout($topic_id) {
-        if (($topic = Topic::where('id',$topic_id)->first()) == null) {
-            return $this->error('Invalid topic.');
+        if (($topic = Topic::where('id', $topic_id)->first()) == null) {
+            return $this->error('Invalid topic.', 404);
         }
-        $topic_id = $topic->id;
+        if ($this->app->getTestoutAttempts($this->student->id, $topic_id) >= $this->app->getMaxTestoutAttempts()) {
+            return $this->error('Too many testout attempts.', 429);
+        }
         $app_id = $this->app->id;
         $topic->questions = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
             $q1->select('id')->from('lesson')->whereIn('id', function($q2) use($app_id, $topic_id) {
@@ -439,11 +443,12 @@ class TopicController extends Controller
         return $this->success($topic);
     }
 
-    function testoutDone($topic) {
-        if (($model = Topic::find($topic)) == null) {
+    function testoutDone($topic_id) {
+        if (($model = Topic::find($topic_id)) == null) {
             return $this->error('Invalid topic.');
         }
         StudentsTrackingController::topicProgressDone($model->id, $this->student, $this->app->id);
+        $this->app->incrementTestoutAttempts($this->student->id, $topic_id);
         return $this->success('OK.');
     }
 

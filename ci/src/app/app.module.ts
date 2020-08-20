@@ -29,33 +29,29 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
 
-import {AuthenticationService, HttpService, HTTPListener, HTTPStatus} from './_services/index';
+import {AuthenticationService, HttpService, HTTPListener, HTTPStatus, CountryService} from './_services/index';
 
 import {AppComponent} from './_components/app.component';
-import {WelcomeComponent} from './_components/welcome/index';
-import {LoginComponent, ForgotPasswordComponent} from './_components/welcome/login/index';
-import {RegisterComponent} from './_components/welcome/register/index';
-import {TryComponent} from './_components/welcome/try/try.component';
-import {HomeComponent} from './_components/home/index';
-import {TopicComponent} from './_components/home/topic/index';
-import {
-    LessonComponent, GoodDialogComponent, BadDialogComponent,
-    ReportDialogComponent, FeedbackDialogComponent, BadChallengeDialogComponent, ChartComponent
-} from './_components/home/topic/lesson/index';
+import {WelcomeComponent, RegisterComponent, LoginComponent,
+    ForgotPasswordComponent, ResetPasswordComponent, TryComponent} from './_components/auth/index';
+import {AssignmentComponent} from './_components/assignment/index';
+import {TopicComponent} from './_components/assignment/topic/index';
+import {LessonComponent, ChartComponent} from './_components/assignment/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {ToDoComponent} from './_components/to-do/to-do.component';
-import {YesNoDialogComponent} from './_components/classes/yes-no-dialog/yes-no-dialog.component';
-import {MyClassesComponent} from './_components/classes/my-classes/my-classes.component';
-import {MyInvitationsComponent} from './_components/classes/my-invitations/my-invitations.component';
-import {ClassStudentsDialogComponent} from './_components/classes/manage-classes/class-students-dialog/class-students-dialog.component';
-import {StudentAssignmentsDialogComponent} from './_components/classes/manage-classes/class-students-dialog/student-assignments-dialog/student-assignments-dialog.component';
-import {EditClassDialogComponent} from './_components/classes/manage-classes/edit-class-dialog/edit-class-dialog.component';
-import {ManageClassesComponent} from './_components/classes/manage-classes/manage-classes.component';
-import {ClassAssignmentsDialogComponent} from './_components/classes/manage-classes/class-assignments-dialog/class-assignments-dialog.component';
-import {ManageAssignmentsComponent} from './_components/assignments/manage-assignments/manage-assignments.component';
-import {EditAssignmentDialogComponent} from './_components/assignments/manage-assignments/edit-assignment-dialog/edit-assignment-dialog.component'
-import {ResetPasswordComponent} from './_components/welcome/login/reset-password/reset-password.component';
-import {QuestionComponent} from './_components/home/topic/lesson/question/question.component';
+import {ToDoComponent} from './_components/student/to-do/to-do.component';
+import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
+    FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent} from './_components/dialogs/index';
+import {MyClassesComponent} from './_components/student/my-classes/my-classes.component';
+import {MyInvitationsComponent} from './_components/student/my-invitations/my-invitations.component';
+import {DashboardComponent} from './_components/teacher/dashboard/dashboard.component';
+import {ClassStudentsDialogComponent} from './_components/teacher/manage-classes/class-students-dialog/class-students-dialog.component';
+import {StudentAssignmentsDialogComponent} from './_components/teacher/manage-classes/class-students-dialog/student-assignments-dialog/student-assignments-dialog.component';
+import {EditClassDialogComponent} from './_components/teacher/manage-classes/edit-class-dialog/edit-class-dialog.component';
+import {ManageClassesComponent} from './_components/teacher/manage-classes/manage-classes.component';
+import {ClassAssignmentsDialogComponent} from './_components/teacher/manage-classes/class-assignments-dialog/class-assignments-dialog.component';
+import {ManageAssignmentsComponent} from './_components/teacher/manage-assignments/manage-assignments.component';
+import {EditAssignmentDialogComponent} from './_components/teacher/manage-assignments/edit-assignment-dialog/edit-assignment-dialog.component';
+import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
@@ -96,7 +92,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         WelcomeComponent,
         LoginComponent,
         RegisterComponent,
-        HomeComponent,
+        AssignmentComponent,
         TopicComponent,
         LessonComponent,
         GoodDialogComponent,
@@ -122,6 +118,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         ResetPasswordComponent,
         QuestionComponent,
         QuestionPreviewComponent,
+        DashboardComponent,
         // PlacementComponent,
         // QuestionNumDialogComponent,
         DraggableDirective,
@@ -145,6 +142,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
     providers: [
         AuthGuard,
         AuthenticationService,
+        CountryService,
         HttpService,
         HTTPListener,
         HTTPStatus,

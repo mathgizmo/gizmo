@@ -67,6 +67,9 @@
         <a class="btn btn-outline-dark mr-2" href="{{ route('users.index') }}">
             Administrators
         </a>
+        <a class="btn btn-outline-dark mr-2" href="{{ url('/dashboards') }}">
+            Dashboards
+        </a>
         <a class="btn btn-outline-dark mr-2" href="{{ route('settings.index') }}">
             Settings
         </a>

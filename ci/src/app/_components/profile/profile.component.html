@@ -44,6 +44,11 @@
                class="answer" />
       </mat-form-field>
       <mat-form-field>
+        <mat-select class="answer" id="country_id" [(value)]="user.country_id" placeholder="Country">
+          <mat-option *ngFor="let country of countries" [value]="country.id">{{country.title}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
         <input matInput
           name="email"
           pattern="^\S+@\S+$"

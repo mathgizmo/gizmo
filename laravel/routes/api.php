@@ -13,8 +13,8 @@
 
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
-    $api->get('/' , 'App\Http\APIControllers\HomeController@index');
     $api->get('/welcome' , 'App\Http\APIControllers\HomeController@getWelcomeTexts');
+    $api->get('/countries' , 'App\Http\APIControllers\HomeController@getCountries');
     $api->any('/authenticate' , 'App\Http\APIControllers\AuthController@authenticate');
     $api->any('/register' , 'App\Http\APIControllers\AuthController@register');
     $api->post('/password-reset-email' , 'App\Http\APIControllers\AuthController@passwordResetEmail');
@@ -65,6 +65,8 @@ $api->version('v1', function ($api) {
         $api->put('/assignments/{app_id}', 'App\Http\APIControllers\ApplicationController@update');
         $api->delete('/assignments/{app_id}', 'App\Http\APIControllers\ApplicationController@delete');
         $api->get('/assignments/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');
+
+        $api->get('/dashboard' , 'App\Http\APIControllers\DashboardController@getDashboards');
 
         $api->get('/available-icons', 'App\Http\APIControllers\ApplicationController@getAvailableIcons');
     });
