@@ -118,6 +118,8 @@ THE SOFTWARE.
 
 @angular/material/checkbox
 
+@angular/material/core
+
 @angular/material/dialog
 
 @angular/material/divider
@@ -126,11 +128,15 @@ THE SOFTWARE.
 
 @angular/material/icon
 
+@angular/material/list
+
 @angular/material/menu
 
 @angular/material/progress-bar
 
 @angular/material/radio
+
+@angular/material/select
 
 @angular/material/slider
 
