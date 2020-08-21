@@ -11,24 +11,21 @@ export class TrackingService {
         private http: HttpService) {
     }
 
-    startLesson(lesson_id, from_content_review = false) {
-        // notify api about lesson start
-        if (lesson_id === -1) {
-          /** TODO: change this HARDCODED value to testoutstart! */
-          // return this.http.post('/testoutstart', '')
-          return this.http.post('/', '');
+    startLesson(lesson_id) {
+        if (lesson_id !== -1) {
+            return this.http.post('/lesson/' + lesson_id + '/start' + '?app_id=' + this.appId, '');
         } else {
-            return this.http.post('/lesson/' + lesson_id + '/start' + '?app_id=' + (from_content_review ? 0 : this.appId), '');
+            return this.http.post('/', ''); // return this.http.post('/testoutstart', '')
         }
     }
 
-    doneLesson(topic_id, lesson_id, start_datetime, weak_questions, from_content_review = false) {
+    doneLesson(topic_id, lesson_id, start_datetime, weak_questions) {
         const request = { start_datetime: start_datetime,
             weak_questions: weak_questions };
         if (lesson_id === -1) {
-          return this.http.post('/topic/' + topic_id + '/testout/done' + '?app_id=' + (from_content_review ? 0 : this.appId), request);
+          return this.http.post('/topic/' + topic_id + '/testout/done' + '?app_id=' + this.appId, request);
         } else {
-          return this.http.post('/lesson/' + lesson_id + '/done' + '?app_id=' + (from_content_review ? 0 : this.appId), request);
+          return this.http.post('/lesson/' + lesson_id + '/done' + '?app_id=' + this.appId, request);
         }
     }
 

@@ -36,18 +36,9 @@ class StudentsTrackingController extends Controller
         }
         if (request()->has('app_id')) {
             $app_id = request('app_id');
-            if ($app_id == 0) {
-                $this->app = new Application();
-                $this->app->id = 0;
-                $this->app->name = '';
-                $this->app->teacher_id = null;
-                $this->app->testout_attempts = null;
-                $this->app->allow_any_order = true;
-            } else {
-                $this->app = Application::where('id', $app_id)->first();
-                if (!$this->app) {
-                    $this->app = Application::where('id', $this->student->app_id)->first();
-                }
+            $this->app = Application::where('id', $app_id)->first();
+            if (!$this->app) {
+                $this->app = Application::where('id', $this->student->app_id)->first();
             }
         } else {
             $this->app = Application::where('id', $this->student->app_id)->first();
@@ -60,18 +51,20 @@ class StudentsTrackingController extends Controller
             return $this->error('Invalid lesson.');
         }
         $now = date("Y-m-d H:i:s");
-        $app_id = $this->app->id ?: null;
-        StudentsTracking::create([
-            'student_id' => $this->student->id,
-            'lesson_id' => $lesson,
-            'app_id' => $app_id,
-            'action' => 'start',
-            'date' => $now,
-            'start_datetime' => $now,
-            'weak_questions' => json_encode([]),
-            'ip' => request()->ip(),
-            'user_agent' => request()->server('HTTP_USER_AGENT'),
-        ]);
+        $app_id = $this->app ? $this->app->id : null;
+        if ($app_id) {
+            StudentsTracking::create([
+                'student_id' => $this->student->id,
+                'lesson_id' => $lesson,
+                'app_id' => $app_id,
+                'action' => 'start',
+                'date' => $now,
+                'start_datetime' => $now,
+                'weak_questions' => json_encode([]),
+                'ip' => request()->ip(),
+                'user_agent' => request()->server('HTTP_USER_AGENT'),
+            ]);
+        }
         return $this->success($now);
     }
 
@@ -80,8 +73,11 @@ class StudentsTrackingController extends Controller
         if (!$topic) {
             return $this->error('Invalid topic.');
         }
+        $app_id = $this->app ? $this->app->id : null;
+        if (!$app_id) {
+            return $this->success('No application provided.', 404);
+        }
         $lastLesson = Lesson::where('id', request()->lesson_id)->first();
-        $app_id = $this->app->id ?: null;
         $student = $this->student;
         // find all lessons from topic that are not done yet
         $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
@@ -127,7 +123,10 @@ class StudentsTrackingController extends Controller
         if (($model = Lesson::find($lesson)) == null) {
             return $this->error('Invalid lesson.');
         }
-        $app_id = $this->app->id ?: null;
+        $app_id = $this->app ? $this->app->id : null;
+        if (!$app_id) {
+            return $this->success('No application provided.', 404);
+        }
         $student = $this->student;
         StudentsTracking::create([
             'student_id' => $this->student->id,
@@ -147,48 +146,37 @@ class StudentsTrackingController extends Controller
             'entity_id' => $lesson,
             'app_id' => $app_id
         ];
-        if ($app_id) {
-            if (Progress::where($progress_data)->count() == 0) {
-                try {
-                    Progress::create(array_merge($progress_data, ['completed_at' => Carbon::now()->toDateTimeString()]));
-                } catch (\Exception $e) { }
-            }
-        } else {
-            if (Progress::where('student_id', $this->student->id)->where('entity_type', 'lesson')
-                    ->where('entity_id', $lesson)->whereNull('app_id')->count() == 0) {
-                try {
-                    Progress::create(array_merge($progress_data, ['completed_at' => Carbon::now()->toDateTimeString()]));
-                } catch (\Exception $e) { }
-            }
+        if (Progress::where($progress_data)->count() == 0) {
+            try {
+                Progress::create(array_merge($progress_data, ['completed_at' => Carbon::now()->toDateTimeString()]));
+            } catch (\Exception $e) { }
         }
-        if ($app_id) {
-            // find all lessons from topic that are not done yet
-            $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
-                $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
-            })->where('topic_id', $model->topic_id)->where('dev_mode', 0);
-            if ($lessons_query->count() > 0) {
-                $is_topic_done = $lessons_query->count() <= $lessons_query->whereIn('id', function($q) use($student, $app_id) {
-                        $q->select('entity_id')->from('progresses')
-                            ->where('entity_type', 'lesson')
-                            ->where('student_id', $student->id)
-                            ->where('app_id', $app_id);
-                    })->count();
-            } else {
-                $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student, $app_id) {
-                    $join->on('progresses.student_id', '=', DB::raw($student->id))
-                        ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
-                        ->on('progresses.entity_id', '=', 'lesson.id')
-                        ->on('progresses.app_id', '=', DB::raw($app_id));
-                })
-                    ->where(['topic_id' => $model->topic_id, 'dependency' => 1])
-                    ->where('dev_mode', 0)
-                    ->whereNull('progresses.id')->get()->all();
-                $is_topic_done = !count($lessons);
-            }
-            // if all lessons done
-            if ($is_topic_done) {
-                self::topicProgressDone($model->topic_id, $student, $app_id);
-            }
+        // find all lessons from topic that are not done yet
+        $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
+            $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
+        })->where('topic_id', $model->topic_id)->where('dev_mode', 0);
+        if ($lessons_query->count() > 0) {
+            $is_topic_done = $lessons_query->count() <= $lessons_query->whereIn('id', function($q) use($student, $app_id) {
+                    $q->select('entity_id')->from('progresses')
+                        ->where('entity_type', 'lesson')
+                        ->where('student_id', $student->id)
+                        ->where('app_id', $app_id);
+                })->count();
+        } else {
+            $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student, $app_id) {
+                $join->on('progresses.student_id', '=', DB::raw($student->id))
+                    ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
+                    ->on('progresses.entity_id', '=', 'lesson.id')
+                    ->on('progresses.app_id', '=', DB::raw($app_id));
+            })
+                ->where(['topic_id' => $model->topic_id, 'dependency' => 1])
+                ->where('dev_mode', 0)
+                ->whereNull('progresses.id')->get()->all();
+            $is_topic_done = !count($lessons);
+        }
+        // if all lessons done
+        if ($is_topic_done) {
+            self::topicProgressDone($model->topic_id, $student, $app_id);
         }
         return $this->success('OK.');
     }

@@ -225,4 +225,44 @@ class ClassController extends Controller
         }
         return $this->error('Error.');
     }
+
+    public function getToDos($class_id) {
+        $student = $this->user;
+        $class = ClassOfStudents::where('id', $class_id)->first();
+        if (!$class) {
+            return $this->error('Class not found.', 404);
+        }
+        $items = [];
+        foreach (DB::table('classes_applications')->where('class_id', $class_id)->get() as $row) {
+            $item = Application::where('id', $row->app_id)->first();
+            $item->class = $class;
+            $item->icon = $item->icon();
+            $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                    ->where('student_id', $student->id)->count() > 0;
+            if ($row->due_date) {
+                $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
+            } else {
+                $due_at = null;
+            }
+            $item->start_time = $row->start_time ?: '00:00:00';
+            $item->start_date = $row->start_date;
+            $item->due_time = $row->due_time ?: '00:00:00';
+            $item->due_date = $row->due_date;
+            $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+            $now = Carbon::now()->toDateTimeString();
+            if ($row->start_date) {
+                $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
+            } else {
+                $start_at = null;
+            }
+            $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+            $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+            $completed_at = $item->getCompletedDate($student->id);
+            $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+            array_push($items, $item);
+        }
+        return $this->success([
+            'items' => array_values(collect($items)->sortBy('due_at')->toArray())
+        ]);
+    }
 }

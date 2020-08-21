@@ -143,10 +143,12 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                         }
                         this.nextQuestion();
                         if (this.lesson_id !== -1) {
-                            this.trackingService.startLesson(this.lesson_id, this.fromContentReview)
-                                .subscribe(start_time => {
-                                    this.start_time = start_time;
-                                });
+                            if (!this.fromContentReview) {
+                                this.trackingService.startLesson(this.lesson_id)
+                                    .subscribe(start_time => {
+                                        this.start_time = start_time;
+                                    });
+                            }
                         }
                         if (this.lesson_id === -1) {
                             this.question_num = lessonTree['max_questions_num']; // lessonTree['questions'].length;
@@ -244,8 +246,10 @@ export class LessonComponent implements OnInit, AfterViewChecked {
             if (this.incorrect_answers === 0) {
                 this.lessonTree['questions'] = [];
                 this.question = null;
-                this.trackingService.doneLesson(this.topic_id,
-                    this.lesson_id, this.start_time, this.weak_questions, this.fromContentReview).subscribe();
+                if (!this.fromContentReview) {
+                    this.trackingService.doneLesson(this.topic_id,
+                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                }
             } else {
                 const dialogRef = this.dialog.open(BadChallengeDialogComponent, {
                     position: this.dialogPosition,
@@ -487,8 +491,10 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.nextQuestion();
                 } else {
                     this.question = null;
-                    this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions, this.fromContentReview).subscribe();
+                    if (!this.fromContentReview) {
+                        this.trackingService.doneLesson(this.topic_id,
+                            this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    }
                     if (this.lesson_id === -1) {
                         this.trackingService.finishTestout(this.topic_id, null, this.start_time, this.weak_questions).subscribe();
                     }
@@ -545,8 +551,10 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.nextQuestion();
                 } else {
                     this.question = null;
-                    this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions, this.fromContentReview).subscribe();
+                    if (!this.fromContentReview) {
+                        this.trackingService.doneLesson(this.topic_id,
+                            this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    }
                 }
             });
         }

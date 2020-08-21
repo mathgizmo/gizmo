@@ -1,0 +1,66 @@
+<div class="to-do">
+  <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
+  <mat-card *ngIf="!showCompletedApplications" class="to-do-content">
+    <span class="title">Assignments To Do</span>
+    <div class="applications-list" *ngIf="applications.length > 0">
+      <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
+        <mat-button-toggle *ngFor="let application of applications" [value]="application.id" (click)="onChangeToDo(application)" >
+          <div class="app-select-container" [class.disabled]="application.is_blocked">
+            <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+            <div class="app-data">
+              <span class="app-title">
+                <strong>{{application.name}}</strong>
+                <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
+              </span>
+              <span class="app-date">
+                <span *ngIf="application.is_blocked && application.start_at" class="due-date">Start At: {{application.start_at}}</span>
+                <span *ngIf="application.due_at" class="due-date">Due At: {{application.due_at}}</span>
+              </span>
+            </div>
+          </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <div *ngIf="completedApplications.length > 0" class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications" >
+        See Completed Assignments
+      </div>
+    </div>
+    <div *ngIf="applications.length < 1">
+      <div class="subtitle text-center">
+        You have no Assignments To Do!
+      </div>
+      <div class="button-container">
+          <div *ngIf="completedApplications.length > 0" class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications">
+            See Completed Assignments
+          </div>
+          <a *ngIf="completedApplications.length < 1" mat-button class="button button-outline" routerLink="../my-classes" >Search for Class</a>
+      </div>
+    </div>
+  </mat-card>
+  <mat-card *ngIf="showCompletedApplications" class="to-do-content">
+    <span class="title">Completed Assignments</span>
+    <div class="applications-list">
+      <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
+        <mat-button-toggle *ngFor="let application of completedApplications" [value]="application.id" (click)="onChangeToDo(application)" >
+          <div class="app-select-container completed" [class.disabled]="application.is_blocked">
+            <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+            <div class="app-data">
+              <span class="app-title">
+                <strong>{{application.name}}</strong>
+                <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
+              </span>
+              <div class="date-container">
+                <span *ngIf="application.completed_at" class="due-date">
+                  Completed At: {{application.completed_at}}
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <div class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications" >
+        See Assignments To Do
+      </div>
+    </div>
+  </mat-card>
+</div>

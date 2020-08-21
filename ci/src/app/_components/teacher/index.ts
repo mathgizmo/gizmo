@@ -4,9 +4,9 @@ export * from './class/dashboard/class-dashboard.component';
 export * from './class/menu/class-menu.component';
 export * from './class/edit-class-dialog/edit-class-dialog.component';
 export * from './class/students/class-students.component';
+export * from './class/to-do/class-to-do.component';
 export * from './class/students/student-assignments-dialog/student-assignments-dialog.component';
 export * from './class/assignments/manage-assignments.component';
 export * from './class/assignments/edit-assignment-dialog/edit-assignment-dialog.component';
 export * from './dashboard/dashboard.component';
 export * from './review-content/review-content.component';
-

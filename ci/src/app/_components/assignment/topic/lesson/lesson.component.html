@@ -70,9 +70,9 @@
         <div *ngIf="initial_loading == 0 && lesson_id != -1">
             <div class="question-container">
                 <h2 class="subtitle">Congratulations!</h2>
-                <h3 class="question" *ngIf="!isChallenge && ((unfinishedLessonsCount < 2 && isUnfinished) || (unfinishedLessonsCount < 1 && !isUnfinished))">You have finished this lesson.</h3>
-                <h3 class="question" *ngIf="!isChallenge && ((isUnfinished && unfinishedLessonsCount > 2) || (!isUnfinished && unfinishedLessonsCount > 1))">You have {{isUnfinished ? unfinishedLessonsCount - 1 : unfinishedLessonsCount}} unfinished lessons in this topic.</h3>
-                <h3 class="question" *ngIf="!isChallenge && ((isUnfinished && unfinishedLessonsCount == 2) || (!isUnfinished && unfinishedLessonsCount == 1))">You have unfinished lesson in this topic.</h3>
+                <h3 class="question" *ngIf="!isChallenge && (fromContentReview || (unfinishedLessonsCount < 2 && isUnfinished) || (unfinishedLessonsCount < 1 && !isUnfinished))">You have finished this lesson.</h3>
+                <h3 class="question" *ngIf="!isChallenge && !fromContentReview && ((isUnfinished && unfinishedLessonsCount > 2) || (!isUnfinished && unfinishedLessonsCount > 1))">You have {{isUnfinished ? unfinishedLessonsCount - 1 : unfinishedLessonsCount}} unfinished lessons in this topic.</h3>
+                <h3 class="question" *ngIf="!isChallenge && !fromContentReview && ((isUnfinished && unfinishedLessonsCount == 2) || (!isUnfinished && unfinishedLessonsCount == 1))">You have unfinished lesson in this topic.</h3>
                 <h3 class="question" *ngIf="isChallenge">You have completed this challenge.</h3>
             </div>
             <a

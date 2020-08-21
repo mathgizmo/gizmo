@@ -45,7 +45,7 @@ import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_comp
 import {DashboardComponent, ClassReportComponent, ClassStudentsComponent, StudentAssignmentsDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassMenuComponent} from './_components/teacher/index';
+    ClassToDoComponent, ClassMenuComponent} from './_components/teacher/index';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
@@ -109,6 +109,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         EditAssignmentDialogComponent,
         ReviewContentComponent,
         ClassDashboardComponent,
+        ClassToDoComponent,
         ClassMenuComponent,
         TryComponent,
         ForgotPasswordComponent,

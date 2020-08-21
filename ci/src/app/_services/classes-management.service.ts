@@ -146,4 +146,17 @@ export class ClassesManagementService {
         return this.http.get('/classes/' + class_id + '/report');
     }
 
+    public getToDos(class_id) {
+        return this.http.get('/classes/' + class_id + '/todo')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
 }

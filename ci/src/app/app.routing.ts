@@ -11,7 +11,8 @@ import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_comp
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent, ClassReportComponent, ManageAssignmentsComponent,
-    ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent, ClassStudentsComponent} from './_components/teacher/index';
+    ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
+    ClassStudentsComponent, ClassToDoComponent} from './_components/teacher/index';
 
 const teacherRoutes = [
     {path: 'teacher/dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
@@ -22,6 +23,7 @@ const teacherRoutes = [
     {path: 'teacher/class/:class_id/report', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/students', component: ClassStudentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/to-do', component: ClassToDoComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
 ];
 
 const studentRoutes = [
