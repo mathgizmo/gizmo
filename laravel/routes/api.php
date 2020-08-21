@@ -29,6 +29,7 @@ $api->version('v1', function ($api) {
         $api->get('/placement/getTopicId/{unit_id}' , 'App\Http\APIControllers\PlacementController@getTopicId');
         $api->post('/placement/done-unit' , 'App\Http\APIControllers\PlacementController@doneUnit');
         $api->post('/placement/done-half-unit' , 'App\Http\APIControllers\PlacementController@doneHalfUnit');
+
         $api->any('/topic' , 'App\Http\APIControllers\TopicController@index');
         $api->any('/topic/{id}' , 'App\Http\APIControllers\TopicController@get');
         $api->any('/topic/{id}/lesson/{lesson_id}' , 'App\Http\APIControllers\TopicController@getLesson');
@@ -68,6 +69,7 @@ $api->version('v1', function ($api) {
         $api->get('/assignments/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');
 
         $api->get('/dashboard' , 'App\Http\APIControllers\DashboardController@getDashboards');
+        $api->get('/content' , 'App\Http\APIControllers\ContentController@index');
 
         $api->get('/available-icons', 'App\Http\APIControllers\ApplicationController@getAvailableIcons');
     });

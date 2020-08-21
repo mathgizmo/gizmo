@@ -39,7 +39,7 @@ export class RegisterComponent implements OnInit {
                 this.authenticationService.login(this.model.email, this.model.password)
                     .subscribe(user => {
                         if (user.role === 'teacher') {
-                            this.router.navigate(['manage-classes']);
+                            this.router.navigate(['teacher/class']);
                         } else {
                             this.router.navigate(['/']);
                         }

@@ -1,12 +1,26 @@
-.profile-classes {
+.profile-assignments {
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
-  flex-wrap: wrap;
   padding: 0;
   margin: 60px auto 0;
   width: 80vw;
+  .assignments-content {
+    margin-left: 220px;
+  }
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    ::ng-deep .class-menu {
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px);
+      min-width: calc(100% - 20px);
+    }
+    .assignments-content {
+      margin-left: 0;
+    }
+  }
   mat-card {
     margin: 10px;
     padding: 15px;
@@ -35,8 +49,6 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  flex-direction: column;
-  margin: 12px 0;
 }
 
 .button {
@@ -56,7 +68,7 @@
 }
 
 @media screen and (max-width: 600px) {
-  .profile-classes {
+  .profile-assignments {
     width: 96vw;
   }
   .button, button {

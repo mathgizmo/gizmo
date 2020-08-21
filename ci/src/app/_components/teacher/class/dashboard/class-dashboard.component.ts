@@ -1,66 +1,71 @@
-import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
+import {Component, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
 import {Sort} from '@angular/material/sort';
 import {ClassesManagementService} from '../../../../_services';
 import {YesNoDialogComponent} from '../../../dialogs/yes-no-dialog/yes-no-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
-    selector: 'class-assignments-dialog',
-    templateUrl: 'class-assignments-dialog.component.html',
-    styleUrls: ['class-assignments-dialog.component.scss'],
+    selector: 'app-class-dashboard',
+    templateUrl: './class-dashboard.component.html',
+    styleUrls: ['./class-dashboard.component.scss'],
     providers: [ClassesManagementService]
 })
-export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAssignmentsDialogComponent> {
+export class ClassDashboardComponent implements OnInit {
+
+    classId: number;
 
     assignments = [];
     available_assignments = [];
-    class: any;
+    class = {
+        name: ''
+    };
     addAssignment = false;
     nameFilter;
 
     currentDate = (new Date()).toISOString().split('T')[0];
+
+    private readonly adminUrl = environment.adminUrl;
 
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
-    private readonly adminUrl = environment.adminUrl;
+    private sub: any;
 
     constructor(
+        private route: ActivatedRoute,
         public snackBar: MatSnackBar,
-        private classService: ClassesManagementService,
         public dialog: MatDialog, private deviceService: DeviceDetectorService,
-        private sanitizer: DomSanitizer,
-        public dialogRef: MatDialogRef<ClassAssignmentsDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
-        super(dialogRef, data);
-        if (data.class) {
-            // tslint:disable-next-line:indent
-        	this.class = data.class;
-        }
-        if (data.assignments) {
-            // tslint:disable-next-line:indent
-        	this.assignments = data.assignments;
-        }
-        if (data.available_assignments) {
-            // tslint:disable-next-line:indent
-            this.available_assignments = data.available_assignments;
-        }
+        private classService: ClassesManagementService,
+        private sanitizer: DomSanitizer) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
         }
     }
 
+    ngOnInit() {
+        this.sub = this.route.params.subscribe(params => {
+            this.classId = +params['class_id'];
+            this.classService.getAssignments(this.classId)
+                .subscribe(res => {
+                    const classes = this.classService.classes;
+                    this.class = classes.filter(x => x.id === this.classId)[0];
+                    this.available_assignments = res['available_assignments'];
+                    this.assignments = res['assignments'];
+                });
+        });
+    }
+
     onAddAssignment(app) {
-        this.classService.addAssignmentToClass(this.class.id, app.id)
+        this.classService.addAssignmentToClass(this.classId, app.id)
             .subscribe(response => {
                 this.assignments.unshift(app);
                 this.available_assignments  = this.available_assignments.filter( (item) => {
@@ -72,7 +77,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
 
     onDueDateChanged(item, newDate) {
         item.due_date = newDate;
-        this.classService.changeAssignment(this.class.id, item)
+        this.classService.changeAssignment(this.classId, item)
             .subscribe(assignments => {
                 this.snackBar.open('Due Date Saved!', '', {
                     duration: 3000,
@@ -88,7 +93,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
 
     onDueTimeChanged(item, newTime) {
         item.due_time = newTime;
-        this.classService.changeAssignment(this.class.id, item)
+        this.classService.changeAssignment(this.classId, item)
             .subscribe(assignments => {
                 this.snackBar.open('Due Time Saved!', '', {
                     duration: 3000,
@@ -104,7 +109,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
 
     onStartDateChanged(item, newStartDate) {
         item.start_date = newStartDate;
-        this.classService.changeAssignment(this.class.id, item)
+        this.classService.changeAssignment(this.classId, item)
             .subscribe(assignments => {
                 this.snackBar.open('Start Date Saved!', '', {
                     duration: 3000,
@@ -123,7 +128,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
         if (!item.start_date) {
             item.start_date = this.currentDate;
         }
-        this.classService.changeAssignment(this.class.id, item)
+        this.classService.changeAssignment(this.classId, item)
             .subscribe(assignments => {
                 this.snackBar.open('Start Time Saved!', '', {
                     duration: 3000,
@@ -144,7 +149,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.classService.deleteAssignmentFromClass(this.class.id, item.id)
+                this.classService.deleteAssignmentFromClass(this.classId, item.id)
                     .subscribe(response => {
                         this.available_assignments.unshift(item);
                         this.assignments  = this.assignments.filter( (x) => {
@@ -153,13 +158,6 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
                     });
             }
         });
-    }
-
-    resizeDialog() {
-        const width = (this.orientation === 'portrait') ? '96vw' : '80vw';
-        // const height = (this.orientation === 'portrait') ? '80vh' : '75vh';
-        // this.updateDialogSize(width, height);
-        this.dialogRef.updateSize(width);
     }
 
     sortData(sort: Sort) {
@@ -205,6 +203,7 @@ export class ClassAssignmentsDialogComponent extends BaseDialogComponent<ClassAs
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

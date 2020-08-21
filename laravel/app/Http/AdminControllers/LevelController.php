@@ -24,7 +24,7 @@ class LevelController extends Controller
             $query->where('order_no', $request['order_no']);
         }
         if ($request['title']) {
-            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+            $query->where('title', 'LIKE', '%' . $request['title'] . '%');
         }
         if ($request['sort'] && $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
@@ -49,17 +49,18 @@ class LevelController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-         'title'=> 'required',
-         ]);
-         DB::table('level')->insert([
-         'title' => $request['title'],
-         'dependency' => $request['dependency'] ?: false,
-         'dev_mode' => $request['dev_mode'] ?: false,
-         'order_no' => $request['order_no'],
-         'created_at' => date('Y-m-d H:i:s'),
-         'updated_at' => date('Y-m-d H:i:s')
+            'title' => 'required',
         ]);
-        return redirect('/levels')->with(array('message'=> 'Created successfully'));
+        DB::table('level')->insert([
+            'title' => $request['title'],
+            'description' => $request['description'],
+            'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
+            'order_no' => $request['order_no'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        return redirect('/levels')->with(array('message' => 'Created successfully'));
     }
 
     public function show()
@@ -73,8 +74,8 @@ class LevelController extends Controller
         $level = Level::find($id);
         $total_level = Level::all()->count();
         return view('levels.edit', [
-            'level'=>$level,
-            'total_level'=>$total_level,
+            'level' => $level,
+            'total_level' => $total_level,
         ]);
     }
 
@@ -82,23 +83,24 @@ class LevelController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-            'title'  => 'required',
+            'title' => 'required',
         ]);
         DB::table('level')->where('id', $id)->update([
             'title' => $request['title'],
+            'description' => $request['description'],
             'order_no' => $request['order_no'],
             'dependency' => $request['dependency'] ?: false,
             'dev_mode' => $request['dev_mode'] ?: false,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-        return redirect('/levels')->with(array('message'=> 'Updated successfully'));
+        return redirect('/levels')->with(array('message' => 'Updated successfully'));
     }
 
     public function destroy($id)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         Level::where('id', $id)->delete();
-        return redirect('/levels')->with(array('message'=> 'Deleted successfully'));
+        return redirect('/levels')->with(array('message' => 'Deleted successfully'));
     }
 }

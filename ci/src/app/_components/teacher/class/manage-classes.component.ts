@@ -3,13 +3,11 @@ import {Sort} from '@angular/material/sort';
 import {ClassesManagementService} from '../../../_services/classes-management.service';
 import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.component';
 import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.component';
-import {ClassStudentsDialogComponent} from './class-students-dialog/class-students-dialog.component';
-import {ClassAssignmentsDialogComponent} from './class-assignments-dialog/class-assignments-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 
 @Component({
-    selector: 'manage-classes',
+    selector: 'app-manage-classes',
     templateUrl: './manage-classes.component.html',
     styleUrls: ['./manage-classes.component.scss'],
     providers: [ClassesManagementService]
@@ -83,28 +81,6 @@ export class ManageClassesComponent implements OnInit {
                     });
             }
         });
-    }
-
-    onManageStudents(item) {
-        this.classService.getStudents(item.id)
-            .subscribe(students => {
-                const dialogRef = this.dialog.open(ClassStudentsDialogComponent, {
-                    data: { 'students': students, 'class': item},
-                    position: this.dialogPosition
-                });
-                dialogRef.afterClosed().subscribe(result => {});
-            });
-    }
-
-    onManageAssignments(item) {
-        this.classService.getAssignments(item.id)
-            .subscribe(res => {
-                const dialogRef = this.dialog.open(ClassAssignmentsDialogComponent, {
-                    data: { 'assignments': res['assignments'], 'available_assignments': res['available_assignments'], 'class': item},
-                    position: this.dialogPosition
-                });
-                dialogRef.afterClosed().subscribe(result => {});
-            });
     }
 
     sortData(sort: Sort) {

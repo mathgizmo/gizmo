@@ -23,11 +23,11 @@ export class TopicService {
     }
 
     // get lesson from api
-    getLesson(topic_id, lesson_id) {
+    getLesson(topic_id, lesson_id, from_content_review = false) {
         if (lesson_id === -1) {
-            return this.http.get('/topic/' + topic_id + '/testout' + '?app_id=' + this.appId);
+            return this.http.get('/topic/' + topic_id + '/testout' + '?app_id=' + (from_content_review ? 0 : this.appId));
         } else {
-          return this.http.get('/topic/' + topic_id + '/lesson/' + lesson_id + '?app_id=' + this.appId);
+          return this.http.get('/topic/' + topic_id + '/lesson/' + lesson_id + '?app_id=' + (from_content_review ? 0 : this.appId));
         }
     }
 

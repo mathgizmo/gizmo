@@ -10,6 +10,6 @@
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" class='button completion-button send-button' style="order: 1;">Send</button>
     <button mat-button [mat-dialog-close]="false" class='button cancel-button'>Cancel</button>
-    <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" class='button completion-button send-button'>Send</button>
 </mat-dialog-actions>

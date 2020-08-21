@@ -35,9 +35,18 @@ class TopicController extends Controller
         }
         if (request()->has('app_id')) {
             $app_id = request('app_id');
-            $this->app = Application::where('id', $app_id)->first();
-            if (!$this->app) {
-                $this->app = Application::where('id', $this->student->app_id)->first();
+            if ($app_id == 0) {
+                $this->app = new Application();
+                $this->app->id = 0;
+                $this->app->name = '';
+                $this->app->teacher_id = null;
+                $this->app->testout_attempts = null;
+                $this->app->allow_any_order = true;
+            } else {
+                $this->app = Application::where('id', $app_id)->first();
+                if (!$this->app) {
+                    $this->app = Application::where('id', $this->student->app_id)->first();
+                }
             }
         } else {
             $this->app = Application::where('id', $this->student->app_id)->first();

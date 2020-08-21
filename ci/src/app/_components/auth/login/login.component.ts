@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
             .subscribe(user => {
                 if (user && user.user_id) {
                     if (user.role === 'teacher') {
-                        this.router.navigate(['dashboard']);
+                        this.router.navigate(['teacher/dashboard']);
                     } else {
                         if (isNaN(+localStorage.getItem('app_id'))) {
                             localStorage.setItem('redirect_to', '/');

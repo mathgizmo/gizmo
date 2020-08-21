@@ -24,6 +24,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSortModule} from '@angular/material/sort';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatListModule} from '@angular/material/list';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 import {AppRoutingModule} from './app.routing';
@@ -41,9 +42,10 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent} from './_components/dialogs/index';
 import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
-import {DashboardComponent, ClassReportComponent, ClassStudentsDialogComponent, StudentAssignmentsDialogComponent,
-    EditClassDialogComponent, ManageClassesComponent, ClassAssignmentsDialogComponent, ManageAssignmentsComponent,
-    EditAssignmentDialogComponent} from './_components/teacher/index';
+import {DashboardComponent, ClassReportComponent, ClassStudentsComponent, StudentAssignmentsDialogComponent,
+    EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
+    EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
+    ClassMenuComponent} from './_components/teacher/index';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
@@ -74,6 +76,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         MatButtonToggleModule,
         MatSortModule,
         MatSnackBarModule,
+        MatListModule,
         DragDropModule,
         FlexLayoutModule,
         PerfectScrollbarModule,
@@ -101,11 +104,12 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         ManageClassesComponent,
         YesNoDialogComponent,
         EditClassDialogComponent,
-        ClassStudentsDialogComponent,
         StudentAssignmentsDialogComponent,
-        ClassAssignmentsDialogComponent,
         ManageAssignmentsComponent,
         EditAssignmentDialogComponent,
+        ReviewContentComponent,
+        ClassDashboardComponent,
+        ClassMenuComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
@@ -113,6 +117,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         QuestionPreviewComponent,
         DashboardComponent,
         ClassReportComponent,
+        ClassStudentsComponent,
         // PlacementComponent,
         // QuestionNumDialogComponent,
         DraggableDirective,
@@ -128,9 +133,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         BadChallengeDialogComponent,
         YesNoDialogComponent,
         EditClassDialogComponent,
-        ClassStudentsDialogComponent,
         StudentAssignmentsDialogComponent,
-        ClassAssignmentsDialogComponent,
         EditAssignmentDialogComponent
     ],
     providers: [

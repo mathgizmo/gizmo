@@ -13,6 +13,7 @@ export class ClassReportComponent implements OnInit {
 
     public class_id: number;
     public class = {
+        id: 0,
         name: ''
     };
     public assignments;

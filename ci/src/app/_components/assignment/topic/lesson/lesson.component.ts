@@ -67,6 +67,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     // public warningMessage = 'Undefined exception';
 
     public ignoreAnswer = false; // ignore answer because user already answered this question wrong
+    public fromContentReview = false;
 
     constructor(
         private router: Router,
@@ -92,6 +93,9 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     }
 
     ngOnInit() {
+        if (this.route.snapshot.queryParams['from_content_review']) {
+            this.fromContentReview = true;
+        }
         this.question_num = +localStorage.getItem('question_num');
         this.incorrect_answers = 0;
         this.sub = this.route.params.subscribe(params => {
@@ -99,7 +103,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
             this.lesson_id = (params['lesson_id'] === 'testout') ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
             // get lesson tree from API
-            this.topicService.getLesson(this.topic_id, this.lesson_id)
+            this.topicService.getLesson(this.topic_id, this.lesson_id, this.fromContentReview)
                 .subscribe(lessonTree => {
                     if (this.lesson_id === -1) {
                         if (lessonTree && lessonTree.questions && lessonTree.questions.length < 1) {
@@ -139,7 +143,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                         }
                         this.nextQuestion();
                         if (this.lesson_id !== -1) {
-                            this.trackingService.startLesson(this.lesson_id)
+                            this.trackingService.startLesson(this.lesson_id, this.fromContentReview)
                                 .subscribe(start_time => {
                                     this.start_time = start_time;
                                 });
@@ -241,7 +245,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.lessonTree['questions'] = [];
                 this.question = null;
                 this.trackingService.doneLesson(this.topic_id,
-                    this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    this.lesson_id, this.start_time, this.weak_questions, this.fromContentReview).subscribe();
             } else {
                 const dialogRef = this.dialog.open(BadChallengeDialogComponent, {
                     position: this.dialogPosition,
@@ -484,7 +488,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 } else {
                     this.question = null;
                     this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                        this.lesson_id, this.start_time, this.weak_questions, this.fromContentReview).subscribe();
                     if (this.lesson_id === -1) {
                         this.trackingService.finishTestout(this.topic_id, null, this.start_time, this.weak_questions).subscribe();
                     }
@@ -542,7 +546,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 } else {
                     this.question = null;
                     this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                        this.lesson_id, this.start_time, this.weak_questions, this.fromContentReview).subscribe();
                 }
             });
         }

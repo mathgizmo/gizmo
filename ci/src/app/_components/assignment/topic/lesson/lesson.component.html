@@ -1,4 +1,7 @@
-﻿<a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="back">
+﻿<a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="back" *ngIf="!fromContentReview">
+    {{backLinkText}}
+</a>
+<a routerLink="/teacher/review-content" routerLinkActive="active" class="back" *ngIf="fromContentReview">
     {{backLinkText}}
 </a>
 
@@ -10,7 +13,7 @@
         <label class="lesson-progress-label" *ngIf="question_num > 0">{{correct_answers}}/{{question_num}}</label>
     </div>
 
-    <div *ngIf="lesson_id === -1 && question !== null" id="testout-confident-level">
+    <div *ngIf="lesson_id === -1 && question !== null" id="testout-confident-level" >
         <div class="question-container white-theme">
             <h2 class="question">
                 How confident you are in your answer?

@@ -1,6 +1,6 @@
 @import '../../../../../colors';
 
-.report {
+.students {
   display: flex;
   justify-content: center;
   flex-direction: row;
@@ -8,7 +8,7 @@
   padding: 0;
   margin: 60px auto 0;
   width: 80vw;
-  .report-content {
+  .students-content {
     margin-left: 220px;
   }
   @media (max-width: 1024px) {
@@ -19,7 +19,7 @@
       max-width: calc(100% - 20px);
       min-width: calc(100% - 20px);
     }
-    .report-content {
+    .students-content {
       margin-left: 0;
     }
   }
@@ -29,29 +29,6 @@
   display: block;
   text-align: center;
   margin-bottom: 16px;
-}
-
-.overdue {
-  background: rgba(255, 115, 115, 0.5);
-  border-radius: 0;
-  color: $navy;
-}
-
-.progress {
-  border-radius: 0;
-  color: $navy;
-}
-
-.completed {
-  background: rgba(90, 193, 142, 0.5);
-  border-radius: 0;
-  color: $navy;
-}
-
-
-.assignment-table-row {
-  max-width: 160px !important;
-  width: 160px;
 }
 
 mat-card {
@@ -66,7 +43,29 @@ mat-card:last-child {
 }
 
 @media screen and (max-width: 600px) {
-  .report {
+  .students {
     width: 100vw;
   }
+}
+
+.filter-item, .filter-item:focus {
+  width: 100%;
+  border: none;
+  outline: none;
+  overflow: visible;
+}
+
+td {
+  word-wrap: break-word;
+  max-width: 240px;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0;
+  margin: 0;
 }

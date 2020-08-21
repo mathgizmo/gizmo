@@ -22,9 +22,9 @@ class TopicController extends Controller
         if ($request['unit_id'] && $request['unit_id'] >= 0) {
             $query->where('unit_id', $request['unit_id']);
         } else if ($request['level_id'] && $request['level_id'] >= 0) {
-            $query->whereIn('unit_id', function($query) {
+            $query->whereIn('unit_id', function ($query) {
                 $query->select('id')->from(with(new Unit)->getTable())
-                ->where('level_id', request('level_id'));
+                    ->where('level_id', request('level_id'));
             });
         }
         if ($request['id']) {
@@ -34,17 +34,17 @@ class TopicController extends Controller
             $query->where('order_no', $request['order_no']);
         }
         if ($request['title']) {
-            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+            $query->where('title', 'LIKE', '%' . $request['title'] . '%');
         }
         if ($request['short_name']) {
-            $query->where('short_name', 'LIKE', '%'.$request['short_name'].'%');
+            $query->where('short_name', 'LIKE', '%' . $request['short_name'] . '%');
         }
         if ($request['sort'] && $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
         }
         $topics = $query->paginate(10)->appends(request()->query());;
         foreach ($topics as $key => $value) {
-            if(!file_exists($topics[$key]->icon_src)) {
+            if (!file_exists($topics[$key]->icon_src)) {
                 $topics[$key]->icon_src = 'images/default-icon.svg';
             }
         }
@@ -70,7 +70,7 @@ class TopicController extends Controller
         $all = glob("images/icons/*.svg");
         $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
-          $icons[] = $file;
+            $icons[] = $file;
         }
         return view('topics.create', array(
             'levels' => $levels,
@@ -78,7 +78,7 @@ class TopicController extends Controller
             'topics' => $topics,
             'lid' => $lid,
             'uid' => $uid,
-			'total_topic' => $total_topic,
+            'total_topic' => $total_topic,
             'icons' => $icons
         ));
     }
@@ -87,9 +87,9 @@ class TopicController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-            'level_id'    => 'required',
-            'unit_id'    => 'required',
-            'topic_title'=> 'required'
+            'level_id' => 'required',
+            'unit_id' => 'required',
+            'topic_title' => 'required'
         ]);
         DB::table('topic')->insert([
             'icon_src' => $request['icon_src'] ?: 'images/default-icon.svg',
@@ -98,14 +98,15 @@ class TopicController extends Controller
             'dev_mode' => $request['dev_mode'] ?: false,
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
+            'description' => $request['description'],
             'unit_id' => $request['unit_id'],
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topics?level_id='. $level_id . '&unit_id='. $unit_id)
-            ->with(array('message'=> 'Created successfully'));
+        return redirect('/topics?level_id=' . $level_id . '&unit_id=' . $unit_id)
+            ->with(array('message' => 'Created successfully'));
     }
 
     public function show($id)
@@ -128,15 +129,15 @@ class TopicController extends Controller
         $all = glob("images/icons/*.svg");
         $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
-          $icons[] = $file;
+            $icons[] = $file;
         }
         if (!file_exists($topic->icon_src)) {
             $topic->icon_src = 'images/default-icon.svg';
         }
         return view('topics.edit', [
-            'levels'=>$levels,
-            'units'=>$units,
-            'topic'=>$topic,
+            'levels' => $levels,
+            'units' => $units,
+            'topic' => $topic,
             'total_topic' => $total_topic,
             'icons' => $icons
         ]);
@@ -146,14 +147,15 @@ class TopicController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-            'level_id'    => 'required',
-            'unit_id'    => 'required',
-            'topic_title'=> 'required'
+            'level_id' => 'required',
+            'unit_id' => 'required',
+            'topic_title' => 'required'
         ]);
         $update_array = [
             'short_name' => $request['short_name'],
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
+            'description' => $request['description'],
             'dependency' => $request['dependency'] ?: false,
             'dev_mode' => $request['dev_mode'] ?: false,
             'unit_id' => $request['unit_id'],
@@ -166,8 +168,8 @@ class TopicController extends Controller
         DB::table('topic')->where('id', $id)->update($update_array);
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topics?level_id='. $level_id . '&unit_id='. $unit_id)
-            ->with(array('message'=> 'Updated successfully'));
+        return redirect('/topics?level_id=' . $level_id . '&unit_id=' . $unit_id)
+            ->with(array('message' => 'Updated successfully'));
     }
 
     public function destroy(Request $request, $id)
@@ -176,8 +178,8 @@ class TopicController extends Controller
         Topic::where('id', $id)->delete();
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topics?level_id='. $level_id . '&unit_id='. $unit_id)
-            ->with(array('message'=> 'Deleted successfully'));
+        return redirect('/topics?level_id=' . $level_id . '&unit_id=' . $unit_id)
+            ->with(array('message' => 'Deleted successfully'));
     }
 
 }

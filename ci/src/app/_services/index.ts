@@ -8,4 +8,5 @@ export * from './http-listener.service';
 export * from './welcome.service';
 export * from './dashboard.service';
 export * from './classes-management.service';
+export * from './content.service';
 export * from './country.service';

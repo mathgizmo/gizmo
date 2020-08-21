@@ -1,5 +1,6 @@
 <div class="report">
-  <mat-card>
+  <app-class-menu [classId]="class.id" class="class-menu"></app-class-menu>
+  <mat-card class="report-content">
     <div class="title">Report for class {{class.name}}</div>
     <form novalidate #form="ngForm">
       <div class="table-responsive">

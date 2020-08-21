@@ -1,5 +1,6 @@
 <div class="profile-assignments">
-    <mat-card>
+    <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
+    <mat-card class="assignments-content">
         <span class="title">Manage Assignments</span>
         <form novalidate #form="ngForm">
             <div class="table-responsive">

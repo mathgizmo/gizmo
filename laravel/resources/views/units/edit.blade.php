@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row">Edit Unit</div>
         <form role="form" action="{{ route('units.update', $unit->id) }}" method="POST">
-        <div class="card-body p-0">
+            <div class="card-body p-0">
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -20,55 +20,72 @@
 
                     <div class="col-md-8">
                         <select class="form-control" name="level_id" id="level_id">
-
                             @if (count($levels) > 0)
                                 <option value="">Select From ...</option>
                                 @foreach($levels as $level)
-                                    <option value="{{$level->id}}" @if (old("level_id") == $level->id) selected="selected" @endif  @if ($level->id == $unit->lid) selected="selected"
+                                    <option value="{{$level->id}}"
+                                            @if (old("level_id") == $level->id) selected="selected"
+                                            @endif  @if ($level->id == $unit->lid) selected="selected"
                                             @endif
                                     >{{$level->title}}</option>
                                 @endforeach
                             @endif
                         </select>
-
                         @if ($errors->has('level_id'))
                             <span class="form-text">
-                                        <strong>{{ $errors->first('level_id') }}</strong>
-                                    </span>
+                                <strong>{{ $errors->first('level_id') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
 
                 <div class="form-group row{{ $errors->has('unit_title') ? ' has-error' : '' }}">
-                    <label for="unit_title" class="col-md-2 form-control-label ml-3 font-weight-bold"> Unit Title</label>
-
+                    <label for="unit_title" class="col-md-2 form-control-label ml-3 font-weight-bold"> Unit
+                        Title</label>
                     <div class="col-md-8">
-                        <textarea id="unit_title" class="form-control"  name="unit_title">{{$unit->title}}</textarea>
-
+                        <textarea id="unit_title" class="form-control" name="unit_title">{{$unit->title}}</textarea>
                         @if ($errors->has('unit_title'))
                             <span class="form-text">
-                                        <strong>{{ $errors->first('unit_title') }}</strong>
-                                    </span>
+                                <strong>{{ $errors->first('unit_title') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3 {{ $errors->has('description') ? ' has-error' : '' }}">
+                    <label for="description"
+                           class="col-md-2 form-control-label ml-3 font-weight-bold">Description</label>
+                    <div class="col-md-8">
+                        <textarea type="text" name="description" id="description"
+                                  class="form-control">{{ old('description', $unit->description) }}</textarea>
+                        @if ($errors->has('description'))
+                            <span class="form-text">
+                                  <strong>{{ $errors->first('description') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
 
                 <div class="form-group row{{ $errors->has('dependency') ? ' has-error' : '' }}">
                     <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">This should be finished to continue</label>
-
                     <div class="col-md-8 radio">
-                        <label for="type" class="col-md-3"> <input {{ ($unit->dependency == true) ? 'checked="checked"' : ''}} type="checkbox" name="dependency" value="1"></label>
+                        <label for="type" class="col-md-3">
+                            <input {{ ($unit->dependency == true) ? 'checked="checked"' : ''}} type="checkbox" name="dependency" value="1">
+                        </label>
                         @if ($errors->has('dependency'))
                             <span class="form-text">
-                                                <strong>{{ $errors->first('dependency') }}</strong>
-                                            </span>
+                                <strong>{{ $errors->first('dependency') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
                 <div class="form-group row{{ $errors->has('dev_mode') ? ' has-error' : '' }}">
-                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Unit in development</label>
+                    <label for="type" class="col-md-2 form-control-label ml-3 font-weight-bold">Unit in
+                        development</label>
                     <div class="col-md-8 radio">
-                        <label for="type" class="col-md-3"> <input {{ ($unit->dev_mode == true) ? 'checked="checked"' : ''}} type="checkbox" name="dev_mode" value="1"></label>
+                        <label for="type" class="col-md-3"> <input
+                                    {{ ($unit->dev_mode == true) ? 'checked="checked"' : ''}} type="checkbox"
+                                    name="dev_mode" value="1"></label>
                         @if ($errors->has('dev_mode'))
                             <span class="form-text">
                                 <strong>{{ $errors->first('dev_mode') }}</strong>
@@ -97,17 +114,29 @@
                         @endif
                     </div>
                 </div>
-        </div>
+            </div>
             <div class="card-footer">
                 <a class="btn btn-secondary" href="{{ route('units.create') }}">Back</a>
-                <button class="btn btn-dark" type="submit" >Update</button>
+                <button class="btn btn-dark" type="submit">Update</button>
             </div>
         </form>
     </div>
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            CKEDITOR.replace('description', {toolbar: [['Bold', 'Italic', 'Font', 'FontSize']]});
+        });
+    </script>
+@endsection
+
 @section('styles')
     <style>
+        .cke_contents {
+            min-height: 360px !important;
+        }
         @media screen and (max-width: 600px) {
             .col-md-8 {
                 margin: 0 16px;

@@ -22,22 +22,28 @@
 
                 <div class="form-group row mt-3 {{ $errors->has('title') ? ' has-error' : '' }}">
                     <label for="title" class="col-md-2 form-control-label ml-3 font-weight-bold">Title</label>
-
                     <div class="col-md-8">
-                        <textarea id="title" class="form-control" name="title"
-                                  placeholder="Enter Title">{{ old('title') }}</textarea>
-
+                        <textarea id="title" class="form-control" name="title" placeholder="Enter Title">{{ old('title') }}</textarea>
                         @if ($errors->has('title'))
                             <span class="form-text">
-                                        <strong>{{ $errors->first('title') }}</strong>
-                                    </span>
+                                <strong>{{ $errors->first('title') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
-
+                <div class="form-group row mt-3 {{ $errors->has('description') ? ' has-error' : '' }}">
+                    <label for="description" class="col-md-2 form-control-label ml-3 font-weight-bold">Description</label>
+                    <div class="col-md-8">
+                        <textarea type="text" name="description" id="description" class="form-control">{{ old('description') }}</textarea>
+                        @if ($errors->has('description'))
+                            <span class="form-text">
+                                  <strong>{{ $errors->first('description') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
                 <div class="form-group row{{ $errors->has('order_no') ? ' has-error' : '' }}">
                     <label for="order_no" class="col-md-2 form-control-label ml-3 font-weight-bold">Order No</label>
-
                     <div class="col-md-8">
                         <select class="form-control" name="order_no" id="order_no">
                             <option value="1">1</option>
@@ -92,19 +98,22 @@
 @endsection
 
 @section('scripts')
-
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
     <script>
         $(document).ready(function () {
+            CKEDITOR.replace('description', {toolbar: [['Bold', 'Italic', 'Font', 'FontSize']]});
             setTimeout(function () {
                 $('#successMessage').fadeOut('fast');
             }, 4000); // <-- time in milliseconds
         });
     </script>
-
 @endsection
 
 @section('styles')
     <style>
+        .cke_contents {
+            min-height: 360px !important;
+        }
         @media screen and (max-width: 600px) {
             .col-md-8 {
                 margin: 0 16px;

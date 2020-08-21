@@ -6,11 +6,11 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
-    <button mat-button [mat-dialog-close]="'report'" class='button error-button'>Report Error!</button>
+    <a routerLink="/topic/{{topic_id}}/lesson/{{lesson_id}}" routerLinkActive="active" style="order: 2;">
+        <button mat-button [mat-dialog-close]="'retry'" class='button moving-forward-button continue-button'>Retry challenge</button>
+    </a>
     <a routerLink="/topic/{{topic_id}}" routerLinkActive="active">
         <button mat-button [mat-dialog-close]="'close'" class='button'>Abandon challenge</button>
     </a>
-    <a routerLink="/topic/{{topic_id}}/lesson/{{lesson_id}}" routerLinkActive="active">
-        <button mat-button [mat-dialog-close]="'retry'" class='button moving-forward-button continue-button'>Retry challenge</button>
-    </a>
+    <button mat-button [mat-dialog-close]="'report'" class='button error-button'>Report Error!</button>
 </mat-dialog-actions>

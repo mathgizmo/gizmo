@@ -1,4 +1,4 @@
-.profile-assignments {
+.profile-classes {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -23,6 +23,15 @@
   text-align: center;
 }
 
+.link {
+  cursor: pointer;
+  outline: none;
+}
+
+.link:hover {
+  text-decoration: none;
+}
+
 .filter-item, .filter-item:focus {
   width: 100%;
   border: none;
@@ -35,6 +44,8 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  flex-direction: column;
+  margin: 12px 0;
 }
 
 .button {
@@ -54,7 +65,7 @@
 }
 
 @media screen and (max-width: 600px) {
-  .profile-assignments {
+  .profile-classes {
     width: 96vw;
   }
   .button, button {

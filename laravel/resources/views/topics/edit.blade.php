@@ -96,6 +96,18 @@
                     </div>
                 </div>
 
+                <div class="form-group row mt-3 {{ $errors->has('description') ? ' has-error' : '' }}">
+                    <label for="description" class="col-md-2 form-control-label ml-3 font-weight-bold">Description</label>
+                    <div class="col-md-8">
+                        <textarea type="text" name="description" id="description" class="form-control">{{ old('description', $topic->description) }}</textarea>
+                        @if ($errors->has('description'))
+                            <span class="form-text">
+                                  <strong>{{ $errors->first('description') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
                 <div class="form-group row{{ $errors->has('icon_src') ? ' has-error' : '' }}">
                     <label for="icon_src" class="col-md-2 form-control-label ml-3 font-weight-bold">Image</label>
 
@@ -264,9 +276,10 @@
 @endsection
 
 @section('scripts')
-
+    <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
     <script>
         $(document).ready(function () {
+            CKEDITOR.replace('description', {toolbar: [['Bold', 'Italic', 'Font', 'FontSize']]});
             $('#upload-icon').change(function () {
                 if (this.files && this.files[0]) {
                     var reader = new FileReader();
@@ -329,6 +342,9 @@
 
 @section('styles')
     <style>
+        .cke_contents {
+            min-height: 360px !important;
+        }
         @media screen and (max-width: 600px) {
             .col-md-8 {
                 margin: 0 16px;

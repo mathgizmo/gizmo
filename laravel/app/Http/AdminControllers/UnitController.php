@@ -28,14 +28,14 @@ class UnitController extends Controller
             $query->where('order_no', $request['order_no']);
         }
         if ($request['title']) {
-            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+            $query->where('title', 'LIKE', '%' . $request['title'] . '%');
         }
         if ($request['sort'] && $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
         }
         return view('units.index', [
-            'levels'=> Level::all(),
-            'units'=> $query->paginate(10)->appends(request()->query()),
+            'levels' => Level::all(),
+            'units' => $query->paginate(10)->appends(request()->query()),
             'level_id' => $request['level_id']
         ]);
     }
@@ -60,20 +60,21 @@ class UnitController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         // Store topic title and unit_id into topic table
         $this->validate($request, [
-         'level_id'    => 'required',
-         'unit_title'=> 'required',
+            'level_id' => 'required',
+            'unit_title' => 'required',
         ]);
         DB::table('unit')->insert([
-         'title' => $request['unit_title'],
-         'dependency' => $request['dependency'] ?: false,
-         'dev_mode' => $request['dev_mode'] ?: false,
-         'level_id' => $request['level_id'],
-         'order_no' => $request['order_no'],
-         'created_at' => date('Y-m-d H:i:s'),
-         'modified_at' => date('Y-m-d H:i:s')
+            'title' => $request['unit_title'],
+            'description' => $request['description'],
+            'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
+            'level_id' => $request['level_id'],
+            'order_no' => $request['order_no'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'modified_at' => date('Y-m-d H:i:s')
         ]);
         $level_id = $request->input('level_id');
-        return redirect('/units?level_id='. $level_id)->with(array('message'=> 'Created successfully'));
+        return redirect('/units?level_id=' . $level_id)->with(array('message' => 'Created successfully'));
     }
 
     public function show()
@@ -91,9 +92,9 @@ class UnitController extends Controller
         $levels = DB::select('select * from level');
         $total_unit = Unit::all()->count();
         return view('units.edit', [
-            'levels'=>$levels,
-            'unit'=>$unit,
-            'total_unit'=>$total_unit,
+            'levels' => $levels,
+            'unit' => $unit,
+            'total_unit' => $total_unit,
         ]);
     }
 
@@ -101,11 +102,12 @@ class UnitController extends Controller
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-            'level_id'    => 'required',
-            'unit_title'=> 'required'
+            'level_id' => 'required',
+            'unit_title' => 'required'
         ]);
         DB::table('unit')->where('id', $id)->update([
             'title' => $request['unit_title'],
+            'description' => $request['description'],
             'dependency' => $request['dependency'] ?: false,
             'dev_mode' => $request['dev_mode'] ?: false,
             'level_id' => $request['level_id'],
@@ -114,7 +116,7 @@ class UnitController extends Controller
             'modified_at' => date('Y-m-d H:i:s')
         ]);
         $level_id = $request->input('level_id');
-        return redirect('/units?level_id='. $level_id)->with(array('message'=> 'Updated successfully'));
+        return redirect('/units?level_id=' . $level_id)->with(array('message' => 'Updated successfully'));
     }
 
     public function destroy(Request $request, $id)
@@ -122,6 +124,6 @@ class UnitController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $level_id = $request->input('level_id');
         Unit::where('id', $id)->delete();
-        return redirect('/units?level_id='. $level_id)->with(array('message'=> 'Deleted successfully'));
+        return redirect('/units?level_id=' . $level_id)->with(array('message' => 'Deleted successfully'));
     }
 }

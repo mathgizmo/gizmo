@@ -6,17 +6,21 @@
             <!--<mat-icon class="menu-icon">menu</mat-icon>-->
         </button>
         <mat-menu #menu="matMenu" class="menu">
-            <a mat-menu-item routerLink="dashboard" class="menu-item" (click)="onAssignmentClicked()">
+            <a mat-menu-item routerLink="teacher/dashboard" class="menu-item" (click)="onAssignmentClicked()">
                 <span class="material-icons">home</span>
                 Home
+            </a>
+            <a mat-menu-item routerLink="teacher/class" class="menu-item">
+                <span class="material-icons">class</span>
+                Classrooms
+            </a>
+            <a mat-menu-item routerLink="teacher/review-content" class="menu-item">
+                <span class="material-icons">grading</span>
+                Review Content
             </a>
             <button mat-menu-item [matMenuTriggerFor]="studentViews" class="menu-item">
                 <span class="material-icons">bubble_chart</span>
                 Student Views
-            </button>
-            <button mat-menu-item [matMenuTriggerFor]="classesManagement" class="menu-item">
-                <span class="material-icons">edit</span>
-                Management
             </button>
             <a mat-menu-item routerLink="profile" class="menu-item">
                 <span class="material-icons">account_circle</span>
@@ -31,10 +35,6 @@
             <a mat-menu-item routerLink="to-do" class="menu-item">To Do</a>
             <a mat-menu-item routerLink="my-classes" class="menu-item">My Classes</a>
             <a mat-menu-item routerLink="my-invitations" class="menu-item">My Invitations</a>
-        </mat-menu>
-        <mat-menu #classesManagement="matMenu">
-            <a mat-menu-item routerLink="manage-classes" class="menu-item">Manage Classes</a>
-            <a mat-menu-item routerLink="manage-assignments" class="menu-item">Manage Assignments</a>
         </mat-menu>
     </div>
     <div *ngIf="user.role !== 'teacher'">

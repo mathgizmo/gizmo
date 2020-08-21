@@ -1,20 +1,25 @@
-import {Component, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
-
-import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
+import {Component, OnInit} from '@angular/core';
+import {ClassesManagementService} from '../../../../_services';
+import {ActivatedRoute} from '@angular/router';
+import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
-import {StudentAssignmentsDialogComponent} from './student-assignments-dialog/student-assignments-dialog.component';
+import {StudentAssignmentsDialogComponent} from '../../class/students/student-assignments-dialog/student-assignments-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 
 @Component({
-    selector: 'class-students-dialog',
-    templateUrl: 'class-students-dialog.component.html',
-    styleUrls: ['class-students-dialog.component.scss'],
+    selector: 'app-class-students',
+    templateUrl: './class-students.component.html',
+    styleUrls: ['./class-students.component.scss'],
+    providers: [ClassesManagementService]
 })
-export class ClassStudentsDialogComponent extends BaseDialogComponent<ClassStudentsDialogComponent> {
+export class ClassStudentsComponent implements OnInit {
+
+    classId: number;
+    class = {
+        name: ''
+    };
 
     students = [];
-    class: any;
 
     public name: string;
     public first_name: string;
@@ -26,27 +31,29 @@ export class ClassStudentsDialogComponent extends BaseDialogComponent<ClassStude
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
+    private sub: any;
+
     constructor(
+        private route: ActivatedRoute,
+        private classService: ClassesManagementService,
         public dialog: MatDialog,
-        private deviceService: DeviceDetectorService,
-        public dialogRef: MatDialogRef<ClassStudentsDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
-        super(dialogRef, data);
-        if (data.class) {
-            // tslint:disable-next-line:indent
-        	this.class = data.class;
-        }
-        if (data.students) {
-            // tslint:disable-next-line:indent
-        	this.students = data.students;
+        private deviceService: DeviceDetectorService) {
+        this.dialogPosition = {bottom: '18vh'};
+        if (this.isMobile || this.isTablet) {
+            this.dialogPosition = {bottom: '2vh'};
         }
     }
 
-    resizeDialog() {
-        const width = (this.orientation === 'portrait') ? '96vw' : '80vw';
-        // const height = (this.orientation === 'portrait') ? '80vh' : '75vh';
-        // this.updateDialogSize(width, height);
-        this.dialogRef.updateSize(width);
+    ngOnInit() {
+        this.sub = this.route.params.subscribe(params => {
+            this.classId = +params['class_id'];
+            const classes = this.classService.classes;
+            this.class = classes.filter(x => x.id === this.classId)[0];
+            this.classService.getStudents(this.classId)
+                .subscribe(students => {
+                    this.students = students;
+                });
+        });
     }
 
     sortData(sort: Sort) {

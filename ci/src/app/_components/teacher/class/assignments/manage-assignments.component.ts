@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
-import {AssignmentService} from '../../../_services/assignment.service';
+import {AssignmentService} from '../../../../_services/assignment.service';
 import {EditAssignmentDialogComponent} from './edit-assignment-dialog/edit-assignment-dialog.component';
-import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.component';
+import {YesNoDialogComponent} from '../../../dialogs/yes-no-dialog/yes-no-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
-import {environment} from '../../../../environments/environment';
+import {environment} from '../../../../../environments/environment';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
     selector: 'manage-assignments',
@@ -20,6 +21,8 @@ export class ManageAssignmentsComponent implements OnInit {
     public icons = [];
     public name: string;
 
+    classId: number;
+
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
@@ -27,7 +30,9 @@ export class ManageAssignmentsComponent implements OnInit {
 
     private readonly adminUrl = environment.adminUrl;
 
-    constructor(private assignmentService: AssignmentService, private sanitizer: DomSanitizer,
+    private sub: any;
+
+    constructor(private route: ActivatedRoute, private assignmentService: AssignmentService, private sanitizer: DomSanitizer,
                 public dialog: MatDialog, private deviceService: DeviceDetectorService) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
@@ -36,6 +41,9 @@ export class ManageAssignmentsComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.sub = this.route.params.subscribe(params => {
+            this.classId = +params['class_id'];
+        });
         this.assignmentService.getAssignments()
             .subscribe(response => {
                 this.assignments = response;

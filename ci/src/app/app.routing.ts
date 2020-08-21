@@ -10,13 +10,18 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
-import {DashboardComponent, ClassReportComponent, ManageAssignmentsComponent, ManageClassesComponent} from './_components/teacher/index';
+import {DashboardComponent, ClassReportComponent, ManageAssignmentsComponent,
+    ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent, ClassStudentsComponent} from './_components/teacher/index';
 
 const teacherRoutes = [
-    {path: 'manage-classes', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'manage-assignments', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'class-report/:class_id', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/review-content', component: ReviewContentComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/assignments', component: ManageAssignmentsComponent,
+        canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/report', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/students', component: ClassStudentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
 ];
 
 const studentRoutes = [
