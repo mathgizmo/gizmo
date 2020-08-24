@@ -18,6 +18,9 @@ export class ClassReportComponent implements OnInit {
     };
     public assignments;
     public students;
+
+    public backLinkText = 'Back';
+
     private sub: any;
 
     constructor(private route: ActivatedRoute, private classService: ClassesManagementService) {}
@@ -31,6 +34,7 @@ export class ClassReportComponent implements OnInit {
                 this.class = response.class;
                 this.assignments = response.assignments;
                 this.students = response.students;
+                this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.class_id) + ' > Report';
             });
     }
 

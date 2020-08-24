@@ -5,8 +5,10 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\Level;
 use App\Progress;
+use App\Question;
 use App\Student;
 use App\StudentsTracking;
+use App\StudentsTrackingQuestion;
 use App\Topic;
 use App\Unit;
 use Carbon\Carbon;
@@ -315,4 +317,22 @@ class StudentsTrackingController extends Controller
             }
         }
     }
+
+    public function trackQuestionAnswer($question_id)
+    {
+        if (($model = Question::find($question_id)) == null) {
+            return $this->error('Invalid question.');
+        }
+        $app_id = $this->app ? $this->app->id : null;
+        if ($app_id) {
+            StudentsTrackingQuestion::create([
+                'student_id' => $this->student->id,
+                'question_id' => $question_id,
+                'app_id' => $app_id,
+                'is_right_answer' => request('is_right_answer'),
+            ]);
+        }
+        return $this->success('saved!');
+    }
+
 }

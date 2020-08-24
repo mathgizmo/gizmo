@@ -5,6 +5,7 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\ClassOfStudents;
 use App\Progress;
+use App\Student;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -38,6 +39,7 @@ class ClassController extends Controller
                 'item' => ClassOfStudents::create([
                     'teacher_id' => $this->user->id,
                     'name' => request('name'),
+                    'class_type' => request('class_type') ?: 'other',
                     'subscription_type' => request('subscription_type') ?: 'open',
                     'invitations' => request('invitations')
                 ])
@@ -53,6 +55,9 @@ class ClassController extends Controller
             if ($class) {
                 if (request()->has('name')) {
                     $class->name = request('name');
+                }
+                if (request()->has('class_type')) {
+                    $class->class_type = request('class_type');
                 }
                 if (request()->has('subscription_type')) {
                     $class->subscription_type = request('subscription_type');
@@ -120,6 +125,66 @@ class ClassController extends Controller
             return $this->success(['items' => array_values($students->toArray())]);
         }
         return $this->error('Error.', 404);
+    }
+
+    public function addStudent($class_id) {
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        if ($class) {
+            $student = Student::where('email', trim(request('email')))->first();
+            if ($student) {
+                try {
+                    if (DB::table('classes_students')->where('class_id', $class_id)
+                            ->where('student_id', $student->id)->count() < 1) {
+                        DB::table('classes_students')->insert([
+                            'class_id' => $class_id,
+                            'student_id' => $student->id
+                        ]);
+                        $items = Application::whereHas('classes', function ($q1) use ($student, $class_id) {
+                            $q1->whereHas('students', function ($q2) use ($student) {
+                                $q2->where('students.id', $student->id);
+                            })->where('classes.id', $class_id);
+                        })->get();
+                        $finished_count = 0; $past_due_count = 0;
+                        foreach ($items as $item) {
+                            $item->icon = $item->icon();
+                            $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                                    ->where('student_id', $student->id)->count() > 0;
+                            $class_data = $item->getClassRelatedData($class_id);
+                            if ($class_data->due_date) {
+                                $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                            } else {
+                                $due_at = null;
+                            }
+                            $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                            $completed_at = $item->getCompletedDate($student->id);
+                            $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                            $now = Carbon::now()->toDateTimeString();
+                            $item->is_past_due = (!$item->is_completed && $due_at && $due_at < $now) ||
+                                ($item->is_completed && $due_at && $completed_at && $due_at < $completed_at);
+                            if ($item->is_completed) {
+                                $finished_count++;
+                            }
+                            if ($item->is_past_due) {
+                                $past_due_count++;
+                            }
+                        }
+                        $student->assignments = array_values($items->sortBy('due_date')->toArray());
+                        $student->assignments_finished_count = $finished_count;
+                        $student->assignments_past_due_count = $past_due_count;
+                        return $this->success(['item' => $student]);
+                    }
+                } catch (\Exception $e) {}
+            }
+        }
+        return $this->error('Error.', 404);
+    }
+
+    public function deleteStudent($class_id, $student_id) {
+        DB::table('classes_students')
+            ->where('class_id', $class_id)
+            ->where('student_id', $student_id)
+            ->delete();
+        return $this->success('deleted');
     }
 
     public function getReport($class_id) {
@@ -235,31 +300,33 @@ class ClassController extends Controller
         $items = [];
         foreach (DB::table('classes_applications')->where('class_id', $class_id)->get() as $row) {
             $item = Application::where('id', $row->app_id)->first();
-            $item->class = $class;
-            $item->icon = $item->icon();
-            $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
-                    ->where('student_id', $student->id)->count() > 0;
-            if ($row->due_date) {
-                $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
-            } else {
-                $due_at = null;
+            if ($item) {
+                $item->class = $class;
+                $item->icon = $item->icon();
+                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                        ->where('student_id', $student->id)->count() > 0;
+                if ($row->due_date) {
+                    $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
+                } else {
+                    $due_at = null;
+                }
+                $item->start_time = $row->start_time ?: '00:00:00';
+                $item->start_date = $row->start_date;
+                $item->due_time = $row->due_time ?: '00:00:00';
+                $item->due_date = $row->due_date;
+                $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                $now = Carbon::now()->toDateTimeString();
+                if ($row->start_date) {
+                    $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
+                } else {
+                    $start_at = null;
+                }
+                $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+                $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+                $completed_at = $item->getCompletedDate($student->id);
+                $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                array_push($items, $item);
             }
-            $item->start_time = $row->start_time ?: '00:00:00';
-            $item->start_date = $row->start_date;
-            $item->due_time = $row->due_time ?: '00:00:00';
-            $item->due_date = $row->due_date;
-            $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-            $now = Carbon::now()->toDateTimeString();
-            if ($row->start_date) {
-                $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
-            } else {
-                $start_at = null;
-            }
-            $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
-            $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
-            $completed_at = $item->getCompletedDate($student->id);
-            $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
-            array_push($items, $item);
         }
         return $this->success([
             'items' => array_values(collect($items)->sortBy('due_at')->toArray())

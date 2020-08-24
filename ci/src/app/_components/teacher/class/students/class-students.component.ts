@@ -5,6 +5,9 @@ import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 import {StudentAssignmentsDialogComponent} from '../../class/students/student-assignments-dialog/student-assignments-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import {YesNoDialogComponent} from '../../../dialogs/yes-no-dialog/yes-no-dialog.component';
+import {AddStudentDialogComponent} from './add-student-dialog/add-student-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-class-students',
@@ -31,10 +34,13 @@ export class ClassStudentsComponent implements OnInit {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
+    public backLinkText = 'Back';
+
     private sub: any;
 
     constructor(
         private route: ActivatedRoute,
+        public snackBar: MatSnackBar,
         private classService: ClassesManagementService,
         public dialog: MatDialog,
         private deviceService: DeviceDetectorService) {
@@ -49,10 +55,66 @@ export class ClassStudentsComponent implements OnInit {
             this.classId = +params['class_id'];
             const classes = this.classService.classes;
             this.class = classes.filter(x => x.id === this.classId)[0];
+            this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Students';
             this.classService.getStudents(this.classId)
                 .subscribe(students => {
                     this.students = students;
                 });
+        });
+    }
+
+    deleteStudent(studentId) {
+        const dialogRef = this.dialog.open(YesNoDialogComponent, {
+            data: { 'message': 'Are you sure that you want to delete this student from the class?'},
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.classService.deleteStudent(this.classId, studentId)
+                    .subscribe(res => {
+                        this.students = this.students.filter(x => x.id !== studentId);
+                        this.snackBar.open('Student was successfully deleted from the classroom!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        this.snackBar.open('Unable to delete student from the classroom!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
+                    });
+            }
+        });
+    }
+
+    addStudent() {
+        const dialogRef = this.dialog.open(AddStudentDialogComponent, {
+            data: { },
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.classService.addStudent(this.classId, result)
+                    .subscribe(item => {
+                        if (item && item.id) {
+                            this.students.unshift(item);
+                            this.snackBar.open('Student was successfully added to the classroom!', '', {
+                                duration: 3000,
+                                panelClass: ['success-snackbar']
+                            });
+                        } else {
+                            this.snackBar.open('Unable to add student with email you provided to the classroom!', '', {
+                                duration: 3000,
+                                panelClass: ['error-snackbar']
+                            });
+                        }
+                    }, error => {
+                        this.snackBar.open('Unable to add student with email you provided to the classroom!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
+                    });
+            }
         });
     }
 

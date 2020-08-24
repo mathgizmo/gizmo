@@ -1,7 +1,8 @@
+<a routerLink="/teacher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
 <div class="report">
   <app-class-menu [classId]="class.id" class="class-menu"></app-class-menu>
   <mat-card class="report-content">
-    <div class="title">Report for class {{class.name}}</div>
+    <div class="subtitle text-center">Detailed Report</div>
     <form novalidate #form="ngForm">
       <div class="table-responsive">
         <table matSort (matSortChange)="sortData($event)" class="table">

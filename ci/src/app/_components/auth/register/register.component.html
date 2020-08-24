@@ -44,8 +44,15 @@
             </div>
             <div class="form-group">
                 <label for="country_id">Country</label>
-                <mat-select class="form-control answer" id="country_id" [(value)]="model.country_id">
-                    <mat-option *ngFor="let country of countries" [value]="country.id">{{country.title}}</mat-option>
+                <mat-select class="form-control answer" id="country_id" [(value)]="selectedCountry">
+                    <mat-select-trigger>
+                        <img class="flag-icon" src="./assets/images/flags/{{selectedCountry.code.toLowerCase()}}.png" [alt]="selectedCountry.code" />
+                        <span>{{selectedCountry.title}}</span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let country of countries" [value]="country">
+                        <img class="flag-icon" src="./assets/images/flags/{{country.code.toLowerCase()}}.png" [alt]="country.code" />
+                        <span>{{country.title}}</span>
+                    </mat-option>
                 </mat-select>
             </div>
             <div *ngIf="error" class="alert alert-danger">

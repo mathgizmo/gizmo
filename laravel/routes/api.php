@@ -39,6 +39,7 @@ $api->version('v1', function ($api) {
 
         $api->post('/lesson/{lesson}/start', 'App\Http\APIControllers\StudentsTrackingController@start');
         $api->post('/lesson/{lesson}/done', 'App\Http\APIControllers\StudentsTrackingController@done');
+        $api->post('/question/{question_id}/tracking', 'App\Http\APIControllers\StudentsTrackingController@trackQuestionAnswer');
 
         $api->post('/report_error/{question}', 'App\Http\APIControllers\ReportErrorController@report');
 
@@ -56,6 +57,8 @@ $api->version('v1', function ($api) {
         $api->put('/classes/{class_id}', 'App\Http\APIControllers\ClassController@update');
         $api->delete('/classes/{class_id}', 'App\Http\APIControllers\ClassController@delete');
         $api->get('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@getStudents');
+        $api->post('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@addStudent');
+        $api->delete('/classes/{class_id}/students/{student_id}', 'App\Http\APIControllers\ClassController@deleteStudent');
         $api->get('/classes/{class_id}/assignments', 'App\Http\APIControllers\ClassController@getAssignments');
         $api->post('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@addAssignmentToClass');
         $api->put('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@changeAssignment');

@@ -8,6 +8,10 @@ import {DeviceDetectorModule} from 'ngx-device-detector';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
@@ -42,16 +46,22 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent} from './_components/dialogs/index';
 import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
-import {DashboardComponent, ClassReportComponent, ClassStudentsComponent, StudentAssignmentsDialogComponent,
+import {DashboardComponent, ClassReportComponent, ClassStudentsComponent,
+    StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassToDoComponent, ClassMenuComponent} from './_components/teacher/index';
+    ClassAssignmentsComponent, ClassToDoComponent, ClassMenuComponent} from './_components/teacher/index';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
 import {DraggableDirective} from './_directives/draggable.directive';
 import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
+
+FullCalendarModule.registerPlugins([
+    dayGridPlugin,
+    interactionPlugin
+]);
 
 @NgModule({
     imports: [
@@ -60,6 +70,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         HttpClientModule,
         AppRoutingModule,
         BrowserAnimationsModule,
+        FullCalendarModule,
         MatInputModule,
         MatButtonModule,
         MatSelectModule,
@@ -105,10 +116,12 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         YesNoDialogComponent,
         EditClassDialogComponent,
         StudentAssignmentsDialogComponent,
+        AddStudentDialogComponent,
         ManageAssignmentsComponent,
         EditAssignmentDialogComponent,
         ReviewContentComponent,
         ClassDashboardComponent,
+        ClassAssignmentsComponent,
         ClassToDoComponent,
         ClassMenuComponent,
         TryComponent,
@@ -135,6 +148,7 @@ import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
         YesNoDialogComponent,
         EditClassDialogComponent,
         StudentAssignmentsDialogComponent,
+        AddStudentDialogComponent,
         EditAssignmentDialogComponent
     ],
     providers: [

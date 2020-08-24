@@ -6,7 +6,8 @@
             <table matSort (matSortChange)="sortAvailableClasses($event)" class="table">
                 <thead>
                 <tr>
-                    <th mat-sort-header="name" scope="col">Class</th>
+                    <th mat-sort-header="name" scope="col">Class ID</th>
+                    <th mat-sort-header="name" scope="col">Class Name</th>
                     <th mat-sort-header="teacher" scope="col">Teacher</th>
                     <th scope="col"></th>
                 </tr>
@@ -15,9 +16,16 @@
                 <tr>
                     <td>
                         <input matInput
+                               name="id"
+                               placeholder="Class ID"
+                               [(ngModel)]="idFilter"
+                               class="filter-item" />
+                    </td>
+                    <td>
+                        <input matInput
                                name="name"
                                pattern="[a-zA-Z0-9]{2,255}"
-                               placeholder="Search by Class Name"
+                               placeholder="Class Name"
                                [(ngModel)]="nameFilter"
                                class="filter-item" />
                     </td>
@@ -25,13 +33,14 @@
                         <input matInput
                                name="teacher"
                                pattern="[a-zA-Z0-9]{2,255}"
-                               placeholder="Search by Teacher"
+                               placeholder="Teacher"
                                [(ngModel)]="teacherFilter"
                                class="filter-item" />
                     </td>
                     <td></td>
                 </tr>
                 <tr *ngFor="let item of availableClasses | tableFilter: form.value">
+                    <td>{{item.id}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.teacher}}</td>
                     <td class="text-right">

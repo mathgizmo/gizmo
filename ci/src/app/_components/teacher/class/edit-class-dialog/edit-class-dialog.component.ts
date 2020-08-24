@@ -12,6 +12,7 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
 
     class = {
         'name': '',
+        'class_type': 'other',
         'subscription_type': 'open',
         'invitations': ''
     };

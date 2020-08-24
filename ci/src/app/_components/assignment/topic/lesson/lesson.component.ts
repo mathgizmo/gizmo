@@ -240,6 +240,9 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 } else {
                     this.incorrect_answers++;
                 }
+                if (!this.fromContentReview) {
+                    this.trackingService.trackQuestionAnswer(this.question.id, isCorrect).subscribe();
+                }
             }
         };
         checkAnswers().then( () => {
@@ -447,6 +450,9 @@ export class LessonComponent implements OnInit, AfterViewChecked {
             return;
         }
         const isCorrect = this.isCorrect(answers);
+        if (!this.fromContentReview) {
+            this.trackingService.trackQuestionAnswer(this.question.id, isCorrect).subscribe();
+        }
         if (isCorrect) {
             if (this.lesson_id === -1) {
                 this.current_question_order_no += !isNaN(+this.confident_value) ? +this.confident_value : 1;

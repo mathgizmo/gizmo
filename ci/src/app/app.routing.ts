@@ -12,13 +12,15 @@ import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_comp
 import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent, ClassReportComponent, ManageAssignmentsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassStudentsComponent, ClassToDoComponent} from './_components/teacher/index';
+    ClassAssignmentsComponent, ClassStudentsComponent, ClassToDoComponent} from './_components/teacher/index';
 
 const teacherRoutes = [
     {path: 'teacher/dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/review-content', component: ReviewContentComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/assignments', component: ManageAssignmentsComponent,
+    {path: 'teacher/assignment', component: ManageAssignmentsComponent,
+        canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/assignments', component: ClassAssignmentsComponent,
         canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/report', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},

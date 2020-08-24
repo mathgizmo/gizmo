@@ -49,6 +49,20 @@
                     </div>
                 </div>
 
+                <div class="form-group row mt-3 {{ $errors->has('class_type') ? ' has-error' : '' }}">
+                    <label for="class_type" class="col-md-2 form-control-label ml-3 font-weight-bold">Type of classroom</label>
+                    <div class="col-md-8">
+                        <select id="class_type" name="class_type" class="form-control" style="max-width: 200px;">
+                            <option value="elementary" {{ $class->class_type == 'elementary' ? 'selected="selected"' : '' }}>Elementary</option>
+                            <option value="secondary" {{ $class->class_type == 'secondary' ? 'selected="selected"' : '' }}>Secondary</option>
+                            <option value="college" {{ $class->class_type == 'college' ? 'selected="selected"' : '' }}>College</option>
+                            <option value="university" {{ $class->class_type == 'university' ? 'selected="selected"' : '' }}>University</option>
+                            <option value="professional" {{ $class->class_type == 'professional' ? 'selected="selected"' : '' }}>Professional</option>
+                            <option value="other" {{ $class->class_type == 'other' ? 'selected="selected"' : '' }}>Other</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group row mt-3 {{ $errors->has('subscription_type') ? ' has-error' : '' }}">
                     <label for="subscription_type" class="col-md-2 form-control-label ml-3 font-weight-bold">Subscription Type</label>
                     <div class="col-md-8">

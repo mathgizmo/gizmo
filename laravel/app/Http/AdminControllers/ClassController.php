@@ -28,6 +28,9 @@ class ClassController extends Controller
         if ($request['subscription_type']) {
             $query->where('subscription_type', $request['subscription_type']);
         }
+        if ($request['class_type']) {
+            $query->where('class_type', $request['class_type']);
+        }
         if ($request['sort'] && $request['order']) {
             if ($request['sort'] == 'teacher') {
                 $query->leftJoin('students', 'students.id', '=', 'classes.teacher_id')
@@ -56,7 +59,7 @@ class ClassController extends Controller
                 'required', 'exists:students,id'
             ],
         ]);
-        $class = ClassOfStudents::create($request->only('name', 'teacher_id', 'subscription_type', 'invitations'));
+        $class = ClassOfStudents::create($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations'));
         foreach ($request['application'] as $key => $value) {
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
@@ -93,7 +96,7 @@ class ClassController extends Controller
         if (!$class) {
             abort('404', 'Class Not Exists!');
         }
-        $class->update($request->only('name', 'teacher_id', 'subscription_type', 'invitations'));
+        $class->update($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations'));
         $old_apps = $class->applications()->get()->keyBy('id');
         if ($request['application']) {
             foreach ($request['application'] as $key => $value) {

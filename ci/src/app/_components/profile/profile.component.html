@@ -44,9 +44,18 @@
                class="answer" />
       </mat-form-field>
       <mat-form-field>
-        <mat-select class="answer" id="country_id" [(value)]="user.country_id" placeholder="Country">
-          <mat-option *ngFor="let country of countries" [value]="country.id">{{country.title}}</mat-option>
+        <mat-select class="answer" id="country_id" [(value)]="selectedCountry" placeholder="Country">
+          <mat-select-trigger>
+            <img class="flag-icon" src="./assets/images/flags/{{selectedCountry.code.toLowerCase()}}.png" [alt]="selectedCountry.code" />
+            <span>{{selectedCountry.title}}</span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let country of countries" [value]="country">
+            <img class="flag-icon" src="./assets/images/flags/{{country.code.toLowerCase()}}.png" [alt]="country.code" />
+            <span>{{country.title}}</span>
+          </mat-option>
         </mat-select>
+
+
       </mat-form-field>
       <mat-form-field>
         <input matInput

@@ -15,8 +15,11 @@ import {MatDialog} from '@angular/material/dialog';
 export class ManageClassesComponent implements OnInit {
 
     public classes = [];
+
+    public id: number;
     public name: string;
     public subscription_type: string;
+    public class_type: string;
 
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
@@ -94,6 +97,7 @@ export class ManageClassesComponent implements OnInit {
             switch (sort.active) {
                 case 'id': return compare(a.id, b.id, isAsc);
                 case 'name': return compare(a.name, b.name, isAsc);
+                case 'class_type': return compare(a.class_type, b.class_type, isAsc);
                 case 'subscription_type': return compare(a.subscription_type, b.subscription_type, isAsc);
                 default: return 0;
             }

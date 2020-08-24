@@ -46,4 +46,9 @@ export class TrackingService {
     getLastVisitedUnit(student_id) {
         return this.http.get('/unit/last-visited/' + student_id);
     }
+
+    trackQuestionAnswer(question_id, is_right_answer) {
+        return this.http.post('/question/' + question_id + '/tracking'
+            + '?app_id=' + this.appId, {'is_right_answer': is_right_answer});
+    }
 }

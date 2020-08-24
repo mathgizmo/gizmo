@@ -20,6 +20,12 @@ export class ProfileComponent implements OnInit {
     public applications = [];
     public selectedAppId;
     public countries = [];
+    public selectedCountry = {
+        id: 1,
+        title: 'Canada',
+        code: 'CA'
+    };
+
     private readonly adminUrl = environment.adminUrl;
 
     constructor(
@@ -33,25 +39,32 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.userService.getProfile()
-            .subscribe(res => {
-                localStorage.setItem('app_id', res['app_id']);
-                this.selectedAppId = res['app_id'];
-                this.user.username = res['name'];
-                this.user.first_name = res['first_name'];
-                this.user.last_name = res['last_name'];
-                this.user.email = res['email'];
-                this.user.question_num = res['question_num'];
-                this.user.country_id = res['country_id'];
-                localStorage.setItem('question_num', res['question_num']);
-                this.applications = res['applications'];
-            });
         this.countryService.getCountries().subscribe(countries => {
             this.countries = countries;
+            this.userService.getProfile()
+                .subscribe(res => {
+                    localStorage.setItem('app_id', res['app_id']);
+                    this.selectedAppId = res['app_id'];
+                    this.user.username = res['name'];
+                    this.user.first_name = res['first_name'];
+                    this.user.last_name = res['last_name'];
+                    this.user.email = res['email'];
+                    this.user.question_num = res['question_num'];
+                    this.user.country_id = res['country_id'];
+                    localStorage.setItem('question_num', res['question_num']);
+                    this.applications = res['applications'];
+                    const userCountry = this.countries.filter(x => x.id === this.user.country_id);
+                    if (userCountry.length > 0) {
+                        this.selectedCountry = userCountry[0];
+                    } else {
+                        this.selectedCountry = this.countries.filter(x => x.code === 'CA')[0];
+                    }
+                });
         });
     }
 
     onChangeProfile() {
+        this.user.country_id = this.selectedCountry.id;
         this.userService.changeProfile(this.user)
             .subscribe(res => {
                 this.passwordsMatch = true;

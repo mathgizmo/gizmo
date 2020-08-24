@@ -77,11 +77,19 @@ mat-form-field {
   width: 100%;
 }
 
+.flag-icon {
+  height: 32px !important;
+  margin-right: 8px;
+}
+
 @media screen and (max-width: 600px) {
   .profile {
-    width: 100vw;
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
   }
   .applications-list {
+    margin-right: 0;
     > * {
       min-width: 100%;
     }

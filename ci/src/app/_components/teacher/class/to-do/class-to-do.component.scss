@@ -152,3 +152,14 @@ mat-card:last-child {
 mat-form-field {
   width: 100%;
 }
+
+@media screen and (max-width: 600px) {
+  .to-do {
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .to-do-content {
+    margin-right: 0;
+  }
+}

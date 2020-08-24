@@ -102,6 +102,19 @@ export class ClassesManagementService {
             );
     }
 
+    public addStudent(class_id, email) {
+        return this.http.post('/classes/' + class_id + '/students', { email: email })
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                })
+            );
+    }
+
+    public deleteStudent(class_id, student_id) {
+        return this.http.delete('/classes/' + class_id + '/students/' + student_id);
+    }
+
     public getAssignments(class_id) {
         return this.http.get('/classes/' + class_id + '/assignments')
             .pipe(

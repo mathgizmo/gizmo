@@ -333,12 +333,17 @@ class TopicController extends Controller
         try {
             // find all lessons from topic that are not done yet
             $student = $this->student;
-            $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
+            $lessons_query = DB::table('lesson')->whereIn('lesson.id', function($q) use($app_id) {
                 $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
             })->where('topic_id', $id)->where('dev_mode', 0);
             if ($lessons_query->count() > 0) {
-                $lesson->unfinished_lessons_count = $lessons_query->count();
-                $lesson->is_unfinished = $lessons_query->where('id', $lesson_id)->count() > 0;
+                $lesson->unfinished_lessons_count = $lessons_query->leftJoin('progresses', function ($join) use ($student, $app_id) {
+                    $join->on('progresses.student_id', '=', DB::raw($student->id))
+                        ->on('progresses.entity_type', '=', DB::raw('"lesson"'))
+                        ->on('progresses.entity_id', '=', 'lesson.id')
+                        ->on('progresses.app_id', '=', DB::raw($app_id));
+                })->whereNull('progresses.id')->count();
+                $lesson->is_unfinished = $lessons_query->where('lesson.id', $lesson_id)->count() > 0;
             } else {
                 $lessons = DB::table('lesson')->leftJoin('progresses', function ($join) use ($student, $app_id) {
                     $join->on('progresses.student_id', '=', DB::raw($student->id))

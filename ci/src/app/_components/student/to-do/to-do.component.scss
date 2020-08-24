@@ -1,4 +1,4 @@
-.profile-application {
+.applications {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -137,4 +137,13 @@ mat-card:last-child {
 
 mat-form-field {
   width: 100%;
+}
+
+.applications {
+  width: calc(100% - 20px);
+  justify-content: center;
+  align-items: center;
+}
+.applications-list {
+  margin-right: 0 !important;
 }

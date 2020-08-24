@@ -50,7 +50,6 @@
 
 
 .assignment-table-row {
-  max-width: 160px !important;
   width: 160px;
 }
 
@@ -67,6 +66,11 @@ mat-card:last-child {
 
 @media screen and (max-width: 600px) {
   .report {
-    width: 100vw;
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .report-content {
+    margin-right: 0;
   }
 }

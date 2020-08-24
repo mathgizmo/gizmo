@@ -11,6 +11,17 @@
                 Name is required.
             </div>
         </div>
+    <div class="form-group">
+        <label for="class_type">Type of Classroom:</label>
+        <select id="class_type" class="form-control" name="class_type" [(ngModel)]="class.class_type">
+            <option value="elementary">Elementary</option>
+            <option value="secondary">Secondary</option>
+            <option value="college">College</option>
+            <option value="university">University</option>
+            <option value="professional">Professional</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
         <div class="form-group">
             <label for="subscription_type">Subscription Type:</label>
             <select id="subscription_type" class="form-control" name="subscription_type" [(ngModel)]="class.subscription_type">

@@ -45,6 +45,9 @@
                             </a>
                         </th>
                         <th style="min-width: 180px;">
+                            Type of classroom
+                        </th>
+                        <th style="min-width: 180px;">
                             Subscription Type
                         </th>
                         <th style="min-width: 160px;"></th>
@@ -65,6 +68,17 @@
                             <datalist id="teachers-datalist"></datalist>
                         </td>
                         <td>
+                            <select class="form-control" name="class_type" id="class-type-filter">
+                                <option></option>
+                                <option value="elementary">Elementary</option>
+                                <option value="secondary">Secondary</option>
+                                <option value="college">College</option>
+                                <option value="university">University</option>
+                                <option value="professional">Professional</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </td>
+                        <td>
                             <select class="form-control" name="subscription_type" id="subscription-type-filter">
                                 <option></option>
                                 <option value="open">Open</option>
@@ -82,6 +96,7 @@
                             <td>{{$class->id}}</td>
                             <td>{{$class->name}}</td>
                             <td>{{$class->teacher ? $class->teacher->name : ''}}</td>
+                            <td>{{ucfirst($class->class_type)}}</td>
                             <td>{{$class->subscription_type == 'closed' ? 'Closed' : ($class->subscription_type == 'invitation' ? 'Invitation Only' : 'Open')}}</td>
                             <td class="text-right" style="min-width: 260px;">
                                 <a class="btn btn-outline-dark" href="{{ route('classes.students.index', $class->id) }}">Manage Students</a>
@@ -120,6 +135,7 @@
             const name = document.getElementById("name-filter").value;
             const teacher = document.getElementById("teacher-filter").value;
             const subscription_type = document.getElementById("subscription-type-filter").value;
+            const class_type = document.getElementById("class-type-filter").value;
             if(id) {
                 url.searchParams.set('id', id);
             } else if (url.searchParams.get('id')) {
@@ -140,6 +156,11 @@
             } else if (url.searchParams.get('subscription_type')) {
                 url.searchParams.delete('subscription_type');
             }
+            if(class_type) {
+                url.searchParams.set('class_type', class_type);
+            } else if (url.searchParams.get('class_type')) {
+                url.searchParams.delete('class_type');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -149,6 +170,7 @@
             document.getElementById("name-filter").value = url.searchParams.get('name');
             document.getElementById("teacher-filter").value = url.searchParams.get('teacher');
             document.getElementById("subscription-type-filter").value = url.searchParams.get('subscription_type');
+            document.getElementById("class-type-filter").value = url.searchParams.get('class_type');
 
         }
         window.onload = initFilters;

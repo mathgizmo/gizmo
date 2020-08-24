@@ -1,3 +1,4 @@
+<a routerLink="/teacher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
 <div class="students">
   <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
   <mat-card class="students-content">
@@ -13,6 +14,9 @@
             <th mat-sort-header="email" scope="col">Email</th>
             <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
             <th mat-sort-header="assignments_past_due_count" scope="col">Past Due Assignments</th>
+            <th class="text-right">
+              <button  class="button button-small button-outline" mat-button (click)="addStudent()">Add Student</button>
+            </th>
           </tr>
           </thead>
           <tbody>
@@ -35,14 +39,26 @@
             </td>
             <td></td>
             <td></td>
+            <td></td>
           </tr>
-          <tr *ngFor="let item of students | tableFilter: form.value" (click)="showAssignments(item)" style="cursor: pointer;">
+          <tr *ngFor="let item of students | tableFilter: form.value" style="cursor: pointer;">
             <td>{{item.name}}</td>
             <td>{{item.first_name }}</td>
             <td>{{item.last_name }}</td>
             <td>{{item.email }}</td>
             <td>{{item.assignments_finished_count }}</td>
             <td>{{item.assignments_past_due_count }}</td>
+            <td>
+              <div class="buttons-container">
+                <div (click)="showAssignments(item)">
+                  <i class="fa fa-info-circle"></i>
+                </div>
+                <div (click)="deleteStudent(item.id)">
+                  <i class="fa fa-trash"></i>
+                </div>
+              </div>
+
+            </td>
           </tr>
           </tbody>
         </table>

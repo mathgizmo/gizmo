@@ -16,6 +16,7 @@ export class MyClassesComponent implements OnInit {
     public myClasses = [];
     public availableClasses = [];
     public addClass = false;
+    public idFilter;
     public nameFilter;
     public teacherFilter;
 
@@ -90,6 +91,7 @@ export class MyClassesComponent implements OnInit {
         this.myClasses = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
+                case 'id': return compare(a.id, b.id, isAsc);
                 case 'name': return compare(a.name, b.name, isAsc);
                 case 'teacher': return compare(a.teacher, b.teacher, isAsc);
                 default: return 0;
@@ -106,6 +108,7 @@ export class MyClassesComponent implements OnInit {
         this.availableClasses = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
+                case 'id': return compare(a.id, b.id, isAsc);
                 case 'name': return compare(a.name, b.name, isAsc);
                 case 'teacher': return compare(a.teacher, b.teacher, isAsc);
                 default: return 0;

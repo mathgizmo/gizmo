@@ -13,12 +13,18 @@ import {ClassesManagementService} from '../../../../_services/index';
 })
 export class ClassToDoComponent implements OnInit, OnDestroy {
     public classId: number;
+    public class = {
+        id: 0,
+        name: ''
+    };
     public applications = [];
     public completedApplications = [];
     public selectedAppId = null;
     public showCompletedApplications = false;
     private readonly adminUrl = environment.adminUrl;
     private checkAvailabilityIntervalId = null;
+
+    public backLinkText = 'Back';
 
     private sub: any;
 
@@ -32,6 +38,9 @@ export class ClassToDoComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
+            const classes = this.classService.classes;
+            this.class = classes.filter(x => x.id === this.classId)[0];
+            this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > What a student see';
             this.classService.getToDos(this.classId)
                 .subscribe(response => {
                     this.applications = response.filter(app => !app.is_completed);

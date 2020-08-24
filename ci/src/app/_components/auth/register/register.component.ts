@@ -17,6 +17,11 @@ export class RegisterComponent implements OnInit {
     error = '';
     isRoleSelected = false;
     countries = [];
+    selectedCountry = {
+        id: 1,
+        title: 'Canada',
+        code: 'CA'
+    };
 
     constructor(
         private router: Router,
@@ -28,13 +33,14 @@ export class RegisterComponent implements OnInit {
         this.authenticationService.logout();
         this.countryService.getCountries().subscribe(countries => {
             this.countries = countries;
+            this.selectedCountry = countries.filter(x => x.code === 'CA')[0];
         });
     }
 
     register() {
         this.loading = true;
         this.authenticationService.register(this.model.username, this.model.email,
-            this.model.password, this.model.first_name, this.model.last_name, this.model.role, this.model.country_id)
+            this.model.password, this.model.first_name, this.model.last_name, this.model.role, this.selectedCountry.id)
             .subscribe(success => {
                 this.authenticationService.login(this.model.email, this.model.password)
                     .subscribe(user => {
