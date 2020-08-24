@@ -12,8 +12,12 @@ export class TrackingService {
     }
 
     startLesson(lesson_id) {
+        let url = '/lesson/' + lesson_id + '/start';
+        if (this.appId) {
+            url += '?app_id=' + this.appId;
+        }
         if (lesson_id !== -1) {
-            return this.http.post('/lesson/' + lesson_id + '/start' + '?app_id=' + this.appId, '');
+            return this.http.post(url, '');
         } else {
             return this.http.post('/', ''); // return this.http.post('/testoutstart', '')
         }
@@ -23,16 +27,28 @@ export class TrackingService {
         const request = { start_datetime: start_datetime,
             weak_questions: weak_questions };
         if (lesson_id === -1) {
-          return this.http.post('/topic/' + topic_id + '/testout/done' + '?app_id=' + this.appId, request);
+            let url = '/topic/' + topic_id + '/testout/done';
+            if (this.appId) {
+                url += '?app_id=' + this.appId;
+            }
+            return this.http.post(url, request);
         } else {
-          return this.http.post('/lesson/' + lesson_id + '/done' + '?app_id=' + this.appId, request);
+            let url = '/lesson/' + lesson_id + '/done';
+            if (this.appId) {
+                url += '?app_id=' + this.appId;
+            }
+            return this.http.post(url, request);
         }
     }
 
     finishTestout(topic_id, lesson_id, start_datetime, weak_questions) {
         const request = { lesson_id: lesson_id, start_datetime: start_datetime,
             weak_questions: weak_questions };
-        return this.http.post('/topic/' + topic_id + '/testout/done-lessons' + '?app_id=' + this.appId, request);
+        let url = '/topic/' + topic_id + '/testout/done-lessons';
+        if (this.appId) {
+            url += '?app_id=' + this.appId;
+        }
+        return this.http.post(url, request);
     }
 
     getLastVisitedLesson(student_id) {
@@ -48,7 +64,10 @@ export class TrackingService {
     }
 
     trackQuestionAnswer(question_id, is_right_answer) {
-        return this.http.post('/question/' + question_id + '/tracking'
-            + '?app_id=' + this.appId, {'is_right_answer': is_right_answer});
+        let url = '/question/' + question_id + '/tracking';
+        if (this.appId) {
+            url += '?app_id=' + this.appId;
+        }
+        return this.http.post(url, {'is_right_answer': is_right_answer});
     }
 }

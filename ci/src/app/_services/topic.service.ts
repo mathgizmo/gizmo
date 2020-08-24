@@ -14,21 +14,34 @@ export class TopicService {
     // get topics from api
     getTopics() {
         this.appId = +localStorage.getItem('app_id'); // fix navigation to home from home
-        return this.http.get('/topic' + '?app_id=' + this.appId);
+        let url = '/topic';
+        if (this.appId) {
+            url += '?app_id=' + this.appId;
+        }
+        return this.http.get(url);
     }
 
     // get topic from api
     getTopic(id) {
-        return this.http.get('/topic/' + id + '?app_id=' + this.appId);
+        let url = '/topic/' + id;
+        if (this.appId) {
+            url += '?app_id=' + this.appId;
+        }
+        return this.http.get(url);
     }
 
     // get lesson from api
     getLesson(topic_id, lesson_id, from_content_review = false) {
+        let url = '/topic/' + topic_id;
         if (lesson_id === -1) {
-            return this.http.get('/topic/' + topic_id + '/testout' + '?app_id=' + (from_content_review ? 0 : this.appId));
+            url += '/testout';
         } else {
-          return this.http.get('/topic/' + topic_id + '/lesson/' + lesson_id + '?app_id=' + (from_content_review ? 0 : this.appId));
+            url += '/lesson/' + lesson_id;
         }
+        if (this.appId) {
+            url += '?app_id=' + (from_content_review ? 0 : this.appId);
+        }
+        return this.http.get(url);
     }
 
     // notify api about question error
