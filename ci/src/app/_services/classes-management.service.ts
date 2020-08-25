@@ -4,6 +4,7 @@ import {HttpService} from './http.service';
 
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ClassModel} from '../_models';
+import {HttpParams} from '@angular/common/http';
 
 @Injectable()
 export class ClassesManagementService {
@@ -161,6 +162,24 @@ export class ClassesManagementService {
 
     public getToDos(class_id) {
         return this.http.get('/classes/' + class_id + '/todo')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
+    geAnswersStatistics(class_id, student_id = null, date_from = null, date_to = null) {
+        return this.http.get( '/classes/' + class_id + '/answers-statistics',
+            true, {
+                student_id: student_id ? student_id : '',
+                date_from: date_from ? date_from : '',
+                date_to: date_to ? date_to : ''
+            })
             .pipe(
                 map((response: Response) => {
                     return response['items'];

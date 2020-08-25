@@ -21,4 +21,8 @@ class StudentsTrackingQuestion extends Model
     public function question() {
         return $this->belongsTo('App\Question', 'question_id');
     }
+
+    public function application() {
+        return $this->belongsTo('App\Application', 'app_id');
+    }
 }

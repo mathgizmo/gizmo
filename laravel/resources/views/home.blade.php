@@ -75,6 +75,31 @@
         </a>
     </div>
     @endif
+    @if(auth()->user()->isSuperAdmin())
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom mt-2">
+            <h4 class="h4">Actions</h4>
+        </div>
+        <div class="actions-container d-flex flex-wrap align-items-center mt-2">
+            <button id="delete-answers-statistics-button" class="btn btn-dark mr-2" type="button">
+                Delete old answers statistics data
+            </button>
+        </div>
+    @endif
+@endsection
+
+@section('scripts')
+    <script>
+        $('#delete-answers-statistics-button').click(function() {
+            $("#delete-answers-statistics-button").attr("disabled", true);
+            $.ajax({
+                url: "{{route('job.statistics.answers.delete')}}",
+                type: "DELETE",
+                success: function (data, textStatus, jqXHR) {
+                    //
+                }
+            });
+        });
+    </script>
 @endsection
 
 @section('styles')

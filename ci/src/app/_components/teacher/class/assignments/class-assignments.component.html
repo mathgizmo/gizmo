@@ -15,7 +15,7 @@
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
-    <full-calendar id="class-assignments-calendar" [options]="calendarOptions"></full-calendar>
+    <full-calendar #calendar id="calendar" [options]="calendarOptions"></full-calendar>
   </mat-card>
   <mat-card *ngIf="!calendarView && !addAssignment" class="assignments-content">
     <div class="subtitle text-center">Assignments of {{class.name}}</div>
@@ -55,13 +55,13 @@
             </th>
             <td>{{item.name}}</td>
             <td class="date-container">
-              <input matInput type="date" name="start_date" #startDate [value]="item.start_date || currentDate" (change)="onStartDateChanged(item, startDate.value)" class="form-control" />
+              <input matInput type="date" name="start_date" #startDate [value]="item.start_date || currentDate" [max]="item.due_date" (change)="onStartDateChanged(item, startDate.value)" class="form-control" />
             </td>
             <td class="date-container">
               <input matInput type="time" name="start_time" #startTime [value]="item.start_time || '00:00'" (change)="onStartTimeChanged(item, startTime.value)" class="form-control" />
             </td>
             <td class="date-container">
-              <input matInput type="date" name="due_date" #dueDate [value]="item.due_date" (change)="onDueDateChanged(item, dueDate.value)" class="form-control" />
+              <input matInput type="date" name="due_date" #dueDate [value]="item.due_date" [min]="item.start_date || currentDate" (change)="onDueDateChanged(item, dueDate.value)" class="form-control" />
             </td>
             <td class="date-container">
               <input matInput *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time || '00:00'" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />

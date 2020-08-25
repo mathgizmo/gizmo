@@ -65,4 +65,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('mails', 'MailController', ['except' => ['show', 'create', 'store', 'destroy']]);
     Route::get('mails/new', 'MailController@newMail')->name('mails.new');
     Route::post('mails/send', 'MailController@sendMail')->name('mails.send');
+
+    Route::delete('job/statistics/answers', 'JobController@deleteOldAnswersStatistics')->name('job.statistics.answers.delete');
 });

@@ -8,10 +8,6 @@ import {DeviceDetectorModule} from 'ngx-device-detector';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 
-import { FullCalendarModule } from '@fullcalendar/angular';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
@@ -50,7 +46,7 @@ import {DashboardComponent, ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassAssignmentsComponent, ClassToDoComponent, ClassMenuComponent} from './_components/teacher/index';
+    ClassAssignmentsComponent, ClassToDoComponent, ClassMenuComponent, StudentsUsageChartComponent} from './_components/teacher/index';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
@@ -58,9 +54,17 @@ import {QuestionPreviewComponent} from './_components/previews/question-preview/
 import {DraggableDirective} from './_directives/draggable.directive';
 import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
 
+import { ChartsModule } from 'ng2-charts';
+
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import adaptivePlugin from '@fullcalendar/adaptive';
+
 FullCalendarModule.registerPlugins([
     dayGridPlugin,
-    interactionPlugin
+    interactionPlugin,
+    adaptivePlugin
 ]);
 
 @NgModule({
@@ -71,6 +75,7 @@ FullCalendarModule.registerPlugins([
         AppRoutingModule,
         BrowserAnimationsModule,
         FullCalendarModule,
+        ChartsModule,
         MatInputModule,
         MatButtonModule,
         MatSelectModule,
@@ -124,6 +129,7 @@ FullCalendarModule.registerPlugins([
         ClassAssignmentsComponent,
         ClassToDoComponent,
         ClassMenuComponent,
+        StudentsUsageChartComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,

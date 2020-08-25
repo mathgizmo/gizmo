@@ -6,6 +6,7 @@ use App\Application;
 use App\ClassOfStudents;
 use App\Progress;
 use App\Student;
+use App\StudentsTrackingQuestion;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -330,6 +331,63 @@ class ClassController extends Controller
         }
         return $this->success([
             'items' => array_values(collect($items)->sortBy('due_at')->toArray())
+        ]);
+    }
+
+    public function geAnswersStatistics($class_id) {
+        $class = ClassOfStudents::where('id', $class_id)->first();
+        if (!$class) {
+            return $this->error('Class not found!', 404);
+        }
+        $query = StudentsTrackingQuestion::query()->with('application');
+        $query->whereHas('application', function ($q1) use ($class_id) {
+            $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id) {
+                $q2->where('classes.id', intval($class_id));
+            });
+        });
+        if (request()->has('student_id') && request('student_id')) {
+            $query->where('student_id', request('student_id'));
+        } else {
+            $query->whereIn('student_id', $class->students()->pluck('students.id')->toArray());
+        }
+        if (request()->has('date_to') && request('date_to')) {
+            $endDate = Carbon::parse(request('date_to'))->addDay();
+            $query->where('created_at', '<', $endDate->toDateString());
+        } else {
+            $endDate = Carbon::now()->addDay();
+        }
+        if (request()->has('date_from') && request('date_from')) {
+            $query->where('created_at', '>=', request('date_from'));
+            $startDate = Carbon::parse(request('date_from'));
+        } else {
+            if (request()->has('date_to') && request('date_to')) {
+                $startDate = Carbon::parse($endDate)->subDays(7);
+            } else {
+                $startDate = Carbon::now()->subDays(6);
+            }
+            $query->where('created_at', '>=', $startDate->toDateString());
+        }
+        $rows = $query->get();
+        $data = [];
+        for ($i = 0; $i < $startDate->diffInDays($endDate); $i++) {
+            $date = Carbon::parse($startDate->toDateString())->addDays($i)->toDateString();
+            $attempts = 0;
+            $correct = 0;
+            foreach ($rows->where('created_at', '>=', $date)
+                         ->where('created_at', '<', Carbon::parse($date)->addDays(1)->toDateString()) as $row) {
+                $attempts++;
+                if ($row->is_right_answer) {
+                    $correct++;
+                }
+            }
+            array_push($data, (object) [
+                'date' => $date,
+                'attempts' => $attempts,
+                'correct' => $correct,
+            ]);
+        }
+        return $this->success([
+            'items' => $data
         ]);
     }
 }
