@@ -1,5 +1,7 @@
 ﻿export * from './class/manage-classes.component';
 export * from './class/report/class-report.component';
+export * from './class/report/students-usage-chart/students-usage-chart.component';
+export * from './class/report/detailed-report/class-detailed-report.component';
 export * from './class/dashboard/class-dashboard.component';
 export * from './class/assignments/class-assignments.component';
 export * from './class/assignments/calendar/class-assignments-calendar.component';
@@ -9,7 +11,6 @@ export * from './class/to-do/class-to-do.component';
 export * from './class/students/student-assignments-dialog/student-assignments-dialog.component';
 export * from './class/students/add-student-dialog/add-student-dialog.component';
 export * from './class/menu/class-menu.component';
-export * from './class/dashboard/students-usage-chart/students-usage-chart.component';
 export * from './assignments/manage-assignments.component';
 export * from './assignments/edit-assignment-dialog/edit-assignment-dialog.component';
 export * from './dashboard/dashboard.component';

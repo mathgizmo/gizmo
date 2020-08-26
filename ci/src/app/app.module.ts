@@ -46,7 +46,8 @@ import {DashboardComponent, ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassAssignmentsComponent, ClassAssignmentsCalendarComponent, ClassToDoComponent, ClassMenuComponent, StudentsUsageChartComponent} from './_components/teacher/index';
+    ClassAssignmentsComponent, ClassAssignmentsCalendarComponent, ClassToDoComponent,
+    ClassMenuComponent, StudentsUsageChartComponent, ClassDetailedReportComponent} from './_components/teacher/index';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
@@ -60,11 +61,13 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import adaptivePlugin from '@fullcalendar/adaptive';
+import scrollGridPlugin from '@fullcalendar/scrollgrid';
 
 FullCalendarModule.registerPlugins([
     dayGridPlugin,
     interactionPlugin,
-    adaptivePlugin
+    adaptivePlugin,
+    scrollGridPlugin
 ]);
 
 @NgModule({
@@ -131,6 +134,7 @@ FullCalendarModule.registerPlugins([
         ClassToDoComponent,
         ClassMenuComponent,
         StudentsUsageChartComponent,
+        ClassDetailedReportComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,

@@ -10,6 +10,7 @@
   width: 90vw;
   .report-content {
     margin-left: 220px;
+    width: calc(100% - 20px);
   }
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -23,34 +24,6 @@
       margin-left: 0;
     }
   }
-}
-
-.title {
-  display: block;
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.overdue {
-  background: rgba(255, 115, 115, 0.5);
-  border-radius: 0;
-  color: $navy;
-}
-
-.progress {
-  border-radius: 0;
-  color: $navy;
-}
-
-.completed {
-  background: rgba(90, 193, 142, 0.5);
-  border-radius: 0;
-  color: $navy;
-}
-
-
-.assignment-table-row {
-  width: 160px;
 }
 
 mat-card {
