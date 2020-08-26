@@ -1,18 +1,15 @@
 import {Component, OnInit} from '@angular/core';
+import {Sort} from '@angular/material/sort';
 import {MatDialog} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import * as moment from 'moment';
 
-import {Sort} from '@angular/material/sort';
 import {ClassesManagementService} from '../../../../_services';
 import {YesNoDialogComponent} from '../../../dialogs/yes-no-dialog/yes-no-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute} from '@angular/router';
-
-import {CalendarOptions} from '@fullcalendar/angular';
-import * as moment from 'moment';
-import * as $ from 'jquery';
 
 @Component({
     selector: 'app-class-assignments',
@@ -47,16 +44,6 @@ export class ClassAssignmentsComponent implements OnInit {
 
     private sub: any;
 
-    calendarOptions: CalendarOptions = {
-        initialView: 'dayGridMonth',
-        dateClick: this.handleDateClick.bind(this), // bind is important!
-        events: []
-    };
-
-    handleDateClick(arg) {
-        console.log('date click! ' + arg.dateStr);
-    }
-
     constructor(
         private route: ActivatedRoute,
         public snackBar: MatSnackBar,
@@ -80,29 +67,8 @@ export class ClassAssignmentsComponent implements OnInit {
                     this.assignments = res['assignments'];
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Assignments';
                     this.updateStatuses();
-                    this.updateCalendarEvents();
                 });
         });
-    }
-
-    updateCalendarEvents() {
-        try {
-            const newEvents = [];
-            this.assignments.forEach( app => {
-                const startAt = app.start_time ? (app.start_date + 'T' + app.start_time) : app.start_date;
-                const dueAt = app.due_time ? (app.due_date + 'T' + app.due_time) : app.due_date;
-                const event = {
-                    id: app.id,
-                    title: app.name,
-                    start: app.start_date ? startAt : this.currentDate,
-                    end: app.due_date ? dueAt : '2100-01-01'
-                    // allDay: !app.due_date
-                };
-                newEvents.push(event);
-            });
-            this.calendarOptions.events = newEvents;
-            ($('#calendar') as any).fullCalendar('renderEvents', newEvents, true);
-        } catch (e) {}
     }
 
     updateStatuses() {
@@ -132,7 +98,6 @@ export class ClassAssignmentsComponent implements OnInit {
                 });
                 this.addAssignment = !this.addAssignment;
                 this.updateStatuses();
-                this.updateCalendarEvents();
             });
     }
 
@@ -145,7 +110,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     panelClass: ['success-snackbar']
                 });
                 this.updateStatuses();
-                this.updateCalendarEvents();
             }, error => {
                 this.snackBar.open('Error occurred while saving Due Date!', '', {
                     duration: 3000,
@@ -163,7 +127,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     panelClass: ['success-snackbar']
                 });
                 this.updateStatuses();
-                this.updateCalendarEvents();
             }, error => {
                 this.snackBar.open('Error occurred while saving Due Time!', '', {
                     duration: 3000,
@@ -181,7 +144,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     panelClass: ['success-snackbar']
                 });
                 this.updateStatuses();
-                this.updateCalendarEvents();
             }, error => {
                 this.snackBar.open('Error occurred while saving Start Date!', '', {
                     duration: 3000,
@@ -202,7 +164,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     panelClass: ['success-snackbar']
                 });
                 this.updateStatuses();
-                this.updateCalendarEvents();
             }, error => {
                 this.snackBar.open('Error occurred while saving Start Time!', '', {
                     duration: 3000,
@@ -224,7 +185,6 @@ export class ClassAssignmentsComponent implements OnInit {
                         this.assignments  = this.assignments.filter( (x) => {
                             return x.id !== item.id;
                         });
-                        this.updateCalendarEvents();
                     });
             }
         });

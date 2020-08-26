@@ -7,9 +7,6 @@
   padding: 0;
   margin: 60px auto 0;
   width: 80vw;
-  @media screen and (max-width: 600px) {
-    width: 100vw;
-  }
   .applications-list {
     display: flex;
     flex-direction: column;
@@ -139,11 +136,14 @@ mat-form-field {
   width: 100%;
 }
 
-.applications {
-  width: calc(100% - 20px);
-  justify-content: center;
-  align-items: center;
+@media screen and (max-width: 600px) {
+  .applications {
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .applications-list {
+    margin-right: 0 !important;
+  }
 }
-.applications-list {
-  margin-right: 0 !important;
-}
+

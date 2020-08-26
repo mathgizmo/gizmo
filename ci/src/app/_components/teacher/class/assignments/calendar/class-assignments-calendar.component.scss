@@ -1,0 +1,34 @@
+@import '../../../../../../colors';
+
+#calendar {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-size: 16px;
+  color: $navy;
+}
+::ng-deep .fc-toolbar-title {
+  font-size: 1.3em !important;
+}
+::ng-deep .fc-header-toolbar {
+  margin-bottom: 8px !important;
+}
+::ng-deep .fc-button {
+  font-family: 'Quicksand' !important;
+  font-weight: 500 !important;
+  color: $navy !important;
+  background-color: $white !important;
+  border-radius: 50px !important;
+  padding: 6px 12px !important;
+  text-decoration: none;
+  border: none !important;
+}
+::ng-deep .fc-prev-button, ::ng-deep .fc-next-button {
+  border-radius: 50% !important;
+  padding: 4px !important;
+}
+::ng-deep .fc-prev-button {
+  margin-right: 4px !important;
+}
+::ng-deep .fc-license-message {
+  display: none !important;
+}

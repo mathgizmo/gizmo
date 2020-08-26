@@ -1,7 +1,7 @@
 <a routerLink="/teacher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
 <div class="assignments">
   <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
-  <mat-card *ngIf="calendarView && !addAssignment" class="assignments-content">
+  <mat-card *ngIf="!addAssignment" class="assignments-content">
     <div class="subtitle text-center">Assignments of {{class.name}}</div>
     <div class="actions-container">
       <mat-button-toggle-group [(ngModel)]="calendarView" class="toggle-group button button-small button-outline">
@@ -15,23 +15,8 @@
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
-    <full-calendar #calendar id="calendar" [options]="calendarOptions"></full-calendar>
-  </mat-card>
-  <mat-card *ngIf="!calendarView && !addAssignment" class="assignments-content">
-    <div class="subtitle text-center">Assignments of {{class.name}}</div>
-    <div class="actions-container">
-      <mat-button-toggle-group [(ngModel)]="calendarView" class="toggle-group button button-small button-outline">
-        <mat-button-toggle [value]="true" class="toggle-button">
-          <i class="fa fa-calendar" aria-hidden="true"></i>
-          Calendar
-        </mat-button-toggle>
-        <mat-button-toggle [value]="false" class="toggle-button">
-          <i class="fa fa-list" aria-hidden="true"></i>
-          List
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-    <form novalidate #form="ngForm">
+    <app-class-assignments-calendar *ngIf="calendarView" [assignments]="assignments"></app-class-assignments-calendar>
+    <form *ngIf="!calendarView" novalidate #form="ngForm">
       <div class="table-responsive">
         <table matSort (matSortChange)="sortData($event)" class="table">
           <thead>
