@@ -122,7 +122,7 @@ export class ClassAssignmentsComponent implements OnInit {
             if (app) {
                 this.classService.addAssignmentToClass(this.classId, app.id)
                     .subscribe(res1 => {
-                        this.classService.changeAssignment(this.classId, item).subscribe(res2 => {
+                        this.classService.changeAssignment(this.classId, app).subscribe(res2 => {
                             this.assignments.unshift(app);
                             this.available_assignments = this.available_assignments.filter(x => {
                                 return x.id !== app.id;
@@ -157,7 +157,7 @@ export class ClassAssignmentsComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(app => {
             if (app) {
-                this.classService.changeAssignment(this.classId, item)
+                this.classService.changeAssignment(this.classId, app)
                     .subscribe(response => {
                         this.updateStatuses();
                         this.calendarComponent.updateCalendarEvents();

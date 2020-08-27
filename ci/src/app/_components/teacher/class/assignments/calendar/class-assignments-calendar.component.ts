@@ -86,9 +86,6 @@ export class ClassAssignmentsCalendarComponent implements OnInit, OnDestroy {
             newEvents.push(event);
         });
         this.calendarOptions.events = newEvents;
-        /* try {
-            ($('#calendar') as any).fullCalendar('renderEvents', newEvents, true);
-        } catch (e) {} */
     }
 
     handleEventDrop(arg) {
