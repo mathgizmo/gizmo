@@ -30,6 +30,9 @@
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
-    <button mat-button  (click)="onSave()" class='button moving-forward-button continue-button' type="button">Save</button>
+    <div class="buttons-container flex-end">
+        <button mat-button (click)="onDelete()" class='button error-button' type="button">Delete</button>
+        <button mat-button (click)="onSave()" class='button moving-forward-button continue-button' type="button">Save</button>
+    </div>
 </mat-dialog-actions>
 

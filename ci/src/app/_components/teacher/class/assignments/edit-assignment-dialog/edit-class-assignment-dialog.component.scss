@@ -27,6 +27,13 @@
     }
 }
 
+.flex-end {
+    justify-content: flex-end;
+    & > * {
+        margin-left: 8px !important;
+    }
+}
+
 @media (max-width: 768px) {
     .dialog-content {
         height: 75%;
@@ -42,5 +49,18 @@
     }
     .buttons-container {
         height: 40%;
+    }
+}
+
+@media (max-width: 500px) {
+    .buttons-container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        & > * {
+            margin: 0 0 8px 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
     }
 }

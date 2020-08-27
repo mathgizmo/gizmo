@@ -66,7 +66,7 @@ export class ClassAssignmentsComponent implements OnInit {
             this.classService.getAssignments(this.classId)
                 .subscribe(res => {
                     const classes = this.classService.classes;
-                    this.class = classes.filter(x => x.id === this.classId)[0];
+                    this.class = classes.filter(x => +x.id === +this.classId)[0];
                     this.available_assignments = res['available_assignments'];
                     this.assignments = res['assignments'];
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Assignments';
@@ -76,7 +76,7 @@ export class ClassAssignmentsComponent implements OnInit {
     }
 
     onAssignmentDateChanged(event) {
-        const items = this.assignments.filter(x => x.id === +event.id);
+        const items = this.assignments.filter(x => +x.id === +event.id);
         if (items.length > 0) {
             const item = items[0];
             const start = moment(event.start);
@@ -125,7 +125,7 @@ export class ClassAssignmentsComponent implements OnInit {
                         this.classService.changeAssignment(this.classId, app).subscribe(res2 => {
                             this.assignments.unshift(app);
                             this.available_assignments = this.available_assignments.filter(x => {
-                                return x.id !== app.id;
+                                return +x.id !== +app.id;
                             });
                             this.updateStatuses();
                             this.calendarComponent.updateCalendarEvents();
@@ -150,27 +150,49 @@ export class ClassAssignmentsComponent implements OnInit {
     }
 
     onAssignmentEditClicked(appId) {
-        const item = this.assignments.filter(x => x.id === appId)[0];
+        const item = this.assignments.filter(x => +x.id === +appId)[0];
         const dialogRef = this.dialog.open(EditClassAssignmentDialogComponent, {
             data: { 'title': 'Edit Assignment', 'assignment': item, 'available_assignments': this.available_assignments },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(app => {
             if (app) {
-                this.classService.changeAssignment(this.classId, app)
-                    .subscribe(response => {
-                        this.updateStatuses();
-                        this.calendarComponent.updateCalendarEvents();
-                        this.snackBar.open('Assignment have been successfully updated!', '', {
-                            duration: 3000,
-                            panelClass: ['success-snackbar']
+                if (app.delete) {
+                    this.classService.deleteAssignmentFromClass(this.classId, app.id)
+                        .subscribe(response => {
+                            this.available_assignments.unshift(app);
+                            this.assignments = this.assignments.filter(x => {
+                                return +x.id !== +item.id;
+                            });
+                            setTimeout(() => {
+                                this.calendarComponent.updateCalendarEvents();
+                            }, 10);
+                            this.snackBar.open('Assignment have been successfully deleted!', '', {
+                                duration: 3000,
+                                panelClass: ['success-snackbar']
+                            });
+                        }, error => {
+                            this.snackBar.open('Error occurred while deleting assignment!', '', {
+                                duration: 3000,
+                                panelClass: ['error-snackbar']
+                            });
                         });
-                    }, error => {
-                        this.snackBar.open('Error occurred while updating assignment!', '', {
-                            duration: 3000,
-                            panelClass: ['error-snackbar']
+                } else {
+                    this.classService.changeAssignment(this.classId, app)
+                        .subscribe(response => {
+                            this.updateStatuses();
+                            this.calendarComponent.updateCalendarEvents();
+                            this.snackBar.open('Assignment have been successfully updated!', '', {
+                                duration: 3000,
+                                panelClass: ['success-snackbar']
+                            });
+                        }, error => {
+                            this.snackBar.open('Error occurred while updating assignment!', '', {
+                                duration: 3000,
+                                panelClass: ['error-snackbar']
+                            });
                         });
-                    });
+                }
             }
         });
     }
@@ -197,8 +219,8 @@ export class ClassAssignmentsComponent implements OnInit {
         this.classService.addAssignmentToClass(this.classId, app.id)
             .subscribe(response => {
                 this.assignments.unshift(app);
-                this.available_assignments  = this.available_assignments.filter( (item) => {
-                    return item.id !== app.id;
+                this.available_assignments  = this.available_assignments.filter(x => {
+                    return +x.id !== +app.id;
                 });
                 this.addAssignment = !this.addAssignment;
                 this.updateStatuses();
@@ -286,8 +308,8 @@ export class ClassAssignmentsComponent implements OnInit {
                 this.classService.deleteAssignmentFromClass(this.classId, item.id)
                     .subscribe(response => {
                         this.available_assignments.unshift(item);
-                        this.assignments  = this.assignments.filter( (x) => {
-                            return x.id !== item.id;
+                        this.assignments  = this.assignments.filter(x => {
+                            return +x.id !== +item.id;
                         });
                     });
             }

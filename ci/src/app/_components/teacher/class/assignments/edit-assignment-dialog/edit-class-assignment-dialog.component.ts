@@ -19,9 +19,11 @@ export class EditClassAssignmentDialogComponent extends BaseDialogComponent<Edit
         start_time: null,
         due_date: null,
         due_time: null,
-        color: '#7FA5C1'
+        color: '#7FA5C1',
+        delete: false
     };
     available_assignments = [];
+    showDeleteButton = false;
 
     constructor(
         private sanitizer: DomSanitizer,
@@ -35,6 +37,9 @@ export class EditClassAssignmentDialogComponent extends BaseDialogComponent<Edit
         if (data.assignment) {
             // tslint:disable-next-line:indent
             this.assignment = data.assignment;
+            if (this.assignment.id) {
+                this.showDeleteButton = true;
+            }
         }
         if (data.available_assignments) {
             // tslint:disable-next-line:indent
@@ -57,6 +62,11 @@ export class EditClassAssignmentDialogComponent extends BaseDialogComponent<Edit
             this.assignment.name = app[0].name;
             this.assignment.icon = app[0].icon;
         }
+        this.dialogRef.close(this.assignment);
+    }
+
+    onDelete() {
+        this.assignment.delete = true;
         this.dialogRef.close(this.assignment);
     }
 
