@@ -42,7 +42,7 @@ export class EditClassAssignmentDialogComponent extends BaseDialogComponent<Edit
             if (this.assignment.id) {
                 this.available_assignments.push(this.assignment);
             }
-            if (this.available_assignments.length > 0) {
+            if (this.available_assignments.length > 0 && !this.assignment.id) {
                 const first = this.available_assignments[0];
                 this.assignment.id = first.id;
                 this.assignment.name = first.name;
