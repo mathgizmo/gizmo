@@ -15,7 +15,13 @@
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
-    <app-class-assignments-calendar *ngIf="calendarView" [assignments]="assignments"></app-class-assignments-calendar>
+    <app-class-assignments-calendar #calendar *ngIf="calendarView"
+      [assignments]="assignments"
+      [available_assignments]="available_assignments"
+      (onAssignmentDateChanged)="onAssignmentDateChanged($event)"
+      (onAssignmentAddClicked)="onAssignmentAddClicked($event)"
+      (onAssignmentEditClicked)="onAssignmentEditClicked($event)"
+    ></app-class-assignments-calendar>
     <form *ngIf="!calendarView" novalidate #form="ngForm">
       <div class="table-responsive">
         <table matSort (matSortChange)="sortData($event)" class="table">

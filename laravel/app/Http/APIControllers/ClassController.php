@@ -240,6 +240,7 @@ class ClassController extends Controller
                 $item->start_time = $class_data && $class_data->start_time ? $class_data->start_time : null;
                 $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
                 $item->due_time = $class_data && $class_data->due_time ? $class_data->due_time : null;
+                $item->color = $class_data && $class_data->color ? $class_data->color : null;
             }
             $available = Application::where('teacher_id', $this->user->id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())->orderBy('name')->get();
@@ -275,7 +276,8 @@ class ClassController extends Controller
                     'start_date' => request('start_date') ?: null,
                     'start_time' => request('start_time') ?: null,
                     'due_date' => request('due_date') ?: null,
-                    'due_time' => request('due_time') ?: null
+                    'due_time' => request('due_time') ?: null,
+                    'color' => request('color') ?: null
                 ]);
             return $this->success('Ok.');
         }

@@ -1,15 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {MatDialog} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
 
 import {ClassesManagementService} from '../../../../_services';
-import {YesNoDialogComponent} from '../../../dialogs/yes-no-dialog/yes-no-dialog.component';
+import {YesNoDialogComponent} from '../../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute} from '@angular/router';
+import {EditClassAssignmentDialogComponent} from './edit-assignment-dialog/edit-class-assignment-dialog.component';
+import {ClassAssignmentsCalendarComponent} from './calendar/class-assignments-calendar.component';
 
 @Component({
     selector: 'app-class-assignments',
@@ -44,6 +46,8 @@ export class ClassAssignmentsComponent implements OnInit {
 
     private sub: any;
 
+    @ViewChild('calendar') calendarComponent: ClassAssignmentsCalendarComponent;
+
     constructor(
         private route: ActivatedRoute,
         public snackBar: MatSnackBar,
@@ -68,6 +72,106 @@ export class ClassAssignmentsComponent implements OnInit {
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Assignments';
                     this.updateStatuses();
                 });
+        });
+    }
+
+    onAssignmentDateChanged(event) {
+        const items = this.assignments.filter(x => x.id === +event.id);
+        if (items.length > 0) {
+            const item = items[0];
+            const start = moment(event.start);
+            const end = moment(event.end);
+            item.start_date = start.format('YYYY-MM-DD');
+            item.start_time = start.format('HH:mm');
+            item.due_date = end.format('YYYY-MM-DD') < '2100-01-01' ? end.format('YYYY-MM-DD') : null;
+            item.due_time = end.format('HH:mm');
+            this.classService.changeAssignment(this.classId, item)
+                .subscribe(assignments => {
+                    this.snackBar.open('Assignment have been successfully moved!', '', {
+                        duration: 3000,
+                        panelClass: ['success-snackbar']
+                    });
+                    this.updateStatuses();
+                }, error => {
+                    this.snackBar.open('Error occurred while moving assignment!', '', {
+                        duration: 3000,
+                        panelClass: ['error-snackbar']
+                    });
+                });
+        }
+    }
+
+    onAssignmentAddClicked(event) {
+        const start = moment(event.start);
+        const end = moment(event.end);
+        const item = {
+            id: null,
+            name: null,
+            icon: null,
+            start_date: event.start ? start.format('YYYY-MM-DD') : null,
+            start_time: event.start ? start.format('HH:mm') : null,
+            due_date: event.end ? end.format('YYYY-MM-DD') : null,
+            due_time: event.end ? end.format('HH:mm') : null,
+            color: '#7FA5C1'
+        };
+        const dialogRef = this.dialog.open(EditClassAssignmentDialogComponent, {
+            data: { 'title': 'Add Assignment', 'assignment': item, 'available_assignments': this.available_assignments },
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(app => {
+            if (app) {
+                this.classService.addAssignmentToClass(this.classId, app.id)
+                    .subscribe(res1 => {
+                        this.classService.changeAssignment(this.classId, item).subscribe(res2 => {
+                            this.assignments.unshift(app);
+                            this.available_assignments = this.available_assignments.filter(x => {
+                                return x.id !== app.id;
+                            });
+                            this.updateStatuses();
+                            this.calendarComponent.updateCalendarEvents();
+                            this.snackBar.open('Assignment have been successfully added!', '', {
+                                duration: 3000,
+                                panelClass: ['success-snackbar']
+                            });
+                        }, error => {
+                            this.snackBar.open('Error occurred while adding assignment!', '', {
+                                duration: 3000,
+                                panelClass: ['error-snackbar']
+                            });
+                        });
+                    }, error => {
+                        this.snackBar.open('Error occurred while adding assignment!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
+                    });
+            }
+        });
+    }
+
+    onAssignmentEditClicked(appId) {
+        const item = this.assignments.filter(x => x.id === appId)[0];
+        const dialogRef = this.dialog.open(EditClassAssignmentDialogComponent, {
+            data: { 'title': 'Edit Assignment', 'assignment': item, 'available_assignments': this.available_assignments },
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(app => {
+            if (app) {
+                this.classService.changeAssignment(this.classId, item)
+                    .subscribe(response => {
+                        this.updateStatuses();
+                        this.calendarComponent.updateCalendarEvents();
+                        this.snackBar.open('Assignment have been successfully updated!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        this.snackBar.open('Error occurred while updating assignment!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
+                    });
+            }
         });
     }
 

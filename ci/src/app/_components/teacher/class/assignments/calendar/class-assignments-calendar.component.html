@@ -1,1 +1,9 @@
-<full-calendar #calendar id="calendar" [options]="calendarOptions"></full-calendar>
+<div id="calendar-container" class="calendar-container">
+    <full-calendar #calendar id="calendar" [options]="calendarOptions"></full-calendar>
+    <button mat-button id="add-button" (click)="addEvent()">
+        <i class="fa fa-plus"></i>
+    </button>
+    <button mat-button id="edit-button" (click)="editEvent()">
+        <i class="fa fa-pencil"></i>
+    </button>
+</div>

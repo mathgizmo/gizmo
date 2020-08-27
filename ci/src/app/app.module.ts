@@ -47,7 +47,8 @@ import {DashboardComponent, ClassReportComponent, ClassStudentsComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
     ClassAssignmentsComponent, ClassAssignmentsCalendarComponent, ClassToDoComponent,
-    ClassMenuComponent, StudentsUsageChartComponent, ClassDetailedReportComponent} from './_components/teacher/index';
+    ClassMenuComponent, StudentsUsageChartComponent, ClassDetailedReportComponent,
+    EditClassAssignmentDialogComponent} from './_components/teacher/index';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
@@ -59,12 +60,14 @@ import { ChartsModule } from 'ng2-charts';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import adaptivePlugin from '@fullcalendar/adaptive';
 import scrollGridPlugin from '@fullcalendar/scrollgrid';
 
 FullCalendarModule.registerPlugins([
     dayGridPlugin,
+    timeGridPlugin,
     interactionPlugin,
     adaptivePlugin,
     scrollGridPlugin
@@ -127,6 +130,7 @@ FullCalendarModule.registerPlugins([
         AddStudentDialogComponent,
         ManageAssignmentsComponent,
         EditAssignmentDialogComponent,
+        EditClassAssignmentDialogComponent,
         ReviewContentComponent,
         ClassDashboardComponent,
         ClassAssignmentsComponent,
@@ -160,7 +164,8 @@ FullCalendarModule.registerPlugins([
         EditClassDialogComponent,
         StudentAssignmentsDialogComponent,
         AddStudentDialogComponent,
-        EditAssignmentDialogComponent
+        EditAssignmentDialogComponent,
+        EditClassAssignmentDialogComponent
     ],
     providers: [
         AuthGuard,

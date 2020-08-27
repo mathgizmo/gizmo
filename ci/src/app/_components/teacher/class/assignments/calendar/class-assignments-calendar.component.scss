@@ -32,3 +32,28 @@
 ::ng-deep .fc-license-message {
   display: none !important;
 }
+
+.calendar-container {
+  position: relative;
+}
+
+#add-button, #edit-button {
+  display: none;
+  z-index: 100;
+  font-size: 0.8em !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+}
+
+#add-button {
+  background: rgb(0,0,0,0.1) !important;
+  color: $navy !important;
+}
+
+#edit-button {
+  background: rgb(255,255,255,0.1) !important;
+  color: $white !important;
+}
