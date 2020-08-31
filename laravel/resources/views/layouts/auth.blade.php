@@ -32,6 +32,7 @@
         }
     </style>
     @yield('styles')
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body style="background-color: #696969;">

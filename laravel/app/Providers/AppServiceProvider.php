@@ -6,6 +6,7 @@ use App\ClassOfStudents;
 use App\Observers\ClassObserver;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
 use Monolog\Logger;
@@ -20,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Validator::extend('recaptcha', 'App\\Validators\\ReCaptcha@validate');
         ClassOfStudents::observe(ClassObserver::class);
         /** DB log */
         /* DB::listen(function ($query) {

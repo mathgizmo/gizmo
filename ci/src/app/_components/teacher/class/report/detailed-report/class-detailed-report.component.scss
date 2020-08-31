@@ -6,19 +6,26 @@
   margin-bottom: 16px;
 }
 
-.overdue {
-  background: rgba(255, 115, 115, 0.5);
+.pending {
+  background: rgba(255, 246, 143, 0.2);
   border-radius: 0;
   color: $navy;
 }
 
 .progress {
+  background: rgba(198, 226, 255, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.overdue {
+  background: rgba(255, 115, 115, 0.2);
   border-radius: 0;
   color: $navy;
 }
 
 .completed {
-  background: rgba(90, 193, 142, 0.5);
+  background: rgba(90, 193, 142, 0.2);
   border-radius: 0;
   color: $navy;
 }

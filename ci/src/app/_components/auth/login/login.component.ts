@@ -1,5 +1,6 @@
-﻿import {Component, OnInit} from '@angular/core';
+﻿import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
+import {environment} from '../../../../environments/environment';
 
 import {AuthenticationService} from '../../../_services/index';
 
@@ -10,9 +11,11 @@ import {AuthenticationService} from '../../../_services/index';
 })
 
 export class LoginComponent implements OnInit {
-    model: any = {};
-    loading = false;
-    error = '';
+    public model: any = {};
+    public loading = false;
+    public error = '';
+    public captchaResponse = '';
+    public siteKey = environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 
     constructor(
         private router: Router,
@@ -24,27 +27,34 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        this.loading = true;
-        this.authenticationService.login(this.model.email, this.model.password)
-            .subscribe(user => {
-                if (user && user.user_id) {
-                    if (user.role === 'teacher') {
-                        this.router.navigate(['teacher/dashboard']);
-                    } else {
-                        if (isNaN(+localStorage.getItem('app_id'))) {
-                            localStorage.setItem('redirect_to', '/');
-                            this.router.navigate(['to-do']);
+        if (this.model.email && this.model.password && this.captchaResponse) {
+            this.loading = true;
+            this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse)
+                .subscribe(user => {
+                    if (user && user.user_id) {
+                        if (user.role === 'teacher') {
+                            this.router.navigate(['teacher/dashboard']);
                         } else {
-                            this.router.navigate(['/']);
+                            if (isNaN(+localStorage.getItem('app_id'))) {
+                                localStorage.setItem('redirect_to', '/');
+                                this.router.navigate(['to-do']);
+                            } else {
+                                this.router.navigate(['/']);
+                            }
                         }
+                    } else {
+                        this.error = 'Username or password is incorrect';
+                        this.loading = false;
                     }
-                } else {
+                }, error => {
                     this.error = 'Username or password is incorrect';
                     this.loading = false;
-                }
-            }, error => {
-                this.error = 'Username or password is incorrect';
-                this.loading = false;
-            });
+                });
+        }
+    }
+
+    public resolved(captchaResponse: string) {
+        this.captchaResponse = captchaResponse;
+        this.login();
     }
 }

@@ -12,6 +12,7 @@ We try to create the app that allow people to learn math.
 - Create *.env* file (copy it from *.env.example*) and set your DB credentials: *DB_DATABASE*, *DB_PORT*, *DB_USERNAME*, *DB_PASSWORD*. 
 - To update your DB to current version run `php artisan migrate --seed`. If you get any error run `composer update`, then rerun command.
 - For email sending make sure you have in your *.env* file next keys set: *MAIL_HOST*, *MAIL_PORT*, *MAIL_USERNAME*, *MAIL_PASSWORD*. 
+- For Google ReCaptcha set next keys in your *.env* file: *RECAPTCHA_KEY*, *RECAPTCHA_SECRET*.
 - For preview questions in the admin you need *PREVIEW_URL* with a link to your client base preview path.
 - Fou production build change environment to production in your *.env* file: *APP_ENV=production*.
 - Run `php artisan key:generate` to generate app key. If you get any error on key generation, check if line *APP_KEY=* exists in *.env*, then rerun command.
@@ -22,7 +23,7 @@ We try to create the app that allow people to learn math.
 #### Client
 - Globally install [Angular CLI](https://angular.io/guide/quickstart) using command `npm install -g @angular/cli@latest`
 - Run `npm install` into `ci` folder to install required npm modules
-- Add URL to your local server API to `/ci/src/environments/environment.ts` (copy it from `environment.example.ts`).
+- Add URL to your local server API and captchaKey to `/ci/src/environments/environment.ts` (copy it from `environment.example.ts`).
 - Run `npm start` for a dev server. The app will automatically reload if you change any of the source files.
 - Use `ng build --prod` into `ci` folder to build the angular app and see your changes under apache (production build uses variables from `environment.prod.ts`, so set your globals there)
 - If you want to generate a new component run `ng generate component component-name`. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

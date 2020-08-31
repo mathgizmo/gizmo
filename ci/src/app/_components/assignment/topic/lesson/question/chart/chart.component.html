@@ -26,15 +26,6 @@
         [step]="step" [max]="endValue" [min]="startValue"
         color="primary" class='slider-control' id='inputValue'>
       </mat-slider>
-      <div class="slider-control-buttons">
-        <button mat-button (click)="incrementSliderValue('decrement', false)" (press)="startIncrementingSliderValue('decrement')" (pressup)="stopIncrementingSliderValue()">
-          <i class="fa fa-minus"></i>
-        </button>
-        <button mat-button (click)="incrementSliderValue('increment', false)" (press)="startIncrementingSliderValue('increment')" (pressup)="stopIncrementingSliderValue()">
-          <i class="fa fa-plus"></i>
-        </button>
-      </div>
-
       <div class="value-label-container">
         <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && !controllbaseValue" class="slider-value-label">
           <span>
@@ -61,7 +52,14 @@
           </span>
         </label>
       </div>
-
+      <div class="slider-control-buttons">
+        <button mat-button (click)="incrementSliderValue('decrement', false)" (press)="startIncrementingSliderValue('decrement')" (pressup)="stopIncrementingSliderValue()">
+          <i class="fa fa-minus"></i>
+        </button>
+        <button mat-button (click)="incrementSliderValue('increment', false)" (press)="startIncrementingSliderValue('increment')" (pressup)="stopIncrementingSliderValue()">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
     </div>
   </div>
 

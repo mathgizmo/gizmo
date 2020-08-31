@@ -53,6 +53,8 @@ import {QuestionComponent} from './_components/assignment/topic/lesson/question/
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+
 import {DraggableDirective} from './_directives/draggable.directive';
 import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
 
@@ -102,6 +104,8 @@ FullCalendarModule.registerPlugins([
         DragDropModule,
         FlexLayoutModule,
         PerfectScrollbarModule,
+        RecaptchaModule,
+        RecaptchaFormsModule,
         DeviceDetectorModule.forRoot()
     ],
     exports: [],

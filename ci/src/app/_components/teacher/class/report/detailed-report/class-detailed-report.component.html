@@ -1,5 +1,5 @@
 <div class="subtitle text-center">Detailed Report</div>
-<form novalidate #form="ngForm">
+<form novalidate #form="ngForm" class="report-data">
   <div class="table-responsive">
     <table matSort (matSortChange)="sortData($event)" class="table">
       <thead>
@@ -11,8 +11,13 @@
       <tbody>
       <tr *ngFor="let student of students | tableFilter: form.value" style="cursor: pointer;">
         <td>{{student.name}}</td>
-        <td *ngFor="let app of assignments" [class]="student.assignments[app.id]" class="assignment-table-row">
-          {{student.assignments[app.id] == 'completed' ? 'Completed' : (student.assignments[app.id] == 'overdue' ? 'Overdue' : 'In progress')}}
+        <td *ngFor="let app of assignments" [class]="student.assignments[app.id].status" class="assignment-table-row">
+          {{student.assignments[app.id].status == 'completed' ? 'Completed' :
+                (student.assignments[app.id].status == 'overdue' ? 'Overdue' : student.assignments[app.id].status == 'progress' ?  'In progress' : 'Pending')}}
+          <div *ngIf="student.assignments[app.id].progress > 0 && student.assignments[app.id].progress < 1">
+            <span style="font-size: 0.8em;">{{student.assignments[app.id].progress * 100}}%</span>
+            <mat-progress-bar  mode="determinate" [value]="student.assignments[app.id].progress * 100"></mat-progress-bar>
+          </div>
         </td>
       </tr>
       </tbody>

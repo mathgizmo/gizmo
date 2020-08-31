@@ -29,6 +29,17 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             return $this->error('Could Not Create Token', 500);
         }
+        $validator = Validator::make(
+            $request->only(['email', 'password', 'g-recaptcha-response']),
+            [
+                'email' => 'required|email|max:255',
+                'password' => 'required',
+                'g-recaptcha-response' => 'required|recaptcha',
+            ]
+        );
+        if ($validator->fails()) {
+            return $this->error($validator->messages(), 400);
+        }
         $student = auth()->user();
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
 
@@ -65,11 +76,12 @@ class AuthController extends Controller
             $credentials[$field] = trim($credentials[$field]);
         }
         $validator = Validator::make(
-            $credentials,
+            $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
             [
                 'name' => 'required|max:255',
                 'email' => 'required|email|max:255|unique:students',
                 'password' => 'required|min:6',
+                'g-recaptcha-response' => 'required|recaptcha',
             ]
             );
         if ($validator->fails()) {

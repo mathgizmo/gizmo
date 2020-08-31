@@ -4,6 +4,7 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\ClassOfStudents;
+use App\Lesson;
 use App\Progress;
 use App\Student;
 use App\StudentsTrackingQuestion;
@@ -210,12 +211,42 @@ class ClassController extends Controller
                     $now = Carbon::now()->toDateTimeString();
                     $is_past_due = (!$is_completed && $due_at && $due_at < $now) ||
                         ($is_completed && $due_at && $completed_at && $due_at < $completed_at);
+                    $complete_lessons_count = Progress::where('entity_type', 'lesson')->where('app_id', $app->id)
+                        ->where('student_id', $student->id)->count();
+                    if (!$is_completed && $complete_lessons_count > 0) {
+                        $lessons_count = 0;
+                        foreach ($app->getTopics() as $topic) {
+                            $topic_lessons_count = DB::table('lesson')->whereIn('id', function($q) use($app) {
+                                $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')
+                                    ->where('app_id', $app->id);
+                            })->where('topic_id', $topic->id)->count();
+                            if ($topic_lessons_count) {
+                                $lessons_count += $topic_lessons_count;
+                            } else {
+                                $lessons_count += DB::table('lesson')->where('topic_id', $topic->id)->count();
+                            }
+                        }
+                    }
                     if ($is_completed) {
-                        $assignments[$app->id] = 'completed';
+                        $assignments[$app->id] = (object) [
+                            'status' => 'completed',
+                            'progress' => 1
+                        ];
                     } else if ($is_past_due) {
-                        $assignments[$app->id] = 'overdue';
+                        $assignments[$app->id] = (object) [
+                            'status' => 'overdue',
+                            'progress' => round($complete_lessons_count / $lessons_count, 3)
+                        ];
+                    } else if ($complete_lessons_count > 0) {
+                        $assignments[$app->id] = (object) [
+                            'status' => 'progress',
+                            'progress' => round($complete_lessons_count / $lessons_count, 3)
+                        ];
                     } else {
-                        $assignments[$app->id] = 'progress';
+                        $assignments[$app->id] = (object) [
+                            'status' => 'pending',
+                            'progress' => 0
+                        ];
                     }
                 }
                 $student->assignments = $assignments;

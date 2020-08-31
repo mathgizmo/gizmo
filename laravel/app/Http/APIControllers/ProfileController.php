@@ -98,7 +98,11 @@ class ProfileController extends Controller
         $items = [];
         foreach (DB::table('classes_applications')->whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->get() as $row) {
             $item = Application::where('id', $row->app_id)->first();
-            $item->class = ClassOfStudents::where('id', $row->class_id)->first();
+            $classObj = ClassOfStudents::where('id', $row->class_id)->first();
+            if (!$classObj) {
+                continue;
+            }
+            $item->class = $classObj;
             $item->icon = $item->icon();
             $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
                     ->where('student_id', $student->id)->count() > 0;

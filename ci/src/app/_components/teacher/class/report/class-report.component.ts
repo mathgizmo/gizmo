@@ -22,6 +22,11 @@ export class ClassReportComponent implements OnInit {
 
     private sub: any;
 
+    public reportShow = [
+        true,
+        true
+    ];
+
     constructor(private route: ActivatedRoute, private classService: ClassesManagementService) {}
 
     ngOnInit() {
@@ -35,5 +40,10 @@ export class ClassReportComponent implements OnInit {
                 this.students = response.students;
                 this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Report';
             });
+    }
+
+    slideToggle(index: any) {
+        $('#report' + index + ' > .report-data').slideToggle('slow');
+        this.reportShow[index] = !this.reportShow[index];
     }
 }

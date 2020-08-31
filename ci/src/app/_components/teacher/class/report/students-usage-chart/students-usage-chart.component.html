@@ -1,22 +1,24 @@
 <div class="subtitle text-center">Student Usage Report</div>
-<div class="actions-container">
-  <select class="form-control" name="studentId" [(ngModel)]="studentId" (change)="getStatistics()">
-    <option value="">All Students</option>
-    <option *ngFor="let student of students" [value]="student.id">{{student.name}}</option>
-  </select>
-  <div class="date-container">
-    <input matInput type="date" name="dateFrom" [(ngModel)]="dateFrom" [max]="dateTo || dateNow" class="form-control" (change)="getStatistics()" />
-    <input matInput type="date" name="dateTo" [(ngModel)]="dateTo" [min]="dateFrom" [max]="dateNow" class="form-control" (change)="getStatistics()" />
+<div class="report-data">
+  <div class="actions-container">
+    <select class="form-control" name="studentId" [(ngModel)]="studentId" (change)="getStatistics()">
+      <option value="">All Students</option>
+      <option *ngFor="let student of students" [value]="student.id">{{student.name}}</option>
+    </select>
+    <div class="date-container">
+      <input matInput type="date" name="dateFrom" [(ngModel)]="dateFrom" [max]="dateTo || dateNow" class="form-control" (change)="getStatistics()" />
+      <input matInput type="date" name="dateTo" [(ngModel)]="dateTo" [min]="dateFrom" [max]="dateNow" class="form-control" (change)="getStatistics()" />
+    </div>
   </div>
-</div>
-<div style="display: block">
-  <canvas baseChart
-          [datasets]="barChartData"
-          [labels]="mbarChartLabels"
-          [options]="barChartOptions"
-          [colors]="barChartColors"
-          legend="true"
-          chartType="bar"
-          (chartHover)="chartHovered($event)"
-          (chartClick)="chartClicked($event)"></canvas>
+  <div style="display: block">
+    <canvas baseChart
+            [datasets]="barChartData"
+            [labels]="mbarChartLabels"
+            [options]="barChartOptions"
+            [colors]="barChartColors"
+            legend="true"
+            chartType="bar"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
+  </div>
 </div>

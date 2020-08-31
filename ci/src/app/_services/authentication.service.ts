@@ -30,8 +30,8 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
-    login(username: string, password: string): Observable<any> {
-        const request = {email: username, password: password};
+    login(username: string, password: string, captcha_response = null): Observable<any> {
+        const request = {email: username, password: password, 'g-recaptcha-response': captcha_response};
         return this.http.post(this.apiUrl + '/authenticate', request, {headers: this.headers})
             .pipe(
                 map((response: Response) => {
@@ -65,7 +65,7 @@ export class AuthenticationService {
 
     register(username: string, email: string, password: string,
              first_name: string = null, last_name: string = null,
-             role: string = 'student', country_id: number = 1): Observable<any> {
+             role: string = 'student', country_id: number = 1, captcha_response = null): Observable<any> {
         return this.http.post(this.apiUrl + '/register', {
             email: email,
             name: username,
@@ -73,7 +73,8 @@ export class AuthenticationService {
             first_name: first_name,
             last_name: last_name,
             role: role,
-            country_id: country_id
+            country_id: country_id,
+            'g-recaptcha-response': captcha_response
         }, {
             headers: this.headers
         });

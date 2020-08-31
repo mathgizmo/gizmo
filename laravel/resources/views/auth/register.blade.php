@@ -6,7 +6,7 @@
     <div class="card shadow-lg border-0 rounded-lg mt-5">
         <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
         <div class="card-body">
-            <form role="form" method="POST" action="{{ url('/register') }}">
+            <form role="form" method="POST" action="{{ url('/register') }}" id="registerForm">
                 <div class="form-group {{ $errors->has('name') ? ' has-error' : '' }}">
                     <label class="small mb-1" for="inputName">
                         Name
@@ -54,7 +54,9 @@
                     @endif
                 </div>
                 <div class="form-group mt-4 mb-0">
-                    <button type="submit" class="btn btn-dark btn-block">
+                    <button type="submit" class="btn btn-dark btn-block g-recaptcha"
+                            data-sitekey="{{Illuminate\Support\Facades\Config::get('auth.recaptcha.key')}}"
+                            data-callback='onSubmit'>
                         <i class="fa fa-btn fa-user"></i> Create Account
                     </button>
                 </div>
@@ -69,4 +71,12 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function onSubmit(token) {
+            document.getElementById("registerForm").submit();
+        }
+    </script>
 @endsection
