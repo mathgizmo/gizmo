@@ -15,7 +15,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ClassController extends Controller
 {
 
-	private $user;
+    private $user;
 
     public function __construct()
     {
@@ -213,8 +213,8 @@ class ClassController extends Controller
                         ($is_completed && $due_at && $completed_at && $due_at < $completed_at);
                     $complete_lessons_count = Progress::where('entity_type', 'lesson')->where('app_id', $app->id)
                         ->where('student_id', $student->id)->count();
+                    $lessons_count = 0;
                     if (!$is_completed && $complete_lessons_count > 0) {
-                        $lessons_count = 0;
                         foreach ($app->getTopics() as $topic) {
                             $topic_lessons_count = DB::table('lesson')->whereIn('id', function($q) use($app) {
                                 $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')
