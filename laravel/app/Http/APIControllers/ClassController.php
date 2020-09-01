@@ -235,12 +235,12 @@ class ClassController extends Controller
                     } else if ($is_past_due) {
                         $assignments[$app->id] = (object) [
                             'status' => 'overdue',
-                            'progress' => round($complete_lessons_count / $lessons_count, 3)
+                            'progress' => $lessons_count ? (round($complete_lessons_count / $lessons_count, 3)) : 0
                         ];
                     } else if ($complete_lessons_count > 0) {
                         $assignments[$app->id] = (object) [
                             'status' => 'progress',
-                            'progress' => round($complete_lessons_count / $lessons_count, 3)
+                            'progress' => $lessons_count ? (round($complete_lessons_count / $lessons_count, 3)) : 0
                         ];
                     } else {
                         $assignments[$app->id] = (object) [
