@@ -99,7 +99,7 @@ class ProfileController extends Controller
         foreach (DB::table('classes_applications')->whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->get() as $row) {
             $item = Application::where('id', $row->app_id)->first();
             $classObj = ClassOfStudents::where('id', $row->class_id)->first();
-            if (!$classObj) {
+            if (!$classObj || !$item) {
                 continue;
             }
             $item->class = $classObj;

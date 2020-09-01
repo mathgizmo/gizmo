@@ -385,6 +385,9 @@ class ClassController extends Controller
         $items = [];
         foreach (DB::table('classes_applications')->where('class_id', $class_id)->get() as $row) {
             $item = Application::where('id', $row->app_id)->first();
+            if (!$item) {
+                continue;
+            }
             if ($item) {
                 $item->class = $class;
                 $item->icon = $item->icon();
