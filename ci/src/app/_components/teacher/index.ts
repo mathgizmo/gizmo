@@ -14,5 +14,4 @@ export * from './class/assignments/edit-assignment-dialog/edit-class-assignment-
 export * from './class/menu/class-menu.component';
 export * from './assignments/manage-assignments.component';
 export * from './assignments/edit-assignment-dialog/edit-assignment-dialog.component';
-export * from './dashboard/dashboard.component';
 export * from './review-content/review-content.component';

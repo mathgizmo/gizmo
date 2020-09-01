@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit {
                             if (user.role === 'teacher') {
                                 this.router.navigate(['teacher/class']);
                             } else {
-                                this.router.navigate(['/']);
+                                this.router.navigate(['dashboard']);
                             }
                         });
                 }, error => {

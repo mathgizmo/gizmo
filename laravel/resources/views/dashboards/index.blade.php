@@ -41,6 +41,7 @@
                                 <i class="fa fa-fw fa-sort{{ (request()->sort == 'title' && request()->order == 'asc') ? '-up' : '' }}{{ (request()->sort == 'title' && request()->order == 'desc') ? '-down' : '' }}"></i>
                             </a>
                         </th>
+                        <th></th>
                         <th style="min-width: 160px;"></th>
                     </tr>
                     </thead>
@@ -55,6 +56,13 @@
                         <td>
                             <input type="text" name="title" id="title-filter" style="width: 100%;">
                         </td>
+                        <td>
+                            <select name="for" id="for-filter" style="width: 100%;">
+                                <option value=""></option>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                            </select>
+                        </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -65,6 +73,14 @@
                             <td>{{$dashboard->id}}</td>
                             <td>{{$dashboard->order_no}}</td>
                             <td>{{$dashboard->title}}</td>
+                            <td>
+                                @if($dashboard->is_for_student)
+                                    <badge class="badge badge-primary">Student</badge>
+                                @endif
+                                @if($dashboard->is_for_teacher)
+                                    <badge class="badge badge-dark">Teacher</badge>
+                                @endif
+                            </td>
                             <td class="text-right">
                                 <a class="btn btn-dark" href="{{ route('dashboards.edit', $dashboard->id) }}">Edit</a>
                                 <form action="{{ route('dashboards.destroy', $dashboard->id) }}"
@@ -97,6 +113,7 @@
             const id = document.getElementById("id-filter").value;
             const order = document.getElementById("order-filter").value;
             const title = document.getElementById("title-filter").value;
+            const forFilter = document.getElementById("for-filter").value;
             if(id) {
                 url.searchParams.set('id', id);
             } else if (url.searchParams.get('id')) {
@@ -112,6 +129,11 @@
             } else if (url.searchParams.get('title')) {
                 url.searchParams.delete('title');
             }
+            if(forFilter) {
+                url.searchParams.set('for', forFilter);
+            } else if (url.searchParams.get('for')) {
+                url.searchParams.delete('for');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -120,6 +142,7 @@
             document.getElementById("id-filter").value = url.searchParams.get('id');
             document.getElementById("order-filter").value = url.searchParams.get('order_no');
             document.getElementById("title-filter").value = url.searchParams.get('title');
+            document.getElementById("for-filter").value = url.searchParams.get('for');
         }
         window.onload = initFilters;
     </script>

@@ -32,16 +32,11 @@ export class LoginComponent implements OnInit {
             this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse)
                 .subscribe(user => {
                     if (user && user.user_id) {
-                        if (user.role === 'teacher') {
-                            this.router.navigate(['teacher/dashboard']);
-                        } else {
-                            if (isNaN(+localStorage.getItem('app_id'))) {
-                                localStorage.setItem('redirect_to', '/');
-                                this.router.navigate(['to-do']);
-                            } else {
-                                this.router.navigate(['/']);
-                            }
+                        if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
+                            localStorage.setItem('redirect_to', '/');
+                            this.router.navigate(['to-do']);
                         }
+                        this.router.navigate(['dashboard']);
                     } else {
                         this.error = 'Username or password is incorrect';
                         this.loading = false;

@@ -62,6 +62,33 @@
                     </div>
                 </div>
 
+                <div class="form-group row{{ $errors->has('is_for_student') ? ' has-error' : '' }}">
+                    <label for="is_for_student" class="col-md-2 form-control-label ml-3 font-weight-bold">For students</label>
+                    <div class="col-md-6 radio">
+                        <label for="is_for_student" class="col-md-3"> <input
+                                    {{ $dashboard->is_for_student ? 'checked="checked"' : ''}} type="checkbox"
+                                    name="is_for_student" value="1"></label>
+                        @if ($errors->has('is_for_student'))
+                            <span class="form-text">
+                                <strong>{{ $errors->first('is_for_student') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group row{{ $errors->has('is_for_teacher') ? ' has-error' : '' }}">
+                    <label for="is_for_teacher" class="col-md-2 form-control-label ml-3 font-weight-bold">For teachers</label>
+                    <div class="col-md-6 radio">
+                        <label for="is_for_teacher" class="col-md-3"> <input
+                                    {{ $dashboard->is_for_teacher ? 'checked="checked"' : ''}} type="checkbox"
+                                    name="is_for_teacher" value="1"></label>
+                        @if ($errors->has('is_for_teacher'))
+                            <span class="form-text">
+                                <strong>{{ $errors->first('is_for_teacher') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label for="question" class="col-md-2 form-control-label ml-3 font-weight-bold">Preview</label>
                     <div class="col-md-8">

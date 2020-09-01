@@ -10,12 +10,12 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
-import {DashboardComponent, ClassReportComponent, ManageAssignmentsComponent,
+import {DashboardComponent} from './_components/dashboard/dashboard.component';
+import {ClassReportComponent, ManageAssignmentsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
     ClassAssignmentsComponent, ClassStudentsComponent, ClassToDoComponent} from './_components/teacher/index';
 
 const teacherRoutes = [
-    {path: 'teacher/dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/review-content', component: ReviewContentComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/assignment', component: ManageAssignmentsComponent,
@@ -45,6 +45,7 @@ const routes: Routes = [
     {path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard]},
     {path: 'topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+    {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
     ...studentRoutes,
     ...teacherRoutes,
     {path: 'preview/question', component: QuestionPreviewComponent},

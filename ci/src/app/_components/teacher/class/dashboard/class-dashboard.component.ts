@@ -43,6 +43,10 @@ export class ClassDashboardComponent implements OnInit {
             this.classService.getAssignments(this.classId)
                 .subscribe(res => {
                     this.assignments = res['assignments'];
+                    this.assignments.forEach(item => {
+                        item.start_time = moment(item.start_time, 'HH:mm').format('hh:mm A');
+                        item.due_time = moment(item.due_time, 'HH:mm').format('hh:mm A');
+                    });
                     this.updateStatuses();
                 });
         });

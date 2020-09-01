@@ -1,9 +1,9 @@
 ﻿import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {catchError, finalize, map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {User} from '../_models/user';
+import {User} from '../_models/index';
 
 @Injectable()
 export class AuthenticationService {
@@ -17,10 +17,8 @@ export class AuthenticationService {
     private headers?: HttpHeaders;
 
     constructor(private http: HttpClient) {
-        // set token if saved in local storage
         this.token = localStorage.getItem('token');
         this.headers = new HttpHeaders({'Content-Type': 'application/json'});
-
         const user = JSON.parse(localStorage.getItem('user'));
         this.userSubject = new BehaviorSubject<User>(user);
         this.user = this.userSubject.asObservable();

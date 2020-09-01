@@ -42,13 +42,14 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent} from './_components/dialogs/index';
 import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
-import {DashboardComponent, ClassReportComponent, ClassStudentsComponent,
+import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
     ClassAssignmentsComponent, ClassAssignmentsCalendarComponent, ClassToDoComponent,
     ClassMenuComponent, StudentsUsageChartComponent, ClassDetailedReportComponent,
     EditClassAssignmentDialogComponent} from './_components/teacher/index';
+import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';

@@ -26,8 +26,18 @@ class DashboardController extends Controller
         if ($request['title']) {
             $query->where('title', 'LIKE', '%'.$request['title'].'%');
         }
+        if ($request['for']) {
+            if ($request['for'] == 'student') {
+                $query->where('is_for_student', true);
+            }
+            if ($request['for'] == 'teacher') {
+                $query->where('is_for_teacher', true);
+            }
+        }
         if ($request['sort'] && $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
+        } else {
+            $query->orderBy('order_no', 'ASC');
         }
         return view('dashboards.index', [
             'dashboards' => $query->get()
@@ -54,6 +64,8 @@ class DashboardController extends Controller
              'title' => $request['title'],
              'data' => $request['data'],
              'order_no' => $request['order_no'],
+             'is_for_student' => $request['is_for_student'] ? true : false,
+             'is_for_teacher' => $request['is_for_teacher'] ? true : false
         ]);
         return redirect('/dashboards')->with(array('message'=> 'Created successfully'));
     }
@@ -84,6 +96,8 @@ class DashboardController extends Controller
             'title' => $request['title'],
             'data' => $request['data'],
             'order_no' => $request['order_no'],
+            'is_for_student' => $request['is_for_student'] ? true : false,
+            'is_for_teacher' => $request['is_for_teacher'] ? true : false
         ]);
         return redirect('/dashboards')->with(array('message'=> 'Updated successfully'));
     }

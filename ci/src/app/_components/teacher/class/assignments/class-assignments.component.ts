@@ -31,8 +31,6 @@ export class ClassAssignmentsComponent implements OnInit {
     addAssignment = false;
     nameFilter;
 
-    currentDate = (new Date()).toISOString().split('T')[0];
-
     private readonly adminUrl = environment.adminUrl;
 
     dialogPosition: any;
@@ -218,8 +216,15 @@ export class ClassAssignmentsComponent implements OnInit {
     onAddAssignment(app) {
         this.classService.addAssignmentToClass(this.classId, app.id)
             .subscribe(response => {
+                const now = (new Date()).toISOString();
+                const currentDate = now.split('T')[0];
+                let currentTime = now.split('T')[1];
+                currentTime = currentTime.substring(0, currentTime.lastIndexOf(':'));
+                app.start_date = currentDate;
+                app.start_time = currentTime;
+                this.classService.changeAssignment(this.classId, app).subscribe();
                 this.assignments.unshift(app);
-                this.available_assignments  = this.available_assignments.filter(x => {
+                this.available_assignments = this.available_assignments.filter(x => {
                     return +x.id !== +app.id;
                 });
                 this.addAssignment = !this.addAssignment;
@@ -281,7 +286,7 @@ export class ClassAssignmentsComponent implements OnInit {
     onStartTimeChanged(item, newStartTime) {
         item.start_time = newStartTime;
         if (!item.start_date) {
-            item.start_date = this.currentDate;
+            item.start_date = (new Date()).toISOString().split('T')[0];
         }
         this.classService.changeAssignment(this.classId, item)
             .subscribe(assignments => {

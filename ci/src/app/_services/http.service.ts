@@ -1,6 +1,6 @@
 ﻿import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {map, catchError, finalize} from 'rxjs/operators';
+import {map, catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {Router} from '@angular/router';
 
@@ -40,8 +40,6 @@ export class HttpService {
                         this.router.navigate(['profile']);
                     }
                     return response['message'];
-                }),
-                finalize(() => {
                 })
             );
     }
@@ -64,8 +62,6 @@ export class HttpService {
                         this.router.navigate(['login']);
                     }
                     return response['message'];
-                }),
-                finalize(() => {
                 })
             );
     }
@@ -88,8 +84,6 @@ export class HttpService {
                         this.router.navigate(['login']);
                     }
                     return response['message'];
-                }),
-                finalize(() => {
                 })
             );
     }
@@ -112,8 +106,6 @@ export class HttpService {
                         this.router.navigate(['login']);
                     }
                     return response['message'];
-                }),
-                finalize(() => {
                 })
             );
     }
