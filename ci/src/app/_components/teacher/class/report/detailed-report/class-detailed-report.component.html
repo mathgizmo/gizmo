@@ -10,7 +10,7 @@
       </thead>
       <tbody>
       <tr *ngFor="let student of students | tableFilter: form.value" style="cursor: pointer;">
-        <td>{{student.name}}</td>
+        <td>{{student.email}}</td>
         <td *ngFor="let app of assignments" [class]="student.assignments[app.id].status" class="assignment-table-row">
           {{student.assignments[app.id].status == 'completed' ? 'Completed' :
                 (student.assignments[app.id].status == 'overdue' ? 'Overdue' : student.assignments[app.id].status == 'progress' ?  'In progress' : 'Pending')}}

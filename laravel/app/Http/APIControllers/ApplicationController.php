@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -82,6 +83,7 @@ class ApplicationController extends Controller
         if ($app) {
             $app->deleteTree();
             $app->delete();
+            DB::table('classes_applications')->where('app_id', $app_id)->delete();
             return $this->success('Ok.');
         }
         return $this->error('Error.');

@@ -29,12 +29,13 @@ export class QuestionComponent implements OnInit, OnChanges, OnDestroy {
 
     private emitted_answers = null;
 
-
     @Input() ignoreAnswer = false;
+
+    @Input() handleEnterPress = true;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        if (event.key === 'Enter') {
+        if (this.handleEnterPress && event.key === 'Enter') {
             this.checkAnswer();
         }
     }

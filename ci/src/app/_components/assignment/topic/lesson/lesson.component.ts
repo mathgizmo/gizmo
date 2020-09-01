@@ -69,6 +69,8 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     public ignoreAnswer = false; // ignore answer because user already answered this question wrong
     public fromContentReview = false;
 
+    public handleEnterPressInQuestion = true;
+
     constructor(
         private router: Router,
         private topicService: TopicService,
@@ -174,9 +176,11 @@ export class LessonComponent implements OnInit, AfterViewChecked {
             // this.warning = true;
             // this.warningMessage = 'Please, select your confident level for this question!';
             $('#continue-button').prop('disabled', true);
+            this.handleEnterPressInQuestion = false;
         } else {
             // this.warning = false;
             $('#continue-button').prop('disabled', false);
+            this.handleEnterPressInQuestion = true;
         }
     }
 

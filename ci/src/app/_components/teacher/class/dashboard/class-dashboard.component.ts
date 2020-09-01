@@ -47,26 +47,7 @@ export class ClassDashboardComponent implements OnInit {
                         item.start_time = moment(item.start_time, 'HH:mm').format('hh:mm A');
                         item.due_time = moment(item.due_time, 'HH:mm').format('hh:mm A');
                     });
-                    this.updateStatuses();
                 });
-        });
-    }
-
-    updateStatuses() {
-        const now = moment();
-        this.assignments.forEach(app => {
-            if (app.start_date || app.due_date) {
-                const start = app.start_date
-                    ? moment(app.start_date + ' ' + app.start_time, 'YYYY-MM-DD HH:mm:ss')
-                    : null;
-                const due = app.due_date
-                    ? moment(app.due_date + ' ' + app.due_time, 'YYYY-MM-DD HH:mm:ss')
-                    : null;
-                app.status = (start && start.isAfter(now)) ? 'Upcoming' :
-                    (due && due.isBefore(now)) ? 'Complete' : 'In progress';
-            } else {
-                app.status = 'In progress';
-            }
         });
     }
 

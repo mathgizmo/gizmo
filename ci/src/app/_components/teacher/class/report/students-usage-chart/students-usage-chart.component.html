@@ -3,7 +3,7 @@
   <div class="actions-container">
     <select class="form-control" name="studentId" [(ngModel)]="studentId" (change)="getStatistics()">
       <option value="">All Students</option>
-      <option *ngFor="let student of students" [value]="student.id">{{student.name}}</option>
+      <option *ngFor="let student of students" [value]="student.id">{{student.email}}</option>
     </select>
     <div class="date-container">
       <input matInput type="date" name="dateFrom" [(ngModel)]="dateFrom" [max]="dateTo || dateNow" class="form-control" (change)="getStatistics()" />

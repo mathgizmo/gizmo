@@ -58,8 +58,13 @@
               <input matInput *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time || '00:00'" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />
               <ng-template #noDueTime><span class="no-data">N/A</span></ng-template>
             </td>
-            <td>
-              {{item.status}}
+            <td [class]="item.status">
+              {{item.status == 'completed' ? 'Closed' :
+                    (item.status == 'overdue' ? 'Overdue' : item.status == 'progress' ?  'In progress' : 'Pending')}}
+              <div *ngIf="item.progress !== undefined && item.status !== 'pending' && item.status !== 'completed'">
+                <span style="font-size: 0.8em;">{{(item.progress * 100).toFixed(1)}}%</span>
+                <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
+              </div>
             </td>
             <td class="text-right">
               <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onDeleteAssignment(item)">Remove</button>

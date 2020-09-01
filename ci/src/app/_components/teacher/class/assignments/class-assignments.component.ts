@@ -68,7 +68,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     this.available_assignments = res['available_assignments'];
                     this.assignments = res['assignments'];
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Assignments';
-                    this.updateStatuses();
                 });
         });
     }
@@ -89,7 +88,6 @@ export class ClassAssignmentsComponent implements OnInit {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
-                    this.updateStatuses();
                 }, error => {
                     this.snackBar.open('Error occurred while moving assignment!', '', {
                         duration: 3000,
@@ -125,7 +123,6 @@ export class ClassAssignmentsComponent implements OnInit {
                             this.available_assignments = this.available_assignments.filter(x => {
                                 return +x.id !== +app.id;
                             });
-                            this.updateStatuses();
                             this.calendarComponent.updateCalendarEvents();
                             this.snackBar.open('Assignment have been successfully added!', '', {
                                 duration: 3000,
@@ -178,7 +175,6 @@ export class ClassAssignmentsComponent implements OnInit {
                 } else {
                     this.classService.changeAssignment(this.classId, app)
                         .subscribe(response => {
-                            this.updateStatuses();
                             this.calendarComponent.updateCalendarEvents();
                             this.snackBar.open('Assignment have been successfully updated!', '', {
                                 duration: 3000,
@@ -191,24 +187,6 @@ export class ClassAssignmentsComponent implements OnInit {
                             });
                         });
                 }
-            }
-        });
-    }
-
-    updateStatuses() {
-        const now = moment();
-        this.assignments.forEach(app => {
-            if (app.start_date || app.due_date) {
-                const start = app.start_date
-                    ? moment(app.start_date + ' ' + app.start_time, 'YYYY-MM-DD HH:mm:ss')
-                    : null;
-                const due = app.due_date
-                    ? moment(app.due_date + ' ' + app.due_time, 'YYYY-MM-DD HH:mm:ss')
-                    : null;
-                app.status = (start && start.isAfter(now)) ? 'Upcoming' :
-                    (due && due.isBefore(now)) ? 'Complete' : 'In progress';
-            } else {
-                app.status = 'In progress';
             }
         });
     }
@@ -228,7 +206,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     return +x.id !== +app.id;
                 });
                 this.addAssignment = !this.addAssignment;
-                this.updateStatuses();
             });
     }
 
@@ -240,7 +217,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });
-                this.updateStatuses();
             }, error => {
                 this.snackBar.open('Error occurred while saving Due Date!', '', {
                     duration: 3000,
@@ -257,7 +233,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });
-                this.updateStatuses();
             }, error => {
                 this.snackBar.open('Error occurred while saving Due Time!', '', {
                     duration: 3000,
@@ -274,7 +249,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });
-                this.updateStatuses();
             }, error => {
                 this.snackBar.open('Error occurred while saving Start Date!', '', {
                     duration: 3000,
@@ -294,7 +268,6 @@ export class ClassAssignmentsComponent implements OnInit {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });
-                this.updateStatuses();
             }, error => {
                 this.snackBar.open('Error occurred while saving Start Time!', '', {
                     duration: 3000,

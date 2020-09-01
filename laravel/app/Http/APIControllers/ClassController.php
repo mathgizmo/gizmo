@@ -82,6 +82,7 @@ class ClassController extends Controller
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
             $class->delete();
+            DB::table('classes_applications')->where('class_id', $class_id)->delete();
             return $this->success('Ok.');
         }
         return $this->error('Error.', 404);
@@ -315,6 +316,8 @@ class ClassController extends Controller
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
             $items = $class->applications()->get();
+            $students = $class->students()->get();
+            $students_count = $students->count();
             foreach ($items as $item) {
                 $item->icon = $item->icon();
                 $class_data = $item->getClassRelatedData($class->id);
@@ -323,6 +326,33 @@ class ClassController extends Controller
                 $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
                 $item->due_time = $class_data && $class_data->due_time ? $class_data->due_time : null;
                 $item->color = $class_data && $class_data->color ? $class_data->color : null;
+                $class_data = $item->getClassRelatedData($class_id);
+                if ($class_data->due_date) {
+                    $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                } else {
+                    $due_at = null;
+                }
+                if ($class_data->start_date) {
+                    $start_at = $class_data->start_time ? $class_data->start_date.' '.$class_data->start_time : $class_data->start_date.' 00:00:00';
+                } else {
+                    $start_at = null;
+                }
+                $now = Carbon::now()->toDateTimeString();
+                $complete_count = DB::table('progresses')
+                    ->where('entity_type', 'application')
+                    ->where('entity_id', $item->id)
+                    ->whereIn('student_id', $students->pluck('id'))
+                    ->select('student_id')->distinct()->count();
+                $item->progress = $students_count > 0 ? (round($complete_count / $students_count, 3)) : 1;
+                if ($item->progress >= 1) {
+                    $item->status = 'completed';
+                } else if ($due_at && $due_at < $now) {
+                    $item->status = 'overdue';
+                } else if ($start_at && $start_at > $now) {
+                    $item->status = 'pending';
+                } else {
+                    $item->status = 'progress';
+                }
             }
             $available = Application::where('teacher_id', $this->user->id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())->orderBy('name')->get();

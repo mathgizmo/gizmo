@@ -13,7 +13,7 @@
         <label class="lesson-progress-label" *ngIf="question_num > 0">{{correct_answers}}/{{question_num}}</label>
     </div>
 
-    <div *ngIf="lesson_id === -1 && question !== null" id="testout-confident-level" >
+    <div *ngIf="lesson_id === -1 && question !== null" id="testout-confident-level">
         <div class="question-container white-theme">
             <h2 class="question">
                 How confident you are in your answer?
@@ -45,6 +45,7 @@
                 [question]='question'
                 [incorrectAnswersCount]='incorrect_answers'
                 [ignoreAnswer]="ignoreAnswer"
+                [handleEnterPress]="handleEnterPressInQuestion"
                 (onAnswered)="checkAnswer($event)"
         ></app-question>
         <!-- We need incorrectAnswersCount input to trigger OnChanges hook on wrong answer -->
@@ -162,7 +163,7 @@
         </div>
         <div *ngIf="initial_loading == 0 && lesson_id == -1 && !testout_completed && !testout_empty">
             <div class="question-container">
-                <!-- <h2 class="subtitle">Placement test failed :(</h2> -->
+                <!-- <h2 class="subtitle">Test Out failed :(</h2> -->
                 <h3 class="question">Based on your responses, you have been placed in {{next_title}}.
                     <span *ngIf="next > first_lesson_id">Feel free to play with earlier lessons if you feel you need more practice.</span>
                 </h3>
