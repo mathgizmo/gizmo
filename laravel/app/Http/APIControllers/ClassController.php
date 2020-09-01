@@ -10,6 +10,7 @@ use App\Student;
 use App\StudentsTrackingQuestion;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ClassController extends Controller
@@ -89,52 +90,102 @@ class ClassController extends Controller
     public function getStudents($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
-            $students = $class->students()->orderBy('name')->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email']);
+            $students = $class->students()->orderBy('name')
+                ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered']);
+            $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
+                $q1->where('classes.id', $class_id);
+            })->get();
+            $now = Carbon::now()->toDateTimeString();
             foreach ($students as $student) {
-                $items = Application::whereHas('classes', function ($q1) use ($student, $class_id) {
-                    $q1->whereHas('students', function ($q2) use ($student) {
-                        $q2->where('students.id', $student->id);
-                    })->where('classes.id', $class_id);
-                })->get();
+                $student->is_subscribed = true;
                 $finished_count = 0; $past_due_count = 0;
-                foreach ($items as $item) {
-                    $item->icon = $item->icon();
-                    $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                foreach ($apps as $app) {
+                    $app->icon = $app->icon();
+                    $app->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
                             ->where('student_id', $student->id)->count() > 0;
-                    $class_data = $item->getClassRelatedData($class_id);
+                    $class_data = $app->getClassRelatedData($class_id);
                     if ($class_data->due_date) {
                         $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
                     } else {
                         $due_at = null;
                     }
-                    $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                    $completed_at = $item->getCompletedDate($student->id);
-                    $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
-                    $now = Carbon::now()->toDateTimeString();
-                    $item->is_past_due = (!$item->is_completed && $due_at && $due_at < $now) ||
-                        ($item->is_completed && $due_at && $completed_at && $due_at < $completed_at);
-                    if ($item->is_completed) {
+                    $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                    $completed_at = $app->getCompletedDate($student->id);
+                    $app->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                    $app->is_past_due = (!$app->is_completed && $due_at && $due_at < $now) ||
+                        ($app->is_completed && $due_at && $completed_at && $due_at < $completed_at);
+                    if ($app->is_completed) {
                         $finished_count++;
                     }
-                    if ($item->is_past_due) {
+                    if ($app->is_past_due) {
                         $past_due_count++;
                     }
                 }
-                $student->assignments = array_values($items->sortBy('due_date')->toArray());
+                $student->assignments = array_values($apps->sortBy('due_date')->toArray());
                 $student->assignments_finished_count = $finished_count;
                 $student->assignments_past_due_count = $past_due_count;
             }
-            return $this->success(['items' => array_values($students->toArray())]);
+            if ($class->subscription_type == 'invitation') {
+                $emails = explode(',', str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations)));
+                $not_subscribed = [];
+                $assignments_past_due_count = 0;
+                foreach ($apps as $app) {
+                    $class_data = $app->getClassRelatedData($class_id);
+                    if ($class_data->due_date) {
+                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                    } else {
+                        $due_at = null;
+                    }
+                    if ($due_at && $due_at < $now) {
+                        $assignments_past_due_count++;
+                    }
+                }
+                foreach (array_filter($emails) as $email) {
+                    if ($students->where('email', $email)->count() < 1) {
+                        array_push($not_subscribed, (object) [
+                            'name' => $email,
+                            'email' => $email,
+                            'is_registered' => false,
+                            'is_subscribed' => false,
+                            'assignments_finished_count' => 0,
+                            'assignments_past_due_count' => $assignments_past_due_count
+                        ]);
+                    }
+                }
+                $items = array_merge(array_values($students->toArray()), $not_subscribed);
+                return $this->success(['items' => $items]);
+            } else {
+                return $this->success(['items' => array_values($students->toArray())]);
+            }
         }
         return $this->error('Error.', 404);
     }
 
     public function addStudent($class_id) {
+        $email = trim(request('email'));
+        $validator = Validator::make(
+            ['email' => $email],
+            ['email' => 'required|email|max:255']
+        );
+        if ($validator->fails()) {
+            return $this->error($validator->messages(), 400);
+        }
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
-            $student = Student::where('email', trim(request('email')))->first();
+            $student = Student::where('email', $email)->first();
+            if (!$student) {
+                $student = Student::create([
+                    'name' => $email,
+                    'email' => $email,
+                    'password' => 'phantom',
+                    'is_registered' => false
+                ]);
+            } else {
+                $student->is_registered = true;
+            }
             if ($student) {
                 try {
+                    $student->is_subscribed = true;
                     if (DB::table('classes_students')->where('class_id', $class_id)
                             ->where('student_id', $student->id)->count() < 1) {
                         DB::table('classes_students')->insert([

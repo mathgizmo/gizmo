@@ -78,6 +78,17 @@ td {
     margin-right: 8px;
   }
 }
+.not-registered {
+  background: #c0c0c0;
+}
+.not-subscribed {
+  background: #c0c0c0;
+}
+.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 
 .button {
   font-size: 18px !important;

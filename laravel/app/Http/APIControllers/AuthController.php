@@ -72,32 +72,58 @@ class AuthController extends Controller
     {
         $fields = ['email', 'password', 'name'];
         $credentials = $request->only($fields);
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
         }
-        $validator = Validator::make(
-            $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
-            [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:students',
-                'password' => 'required|min:6',
-                'g-recaptcha-response' => 'required|recaptcha',
-            ]
+        $student = Student::where('email', $credentials['email'])
+            ->where('is_registered', false)->first();
+        if ($student) {
+            $validator = Validator::make(
+                $request->only(['password', 'name', 'g-recaptcha-response']),
+                [
+                    'name' => 'required|max:255',
+                    'password' => 'required|min:6',
+                    'g-recaptcha-response' => 'required|recaptcha',
+                ]
             );
-        if ($validator->fails()) {
-            return $this->error($validator->messages(), 400);
+            if ($validator->fails()) {
+                return $this->error($validator->messages(), 400);
+            }
+            $student = $student->update([
+                'name' => $credentials['name'],
+                'first_name' => request('first_name') ?: null,
+                'last_name' => request('last_name') ?: null,
+                'password' => bcrypt($credentials['password']),
+                'country_id' => request('country_id') ? intval(request('country_id')): 1,
+                // 'is_teacher' => request('role') == 'teacher',
+                'is_registered' => true
+            ]);
+        } else {
+            $validator = Validator::make(
+                $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255|unique:students',
+                    'password' => 'required|min:6',
+                    'g-recaptcha-response' => 'required|recaptcha',
+                ]
+            );
+            if ($validator->fails()) {
+                return $this->error($validator->messages(), 400);
+            }
+            $student = Student::create([
+                'name' => $credentials['name'],
+                'first_name' => request('first_name') ?: null,
+                'last_name' => request('last_name') ?: null,
+                'email' => $credentials['email'],
+                'password' => bcrypt($credentials['password']),
+                'country_id' => request('country_id') ? intval(request('country_id')): 1,
+                'is_super' => false,
+                'is_teacher' => request('role') == 'teacher',
+                'is_admin' => false,
+                'is_registered' => true
+            ]);
         }
-        $student = Student::create([
-            'name' => $credentials['name'],
-            'first_name' => request('first_name') ?: null,
-            'last_name' => request('last_name') ?: null,
-            'email' => $credentials['email'],
-            'password' => bcrypt($credentials['password']),
-            'country_id' => request('country_id') ? intval(request('country_id')): 1,
-            'is_super' => false,
-            'is_teacher' => request('role') == 'teacher',
-            'is_admin' => false
-        ]);
         if ($student) {
             return $this->success($student);
         }

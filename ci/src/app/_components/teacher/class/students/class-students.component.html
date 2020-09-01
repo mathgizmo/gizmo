@@ -14,6 +14,7 @@
             <th mat-sort-header="email" scope="col">Email</th>
             <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
             <th mat-sort-header="assignments_past_due_count" scope="col">Past Due Assignments</th>
+            <th scope="col"></th>
             <th class="text-right">
               <button  class="button button-small button-outline" mat-button (click)="addStudent()">Add Student</button>
             </th>
@@ -40,8 +41,10 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
           </tr>
-          <tr *ngFor="let item of students | tableFilter: form.value" style="cursor: pointer;">
+          <tr *ngFor="let item of students | tableFilter: form.value"
+              style="cursor: pointer;" [class.not-registered]="!item.is_registered" [class.not-subscribed]="!item.is_subscribed">
             <td>{{item.name}}</td>
             <td>{{item.first_name }}</td>
             <td>{{item.last_name }}</td>
@@ -49,15 +52,22 @@
             <td>{{item.assignments_finished_count }}</td>
             <td>{{item.assignments_past_due_count }}</td>
             <td>
+              <span *ngIf="!item.is_registered">
+                <span class="badge">Not Registered</span>
+              </span>
+              <span *ngIf="!item.is_subscribed">
+                <span class="badge">Not Subscribed</span>
+              </span>
+            </td>
+            <td>
               <div class="buttons-container">
-                <div (click)="showAssignments(item)">
+                <div [class.disabled]="!item.is_registered || !item.is_subscribed" (click)="showAssignments(item)">
                   <i class="fa fa-info-circle"></i>
                 </div>
-                <div (click)="deleteStudent(item.id)">
+                <div [class.disabled]="!item.is_subscribed" (click)="deleteStudent(item.id)">
                   <i class="fa fa-trash"></i>
                 </div>
               </div>
-
             </td>
           </tr>
           </tbody>
