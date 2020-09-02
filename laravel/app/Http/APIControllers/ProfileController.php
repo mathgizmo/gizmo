@@ -57,7 +57,7 @@ class ProfileController extends Controller
             $update['last_name'] = request('last_name');
         }
         if (request()->has('email')) {
-            $update['email'] = request('email');
+            $update['email'] = strtolower(request('email'));
         }
         if (request()->has('password')) {
             $update['password'] = request('password');
@@ -161,7 +161,7 @@ class ProfileController extends Controller
         })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
         foreach ($available_classes as $item) {
             if ($item->subscription_type == 'invitation') {
-                $emails = explode(',', str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations)));
+                $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations))));
                 if (!in_array($student->email, $emails)) {
                     $available_classes->forget($item->id);
                     continue;
@@ -185,7 +185,7 @@ class ProfileController extends Controller
             $q1->where('subscription_type', 'invitation')->where('invitations', 'LIKE', '%'.$student->email.'%');
         })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
         foreach ($class_invitations as $item) {
-            $emails = explode(',', str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations)));
+            $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations))));
             if (!in_array($student->email, $emails)) {
                 $class_invitations->forget($item->id);
                 continue;

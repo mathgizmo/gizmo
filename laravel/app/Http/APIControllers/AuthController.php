@@ -115,7 +115,7 @@ class AuthController extends Controller
                 'name' => $credentials['name'],
                 'first_name' => request('first_name') ?: null,
                 'last_name' => request('last_name') ?: null,
-                'email' => $credentials['email'],
+                'email' => strtolower($credentials['email']),
                 'password' => bcrypt($credentials['password']),
                 'country_id' => request('country_id') ? intval(request('country_id')): 1,
                 'is_super' => false,

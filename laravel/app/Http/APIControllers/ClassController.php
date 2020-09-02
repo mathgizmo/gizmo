@@ -127,7 +127,7 @@ class ClassController extends Controller
                 $student->assignments_past_due_count = $past_due_count;
             }
             if ($class->subscription_type == 'invitation') {
-                $emails = explode(',', str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations)));
+                $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
                 $not_subscribed = [];
                 $assignments_past_due_count = 0;
                 foreach ($apps as $app) {
@@ -142,7 +142,7 @@ class ClassController extends Controller
                     }
                 }
                 foreach (array_filter($emails) as $email) {
-                    if ($students->where('email', $email)->count() < 1) {
+                    if ($students->where('email', trim($email))->count() < 1) {
                         array_push($not_subscribed, (object) [
                             'name' => $email,
                             'email' => $email,
@@ -177,7 +177,7 @@ class ClassController extends Controller
             if (!$student) {
                 $student = Student::create([
                     'name' => $email,
-                    'email' => $email,
+                    'email' => strtolower($email),
                     'password' => 'phantom',
                     'is_registered' => false
                 ]);
