@@ -244,69 +244,14 @@ class ClassController extends Controller
     public function getReport($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
-            $students = $class->students()->orderBy('name')
-                ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email']);
-            $apps = $class->applications()->get();
-            foreach ($students as $student) {
-                $assignments = [];
-                foreach ($apps as $app) {
-                    $is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
-                            ->where('student_id', $student->id)->count() > 0;
-                    $class_data = $app->getClassRelatedData($class_id);
-                    if ($class_data->due_date) {
-                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
-                    } else {
-                        $due_at = null;
-                    }
-                    $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                    $completed_at = $app->getCompletedDate($student->id);
-                    $now = Carbon::now()->toDateTimeString();
-                    $is_past_due = (!$is_completed && $due_at && $due_at < $now) ||
-                        ($is_completed && $due_at && $completed_at && $due_at < $completed_at);
-                    $complete_lessons_count = Progress::where('entity_type', 'lesson')->where('app_id', $app->id)
-                        ->where('student_id', $student->id)->count();
-                    $lessons_count = 0;
-                    if (!$is_completed && $complete_lessons_count > 0) {
-                        foreach ($app->getTopics() as $topic) {
-                            $topic_lessons_count = DB::table('lesson')->whereIn('id', function($q) use($app) {
-                                $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')
-                                    ->where('app_id', $app->id);
-                            })->where('topic_id', $topic->id)->count();
-                            if ($topic_lessons_count) {
-                                $lessons_count += $topic_lessons_count;
-                            } else {
-                                $lessons_count += DB::table('lesson')->where('topic_id', $topic->id)->count();
-                            }
-                        }
-                    }
-                    if ($is_completed) {
-                        $assignments[$app->id] = (object) [
-                            'status' => 'completed',
-                            'progress' => 1
-                        ];
-                    } else if ($is_past_due) {
-                        $assignments[$app->id] = (object) [
-                            'status' => 'overdue',
-                            'progress' => $lessons_count > 0 ? (round($complete_lessons_count / $lessons_count, 3)) : 0
-                        ];
-                    } else if ($complete_lessons_count > 0) {
-                        $assignments[$app->id] = (object) [
-                            'status' => 'progress',
-                            'progress' => $lessons_count > 0 ? (round($complete_lessons_count / $lessons_count, 3)) : 0
-                        ];
-                    } else {
-                        $assignments[$app->id] = (object) [
-                            'status' => 'pending',
-                            'progress' => 0
-                        ];
-                    }
-                }
-                $student->assignments = $assignments;
+            $data = DB::table('class_detailed_reports')->where('class_id', $class->id)->get();
+            foreach ($data as $row) {
+                $row->data = json_decode($row->data);
             }
             return $this->success([
                 'class' => $class,
-                'students' => array_values($students->toArray()),
-                'assignments' => array_values($apps->toArray()),
+                'assignments' => array_values($class->applications()->get()->toArray()),
+                'students' => array_values($data->toArray()),
             ]);
         }
         return $this->error('Error.', 404);

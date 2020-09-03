@@ -60,26 +60,29 @@
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom mt-2">
             <h4 class="h4">Settings</h4>
         </div>
-    <div class="actions-container d-flex flex-wrap align-items-center mt-2">
-        <a class="btn btn-outline-dark mr-2" href="{{ route('mails.index') }}">
-            Mails
-        </a>
-        <a class="btn btn-outline-dark mr-2" href="{{ route('users.index') }}">
-            Administrators
-        </a>
-        <a class="btn btn-outline-dark mr-2" href="{{ url('/dashboards') }}">
-            Dashboards
-        </a>
-        <a class="btn btn-outline-dark mr-2" href="{{ route('settings.index') }}">
-            Settings
-        </a>
-    </div>
+        <div class="actions-container d-flex flex-wrap align-items-center mt-2">
+            <a class="btn btn-outline-dark mr-2" href="{{ route('mails.index') }}">
+                Mails
+            </a>
+            <a class="btn btn-outline-dark mr-2" href="{{ route('users.index') }}">
+                Administrators
+            </a>
+            <a class="btn btn-outline-dark mr-2" href="{{ url('/dashboards') }}">
+                Dashboards
+            </a>
+            <a class="btn btn-outline-dark mr-2" href="{{ route('settings.index') }}">
+                Settings
+            </a>
+        </div>
     @endif
     @if(auth()->user()->isSuperAdmin())
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom mt-2">
             <h4 class="h4">Actions</h4>
         </div>
         <div class="actions-container d-flex flex-wrap align-items-center mt-2">
+            <button id="generate-detailed-reports-button" class="btn btn-dark mr-2" type="button">
+                Generate Detailed Reports for All Classes
+            </button>
             <button id="delete-answers-statistics-button" class="btn btn-dark mr-2" type="button">
                 Delete old answers statistics data
             </button>
@@ -89,13 +92,23 @@
 
 @section('scripts')
     <script>
+        $('#generate-detailed-reports-button').click(function() {
+            $("#generate-detailed-reports-button").attr("disabled", true);
+            $.ajax({
+                url: "{{route('job.reports.class-detailed.generate')}}",
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    alert('Generated!');
+                }
+            });
+        });
         $('#delete-answers-statistics-button').click(function() {
             $("#delete-answers-statistics-button").attr("disabled", true);
             $.ajax({
                 url: "{{route('job.statistics.answers.delete')}}",
                 type: "DELETE",
                 success: function (data, textStatus, jqXHR) {
-                    //
+                    alert('Deleted!');
                 }
             });
         });

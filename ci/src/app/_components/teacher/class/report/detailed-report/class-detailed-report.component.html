@@ -9,14 +9,17 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let student of students | tableFilter: form.value" style="cursor: pointer;">
-        <td>{{student.email}}</td>
-        <td *ngFor="let app of assignments" [class]="student.assignments[app.id].status" class="assignment-table-row">
-          {{student.assignments[app.id].status == 'completed' ? 'Completed' :
-                (student.assignments[app.id].status == 'overdue' ? 'Overdue' : student.assignments[app.id].status == 'progress' ?  'In progress' : 'Pending')}}
-          <div *ngIf="student.assignments[app.id].progress > 0">
-            <span style="font-size: 0.8em;">{{(student.assignments[app.id].progress * 100).toFixed(1)}}%</span>
-            <mat-progress-bar  mode="determinate" [value]="student.assignments[app.id].progress * 100"></mat-progress-bar>
+      <tr *ngFor="let row of students | tableFilter: form.value" style="cursor: pointer;">
+        <td>{{row.student_email}}</td>
+        <td *ngFor="let app of assignments" [class]="row.data[app.id] && row.data[app.id].status" class="assignment-table-row">
+          <span *ngIf="row.data[app.id]">
+            {{row.data[app.id].status == 'completed' ? 'Completed' :
+                  (row.data[app.id].status == 'overdue' ? 'Overdue' : row.data[app.id].status == 'progress' ?  'In progress' : 'Pending')}}
+          </span>
+          <span *ngIf="!row.data[app.id]">N/A</span>
+          <div *ngIf="row.data[app.id] && row.data[app.id].status !== 'pending'">
+            <span style="font-size: 0.8em;">{{(row.data[app.id].progress * 100).toFixed(1)}}%</span>
+            <mat-progress-bar  mode="determinate" [value]="row.data[app.id].progress * 100"></mat-progress-bar>
           </div>
         </td>
       </tr>
