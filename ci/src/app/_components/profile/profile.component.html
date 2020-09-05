@@ -1,6 +1,5 @@
 <div class="profile">
-
-  <mat-card>
+  <!-- <mat-card>
     <span class="title">Applications</span>
     <div class="applications-list" *ngIf="applications.length > 0">
       <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
@@ -14,7 +13,7 @@
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
-  </mat-card>
+  </mat-card> -->
 
   <mat-card id="profile-container">
   	<span class="title">Change Profile Info</span>
@@ -61,14 +60,6 @@
           pattern="^\S+@\S+$"
           placeholder="Email"
           [(ngModel)]="user.email"
-          class="answer" />
-      </mat-form-field>
-      <mat-form-field>
-        <label class="answer">Please set the number of consecutive correct answers  which will signify lesson completion for you. You can come back to profile to change the setting if you wish. (put 0 to answer all questions)</label>
-        <input matInput
-          name="question_num"
-          pattern="[0-9]{1,2}"
-          [(ngModel)]="user.question_num"
           class="answer" />
       </mat-form-field>
       <div class="alert alert-danger" *ngIf="badEmail">

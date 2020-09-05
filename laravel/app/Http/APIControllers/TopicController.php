@@ -326,6 +326,7 @@ class TopicController extends Controller
                         });
                 })
             ->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->first();
+        $lesson->question_num = $this->app->question_num ?: 3;
         $lesson->next_lesson_id = isset($next->id) ? $next->id : 0;
         $lesson->next_topic_id = null;
         $lesson->unfinished_lessons_count = 0;
@@ -454,6 +455,7 @@ class TopicController extends Controller
         $topic->max_questions_num = $max_questions_num ? intval($max_questions_num->value) : 5;
         $topic->lessons_count = count($lessons);
         $topic->first_lesson_id = $lessons[0]->id;
+        $topic->question_num = $this->app->question_num ?: 3;
         return $this->success($topic);
     }
 

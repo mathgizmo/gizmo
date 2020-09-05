@@ -9,7 +9,7 @@ class Application extends Model
 {
     protected $table = 'applications';
 
-    protected $fillable = ['icon', 'name', 'teacher_id', 'allow_any_order', 'testout_attempts'];
+    protected $fillable = ['icon', 'name', 'teacher_id', 'allow_any_order', 'testout_attempts', 'question_num'];
 
     public function teacher() {
         return $this->belongsTo('App\Student', 'teacher_id');

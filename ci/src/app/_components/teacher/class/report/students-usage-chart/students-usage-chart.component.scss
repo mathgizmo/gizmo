@@ -11,11 +11,12 @@
   }
   & > *:first-child {
     max-width: 50%;
-    width: 300px;
+    width: 400px;
+    margin: 0 16px;
     @media (max-width: 1310px) {
       max-width: 100%;
-      width: 100%;
-      margin-bottom: 8px;
+      margin: 0 8px;
+      width: calc(100% - 16px) !important;
     }
   }
   .date-container {

@@ -1,0 +1,15 @@
+<a routerLink="/student/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="report">
+  <mat-card>
+    <i class="arrow" [class.arrow-up]="reportShow[0]" [class.arrow-down]="!reportShow[0]"
+       (click)="slideToggle(0)">
+    </i>
+    <app-students-usage-chart id="report0" [classId]="classId" [forStudent]="true"></app-students-usage-chart>
+  </mat-card>
+  <mat-card>
+    <i class="arrow" [class.arrow-up]="reportShow[1]" [class.arrow-down]="!reportShow[1]"
+       (click)="slideToggle(1)">
+    </i>
+    <app-class-detailed-report id="report1" [assignments]="assignments" [students]="students" [forStudent]="true"></app-class-detailed-report>
+  </mat-card>
+</div>

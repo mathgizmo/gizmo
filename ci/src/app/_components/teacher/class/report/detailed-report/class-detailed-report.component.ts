@@ -11,6 +11,7 @@ export class ClassDetailedReportComponent implements OnInit {
 
     @Input() assignments;
     @Input() students;
+    @Input() forStudent = false;
 
     constructor() {}
 

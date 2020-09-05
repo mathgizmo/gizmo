@@ -28,8 +28,8 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
-    login(username: string, password: string, captcha_response = null): Observable<any> {
-        const request = {email: username, password: password, 'g-recaptcha-response': captcha_response};
+    login(username: string, password: string, captcha_response = null, tokenStr = null): Observable<any> {
+        const request = {email: username, password: password, 'g-recaptcha-response': captcha_response, token: tokenStr};
         return this.http.post(this.apiUrl + '/authenticate', request, {headers: this.headers})
             .pipe(
                 map((response: Response) => {
@@ -44,11 +44,6 @@ export class AuthenticationService {
                         localStorage.setItem('token', token);
                         localStorage.setItem('user', JSON.stringify(user));
                         this.userSubject.next(user);
-                        let question_num = 3;
-                        if (user.question_num !== undefined) {
-                            question_num = user.question_num;
-                        }
-                        localStorage.setItem('question_num', question_num + '');
                         localStorage.setItem('app_id', app_id + '');
                         return user;
                     } else {
@@ -83,7 +78,6 @@ export class AuthenticationService {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('app_id');
-        localStorage.removeItem('question_num');
         this.userSubject.next(null);
     }
 

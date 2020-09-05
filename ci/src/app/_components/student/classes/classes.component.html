@@ -1,12 +1,40 @@
 <div class="profile-classes">
-    <mat-card>
-        <span class="title">My Invitations</span>
-        <form *ngIf="availableClasses.length > 0" novalidate #form="ngForm">
+    <mat-card *ngIf="!addClass && myClasses.length > 0">
+        <span class="title">My Classes</span>
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortMyClasses($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="id" scope="col">Class ID</th>
+                    <th mat-sort-header="name" scope="col">Class Name</th>
+                    <th mat-sort-header="teacher" scope="col">Teacher</th>
+                    <td class="text-right">
+                        <button *ngIf="availableClasses.length > 0" mat-button class="button button-small button-outline" (click)="onAddClass()">Add Class</button>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of myClasses">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.teacher}}</td>
+                    <td class="text-right" style="min-width: 170px;">
+                        <a class="button button-small button-outline" mat-stroked-button routerLink="/student/class/{{item.id}}/report" target="_blank" style="margin-right: 8px;">Report</a>
+                        <button class="button button-small button-outline" mat-stroked-button (click)="onUnsubscribe(item.id)">Unsubscribe</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </mat-card>
+    <mat-card *ngIf="addClass || myClasses.length < 1">
+        <span class="title">Select Class</span>
+        <form novalidate #form="ngForm">
         <div class="table-responsive">
             <table matSort (matSortChange)="sortAvailableClasses($event)" class="table">
                 <thead>
                 <tr>
-                    <th mat-sort-header="name" scope="col">Class ID</th>
+                    <th mat-sort-header="id" scope="col">Class ID</th>
                     <th mat-sort-header="name" scope="col">Class Name</th>
                     <th mat-sort-header="teacher" scope="col">Teacher</th>
                     <th scope="col"></th>
@@ -51,13 +79,8 @@
             </table>
         </div>
         </form>
-        <div *ngIf="availableClasses.length == 0">
-            <div class="subtitle text-center">
-                You have no invitations!
-            </div>
-            <div class="button-container">
-                <a mat-button class="button button-outline" routerLink="../my-classes" >Show your classes</a>
-            </div>
+        <div *ngIf="myClasses.length > 0" class="button-container">
+            <button mat-button class="button button-white" (click)="addClass=false">Close</button>
         </div>
     </mat-card>
 </div>

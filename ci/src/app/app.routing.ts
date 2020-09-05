@@ -7,7 +7,7 @@ import {WelcomeComponent, RegisterComponent, LoginComponent,
     ForgotPasswordComponent, ResetPasswordComponent} from './_components/auth/index';
 import {AssignmentComponent, TopicComponent, LessonComponent} from './_components/assignment/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
+import {ToDoComponent, MyClassesComponent, MyInvitationsComponent, MyClassReportComponent} from './_components/student/index';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
@@ -30,8 +30,9 @@ const teacherRoutes = [
 
 const studentRoutes = [
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
-    {path: 'my-classes', component: MyClassesComponent, canActivate: [AuthGuard]},
-    {path: 'my-invitations', component: MyInvitationsComponent, canActivate: [AuthGuard]},
+    {path: 'student/class', component: MyClassesComponent, canActivate: [AuthGuard]},
+    {path: 'student/class/:class_id/report', component: MyClassReportComponent, canActivate: [AuthGuard]},
+    {path: 'student/invitations', component: MyInvitationsComponent, canActivate: [AuthGuard]},
 ];
 
 const routes: Routes = [

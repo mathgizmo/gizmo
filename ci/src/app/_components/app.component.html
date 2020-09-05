@@ -37,8 +37,8 @@
         </mat-menu>
         <mat-menu #studentViews="matMenu">
             <a mat-menu-item routerLink="to-do" class="menu-item">To Do</a>
-            <a mat-menu-item routerLink="my-classes" class="menu-item">My Classes</a>
-            <a mat-menu-item routerLink="my-invitations" class="menu-item">My Invitations</a>
+            <a mat-menu-item routerLink="student/class" class="menu-item">My Classes</a>
+            <a mat-menu-item routerLink="student/invitations" class="menu-item">My Invitations</a>
         </mat-menu>
     </div>
     <div *ngIf="user.role !== 'teacher'">
@@ -55,11 +55,11 @@
                 <span class="material-icons">grading</span>
                 To Do
             </a>
-            <a mat-menu-item routerLink="my-classes" class="menu-item">
+            <a mat-menu-item routerLink="student/class" class="menu-item">
                 <span class="material-icons">class</span>
                 My Classes
             </a>
-            <a mat-menu-item routerLink="my-invitations" class="menu-item">
+            <a mat-menu-item routerLink="student/invitations" class="menu-item">
                 <span class="material-icons">vpn_key</span>
                 My Invitations
             </a>

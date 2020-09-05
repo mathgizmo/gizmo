@@ -193,14 +193,9 @@ export class ClassAssignmentsComponent implements OnInit {
 
     onAddAssignment(app) {
         this.classService.addAssignmentToClass(this.classId, app.id)
-            .subscribe(response => {
-                const now = (new Date()).toISOString();
-                const currentDate = now.split('T')[0];
-                let currentTime = now.split('T')[1];
-                currentTime = currentTime.substring(0, currentTime.lastIndexOf(':'));
-                app.start_date = currentDate;
-                app.start_time = currentTime;
-                this.classService.changeAssignment(this.classId, app).subscribe();
+            .subscribe(newApp => {
+                app.start_date = newApp.start_date;
+                app.start_time = newApp.start_time;
                 this.assignments.unshift(app);
                 this.available_assignments = this.available_assignments.filter(x => {
                     return +x.id !== +app.id;

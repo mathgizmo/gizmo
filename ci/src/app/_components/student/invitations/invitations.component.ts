@@ -1,13 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../../_services/user.service';
-import {DeviceDetectorService} from 'ngx-device-detector';
-import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 
 @Component({
-    selector: 'my-invitations',
-    templateUrl: './my-invitations.component.html',
-    styleUrls: ['./my-invitations.component.scss'],
+    selector: 'app-my-invitations',
+    templateUrl: './invitations.component.html',
+    styleUrls: ['./invitations.component.scss'],
     providers: [UserService]
 })
 export class MyInvitationsComponent implements OnInit {

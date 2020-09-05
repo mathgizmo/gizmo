@@ -61,7 +61,11 @@
     </mat-radio-group>
     <div class="form-group">
         <label for="testout_attempts">Number of attempts to testout (-1 – means unlimited attempts; 0 – for not testout):</label>
-        <input id="testout_attempts" name="testout_attempts" [(ngModel)]="assignment.testout_attempts" required class="form-control"/>
+        <input id="testout_attempts" name="testout_attempts" type="number" step="1" min="-1" [(ngModel)]="assignment.testout_attempts" required class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="question_num">Number of consecutive correct answers which will signify lesson completion (0 - to answer all questions):</label>
+        <input id="question_num" name="question_num" type="number" step="1" min="0" [(ngModel)]="assignment.question_num" required class="form-control"/>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">

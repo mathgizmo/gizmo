@@ -109,10 +109,9 @@
                             <td style="max-width: 80px;">{{ $student->date != null ? date('H:i d.m.Y', strtotime($student->date)) : 'Never' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_super ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_teacher ? 'Yes' : 'No' }}</td>
-                            <td class="flex flex-row justify-content-end mb-2">
-                                <div class="btn-group">
-                                    <a href="{{ route('students.edit', $student->id) }}" class="btn btn-dark">Edit</a>
-                                </div>
+                            <td class="flex flex-row justify-content-end mb-2" style="min-width: 230px">
+                                <a href="{{ route('students.login', $student->id) }}" target="_blank" class="btn btn-outline-dark">Login</a>
+                                <a href="{{ route('students.edit', $student->id) }}" class="btn btn-dark">Edit</a>
                                 <form action="{{ route('students.delete', $student->id) }}"
                                       method="POST" style="display: inline;"
                                       onsubmit="if(confirm('Are you about to delete {{ $student->name }}, all participant information will be lost. This action is irreversible.')) { return true } else {return false };">

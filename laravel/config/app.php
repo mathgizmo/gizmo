@@ -120,6 +120,16 @@ return [
     */
     'preview_url' => env('PREVIEW_URL', 'http://localhost:4200/gizmo/preview/'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Login as student URL
+    |--------------------------------------------------------------------------
+    |
+    | Angular client URL to login as student
+    |
+    */
+    'login_as_student_url' => env('CLIENT_LOGIN_URL', 'http://localhost:4200/gizmo/login'),
+
     'cipher' => 'AES-256-CBC',
 
     /*

@@ -12,11 +12,6 @@ use App\Dashboard;
 
 class JobController extends Controller
 {
-    public function __construct()
-    {
-        // $this->authorizeResource(Dashboard::class); // not working!
-    }
-
     public function generateClassDetailedReports(Request $request) {
         $error = null;
         try {

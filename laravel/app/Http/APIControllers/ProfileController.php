@@ -36,7 +36,6 @@ class ProfileController extends Controller
             'first_name' => $student->first_name,
             'last_name' => $student->last_name,
             'email' => $student->email,
-            'question_num' => $student->question_num,
             'app_id' => $student->app_id,
             'applications' => Application::whereDoesntHave('teacher')->get(),
             'country_id' => $student->country_id
@@ -78,16 +77,6 @@ class ProfileController extends Controller
         }
         if (request()->has('password')) {
             $update['password'] = bcrypt(request('password'));
-        }
-        if (request()->has('question_num')) {
-            $question_num = request('question_num');
-            if (!is_numeric($question_num)) {
-                return $this->error('question_num must be an integer');
-            }
-            if ($question_num < 0) {
-                $question_num = 0;
-            }
-            $update['question_num'] = (int)$question_num;
         }
         Student::find($student->id)->update($update);
         return $this->success('OK.');

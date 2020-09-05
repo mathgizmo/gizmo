@@ -4,13 +4,13 @@
     <table matSort (matSortChange)="sortData($event)" class="table">
       <thead>
       <tr>
-        <th mat-sort-header="name" scope="col">Student</th>
+        <th *ngIf="!forStudent" mat-sort-header="name" scope="col">Student</th>
         <th scope="col" *ngFor="let app of assignments" class="assignment-table-row">{{app.name}}</th>
       </tr>
       </thead>
       <tbody>
       <tr *ngFor="let row of students | tableFilter: form.value" style="cursor: pointer;">
-        <td>{{row.student_email}}</td>
+        <td *ngIf="!forStudent">{{row.student_email}}</td>
         <td *ngFor="let app of assignments" [class]="row.data[app.id] && row.data[app.id].status" class="assignment-table-row">
           <span *ngIf="row.data[app.id]">
             {{row.data[app.id].status == 'completed' ? 'Completed' :

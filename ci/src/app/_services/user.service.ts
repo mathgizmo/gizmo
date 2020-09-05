@@ -27,7 +27,6 @@ export class UserService {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
-            question_num: user.question_num,
             country_id: user.country_id
         };
         return this.http.post('/profile', request)

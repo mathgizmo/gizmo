@@ -6,9 +6,9 @@ import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 
 @Component({
-    selector: 'my-classes',
-    templateUrl: './my-classes.component.html',
-    styleUrls: ['./my-classes.component.scss'],
+    selector: 'app-my-classes',
+    templateUrl: './classes.component.html',
+    styleUrls: ['./classes.component.scss'],
     providers: [UserService]
 })
 export class MyClassesComponent implements OnInit {

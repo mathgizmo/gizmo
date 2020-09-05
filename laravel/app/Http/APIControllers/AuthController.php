@@ -21,29 +21,33 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         auth()->shouldUse('api');
-        $credentials = $request->only('email', 'password');
-        try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return $this->error('invalid_credentials', 401);
+        if ($request->filled('token')) {
+            $token = request('token');
+            $student = JWTAuth::parseToken()->authenticate();
+        } else {
+            $credentials = $request->only('email', 'password');
+            try {
+                if (!$token = JWTAuth::attempt($credentials)) {
+                    return $this->error('invalid_credentials', 401);
+                }
+            } catch (JWTException $e) {
+                return $this->error('Could Not Create Token', 500);
             }
-        } catch (JWTException $e) {
-            return $this->error('Could Not Create Token', 500);
+            $validator = Validator::make(
+                $request->only(['email', 'password', 'g-recaptcha-response']),
+                [
+                    'email' => 'required|email|max:255',
+                    'password' => 'required',
+                    'g-recaptcha-response' => 'required|recaptcha',
+                ]
+            );
+            if ($validator->fails()) {
+                return $this->error($validator->messages(), 400);
+            }
+            $student = auth()->user();
+            DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
         }
-        $validator = Validator::make(
-            $request->only(['email', 'password', 'g-recaptcha-response']),
-            [
-                'email' => 'required|email|max:255',
-                'password' => 'required',
-                'g-recaptcha-response' => 'required|recaptcha',
-            ]
-        );
-        if ($validator->fails()) {
-            return $this->error($validator->messages(), 400);
-        }
-        $student = auth()->user();
-        DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
 
-        $student->question_num = $student->question_num ?: 5;
         $app = Application::where('id', $student->app_id)->first();
         if (!$app) {
             $app = Application::whereDoesntHave('teacher')->first();
@@ -62,8 +66,7 @@ class AuthController extends Controller
             'last_name' => $student->last_name,
             'email' => $student->email,
             'role' => $role,
-            'country_id' => $student->country_id,
-            'question_num' => $student->question_num
+            'country_id' => $student->country_id
         ]);
         return $this->success(compact('token', 'app_id', 'user'));
     }
@@ -192,4 +195,5 @@ class AuthController extends Controller
         }
         return $this->error('Something went wrong!');
     }
+
 }

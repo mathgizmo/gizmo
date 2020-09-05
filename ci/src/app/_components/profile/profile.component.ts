@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../_models/user';
 import {AuthenticationService, CountryService, UserService} from '../../_services/index';
-import {DomSanitizer} from '@angular/platform-browser';
-import {Router} from '@angular/router';
-import {environment} from '../../../environments/environment';
+// import {DomSanitizer} from '@angular/platform-browser';
+// import {Router} from '@angular/router';
+// import {environment} from '../../../environments/environment';
 
 @Component({
     selector: 'app-profile',
@@ -12,13 +12,10 @@ import {environment} from '../../../environments/environment';
     providers: [UserService]
 })
 export class ProfileComponent implements OnInit {
-    user: User;
-    passwordsMatch = true;
-    badEmail = false;
-    warningMessage: string;
-
-    public applications = [];
-    public selectedAppId;
+    public user: User;
+    public passwordsMatch = true;
+    public badEmail = false;
+    public warningMessage: string;
     public countries = [];
     public selectedCountry = {
         id: 1,
@@ -26,14 +23,16 @@ export class ProfileComponent implements OnInit {
         code: 'CA'
     };
 
-    private readonly adminUrl = environment.adminUrl;
+    // public applications = [];
+    // public selectedAppId;
+    // private readonly adminUrl = environment.adminUrl;
 
     constructor(
         private userService: UserService,
         private authenticationService: AuthenticationService,
-        private countryService: CountryService,
-        private sanitizer: DomSanitizer,
-        private router: Router
+        private countryService: CountryService
+        // private sanitizer: DomSanitizer,
+        // private router: Router
     ) {
         this.user = new User();
     }
@@ -44,15 +43,13 @@ export class ProfileComponent implements OnInit {
             this.userService.getProfile()
                 .subscribe(res => {
                     localStorage.setItem('app_id', res['app_id']);
-                    this.selectedAppId = res['app_id'];
                     this.user.username = res['name'];
                     this.user.first_name = res['first_name'];
                     this.user.last_name = res['last_name'];
                     this.user.email = res['email'];
-                    this.user.question_num = res['question_num'];
                     this.user.country_id = res['country_id'];
-                    localStorage.setItem('question_num', res['question_num']);
-                    this.applications = res['applications'];
+                    // this.applications = res['applications'];
+                    // this.selectedAppId = res['app_id'];
                     const userCountry = this.countries.filter(x => x.id === this.user.country_id);
                     if (userCountry.length > 0) {
                         this.selectedCountry = userCountry[0];
@@ -72,7 +69,6 @@ export class ProfileComponent implements OnInit {
                     this.warningMessage = res['email'][0];
                     this.badEmail = true;
                 } else {
-                    localStorage.setItem('question_num', '' + this.user.question_num);
                     this.badEmail = false;
                 }
             });
@@ -99,7 +95,7 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    onChangeApplication(appId: number) {
+    /* onChangeApplication(appId: number) {
         if (!appId) {
             return;
         }
@@ -125,6 +121,6 @@ export class ProfileComponent implements OnInit {
         }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
-    }
+    } */
 
 }

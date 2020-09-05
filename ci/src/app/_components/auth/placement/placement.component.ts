@@ -1,9 +1,6 @@
-/*import {Component, OnInit, Inject} from '@angular/core';
+/* import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {PlacementService} from '../../../_services/index';
-
-import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
-import {QuestionNumDialogComponent} from './question-num-dialog/question-num-dialog.component';
 
 @Component({
     selector: 'app-placement',
@@ -20,19 +17,14 @@ export class PlacementComponent implements OnInit {
 
     loading = false;
 
-    constructor(private placementService: PlacementService, private router: Router, public dialog: MatDialog) {
+    constructor(private placementService: PlacementService, private router: Router) {
     }
 
     ngOnInit() {
     }
 
     onSkip() {
-        const dialogRef = this.dialog.open(QuestionNumDialogComponent, {
-            width: '1000px', data: {}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.router.navigate(['/']);
-        });
+        this.router.navigate(['/']);
     }
 
     onNext() {
@@ -55,25 +47,14 @@ export class PlacementComponent implements OnInit {
     }
 
     onNo() {
-        const dialogRef = this.dialog.open(QuestionNumDialogComponent, {
-            width: '1000px',
-            data: {}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.placementService.getFirstTopicId(this.unitId).subscribe(response => {
-                this.router.navigate(['/topic/' + response]);
-            });
+        this.placementService.getFirstTopicId(this.unitId).subscribe(response => {
+            this.router.navigate(['/topic/' + response]);
         });
     }
 
     onNotSure() {
-        const dialogRef = this.dialog.open(QuestionNumDialogComponent, {
-            width: '1000px', data: {}
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.placementService.doneHalfUnit(this.unitId).subscribe(response => {
-                this.router.navigate(['/topic/' + response]);
-            });
+        this.placementService.doneHalfUnit(this.unitId).subscribe(response => {
+            this.router.navigate(['/topic/' + response]);
         });
     }
 
@@ -86,6 +67,4 @@ export class PlacementComponent implements OnInit {
             this.state = 2;
         }
     }
-
-}
-*/
+} */

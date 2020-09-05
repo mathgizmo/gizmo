@@ -14,7 +14,8 @@
           <th mat-sort-header="start_time" scope="col">Start Time</th>
           <th mat-sort-header="due_date" scope="col">Due Date</th>
           <th mat-sort-header="due_time" scope="col">Due Time</th>
-          <th scope="col">Status</th>
+          <th scope="col">Completion Rate</th>
+          <th scope="col">Error Rate</th>
         </tr>
         </thead>
         <tbody>
@@ -43,6 +44,10 @@
               <span style="font-size: 0.8em;">{{(item.progress * 100).toFixed(1)}}%</span>
               <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
             </div>
+          </td>
+          <td>
+            <span style="font-size: 0.8em;">{{(item.error_rate * 100).toFixed(1)}}%</span>
+            <mat-progress-bar  mode="determinate" [value]="item.error_rate * 100"></mat-progress-bar>
           </td>
         </tr>
         </tbody>
