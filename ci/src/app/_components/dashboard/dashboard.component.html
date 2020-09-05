@@ -1,0 +1,6 @@
+<div class="dashboard">
+  <mat-card *ngFor="let dashboard of dashboards">
+    <div class="title">{{dashboard.title}}</div>
+    <div class="data" [innerHtml]="dashboard.data | safeHtml"></div>
+  </mat-card>
+</div>

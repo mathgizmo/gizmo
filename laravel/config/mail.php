@@ -55,7 +55,10 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => [
+        'address' => env('MAIL_USERNAME', 'support@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'Gizmo Support'),
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -109,12 +112,36 @@ return [
 
     'sendmail' => '/usr/sbin/sendmail -bs',
 
-    'stream' => [
-       'ssl' => [
-          'allow_self_signed' => true,
-          'verify_peer' => false,
-          'verify_peer_name' => false,
-       ],
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown Mail Settings
+    |--------------------------------------------------------------------------
+    |
+    | If you are using Markdown based email rendering, you may configure your
+    | theme and component paths here, allowing you to customize the design
+    | of the emails. Or, you may simply stick with the Laravel defaults!
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'default',
+
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Log Channel
+    |--------------------------------------------------------------------------
+    |
+    | If you are using the "log" driver, you may specify the logging channel
+    | if you prefer to keep mail messages separate from other log entries
+    | for simpler reading. Otherwise, the default channel will be used.
+    |
+    */
+
+    'log_channel' => env('MAIL_LOG_CHANNEL'),
 
 ];

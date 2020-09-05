@@ -1,4 +1,4 @@
-.profile{
+.profile {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -9,35 +9,89 @@
   width: 80vw;
 }
 
-mat-card{
+.app-title {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: flex-start;
+  width: calc(100% - 70px);
+}
+
+.title {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.app-img {
+  width: 64px;
+  height: 64px;
+  background-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-repeat: no-repeat;
+}
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  > * {
+    min-width: 50%;
+  }
+}
+
+.app-select-container {
+  div:first-child {
+    margin-right: 6px;
+  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+mat-card {
   margin: 10px;
   padding: 15px;
   min-width: 250px;
-  width: calc(100% - 20px); 
+  width: calc(100% - 20px);
 }
 
 mat-card:last-child {
   margin-bottom: 28px;
 }
 
-.title {
-  display: block;
-  text-align: center;
-}
-
 mat-form-field {
   width: 100%;
 }
 
-.button-container{
-  display: flex;  
-  align-items: center; 
-  justify-content: center;
-  flex-wrap: wrap; 
+.flag-icon {
+  height: 32px !important;
+  margin-right: 8px;
 }
 
-@media screen and (max-width: 600px) { 
+@media screen and (max-width: 600px) {
   .profile {
-    width: 100vw;
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .applications-list {
+    margin-right: 0;
+    > * {
+      min-width: 100%;
+    }
   }
 }

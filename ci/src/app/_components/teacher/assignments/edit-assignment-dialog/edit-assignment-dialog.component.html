@@ -1,0 +1,76 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container"
+    class="subtitle hide">Edit Class!</h2>
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{title}}</div>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input id="name" name="name" placeholder="Name" [(ngModel)]="assignment.name" #name="ngModel" required class="form-control"/>
+    </div>
+    <div *ngIf="name.invalid && (name.dirty || name.touched)"
+         class="alert alert-danger">
+        <div *ngIf="name.errors.required">
+            Name is required.
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="icon">Icon:</label>
+        <input id="icon" name="icon" [(ngModel)]="assignment.icon" type="hidden" />
+        <div *ngIf="!showImages" class="app-img" [style.background-image]="setIcon(assignment.icon ? assignment.icon : 'images/default-icon.svg')" (click)="showImages=!showImages"></div>
+        <div *ngIf="showImages" class="icons-list">
+            <div *ngFor="let icon of icons">
+                <div class="app-img" [style.background-image]="setIcon(icon)" (click)="onImageSelected(icon)"></div>
+            </div>
+        </div>
+    </div>
+    <form novalidate #form="ngForm" id="tree-form" class="tree m-0 p-0 ml-2 mb-3">
+        <ul>
+            <li *ngFor="let level of tree">
+                <i class="expand-icon fa" [ngClass]="hasCheckedChildrenLevel(level) ? 'fa-plus' : 'fa-minus'" (click)="onExpandTree(levelLabel)"></i>
+                <input type="checkbox" name="level[{{level.id}}]" [attr.checked]="level.checked ? 'checked' : null"
+                       #levelCheckbox (change)="onTreeElementChecked(levelCheckbox)" />
+                <label class="can-expand" #levelLabel (click)="onExpandTree(levelLabel)">{{level.text}}</label>
+                <ul class="{{level.collapsed ? 'collapse' : ''}}">
+                    <li *ngFor="let unit of level.children">
+                        <i class="expand-icon fa" [ngClass]="hasCheckedChildrenUnit(unit) ? 'fa-plus' : 'fa-minus'" (click)="onExpandTree(unitLabel)"></i>
+                        <input type="checkbox" name="unit[{{unit.id}}]" [attr.checked]="unit.checked ? 'checked' : null"
+                               #unitCheckbox (change)="onTreeElementChecked(unitCheckbox)" />
+                        <label class="can-expand"  #unitLabel (click)="onExpandTree(unitLabel)">{{unit.text}}</label>
+                        <ul [ngClass]="{'collapse' : unit.collapsed }">
+                            <li *ngFor="let topic of unit.children">
+                                <i class="expand-icon fa" [ngClass]="hasCheckedChildrenTopic(topic) ? 'fa-plus' : 'fa-minus'" (click)="onExpandTree(topicLabel)"></i>
+                                <input type="checkbox" name="topic[{{topic.id}}]" [attr.checked]="topic.checked ? 'checked' : null"
+                                       #topicCheckbox (change)="onTreeElementChecked(topicCheckbox)" />
+                                <label class="can-expand" #topicLabel (click)="onExpandTree(topicLabel)">{{topic.text}}</label>
+                                <ul [ngClass]="{'collapse' : topic.collapsed }">
+                                    <li *ngFor="let lesson of topic.children">
+                                        <input type="checkbox" name="lesson[{{lesson.id}}]" [attr.checked]="lesson.checked ? 'checked' : null"
+                                               #lessonCheckbox (change)="onTreeElementChecked(lessonCheckbox)" />
+                                        <label>{{lesson.text}}</label>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <mat-radio-group [(ngModel)]="assignment.allow_any_order" class="radio-group form-group">
+        <mat-radio-button [value]="0">Topics/Lessons need to be completed in linear order</mat-radio-button>
+        <mat-radio-button [value]="1">Topics/Lessons can be completed in any order</mat-radio-button>
+    </mat-radio-group>
+    <div class="form-group">
+        <label for="testout_attempts">Number of attempts to testout (-1 – means unlimited attempts; 0 – for not testout):</label>
+        <input id="testout_attempts" name="testout_attempts" [(ngModel)]="assignment.testout_attempts" required class="form-control"/>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
+    <button *ngIf="name.invalid" mat-button class='button moving-forward-button continue-button' disabled
+            type="button">Save
+    </button>
+    <button *ngIf="!name.invalid" mat-button class='button moving-forward-button continue-button'
+            type="button" (click)="onSave()">Save
+    </button>
+</mat-dialog-actions>
+

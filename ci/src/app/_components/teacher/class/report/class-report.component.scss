@@ -1,0 +1,81 @@
+@import '../../../../../colors';
+
+.report {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0;
+  margin: 60px auto 0;
+  width: 90vw;
+  .report-content {
+    margin-left: 220px;
+    width: calc(100% - 20px);
+  }
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    ::ng-deep .class-menu {
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px);
+      min-width: calc(100% - 20px);
+    }
+    .report-content {
+      margin-left: 0;
+    }
+  }
+}
+
+mat-card {
+  margin: 10px;
+  padding: 15px;
+  min-width: 250px;
+  width: calc(100% - 20px);
+}
+
+mat-card:last-child {
+  margin-bottom: 28px;
+}
+
+.arrow {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  border: solid $navy;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  @media (max-width: 1024px) {
+    top: 14px;
+    right: 18px;
+  }
+  @media (max-width: 768px) {
+    top: 10px;
+    right: 16px;
+  }
+}
+
+.arrow, .unit-title, .topic-title {
+  cursor: pointer;
+}
+
+.arrow-up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.arrow-down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+@media screen and (max-width: 600px) {
+  .report {
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .report-content {
+    margin-right: 0;
+  }
+}

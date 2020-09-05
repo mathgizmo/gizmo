@@ -8,125 +8,99 @@ use App\Level;
 
 class LevelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function __construct()
     {
-        $query = Level::query();
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('order_no'), function ($q) {
-            return $q->where('order_no', request('order_no'));
-        });
-        $query->when($request->has('title'), function ($q) {
-            return $q->where('title', 'LIKE', '%'.request('title').'%');
-        });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
-        $levels = $query->get();
-        return view('level_views.index', ['levels'=>$levels]);
+        // $this->authorizeResource(Level::class); // not working!
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function index(Request $request)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $query = Level::query();
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['order_no']) {
+            $query->where('order_no', $request['order_no']);
+        }
+        if ($request['title']) {
+            $query->where('title', 'LIKE', '%' . $request['title'] . '%');
+        }
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
+        }
+        return view('levels.index', [
+            'levels' => $query->get()
+        ]);
+    }
+
     public function create()
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $total_level = Level::all()->count();
         $levels = Level::All();
-        return view('level_views.create', array(
+        return view('levels.create', array(
             'levels' => $levels,
             'total_level' => $total_level
         ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-         'title'=> 'required',
-         ]);
-         DB::table('level')->insert([
-         'title' => $request['title'],
-         'dependency' => $request['dependency'] ?: false,
-         'dev_mode' => $request['dev_mode'] ?: false,
-         'order_no' => $request['order_no'],
-         'created_at' => date('Y-m-d H:i:s'),
-         'updated_at' => date('Y-m-d H:i:s')
+            'title' => 'required',
         ]);
-        return redirect('/level_views')->with(array('message'=> 'Created successfully'));
+        DB::table('level')->insert([
+            'title' => $request['title'],
+            'description' => $request['description'],
+            'dependency' => $request['dependency'] ?: false,
+            'dev_mode' => $request['dev_mode'] ?: false,
+            'order_no' => $request['order_no'],
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        return redirect('/levels')->with(array('message' => 'Created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $level = Level::find($id);
         $total_level = Level::all()->count();
-        return view('level_views.edit', [
-            'level'=>$level,
-            'total_level'=>$total_level,
+        return view('levels.edit', [
+            'level' => $level,
+            'total_level' => $total_level,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-            'title'  => 'required',
+            'title' => 'required',
         ]);
         DB::table('level')->where('id', $id)->update([
             'title' => $request['title'],
+            'description' => $request['description'],
             'order_no' => $request['order_no'],
             'dependency' => $request['dependency'] ?: false,
             'dev_mode' => $request['dev_mode'] ?: false,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
-        return redirect('/level_views')->with(array('message'=> 'Updated successfully'));
+        return redirect('/levels')->with(array('message' => 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         Level::where('id', $id)->delete();
-        return redirect('/level_views')->with(array('message'=> 'Deleted successfully'));
+        return redirect('/levels')->with(array('message' => 'Deleted successfully'));
     }
 }

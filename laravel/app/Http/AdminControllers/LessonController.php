@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 use App\Lesson;
 use App\Topic;
 use App\Level;
@@ -12,62 +11,58 @@ use App\Unit;
 
 class LessonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(Lesson::class); // not working!
+    }
+
     public function index(Request $request)
     {
-        $levels = Level::all();
-        $units = Unit::all();
-        $topics = Topic::all();
-
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = Lesson::query();
-        
-        if ($request->has('topic_id') && $request->topic_id >= 0) {
-            $query->where('topic_id', $request->topic_id);
-        } else if ($request->has('unit_id') && $request->unit_id >= 0) {
-            $query->whereIn('topic_id', function($query) { 
+        if ($request['topic_id'] && $request['topic_id'] >= 0) {
+            $query->where('topic_id', $request['topic_id']);
+        } else if ($request['unit_id'] && $request['unit_id'] >= 0) {
+            $query->whereIn('topic_id', function($query) {
                 $query->select('id')->from(with(new Topic)->getTable())
                 ->where('unit_id', request('unit_id'));
             });
-        } else if ($request->has('level_id')  && $request->level_id >= 0) {
-            $query->whereIn('topic_id', function($query) { 
+        } else if ($request['level_id']  && $request['level_id'] >= 0) {
+            $query->whereIn('topic_id', function($query) {
                 $query->select('id')->from(with(new Topic)->getTable())
-                ->whereIn('unit_id', function($query) { 
+                ->whereIn('unit_id', function($query) {
                     $query->select('id')->from(with(new Unit)->getTable())
                     ->where('level_id', request('level_id'));
                 });
             });
         }
-
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('order_no'), function ($q) {
-            return $q->where('order_no', request('order_no'));
-        });
-        $query->when($request->has('title'), function ($q) {
-            return $q->where('title', 'LIKE', '%'.request('title').'%');
-        });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
-        
-        $lessons = $query->paginate(10)->appends(Input::except('page'));
-
-        return view('lesson_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'lessons'=>$lessons, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id, 'topic_id'=>$request->topic_id]);
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['order_no']) {
+            $query->where('order_no', $request['order_no']);
+        }
+        if ($request['title']) {
+            $query->where('title', 'LIKE', '%'.$request['title'].'%');
+        }
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
+        }
+        return view('lessons.index', [
+            'levels' => Level::all(),
+            'units' => Unit::all(),
+            'topics' => Topic::all(),
+            'lessons' => $query->paginate(10)->appends(request()->query()),
+            'unit_id' => $request['unit_id'],
+            'level_id' => $request['level_id'],
+            'topic_id' => $request['topic_id']
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
-    {   $lid = "";
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $lid = "";
         $uid = "";
         $tid = "";
         $levels = DB::select('select * from level');
@@ -75,7 +70,7 @@ class LessonController extends Controller
         $topics = DB::select('select * from topic');
         $lessons = DB::table('lesson')->where('topic_id', $tid)->get();
         $total_lesson = Lesson::all()->count();
-        return view('lesson_views.create', [
+        return view('lessons.create', [
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,
@@ -87,14 +82,9 @@ class LessonController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'level_id'    => 'required',
             'unit_id'    => 'required',
@@ -115,27 +105,17 @@ class LessonController extends Controller
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
         $topic_id = $request->input('topic_id');
-        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Created successfully'));
+        return redirect('/lessons?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $lesson = DB::table('lesson')
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
@@ -147,7 +127,7 @@ class LessonController extends Controller
         $units = DB::table('unit')->select('id', 'title')->where('level_id', $lesson->lid)->get();
         $topics = DB::table('topic')->select('id', 'title')->where('unit_id', $lesson->uid)->get();
         $total_lesson = Lesson::all()->count();
-        return view('lesson_views.edit', [
+        return view('lessons.edit', [
             'lesson' => $lesson,
             'levels' => $levels,
             'units' => $units,
@@ -156,15 +136,9 @@ class LessonController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
          'level_id'    => 'required',
          'unit_id'    => 'required',
@@ -185,25 +159,16 @@ class LessonController extends Controller
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
         $topic_id = $request->input('topic_id');
-        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Updated successfully'));
+        return redirect('/lessons?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     * The delete operation need to be performed
-     * after selecting topic_id form the lesson table
-     * for associated lesson id.
-     */
     public function destroy(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         DB::table('lesson')->where('id', $id)->delete();
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
         $topic_id = $request->input('topic_id');
-        return redirect('/lesson_views?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Deleted successfully'));
+        return redirect('/lessons?level_id='. $level_id . '&unit_id='. $unit_id. '&topic_id='. $topic_id)->with(array('message'=> 'Deleted successfully'));
     }
 }

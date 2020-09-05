@@ -1,0 +1,95 @@
+<h2 id="chart-container" (window:resize)="onResize($event)"></h2>
+
+<div id="controls">
+  <div *ngIf="control == 1">
+    <mat-form-field (change)="ngOnChanges()">
+      <input matInput [(ngModel)]="inputValue" type="number"
+        [step]="stepInput" [max]="maxInputValue" [min]="minInputValue" />
+        <mat-progress-bar class='progress' [value]="((value-startValue)/(maxValue-startValue)*100).toFixed(0)">
+      </mat-progress-bar>
+    </mat-form-field>
+    <span *ngIf="valueDisplay == 2" >
+      <span class='max-value'>/{{maxValue}}</span>
+    </span>
+    <span *ngIf="valueDisplay == 4"> %</span>
+  </div>
+
+  <div *ngIf="control == 2">
+    <div>
+      <mat-slider *ngIf="type != 4"
+        (change)="ngOnChanges()" [(ngModel)]="value"
+        [step]="step" [max]="maxValue" min="0"
+        color="primary" class='slider-control'>
+      </mat-slider>
+      <mat-slider *ngIf="type == 4"
+        (change)="ngOnChanges()" [(ngModel)]="value"
+        [step]="step" [max]="endValue" [min]="startValue"
+        color="primary" class='slider-control' id='inputValue'>
+      </mat-slider>
+      <div class="value-label-container">
+        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && !controllbaseValue" class="slider-value-label">
+          <span>
+            Value = {{value.toFixed(accuracyControl)}}
+          </span>
+          <span *ngIf="valueDisplay == 2">
+            / {{maxValue}}
+          </span>
+        </label>
+        <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue" class="slider-value-label">
+          <span>
+            Value = {{(value*controllbaseValue/maxValue).toFixed(accuracyControl)}}
+          </span>
+          <span *ngIf="valueDisplay == 2">
+            / {{controllbaseValue}}
+          </span>
+        </label>
+        <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)" class="slider-value-label">
+          <span *ngIf="valueDisplay == 3">
+            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(accuracyControl)}}
+          </span>
+          <span *ngIf="valueDisplay == 4">
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(accuracyControl)}}%
+          </span>
+        </label>
+      </div>
+      <div class="slider-control-buttons">
+        <button mat-button (click)="incrementSliderValue('decrement', false)" (press)="startIncrementingSliderValue('decrement')" (pressup)="stopIncrementingSliderValue()">
+          <i class="fa fa-minus"></i>
+        </button>
+        <button mat-button (click)="incrementSliderValue('increment', false)" (press)="startIncrementingSliderValue('increment')" (pressup)="stopIncrementingSliderValue()">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="(control != 1 && control != 2)">
+    <div id="value-label-container">
+      <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && !controllbaseValue">
+        <span>
+          Value = {{value.toFixed(accuracyControl)}}
+        </span>
+        <span *ngIf="valueDisplay == 2">
+          / {{maxValue}}
+        </span>
+      </label>
+      <label *ngIf="(valueDisplay == 1 || valueDisplay == 2) && controllbaseValue">
+        <span>
+          Value = {{(value*controllbaseValue/maxValue).toFixed(accuracyControl)}}
+        </span>
+        <span *ngIf="valueDisplay == 2">
+          / {{controllbaseValue}}
+        </span>
+      </label>
+      <label *ngIf="(valueDisplay == 3 || valueDisplay == 4)">
+          <span *ngIf="valueDisplay == 3">
+            Value = {{((value-startValue)/(maxValue-startValue)).toFixed(accuracyControl)}}
+          </span>
+          <span *ngIf="valueDisplay == 4">
+            Value = {{((value-startValue)/(maxValue-startValue)*100).toFixed(accuracyControl)}}%
+          </span>
+        </label>
+    </div>
+  </div>
+
+</div>

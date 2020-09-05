@@ -23,17 +23,16 @@
               "src/.htaccess"
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/font-awesome/css/font-awesome.css"
+              "node_modules/font-awesome/css/font-awesome.css",
+              "src/styles.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/mathjax/MathJax.js",
-              "src/assets/js/mathjax/config/TeX-AMS_CHTML.js",
-              "src/assets/js/mathjax/jax/output/CommonHTML/jax.js",
-              "src/assets/js/mathjax/jax/output/CommonHTML/fonts/TeX/fontdata.js",
-              "node_modules/mathjax/extensions/MathMenu.js",
-              "node_modules/mathjax/extensions/MathZoom.js"
+              "node_modules/chart.js/dist/Chart.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "chart.js",
+              "jquery"
             ]
           },
           "configurations": {
@@ -99,16 +98,11 @@
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/mathjax/MathJax.js",
-              "src/assets/js/mathjax/config/TeX-AMS_CHTML.js",
-              "src/assets/js/mathjax/jax/output/CommonHTML/jax.js",
-              "src/assets/js/mathjax/jax/output/CommonHTML/fonts/TeX/fontdata.js",
-              "node_modules/mathjax/extensions/MathMenu.js",
-              "node_modules/mathjax/extensions/MathZoom.js"
+              "node_modules/chart.js/dist/Chart.min.js"
             ],
             "styles": [
-              "src/styles.scss",
-              "node_modules/font-awesome/css/font-awesome.css"
+              "node_modules/font-awesome/css/font-awesome.css",
+              "src/styles.scss"
             ],
             "assets": [
               "src/assets",
@@ -130,7 +124,7 @@
           }
         }
       }
-    },
+    }
   },
   "defaultProject": "ci",
   "schematics": {
@@ -158,5 +152,8 @@
     "@schematics/angular:service": {
       "spec": false
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

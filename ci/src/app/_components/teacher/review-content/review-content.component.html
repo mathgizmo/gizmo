@@ -1,0 +1,42 @@
+﻿<div *ngIf="topicsTree.length" class="topics">
+  <div *ngFor="let level of topicsTree; let levelIndex = 'index'" >
+    <mat-card *ngIf="level.units.length" class="level">
+      <h3 class="level-title title" >{{level.title}}</h3>
+      <h4 class="level-description subtitle" [innerHtml]="level.description | safeHtml"></h4>
+      <mat-card [id]="'unit'+unit.id" class="unit" *ngFor="let unit of level.units; let unitIndex = 'index'">
+        <h4 class="unit-title subtitle" (click)="slideToggle(unit)">
+          {{unit.title}}
+        </h4>
+        <i class="arrow" [class.arrow-up]="unit.show" [class.arrow-down]="!unit.show"
+          (click)="slideToggle(unit)">
+        </i>
+        <div [id]="'unit'+unit.id+'-topics'" style="display: none;">
+          <div class="description-container">
+            <h5 class="unit-description subtitle" [innerHtml]="unit.description | safeHtml"></h5>
+          </div>
+          <mat-card [id]="'topic'+topic.id" class="topic" *ngFor="let topic of unit.topics; let topicIndex = 'index'" >
+            <h4 class="topic-title subtitle" (click)="slideToggleTopic(topic)">
+              {{topic.title}}
+            </h4>
+            <i class="arrow" [class.arrow-up]="topic.show" [class.arrow-down]="!topic.show"
+               (click)="slideToggleTopic(topic)">
+            </i>
+            <div [id]="'topic'+topic.id+'-lessons'" style="display: none;">
+              <div class="description-container">
+                <h5 class="topic-description subtitle" [innerHtml]="topic.description | safeHtml"></h5>
+              </div>
+              <div *ngFor="let lesson of topic.lessons; let lessonIndex = 'index'" class="lessons-container" [class.locked]="topic.status == 0 ? true : null" [id]="'topic'+topic.id">
+                <a [routerLink]="'/topic/'+topic.id+'/lesson/'+lesson.id" [queryParams]="{from_content_review:'true'}" routerLinkActive="active" class="lesson">
+                  <div class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)"></div>
+                  <div>
+                    <div class="lesson-title">{{lesson.title}}</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </mat-card>
+    </mat-card>
+  </div>
+</div>

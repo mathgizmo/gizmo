@@ -2,68 +2,41 @@
 
 namespace App\Providers;
 
-use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * This namespace is applied to your controller routes.
-     *
-     * In addition, it is set as the URL generator's root namespace.
-     *
-     * @var string
-     */
+
     protected $namespace = 'App\Http\Controllers';
 
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @param  \Illuminate\Routing\Router  $router
-     * @return void
-     */
-    public function boot(Router $router)
+    public function boot()
     {
-        //
-
-        parent::boot($router);
+        parent::boot();
     }
 
-    /**
-     * Define the routes for the application.
-     *
-     * @param  \Illuminate\Routing\Router  $router
-     * @return void
-     */
-    public function map(Router $router)
-    {
-        $this->mapWebRoutes($router);
-
-        //
-    }
-
-    /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @param  \Illuminate\Routing\Router  $router
-     * @return void
-     */
-    protected function mapWebRoutes(Router $router)
+    public function map()
     {
         if (isset($_ENV['app']) && $_ENV['app'] == 'api') {
-            $api = app('Dingo\Api\Routing\Router');
-            $api->version('v1', ['middleware' => 'api'], function ($api) {
-                require app_path('Http/api-routes.php');
-            });
+            $this->mapApiRoutes();
         }
         else {
-            $router->group([
-                'namespace' => $this->namespace, 'middleware' => 'web',
-            ], function ($router) {
-                require app_path('Http/routes.php');
-            });
+            $this->mapWebRoutes();
         }
+    }
+
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
+    }
+
+    protected function mapApiRoutes()
+    {
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 }

@@ -43,6 +43,39 @@ h1, h2, h3, h4 {
   background-color: $teal !important;
   border-radius: 50px !important;
   padding: 10px 25px !important;
+  text-decoration: none;
+}
+
+a.button:hover, a.button:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+.button-small {
+  padding: 1px 10px !important;
+}
+
+.button-outline {
+  background: $white !important;
+  color: $navy !important;
+  border: solid 1px $navy !important;
+}
+
+.button-dark {
+  background: $navy !important;
+  color: $white !important;
+  border: solid 1px $navy !important;
+}
+
+.button-white {
+  background: $white !important;
+  color: $navy !important;
+}
+
+.button-danger {
+  background: $danger !important;
+  color: $white !important;
+  border: solid 1px $red !important;
 }
 
 .completion-button {
@@ -120,6 +153,11 @@ h1, h2, h3, h4 {
     top: 22px;
     left: 72px;
     z-index: 10;
+}
+
+.back:hover {
+  text-decoration: none;
+  color: $white;
 }
 
 .question * img {
@@ -326,6 +364,110 @@ h1, h2, h3, h4 {
   }
 }
 
+.order-list {
+  background: none !important;
+  border: none !important;
+  .order-item {
+    min-height: 52px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    background: rgba(0, 38, 66, 0.1) !important;
+    color: $white !important;
+    border: none !important;
+    padding: 10px 16px !important;
+    .mjx-chtml, .MathJax_CHTML {
+      width: 100% !important;
+    }
+  }
+  .order-item:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cdk-drag-preview {
+  border-radius: 16px !important;
+  color: $white !important;
+  padding: 10px 16px !important;
+}
+
+.question-container .question * {
+  [data-tooltip] {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1.8px dotted $navy;
+    cursor: help;
+    z-index: 2;
+  }
+
+  [data-tooltip]:before,
+  [data-tooltip]:after {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  [data-tooltip]:before {
+    position: absolute;
+    bottom: 80%;
+    left: 50%;
+    margin-bottom: 5px;
+    margin-left: -80px;
+    padding: 7px;
+    width: 160px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #000;
+    background-color: hsla(0, 0%, 20%, 0.9);
+    color: #fff;
+    content: attr(data-tooltip);
+    text-align: center;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.2;
+  }
+
+  [data-tooltip]:after {
+    position: absolute;
+    bottom: 80%;
+    left: 50%;
+    margin-left: -5px;
+    width: 0;
+    border-top: 5px solid #000;
+    border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    content: " ";
+    font-size: 0;
+    line-height: 0;
+  }
+
+  [data-tooltip]:hover:before,
+  [data-tooltip]:hover:after {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+/* hide time picker (Chrome) */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background: none;
+  display: none;
+}
+
+input[type="time"].form-control, input[type="date"].form-control {
+  line-height: unset !important;
+}
+
+/* .success-snackbar {
+  background: $teal !important;
+  color: $navy !important;
+} */
+.error-snackbar {
+  background: $danger !important;
+  color: $navy !important;
+}
+
 @media screen and (max-width: 1366px) {
   .welcome iframe, .welcome video {
     height: 28vh;
@@ -355,6 +497,10 @@ h1, h2, h3, h4 {
     .button, .mat-button {
       font-size: 21px !important;
       padding: 4px 14px !important;
+    }
+
+    .button-small {
+      padding: 1px 6px !important;
     }
 
     .dialog-buttons-container {
@@ -404,6 +550,10 @@ h1, h2, h3, h4 {
     .button, .mat-button {
       font-size: 16px !important;
       padding: 2px 12px !important;
+    }
+
+    .button-small {
+      padding: 0 4px !important;
     }
 
     .dialog-content {

@@ -10,12 +10,21 @@ class Controller extends BaseController
 {
     use \Dingo\Api\Routing\Helpers;
 
-    protected function success($message)
+    protected function success($message, $code = 200)
     {
-        return $this->response->array(['success' => true, 'message' => $message, 'status_code' => 200]);
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'status_code' => $code
+        ], $code, [], JSON_NUMERIC_CHECK);
     }
-    protected function error($message)
+
+    protected function error($message, $code = 500)
     {
-        return $this->response->array(['success' => false, 'message' => $message, 'status_code' => 200]);
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'status_code' => $code
+        ], $code, [], JSON_NUMERIC_CHECK);
     }
 }

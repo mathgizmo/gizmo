@@ -11,11 +11,6 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that should not be reported.
-     *
-     * @var array
-     */
     protected $dontReport = [
         AuthorizationException::class,
         HttpException::class,
@@ -23,28 +18,28 @@ class Handler extends ExceptionHandler
         ValidationException::class,
     ];
 
-    /**
-     * Report or log an exception.
-     *
-     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
-     *
-     * @param  \Exception  $e
-     * @return void
-     */
-    public function report(Exception $e)
+    public function report(Exception $exception)
     {
-        parent::report($e);
+        parent::report($exception);
+    }
+    public function render($request, Exception $exception)
+    {
+        if ($exception instanceof AuthorizationException) {
+            return response()->view('errors.' . '403', [], 403);
+        }
+        if ($this->isHttpException($exception)) {
+            if ($exception->getStatusCode() == 404) {
+                return response()->view('errors.' . '404', [], 404);
+            }
+            if ($exception->getStatusCode() == 500) {
+                return response()->view('errors.' . '500', [], 500);
+            }
+        }
+        return parent::render($request, $exception);
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
-     * @return \Illuminate\Http\Response
-     */
-    public function render($request, Exception $e)
+    protected function invalidJson($request, ValidationException $exception)
     {
-        return parent::render($request, $e);
+        return response()->json($exception->errors(), $exception->status);
     }
 }

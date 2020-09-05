@@ -2,37 +2,48 @@
 
 namespace App\Http\APIControllers;
 
+use App\Mail\ErrorReportMail;
 use App\ReportError;
 use App\Setting;
 use Illuminate\Support\Facades\Mail;
-use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Question;
 
 class ReportErrorController extends Controller
 {
 
-    /**
-     * @param $question
-     * @return mixed
-     */
+    private $user;
+
+    public function __construct()
+    {
+        try {
+            $this->user = JWTAuth::parseToken()->authenticate();
+            if (!$this->user) {
+                abort(401, 'Unauthorized!');
+            }
+        } catch (\Exception $e) {
+            abort(401, 'Unauthorized!');
+        }
+    }
+
     public function report($question)
     {
         if (($model = Question::find($question)) == null) {
             return $this->error('Invalid question.');
         }
-        $student = JWTAuth::parseToken()->authenticate();
+        $student = $this->user;
         if(request('is_feedback')) {
-            $answers = "";
-            $options = "Feedback";
+            $answers = '';
+            $options = 'Feedback';
         } else {
             $options = request('options');
             $answers = request('answers');
             if (!is_array($answers)) {
                 $answers = [$answers];
             }
-            $answers = implode(";", $answers);
+            $answers = implode(';', $answers);
         }
-        ReportError::create([
+        $error = ReportError::create([
             'student_id' => $student->id,
             'question_id' => $question,
             'answers' => $answers,
@@ -42,11 +53,7 @@ class ReportErrorController extends Controller
         ]);
         if (Setting::getValueByKey('admin_email')) {
             try {
-                Mail::send('emails.report_error', [], function ($m) {
-                    $m->from(Setting::getValueByKey('admin_email'), 'Gizmo');
-
-                    $m->to(Setting::getValueByKey('admin_email'))->subject('New error report!');
-                });
+                Mail::to(Setting::getValueByKey('admin_email'))->send(new ErrorReportMail($student, $error));
             } catch (\Exception $e) {
 
             }

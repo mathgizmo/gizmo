@@ -5,27 +5,43 @@ import { HttpService } from './http.service';
 @Injectable()
 export class TopicService {
 
+    private appId = +localStorage.getItem('app_id');
+
     constructor(
         private http: HttpService) {
     }
 
     // get topics from api
     getTopics() {
-        return this.http.get('/topic');
+        this.appId = +localStorage.getItem('app_id'); // fix navigation to home from home
+        let url = '/topic';
+        if (this.appId) {
+            url += '?app_id=' + this.appId;
+        }
+        return this.http.get(url);
     }
 
     // get topic from api
     getTopic(id) {
-        return this.http.get('/topic/' + id);
+        let url = '/topic/' + id;
+        if (this.appId) {
+            url += '?app_id=' + this.appId;
+        }
+        return this.http.get(url);
     }
 
     // get lesson from api
-    getLesson(topic_id, lesson_id) {
+    getLesson(topic_id, lesson_id, from_content_review = false) {
+        let url = '/topic/' + topic_id;
         if (lesson_id === -1) {
-            return this.http.get('/topic/' + topic_id + '/testout');
+            url += '/testout';
         } else {
-          return this.http.get('/topic/' + topic_id + '/lesson/' + lesson_id);
+            url += '/lesson/' + lesson_id;
         }
+        if (this.appId) {
+            url += '?app_id=' + (from_content_review ? 0 : this.appId);
+        }
+        return this.http.get(url);
     }
 
     // notify api about question error

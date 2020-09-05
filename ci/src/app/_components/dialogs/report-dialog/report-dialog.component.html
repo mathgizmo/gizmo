@@ -1,0 +1,15 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle dialog-title">Please specify reason</h2>
+<mat-dialog-content class='dialog-content'>
+  <mat-radio-group class="radio-group" [(ngModel)]="selectedOption">
+    <mat-radio-button class="radio-button" *ngFor="let option of options; let optionIndex = index" [value]="optionIndex" color="primary">
+      <span class="wrap-text">{{option}}</span>
+    </mat-radio-button>
+  </mat-radio-group>
+  <mat-form-field *ngIf="selectedOption == 3" class='custom-answer'>
+    <input matInput [(ngModel)]="custom" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="{option: options[selectedOption], text: custom, question_id: question_id, answers: answers}" class='button completion-button send-button' style="order: 1;">Send</button>
+    <button mat-button [mat-dialog-close]="false" class='button cancel-button'>Cancel</button>
+</mat-dialog-actions>

@@ -4,78 +4,69 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
-use App\Http\Requests;
 
 class UserController extends Controller
 {
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
+
+    public function __construct()
+    {
+        // $this->authorizeResource(User::class);
+    }
+
     public function index(Request $request)
     {
-        $this->checkAccess(auth()->user()->is_admin);
-        if ($request->has('sort') and $request->has('order')) {
-            $users = User::orderBy($request->sort, $request->order)->get();
+        $this->checkAccess(auth()->user()->isSuperAdmin());
+
+        if ($request['sort'] && $request['order']) {
+            $users = User::orderBy($request['sort'], $request['order'])->get();
         } else {
             $users = User::latest()->get();
         }
-        return view('user_views.index', compact('users'));
+        return view('users.index', compact('users'));
     }
 
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function create()
     {
-        $this->checkAccess(auth()->user()->is_admin);
-        return view('user_views.create');
+        $this->checkAccess(auth()->user()->isSuperAdmin());
+        return view('users.create');
     }
 
-    /**
-     * @param Requests\UserRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(Requests\UserRequest $request)
+    public function store(Request $request)
     {
-        $this->checkAccess(auth()->user()->is_admin);
-        $is_admin = $request->is_admin=='1' ? true : false;
-        $users = User::create([
-            'email' => $request->email,
-            'name' => $request->name,
-            'password' => bcrypt($request->password),
-            'is_admin' => $is_admin
+        $this->checkAccess(auth()->user()->isSuperAdmin());
+        $this->validate($request, [
+            'email' => 'required|email|unique:users',
+            'name' => 'required|string',
+            'password' => 'required|string'
+        ]);
+        User::create([
+            'email' => $request['email'],
+            'name' => $request['name'],
+            'password' => bcrypt($request['password']),
+            'role' => $request['role']
         ]);
         return redirect(route('users.index'))->with('status', 'User has been successfully added.');
     }
 
-    /**
-     * @param User $user
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function edit(User $user)
     {
-        $this->checkAccess(auth()->user()->is_admin);
-        return view('user_views.edit', compact('user'));
+        $this->checkAccess(auth()->user()->isSuperAdmin());
+        return view('users.edit', compact('user'));
     }
 
-    /**
-     * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function update(User $user)
     {
-        $this->checkAccess(auth()->user()->is_admin);
+        $this->checkAccess(auth()->user()->isSuperAdmin());
         $this->validate(request(), [
-            'email' => 'required|email|max:255|unique:users, email, ' . $user->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
         ]);
         if (request()->name == '') {
             return back()->withErrors(['name' => 'Name can\'t be empty.']);
         }
-        $is_admin = request()->is_admin=='1' ? true : false;
         $update = [
             'email' => request()->email,
             'name' => request()->name,
-            'is_admin' => $is_admin
+            'role' => request()->role
         ];
         if (request()->password != '') {
             $update['password'] = bcrypt(request()->password);
@@ -84,24 +75,10 @@ class UserController extends Controller
         return redirect(route('users.index'))->with('status', 'User has been successfully updated.');
     }
 
-    /**
-     * @param User $user
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Exception
-     */
     public function destroy(User $user)
     {
-        $this->checkAccess(auth()->user()->is_admin);
+        $this->checkAccess(auth()->user()->isSuperAdmin());
         $user->delete();
         return redirect(route('users.index'));
-    }
-
-    /**
-     * @param $role
-     */
-    public function checkAccess($role) {
-        if (!$role) {
-            abort('503');
-        }
     }
 }

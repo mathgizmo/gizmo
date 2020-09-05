@@ -1,0 +1,16 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Incorrect :(</h2>
+<mat-dialog-content class="dialog-content">
+    <img src="./assets/images/popup_image_incorrect.svg" alt="Correct" class="popup-image">
+    <div class="explanation">
+        {{text}}
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <a routerLink="/topic/{{topic_id}}/lesson/{{lesson_id}}" routerLinkActive="active" style="order: 2;">
+        <button mat-button [mat-dialog-close]="'retry'" class='button moving-forward-button continue-button'>Retry challenge</button>
+    </a>
+    <a routerLink="/topic/{{topic_id}}" routerLinkActive="active">
+        <button mat-button [mat-dialog-close]="'close'" class='button'>Abandon challenge</button>
+    </a>
+    <button mat-button [mat-dialog-close]="'report'" class='button error-button'>Report Error!</button>
+</mat-dialog-actions>

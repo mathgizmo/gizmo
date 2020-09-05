@@ -1,68 +1,90 @@
 ﻿import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {User} from '../_models/index';
 
 @Injectable()
 export class AuthenticationService {
     public token: string;
+
+    private userSubject: BehaviorSubject<User>;
+    public user: Observable<User>;
+
     private readonly apiUrl = environment.apiUrl;
     private readonly baseUrl = environment.baseUrl;
     private headers?: HttpHeaders;
 
     constructor(private http: HttpClient) {
-        // set token if saved in local storage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
+        this.token = localStorage.getItem('token');
         this.headers = new HttpHeaders({'Content-Type': 'application/json'});
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.userSubject = new BehaviorSubject<User>(user);
+        this.user = this.userSubject.asObservable();
     }
 
-    login(username: string, password: string): Observable<any> {
-        const request = {email: username, password: password};
+    public get userValue(): User {
+        return this.userSubject.value;
+    }
+
+    login(username: string, password: string, captcha_response = null): Observable<any> {
+        const request = {email: username, password: password, 'g-recaptcha-response': captcha_response};
         return this.http.post(this.apiUrl + '/authenticate', request, {headers: this.headers})
             .pipe(
                 map((response: Response) => {
                     // login successful if there's a jwt token in the response
+                    const user = response && response['message'] && response['message']['user'] && JSON.parse(response['message']['user']);
+                    const app_id = response && response['message'] && response['message']['app_id'];
                     const token = response && response['message'] && response['message']['token'];
-                    const user_id = response && response['message'] && response['message']['user_id'];
                     if (token) {
                         // set token property
                         this.token = token;
                         // store username and jwt token in local storage to keep user logged in between page refreshes
-                        localStorage.setItem('currentUser',
-                            JSON.stringify({user_id: user_id, username: username, token: token}));
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('user', JSON.stringify(user));
+                        this.userSubject.next(user);
                         let question_num = 3;
-                        if (response['message'] && response['message']['question_num'] !== undefined) {
-                            question_num = response['message']['question_num'];
+                        if (user.question_num !== undefined) {
+                            question_num = user.question_num;
                         }
                         localStorage.setItem('question_num', question_num + '');
-                        // return true to indicate successful login
-                        return true;
+                        localStorage.setItem('app_id', app_id + '');
+                        return user;
                     } else {
-                        // return false to indicate failed login
                         return false;
                     }
-                })
+                }),
+                catchError((response: Response) => {
+                    return response['message'];
+                }),
             );
     }
 
-    register(username: string, email: string, password: string): Observable<any> {
-        const request = {email: email, name: username, password: password};
-        return this.http.post(this.apiUrl + '/register', request, {headers: this.headers})
-            .pipe(
-                map((response: Response) => {
-                    // login successful if there's a jwt token in the response
-                    this.token = response && response['message'] && response['message']['token'];
-                    return response;
-                })
-            );
+    register(username: string, email: string, password: string,
+             first_name: string = null, last_name: string = null,
+             role: string = 'student', country_id: number = 1, captcha_response = null): Observable<any> {
+        return this.http.post(this.apiUrl + '/register', {
+            email: email,
+            name: username,
+            password: password,
+            first_name: first_name,
+            last_name: last_name,
+            role: role,
+            country_id: country_id,
+            'g-recaptcha-response': captcha_response
+        }, {
+            headers: this.headers
+        });
     }
 
     logout(): void {
-        // clear token remove user from local storage to log user out
         this.token = null;
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('app_id');
+        localStorage.removeItem('question_num');
+        this.userSubject.next(null);
     }
 
     sendPasswordResetEmail(email: string): Observable<any> {

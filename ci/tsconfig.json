@@ -12,8 +12,11 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2017",
+      "es5",
       "dom"
     ]
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false
   }
 }

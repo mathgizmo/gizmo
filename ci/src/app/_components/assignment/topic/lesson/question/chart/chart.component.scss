@@ -1,0 +1,125 @@
+.slider-control-buttons {
+  margin-bottom: 32px;
+  button {
+    border-radius: 50% !important;
+    width: 60px;
+    height: 60px;
+    font-size: 24px !important;
+    * {
+      padding: 0 !important;
+    }
+    padding: 0 !important;
+  }
+  button:first-child {
+    margin-right: 8px;
+  }
+}
+
+input {
+  text-align: center;
+  font-weight: bold;
+}
+
+#chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 20px 0;
+  padding: 0;
+  position: relative;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+#controls {
+  margin-top: 8px;
+  padding: 0;
+}
+
+.slider-control {
+  min-width: 240px;
+}
+
+::ng-deep .mat-slider-horizontal .mat-slider-track-background,
+::ng-deep .mat-slider-horizontal:hover .mat-slider-track-background {
+  background-color: rgba(255,255,255,0.4);
+}
+
+::ng-deep .mat-progress-bar .mat-progress-bar-fill::after {
+    border-radius: 200px !important;
+}
+::ng-deep .mat-progress-bar .mat-progress-bar-buffer {
+  background-color: #8ED8DD;
+}
+::ng-deep .mat-progress-bar .mat-progress-bar-background {
+  display: none;
+}
+
+.center {
+  display: flex; 
+  justify-content: center;
+}
+
+.value-label-container, .value-label, label, 
+  mat-form-field, #controls > *, #controls span, input, mat-slider {
+  margin: 0;
+  padding: 0;
+}
+
+.progress {
+  width: 100%;
+  height: 6px;
+  border-radius: 10px;
+  z-index: 2;
+  position: absolute;
+  top: 38px;
+  left: 0;
+}
+
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-fill::after {
+  border-radius: 10px !important;
+}
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-buffer {
+  background-color: rgba(255,255,255,0.4);
+}
+::ng-deep .mat-progress-bar.mat-warn .mat-progress-bar-background {
+  display: none;
+}
+
+.max-value{
+  font-weight: bold;
+}
+
+.question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+  font-size: 26px !important;
+}
+
+.slider-value-label {
+  position: relative;
+  top: -16px;
+  margin-bottom: 8px;
+}
+
+@media screen and (max-width: 1024px) { 
+  .progress {
+    height: 5px;
+    top: 22px;
+  }
+  .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+    font-size: 17px !important;
+  }
+}
+
+@media screen and (max-width: 768px) { 
+  .progress {
+    height: 4px;
+    top: 19px;
+  }
+  .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
+    font-size: 14px !important;
+  }
+}

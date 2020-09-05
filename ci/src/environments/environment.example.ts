@@ -5,8 +5,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'your_local_server_url/api', //your local API URL here
+  apiUrl: 'your_local_server_url/api', // your local API URL here
   adminUrl: 'your_local_server_url/admin',
-  baseUrl: window.location.origin + '/gizmo' // Base URL here
-  //... more of your variables
+  baseUrl: window.location.origin + '/gizmo', // Base URL here
+  captchaKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
 };

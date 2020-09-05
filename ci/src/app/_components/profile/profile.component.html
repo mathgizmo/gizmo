@@ -1,14 +1,59 @@
 <div class="profile">
+
+  <mat-card>
+    <span class="title">Applications</span>
+    <div class="applications-list" *ngIf="applications.length > 0">
+      <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
+        <mat-button-toggle *ngFor="let application of applications" [value]="application.id" (click)="onChangeApplication(application.id)" >
+          <div class="app-select-container">
+            <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+            <div class="app-title">
+              <strong>{{application.name}}</strong>
+            </div>
+          </div>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </mat-card>
+
   <mat-card id="profile-container">
-  	<span class="title">Change Profile Info</span> 
+  	<span class="title">Change Profile Info</span>
     <form #changeProfile="ngForm" (ngSubmit)="onChangeProfile()">
-  		<mat-form-field>
+      <mat-form-field>
         <input matInput
           name="username"
           pattern="[a-zA-Z0-9]{2,255}"
-          placeholder="Name"
+          placeholder="Username"
           [(ngModel)]="user.username"
           class="answer" />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+               name="first_name"
+               pattern="[a-zA-Z]{2,255}"
+               placeholder="First Name"
+               [(ngModel)]="user.first_name"
+               class="answer" />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+               name="last_name"
+               pattern="[a-zA-Z]{2,255}"
+               placeholder="Last Name"
+               [(ngModel)]="user.last_name"
+               class="answer" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select class="answer" id="country_id" [(value)]="selectedCountry" placeholder="Country">
+          <mat-select-trigger>
+            <img class="flag-icon" src="./assets/images/flags/{{selectedCountry.code.toLowerCase()}}.png" [alt]="selectedCountry.code" />
+            <span>{{selectedCountry.title}}</span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let country of countries" [value]="country">
+            <img class="flag-icon" src="./assets/images/flags/{{country.code.toLowerCase()}}.png" [alt]="country.code" />
+            <span>{{country.title}}</span>
+          </mat-option>
+        </mat-select>
       </mat-form-field>
       <mat-form-field>
         <input matInput
@@ -17,15 +62,15 @@
           placeholder="Email"
           [(ngModel)]="user.email"
           class="answer" />
-      </mat-form-field> 
+      </mat-form-field>
       <mat-form-field>
         <label class="answer">Please set the number of consecutive correct answers  which will signify lesson completion for you. You can come back to profile to change the setting if you wish. (put 0 to answer all questions)</label>
         <input matInput
           name="question_num"
           pattern="[0-9]{1,2}"
-          [(ngModel)]="user.questionNum"
+          [(ngModel)]="user.question_num"
           class="answer" />
-      </mat-form-field> 
+      </mat-form-field>
       <div class="alert alert-danger" *ngIf="badEmail">
          <mat-icon>warning</mat-icon>
          <span class="answer">&nbsp;{{warningMessage}}</span>
@@ -76,5 +121,4 @@
       </div>
     </form>
   </mat-card>
-
 </div>

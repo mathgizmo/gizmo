@@ -1,0 +1,196 @@
+@import '../../../../../colors';
+.actions-container {
+  display: flex;
+  justify-content: flex-end;
+  .toggle-group {
+    display: flex;
+    justify-content: flex-end;
+    width: 240px;
+    max-width: 100%;
+    padding: 0 !important;
+    margin: 12px 0;
+    .toggle-button {
+      width: 50%;
+      margin: 0 !important;
+      max-height: 36px !important;
+    }
+    ::ng-deep .mat-button-toggle-label-content {
+      max-height: 36px !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      & >:first-child {
+        margin-right: 8px;
+      }
+    }
+    .toggle-button:first-child {
+      border-top-left-radius: 50px !important;
+      border-bottom-left-radius: 50px !important;
+    }
+    .toggle-button:last-child {
+      border-top-right-radius: 50px !important;
+      border-bottom-right-radius: 50px !important;
+    }
+  }
+}
+
+.assignments {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0;
+  margin: 60px auto 0;
+  width: 90vw;
+  .assignments-content {
+    margin-left: 220px;
+  }
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    ::ng-deep .class-menu {
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px);
+      min-width: calc(100% - 20px);
+    }
+    .assignments-content {
+      margin-left: 0;
+    }
+  }
+}
+
+.title {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+mat-card {
+  margin: 10px;
+  padding: 15px;
+  min-width: 250px;
+  width: calc(100% - 20px);
+}
+
+mat-card:last-child {
+  margin-bottom: 28px;
+}
+
+@media screen and (max-width: 600px) {
+  .assignments {
+    width: 100vw;
+  }
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-item, .filter-item:focus {
+  width: 100%;
+  border: none;
+  outline: none;
+  overflow: visible;
+}
+
+td {
+  word-wrap: break-word !important;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0;
+  margin: 0;
+}
+
+.button {
+  font-size: 18px !important;
+}
+
+.app-img {
+  width: 90px;
+  height: 90px;
+  background-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-repeat: no-repeat;
+}
+
+.checkbox-container {
+  & > * {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+}
+
+.date-container {
+  width: 100px;
+}
+
+.no-data {
+  padding: 6px 0;
+}
+
+.pending {
+  // background: rgba(255, 246, 143, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.progress {
+  background: rgba(198, 226, 255, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.overdue {
+  background: rgba(255, 115, 115, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.completed {
+  background: rgba(90, 193, 142, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+@media screen and (max-width: 1100px) {
+  .button, button {
+    font-size: 14px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .button, button {
+    font-size: 12px !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .assignments {
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .assignments-content {
+    margin-right: 0;
+  }
+  .button, button {
+    font-size: 9px !important;
+  }
+  .toggle-group {
+    width: 100% !important;
+  }
+}

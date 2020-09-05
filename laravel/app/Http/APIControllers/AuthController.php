@@ -2,99 +2,144 @@
 
 namespace App\Http\APIControllers;
 
+use App\Application;
+use App\ClassOfStudents;
+use App\Mail\PasswordResetMail;
 use Illuminate\Http\Request;
-use JWTAuth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\DB;
-use Validator;
 use App\Student;
 use App\PasswordResets;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return mixed
-     */
+
     public function authenticate(Request $request)
     {
         auth()->shouldUse('api');
-        // grab credentials from the request
         $credentials = $request->only('email', 'password');
         try {
-            // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return $this->error('invalid_credentials');
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return $this->error('invalid_credentials', 401);
             }
         } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
-            throw new \Symfony\Component\HttpKernel\Exception\HttpException(500, 'could_not_create_token');
+            return $this->error('Could Not Create Token', 500);
         }
-        //if user is admin update corresponding field
-        $student_id = JWTAuth::getPayload($token)->get('sub');
-        DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student_id);
-        $student = Student::find($student_id);
-        $question_num = $student->question_num?:5;
-        $user_id = $student->id;
-        // all good so return the token
-        return $this->success(compact('token', 'question_num', 'user_id'));
+        $validator = Validator::make(
+            $request->only(['email', 'password', 'g-recaptcha-response']),
+            [
+                'email' => 'required|email|max:255',
+                'password' => 'required',
+                'g-recaptcha-response' => 'required|recaptcha',
+            ]
+        );
+        if ($validator->fails()) {
+            return $this->error($validator->messages(), 400);
+        }
+        $student = auth()->user();
+        DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
+
+        $student->question_num = $student->question_num ?: 5;
+        $app = Application::where('id', $student->app_id)->first();
+        if (!$app) {
+            $app = Application::whereDoesntHave('teacher')->first();
+            $student->app_id = $app->id ?: null;
+            $student->save();
+        }
+        $app_id = $student->app_id;
+        $role = 'student';
+        if ($student->is_teacher) {
+            $role = 'teacher';
+        }
+        $user = json_encode([
+            'user_id' => $student->id,
+            'username' => $student->name,
+            'first_name' => $student->first_name,
+            'last_name' => $student->last_name,
+            'email' => $student->email,
+            'role' => $role,
+            'country_id' => $student->country_id,
+            'question_num' => $student->question_num
+        ]);
+        return $this->success(compact('token', 'app_id', 'user'));
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function register(Request $request)
     {
         $fields = ['email', 'password', 'name'];
-        // grab credentials from the request
         $credentials = $request->only($fields);
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
         }
-        $validator = Validator::make(
-            $credentials,
-            [
-                'name' => 'required|max:255',
-                'email' => 'required|email|max:255|unique:students',
-                'password' => 'required|min:6',
-            ]
+        $student = Student::where('email', $credentials['email'])
+            ->where('is_registered', false)->first();
+        if ($student) {
+            $validator = Validator::make(
+                $request->only(['password', 'name', 'g-recaptcha-response']),
+                [
+                    'name' => 'required|max:255',
+                    'password' => 'required|min:6',
+                    'g-recaptcha-response' => 'required|recaptcha',
+                ]
             );
-        if ($validator->fails()) {
-            return $this->error($validator->messages());
+            if ($validator->fails()) {
+                return $this->error($validator->messages(), 400);
+            }
+            $student = $student->update([
+                'name' => $credentials['name'],
+                'first_name' => request('first_name') ?: null,
+                'last_name' => request('last_name') ?: null,
+                'password' => bcrypt($credentials['password']),
+                'country_id' => request('country_id') ? intval(request('country_id')): 1,
+                // 'is_teacher' => request('role') == 'teacher',
+                'is_registered' => true
+            ]);
+        } else {
+            $validator = Validator::make(
+                $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255|unique:students',
+                    'password' => 'required|min:6',
+                    'g-recaptcha-response' => 'required|recaptcha',
+                ]
+            );
+            if ($validator->fails()) {
+                return $this->error($validator->messages(), 400);
+            }
+            $student = Student::create([
+                'name' => $credentials['name'],
+                'first_name' => request('first_name') ?: null,
+                'last_name' => request('last_name') ?: null,
+                'email' => strtolower($credentials['email']),
+                'password' => bcrypt($credentials['password']),
+                'country_id' => request('country_id') ? intval(request('country_id')): 1,
+                'is_super' => false,
+                'is_teacher' => request('role') == 'teacher',
+                'is_admin' => false,
+                'is_registered' => true
+            ]);
         }
-        $result = Student::create([
-            'name' => $credentials['name'],
-            'email' => $credentials['email'],
-            'password' => bcrypt($credentials['password']),
-        ]);
-        if($result) {
-            return $this->success($result);
+        if ($student) {
+            return $this->success($student);
         }
-        return $this->success($error);
+        return $this->error('Something went wrong!', 400);
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function passwordResetEmail(Request $request) {
         $fields = ['email', 'url'];
-        // grab credentials from the request
         $credentials = $request->only($fields);
         foreach($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
         }
-        $validator = Validator::make(
-            $credentials,
-            [
-                'email' => 'required|email|max:255',
-                'url' => 'required'
-            ]
-            );
-        if ($validator->fails())
-        {
+        $validator = Validator::make($credentials,
+            [ 'email' => 'required|email|max:255', 'url' => 'required' ]
+        );
+        if ($validator->fails()) {
             return $this->error($validator->messages());
         }
         $email = $credentials['email'];
@@ -102,66 +147,49 @@ class AuthController extends Controller
         if(!$student) {
             return $this->error('We can not find email you provided in our database! You can register a new account with this email.');
         }
-        // delete existings resets if exists
         PasswordResets::where('email', $email)->delete();
-        $url = $credentials['url'];
-        $token = str_random(64);
+        $token = Str::random(64);
         $result = PasswordResets::create([
             'email' => $email,
             'token' => $token
         ]);
-        if($result) {
-            $data = array('token'=>$token, 'email' => $email, 'url' => $url);
-            Mail::queue('mail', $data, function($message) use ($data) {
-               $message->to($data['email'], $data['email'])->subject
-                  ('Password Reset at MathGizmo');
-               $message->from('mathgizmo01@gmail.com', 'Gizmo Support');
-            });
+        if ($result) {
+            Mail::to($email)->send(new PasswordResetMail($credentials['url'] . '/' . $token));
             return $this->success('The mail has been sent successfully!');
         }
-        return $this->success($error);
+        return $this->error('Something went wrong!');
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function resetPassword(Request $request) {
         $fields = ['password', 'token'];
-        // grab credentials from the request
         $credentials = $request->only($fields);
         foreach($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
         }
-        $validator = Validator::make(
-            $credentials,
-            [
-                'password' => 'required|min:6',
-                'token' => 'required'
-            ]
-            );
-        if ($validator->fails())
-        {
+        $validator = Validator::make($credentials,
+            [ 'password' => 'required|min:6', 'token' => 'required' ]
+        );
+        if ($validator->fails()) {
             return $this->error($validator->messages());
         }
         $token = $credentials['token'];
         $pr = PasswordResets::where('token', $token)->first(['email', 'created_at']);
         $email = $pr['email'];
-        if(!$email) {
+        if (!$email) {
             return $this->error('Invalid reset password link!');
         }
         $dateCreated = strtotime($pr['created_at']);
         $expireInterval = 86400; // token expire interval in seconds (24 h)
         $currentTime = time();
-        if($currentTime  - $dateCreated > $expireInterval) {
+        if ($currentTime - $dateCreated > $expireInterval) {
             return $this->error('The time to reset password has expired!');
         }
         $password = bcrypt($credentials['password']);
         $updatedRows = Student::where('email', $email)->update(['password' => $password]);
-        if($updatedRows > 0) {
+        if ($updatedRows > 0) {
             PasswordResets::where('token', $token)->delete();
             return $this->success('The password has been changed successfully!');
         }
-        return $this->success($error);
+        return $this->error('Something went wrong!');
     }
 }

@@ -1,0 +1,8 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Unsubscribe!</h2>
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{this.data.message}}</div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="true" class='button moving-forward-button continue-button' style="order: 1;">Yes</button>
+    <button mat-button [mat-dialog-close]="false" class='button error-button'>No</button>
+</mat-dialog-actions>

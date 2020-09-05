@@ -1,0 +1,72 @@
+<div class="profile-classes">
+    <mat-card>
+        <div class="title">Classrooms</div>
+        <form *ngIf="classes.length > 0" novalidate #form="ngForm">
+            <div class="table-responsive">
+                <table matSort (matSortChange)="sortData($event)" class="table">
+                    <thead>
+                    <tr>
+                        <th mat-sort-header="id" scope="col">ID</th>
+                        <th mat-sort-header="name" scope="col">Name</th>
+                        <th mat-sort-header="class_type" scope="col">Type of classroom</th>
+                        <th mat-sort-header="subscription_type" scope="col">Subscription Type</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <input matInput placeholder="ID" class="filter-item"
+                                   type="text" name="id" id="id-filter" [(ngModel)]="id" [value]="">
+                        </td>
+                        <td>
+                            <input matInput placeholder="Name" class="filter-item"
+                                    type="text" name="name" id="name-filter" [(ngModel)]="name" [value]="">
+                        </td>
+                        <td>
+                            <select class="form-control" name="class_type" [(ngModel)]="class_type" [value]="">
+                                <option></option>
+                                <option value="elementary">Elementary</option>
+                                <option value="secondary">Secondary</option>
+                                <option value="college">College</option>
+                                <option value="university">University</option>
+                                <option value="professional">Professional</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" name="subscription_type" [(ngModel)]="subscription_type" [value]="">
+                                <option></option>
+                                <option value="open">Open</option>
+                                <option value="invitation">Invitation</option>
+                                <option value="closed">Closed</option>
+                            </select>
+                        </td>
+                        <td class="text-right">
+                            <button mat-button class="button button-small button-outline" (click)="onAddClass()">Create Class</button>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let item of classes | tableFilter: form.value">
+                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.id}}</td>
+                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.name}}</td>
+                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.class_type.charAt(0).toUpperCase() + item.class_type.slice(1) }}</td>
+                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
+                        <td class="text-right" style="min-width: 120px;">
+                            <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditClass(item)">Edit</button>
+                            <button mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteClass(item.id)">Remove</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        <div *ngIf="classes.length < 1">
+            <div class="subtitle text-center">
+                Your classlist is empty!
+            </div>
+            <div class="button-container">
+                <button mat-button class="button button-outline" (click)="onAddClass()">Create your first class</button>
+            </div>
+        </div>
+    </mat-card>
+</div>

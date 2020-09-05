@@ -2,11 +2,11 @@
 
 
 .menu {
-	background-color: transparent;
+  background-color: transparent;
   display: inline-block;
   color: $white;
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
   position: fixed;
   top: 10px;
   left: 20px;
@@ -21,6 +21,19 @@
   font-family: 'Quicksand' !important;
   color: $navy;
   margin: 0;
+  outline: none;
+  min-width: 160px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  & > .material-icons {
+    margin-right: 4px;
+  }
+}
+
+.menu-item:hover {
+  text-decoration: none;
+  color: $navy;
 }
 
 @media screen and (max-width: 1024px) { 
@@ -30,7 +43,7 @@
 }
 
 @media screen and (max-width: 768px) { 
-  
+  //
 }
 
 /** loader */

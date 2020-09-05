@@ -4,68 +4,62 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 use App\Topic;
 use App\Level;
 use App\Unit;
 
 class TopicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        // $this->authorizeResource(Topic::class); // not working!
+    }
+
     public function index(Request $request)
     {
-        $levels = Level::all();
-        $units = Unit::all();
-
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $query = Topic::query();
-
-        if ($request->has('unit_id') && $request->unit_id >= 0) {
-            $query->where('unit_id', $request->unit_id);
-        } else if ($request->has('level_id') && $request->level_id >= 0) {
-            $query->whereIn('unit_id', function($query) { 
+        if ($request['unit_id'] && $request['unit_id'] >= 0) {
+            $query->where('unit_id', $request['unit_id']);
+        } else if ($request['level_id'] && $request['level_id'] >= 0) {
+            $query->whereIn('unit_id', function ($query) {
                 $query->select('id')->from(with(new Unit)->getTable())
-                ->where('level_id', request('level_id'));
+                    ->where('level_id', request('level_id'));
             });
         }
-
-        $query->when($request->has('id'), function ($q) {
-            return $q->where('id', request('id'));
-        });
-        $query->when($request->has('order_no'), function ($q) {
-            return $q->where('order_no', request('order_no'));
-        });
-        $query->when($request->has('title'), function ($q) {
-            return $q->where('title', 'LIKE', '%'.request('title').'%');
-        });
-        $query->when($request->has('short_name'), function ($q) {
-            return $q->where('short_name', 'LIKE', '%'.request('short_name').'%');
-        });
-        $query->when($request->has('sort') and $request->has('order'), function ($q) {
-            return $q->orderBy(request('sort'), request('order'));
-        });
-
-        $topics = $query->paginate(10)->appends(Input::except('page'));
-
+        if ($request['id']) {
+            $query->where('id', $request['id']);
+        }
+        if ($request['order_no']) {
+            $query->where('order_no', $request['order_no']);
+        }
+        if ($request['title']) {
+            $query->where('title', 'LIKE', '%' . $request['title'] . '%');
+        }
+        if ($request['short_name']) {
+            $query->where('short_name', 'LIKE', '%' . $request['short_name'] . '%');
+        }
+        if ($request['sort'] && $request['order']) {
+            $query->orderBy($request['sort'], $request['order']);
+        }
+        $topics = $query->paginate(10)->appends(request()->query());;
         foreach ($topics as $key => $value) {
-            if(!file_exists($topics[$key]->icon_src)) {
+            if (!file_exists($topics[$key]->icon_src)) {
                 $topics[$key]->icon_src = 'images/default-icon.svg';
             }
         }
-        return view('topic_views.index', ['levels'=>$levels, 'units'=>$units, 'topics'=>$topics, 'unit_id'=>$request->unit_id, 'level_id'=>$request->level_id]);
+        return view('topics.index', [
+            'levels' => Level::all(),
+            'units' => Unit::all(),
+            'topics' => $topics,
+            'unit_id' => $request['unit_id'],
+            'level_id' => $request['level_id']
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $lid = "";
         $uid = "";
         $levels = DB::select('select * from level');
@@ -76,31 +70,26 @@ class TopicController extends Controller
         $all = glob("images/icons/*.svg");
         $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
-          $icons[] = $file;
+            $icons[] = $file;
         }
-        return view('topic_views.create', array(
+        return view('topics.create', array(
             'levels' => $levels,
             'units' => $units,
             'topics' => $topics,
             'lid' => $lid,
             'uid' => $uid,
-			'total_topic' => $total_topic,
+            'total_topic' => $total_topic,
             'icons' => $icons
         ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-            'level_id'    => 'required',
-            'unit_id'    => 'required',
-            'topic_title'=> 'required'
+            'level_id' => 'required',
+            'unit_id' => 'required',
+            'topic_title' => 'required'
         ]);
         DB::table('topic')->insert([
             'icon_src' => $request['icon_src'] ?: 'images/default-icon.svg',
@@ -109,34 +98,25 @@ class TopicController extends Controller
             'dev_mode' => $request['dev_mode'] ?: false,
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
+            'description' => $request['description'],
             'unit_id' => $request['unit_id'],
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
-            ->with(array('message'=> 'Created successfully'));
+        return redirect('/topics?level_id=' . $level_id . '&unit_id=' . $unit_id)
+            ->with(array('message' => 'Created successfully'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return "Under Construction";
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $topic = DB::table('topic')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->join('level', 'unit.level_id', '=', 'level.id')
@@ -149,38 +129,33 @@ class TopicController extends Controller
         $all = glob("images/icons/*.svg");
         $complete = glob("images/icons/*-gold.svg");
         foreach (array_diff($all, $complete) as $file) {
-          $icons[] = $file;
+            $icons[] = $file;
         }
-        if(!file_exists($topic->icon_src)) {
+        if (!file_exists($topic->icon_src)) {
             $topic->icon_src = 'images/default-icon.svg';
         }
-        return view('topic_views.edit', [
-            'levels'=>$levels,
-            'units'=>$units,
-            'topic'=>$topic,
+        return view('topics.edit', [
+            'levels' => $levels,
+            'units' => $units,
+            'topic' => $topic,
             'total_topic' => $total_topic,
             'icons' => $icons
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
-            'level_id'    => 'required',
-            'unit_id'    => 'required',
-            'topic_title'=> 'required'
+            'level_id' => 'required',
+            'unit_id' => 'required',
+            'topic_title' => 'required'
         ]);
         $update_array = [
             'short_name' => $request['short_name'],
             'order_no' => $request['order_no'],
             'title' => $request['topic_title'],
+            'description' => $request['description'],
             'dependency' => $request['dependency'] ?: false,
             'dev_mode' => $request['dev_mode'] ?: false,
             'unit_id' => $request['unit_id'],
@@ -193,24 +168,18 @@ class TopicController extends Controller
         DB::table('topic')->where('id', $id)->update($update_array);
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
-            ->with(array('message'=> 'Updated successfully'));
+        return redirect('/topics?level_id=' . $level_id . '&unit_id=' . $unit_id)
+            ->with(array('message' => 'Updated successfully'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request, $id)
     {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         Topic::where('id', $id)->delete();
         $level_id = $request->input('level_id');
         $unit_id = $request->input('unit_id');
-        return redirect('/topic_views?level_id='. $level_id . '&unit_id='. $unit_id)
-            ->with(array('message'=> 'Deleted successfully'));
+        return redirect('/topics?level_id=' . $level_id . '&unit_id=' . $unit_id)
+            ->with(array('message' => 'Deleted successfully'));
     }
 
 }

@@ -6,12 +6,6 @@ use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
-    /**
-     * Upload topic icon 
-     *
-     * @param  Request  $request
-     * @return Response
-     */
     public function uploadTopicIcon(Request $request)
     {
         $json = array();
@@ -22,33 +16,27 @@ class FileController extends Controller
             $request->file('icon')->move('images/icons', $new_name);
             //$request->file('icon')->move('images/icons', $new_name_complete);
             $json['path'] = 'images/icons/'.$new_name;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $json['path'] = 'Caught exception: '.$e->getMessage();
         }
         return json_encode($json);
     }
 
-    /**
-     * Delete topic icon 
-     *
-     * @param  Request  $request
-     * @return Response
-     */
     public function deleteTopicIcon(Request $request)
     {
         $json = array();
         try {
             if($request->icon) {
                 if(strpos($request->icon, 'images/icons/') === 0) {
-                   unlink($request->icon); 
+                   unlink($request->icon);
                 }
                 /*$complete_icon = str_replace(".svg","-gold.svg",$request->icon);
                 if(strpos($complete_icon, 'images/icons/') === 0) {
                     unlink($complete_icon);
                 }*/
-            } 
+            }
             $json['icon'] = $request->icon;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $json['icon'] = 'Caught exception: '.$e->getMessage();
         }
         return json_encode($json);
