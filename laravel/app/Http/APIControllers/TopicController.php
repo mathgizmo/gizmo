@@ -465,7 +465,8 @@ class TopicController extends Controller
         }
         StudentsTrackingController::topicProgressDone($model->id, $this->student, $this->app->id);
         $this->app->incrementTestoutAttempts($this->student->id, $topic_id);
-        return $this->success('OK.');
+        $message = StudentsTrackingController::checkIfApplicationIsComplete($this->student->id, $this->app->id);
+        return $this->success($message, 200);
     }
 
     function getLastVisitedLesson($student_id) {

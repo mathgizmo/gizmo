@@ -117,7 +117,8 @@ class StudentsTrackingController extends Controller
                 $this->done($lesson->id, true);
             }
         }
-        return $this->success('OK.');
+        $message = StudentsTrackingController::checkIfApplicationIsComplete($this->student->id, $this->app->id);
+        return $this->success($message, 200);
     }
 
     public function done($lesson, $is_testout = false)
@@ -180,7 +181,34 @@ class StudentsTrackingController extends Controller
         if ($is_topic_done) {
             self::topicProgressDone($model->topic_id, $student, $app_id);
         }
-        return $this->success('OK.');
+        $message = StudentsTrackingController::checkIfApplicationIsComplete($this->student->id, $this->app->id);
+        return $this->success($message, 200);
+    }
+
+    public static function checkIfApplicationIsComplete($student_id, $app_id) {
+        $is_assignment_complete = false;
+        $correct_question_rate = 0;
+        $assignment_name = '';
+        $is_assignment_complete = DB::table('progresses')
+                ->where('student_id', $student_id)
+                ->where('entity_id', $app_id)
+                ->where('entity_type', 'application')->count() > 0;
+        if ($is_assignment_complete) {
+            $app = Application::where('id', $app_id)->first();
+            if ($app) {
+                $assignment_name = $app->name;
+            }
+            $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                DB::raw("SUM(1) as total"),
+                DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+            )->where('app_id', $app_id)->where('student_id', $student_id)->first();
+            $correct_question_rate = $tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1;
+        }
+        return [
+            'is_assignment_complete' => $is_assignment_complete,
+            'correct_question_rate' => $correct_question_rate,
+            'assignment_name' => $assignment_name
+        ];
     }
 
     public static function topicProgressDone($topic_id, $student, $app_id = null)
