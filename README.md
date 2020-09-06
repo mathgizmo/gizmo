@@ -27,6 +27,7 @@ We try to create the app that allow people to learn math.
 - Add URL to your local server API and captchaKey to `/ci/src/environments/environment.ts` (copy it from `environment.example.ts`).
 - Run `npm start` for a dev server. The app will automatically reload if you change any of the source files.
 - Use `ng build --prod` into `ci` folder to build the angular app and see your changes under apache (production build uses variables from `environment.prod.ts`, so set your globals there)
+- If you want to disable captcha just set `ignoreCaptcha: true` in `/ci/src/environments/environment.ts`.
 - If you want to generate a new component run `ng generate component component-name`. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ### To set up backups to dropbox

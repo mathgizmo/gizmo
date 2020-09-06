@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
     public error = '';
     public captchaResponse = '';
     public siteKey = environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+    public ignoreCaptcha = environment.ignoreCaptcha || false;
     private token = null;
 
     private sub: any;
@@ -52,9 +53,9 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        if (this.model.email && this.model.password && this.captchaResponse) {
+        if (this.model.email && this.model.password && (this.captchaResponse || this.ignoreCaptcha)) {
             this.loading = true;
-            this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.token)
+            this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.token, this.ignoreCaptcha)
                 .subscribe(user => {
                     if (user && user.user_id) {
                         if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {

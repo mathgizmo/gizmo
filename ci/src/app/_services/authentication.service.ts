@@ -28,8 +28,10 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
-    login(username: string, password: string, captcha_response = null, tokenStr = null): Observable<any> {
-        const request = {email: username, password: password, 'g-recaptcha-response': captcha_response, token: tokenStr};
+    login(username: string, password: string, captcha_response = null, tokenStr = null, ignoreCaptcha = false): Observable<any> {
+        const ignoreCaptchaKey = ignoreCaptcha ? (environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') : null;
+        const request = {email: username, password: password, token: tokenStr,
+            'g-recaptcha-response': captcha_response, 'ignore-captcha-key': ignoreCaptchaKey};
         return this.http.post(this.apiUrl + '/authenticate', request, {headers: this.headers})
             .pipe(
                 map((response: Response) => {
@@ -58,7 +60,8 @@ export class AuthenticationService {
 
     register(username: string, email: string, password: string,
              first_name: string = null, last_name: string = null,
-             role: string = 'student', country_id: number = 1, captcha_response = null): Observable<any> {
+             role: string = 'student', country_id: number = 1,
+             captcha_response = null, ignoreCaptcha = false): Observable<any> {
         return this.http.post(this.apiUrl + '/register', {
             email: email,
             name: username,
@@ -67,25 +70,41 @@ export class AuthenticationService {
             last_name: last_name,
             role: role,
             country_id: country_id,
-            'g-recaptcha-response': captcha_response
+            'g-recaptcha-response': captcha_response,
+            'ignore-captcha-key': ignoreCaptcha ? (environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') : null
         }, {
             headers: this.headers
         });
     }
 
     logout() {
-        this.http.get(this.apiUrl + '/logout', {headers: new HttpHeaders({
-                'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json'
-            })}).subscribe(res => {
+        if (this.token) {
+            this.http.get(this.apiUrl + '/logout', {headers: new HttpHeaders({
+                    'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json'
+                })}).subscribe(res => {
+                this.token = null;
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('app_id');
+                this.userSubject.next(null);
+                return true;
+            }, error => {
+                this.token = null;
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('app_id');
+                this.userSubject.next(null);
+                return false;
+            });
+        } else {
             this.token = null;
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             localStorage.removeItem('app_id');
             this.userSubject.next(null);
-            return true;
-        }, error => {
             return false;
-        });
+        }
+
     }
 
     sendPasswordResetEmail(email: string): Observable<any> {

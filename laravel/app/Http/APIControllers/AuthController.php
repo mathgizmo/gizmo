@@ -37,14 +37,24 @@ class AuthController extends Controller
             } catch (JWTException $e) {
                 return $this->error('Could Not Create Token', 500);
             }
-            $validator = Validator::make(
-                $request->only(['email', 'password', 'g-recaptcha-response']),
-                [
-                    'email' => 'required|email|max:255',
-                    'password' => 'required',
-                    'g-recaptcha-response' => 'required|recaptcha',
-                ]
-            );
+            if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
+                $validator = Validator::make(
+                    $request->only(['email', 'password']),
+                    [
+                        'email' => 'required|email|max:255',
+                        'password' => 'required',
+                    ]
+                );
+            } else {
+                $validator = Validator::make(
+                    $request->only(['email', 'password', 'g-recaptcha-response']),
+                    [
+                        'email' => 'required|email|max:255',
+                        'password' => 'required',
+                        'g-recaptcha-response' => 'required|recaptcha',
+                    ]
+                );
+            }
             if ($validator->fails()) {
                 return $this->error($validator->messages(), 400);
             }
@@ -85,14 +95,24 @@ class AuthController extends Controller
         $student = Student::where('email', $credentials['email'])
             ->where('is_registered', false)->first();
         if ($student) {
-            $validator = Validator::make(
-                $request->only(['password', 'name', 'g-recaptcha-response']),
-                [
-                    'name' => 'required|max:255',
-                    'password' => 'required|min:6',
-                    'g-recaptcha-response' => 'required|recaptcha',
-                ]
-            );
+            if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
+                $validator = Validator::make(
+                    $request->only(['password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'password' => 'required|min:6',
+                    ]
+                );
+            } else {
+                $validator = Validator::make(
+                    $request->only(['password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'password' => 'required|min:6',
+                        'g-recaptcha-response' => 'required|recaptcha',
+                    ]
+                );
+            }
             if ($validator->fails()) {
                 return $this->error($validator->messages(), 400);
             }
@@ -106,15 +126,26 @@ class AuthController extends Controller
                 'is_registered' => true
             ]);
         } else {
-            $validator = Validator::make(
-                $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
-                [
-                    'name' => 'required|max:255',
-                    'email' => 'required|email|max:255|unique:students',
-                    'password' => 'required|min:6',
-                    'g-recaptcha-response' => 'required|recaptcha',
-                ]
-            );
+            if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
+                $validator = Validator::make(
+                    $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'email' => 'required|email|max:255|unique:students',
+                        'password' => 'required|min:6'
+                    ]
+                );
+            } else {
+                $validator = Validator::make(
+                    $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'email' => 'required|email|max:255|unique:students',
+                        'password' => 'required|min:6',
+                        'g-recaptcha-response' => 'required|recaptcha',
+                    ]
+                );
+            }
             if ($validator->fails()) {
                 return $this->error($validator->messages(), 400);
             }

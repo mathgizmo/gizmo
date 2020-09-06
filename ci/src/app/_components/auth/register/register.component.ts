@@ -25,6 +25,7 @@ export class RegisterComponent implements OnInit {
     };
     public captchaResponse = '';
     public siteKey = environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+    public ignoreCaptcha = environment.ignoreCaptcha || false;
 
     constructor(
         private router: Router,
@@ -41,13 +42,13 @@ export class RegisterComponent implements OnInit {
     }
 
     register() {
-        if (this.model.username && this.model.email && this.model.password && this.captchaResponse) {
+        if (this.model.username && this.model.email && this.model.password && (this.captchaResponse || this.ignoreCaptcha)) {
             this.loading = true;
             this.authenticationService.register(this.model.username, this.model.email,
                 this.model.password, this.model.first_name, this.model.last_name,
-                this.model.role, this.selectedCountry.id, this.captchaResponse)
+                this.model.role, this.selectedCountry.id, this.captchaResponse, this.ignoreCaptcha)
                 .subscribe(success => {
-                    this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse)
+                    this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, null, this.ignoreCaptcha)
                         .subscribe(user => {
                             if (user.role === 'teacher') {
                                 this.router.navigate(['teacher/class']);
