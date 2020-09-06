@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
                 this.model.password, this.model.first_name, this.model.last_name,
                 this.model.role, this.selectedCountry.id, this.captchaResponse, this.ignoreCaptcha)
                 .subscribe(success => {
-                    this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, null, this.ignoreCaptcha)
+                    this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.ignoreCaptcha)
                         .subscribe(user => {
                             if (user.role === 'teacher') {
                                 this.router.navigate(['teacher/class']);

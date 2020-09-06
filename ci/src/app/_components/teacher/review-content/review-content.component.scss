@@ -1,9 +1,17 @@
 @import '../../../../colors';
 
-.topics {
+.content {
 	margin: 60px auto 0;
 	padding: 0;
 	width: 80vw;
+	@media (max-width: 600px) {
+		width: calc(100% - 20px);
+		margin: 0 auto;
+		padding: 0;
+		@media (max-width: 370px) {
+			width: 100%;
+		}
+	}
 }
 
 .level {
@@ -15,7 +23,7 @@
 	background-color: rgba(255, 255, 255, 0.2);
 	margin: 10px 10px 24px 10px;
 	padding: 20px;
-	@media screen and (max-width: 370px) {
+	@media (max-width: 370px) {
 		margin: 6px !important;
 		padding: 8px !important;
 	}
@@ -220,6 +228,20 @@ a:hover {
 }
 
 @media screen and (max-width: 370px) {
+	.level, .unit {
+		margin: 6px !important;
+		padding: 8px !important;
+	}
+	.unit:first-child {
+		margin-top: 0 !important;
+	}
+	.unit:last-child {
+		margin-bottom: 0 !important;
+	}
+	.topic {
+		margin: 4px !important;
+		padding: 4px !important;
+	}
 	.lesson {
 		margin: 4px !important;
 		padding: 4px !important;

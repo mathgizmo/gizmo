@@ -28,11 +28,10 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
-    login(username: string, password: string, captcha_response = null, tokenStr = null, ignoreCaptcha = false): Observable<any> {
-        const ignoreCaptchaKey = ignoreCaptcha ? (environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') : null;
-        const request = {email: username, password: password, token: tokenStr,
-            'g-recaptcha-response': captcha_response, 'ignore-captcha-key': ignoreCaptchaKey};
-        return this.http.post(this.apiUrl + '/authenticate', request, {headers: this.headers})
+    login(username: string, password: string, captcha_response = null, ignoreCaptcha = false): Observable<any> {
+        const request = {email: username, password: password,
+            'g-recaptcha-response': captcha_response, 'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null};
+        return this.http.post(this.apiUrl + '/login', request, {headers: this.headers})
             .pipe(
                 map((response: Response) => {
                     // login successful if there's a jwt token in the response
@@ -43,6 +42,30 @@ export class AuthenticationService {
                         // set token property
                         this.token = token;
                         // store username and jwt token in local storage to keep user logged in between page refreshes
+                        localStorage.setItem('token', token);
+                        localStorage.setItem('user', JSON.stringify(user));
+                        this.userSubject.next(user);
+                        localStorage.setItem('app_id', app_id + '');
+                        return user;
+                    } else {
+                        return false;
+                    }
+                }),
+                catchError((response: Response) => {
+                    return response['message'];
+                }),
+            );
+    }
+
+    loginByToken(tokenStr = null): Observable<any> {
+        return this.http.post(this.apiUrl + '/login/by-token', {token: tokenStr}, {headers: this.headers})
+            .pipe(
+                map((response: Response) => {
+                    const user = response && response['message'] && response['message']['user'] && JSON.parse(response['message']['user']);
+                    const app_id = response && response['message'] && response['message']['app_id'];
+                    const token = response && response['message'] && response['message']['token'];
+                    if (token) {
+                        this.token = token;
                         localStorage.setItem('token', token);
                         localStorage.setItem('user', JSON.stringify(user));
                         this.userSubject.next(user);
@@ -71,7 +94,7 @@ export class AuthenticationService {
             role: role,
             country_id: country_id,
             'g-recaptcha-response': captcha_response,
-            'ignore-captcha-key': ignoreCaptcha ? (environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI') : null
+            'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null
         }, {
             headers: this.headers
         });

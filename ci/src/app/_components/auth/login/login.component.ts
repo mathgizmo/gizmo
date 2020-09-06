@@ -34,8 +34,7 @@ export class LoginComponent implements OnInit {
         this.sub = this.route.queryParams.subscribe(params => {
             this.token = params['token'] || null;
             if (this.token) {
-                localStorage.setItem('token', this.token);
-                this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.token)
+                this.authenticationService.loginByToken(this.token)
                     .subscribe(user => {
                         if (user && user.user_id) {
                             if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
@@ -55,7 +54,7 @@ export class LoginComponent implements OnInit {
     login() {
         if (this.model.email && this.model.password && (this.captchaResponse || this.ignoreCaptcha)) {
             this.loading = true;
-            this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.token, this.ignoreCaptcha)
+            this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.ignoreCaptcha)
                 .subscribe(user => {
                     if (user && user.user_id) {
                         if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
