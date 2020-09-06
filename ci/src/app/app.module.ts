@@ -35,7 +35,7 @@ import {AuthGuard} from './_guards/index';
 import {AuthenticationService, HttpService, HTTPListener, HTTPStatus, CountryService} from './_services/index';
 
 import {AppComponent} from './_components/app.component';
-import {WelcomeComponent, RegisterComponent, LoginComponent,
+import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
     ForgotPasswordComponent, ResetPasswordComponent, TryComponent} from './_components/auth/index';
 import {AssignmentComponent} from './_components/assignment/index';
 import {TopicComponent} from './_components/assignment/topic/index';
@@ -118,6 +118,7 @@ FullCalendarModule.registerPlugins([
         AppComponent,
         WelcomeComponent,
         LoginComponent,
+        LogoutComponent,
         RegisterComponent,
         AssignmentComponent,
         TopicComponent,

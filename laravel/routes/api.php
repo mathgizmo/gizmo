@@ -15,8 +15,9 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
     $api->get('/welcome' , 'App\Http\APIControllers\HomeController@getWelcomeTexts');
     $api->get('/countries' , 'App\Http\APIControllers\HomeController@getCountries');
-    $api->any('/authenticate' , 'App\Http\APIControllers\AuthController@authenticate');
-    $api->any('/register' , 'App\Http\APIControllers\AuthController@register');
+    $api->post('/authenticate' , 'App\Http\APIControllers\AuthController@authenticate');
+    $api->post('/register' , 'App\Http\APIControllers\AuthController@register');
+    $api->get('/logout' , 'App\Http\APIControllers\AuthController@logout');
     $api->post('/password-reset-email' , 'App\Http\APIControllers\AuthController@passwordResetEmail');
     $api->post('/reset-password' , 'App\Http\APIControllers\AuthController@resetPassword');
 

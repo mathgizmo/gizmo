@@ -22,8 +22,12 @@ class AuthController extends Controller
     {
         auth()->shouldUse('api');
         if ($request->filled('token')) {
-            $token = request('token');
-            $student = JWTAuth::parseToken()->authenticate();
+            try {
+                $token = request('token');
+                $student = JWTAuth::parseToken()->authenticate();
+            } catch (\Exception $e) {
+                return $this->error($e->getMessage(), 401);
+            }
         } else {
             $credentials = $request->only('email', 'password');
             try {
@@ -194,6 +198,11 @@ class AuthController extends Controller
             return $this->success('The password has been changed successfully!');
         }
         return $this->error('Something went wrong!');
+    }
+
+    public function logout(Request $request) {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return $this->success('Logged Out!', 200);
     }
 
 }

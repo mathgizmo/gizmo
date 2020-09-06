@@ -73,12 +73,19 @@ export class AuthenticationService {
         });
     }
 
-    logout(): void {
-        this.token = null;
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('app_id');
-        this.userSubject.next(null);
+    logout() {
+        this.http.get(this.apiUrl + '/logout', {headers: new HttpHeaders({
+                'Authorization': 'Bearer ' + this.token, 'Content-Type': 'application/json'
+            })}).subscribe(res => {
+            this.token = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('app_id');
+            this.userSubject.next(null);
+            return true;
+        }, error => {
+            return false;
+        });
     }
 
     sendPasswordResetEmail(email: string): Observable<any> {

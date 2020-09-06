@@ -27,23 +27,28 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService) {
-        this.sub = this.route.queryParams.subscribe(params => {
-            this.token = params['token'] || null;
-            this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.token)
-                .subscribe(user => {
-                    if (user && user.user_id) {
-                        if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
-                            localStorage.setItem('redirect_to', '/');
-                            this.router.navigate(['to-do']);
-                        }
-                        this.router.navigate(['dashboard']);
-                    }
-                });
-        });
     }
 
     ngOnInit() {
-        this.authenticationService.logout();
+        this.sub = this.route.queryParams.subscribe(params => {
+            this.token = params['token'] || null;
+            if (this.token) {
+                localStorage.setItem('token', this.token);
+                this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.token)
+                    .subscribe(user => {
+                        if (user && user.user_id) {
+                            if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
+                                localStorage.setItem('redirect_to', '/');
+                                this.router.navigate(['to-do']);
+                            }
+                            this.router.navigate(['dashboard']);
+                        }
+                    }, error => {
+                        this.authenticationService.logout();
+                        this.router.navigate(['login']);
+                    });
+            }
+        });
     }
 
     login() {
