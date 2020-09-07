@@ -9,6 +9,9 @@
   "installed_plugins": {
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.healthnumeracyproject.HealthNumeracy"
+    },
+    "cordova-plugin-ionic-webview": {
+      "PACKAGE_NAME": "com.healthnumeracyproject.HealthNumeracy"
     }
   },
   "dependent_plugins": {}
