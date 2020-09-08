@@ -218,7 +218,7 @@ class StudentsTrackingController extends Controller
             $app_id = $student ? $student->app_id : null;
         }
         $completed_at = Carbon::now()->toDateTimeString();
-        //mark topic as done
+        // mark topic as done
         try {
             DB::table('progresses')->insert([
                 'student_id' => $student->id,
@@ -228,9 +228,9 @@ class StudentsTrackingController extends Controller
                 'completed_at' => $completed_at
             ]);
         } catch (\Exception $e) { }
-        //find all topics from unit that are not done yet
-        $topic_model = Topic::where("id", $topic_id)->first();
-        if(!$topic_model) { return; }
+        // find all topics from unit that are not done yet
+        $topic_model = Topic::where('id', $topic_id)->first();
+        if (!$topic_model) { return; }
         $topic_query = DB::table('topic')->where(function ($query) use($app_id) {
             $query->whereIn('id', function($q1) use($app_id) {
                 $q1->select('model_id')->from('application_has_models')->where('model_type', 'topic')->where('app_id', $app_id);
@@ -255,7 +255,6 @@ class StudentsTrackingController extends Controller
                     ->on('progresses.app_id', '=', DB::raw($app_id));
             })->where(['unit_id' => $topic_model->unit_id, 'dependency' => 1])
                 ->whereNull('progresses.id')
-                ->where('progresses.app_id', $app_id)
                 ->count();
             $is_unit_done = !$topics_count;
         }
@@ -270,9 +269,9 @@ class StudentsTrackingController extends Controller
                     'completed_at' => $completed_at
                 ]);
             } catch (\Exception $e) { }
-            //find all units from level that are not done yet
+            // find all units from level that are not done yet
             $unit_model = Unit::where('id', $topic_model->unit_id)->first();
-            if(!$unit_model) { return; }
+            if (!$unit_model) { return; }
             $unit_query = DB::table('unit')->where(function ($query) use($app_id) {
                 $query->whereIn('id', function($q1) use($app_id) {
                     $q1->select('model_id')->from('application_has_models')->where('model_type', 'unit')->where('app_id', $app_id);
@@ -304,7 +303,7 @@ class StudentsTrackingController extends Controller
                 })
                     ->where(['level_id' => $unit_model->level_id, 'dependency' => 1])
                     ->whereNull('progresses.id')
-                    ->where('progresses.app_id', $app_id)->get()->all();
+                    ->get()->all();
                 $is_level_done = !count($units);
             }
             //if all units are done, mark level as done
@@ -318,7 +317,7 @@ class StudentsTrackingController extends Controller
                         'completed_at' => $completed_at
                     ]);
                 } catch (\Exception $e) { }
-                //find all levels from application that are not done yet
+                // find all levels from application that are not done yet
                 $level_model = Level::where('id', $unit_model->level_id)->first();
                 if (!$level_model) { return; }
                 $level_query = (Application::where('id', $app_id)->first())->getLevelsQuery()->where('dev_mode', 0);
@@ -329,7 +328,7 @@ class StudentsTrackingController extends Controller
                                 ->where('student_id', $student->id)
                                 ->where('app_id', $app_id);
                         })->count();
-                    //if all levels are done, mark app as done
+                    // if all levels are done, mark app as done
                     if ($is_app_done) {
                         try {
                             DB::table('progresses')->insert([
