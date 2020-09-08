@@ -238,6 +238,16 @@ class StudentsTrackingController extends Controller
                 $q2->select('topic_id')->from('lesson')->whereIn('id', function($q3) use($app_id) {
                     $q3->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
                 });
+            })->orWhereIn('id', function($q2) use($app_id) {
+                $q4->select('id')->from('topic')->whereIn('unit_id', function($q3) use($app_id) {
+                    $q5->select('model_id')->from('application_has_models')->where('model_type', 'unit')->where('app_id', $app_id);
+                });
+            })->orWhereIn('id', function($q2) use($app_id) {
+                $q6->select('id')->from('topic')->whereIn('unit_id', function($q3) use($app_id) {
+                    $q7->select('id')->from('unit')->whereIn('level_id', function($q3) use($app_id) {
+                        $q8->select('model_id')->from('application_has_models')->where('model_type', 'level')->where('app_id', $app_id);
+                    });
+                });
             });
         })->where('unit_id', $topic_model->unit_id)->where('dev_mode', 0);
         if ($topic_query->count() > 0) {
@@ -285,6 +295,10 @@ class StudentsTrackingController extends Controller
                         $q5->select('topic_id')->from('lesson')->whereIn('id', function($q6) use($app_id) {
                             $q6->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
                         });
+                    });
+                })->orWhereIn('id', function($q2) use($app_id) {
+                    $q2->select('id')->from('unit')->whereIn('level_id', function($q3) use($app_id) {
+                        $q3->select('model_id')->from('application_has_models')->where('model_type', 'level')->where('app_id', $app_id);
                     });
                 });
             })->where('level_id', $unit_model->level_id)->where('dev_mode', 0);
