@@ -1,4 +1,14 @@
-import {Component, OnInit, OnChanges, OnDestroy, Input, Output, EventEmitter, HostListener} from '@angular/core';
+import {
+    Component,
+    OnInit,
+    OnChanges,
+    OnDestroy,
+    Input,
+    Output,
+    EventEmitter,
+    HostListener,
+    SimpleChanges
+} from '@angular/core';
 import {CdkDragDrop, CdkDragMove, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -44,10 +54,13 @@ export class QuestionComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
+        this.initQuestion();
     }
 
-    ngOnChanges() {
-        this.initQuestion();
+    ngOnChanges(changes: SimpleChanges) {
+        if (!(changes['handleEnterPress'] && changes['handleEnterPress'].previousValue !== changes['handleEnterPress'].currentValue)) {
+            this.initQuestion();
+        }
     }
 
     ngOnDestroy() {

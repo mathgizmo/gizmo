@@ -18,9 +18,30 @@ use Illuminate\Support\Facades\Mail;
 class AuthController extends Controller
 {
 
-    public function authenticate(Request $request)
+    public function login(Request $request)
     {
         auth()->shouldUse('api');
+        if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
+            $validator = Validator::make(
+                $request->only(['email', 'password']),
+                [
+                    'email' => 'required|email|max:255',
+                    'password' => 'required',
+                ]
+            );
+        } else {
+            $validator = Validator::make(
+                $request->only(['email', 'password', 'g-recaptcha-response']),
+                [
+                    'email' => 'required|email|max:255',
+                    'password' => 'required',
+                    'g-recaptcha-response' => 'required|recaptcha',
+                ]
+            );
+        }
+        if ($validator->fails()) {
+            return $this->error($validator->messages(), 400);
+        }
         $credentials = $request->only('email', 'password');
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
@@ -29,21 +50,9 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             return $this->error('Could Not Create Token', 500);
         }
-        $validator = Validator::make(
-            $request->only(['email', 'password', 'g-recaptcha-response']),
-            [
-                'email' => 'required|email|max:255',
-                'password' => 'required',
-                'g-recaptcha-response' => 'required|recaptcha',
-            ]
-        );
-        if ($validator->fails()) {
-            return $this->error($validator->messages(), 400);
-        }
         $student = auth()->user();
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
 
-        $student->question_num = $student->question_num ?: 5;
         $app = Application::where('id', $student->app_id)->first();
         if (!$app) {
             $app = Application::whereDoesntHave('teacher')->first();
@@ -62,8 +71,43 @@ class AuthController extends Controller
             'last_name' => $student->last_name,
             'email' => $student->email,
             'role' => $role,
-            'country_id' => $student->country_id,
-            'question_num' => $student->question_num
+            'country_id' => $student->country_id
+        ]);
+        return $this->success(compact('token', 'app_id', 'user'));
+    }
+
+    public function loginByToken(Request $request)
+    {
+        auth()->shouldUse('api');
+        if ($request->filled('token')) {
+            try {
+                $token = request('token');
+                $student = JWTAuth::parseToken()->authenticate();
+            } catch (\Exception $e) {
+                return $this->error($e->getMessage(), 401);
+            }
+        } else {
+            return $this->error('Token is Required!', 401);
+        }
+        $app = Application::where('id', $student->app_id)->first();
+        if (!$app) {
+            $app = Application::whereDoesntHave('teacher')->first();
+            $student->app_id = $app->id ?: null;
+            $student->save();
+        }
+        $app_id = $student->app_id;
+        $role = 'student';
+        if ($student->is_teacher) {
+            $role = 'teacher';
+        }
+        $user = json_encode([
+            'user_id' => $student->id,
+            'username' => $student->name,
+            'first_name' => $student->first_name,
+            'last_name' => $student->last_name,
+            'email' => $student->email,
+            'role' => $role,
+            'country_id' => $student->country_id
         ]);
         return $this->success(compact('token', 'app_id', 'user'));
     }
@@ -78,14 +122,24 @@ class AuthController extends Controller
         $student = Student::where('email', $credentials['email'])
             ->where('is_registered', false)->first();
         if ($student) {
-            $validator = Validator::make(
-                $request->only(['password', 'name', 'g-recaptcha-response']),
-                [
-                    'name' => 'required|max:255',
-                    'password' => 'required|min:6',
-                    'g-recaptcha-response' => 'required|recaptcha',
-                ]
-            );
+            if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
+                $validator = Validator::make(
+                    $request->only(['password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'password' => 'required|min:6',
+                    ]
+                );
+            } else {
+                $validator = Validator::make(
+                    $request->only(['password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'password' => 'required|min:6',
+                        'g-recaptcha-response' => 'required|recaptcha',
+                    ]
+                );
+            }
             if ($validator->fails()) {
                 return $this->error($validator->messages(), 400);
             }
@@ -99,15 +153,26 @@ class AuthController extends Controller
                 'is_registered' => true
             ]);
         } else {
-            $validator = Validator::make(
-                $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
-                [
-                    'name' => 'required|max:255',
-                    'email' => 'required|email|max:255|unique:students',
-                    'password' => 'required|min:6',
-                    'g-recaptcha-response' => 'required|recaptcha',
-                ]
-            );
+            if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
+                $validator = Validator::make(
+                    $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'email' => 'required|email|max:255|unique:students',
+                        'password' => 'required|min:6'
+                    ]
+                );
+            } else {
+                $validator = Validator::make(
+                    $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                    [
+                        'name' => 'required|max:255',
+                        'email' => 'required|email|max:255|unique:students',
+                        'password' => 'required|min:6',
+                        'g-recaptcha-response' => 'required|recaptcha',
+                    ]
+                );
+            }
             if ($validator->fails()) {
                 return $this->error($validator->messages(), 400);
             }
@@ -192,4 +257,10 @@ class AuthController extends Controller
         }
         return $this->error('Something went wrong!');
     }
+
+    public function logout(Request $request) {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return $this->success('Logged Out!', 200);
+    }
+
 }

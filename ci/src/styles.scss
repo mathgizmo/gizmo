@@ -35,8 +35,8 @@ h1, h2, h3, h4 {
   //color: $white;
 }
 
-.button, .mat-button {
-  font-family: 'Quicksand'!important;
+.button {
+  font-family: 'Quicksand' !important;
   font-weight: 500 !important;
   font-size: 32px !important;
   color: $white !important;
@@ -576,6 +576,12 @@ input[type="time"].form-control, input[type="date"].form-control {
       font-size: 8px;
     }
 
+}
+
+@media screen and (max-width: 767px) {
+  .table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th {
+    white-space: normal !important;
+  }
 }
 
 @media screen and (max-width: 480px) {

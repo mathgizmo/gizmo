@@ -91,7 +91,7 @@ class ClassController extends Controller
     public function getStudents($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
-            $students = $class->students()->orderBy('name')
+            $students = $class->students()->orderBy('email')
                 ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered']);
             $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
                 $q1->where('classes.id', $class_id);
@@ -242,17 +242,35 @@ class ClassController extends Controller
     }
 
     public function getReport($class_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-        if ($class) {
-            $data = DB::table('class_detailed_reports')->where('class_id', $class->id)->get();
-            foreach ($data as $row) {
-                $row->data = json_decode($row->data);
+        if ($this->user->is_teacher) {
+            $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+            if ($class) {
+                $data = DB::table('class_detailed_reports')->where('class_id', $class->id)->get();
+                foreach ($data as $row) {
+                    $row->data = json_decode($row->data);
+                }
+                return $this->success([
+                    'class' => $class,
+                    'assignments' => array_values($class->applications()->get()->toArray()),
+                    'students' => array_values($data->toArray()),
+                ]);
             }
-            return $this->success([
-                'class' => $class,
-                'assignments' => array_values($class->applications()->get()->toArray()),
-                'students' => array_values($data->toArray()),
-            ]);
+        } else {
+            $class = ClassOfStudents::where('id', $class_id)->first();
+            if ($class) {
+                $data = DB::table('class_detailed_reports')
+                    ->where('class_id', $class->id)
+                    ->where('student_id', $this->user->id)
+                    ->get();
+                foreach ($data as $row) {
+                    $row->data = json_decode($row->data);
+                }
+                return $this->success([
+                    'class' => $class,
+                    'assignments' => array_values($class->applications()->get()->toArray()),
+                    'students' => array_values($data->toArray()),
+                ]);
+            }
         }
         return $this->error('Error.', 404);
     }
@@ -298,6 +316,11 @@ class ClassController extends Controller
                 } else {
                     $item->status = 'progress';
                 }
+                $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                    DB::raw("SUM(1) as total"),
+                    DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                )->where('app_id', $item->id)->first();
+                $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
             $available = Application::where('teacher_id', $this->user->id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())->orderBy('name')->get();
@@ -318,9 +341,12 @@ class ClassController extends Controller
         if ($class && !$exists) {
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
-                'app_id' => $app_id
+                'app_id' => $app_id,
+                'start_date' => Carbon::now()->toDateString(),
+                'start_time' => Carbon::now()->format('H:i')
             ]);
-            return $this->success('Ok.');
+            $item = DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)->first();
+            return $this->success(['item' => $item ?: null]);
         }
         return $this->error('Error.');
     }

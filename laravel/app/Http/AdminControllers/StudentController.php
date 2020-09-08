@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StudentController extends Controller
 {
@@ -94,5 +98,10 @@ class StudentController extends Controller
             if ($limit) $query->limit($limit);
             return $query->get();
         }
+    }
+
+    public function loginAsStudent(Student $student) {
+        return Redirect::to(URL::to(Config::get('app.login_as_student_url'))
+            .'?token='.JWTAuth::fromUser($student));
     }
 }

@@ -5,7 +5,6 @@
     last_name: string;
     email: string;
     password: string;
-    question_num: number;
     role: string;
     country_id: number;
 }

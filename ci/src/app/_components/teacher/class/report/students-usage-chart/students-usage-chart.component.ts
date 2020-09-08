@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {ClassesManagementService} from '../../../../../_services/index';
+import {AuthenticationService, ClassesManagementService} from '../../../../../_services/index';
 import * as moment from 'moment';
 
 @Component({
@@ -10,14 +10,16 @@ import * as moment from 'moment';
 })
 export class StudentsUsageChartComponent implements OnInit {
 
-    constructor(private classService: ClassesManagementService) {}
+    constructor(private classService: ClassesManagementService, private authenticationService: AuthenticationService) {}
     @Input() classId: number;
+    @Input() forStudent = false;
     studentId = '';
     dateFrom = '';
     dateTo = '';
     dateNow = moment().format('YYYY-MM-DD');
 
     students = [];
+    availableStudents = [];
 
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
@@ -55,11 +57,17 @@ export class StudentsUsageChartComponent implements OnInit {
     ];
 
     ngOnInit() {
+        if (this.forStudent) {
+            const user = this.authenticationService.userValue;
+            this.studentId = user.user_id + '';
+        } else {
+            this.classService.getStudents(this.classId)
+                .subscribe(students => {
+                    this.students = students;
+                    this.availableStudents = students;
+                });
+        }
         this.getStatistics();
-        this.classService.getStudents(this.classId)
-            .subscribe(students => {
-                this.students = students;
-            });
     }
 
     public getStatistics() {
@@ -86,6 +94,16 @@ export class StudentsUsageChartComponent implements OnInit {
                 ];
                 this.mbarChartLabels = labels;
             });
+    }
+
+    public filterStudents(event) {
+        if (!event) {
+            this.availableStudents = this.students;
+        }
+        if (typeof event === 'string') {
+            this.availableStudents = this.students.filter(a => a.email.toLowerCase()
+                .startsWith(event.toLowerCase()));
+        }
     }
 
     public chartClicked(e: any): void {

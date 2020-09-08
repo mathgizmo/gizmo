@@ -8,13 +8,11 @@
         <table matSort (matSortChange)="sortData($event)" class="table">
           <thead>
           <tr>
-            <th mat-sort-header="name" scope="col">Name</th>
-            <th mat-sort-header="first_name" scope="col">First Name</th>
-            <th mat-sort-header="last_name" scope="col">Last Name</th>
             <th mat-sort-header="email" scope="col">Email</th>
+            <th mat-sort-header="name" scope="col">Name</th>
             <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
             <th mat-sort-header="assignments_past_due_count" scope="col">Past Due Assignments</th>
-            <th scope="col"></th>
+            <th></th>
             <th class="text-right">
               <button  class="button button-small button-outline" mat-button (click)="addStudent()">Add Student</button>
             </th>
@@ -22,36 +20,19 @@
           </thead>
           <tbody>
           <tr>
-            <td>
-              <input matInput placeholder="Name" class="filter-item"
-                     type="text" name="name" [(ngModel)]="name" [value]="" />
-            </td>
-            <td>
-              <input matInput placeholder="First Name" class="filter-item"
-                     type="text" name="first_name" [(ngModel)]="first_name" [value]="" />
-            </td>
-            <td>
-              <input matInput placeholder="Last Name" class="filter-item"
-                     type="text" name="last_name" [(ngModel)]="last_name" [value]="" />
-            </td>
-            <td>
+            <td colspan="7">
               <input matInput placeholder="Email" class="filter-item"
                      type="text" name="email" [(ngModel)]="email" [value]="" />
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
           </tr>
-          <tr *ngFor="let item of students | tableFilter: form.value"
-              style="cursor: pointer;" [class.not-registered]="!item.is_registered" [class.not-subscribed]="!item.is_subscribed">
-            <td>{{item.name}}</td>
-            <td>{{item.first_name }}</td>
-            <td>{{item.last_name }}</td>
-            <td>{{item.email }}</td>
-            <td>{{item.assignments_finished_count }}</td>
-            <td>{{item.assignments_past_due_count }}</td>
-            <td>
+          <tr *ngFor="let item of students | tableFilter: form.value" [class.not-registered]="!item.is_registered" [class.not-subscribed]="!item.is_subscribed">
+            <td style="max-width: 260px;">{{item.email }}</td>
+            <td style="max-width: 260px;">
+              <span>{{item.name}} </span>
+              <span *ngIf="item.first_name || item.last_name">({{item.first_name}} {{item.last_name}})</span></td>
+            <td style="max-width: 60px;">{{item.assignments_finished_count }}</td>
+            <td style="max-width: 60px;">{{item.assignments_past_due_count }}</td>
+            <td style="max-width: 100px;">
               <span *ngIf="!item.is_registered">
                 <span class="badge">Not Registered</span>
               </span>
@@ -59,8 +40,8 @@
                 <span class="badge">Not Subscribed</span>
               </span>
             </td>
-            <td>
-              <div class="buttons-container">
+            <td style="max-width: 60px;">
+              <div class="buttons-container" style="cursor: pointer">
                 <div [class.disabled]="!item.is_registered || !item.is_subscribed" (click)="showAssignments(item)">
                   <i class="fa fa-info-circle"></i>
                 </div>

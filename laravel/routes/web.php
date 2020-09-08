@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('students', 'StudentController@index')->name('students.index');
     Route::get('students/search', 'StudentController@find')->name('students.search');
     Route::get('students/{student}/edit', 'StudentController@edit')->name('students.edit');
+    Route::get('students/{student}/login', 'StudentController@loginAsStudent')->name('students.login');
     Route::patch('students/super/{student}', 'StudentController@superUpdate')->name('students.super');
     Route::patch('students/teacher/{student}', 'StudentController@teacherUpdate')->name('students.teacher');
     Route::post('students/reset/{student}', 'StudentController@resetProgress')->name('students.reset');

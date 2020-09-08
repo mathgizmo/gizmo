@@ -44,7 +44,7 @@ export class ClassDashboardComponent implements OnInit {
                 .subscribe(res => {
                     this.assignments = res['assignments'];
                     this.assignments.forEach(item => {
-                        item.start_time = moment(item.start_time, 'HH:mm').format('hh:mm A');
+                        item.start_time = item.start_time ? moment(item.start_time, 'HH:mm').format('hh:mm A') : '12:00 AM';
                         item.due_time = moment(item.due_time, 'HH:mm').format('hh:mm A');
                     });
                 });

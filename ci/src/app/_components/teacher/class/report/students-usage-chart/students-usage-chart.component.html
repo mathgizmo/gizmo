@@ -1,13 +1,18 @@
 <div class="subtitle text-center">Student Usage Report</div>
 <div class="report-data">
   <div class="actions-container">
-    <select class="form-control" name="studentId" [(ngModel)]="studentId" (change)="getStatistics()">
-      <option value="">All Students</option>
-      <option *ngFor="let student of students" [value]="student.id">{{student.email}}</option>
-    </select>
+    <mat-form-field *ngIf="!forStudent">
+      <mat-select name="studentId" [(ngModel)]="studentId" (ngModelChange)="getStatistics()" [disableOptionCentering]="true">
+        <mat-option>
+          <ngx-mat-select-search ngModel (ngModelChange)="filterStudents($event)"></ngx-mat-select-search>
+        </mat-option>
+        <mat-option value="">All Students</mat-option>
+        <mat-option *ngFor="let student of availableStudents" [value]="student.id">{{student.email}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <div class="date-container">
-      <input matInput type="date" name="dateFrom" [(ngModel)]="dateFrom" [max]="dateTo || dateNow" class="form-control" (change)="getStatistics()" />
-      <input matInput type="date" name="dateTo" [(ngModel)]="dateTo" [min]="dateFrom" [max]="dateNow" class="form-control" (change)="getStatistics()" />
+      <input type="date" name="dateFrom" [(ngModel)]="dateFrom" [max]="dateTo || dateNow" class="form-control" (change)="getStatistics()" />
+      <input type="date" name="dateTo" [(ngModel)]="dateTo" [min]="dateFrom" [max]="dateNow" class="form-control" (change)="getStatistics()" />
     </div>
   </div>
   <div style="display: block">

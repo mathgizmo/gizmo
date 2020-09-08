@@ -8,5 +8,6 @@ export const environment = {
   apiUrl: 'your_local_server_url/api', // your local API URL here
   adminUrl: 'your_local_server_url/admin',
   baseUrl: window.location.origin + '/gizmo', // Base URL here
-  captchaKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+  captchaKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+  ignoreCaptcha: false
 };

@@ -32,7 +32,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
     isUnfinished = false;
     private sub: any;
 
-    question_num: number;
+    question_num = 3;
     correct_answers: number;
     complete_percent: number;
 
@@ -71,6 +71,10 @@ export class LessonComponent implements OnInit, AfterViewChecked {
 
     public handleEnterPressInQuestion = true;
 
+    public isAssignmentComplete = false;
+    public correctQuestionRate = null;
+    public assignmentName = null;
+
     constructor(
         private router: Router,
         private topicService: TopicService,
@@ -79,11 +83,6 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         public dialog: MatDialog,
         private deviceService: DeviceDetectorService
     ) {
-        if (localStorage.getItem('question_num') !== undefined) {
-            this.question_num = Number(localStorage.getItem('question_num'));
-        } else {
-            this.question_num = 4;
-        }
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -98,7 +97,6 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         if (this.route.snapshot.queryParams['from_content_review']) {
             this.fromContentReview = true;
         }
-        this.question_num = +localStorage.getItem('question_num');
         this.incorrect_answers = 0;
         this.sub = this.route.params.subscribe(params => {
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
@@ -107,6 +105,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
             // get lesson tree from API
             this.topicService.getLesson(this.topic_id, this.lesson_id, this.fromContentReview)
                 .subscribe(lessonTree => {
+                    this.question_num = +lessonTree.question_num || 3;
                     if (this.lesson_id === -1) {
                         if (lessonTree && lessonTree.questions && lessonTree.questions.length < 1) {
                             this.testout_empty = true;
@@ -190,7 +189,13 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.next = this.question.lesson_id;
                 this.next_title = this.question.lesson_title;
                 this.question = null;
-                this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions).subscribe();
+                this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions).subscribe( res => {
+                    this.isAssignmentComplete = res['is_assignment_complete'];
+                    if (this.isAssignmentComplete) {
+                        this.correctQuestionRate = +res['correct_question_rate'];
+                        this.assignmentName = res['assignment_name'];
+                    }
+                });
                 return;
             }
             let current_question_order_no = this.current_question_order_no;
@@ -254,8 +259,14 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.lessonTree['questions'] = [];
                 this.question = null;
                 if (!this.fromContentReview) {
-                    this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                    this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions)
+                        .subscribe(res => {
+                            this.isAssignmentComplete = res['is_assignment_complete'];
+                            if (this.isAssignmentComplete) {
+                                this.correctQuestionRate = +res['correct_question_rate'];
+                                this.assignmentName = res['assignment_name'];
+                            }
+                        });
                 }
             } else {
                 const dialogRef = this.dialog.open(BadChallengeDialogComponent, {
@@ -503,10 +514,22 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.question = null;
                     if (!this.fromContentReview) {
                         this.trackingService.doneLesson(this.topic_id,
-                            this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                            this.lesson_id, this.start_time, this.weak_questions).subscribe(res => {
+                            this.isAssignmentComplete = res['is_assignment_complete'];
+                            if (this.isAssignmentComplete) {
+                                this.correctQuestionRate = +res['correct_question_rate'];
+                                this.assignmentName = res['assignment_name'];
+                            }
+                        });
                     }
                     if (this.lesson_id === -1) {
-                        this.trackingService.finishTestout(this.topic_id, null, this.start_time, this.weak_questions).subscribe();
+                        this.trackingService.finishTestout(this.topic_id, null, this.start_time, this.weak_questions).subscribe(res => {
+                            this.isAssignmentComplete = res['is_assignment_complete'];
+                            if (this.isAssignmentComplete) {
+                                this.correctQuestionRate = +res['correct_question_rate'];
+                                this.assignmentName = res['assignment_name'];
+                            }
+                        });
                     }
                 }
             });
@@ -533,10 +556,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 position: this.dialogPosition,
                 data: {
                     data: this.question.answers.filter(function (answer) {
-                        if (answer.is_correct === 1) {
-                            return true;
-                        }
-                        return false;
+                        return answer.is_correct === 1;
                     }), explanation: this.question.explanation,
                     showAnswers: (this.lesson_id !== -1)
                 }
@@ -563,7 +583,13 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.question = null;
                     if (!this.fromContentReview) {
                         this.trackingService.doneLesson(this.topic_id,
-                            this.lesson_id, this.start_time, this.weak_questions).subscribe();
+                            this.lesson_id, this.start_time, this.weak_questions).subscribe(res => {
+                            this.isAssignmentComplete = res['is_assignment_complete'];
+                            if (this.isAssignmentComplete) {
+                                this.correctQuestionRate = +res['correct_question_rate'];
+                                this.assignmentName = res['assignment_name'];
+                            }
+                        });
                     }
                 }
             });

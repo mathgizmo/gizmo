@@ -46,16 +46,16 @@
             </th>
             <td>{{item.name}}</td>
             <td class="date-container">
-              <input matInput type="date" name="start_date" #startDate [value]="item.start_date" [max]="item.due_date" (change)="onStartDateChanged(item, startDate.value)" class="form-control" />
+              <input type="date" name="start_date" #startDate [value]="item.start_date" [max]="item.due_date" (change)="onStartDateChanged(item, startDate.value)" class="form-control" />
             </td>
             <td class="date-container">
-              <input matInput type="time" name="start_time" #startTime [value]="item.start_time || '00:00'" (change)="onStartTimeChanged(item, startTime.value)" class="form-control" />
+              <input type="time" name="start_time" #startTime [value]="item.start_time || '00:00'" (change)="onStartTimeChanged(item, startTime.value)" class="form-control" />
             </td>
             <td class="date-container">
-              <input matInput type="date" name="due_date" #dueDate [value]="item.due_date" [min]="item.start_date" (change)="onDueDateChanged(item, dueDate.value)" class="form-control" />
+              <input type="date" name="due_date" #dueDate [value]="item.due_date" [min]="item.start_date" (change)="onDueDateChanged(item, dueDate.value)" class="form-control" />
             </td>
             <td class="date-container">
-              <input matInput *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time || '00:00'" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />
+              <input *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time || '00:00'" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />
               <ng-template #noDueTime><span class="no-data">N/A</span></ng-template>
             </td>
             <td [class]="item.status">

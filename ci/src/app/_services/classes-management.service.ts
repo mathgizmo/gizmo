@@ -139,6 +139,9 @@ export class ClassesManagementService {
     public addAssignmentToClass(class_id, app_id) {
         return this.http.post('/classes/' + class_id + '/assignments/' + app_id)
             .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
                 catchError(error => {
                     console.log(error);
                     throw Error(error);

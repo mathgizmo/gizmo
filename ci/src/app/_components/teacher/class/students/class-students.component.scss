@@ -61,8 +61,8 @@ mat-card:last-child {
 }
 
 td {
-  word-wrap: break-word;
-  max-width: 200px;
+  word-wrap: break-word !important;
+  min-width: 0;
 }
 
 .buttons-container {

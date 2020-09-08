@@ -8,6 +8,7 @@ import {DeviceDetectorModule} from 'ngx-device-detector';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
@@ -26,6 +27,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatListModule} from '@angular/material/list';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
@@ -33,7 +35,7 @@ import {AuthGuard} from './_guards/index';
 import {AuthenticationService, HttpService, HTTPListener, HTTPStatus, CountryService} from './_services/index';
 
 import {AppComponent} from './_components/app.component';
-import {WelcomeComponent, RegisterComponent, LoginComponent,
+import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
     ForgotPasswordComponent, ResetPasswordComponent, TryComponent} from './_components/auth/index';
 import {AssignmentComponent} from './_components/assignment/index';
 import {TopicComponent} from './_components/assignment/topic/index';
@@ -41,7 +43,7 @@ import {LessonComponent, ChartComponent} from './_components/assignment/topic/le
 import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent} from './_components/dialogs/index';
-import {ToDoComponent, MyClassesComponent, MyInvitationsComponent} from './_components/student/index';
+import {ToDoComponent, MyClassesComponent, MyClassReportComponent, MyInvitationsComponent} from './_components/student/index';
 import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
@@ -85,6 +87,7 @@ FullCalendarModule.registerPlugins([
         BrowserAnimationsModule,
         FullCalendarModule,
         ChartsModule,
+        MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
         MatSelectModule,
@@ -102,6 +105,7 @@ FullCalendarModule.registerPlugins([
         MatSortModule,
         MatSnackBarModule,
         MatListModule,
+        NgxMatSelectSearchModule,
         DragDropModule,
         FlexLayoutModule,
         PerfectScrollbarModule,
@@ -114,6 +118,7 @@ FullCalendarModule.registerPlugins([
         AppComponent,
         WelcomeComponent,
         LoginComponent,
+        LogoutComponent,
         RegisterComponent,
         AssignmentComponent,
         TopicComponent,
@@ -127,6 +132,7 @@ FullCalendarModule.registerPlugins([
         ProfileComponent,
         ToDoComponent,
         MyClassesComponent,
+        MyClassReportComponent,
         MyInvitationsComponent,
         ManageClassesComponent,
         YesNoDialogComponent,

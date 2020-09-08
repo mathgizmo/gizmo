@@ -18,7 +18,8 @@
                     <td>{{item.id}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.teacher}}</td>
-                    <td class="text-right">
+                    <td class="text-right" style="min-width: 170px;">
+                        <a class="button button-small button-outline" mat-stroked-button routerLink="/student/class/{{item.id}}/report" style="margin-right: 8px;">Report</a>
                         <button class="button button-small button-outline" mat-stroked-button (click)="onUnsubscribe(item.id)">Unsubscribe</button>
                     </td>
                 </tr>
