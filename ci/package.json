@@ -9,7 +9,7 @@
       "lint": "ng lint",
       "prod-build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/",
       "test-build": "ng build --output-path=test-build/ --configuration=testing --base-href /gizmo/",
-      "cordova-build": "ng build --output-path=www/ --configuration=production --base-href ./"
+      "cordova-build": "ng build --output-path=www/ --configuration=cordova --base-href ./"
    },
    "dependencies": {
       "@angular/animations": "^10.0.11",
