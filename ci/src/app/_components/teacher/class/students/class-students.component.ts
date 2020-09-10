@@ -5,9 +5,9 @@ import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 import {StudentAssignmentsDialogComponent} from '../../class/students/student-assignments-dialog/student-assignments-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
-import {YesNoDialogComponent} from '../../../dialogs/yes-no-dialog/yes-no-dialog.component';
 import {AddStudentDialogComponent} from './add-student-dialog/add-student-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {DeleteConfirmationDialogComponent} from '../../../dialogs/index';
 
 @Component({
     selector: 'app-class-students',
@@ -64,8 +64,10 @@ export class ClassStudentsComponent implements OnInit {
     }
 
     deleteStudent(studentId) {
-        const dialogRef = this.dialog.open(YesNoDialogComponent, {
-            data: { 'message': 'Are you sure that you want to delete this student from the class?'},
+        const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+            data: {
+                // 'message': 'Are you sure that you want to delete this student from the class?'
+            },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {

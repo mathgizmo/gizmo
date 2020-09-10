@@ -1,42 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
 @import './colors';
-@import '~@angular/material/theming';
+@import './theme';
 @import url('//fonts.googleapis.com/icon?family=Material+Icons');
-@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-
-// import fonts
 @import url('https://fonts.googleapis.com/css?family=Quicksand:500');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,600');
 
-@include mat-core();
-
 body {
-    font-weight: normal;
     background-color: $teal;
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', serif;
     font-weight: 300;
     font-size: 20px;
     color: $navy;
 }
-
 .jumbotron {
     background-color: transparent;
 }
-
 h1, h2, h3, h4 {
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', serif;
     font-weight: 600;
 }
-
 .title {
-  font-family: 'Quicksand';
+  font-family: 'Quicksand', serif;
   font-weight: 500;
   font-size: 42px;
-  //color: $white;
 }
-
 .button {
-  font-family: 'Quicksand' !important;
+  font-family: 'Quicksand', serif !important;
   font-weight: 500 !important;
   font-size: 32px !important;
   color: $white !important;
@@ -44,93 +32,75 @@ h1, h2, h3, h4 {
   border-radius: 50px !important;
   padding: 10px 25px !important;
   text-decoration: none;
+  white-space: pre-wrap !important;
 }
-
 a.button:hover, a.button:focus {
   text-decoration: none;
   outline: none;
 }
-
 .button-small {
   padding: 1px 10px !important;
 }
-
 .button-outline {
   background: $white !important;
   color: $navy !important;
   border: solid 1px $navy !important;
 }
-
 .button-dark {
   background: $navy !important;
   color: $white !important;
   border: solid 1px $navy !important;
 }
-
 .button-white {
   background: $white !important;
   color: $navy !important;
 }
-
 .button-danger {
   background: $danger !important;
   color: $white !important;
   border: solid 1px $red !important;
 }
-
 .completion-button {
   background-color: $gold !important;
 }
-
 .moving-forward-button {
   background-color: $green !important;
 }
-
 .error-button {
   background-color: $red !important;
 }
-
 .mat-button-wrapper {
   width: 100%;
   height: 100%;
   background-color: transparent;
 }
-
 .subtitle {
-  font-family: 'Quicksand';
+  font-family: 'Quicksand', serif;
   font-weight: 500;
   font-size: 26px;
-  //color: $navy;
 }
-
 .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', serif;
   font-weight: 600;
   font-size: 26px;
-  //color: $navy;
 }
-
 .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .answer p:not([class^='mjx']) {
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', serif;
   font-weight: 300;
   font-size: 20px;
-  //color: $navy;
 }
-
 .topic-title, .lesson-title {
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', serif;
   font-weight: 600;
   font-size: 16px;
   color: $navy;
 }
-
 .topic-progress {
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', serif;
   font-weight: 300;
   font-size: 16px;
   color: $navy;
 }
-
 .locked {
     -webkit-filter: opacity(40%); /* Safari 6.0 - 9.0 */
     filter: opacity(40%);
@@ -141,7 +111,6 @@ a.button:hover, a.button:focus {
     -webkit-filter: grayscale(100%) sepia(100%) saturate(250%); /* Safari 6.0 - 9.0 */
     filter: grayscale(100%) sepia(100%) saturate(250%);
 }
-
 .back {
     color: $white;
     font-size: 14px;
@@ -154,37 +123,29 @@ a.button:hover, a.button:focus {
     left: 72px;
     z-index: 10;
 }
-
 .back:hover {
   text-decoration: none;
   color: $white;
 }
-
 .question * img {
     max-width: 100%;
     max-height: 100%;
 }
-
-// add border radius to all cards
 .mat-card, .mat-dialog-container {
     border-radius: 25px !important;
 }
-
 .mat-dialog-container {
     padding: 10px !important;
 }
-
 .mat-dialog-actions {
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
     min-height: 20px !important;
 }
-
 .help-block {
     font-size: 12px;
 }
-
 .circle-icon {
     background: #ffc0c0;
     width: 100px;
@@ -198,25 +159,20 @@ a.button:hover, a.button:focus {
 .icon-red {
     color: #ffc0c0;
 }
-
 .icon-dark-red {
     color: #c04040;
 }
-
 .icon-green {
     color: #c0ffc0;
 }
-
 .icon-dark-green {
     color: #40c040;
 }
-
 .circle-icon2 {
     background: #ffc0c0;
     padding:30px;
     border-radius: 50%;
 }
-
 .topic-img {
     width: 115px;
     height: 115px;
@@ -227,14 +183,12 @@ a.button:hover, a.button:focus {
     background-repeat: no-repeat;
     //background-image: url(/assets/images/default-icon.svg);
 }
-
 .greenButton {
     border: 2px solid;
     border-color: #40c040;
     border-radius: 25px;
     width:80px;
 }
-
 .fill-remaining-space {
   // This fills the remaining space, by using flexbox.
   // Every toolbar row uses a flexbox row layout.
@@ -244,27 +198,22 @@ a.button:hover, a.button:focus {
     display: inline-flex;
     flex-direction: column;
 }
-
 .radio-button {
     margin: 5px;
 }
-
 .selected-value {
     margin: 15px 0;
 }
-
 .topicButton {
     position: relative;
     width: 100%;
     height: 100%;
     border-radius: 8px;
 }
-
 .shadow {
     margin: 7px 7px 9px 8px;
     box-shadow: 4px 4px 5px 2px black;
 }
-
 .center {
     margin: auto;
     width: 50%;
@@ -272,20 +221,16 @@ a.button:hover, a.button:focus {
 .width150 {
     width: 150px;
 }
-
 .chart-value-label {
   font-size: 16px;
   font-weight: bold;
 }
-
 .draggable {
   cursor: pointer;
 }
-
-.movable, good-dialog, bad-dialog, feedback-dialog, report-dialog {
+.movable {
   cursor: move;
 }
-
 .no-select, good-dialog, bad-dialog {
   user-select: none;
   -webkit-touch-callout: none;
@@ -293,36 +238,31 @@ a.button:hover, a.button:focus {
   -moz-user-select: none;
   -ms-user-select: none;
 }
-
 .hide {
     display: none;
 }
-
 .dialog-content {
     font-size: 14px !important;
-    font-family: 'Open Sans';
+  font-family: 'Open Sans', serif;
     font-weight: 300;
 }
-
 .dialog-title {
     font-size: 18px !important;
     padding: 0 !important;
     margin: 0 !important;
     text-align: center;
 }
-
 .dialog-buttons-container {
     padding: 0 !important;
     margin: 0 !important;
     .button, .error-button {
-        font-size: 18px !important;
+      font-size: 16px !important;
+      line-height: initial !important;
+      padding-top: 12px!important;
+      padding-bottom: 12px!important;
     }
 }
-
 .back-button {
-    //position: fixed;
-    //left: 0;
-    //top: 0;
     color: white;
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.2);
@@ -338,17 +278,14 @@ a.button:hover, a.button:focus {
 .back-button-container {
    margin-bottom: 16px;
 }
-
 .welcome iframe, .welcome video {
     width: 85%;
     height: 36vh;
 }
-
 .welcome .right a {
     text-decoration: none;
     color: white !important;
 }
-
 .explanation {
   .explanation-text {
     *:not(* .math-tex) {
@@ -363,7 +300,6 @@ a.button:hover, a.button:focus {
     }
   }
 }
-
 .order-list {
   background: none !important;
   border: none !important;
@@ -383,13 +319,11 @@ a.button:hover, a.button:focus {
     margin-bottom: 0;
   }
 }
-
 .cdk-drag-preview {
   border-radius: 16px !important;
   color: $white !important;
   padding: 10px 16px !important;
 }
-
 .question-container .question * {
   [data-tooltip] {
     position: relative;
@@ -398,14 +332,12 @@ a.button:hover, a.button:focus {
     cursor: help;
     z-index: 2;
   }
-
   [data-tooltip]:before,
   [data-tooltip]:after {
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
   }
-
   [data-tooltip]:before {
     position: absolute;
     bottom: 80%;
@@ -426,7 +358,6 @@ a.button:hover, a.button:focus {
     font-weight: normal;
     line-height: 1.2;
   }
-
   [data-tooltip]:after {
     position: absolute;
     bottom: 80%;
@@ -441,24 +372,20 @@ a.button:hover, a.button:focus {
     font-size: 0;
     line-height: 0;
   }
-
   [data-tooltip]:hover:before,
   [data-tooltip]:hover:after {
     visibility: visible;
     opacity: 1;
   }
 }
-
 /* hide time picker (Chrome) */
 input[type="time"]::-webkit-calendar-picker-indicator {
   background: none;
   display: none;
 }
-
 input[type="time"].form-control, input[type="date"].form-control {
   line-height: unset !important;
 }
-
 /* .success-snackbar {
   background: $teal !important;
   color: $navy !important;
@@ -466,6 +393,13 @@ input[type="time"].form-control, input[type="date"].form-control {
 .error-snackbar {
   background: $danger !important;
   color: $navy !important;
+}
+
+.mat-checkbox-layout {
+  white-space: normal !important;
+}
+.mat-radio-label {
+  white-space: normal !important;
 }
 
 @media screen and (max-width: 1366px) {
@@ -478,7 +412,6 @@ input[type="time"].form-control, input[type="date"].form-control {
     body {
         font-size: 12px;
     }
-
     .back {
         top: 24px;
         left: 64px;
@@ -489,50 +422,36 @@ input[type="time"].form-control, input[type="date"].form-control {
     .back:hover {
         text-decoration: none !important;
     }
-
     .title {
       font-size: 28px;
     }
-
     .button, .mat-button {
       font-size: 21px !important;
       padding: 4px 14px !important;
     }
-
     .button-small {
       padding: 1px 6px !important;
     }
-
     .dialog-buttons-container {
-        .button {
-            font-size: 18px !important;
-        }
-        .error-button {
-            font-size: 16px !important;
+        .button, .error-button {
+            font-size: 14px !important;
         }
     }
-
     .dialog-content {
         font-size: 12px !important;
     }
-
     .subtitle {
       font-size: 16.8px;
     }
-
-
     .dialog-title {
         font-size: 13px !important;
     }
-
     .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
       font-size: 17px;
     }
-
     .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .answer p:not([class^='mjx']) {
       font-size: 12px;
     }
-
     .topic-title, .topic-progress, .lesson-title {
       font-size: 9px;
     }
@@ -542,40 +461,36 @@ input[type="time"].form-control, input[type="date"].form-control {
     body {
         font-size: 11px;
     }
-
     .title {
       font-size: 20px;
     }
-
     .button, .mat-button {
       font-size: 16px !important;
       padding: 2px 12px !important;
     }
-
     .button-small {
       padding: 0 4px !important;
     }
-
+    .dialog-buttons-container {
+      .button, .error-button {
+        font-size: 12px !important;
+      }
+    }
     .dialog-content {
         font-size: 11px !important;
     }
-
     .subtitle {
       font-size: 12px;
     }
-
     .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
       font-size: 14px;
     }
-
     .answer:not([class^='mjx']), .answer *:not([class^='mjx']), .answer p:not([class^='mjx']) {
       font-size: 12px;
     }
-
     .topic-title, .topic-progress, .lesson-title {
       font-size: 8px;
     }
-
 }
 
 @media screen and (max-width: 767px) {
@@ -597,6 +512,11 @@ input[type="time"].form-control, input[type="date"].form-control {
 @media screen and (max-width: 400px) {
     .button, .mat-button {
       font-size: 12px !important;
+    }
+    .dialog-buttons-container {
+      .button, .error-button {
+        font-size: 10px !important;
+      }
     }
     .topic-img {
         width: 90px;
@@ -632,232 +552,4 @@ input[type="time"].form-control, input[type="date"].form-control {
   .welcome iframe, .welcome video {
     height: 12vh;
   }
-}
-
-/** THEMING */
-$mat-navy: (
-    50: #e0e5e8,
-    100: #b3bec6,
-    200: #8093a1,
-    300: #4d677b,
-    400: #26475e,
-    500: #002642,
-    600: #00223c,
-    700: #001c33,
-    800: #00172b,
-    900: #000d1d,
-    A100: #5b8bff,
-    A200: #2867ff,
-    A400: #0048f4,
-    A700: #0040da,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-
-$mat-teal: (
-    50: #e6f6f8,
-    100: #c0e9ec,
-    200: #97dbe0,
-    300: #6dcdd4,
-    400: #4dc2ca,
-    500: #2eb7c1,
-    600: #29b0bb,
-    700: #23a7b3,
-    800: #1d9fab,
-    900: #12909e,
-    A100: #cffaff,
-    A200: #9cf4ff,
-    A400: #69efff,
-    A700: #50ecff,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-
-$mat-gold: (
-    50: #fff6e7,
-    100: #ffe8c2,
-    200: #ffd899,
-    300: #ffc870,
-    400: #ffbd52,
-    500: #ffb133,
-    600: #ffaa2e,
-    700: #ffa127,
-    800: #ff9820,
-    900: #ff8814,
-    A100: #ffffff,
-    A200: #fffdfb,
-    A400: #ffe1c8,
-    A700: #ffd3ae,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-
-$primary: mat-palette($mat-navy);
-$accent:  mat-palette($mat-teal);
-$warn:    mat-palette($mat-gold);
-$theme: mat-light-theme($primary, $accent, $warn);
-@include angular-material-theme($theme);
-
-// Define an alternate theme
-$mat-green: (
-    50: #e2f4e6,
-    100: #b8e3c0,
-    200: #88d097,
-    300: #58bd6d,
-    400: #35ae4d,
-    500: #11a02e,
-    600: #0f9829,
-    700: #0c8e23,
-    800: #0a841d,
-    900: #057312,
-    A100: #a2ffa9,
-    A200: #6fff79,
-    A400: #3cff4a,
-    A700: #23ff32,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-$mat-red: (
-    50: #fde4e5,
-    100: #fabbbd,
-    200: #f68e92,
-    300: #f26066,
-    400: #f03e45,
-    500: #ed1c24,
-    600: #eb1920,
-    700: #e8141b,
-    800: #e51116,
-    900: #e0090d,
-    A100: #ffffff,
-    A200: #ffd7d7,
-    A400: #ffa4a5,
-    A700: #ff8b8c,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-/* Include the alternative theme styles inside of a block with a CSS class. You can make this
-CSS class whatever you want. Any component inside of an element with
-.grey-theme class will be affected by this alternate theme instead of the default theme. */
-$grey-primary: mat-palette($mat-grey, 700);
-$grey-accent:  mat-palette($mat-green);
-$grey-warn: mat-palette($mat-red);
-$grey-theme: mat-light-theme($grey-primary, $grey-accent, $grey-warn);
-.grey-theme {
-  @include angular-material-theme($grey-theme);
-}
-
-$mat-white: (
-    50: #ffffff,
-    100: #ffffff,
-    200: #ffffff,
-    300: #ffffff,
-    400: #ffffff,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-    A100: #ffffff,
-    A200: #ffffff,
-    A400: #ffffff,
-    A700: #ffffff,
-    contrast: (
-        50: $black-87-opacity,
-        100: $black-87-opacity,
-        200: $black-87-opacity,
-        300: $black-87-opacity,
-        400: $black-87-opacity,
-        500: white,
-        600: white,
-        700: white,
-        800: white,
-        900: white,
-        A100: $black-87-opacity,
-        A200: $black-87-opacity,
-        A400: $black-87-opacity,
-        A700: white
-    )
-);
-$white-primary: mat-palette($mat-white);
-$white-theme: mat-light-theme($white-primary, $accent, $warn);
-.white-theme {
-  @include angular-material-theme($white-theme);
-}
-
-.mat-checkbox-layout {
-  white-space: normal !important;
-}
-
-.mat-radio-label {
-  white-space: normal !important;
 }

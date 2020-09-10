@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {AssignmentService} from '../../../_services/assignment.service';
 import {EditAssignmentDialogComponent} from './edit-assignment-dialog/edit-assignment-dialog.component';
-import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
+import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
 
 @Component({
     selector: 'manage-assignments',
@@ -85,8 +85,10 @@ export class ManageAssignmentsComponent implements OnInit {
     }
 
     onDeleteAssignment(assignment_id) {
-        const dialogRef = this.dialog.open(YesNoDialogComponent, {
-            data: { 'message': 'Are you sure that you want to delete the assignment?'},
+        const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+            data: {
+                'message': 'Are you sure that you want to remove? This will permanently delete the assignment.'
+            },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {

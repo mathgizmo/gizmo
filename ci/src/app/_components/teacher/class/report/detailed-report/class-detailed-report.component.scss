@@ -33,3 +33,8 @@
 .assignment-table-row {
   width: 160px;
 }
+
+td {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}

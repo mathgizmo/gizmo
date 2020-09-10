@@ -5,13 +5,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
 
 import {ClassesManagementService} from '../../../../_services';
-import {YesNoDialogComponent} from '../../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute} from '@angular/router';
 import {EditClassAssignmentDialogComponent} from './edit-assignment-dialog/edit-class-assignment-dialog.component';
 import {ClassAssignmentsCalendarComponent} from './calendar/class-assignments-calendar.component';
+import {DeleteConfirmationDialogComponent} from '../../../dialogs/index';
 
 @Component({
     selector: 'app-class-assignments',
@@ -272,8 +272,10 @@ export class ClassAssignmentsComponent implements OnInit {
     }
 
     onDeleteAssignment(item) {
-        const dialogRef = this.dialog.open(YesNoDialogComponent, {
-            data: { 'message': 'Are you sure that you want to delete this assignments from the class?'},
+        const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+            data: {
+                // 'message': 'Are you sure that you want to delete this assignments from the class?'
+            },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {

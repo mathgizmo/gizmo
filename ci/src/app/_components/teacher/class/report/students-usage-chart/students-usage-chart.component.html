@@ -1,15 +1,23 @@
 <div class="subtitle text-center">Student Usage Report</div>
 <div class="report-data">
   <div class="actions-container">
-    <mat-form-field *ngIf="!forStudent">
-      <mat-select name="studentId" [(ngModel)]="studentId" (ngModelChange)="getStatistics()" [disableOptionCentering]="true">
-        <mat-option>
-          <ngx-mat-select-search ngModel (ngModelChange)="filterStudents($event)"></ngx-mat-select-search>
-        </mat-option>
-        <mat-option value="">All Students</mat-option>
-        <mat-option *ngFor="let student of availableStudents" [value]="student.id">{{student.email}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div>
+      <mat-form-field *ngIf="!forStudent" class="select">
+        <mat-select name="studentId" [(ngModel)]="studentId" (ngModelChange)="getStatistics()" [disableOptionCentering]="true">
+          <mat-option>
+            <ngx-mat-select-search ngModel (ngModelChange)="filterStudents($event)"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option value="">All Students</mat-option>
+          <mat-option *ngFor="let student of availableStudents" [value]="student.id">{{student.email}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="select">
+        <mat-select name="appId" [(ngModel)]="appId" (ngModelChange)="getStatistics()" [disableOptionCentering]="true">
+          <mat-option value="">All Assignments</mat-option>
+          <mat-option *ngFor="let app of assignments" [value]="app.id">{{app.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div class="date-container">
       <input type="date" name="dateFrom" [(ngModel)]="dateFrom" [max]="dateTo || dateNow" class="form-control" (change)="getStatistics()" />
       <input type="date" name="dateTo" [(ngModel)]="dateTo" [min]="dateFrom" [max]="dateNow" class="form-control" (change)="getStatistics()" />

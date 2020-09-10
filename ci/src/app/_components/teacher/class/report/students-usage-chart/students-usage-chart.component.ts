@@ -14,12 +14,14 @@ export class StudentsUsageChartComponent implements OnInit {
     @Input() classId: number;
     @Input() forStudent = false;
     studentId = '';
+    appId = '';
     dateFrom = '';
     dateTo = '';
     dateNow = moment().format('YYYY-MM-DD');
 
     students = [];
     availableStudents = [];
+    assignments = [];
 
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
@@ -66,12 +68,16 @@ export class StudentsUsageChartComponent implements OnInit {
                     this.students = students;
                     this.availableStudents = students;
                 });
+            this.classService.getAssignments(this.classId)
+                .subscribe(assignments => {
+                    this.assignments = assignments.assignments;
+                });
         }
         this.getStatistics();
     }
 
     public getStatistics() {
-        this.classService.geAnswersStatistics(this.classId, this.studentId, this.dateFrom, this.dateTo)
+        this.classService.geAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo)
             .subscribe(response => {
                 const labels = [];
                 const attempts = [];

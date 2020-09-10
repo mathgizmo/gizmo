@@ -42,7 +42,7 @@ import {TopicComponent} from './_components/assignment/topic/index';
 import {LessonComponent, ChartComponent} from './_components/assignment/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
-    FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent} from './_components/dialogs/index';
+    FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
 import {ToDoComponent, MyClassesComponent, MyClassReportComponent, MyInvitationsComponent} from './_components/student/index';
 import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
@@ -136,6 +136,7 @@ FullCalendarModule.registerPlugins([
         MyInvitationsComponent,
         ManageClassesComponent,
         YesNoDialogComponent,
+        DeleteConfirmationDialogComponent,
         EditClassDialogComponent,
         StudentAssignmentsDialogComponent,
         AddStudentDialogComponent,
@@ -172,6 +173,7 @@ FullCalendarModule.registerPlugins([
         // QuestionNumDialogComponent,
         BadChallengeDialogComponent,
         YesNoDialogComponent,
+        DeleteConfirmationDialogComponent,
         EditClassDialogComponent,
         StudentAssignmentsDialogComponent,
         AddStudentDialogComponent,

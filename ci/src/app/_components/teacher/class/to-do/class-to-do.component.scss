@@ -8,6 +8,8 @@
   width: 90vw;
   .to-do-content {
     margin-left: 220px;
+    width: calc(100% - 240px);
+    max-width: calc(100% - 240px) !important;
   }
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -19,6 +21,8 @@
     }
     .to-do-content {
       margin-left: 0;
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px) !important;
     }
   }
   @media screen and (max-width: 600px) {

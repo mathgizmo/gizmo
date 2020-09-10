@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {ClassesManagementService} from '../../../_services/classes-management.service';
 import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.component';
-import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.component';
+import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 
@@ -70,8 +70,10 @@ export class ManageClassesComponent implements OnInit {
     }
 
     onDeleteClass(class_id) {
-        const dialogRef = this.dialog.open(YesNoDialogComponent, {
-            data: { 'message': 'Are you sure that you want to delete the class?'},
+        const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+            data: {
+                // 'message': 'Are you sure that you want to delete the class?'
+            },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {

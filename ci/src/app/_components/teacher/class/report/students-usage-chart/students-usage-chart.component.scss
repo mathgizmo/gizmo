@@ -10,8 +10,11 @@
     justify-content: center;
   }
   & > *:first-child {
-    max-width: 50%;
-    width: 400px;
+    max-width: 100%;
+  }
+  & > *:first-child > * {
+    max-width: 49%;
+    min-width: 250px;
     margin: 0 16px;
     @media (max-width: 1310px) {
       max-width: 100%;

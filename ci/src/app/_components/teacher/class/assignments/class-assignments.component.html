@@ -34,7 +34,7 @@
             <th mat-sort-header="due_date" scope="col">Due Date</th>
             <th mat-sort-header="due_time" scope="col">Due Time</th>
             <th scope="col">Status</th>
-            <th class="text-right">
+            <th class="text-right" style="min-width: 180px">
               <button *ngIf="available_assignments.length > 0" class="button button-small button-outline" mat-button (click)="addAssignment=!addAssignment">Add Assignment</button>
             </th>
           </tr>

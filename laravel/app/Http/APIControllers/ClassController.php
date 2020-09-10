@@ -153,7 +153,8 @@ class ClassController extends Controller
                         ]);
                     }
                 }
-                $items = array_merge(array_values($students->toArray()), $not_subscribed);
+                $not_sorted_items = array_merge(array_values($students->toArray()), $not_subscribed);
+                $items = array_values(collect($not_sorted_items)->sortBy('email')->toArray());
                 return $this->success(['items' => $items]);
             } else {
                 return $this->success(['items' => array_values($students->toArray())]);
@@ -245,13 +246,14 @@ class ClassController extends Controller
         if ($this->user->is_teacher) {
             $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
             if ($class) {
-                $data = DB::table('class_detailed_reports')->where('class_id', $class->id)->get();
+                $data = DB::table('class_detailed_reports')->where('class_id', $class->id)
+                    ->orderBy('student_email', 'ASC')->get();
                 foreach ($data as $row) {
                     $row->data = json_decode($row->data);
                 }
                 return $this->success([
                     'class' => $class,
-                    'assignments' => array_values($class->applications()->get()->toArray()),
+                    'assignments' => array_values($class->applications()->orderBy('name', 'ASC')->get()->toArray()),
                     'students' => array_values($data->toArray()),
                 ]);
             }
@@ -267,7 +269,7 @@ class ClassController extends Controller
                 }
                 return $this->success([
                     'class' => $class,
-                    'assignments' => array_values($class->applications()->get()->toArray()),
+                    'assignments' => array_values($class->applications()->orderBy('name', 'ASC')->get()->toArray()),
                     'students' => array_values($data->toArray()),
                 ]);
             }
@@ -428,11 +430,15 @@ class ClassController extends Controller
             return $this->error('Class not found!', 404);
         }
         $query = StudentsTrackingQuestion::query()->with('application');
-        $query->whereHas('application', function ($q1) use ($class_id) {
-            $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id) {
-                $q2->where('classes.id', intval($class_id));
+        if (request()->has('app_id') && request('app_id')) {
+            $query->where('app_id', request('app_id'));
+        } else {
+            $query->whereHas('application', function ($q1) use ($class_id) {
+                $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id) {
+                    $q2->where('classes.id', intval($class_id));
+                });
             });
-        });
+        }
         if (request()->has('student_id') && request('student_id')) {
             $query->where('student_id', request('student_id'));
         } else {

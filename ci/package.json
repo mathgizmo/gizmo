@@ -6,7 +6,6 @@
     "ng": "ng",
     "start": "ng serve --base-href /gizmo/",
     "build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/",
-    "lint": "ng lint",
     "prod-build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/",
     "test-build": "ng build --output-path=test-build/ --configuration=testing --base-href /gizmo/",
     "cordova-build": "ng build --output-path=www/ --configuration=cordova --base-href ./"

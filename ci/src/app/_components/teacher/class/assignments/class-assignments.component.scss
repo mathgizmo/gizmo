@@ -44,6 +44,8 @@
   width: 90vw;
   .assignments-content {
     margin-left: 220px;
+    width: calc(100% - 240px);
+    max-width: calc(100% - 240px) !important;
   }
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -55,6 +57,8 @@
     }
     .assignments-content {
       margin-left: 0;
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px) !important;
     }
   }
 }
