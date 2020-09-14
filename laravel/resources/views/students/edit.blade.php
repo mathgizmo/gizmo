@@ -80,6 +80,19 @@
                 <input type="hidden" name="_method" value="PATCH">
                 {{ csrf_field() }}
             </form>
+            <form class="row mb-3" action="{{ route('students.self-study', $student->id) }}" method="POST">
+                <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                    <label for="is_self_study">Self Study</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="is_self_study" name="is_self_study" class="form-control" onchange="this.parentElement.parentElement.submit();" style="max-width: 300px;">
+                        <option {{ $student->is_self_study ? 'selected="selected"' : '' }} value="1">Yes</option>
+                        <option {{ $student->is_self_study ? '' : 'selected="selected"' }} value="0">No</option>
+                    </select>
+                </div>
+                <input type="hidden" name="_method" value="PATCH">
+                {{ csrf_field() }}
+            </form>
             <form class="row mb-3" action="{{ route('students.teacher', $student->id) }}" method="POST">
                 <div class="col-md-2 form-control-label ml-3 font-weight-bold">
                     <label for="is_teacher">Teacher</label>
