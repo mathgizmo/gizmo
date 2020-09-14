@@ -17,11 +17,12 @@
 
   <mat-card id="profile-container">
   	<span class="title">Change Profile Info</span>
-    <form #changeProfile="ngForm" (ngSubmit)="onChangeProfile()">
+    <form #changeProfile="ngForm" (ngSubmit)="changeProfile.form.valid && onChangeProfile()">
       <mat-form-field>
         <input matInput
           name="username"
-          pattern="[a-zA-Z0-9]{2,255}"
+          required
+          minlength="2"
           placeholder="Username"
           [(ngModel)]="user.username"
           class="answer" />
@@ -29,7 +30,6 @@
       <mat-form-field>
         <input matInput
                name="first_name"
-               pattern="[a-zA-Z]{2,255}"
                placeholder="First Name"
                [(ngModel)]="user.first_name"
                class="answer" />
@@ -37,7 +37,6 @@
       <mat-form-field>
         <input matInput
                name="last_name"
-               pattern="[a-zA-Z]{2,255}"
                placeholder="Last Name"
                [(ngModel)]="user.last_name"
                class="answer" />
@@ -57,11 +56,21 @@
       <mat-form-field>
         <input matInput
           name="email"
+          required
           pattern="^\S+@\S+$"
           placeholder="Email"
           [(ngModel)]="user.email"
-          class="answer" />
+          class="answer"
+        />
       </mat-form-field>
+      <div class="email-message alert alert-info" *ngIf="showOldEmail && oldEmail !== user.email">
+        <div>
+          <mat-icon>info</mat-icon>
+          <span class="answer">You need to verify your new email address! Current Email: {{oldEmail}}</span>
+        </div>
+        <button *ngIf="linkTimer < 1" type="button" class="button button-outline button-very-small" (click)="onVerifyEmail()">Resend Email</button>
+        <span *ngIf="linkTimer > 0">Wait {{linkTimer}} sec.</span>
+      </div>
       <div class="alert alert-danger" *ngIf="badEmail">
          <mat-icon>warning</mat-icon>
          <span class="answer">&nbsp;{{warningMessage}}</span>
@@ -79,23 +88,27 @@
 
   <mat-card>
     <span class="title">Change Password</span>
-    <form #changePassword="ngForm" (ngSubmit)="onChangePassword(newPassword.value, confirmedPassword.value)">
+    <form #changePassword="ngForm" (ngSubmit)="changePassword.form.valid && onChangePassword()">
       <mat-form-field>
         <input matInput
-          required="required"
+          required
+          minlength="6"
           pattern=".{6,30}"
+          name="newPassword"
           type="password"
           placeholder="New Password"
-          #newPassword
+          [(ngModel)]="newPassword"
           class="answer" />
       </mat-form-field>
       <mat-form-field>
         <input matInput
-          required="required"
+          required
+          minlength="6"
           pattern=".{6,30}"
+          name="confirmedPassword"
           type="password"
           placeholder="Confirm Password"
-          #confirmedPassword
+          [(ngModel)]="confirmedPassword"
           class="answer" />
       </mat-form-field>
       <div class="alert alert-danger" *ngIf="!passwordsMatch">

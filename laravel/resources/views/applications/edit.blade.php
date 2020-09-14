@@ -81,6 +81,42 @@
                         @endforeach
                     </ul>
                 </div>
+                <div class="form-group row mt-3 {{ $errors->has('allow_any_order') ? ' has-error' : '' }}">
+                    <label for="allow_any_order" class="col-md-2 form-control-label ml-3 font-weight-bold">Order</label>
+                    <div class="col-md-8">
+                        <select id="allow_any_order" class="form-control" name="allow_any_order">
+                            <option value="0">Topics/Lessons need to be completed in linear order</option>
+                            <option value="1" {{old('allow_any_order', $application->allow_any_order) ? 'selected="selected"' : '' }}>Topics/Lessons can be completed in any order</option>
+                        </select>
+                        @if ($errors->has('allow_any_order'))
+                            <span class="form-text">
+                                <strong>{{ $errors->first('allow_any_order') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group row mt-3 {{ $errors->has('testout_attempts') ? ' has-error' : '' }}">
+                    <label for="testout_attempts" class="col-md-2 form-control-label ml-3 font-weight-bold">Number of attempts to testout (-1 – means unlimited attempts; 0 – for not testout)</label>
+                    <div class="col-md-8">
+                        <input id="testout_attempts" type="text" class="form-control" name="testout_attempts" value="{{ $application->testout_attempts }}">
+                        @if ($errors->has('testout_attempts'))
+                            <span class="form-text">
+                                <strong>{{ $errors->first('testout_attempts') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="form-group row mt-3 {{ $errors->has('question_num') ? ' has-error' : '' }}">
+                    <label for="question_num" class="col-md-2 form-control-label ml-3 font-weight-bold">Number of consecutive correct answers which will signify lesson completion (0 - to answer all questions)</label>
+                    <div class="col-md-8">
+                        <input id="question_num" type="text" class="form-control" name="question_num" value="{{ $application->question_num }}">
+                        @if ($errors->has('question_num'))
+                            <span class="form-text">
+                                <strong>{{ $errors->first('question_num') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
             </div>
             <div class="card-footer">
                 <a class="btn btn-secondary" href="{{ route('applications.index') }}">Back</a>

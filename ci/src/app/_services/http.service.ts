@@ -2,9 +2,10 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {Router} from '@angular/router';
+import {NavigationExtras, Router} from '@angular/router';
 
 import {AuthenticationService} from './authentication.service';
+import {throwError} from 'rxjs';
 
 
 @Injectable()
@@ -31,15 +32,20 @@ export class HttpService {
             .pipe(
                 map((response: Response) => response['message']),
                 catchError((response: Response) => {
-                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
+                    if (response['status_code'] === 401 || response['error']['status_code'] === 401 ||
+                        response['status_code'] === 403 || response['error']['status_code'] === 403) {
                         this.authenticationService.logout();
-                        this.router.navigate(['login']);
+                        this.router.navigate(['login'], {
+                            state: {
+                                error: response['error'] && response['error']['message']
+                            }
+                        });
                     }
                     if (response['status_code'] === 453 || response['error']['status_code'] === 453) {
                         localStorage.setItem('redirect_to', this.router.url + '');
                         this.router.navigate(['to-do']);
                     }
-                    return response['message'];
+                    return throwError(response['error'] && response['error']['message'] || 'Unknown error!');
                 })
             );
     }
@@ -57,11 +63,16 @@ export class HttpService {
             .pipe(
                 map((response: Response) => response['message']),
                 catchError((response: Response) => {
-                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
+                    if (response['status_code'] === 401 || response['error']['status_code'] === 401 ||
+                        response['status_code'] === 403 || response['error']['status_code'] === 403) {
                         this.authenticationService.logout();
-                        this.router.navigate(['login']);
+                        this.router.navigate(['login'], {
+                            state: {
+                                error: response['error'] && response['error']['message']
+                            }
+                        });
                     }
-                    return response['message'];
+                    return throwError(response['error'] && response['error']['message'] || 'Unknown error!');
                 })
             );
     }
@@ -79,11 +90,16 @@ export class HttpService {
             .pipe(
                 map((response: Response) => response['message']),
                 catchError((response: Response) => {
-                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
+                    if (response['status_code'] === 401 || response['error']['status_code'] === 401 ||
+                        response['status_code'] === 403 || response['error']['status_code'] === 403) {
                         this.authenticationService.logout();
-                        this.router.navigate(['login']);
+                        this.router.navigate(['login'], {
+                            state: {
+                                error: response['error'] && response['error']['message']
+                            }
+                        });
                     }
-                    return response['message'];
+                    return throwError(response['error'] && response['error']['message'] || 'Unknown error!');
                 })
             );
     }
@@ -101,11 +117,16 @@ export class HttpService {
             .pipe(
                 map((response: Response) => response['message']),
                 catchError((response: Response) => {
-                    if (response['status_code'] === 401 || response['error']['status_code'] === 401) {
+                    if (response['status_code'] === 401 || response['error']['status_code'] === 401 ||
+                        response['status_code'] === 403 || response['error']['status_code'] === 403) {
                         this.authenticationService.logout();
-                        this.router.navigate(['login']);
+                        this.router.navigate(['login'], {
+                            state: {
+                                error: response['error'] && response['error']['message']
+                            }
+                        });
                     }
-                    return response['message'];
+                    return throwError(response['error'] && response['error']['message'] || 'Unknown error!');
                 })
             );
     }

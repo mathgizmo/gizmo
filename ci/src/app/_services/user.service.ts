@@ -1,5 +1,5 @@
 ﻿import {Injectable} from '@angular/core';
-import {map, catchError} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 import {User} from '../_models/index';
 import {HttpService} from './http.service';
@@ -12,13 +12,7 @@ export class UserService {
     }
 
     public getProfile() {
-        return this.http.get('/profile')
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.get('/profile');
     }
 
     public changeProfile(user: User) {
@@ -29,13 +23,7 @@ export class UserService {
             email: user.email,
             country_id: user.country_id
         };
-        return this.http.post('/profile', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.post('/profile', request);
     }
 
     public changePassword(newPassword: string, confirmedPassword: string) {
@@ -43,26 +31,14 @@ export class UserService {
             password: newPassword,
             confirm_password: confirmedPassword
         };
-        return this.http.post('/profile', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.post('/profile', request);
     }
 
     public changeApplication(appId: number) {
         const request = {
             app_id: appId,
         };
-        return this.http.post('/profile/app/', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.post('/profile/app/', request);
     }
 
     public getToDos() {
@@ -70,22 +46,12 @@ export class UserService {
             .pipe(
                 map((response: Response) => {
                     return response['items'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }
 
     public getClasses() {
-        return this.http.get('/profile/classes')
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.get('/profile/classes');
     }
 
     public getClassInvitations() {
@@ -94,10 +60,6 @@ export class UserService {
                 map((response: Response) => {
                     return response['items'];
                 }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
             );
     }
 
@@ -105,25 +67,13 @@ export class UserService {
         const request = {
             class_id: classId,
         };
-        return this.http.post('/profile/classes/' + classId + '/subscribe', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.post('/profile/classes/' + classId + '/subscribe', request);
     }
 
     public unsubscribeClass(classId: number) {
         const request = {
             class_id: classId,
         };
-        return this.http.post('/profile/classes/' + classId + '/unsubscribe', request)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.post('/profile/classes/' + classId + '/unsubscribe', request);
     }
 }

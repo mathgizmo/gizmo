@@ -4,7 +4,7 @@
     <i class="arrow" [class.arrow-up]="reportShow[0]" [class.arrow-down]="!reportShow[0]"
        (click)="slideToggle(0)">
     </i>
-    <app-students-usage-chart id="report0" [classId]="classId" [forStudent]="true"></app-students-usage-chart>
+    <app-students-usage-chart id="report0" [classId]="classId" [assignments]="assignments" [forStudent]="true"></app-students-usage-chart>
   </mat-card>
   <mat-card>
     <i class="arrow" [class.arrow-up]="reportShow[1]" [class.arrow-down]="!reportShow[1]"

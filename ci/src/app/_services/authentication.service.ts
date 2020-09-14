@@ -1,6 +1,6 @@
 ﻿import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {User} from '../_models/index';
@@ -51,8 +51,12 @@ export class AuthenticationService {
                         return false;
                     }
                 }),
-                catchError((response: Response) => {
-                    return response['message'];
+                catchError((errorResponse: HttpErrorResponse) => {
+                    if (errorResponse.error && errorResponse.error.status_code && errorResponse.error.status_code === 420) {
+                        return throwError('email_not_verified');
+                    } else {
+                        return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
+                    }
                 }),
             );
     }
@@ -75,8 +79,8 @@ export class AuthenticationService {
                         return false;
                     }
                 }),
-                catchError((response: Response) => {
-                    return response['message'];
+                catchError((errorResponse: HttpErrorResponse) => {
+                    return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
                 }),
             );
     }
@@ -148,6 +152,30 @@ export class AuthenticationService {
                 map((response: Response) => {
                     return response;
                 })
+            );
+    }
+
+    sendEmailVerificationLink(email: string): Observable<any> {
+        return this.http.post(this.apiUrl + '/email-verify', {email: email}, {headers: this.headers})
+            .pipe(
+                map((response: Response) => {
+                    return response['message'];
+                }),
+                catchError((errorResponse: HttpErrorResponse) => {
+                    return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
+                }),
+            );
+    }
+
+    verifyEmail(callbackUrl: string): Observable<any> {
+        return this.http.get(callbackUrl, {headers: this.headers})
+            .pipe(
+                map((response: Response) => {
+                    return response['message'];
+                }),
+                catchError((errorResponse: HttpErrorResponse) => {
+                    return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
+                }),
             );
     }
 }

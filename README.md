@@ -15,6 +15,7 @@ We try to create the app that allow people to learn math.
 - For Google ReCaptcha set next keys in your *.env* file: *RECAPTCHA_KEY*, *RECAPTCHA_SECRET*.
 - For preview questions in the admin you need *PREVIEW_URL* with a link to your client base preview path.
 - To add admin ability to login as student you need *CLIENT_LOGIN_URL* with a link to your client login path.
+- For email verification you need *CLIENT_VERIFY_EMAIL_URL* with a link to your client email verification path.
 - Fou production build change environment to production in your *.env* file: *APP_ENV=production*.
 - Run `php artisan key:generate` to generate app key. If you get any error on key generation, check if line *APP_KEY=* exists in *.env*, then rerun command.
 - Run `php artisan jwt:generate` to generate secret for API.

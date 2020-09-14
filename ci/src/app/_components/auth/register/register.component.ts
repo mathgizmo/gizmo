@@ -52,8 +52,22 @@ export class RegisterComponent implements OnInit {
                         .subscribe(user => {
                             if (user.role === 'teacher') {
                                 this.router.navigate(['teacher/class']);
+                            } else if (user.role === 'self_study') {
+                                this.router.navigate(['/']);
                             } else {
                                 this.router.navigate(['dashboard']);
+                            }
+                        }, error => {
+                            if (error === 'email_not_verified') {
+                                this.router.navigate(['verify-email'], {
+                                    state: {
+                                        email: this.model.email,
+                                        message: 'We sent email verification link to your email address!'
+                                    }
+                                });
+                            } else {
+                                this.error = error;
+                                this.loading = false;
                             }
                         });
                 }, error => {

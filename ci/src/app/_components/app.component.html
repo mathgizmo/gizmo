@@ -1,82 +1,62 @@
-﻿<!-- main app container -->
-<div *ngIf="showMenu" class="menu" id='main-menu'>
-    <div *ngIf="user.role === 'teacher'">
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <img src="./assets/images/menu-button-white.svg" class="menu-icon">
-            <!--<mat-icon class="menu-icon">menu</mat-icon>-->
-        </button>
-        <mat-menu #menu="matMenu" class="menu">
-            <a mat-menu-item routerLink="dashboard" class="menu-item">
-                <span class="material-icons">home</span>
-                Home
-            </a>
-            <a mat-menu-item routerLink="teacher/class" class="menu-item">
-                <span class="material-icons">class</span>
-                Classrooms
-            </a>
-            <a mat-menu-item routerLink="teacher/assignment" class="menu-item">
-                <span class="material-icons">edit</span>
-                Assignments
-            </a>
-            <a mat-menu-item routerLink="teacher/review-content" class="menu-item">
-                <span class="material-icons">grading</span>
-                Review Content
-            </a>
-            <button mat-menu-item [matMenuTriggerFor]="studentViews" class="menu-item">
-                <span class="material-icons">bubble_chart</span>
-                Student Views
-            </button>
-            <a mat-menu-item routerLink="profile" class="menu-item">
-                <span class="material-icons">account_circle</span>
-                Profile
-            </a>
-            <a mat-menu-item routerLink="logout" class="menu-item">
-                <span class="material-icons">power_settings_new</span>
-                Logout
-            </a>
-        </mat-menu>
-        <mat-menu #studentViews="matMenu">
-            <a mat-menu-item routerLink="to-do" class="menu-item">To Do</a>
-            <a mat-menu-item routerLink="student/class" class="menu-item">My Classes</a>
-            <a mat-menu-item routerLink="student/invitations" class="menu-item">My Invitations</a>
-        </mat-menu>
-    </div>
-    <div *ngIf="user.role !== 'teacher'">
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <img src="./assets/images/menu-button-white.svg" class="menu-icon">
-            <!--<mat-icon class="menu-icon">menu</mat-icon>-->
-        </button>
-        <mat-menu #menu="matMenu" class="menu">
-            <a mat-menu-item routerLink="dashboard" class="menu-item">
-                <span class="material-icons">home</span>
-                Home
-            </a>
-            <a mat-menu-item routerLink="to-do" class="menu-item">
-                <span class="material-icons">grading</span>
-                To Do
-            </a>
-            <a mat-menu-item routerLink="student/class" class="menu-item">
-                <span class="material-icons">class</span>
-                My Classes
-            </a>
-            <a mat-menu-item routerLink="student/invitations" class="menu-item">
-                <span class="material-icons">vpn_key</span>
-                My Invitations
-            </a>
-            <a mat-menu-item routerLink="profile" class="menu-item">
-                <span class="material-icons">account_circle</span>
-                Profile
-            </a>
-            <a mat-menu-item routerLink="logout" class="menu-item">
-                <span class="material-icons">power_settings_new</span>
-                Logout
-            </a>
-        </mat-menu>
-    </div>
+﻿<div *ngIf="showMenu" class="menu" id='main-menu'>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <img src="./assets/images/menu-button-white.svg" class="menu-icon" alt="menu" />
+        <!--<mat-icon class="menu-icon">menu</mat-icon>-->
+    </button>
+    <mat-menu #menu="matMenu" class="menu">
+        <a *ngIf="user.role === 'teacher' || user.role === 'student'" mat-menu-item routerLink="dashboard" class="menu-item">
+            <span class="material-icons">home</span>
+            Home
+        </a>
+        <a *ngIf="user.role !== 'teacher' && user.role !== 'student'" mat-menu-item routerLink="/" class="menu-item">
+            <span class="material-icons">home</span>
+            Home
+        </a>
+        <a *ngIf="user.role !== 'teacher'" mat-menu-item routerLink="to-do" class="menu-item">
+            <span class="material-icons">grading</span>
+            To Do
+        </a>
+        <a *ngIf="user.role === 'student'" mat-menu-item routerLink="student/class" class="menu-item">
+            <span class="material-icons">class</span>
+            My Classes
+        </a>
+        <a *ngIf="user.role === 'student'" mat-menu-item routerLink="student/invitations" class="menu-item">
+            <span class="material-icons">vpn_key</span>
+            My Invitations
+        </a>
+        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/class" class="menu-item">
+            <span class="material-icons">class</span>
+            Classrooms
+        </a>
+        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/assignment" class="menu-item">
+            <span class="material-icons">edit</span>
+            Assignments
+        </a>
+        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/review-content" class="menu-item">
+            <span class="material-icons">grading</span>
+            Review Content
+        </a>
+        <a mat-menu-item routerLink="profile" class="menu-item">
+            <span class="material-icons">account_circle</span>
+            Profile
+        </a>
+        <a mat-menu-item routerLink="logout" class="menu-item">
+            <span class="material-icons">power_settings_new</span>
+            Logout
+        </a>
+        <!-- <button mat-menu-item [matMenuTriggerFor]="studentViews" class="menu-item">
+            <span class="material-icons">bubble_chart</span>
+            Student Views
+        </button> -->
+    </mat-menu>
+    <!-- <mat-menu #studentViews="matMenu">
+        <a mat-menu-item routerLink="to-do" class="menu-item">To Do</a>
+        <a mat-menu-item routerLink="student/class" class="menu-item">My Classes</a>
+        <a mat-menu-item routerLink="student/invitations" class="menu-item">My Invitations</a>
+    </mat-menu> -->
 </div>
 <router-outlet></router-outlet>
 
-<!-- loader -->
 <div [hidden] = !HTTPActivity>
     <div class="loader">
         <div class="sk-fading-circle">

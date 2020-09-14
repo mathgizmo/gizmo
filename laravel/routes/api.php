@@ -21,8 +21,10 @@ $api->version('v1', function ($api) {
     $api->get('/logout' , 'App\Http\APIControllers\AuthController@logout');
     $api->post('/password-reset-email' , 'App\Http\APIControllers\AuthController@passwordResetEmail');
     $api->post('/reset-password' , 'App\Http\APIControllers\AuthController@resetPassword');
+    $api->get('email-verify/{id}', 'App\Http\APIControllers\AuthController@verifyEmail')->name('verification.verify');
+    $api->post('email-verify', 'App\Http\APIControllers\AuthController@resendVerificationEmail')->name('verification.resend');
 
-    $api->group(['middleware' => 'api.auth'], function () use ($api) {
+    $api->group(['middleware' => ['api.auth', 'verified']], function () use ($api) {
         $api->get('/lesson/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedLesson');
         $api->get('/topic/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedTopic');
         $api->get('/unit/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedUnit');

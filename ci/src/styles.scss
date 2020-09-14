@@ -69,6 +69,10 @@ a.button:hover, a.button:focus {
 .error-button {
   background-color: $red !important;
 }
+.button-very-small {
+  font-size: 0.8em !important;
+  padding: 4px 8px !important;
+}
 .mat-button-wrapper {
   width: 100%;
   height: 100%;
@@ -402,6 +406,14 @@ input[type="time"].form-control, input[type="date"].form-control {
   white-space: normal !important;
 }
 
+.alert {
+  display: flex;
+  align-items: center;
+  .material-icons {
+    margin-right: 4px;
+  }
+}
+
 @media screen and (max-width: 1366px) {
   .welcome iframe, .welcome video {
     height: 28vh;
@@ -431,6 +443,9 @@ input[type="time"].form-control, input[type="date"].form-control {
     }
     .button-small {
       padding: 1px 6px !important;
+    }
+    .button-very-small {
+      font-size: 10px !important;
     }
     .dialog-buttons-container {
         .button, .error-button {
@@ -468,8 +483,11 @@ input[type="time"].form-control, input[type="date"].form-control {
       font-size: 16px !important;
       padding: 2px 12px !important;
     }
-    .button-small {
+    .button-small, .button-very-small {
       padding: 0 4px !important;
+    }
+    .button-very-small {
+      font-size: 10px !important;
     }
     .dialog-buttons-container {
       .button, .error-button {

@@ -13,6 +13,7 @@ export class StudentsUsageChartComponent implements OnInit {
     constructor(private classService: ClassesManagementService, private authenticationService: AuthenticationService) {}
     @Input() classId: number;
     @Input() forStudent = false;
+    @Input() assignments = [];
     studentId = '';
     appId = '';
     dateFrom = '';
@@ -21,7 +22,6 @@ export class StudentsUsageChartComponent implements OnInit {
 
     students = [];
     availableStudents = [];
-    assignments = [];
 
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
@@ -68,6 +68,8 @@ export class StudentsUsageChartComponent implements OnInit {
                     this.students = students;
                     this.availableStudents = students;
                 });
+        }
+        if (!this.assignments) {
             this.classService.getAssignments(this.classId)
                 .subscribe(assignments => {
                     this.assignments = assignments.assignments;

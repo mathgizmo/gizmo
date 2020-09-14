@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../_models/user';
 import {AuthenticationService, CountryService, UserService} from '../../_services/index';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {timer} from 'rxjs';
+import {takeWhile, tap} from 'rxjs/operators';
 // import {DomSanitizer} from '@angular/platform-browser';
 // import {Router} from '@angular/router';
 // import {environment} from '../../../environments/environment';
@@ -13,6 +16,11 @@ import {AuthenticationService, CountryService, UserService} from '../../_service
 })
 export class ProfileComponent implements OnInit {
     public user: User;
+    public newPassword = '';
+    public confirmedPassword = '';
+    public oldEmail = null;
+    public showOldEmail = false;
+    public linkTimer = 0;
     public passwordsMatch = true;
     public badEmail = false;
     public warningMessage: string;
@@ -30,7 +38,8 @@ export class ProfileComponent implements OnInit {
     constructor(
         private userService: UserService,
         private authenticationService: AuthenticationService,
-        private countryService: CountryService
+        private countryService: CountryService,
+        public snackBar: MatSnackBar,
         // private sanitizer: DomSanitizer,
         // private router: Router
     ) {
@@ -46,7 +55,9 @@ export class ProfileComponent implements OnInit {
                     this.user.username = res['name'];
                     this.user.first_name = res['first_name'];
                     this.user.last_name = res['last_name'];
-                    this.user.email = res['email'];
+                    this.oldEmail = res['email'];
+                    this.user.email = res['email_new'] ? res['email_new'] : res['email'];
+                    this.showOldEmail = this.oldEmail !== this.user.email;
                     this.user.country_id = res['country_id'];
                     // this.applications = res['applications'];
                     // this.selectedAppId = res['app_id'];
@@ -71,28 +82,79 @@ export class ProfileComponent implements OnInit {
                 } else {
                     this.badEmail = false;
                 }
+                this.showOldEmail = this.oldEmail !== this.user.email;
+                this.snackBar.open('Profile info have been successfully updated!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                let message = '';
+                Object.values(error).forEach(x => {
+                    message += x + ' ';
+                });
+                this.snackBar.open(message ? message : 'Error occurred while changing profile info!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
             });
     }
 
-    onChangePassword(newPassword: string, confirmedPassword: string) {
+    onChangePassword() {
         this.badEmail = false;
-        if (newPassword !== confirmedPassword) {
+        if (this.newPassword !== this.confirmedPassword) {
             this.passwordsMatch = false;
             this.warningMessage = 'Password does not match the confirm password!';
             return;
-        } else if (newPassword === '') {
+        } else if (this.newPassword === '') {
             this.passwordsMatch = false;
             this.warningMessage = 'You can\'t use empty passwords!';
             return;
         } else {
             this.passwordsMatch = true;
-            this.userService.changePassword(newPassword, confirmedPassword)
+            this.userService.changePassword(this.newPassword, this.confirmedPassword)
                 .subscribe(res => {
-                    this.authenticationService.login(this.user.email, newPassword);
+                    this.authenticationService.login(this.user.email, this.newPassword);
+                    this.snackBar.open('Password have been successfully updated!', '', {
+                        duration: 3000,
+                        panelClass: ['success-snackbar']
+                    });
                 }, error => {
-                    console.log(error);
+                    this.snackBar.open(error.password ? error.password : 'Error occurred while changing password!', '', {
+                        duration: 3000,
+                        panelClass: ['error-snackbar']
+                    });
                 });
         }
+    }
+
+    onVerifyEmail() {
+        if (this.user.email) {
+            this.authenticationService.sendEmailVerificationLink(this.user.email)
+                .subscribe(res => {
+                    this.linkTimer = 60;
+                    this.initTimer();
+                    this.snackBar.open('We sent email verification link to your email address!', '', {
+                        duration: 3000,
+                        panelClass: ['success-snackbar']
+                    });
+                }, error => {
+                    this.linkTimer = 60;
+                    this.initTimer();
+                    this.snackBar.open(error, '', {
+                        duration: 3000,
+                        panelClass: ['error-snackbar']
+                    });
+                });
+        }
+    }
+
+    initTimer() {
+        timer(1000, 1000)
+            .pipe(
+                takeWhile( () => this.linkTimer > 0 ),
+                tap(() => this.linkTimer--)
+            )
+            .subscribe( () => {});
     }
 
     /* onChangeApplication(appId: number) {

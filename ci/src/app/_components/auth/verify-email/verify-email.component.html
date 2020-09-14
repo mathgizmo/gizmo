@@ -1,0 +1,36 @@
+﻿<div class="back-button-container"><a routerLink="/welcome" routerLinkActive="active" class="back-button"><-Back Home</a></div>
+<mat-card class="auth-container">
+    <mat-card>
+        <h2 class="title">Verify Email</h2>
+        <form name="form" (ngSubmit)="f.form.valid && verifyEmail()" #f="ngForm" novalidate>
+            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+                <label for="email">Email</label>
+                <input type="text" class="form-control answer" name="email" id="email" [(ngModel)]="model.email" #email="ngModel" required />
+                <div *ngIf="f.submitted && !email.valid" class="help-block">Email is required</div>
+            </div>
+            <div *ngIf="error" class="alert alert-danger">
+                <span class="material-icons">warning</span>
+                <span class="answer">&nbsp;{{error}}</span>
+            </div>
+            <div *ngIf="!error && message" class="alert alert-info">
+                <span class="material-icons">done</span>
+                <span class="answer">&nbsp;{{message}}</span>
+            </div>
+            <div class="form-group center-block buttons-container">
+                <button *ngIf="linkTimer < 1" mat-button [disabled]="loading" class="button login-button moving-forward-button">
+                    <span *ngIf="!loading">Resend Verification link</span>
+                    <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" alt=""/>
+                </button>
+                <span *ngIf="linkTimer > 0">Wait {{linkTimer}} sec.</span>
+            </div>
+        </form>
+        <mat-divider></mat-divider>
+        <div class="text-center">
+            <span>Don't have an account?&nbsp;</span>
+            <a [routerLink]="['/register']" routerLinkActive="link-active">
+                <span>Register account</span>
+            </a>
+        </div> 
+        <mat-divider></mat-divider>
+    </mat-card>  
+</mat-card>

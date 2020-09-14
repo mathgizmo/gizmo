@@ -280,7 +280,7 @@ class ClassController extends Controller
     public function getAssignments($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
-            $items = $class->applications()->get();
+            $items = $class->applications()->orderBy('name', 'ASC')->get();
             $students = $class->students()->get();
             $students_count = $students->count();
             foreach ($items as $item) {
@@ -325,7 +325,7 @@ class ClassController extends Controller
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
             $available = Application::where('teacher_id', $this->user->id)
-                ->whereNotIn('id', $items->pluck('id')->toArray())->orderBy('name')->get();
+                ->whereNotIn('id', $items->pluck('id')->toArray())->orderBy('name', 'ASC')->get();
             foreach ($available as $item) {
                 $item->icon = $item->icon();
             }

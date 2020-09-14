@@ -23,6 +23,16 @@
   margin-bottom: 16px;
 }
 
+.email-message {
+  display: flex;
+  justify-content: space-between;
+  & > *:first-child {
+    display: flex;
+    align-items: center;
+  }
+}
+
+
 .button-container {
   display: flex;
   align-items: center;

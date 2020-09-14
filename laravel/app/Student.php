@@ -2,15 +2,21 @@
 
 namespace App;
 
+use App\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Student extends Authenticatable implements JWTSubject
+class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
+    use Notifiable;
+
     protected $table = 'students';
 
     protected $fillable = [
-        'first_name', 'last_name', 'name', 'email', 'password', 'country_id', 'is_teacher', 'is_super', 'is_admin', 'is_registered'
+        'first_name', 'last_name', 'name', 'email', 'email_new', 'password', 'country_id',
+        'is_teacher', 'is_super', 'is_admin', 'is_self_study', 'is_registered', 'email_verified_at'
     ];
 
     protected $hidden = [
@@ -21,6 +27,10 @@ class Student extends Authenticatable implements JWTSubject
     {
         if (!empty($filters['id'])) {
             $query->where('id', $filters['id']);
+        }
+
+        if (!empty($filters['country_id'])) {
+            $query->where('country_id', $filters['country_id']);
         }
 
         if (!empty($filters['name'])) {
@@ -45,6 +55,18 @@ class Student extends Authenticatable implements JWTSubject
 
         if (!empty($filters['is_teacher'])) {
             $query->where('is_teacher', $filters['is_teacher'] == 'yes');
+        }
+
+        if (!empty($filters['is_self_study'])) {
+            $query->where('is_self_study', $filters['is_self_study'] == 'yes');
+        }
+
+        if (!empty($filters['is_admin'])) {
+            $query->where('is_admin', $filters['is_admin'] == 'yes');
+        }
+
+        if (!empty($filters['is_registered'])) {
+            $query->where('is_registered', $filters['is_registered'] == 'yes');
         }
     }
 
@@ -72,6 +94,11 @@ class Student extends Authenticatable implements JWTSubject
         return $this->is_super;
     }
 
+    public function isSelfStudy()
+    {
+        return $this->is_self_study;
+    }
+
     public function isAdmin()
     {
         return $this->is_admin;
@@ -85,5 +112,15 @@ class Student extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
+    }
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->email_new ? $this->email_new : $this->email;
     }
 }

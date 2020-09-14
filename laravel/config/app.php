@@ -130,6 +130,16 @@ return [
     */
     'login_as_student_url' => env('CLIENT_LOGIN_URL', 'http://localhost:4200/gizmo/login'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Email verification URL
+    |--------------------------------------------------------------------------
+    |
+    | Angular client URL to verify email
+    |
+    */
+    'email_verify_url' => env('CLIENT_VERIFY_EMAIL_URL', 'http://localhost:4200/gizmo/auth/email/verify'),
+
     'cipher' => 'AES-256-CBC',
 
     /*

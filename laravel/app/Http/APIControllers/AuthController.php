@@ -5,7 +5,13 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\ClassOfStudents;
 use App\Mail\PasswordResetMail;
+use App\Notifications\VerifyEmail;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -17,6 +23,12 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('throttle:6,1')->only('verifyEmail', 'resendVerificationEmail');
+        $this->middleware('signed')->only('verifyEmail');
+    }
 
     public function login(Request $request)
     {
@@ -45,12 +57,15 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                return $this->error('invalid_credentials', 401);
+                return $this->error('Username or password is incorrect!', 401);
             }
         } catch (JWTException $e) {
-            return $this->error('Could Not Create Token', 500);
+            return $this->error('Could Not Create Token!', 500);
         }
         $student = auth()->user();
+        if (!$student->hasVerifiedEmail()) {
+            return $this->error('Your email address is not verified!', 420);
+        }
         DB::unprepared("UPDATE students s LEFT JOIN users u ON s.email = u.email SET s.is_admin = IF(u.id, 1, 0) WHERE s.id = ".$student->id);
 
         $app = Application::where('id', $student->app_id)->first();
@@ -61,6 +76,9 @@ class AuthController extends Controller
         }
         $app_id = $student->app_id;
         $role = 'student';
+        if ($student->is_self_study) {
+            $role = 'self_study';
+        }
         if ($student->is_teacher) {
             $role = 'teacher';
         }
@@ -97,6 +115,9 @@ class AuthController extends Controller
         }
         $app_id = $student->app_id;
         $role = 'student';
+        if ($student->is_self_study) {
+            $role = 'self_study';
+        }
         if ($student->is_teacher) {
             $role = 'teacher';
         }
@@ -149,7 +170,9 @@ class AuthController extends Controller
                 'last_name' => request('last_name') ?: null,
                 'password' => bcrypt($credentials['password']),
                 'country_id' => request('country_id') ? intval(request('country_id')): 1,
-                // 'is_teacher' => request('role') == 'teacher',
+                'is_teacher' => request('role') == 'teacher',
+                'is_self_study' => request('role') == 'self_study',
+                'is_super' => request('role') == 'self_study',
                 'is_registered' => true
             ]);
         } else {
@@ -183,13 +206,17 @@ class AuthController extends Controller
                 'email' => strtolower($credentials['email']),
                 'password' => bcrypt($credentials['password']),
                 'country_id' => request('country_id') ? intval(request('country_id')): 1,
-                'is_super' => false,
                 'is_teacher' => request('role') == 'teacher',
+                'is_self_study' => request('role') == 'self_study',
+                'is_super' => request('role') == 'self_study',
                 'is_admin' => false,
                 'is_registered' => true
             ]);
         }
         if ($student) {
+            try {
+                $this->resendVerificationEmail($request);
+            } catch (\Exception $e) { }
             return $this->success($student);
         }
         return $this->error('Something went wrong!', 400);
@@ -261,6 +288,49 @@ class AuthController extends Controller
     public function logout(Request $request) {
         JWTAuth::invalidate(JWTAuth::getToken());
         return $this->success('Logged Out!', 200);
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $student = Student::where('id', $request->route('id'))->first();
+        if (!$student || ($request['hash'] != sha1($student->email) && $request['hash'] != sha1($student->email_new))) {
+            return $this->error('User not found!', 404);
+        }
+        if ($student->markEmailAsVerified()) {
+            event(new Verified($request->user()));
+            if ($student->email_new) {
+                $student->email = $student->email_new;
+                $student->email_new = null;
+                $student->save();
+            }
+            try {
+                $message = (object) [
+                    'message' => 'Email verified!',
+                    'redirectUrl' => URL::to(Config::get('app.login_as_student_url'))
+                        .'?token='.JWTAuth::fromUser($student)
+                ];
+                return $this->success($message, 200);
+            } catch (\Exception $e) {
+                return $this->success('Email verified!', 200);
+            }
+        }
+        return $this->error('Wrong verification link!', 400);
+    }
+
+    public function resendVerificationEmail(Request $request)
+    {
+        if ($request->filled('email')) {
+            $email = trim(strtolower(request('email')));
+            $student = Student::where('email', $email)->orWhere('email_new', $email)->first();
+            if ($student) {
+                if (!$student->email_new && $student->hasVerifiedEmail()) {
+                    return $this->error('User already have verified email!', 422);
+                }
+                $student->sendEmailVerificationNotification();
+                return $this->success('We sent email verification link to your email address!', 201);
+            }
+        }
+        return $this->error('User with email you provided not found!', 404);
     }
 
 }

@@ -68,6 +68,9 @@ class ApplicationController extends Controller
         if (isset($request['icon']) && $request['icon']) {
             $application->icon = $request['icon'];
         }
+        $application->allow_any_order = $request['allow_any_order'] ? true : false;
+        $application->testout_attempts = $request['testout_attempts'] ?: -1;
+        $application->question_num = $request['question_num'] ?: 3;
         $application->save();
         $application->updateTree($request);
         return redirect('/applications')->with(array('message' => 'Created successfully'));
@@ -107,6 +110,9 @@ class ApplicationController extends Controller
         if (isset($request['icon']) && $request['icon']) {
             $application->icon = $request['icon'];
         }
+        $application->allow_any_order = $request['allow_any_order'] ? true : false;
+        $application->testout_attempts = $request['testout_attempts'] ?: -1;
+        $application->question_num = $request['question_num'] ?: 3;
         $application->save();
         $application->updateTree($request);
         return redirect('/applications')->with(array('message' => 'Updated successfully'));

@@ -28,6 +28,11 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService) {
+        const navigation = this.router.getCurrentNavigation();
+        const state = navigation && navigation.extras && navigation.extras.state;
+        if (state && state.error) {
+            this.error = state.error;
+        }
     }
 
     ngOnInit() {
@@ -37,11 +42,15 @@ export class LoginComponent implements OnInit {
                 this.authenticationService.loginByToken(this.token)
                     .subscribe(user => {
                         if (user && user.user_id) {
-                            if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
-                                localStorage.setItem('redirect_to', '/');
-                                this.router.navigate(['to-do']);
+                            if (user.role === 'self_study') {
+                                this.router.navigate(['/']);
+                            } else {
+                                if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
+                                    localStorage.setItem('redirect_to', '/');
+                                    this.router.navigate(['to-do']);
+                                }
+                                this.router.navigate(['dashboard']);
                             }
-                            this.router.navigate(['dashboard']);
                         }
                     }, error => {
                         this.authenticationService.logout();
@@ -57,18 +66,31 @@ export class LoginComponent implements OnInit {
             this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.ignoreCaptcha)
                 .subscribe(user => {
                     if (user && user.user_id) {
-                        if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
-                            localStorage.setItem('redirect_to', '/');
-                            this.router.navigate(['to-do']);
+                        if (user.role === 'self_study') {
+                            this.router.navigate(['/']);
+                        } else {
+                            if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
+                                localStorage.setItem('redirect_to', '/');
+                                this.router.navigate(['to-do']);
+                            }
+                            this.router.navigate(['dashboard']);
                         }
-                        this.router.navigate(['dashboard']);
                     } else {
-                        this.error = 'Username or password is incorrect';
+                        this.error = 'Username or password is incorrect!';
                         this.loading = false;
                     }
                 }, error => {
-                    this.error = 'Username or password is incorrect';
-                    this.loading = false;
+                    if (error === 'email_not_verified') {
+                        this.router.navigate(['verify-email'], {
+                            state: {
+                                error: 'Your email address is not verified!',
+                                email: this.model.email,
+                            }
+                        });
+                    } else {
+                        this.error = error || 'Username or password is incorrect!';
+                        this.loading = false;
+                    }
                 });
         }
     }

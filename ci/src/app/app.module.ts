@@ -36,7 +36,7 @@ import {AuthenticationService, HttpService, HTTPListener, HTTPStatus, CountrySer
 
 import {AppComponent} from './_components/app.component';
 import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
-    ForgotPasswordComponent, ResetPasswordComponent, TryComponent} from './_components/auth/index';
+    ForgotPasswordComponent, ResetPasswordComponent, TryComponent, VerifyEmailComponent} from './_components/auth/index';
 import {AssignmentComponent} from './_components/assignment/index';
 import {TopicComponent} from './_components/assignment/topic/index';
 import {LessonComponent, ChartComponent} from './_components/assignment/topic/lesson/index';
@@ -119,6 +119,7 @@ FullCalendarModule.registerPlugins([
         WelcomeComponent,
         LoginComponent,
         LogoutComponent,
+        VerifyEmailComponent,
         RegisterComponent,
         AssignmentComponent,
         TopicComponent,
