@@ -8,13 +8,15 @@ import {AuthenticationService} from '../../../../_services/index';
     styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent implements OnInit {
-    passwordsMatch: boolean;
+    showError: boolean;
     warning: string;
     token: string;
     waiting = false;
+    newPassword = '';
+    confirmedPassword = '';
 
     constructor(private authenticationService: AuthenticationService, private router: Router, private route: ActivatedRoute) {
-        this.passwordsMatch = true;
+        this.showError = true;
         this.route.params.subscribe(params => {
             this.token = params['token'];
         });
@@ -23,19 +25,19 @@ export class ResetPasswordComponent implements OnInit {
     ngOnInit() {
     }
 
-    onChangePassword(newPassword: string, confirmedPassword: string) {
-        if (newPassword !== confirmedPassword) {
-            this.passwordsMatch = false;
+    onChangePassword() {
+        if (this.newPassword !== this.confirmedPassword) {
+            this.showError = false;
             this.warning = 'Password does not match the confirm password!';
             return;
-        } else if (newPassword === '') {
-            this.passwordsMatch = false;
+        } else if (this.newPassword === '') {
+            this.showError = false;
             this.warning = 'You can\'t use empty passwords!';
             return;
         } else {
-            this.passwordsMatch = true;
+            this.showError = true;
             this.waiting = true;
-            this.authenticationService.resetPassword(newPassword, confirmedPassword, this.token)
+            this.authenticationService.resetPassword(this.newPassword, this.confirmedPassword, this.token)
                 .subscribe(result => {
                     if (result['success']) {
                         this.router.navigate(['/login']);
@@ -50,11 +52,21 @@ export class ResetPasswordComponent implements OnInit {
                             error = result['message'];
                         }
                         this.warning = error;
-                        this.passwordsMatch = false;
+                        this.showError = false;
                     }
                     this.waiting = false;
                 }, error => {
                     this.waiting = false;
+                    let message = '';
+                    if (typeof error === 'object') {
+                        Object.values(error).forEach(x => {
+                            message += x + ' ';
+                        });
+                    } else {
+                        message = error;
+                    }
+                    this.warning = message;
+                    this.showError = false;
                 });
         }
     }

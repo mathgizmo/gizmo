@@ -43,6 +43,10 @@ export class ForgotPasswordComponent implements OnInit {
                     this.emailNotFound = true;
                 }
                 this.waiting = false;
+            }, error => {
+                this.error = error;
+                this.emailNotFound = true;
+                this.waiting = false;
             });
     }
 

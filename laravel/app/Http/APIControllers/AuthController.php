@@ -3,14 +3,10 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
-use App\ClassOfStudents;
 use App\Mail\PasswordResetMail;
-use App\Notifications\VerifyEmail;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -219,7 +215,7 @@ class AuthController extends Controller
             } catch (\Exception $e) { }
             return $this->success($student);
         }
-        return $this->error('Something went wrong!', 400);
+        return $this->error('Something went wrong!', 500);
     }
 
     public function passwordResetEmail(Request $request) {
@@ -232,12 +228,12 @@ class AuthController extends Controller
             [ 'email' => 'required|email|max:255', 'url' => 'required' ]
         );
         if ($validator->fails()) {
-            return $this->error($validator->messages());
+            return $this->error($validator->messages(), 400);
         }
         $email = $credentials['email'];
         $student = Student::where('email', '=' , $email)->first();
         if(!$student) {
-            return $this->error('We can not find email you provided in our database! You can register a new account with this email.');
+            return $this->error('We can not find email you provided in our database! You can register a new account with this email.', 404);
         }
         PasswordResets::where('email', $email)->delete();
         $token = Str::random(64);
@@ -249,7 +245,7 @@ class AuthController extends Controller
             Mail::to($email)->send(new PasswordResetMail($credentials['url'] . '/' . $token));
             return $this->success('The mail has been sent successfully!');
         }
-        return $this->error('Something went wrong!');
+        return $this->error('Something went wrong!', 500);
     }
 
     public function resetPassword(Request $request) {
@@ -262,19 +258,19 @@ class AuthController extends Controller
             [ 'password' => 'required|min:6', 'token' => 'required' ]
         );
         if ($validator->fails()) {
-            return $this->error($validator->messages());
+            return $this->error($validator->messages(), 400);
         }
         $token = $credentials['token'];
         $pr = PasswordResets::where('token', $token)->first(['email', 'created_at']);
         $email = $pr['email'];
         if (!$email) {
-            return $this->error('Invalid reset password link!');
+            return $this->error('Invalid link!', 400);
         }
         $dateCreated = strtotime($pr['created_at']);
         $expireInterval = 86400; // token expire interval in seconds (24 h)
         $currentTime = time();
         if ($currentTime - $dateCreated > $expireInterval) {
-            return $this->error('The time to reset password has expired!');
+            return $this->error('The time to reset password has expired!', 400);
         }
         $password = bcrypt($credentials['password']);
         $updatedRows = Student::where('email', $email)->update(['password' => $password]);
@@ -282,7 +278,7 @@ class AuthController extends Controller
             PasswordResets::where('token', $token)->delete();
             return $this->success('The password has been changed successfully!');
         }
-        return $this->error('Something went wrong!');
+        return $this->error('Something went wrong!', 500);
     }
 
     public function logout(Request $request) {

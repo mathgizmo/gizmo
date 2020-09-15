@@ -114,9 +114,18 @@
 	margin-right: 8px;
 }
 
-@media screen and (max-width: 992px) {
+@media (max-width: 992px) {
+	.role-select-container, .role-select-container > .mat-card {
+		max-width: calc(100% - 16px);
+	}
 	.col-md-6 {
 		padding: 0 !important;
+	}
+}
+
+@media (max-width: 600px) {
+	.auth-container, .auth-container > .mat-card {
+		max-width: calc(100% - 16px);
 	}
 }
 

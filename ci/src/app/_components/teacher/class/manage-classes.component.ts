@@ -5,6 +5,7 @@ import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.co
 import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-manage-classes',
@@ -26,7 +27,8 @@ export class ManageClassesComponent implements OnInit {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
-    constructor(private classService: ClassesManagementService, public dialog: MatDialog, private deviceService: DeviceDetectorService) {
+    constructor(private classService: ClassesManagementService, public dialog: MatDialog,
+                private deviceService: DeviceDetectorService, public snackBar: MatSnackBar) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -50,6 +52,23 @@ export class ManageClassesComponent implements OnInit {
                 this.classService.addClass(result)
                     .subscribe(item => {
                         this.classes.unshift(item);
+                        this.snackBar.open('Class have been successfully created!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.snackBar.open(message ? message : 'Error occurred while creating class!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
                     });
             }
         });
@@ -63,7 +82,23 @@ export class ManageClassesComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.classService.updateClass(item.id, result).subscribe(res => {
-                    //
+                    this.snackBar.open('Class have been successfully updated!', '', {
+                        duration: 3000,
+                        panelClass: ['success-snackbar']
+                    });
+                }, error => {
+                    let message = '';
+                    if (typeof error === 'object') {
+                        Object.values(error).forEach(x => {
+                            message += x + ' ';
+                        });
+                    } else {
+                        message = error;
+                    }
+                    this.snackBar.open(message ? message : 'Error occurred while updating class!', '', {
+                        duration: 3000,
+                        panelClass: ['error-snackbar']
+                    });
                 });
             }
         });
@@ -82,6 +117,23 @@ export class ManageClassesComponent implements OnInit {
                     .subscribe(response => {
                         this.classes = this.classes.filter( (item) => {
                             return item.id !== class_id;
+                        });
+                        this.snackBar.open('Class have been successfully deleted!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.snackBar.open(message ? message : 'Error occurred while deleting class!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
                         });
                     });
             }

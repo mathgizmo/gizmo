@@ -8,6 +8,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
 import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'manage-assignments',
@@ -29,7 +30,7 @@ export class ManageAssignmentsComponent implements OnInit {
     private readonly adminUrl = environment.adminUrl;
 
     constructor(private route: ActivatedRoute, private assignmentService: AssignmentService, private sanitizer: DomSanitizer,
-                public dialog: MatDialog, private deviceService: DeviceDetectorService) {
+                public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackBar: MatSnackBar) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -60,7 +61,24 @@ export class ManageAssignmentsComponent implements OnInit {
                             .subscribe(item => {
                                 if (item) {
                                     this.assignments.unshift(item);
+                                    this.snackBar.open('Assignment have been successfully created!', '', {
+                                        duration: 3000,
+                                        panelClass: ['success-snackbar']
+                                    });
                                 }
+                            }, error => {
+                                let message = '';
+                                if (typeof error === 'object') {
+                                    Object.values(error).forEach(x => {
+                                        message += x + ' ';
+                                    });
+                                } else {
+                                    message = error;
+                                }
+                                this.snackBar.open(message ? message : 'Error occurred while creating assignment!', '', {
+                                    duration: 3000,
+                                    panelClass: ['error-snackbar']
+                                });
                             });
                     }
                 });
@@ -77,7 +95,23 @@ export class ManageAssignmentsComponent implements OnInit {
                 dialogRef.afterClosed().subscribe(result => {
                     if (result) {
                         this.assignmentService.updateAssignment(item.id, result).subscribe(res => {
-                            //
+                            this.snackBar.open('Assignment have been successfully updated!', '', {
+                                duration: 3000,
+                                panelClass: ['success-snackbar']
+                            });
+                        }, error => {
+                            let message = '';
+                            if (typeof error === 'object') {
+                                Object.values(error).forEach(x => {
+                                    message += x + ' ';
+                                });
+                            } else {
+                                message = error;
+                            }
+                            this.snackBar.open(message ? message : 'Error occurred while updating assignment!', '', {
+                                duration: 3000,
+                                panelClass: ['error-snackbar']
+                            });
                         });
                     }
                 });
@@ -87,7 +121,7 @@ export class ManageAssignmentsComponent implements OnInit {
     onDeleteAssignment(assignment_id) {
         const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
             data: {
-                'message': 'Are you sure that you want to remove? This will permanently delete the assignment.'
+                // 'message': 'Are you sure that you want to remove? This will permanently delete the assignment.'
             },
             position: this.dialogPosition
         });
@@ -97,6 +131,23 @@ export class ManageAssignmentsComponent implements OnInit {
                     .subscribe(response => {
                         this.assignments = this.assignments.filter( (item) => {
                             return item.id !== assignment_id;
+                        });
+                        this.snackBar.open('Assignment have been successfully deleted!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.snackBar.open(message ? message : 'Error occurred while deleting assignment!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
                         });
                     });
             }

@@ -101,7 +101,14 @@ export class AuthenticationService {
             'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null
         }, {
             headers: this.headers
-        });
+        }).pipe(
+            map((response: Response) => {
+                return response;
+            }),
+            catchError((errorResponse: HttpErrorResponse) => {
+                return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
+            }),
+        );
     }
 
     logout() {
@@ -141,7 +148,10 @@ export class AuthenticationService {
             .pipe(
                 map((response: Response) => {
                     return response;
-                })
+                }),
+                catchError((errorResponse: HttpErrorResponse) => {
+                    return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
+                }),
             );
     }
 
@@ -151,6 +161,9 @@ export class AuthenticationService {
             .pipe(
                 map((response: Response) => {
                     return response;
+                }),
+                catchError((errorResponse: HttpErrorResponse) => {
+                    return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
                 })
             );
     }
@@ -175,7 +188,7 @@ export class AuthenticationService {
                 }),
                 catchError((errorResponse: HttpErrorResponse) => {
                     return throwError(errorResponse.error && errorResponse.error.message || 'Unknown error!');
-                }),
+                })
             );
     }
 }

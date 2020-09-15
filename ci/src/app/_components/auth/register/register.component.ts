@@ -71,10 +71,20 @@ export class RegisterComponent implements OnInit {
                             }
                         });
                 }, error => {
-                    if (error.error['message']['email']) {
+                    if (error.error && error.error['message'] && error.error['message']['email']) {
                         this.error = error.error['message']['email'];
-                    } else {
+                    } else if (error.error && error.error['message'] && error.error['message']['password']) {
                         this.error = error.error['message']['password'];
+                    } else {
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.error = message;
                     }
                     this.loading = false;
                 });

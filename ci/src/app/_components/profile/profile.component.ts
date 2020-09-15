@@ -89,9 +89,13 @@ export class ProfileComponent implements OnInit {
                 });
             }, error => {
                 let message = '';
-                Object.values(error).forEach(x => {
-                    message += x + ' ';
-                });
+                if (typeof error === 'object') {
+                    Object.values(error).forEach(x => {
+                        message += x + ' ';
+                    });
+                } else {
+                    message = error;
+                }
                 this.snackBar.open(message ? message : 'Error occurred while changing profile info!', '', {
                     duration: 3000,
                     panelClass: ['error-snackbar']

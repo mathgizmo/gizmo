@@ -129,13 +129,29 @@ export class ClassAssignmentsComponent implements OnInit {
                                 panelClass: ['success-snackbar']
                             });
                         }, error => {
-                            this.snackBar.open('Error occurred while adding assignment!', '', {
+                            let message = '';
+                            if (typeof error === 'object') {
+                                Object.values(error).forEach(x => {
+                                    message += x + ' ';
+                                });
+                            } else {
+                                message = error;
+                            }
+                            this.snackBar.open(message ? message : 'Error occurred while adding assignment!', '', {
                                 duration: 3000,
                                 panelClass: ['error-snackbar']
                             });
                         });
                     }, error => {
-                        this.snackBar.open('Error occurred while adding assignment!', '', {
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.snackBar.open(message ? message : 'Error occurred while adding assignment!', '', {
                             duration: 3000,
                             panelClass: ['error-snackbar']
                         });
@@ -167,7 +183,15 @@ export class ClassAssignmentsComponent implements OnInit {
                                 panelClass: ['success-snackbar']
                             });
                         }, error => {
-                            this.snackBar.open('Error occurred while deleting assignment!', '', {
+                            let message = '';
+                            if (typeof error === 'object') {
+                                Object.values(error).forEach(x => {
+                                    message += x + ' ';
+                                });
+                            } else {
+                                message = error;
+                            }
+                            this.snackBar.open(message ? message : 'Error occurred while deleting assignment!', '', {
                                 duration: 3000,
                                 panelClass: ['error-snackbar']
                             });
@@ -181,7 +205,15 @@ export class ClassAssignmentsComponent implements OnInit {
                                 panelClass: ['success-snackbar']
                             });
                         }, error => {
-                            this.snackBar.open('Error occurred while updating assignment!', '', {
+                            let message = '';
+                            if (typeof error === 'object') {
+                                Object.values(error).forEach(x => {
+                                    message += x + ' ';
+                                });
+                            } else {
+                                message = error;
+                            }
+                            this.snackBar.open(message ? message : 'Error occurred while updating assignment!', '', {
                                 duration: 3000,
                                 panelClass: ['error-snackbar']
                             });
@@ -201,6 +233,23 @@ export class ClassAssignmentsComponent implements OnInit {
                     return +x.id !== +app.id;
                 });
                 this.addAssignment = !this.addAssignment;
+                this.snackBar.open('Assignment have been successfully added!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                let message = '';
+                if (typeof error === 'object') {
+                    Object.values(error).forEach(x => {
+                        message += x + ' ';
+                    });
+                } else {
+                    message = error;
+                }
+                this.snackBar.open(message ? message : 'Error occurred while adding assignment!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
             });
     }
 
@@ -285,6 +334,23 @@ export class ClassAssignmentsComponent implements OnInit {
                         this.available_assignments.unshift(item);
                         this.assignments  = this.assignments.filter(x => {
                             return +x.id !== +item.id;
+                        });
+                        this.snackBar.open('Assignment have been successfully deleted!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.snackBar.open(message ? message : 'Error occurred while deleting assignment!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
                         });
                     });
             }

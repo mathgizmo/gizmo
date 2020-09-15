@@ -88,7 +88,15 @@ export class LoginComponent implements OnInit {
                             }
                         });
                     } else {
-                        this.error = error || 'Username or password is incorrect!';
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.error = message || 'Username or password is incorrect!';
                         this.loading = false;
                     }
                 });
