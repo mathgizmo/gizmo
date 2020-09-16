@@ -20,7 +20,8 @@
               "src/assets",
               "src/favicon.ico",
               "src/assets/images/icons",
-              "src/.htaccess"
+              "src/.htaccess",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "node_modules/font-awesome/css/font-awesome.css",
@@ -51,7 +52,9 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             },
             "testing": {
               "optimization": true,
@@ -124,7 +127,8 @@
             "assets": [
               "src/assets",
               "src/favicon.ico",
-              "src/.htaccess"
+              "src/.htaccess",
+              "src/manifest.webmanifest"
             ]
           }
         },

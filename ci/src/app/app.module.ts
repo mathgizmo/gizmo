@@ -50,7 +50,7 @@ import {ClassReportComponent, ClassStudentsComponent,
     EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
     ClassAssignmentsComponent, ClassAssignmentsCalendarComponent, ClassToDoComponent,
     ClassMenuComponent, StudentsUsageChartComponent, ClassDetailedReportComponent,
-    EditClassAssignmentDialogComponent} from './_components/teacher/index';
+    EditClassAssignmentDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
@@ -68,7 +68,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import adaptivePlugin from '@fullcalendar/adaptive';
-import scrollGridPlugin from '@fullcalendar/scrollgrid';
+import scrollGridPlugin from '@fullcalendar/scrollgrid';;
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment'
 
 FullCalendarModule.registerPlugins([
     dayGridPlugin,
@@ -111,7 +113,8 @@ FullCalendarModule.registerPlugins([
         PerfectScrollbarModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        DeviceDetectorModule.forRoot()
+        DeviceDetectorModule.forRoot(),
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     exports: [],
     declarations: [
@@ -144,6 +147,7 @@ FullCalendarModule.registerPlugins([
         ManageAssignmentsComponent,
         EditAssignmentDialogComponent,
         EditClassAssignmentDialogComponent,
+        SelectStudentsDialogComponent,
         ReviewContentComponent,
         ClassDashboardComponent,
         ClassAssignmentsComponent,
@@ -179,7 +183,8 @@ FullCalendarModule.registerPlugins([
         StudentAssignmentsDialogComponent,
         AddStudentDialogComponent,
         EditAssignmentDialogComponent,
-        EditClassAssignmentDialogComponent
+        EditClassAssignmentDialogComponent,
+        SelectStudentsDialogComponent
     ],
     providers: [
         AuthGuard,

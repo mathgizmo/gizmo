@@ -34,10 +34,6 @@ export class ClassesManagementService {
                 map((response: Response) => {
                     this.classes = response['items'];
                     return response['items'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }
@@ -51,10 +47,6 @@ export class ClassesManagementService {
             .pipe(
                 map((response: Response) => {
                     return response['item'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }
@@ -71,34 +63,20 @@ export class ClassesManagementService {
             .pipe(
                 map((response: Response) => {
                     return response['item'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }
 
     public deleteClass(class_id) {
         this.classes = this.classes.filter(item => item.id !== class_id);
-        return this.http.delete('/classes/' + class_id)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.delete('/classes/' + class_id);
     }
 
-    public getStudents(class_id) {
-        return this.http.get('/classes/' + class_id + '/students')
+    public getStudents(class_id, extraData = true) {
+        return this.http.get('/classes/' + class_id + '/students?extra=' + extraData)
             .pipe(
                 map((response: Response) => {
                     return response['items'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }
@@ -117,46 +95,28 @@ export class ClassesManagementService {
     }
 
     public getAssignments(class_id) {
-        return this.http.get('/classes/' + class_id + '/assignments')
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.get('/classes/' + class_id + '/assignments');
     }
 
     public changeAssignment(class_id, item) {
-        return this.http.put('/classes/' + class_id + '/assignments/' + item.id, item)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.put('/classes/' + class_id + '/assignments/' + item.id, item);
     }
 
-    public addAssignmentToClass(class_id, app_id) {
-        return this.http.post('/classes/' + class_id + '/assignments/' + app_id)
+    public changeAssignmentStudents(class_id, app_id, students = null) {
+        return this.http.put('/classes/' + class_id + '/assignments/' + app_id + '/students', { students: students });
+    }
+
+    public addAssignmentToClass(class_id, app_id, students = null) {
+        return this.http.post('/classes/' + class_id + '/assignments/' + app_id, { students: students })
             .pipe(
                 map((response: Response) => {
                     return response['item'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }
 
     public deleteAssignmentFromClass(class_id, app_id) {
-        return this.http.delete('/classes/' + class_id + '/assignments/' + app_id)
-            .pipe(
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
-                })
-            );
+        return this.http.delete('/classes/' + class_id + '/assignments/' + app_id);
     }
 
     public getReport(class_id) {
@@ -168,10 +128,6 @@ export class ClassesManagementService {
             .pipe(
                 map((response: Response) => {
                     return response['items'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }
@@ -187,10 +143,6 @@ export class ClassesManagementService {
             .pipe(
                 map((response: Response) => {
                     return response['items'];
-                }),
-                catchError(error => {
-                    console.log(error);
-                    throw Error(error);
                 })
             );
     }

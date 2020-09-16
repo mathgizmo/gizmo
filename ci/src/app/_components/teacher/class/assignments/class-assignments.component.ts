@@ -10,8 +10,9 @@ import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute} from '@angular/router';
 import {EditClassAssignmentDialogComponent} from './edit-assignment-dialog/edit-class-assignment-dialog.component';
+import {SelectStudentsDialogComponent} from './select-students-dialog/select-students-dialog.component';
 import {ClassAssignmentsCalendarComponent} from './calendar/class-assignments-calendar.component';
-import {DeleteConfirmationDialogComponent} from '../../../dialogs/index';
+import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../../dialogs/index';
 
 @Component({
     selector: 'app-class-assignments',
@@ -30,6 +31,7 @@ export class ClassAssignmentsComponent implements OnInit {
     };
     addAssignment = false;
     nameFilter;
+    students = [];
 
     private readonly adminUrl = environment.adminUrl;
 
@@ -69,6 +71,9 @@ export class ClassAssignmentsComponent implements OnInit {
                     this.assignments = res['assignments'];
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Assignments';
                 });
+            this.classService.getStudents(this.classId, false).subscribe(students => {
+                this.students = students;
+            });
         });
     }
 
@@ -224,33 +229,79 @@ export class ClassAssignmentsComponent implements OnInit {
     }
 
     onAddAssignment(app) {
-        this.classService.addAssignmentToClass(this.classId, app.id)
-            .subscribe(newApp => {
-                app.start_date = newApp.start_date;
-                app.start_time = newApp.start_time;
-                this.assignments.unshift(app);
-                this.available_assignments = this.available_assignments.filter(x => {
-                    return +x.id !== +app.id;
+        const dialogRef = this.dialog.open(YesNoDialogComponent, {
+            data: { 'message': 'For all students?'},
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(forAll => {
+            if (!forAll) {
+                const dialogRef2 = this.dialog.open(SelectStudentsDialogComponent, {
+                    data: { 'students': this.students},
+                    position: this.dialogPosition
                 });
-                this.addAssignment = !this.addAssignment;
-                this.snackBar.open('Assignment have been successfully added!', '', {
-                    duration: 3000,
-                    panelClass: ['success-snackbar']
+                dialogRef2.afterClosed().subscribe(students => {
+                    if (!students || students.length < 1) { return; }
+                    this.classService.addAssignmentToClass(this.classId, app.id, students)
+                        .subscribe(newApp => {
+                            app.start_date = newApp.start_date;
+                            app.start_time = newApp.start_time;
+                            app.is_for_selected_students = true;
+                            app.students = students;
+                            this.assignments.unshift(app);
+                            this.available_assignments = this.available_assignments.filter(x => {
+                                return +x.id !== +app.id;
+                            });
+                            this.addAssignment = !this.addAssignment;
+                            this.snackBar.open('Assignment have been successfully added!', '', {
+                                duration: 3000,
+                                panelClass: ['success-snackbar']
+                            });
+                        }, error => {
+                            let message = '';
+                            if (typeof error === 'object') {
+                                Object.values(error).forEach(x => {
+                                    message += x + ' ';
+                                });
+                            } else {
+                                message = error;
+                            }
+                            this.snackBar.open(message ? message : 'Error occurred while adding assignment!', '', {
+                                duration: 3000,
+                                panelClass: ['error-snackbar']
+                            });
+                        });
                 });
-            }, error => {
-                let message = '';
-                if (typeof error === 'object') {
-                    Object.values(error).forEach(x => {
-                        message += x + ' ';
+            } else {
+                this.classService.addAssignmentToClass(this.classId, app.id)
+                    .subscribe(newApp => {
+                        app.start_date = newApp.start_date;
+                        app.start_time = newApp.start_time;
+                        app.is_for_selected_students = false;
+                        this.assignments.unshift(app);
+                        this.available_assignments = this.available_assignments.filter(x => {
+                            return +x.id !== +app.id;
+                        });
+                        this.addAssignment = !this.addAssignment;
+                        this.snackBar.open('Assignment have been successfully added!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        let message = '';
+                        if (typeof error === 'object') {
+                            Object.values(error).forEach(x => {
+                                message += x + ' ';
+                            });
+                        } else {
+                            message = error;
+                        }
+                        this.snackBar.open(message ? message : 'Error occurred while adding assignment!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
                     });
-                } else {
-                    message = error;
-                }
-                this.snackBar.open(message ? message : 'Error occurred while adding assignment!', '', {
-                    duration: 3000,
-                    panelClass: ['error-snackbar']
-                });
-            });
+            }
+        });
     }
 
     onDueDateChanged(item, newDate) {
@@ -354,6 +405,41 @@ export class ClassAssignmentsComponent implements OnInit {
                         });
                     });
             }
+        });
+    }
+
+    onShowAssignmentStudents(item) {
+        const dialogRef = this.dialog.open(SelectStudentsDialogComponent, {
+            data: {
+                'title': item.name + ': assigned students',
+                'students': this.students,
+                'selected_students': item.students
+            },
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(students => {
+            if (!students || students.length < 1) { return; }
+            this.classService.changeAssignmentStudents(this.classId, item.id, students)
+                .subscribe(response => {
+                    item.students = students;
+                    this.snackBar.open('Assigned students have been successfully changed!', '', {
+                        duration: 3000,
+                        panelClass: ['success-snackbar']
+                    });
+                }, error => {
+                    let message = '';
+                    if (typeof error === 'object') {
+                        Object.values(error).forEach(x => {
+                            message += x + ' ';
+                        });
+                    } else {
+                        message = error;
+                    }
+                    this.snackBar.open(message ? message : 'Error occurred while changing assigned students!', '', {
+                        duration: 3000,
+                        panelClass: ['error-snackbar']
+                    });
+                });
         });
     }
 

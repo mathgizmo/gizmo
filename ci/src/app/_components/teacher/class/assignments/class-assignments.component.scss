@@ -170,6 +170,16 @@ td {
   color: $navy;
 }
 
+.for-selected-students {
+  background: rgba(99, 99, 99, 0.1);
+}
+
+.link, .link:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $navy;
+}
+
 @media screen and (max-width: 1100px) {
   .button, button {
     font-size: 14px !important;

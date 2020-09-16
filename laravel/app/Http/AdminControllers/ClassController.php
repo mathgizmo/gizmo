@@ -113,6 +113,14 @@ class ClassController extends Controller
                 }
             }
         }
+        $class_apps_to_remove = DB::table('classes_applications')
+            ->where('class_id', $class->id)
+            ->whereIn('app_id', $old_apps->pluck('id')->toArray())->get();
+        if ($class_apps_to_remove) {
+            foreach ($class_apps_to_remove as $item) {
+                DB::table('classes_applications_students')->where('class_app_id', $item->id)->delete();
+            }
+        }
         DB::table('classes_applications')
             ->where('class_id', $class->id)
             ->whereIn('app_id', $old_apps->pluck('id')->toArray())

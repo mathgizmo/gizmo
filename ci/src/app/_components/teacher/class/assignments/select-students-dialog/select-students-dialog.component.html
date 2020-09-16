@@ -1,0 +1,50 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Add Student!</h2>
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{title}}</div>
+    <form novalidate #form="ngForm">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                <tr>
+                    <th>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                      [checked]="selected_students.length > 0 && isAllSelected()"
+                                      [indeterminate]="selected_students.length > 0 && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <th mat-sort-header="email" scope="col">Email</th>
+                    <th mat-sort-header="name" scope="col">Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td></td>
+                    <td colspan="2">
+                        <input matInput placeholder="Email" class="filter-item"
+                               type="text" name="email" [(ngModel)]="email" [value]="" />
+                    </td>
+                </tr>
+                <tr *ngFor="let item of students | tableFilter: form.value">
+                    <td>
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleStudentChecked(item) : null"
+                                      [checked]="isStudentChecked(item)">
+                        </mat-checkbox>
+                    </td>
+                    <td style="max-width: 260px;">{{item.email }}</td>
+                    <td style="max-width: 260px;">
+                        <span>{{item.name}} </span>
+                        <span *ngIf="item.first_name || item.last_name">({{item.first_name}} {{item.last_name}})</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
+    <div class="buttons-container flex-end">
+        <button mat-button (click)="onSave()" class='button moving-forward-button continue-button' type="button">Save</button>
+    </div>
+</mat-dialog-actions>
+

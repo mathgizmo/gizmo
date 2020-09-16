@@ -63,7 +63,7 @@ export class StudentsUsageChartComponent implements OnInit {
             const user = this.authenticationService.userValue;
             this.studentId = user.user_id + '';
         } else {
-            this.classService.getStudents(this.classId)
+            this.classService.getStudents(this.classId, false)
                 .subscribe(students => {
                     this.students = students;
                     this.availableStudents = students;

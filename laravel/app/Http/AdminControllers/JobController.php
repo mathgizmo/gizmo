@@ -30,9 +30,13 @@ class JobController extends Controller
                         $data = [];
                         foreach ($apps as $app) {
                             try {
-                                $is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
-                                        ->where('student_id', $student->id)->count() > 0;
                                 $class_data = $app->getClassRelatedData($class->id);
+                                if ($class_data->is_for_selected_students) {
+                                    if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                                        ->where('student_id', $student->id)->count() < 1) {
+                                        continue;
+                                    }
+                                }
                                 if ($class_data->due_date) {
                                     $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
                                 } else {
@@ -40,6 +44,8 @@ class JobController extends Controller
                                 }
                                 $completed_at = $app->getCompletedDate($student->id);
                                 $now = Carbon::now()->toDateTimeString();
+                                $is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
+                                        ->where('student_id', $student->id)->count() > 0;
                                 $is_past_due = (!$is_completed && $due_at && $due_at < $now) ||
                                     ($is_completed && $due_at && $completed_at && $due_at < $completed_at);
                                 $complete_lessons_count = Progress::where('entity_type', 'lesson')->where('app_id', $app->id)
