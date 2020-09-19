@@ -89,49 +89,63 @@ class ClassController extends Controller
     }
 
     public function getStudents($class_id) {
+        $show_extra = request()->filled('extra') && request('extra') == 'true' ? true : false;
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
             $students = $class->students()->orderBy('email')
                 ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered']);
-            $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
-                $q1->where('classes.id', $class_id);
-            })->get();
-            $now = Carbon::now()->toDateTimeString();
-            foreach ($students as $student) {
-                $student->is_subscribed = true;
-                $finished_count = 0; $past_due_count = 0;
-                foreach ($apps as $app) {
-                    $app->icon = $app->icon();
-                    $app->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
-                            ->where('student_id', $student->id)->count() > 0;
-                    $class_data = $app->getClassRelatedData($class_id);
-                    if ($class_data->due_date) {
-                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
-                    } else {
-                        $due_at = null;
+            if ($show_extra) {
+                $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
+                    $q1->where('classes.id', $class_id);
+                })->get();
+                $now = Carbon::now()->toDateTimeString();
+                foreach ($students as $student) {
+                    $student->is_subscribed = true;
+                    $finished_count = 0; $past_due_count = 0;
+                    $student_assignments = $apps->keyBy('id');
+                    foreach ($apps as $app) {
+                        $class_data = $app->getClassRelatedData($class_id);
+                        if ($class_data->is_for_selected_students) {
+                            if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                                    ->where('student_id', $student->id)->count() < 1) {
+                                $student_assignments->forget($app->id);
+                                continue;
+                            }
+                        }
+                        $app->icon = $app->icon();
+                        $app->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
+                                ->where('student_id', $student->id)->count() > 0;
+                        if ($class_data->due_date) {
+                            $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                        } else {
+                            $due_at = null;
+                        }
+                        $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                        $completed_at = $app->getCompletedDate($student->id);
+                        $app->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                        $app->is_past_due = (!$app->is_completed && $due_at && $due_at < $now) ||
+                            ($app->is_completed && $due_at && $completed_at && $due_at < $completed_at);
+                        if ($app->is_completed) {
+                            $finished_count++;
+                        }
+                        if ($app->is_past_due) {
+                            $past_due_count++;
+                        }
                     }
-                    $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                    $completed_at = $app->getCompletedDate($student->id);
-                    $app->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
-                    $app->is_past_due = (!$app->is_completed && $due_at && $due_at < $now) ||
-                        ($app->is_completed && $due_at && $completed_at && $due_at < $completed_at);
-                    if ($app->is_completed) {
-                        $finished_count++;
-                    }
-                    if ($app->is_past_due) {
-                        $past_due_count++;
-                    }
+                    $student->assignments = array_values($student_assignments->sortBy('due_date')->toArray());
+                    $student->assignments_finished_count = $finished_count;
+                    $student->assignments_past_due_count = $past_due_count;
                 }
-                $student->assignments = array_values($apps->sortBy('due_date')->toArray());
-                $student->assignments_finished_count = $finished_count;
-                $student->assignments_past_due_count = $past_due_count;
             }
-            if ($class->subscription_type == 'invitation') {
+            if ($class->subscription_type == 'invitation' && $show_extra) {
                 $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
                 $not_subscribed = [];
                 $assignments_past_due_count = 0;
                 foreach ($apps as $app) {
                     $class_data = $app->getClassRelatedData($class_id);
+                    if ($class_data->is_for_selected_students) {
+                        continue;
+                    }
                     if ($class_data->due_date) {
                         $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
                     } else {
@@ -160,7 +174,7 @@ class ClassController extends Controller
                 return $this->success(['items' => array_values($students->toArray())]);
             }
         }
-        return $this->error('Error.', 404);
+        return $this->error('Error.', 500);
     }
 
     public function addStudent($class_id) {
@@ -267,9 +281,19 @@ class ClassController extends Controller
                 foreach ($data as $row) {
                     $row->data = json_decode($row->data);
                 }
+                $apps = $class->applications()->orderBy('name', 'ASC')->get()->keyBy('id');
+                foreach ($apps as $app) {
+                    $class_data = $app->getClassRelatedData($class->id);
+                    if ($class_data->is_for_selected_students) {
+                        if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                                ->where('student_id', $this->user->id)->count() < 1) {
+                            $apps->forget($app->id);
+                        }
+                    }
+                }
                 return $this->success([
                     'class' => $class,
-                    'assignments' => array_values($class->applications()->orderBy('name', 'ASC')->get()->toArray()),
+                    'assignments' => array_values($apps->toArray()),
                     'students' => array_values($data->toArray()),
                 ]);
             }
@@ -278,12 +302,21 @@ class ClassController extends Controller
     }
 
     public function getAssignments($class_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
-            $items = $class->applications()->orderBy('name', 'ASC')->get();
+            $items = $class->applications()->orderBy('name', 'ASC')->get()->keyBy('id');
             $students = $class->students()->get();
             $students_count = $students->count();
             foreach ($items as $item) {
+                if (!$this->user->is_teacher) {
+                    $class_data = $item->getClassRelatedData($class->id);
+                    if ($class_data->is_for_selected_students) {
+                        if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                                ->where('student_id', $this->user->id)->count() < 1) {
+                            $items->forget($item->id);
+                        }
+                    }
+                }
                 $item->icon = $item->icon();
                 $class_data = $item->getClassRelatedData($class->id);
                 $item->start_date = $class_data && $class_data->start_date ? $class_data->start_date : null;
@@ -291,7 +324,14 @@ class ClassController extends Controller
                 $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
                 $item->due_time = $class_data && $class_data->due_time ? $class_data->due_time : null;
                 $item->color = $class_data && $class_data->color ? $class_data->color : null;
-                $class_data = $item->getClassRelatedData($class_id);
+                $item->is_for_selected_students = $class_data && $class_data->is_for_selected_students;
+                if ($item->is_for_selected_students) {
+                    $item->students = DB::table('classes_applications_students')
+                        ->where('class_app_id', $class_data->id)->pluck('student_id');
+                    $app_students_count = count($item->students);
+                } else {
+                    $app_students_count = $students_count;
+                }
                 if ($class_data->due_date) {
                     $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
                 } else {
@@ -308,7 +348,7 @@ class ClassController extends Controller
                     ->where('entity_id', $item->id)
                     ->whereIn('student_id', $students->pluck('id'))
                     ->select('student_id')->distinct()->count();
-                $item->progress = $students_count > 0 ? (round($complete_count / $students_count, 3)) : 1;
+                $item->progress = $app_students_count > 0 ? (round($complete_count / $app_students_count, 3)) : 1;
                 if ($item->progress >= 1) {
                     $item->status = 'completed';
                 } else if ($due_at && $due_at < $now) {
@@ -318,10 +358,17 @@ class ClassController extends Controller
                 } else {
                     $item->status = 'progress';
                 }
-                $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
-                    DB::raw("SUM(1) as total"),
-                    DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
-                )->where('app_id', $item->id)->first();
+                if ($item->is_for_selected_students) {
+                    $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                        DB::raw("SUM(1) as total"),
+                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                    )->where('app_id', $item->id)->whereIn('student_id', $item->students)->first();
+                } else {
+                    $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                        DB::raw("SUM(1) as total"),
+                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                    )->where('app_id', $item->id)->first();
+                }
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
             $available = Application::where('teacher_id', $this->user->id)
@@ -338,6 +385,10 @@ class ClassController extends Controller
     }
 
     public function addAssignmentToClass($class_id, $app_id) {
+        $students = null;
+        if (request()->filled('students') && request('students')) {
+            $students = Student::whereIn('id', request('students'))->get();
+        }
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         $exists = DB::table('classes_applications')->where('class_id', $class_id)->where('app_id', $app_id)->first();
         if ($class && !$exists) {
@@ -345,9 +396,21 @@ class ClassController extends Controller
                 'class_id' => $class->id,
                 'app_id' => $app_id,
                 'start_date' => Carbon::now()->toDateString(),
-                'start_time' => Carbon::now()->format('H:i')
+                'start_time' => Carbon::now()->format('H:i'),
+                'is_for_selected_students' => $students ? true : false
             ]);
-            $item = DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)->first();
+            $item = DB::table('classes_applications')
+                ->where('class_id', $class->id)
+                ->where('app_id', $app_id)
+                ->first();
+            if ($students) {
+                foreach ($students as $student) {
+                    DB::table('classes_applications_students')->insert([
+                        'class_app_id' => $item->id,
+                        'student_id' => $student->id,
+                    ]);
+                }
+            }
             return $this->success(['item' => $item ?: null]);
         }
         return $this->error('Error.');
@@ -369,10 +432,47 @@ class ClassController extends Controller
         return $this->error('Error.');
     }
 
+    public function changeAssignmentStudents($class_id, $app_id) {
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        if (!$class) {
+            return $this->error('Class Not Found', 404);
+        }
+        $class_app = DB::table('classes_applications')
+            ->where('class_id', $class->id)
+            ->where('app_id', $app_id)->first();
+        if (!$class_app) {
+            return $this->error('Class Assignment Not Found', 404);
+        }
+        $students = null;
+        if (request()->filled('students') && request('students')) {
+            $students = Student::whereIn('id', request('students'))->get();
+            if ($students) {
+                DB::table('classes_applications_students')
+                    ->where('class_app_id', $class_app->id)->delete();
+                foreach ($students as $student) {
+                    DB::table('classes_applications_students')->insert([
+                        'class_app_id' => $class_app->id,
+                        'student_id' => $student->id,
+                    ]);
+                }
+            }
+        }
+        return $this->success('Ok.');
+    }
+
     public function deleteAssignmentFromClass($class_id, $app_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
-            DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)
+            $item = DB::table('classes_applications')
+                ->where('class_id', $class->id)
+                ->where('app_id', $app_id)
+                ->first();
+            if ($item) {
+                DB::table('classes_applications_students')->where('class_app_id', $item->id)->delete();
+            }
+            DB::table('classes_applications')
+                ->where('class_id', $class->id)
+                ->where('app_id', $app_id)
                 ->delete();
             return $this->success('Ok.');
         }

@@ -5,7 +5,7 @@
       <mat-form-field *ngIf="!forStudent" class="select">
         <mat-select name="studentId" [(ngModel)]="studentId" (ngModelChange)="getStatistics()" [disableOptionCentering]="true">
           <mat-option>
-            <ngx-mat-select-search ngModel (ngModelChange)="filterStudents($event)"></ngx-mat-select-search>
+            <ngx-mat-select-search placeholderLabel="Search student..." ngModel (ngModelChange)="filterStudents($event)"></ngx-mat-select-search>
           </mat-option>
           <mat-option value="">All Students</mat-option>
           <mat-option *ngFor="let student of availableStudents" [value]="student.id">{{student.email}}</mat-option>

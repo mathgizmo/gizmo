@@ -34,13 +34,14 @@
             <th mat-sort-header="due_date" scope="col">Due Date</th>
             <th mat-sort-header="due_time" scope="col">Due Time</th>
             <th scope="col">Status</th>
+            <th scope="col">Students</th>
             <th class="text-right" style="min-width: 180px">
               <button *ngIf="available_assignments.length > 0" class="button button-small button-outline" mat-button (click)="addAssignment=!addAssignment">Add Assignment</button>
             </th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let item of assignments">
+          <tr *ngFor="let item of assignments" [class.for-selected-students]="item.is_for_selected_students">
             <th scope="col" style="width: 40px;">
               <div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div>
             </th>
@@ -65,6 +66,10 @@
                 <span style="font-size: 0.8em;">{{(item.progress * 100).toFixed(1)}}%</span>
                 <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
               </div>
+            </td>
+            <td>
+              <span *ngIf="item.is_for_selected_students" class="link" (click)="onShowAssignmentStudents(item)">Selected</span>
+              <span *ngIf="!item.is_for_selected_students">All</span>
             </td>
             <td class="text-right">
               <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onDeleteAssignment(item)">Remove</button>

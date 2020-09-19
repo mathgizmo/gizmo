@@ -123,6 +123,12 @@ class ProfileController extends Controller
         } else {
             $apps = DB::table('classes_applications')->whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->get();
             foreach ($apps as $row) {
+                if ($row->is_for_selected_students) {
+                    if (DB::table('classes_applications_students')->where('class_app_id', $row->id)
+                            ->where('student_id', $student->id)->count() < 1) {
+                        continue;
+                    }
+                }
                 $item = Application::where('id', $row->app_id)->first();
                 $classObj = ClassOfStudents::where('id', $row->class_id)->first();
                 if (!$item || !$classObj) {
