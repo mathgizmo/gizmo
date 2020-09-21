@@ -1,4 +1,4 @@
-﻿<a routerLink="/topic/{{topic_id}}" routerLinkActive="active" class="back" *ngIf="!fromContentReview">
+﻿<a routerLink="/assignment/{{appId}}/topic/{{topic_id}}" routerLinkActive="active" class="back" *ngIf="!fromContentReview">
     {{backLinkText}}
 </a>
 <a routerLink="/teacher/review-content" routerLinkActive="active" class="back" *ngIf="fromContentReview">
@@ -78,7 +78,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/topic/{{topic_id}}/lesson/{{next}}"
+                    routerLink="/assignment/{{appId}}/topic/{{topic_id}}/lesson/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0 && !isChallenge">
                 <button
@@ -90,7 +90,7 @@
             </a>
             <a
                     class="button-container"
-                    routerLink="/"
+                    routerLink="/assignment/{{appId}}"
                     routerLinkActive="active"
                     *ngIf="(next == 0 || isChallenge) && !next_topic_id">
                 <button
@@ -102,7 +102,7 @@
             </a>
             <a
                     class="button-container"
-                    routerLink="/topic/{{next_topic_id}}"
+                    routerLink="/assignment/{{appId}}/topic/{{next_topic_id}}"
                     routerLinkActive="active"
                     *ngIf="(next == 0 || isChallenge) && next_topic_id">
                 <button
@@ -120,7 +120,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/topic/{{next}}"
+                    routerLink="/assignment/{{appId}}/topic/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0">
                 <button
@@ -132,7 +132,7 @@
             </a>
             <a
                     class="button-container"
-                    routerLink="/"
+                    routerLink="/assignment/{{appId}}"
                     routerLinkActive="active"
                     *ngIf="next == 0">
                 <button
@@ -150,7 +150,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/topic/{{next}}"
+                    routerLink="/assignment/{{appId}}/topic/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0">
                 <button
@@ -170,7 +170,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/topic/{{topic_id}}/lesson/{{next}}"
+                    routerLink="/assignment/{{appId}}/topic/{{topic_id}}/lesson/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0">
                 <button

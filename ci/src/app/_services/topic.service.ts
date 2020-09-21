@@ -12,34 +12,34 @@ export class TopicService {
     }
 
     // get topics from api
-    getTopics() {
+    getTopics(app_id = null) {
         this.appId = +localStorage.getItem('app_id'); // fix navigation to home from home
         let url = '/topic';
         if (this.appId) {
-            url += '?app_id=' + this.appId;
+            url += '?app_id=' + (app_id ? app_id : this.appId);
         }
         return this.http.get(url);
     }
 
     // get topic from api
-    getTopic(id) {
+    getTopic(id, app_id = null) {
         let url = '/topic/' + id;
-        if (this.appId) {
-            url += '?app_id=' + this.appId;
+        if (this.appId || app_id) {
+            url += '?app_id=' + (app_id ? app_id : this.appId);
         }
         return this.http.get(url);
     }
 
     // get lesson from api
-    getLesson(topic_id, lesson_id, from_content_review = false) {
+    getLesson(topic_id, lesson_id, from_content_review = false, app_id = null) {
         let url = '/topic/' + topic_id;
         if (lesson_id === -1) {
             url += '/testout';
         } else {
             url += '/lesson/' + lesson_id;
         }
-        if (this.appId) {
-            url += '?app_id=' + (from_content_review ? 0 : this.appId);
+        if (this.appId || app_id) {
+            url += '?app_id=' + (from_content_review ? 0 : (app_id ? app_id : this.appId));
         }
         return this.http.get(url);
     }

@@ -48,8 +48,9 @@ const studentRoutes = [
 const routes: Routes = [
     ...authRoutes,
     {path: '', component: AssignmentComponent, canActivate: [AuthGuard]},
-    {path: 'topic/:id', component: TopicComponent, canActivate: [AuthGuard]},
-    {path: 'topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
+    {path: 'assignment/:app_id', component: AssignmentComponent, canActivate: [AuthGuard]},
+    {path: 'assignment/:app_id/topic/:topic_id', component: TopicComponent, canActivate: [AuthGuard]},
+    {path: 'assignment/:app_id/topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},

@@ -6,7 +6,7 @@ import { Observable, Subscriber } from 'rxjs';
 
 import {AuthenticationService, TopicService, TrackingService} from '../../_services';
 import {environment} from '../../../environments/environment';
-import {NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 @Component({
     moduleId: module.id,
@@ -16,12 +16,14 @@ import {NavigationEnd, Router} from '@angular/router';
 })
 
 export class AssignmentComponent implements OnInit, OnDestroy {
-    topicsTree: any = [];
+    public topicsTree: any = [];
+    public appId: number;
     private readonly adminUrl = environment.adminUrl;
-
     private routerEvent;
+    private sub: any;
 
     constructor(private router: Router,
+                private route: ActivatedRoute,
                 private topicService: TopicService,
                 private trackingService: TrackingService,
                 private sanitizer: DomSanitizer,
@@ -29,6 +31,9 @@ export class AssignmentComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.sub = this.route.params.subscribe(params => {
+            this.appId = +params['app_id'] || +localStorage.getItem('app_id') || 0;
+        });
         this.routerEvent = this.router.events.subscribe((evt) => {
             if (evt instanceof NavigationEnd) {
                 this.initData();
@@ -43,7 +48,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
 
     initData() {
         const user = this.authenticationService.userValue;
-        const result = this.topicService.getTopics().pipe(
+        const result = this.topicService.getTopics(this.appId).pipe(
             flatMap(topicsTree => {
                 this.topicsTree = topicsTree;
                 if (!isNaN(+localStorage.getItem('last-visited-unit-id'))) {

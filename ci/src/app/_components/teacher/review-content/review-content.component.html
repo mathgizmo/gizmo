@@ -26,7 +26,7 @@
                 <h5 class="topic-description subtitle" [innerHtml]="topic.description | safeHtml"></h5>
               </div>
               <div *ngFor="let lesson of topic.lessons; let lessonIndex = 'index'" class="lessons-container" [class.locked]="topic.status == 0 ? true : null" [id]="'topic'+topic.id">
-                <a [routerLink]="'/topic/'+topic.id+'/lesson/'+lesson.id" [queryParams]="{from_content_review:'true'}" routerLinkActive="active" class="lesson">
+                <a [routerLink]="'/assignment/0/topic/'+topic.id+'/lesson/'+lesson.id" [queryParams]="{from_content_review:'true'}" routerLinkActive="active" class="lesson">
                   <div class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)"></div>
                   <div>
                     <div class="lesson-title">{{lesson.title}}</div>
