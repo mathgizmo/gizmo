@@ -68,9 +68,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import adaptivePlugin from '@fullcalendar/adaptive';
-import scrollGridPlugin from '@fullcalendar/scrollgrid';;
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment'
+import scrollGridPlugin from '@fullcalendar/scrollgrid';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 FullCalendarModule.registerPlugins([
     dayGridPlugin,
@@ -113,7 +113,8 @@ FullCalendarModule.registerPlugins([
         PerfectScrollbarModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-        DeviceDetectorModule.forRoot(),
+        DeviceDetectorModule.forRoot()
+,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     exports: [],
