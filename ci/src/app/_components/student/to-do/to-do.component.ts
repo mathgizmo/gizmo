@@ -56,7 +56,7 @@ export class ToDoComponent implements OnInit, OnDestroy {
             return;
         }
         localStorage.setItem('app_id', app.id + '');
-        this.router.navigate(['/']);
+        this.router.navigate(['/assignment/' + app.id]);
     }
 
     setIcon(image) {

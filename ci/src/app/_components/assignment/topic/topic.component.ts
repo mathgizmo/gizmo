@@ -15,6 +15,7 @@ export class TopicComponent implements OnInit {
     backLinkText = 'Back';
     topicTree: any = [];
     id: number;
+    appId: number;
     private sub: any;
     topicDone: boolean;
 
@@ -30,10 +31,11 @@ export class TopicComponent implements OnInit {
     ngOnInit() {
         this.topicDone = false;
         this.sub = this.route.params.subscribe(params => {
-            this.id = +params['id']; // (+) converts string 'id' to a number
+            this.id = +params['topic_id']; // (+) converts string 'id' to a number
+            this.appId = +params['app_id'] || +localStorage.getItem('app_id') || 0;
             // In a real app: dispatch action to load the details here.
             // get topics tree from API
-            this.topicService.getTopic(this.id)
+            this.topicService.getTopic(this.id, this.appId)
                 .subscribe(topicTree => {
                     this.topicTree = topicTree;
                     localStorage.setItem('last-visited-unit-id', this.topicTree.unit_id + '');
