@@ -52,10 +52,10 @@
                             {{-- <a class="nav-link" href="{{ url('/placements') }}">
                                 Manage Placements
                             </a> --}}
-                            <a class="nav-link" href="{{ route('error_report.index', 'new') }}">
-                                Error Report
-                            </a>
                         @endif
+                        <a class="nav-link" href="{{ route('error_report.index', 'new') }}">
+                            Error Report
+                        </a>
                     </nav>
                 </div>
                 @endif

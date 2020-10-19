@@ -12,26 +12,26 @@ class ReportErrorPolicy
 
     public function viewAny(User $user)
     {
-        return $user->isSuperAdmin() || $user->isAdmin();
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isQuestionsEditor();
     }
 
     public function view(User $user)
     {
-        return $user->isSuperAdmin() || $user->isAdmin();
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isQuestionsEditor();
     }
 
     public function create(User $user)
     {
-        return $user->isSuperAdmin() || $user->isAdmin();
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isQuestionsEditor();
     }
 
     public function update(User $user, ReportError $model)
     {
-        return $user->isSuperAdmin() || $user->isAdmin();
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isQuestionsEditor();
     }
 
     public function delete(User $user, ReportError $model)
     {
-        return $user->isSuperAdmin() || $user->isAdmin();
+        return $user->isSuperAdmin() || $user->isAdmin() || $user->isQuestionsEditor();
     }
 }

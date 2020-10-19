@@ -35,10 +35,10 @@
             {{-- <a class="btn btn-outline-dark mr-2 mb-2" href="{{ url('/placements') }}">
                 Manage Placements
             </a> --}}
-            <a class="btn btn-outline-dark mr-2 mb-2" href="{{ route('error_report.index', 'new') }}">
-                Error Report
-            </a>
         @endif
+        <a class="btn btn-outline-dark mr-2 mb-2" href="{{ route('error_report.index', 'new') }}">
+            Error Report
+        </a>
     </div>
     @if(auth()->user()->isAdmin())
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center border-bottom mt-2">

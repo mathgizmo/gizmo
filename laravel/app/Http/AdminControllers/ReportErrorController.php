@@ -15,7 +15,7 @@ class ReportErrorController extends Controller
 
     public function index(Request $request, $type)
     {
-        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin() || auth()->user()->isQuestionsEditor());
         $query = ReportError::query()->where('declined', $type == 'new' ? 0 : 1);
         if ($request['sort'] && $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
@@ -28,7 +28,7 @@ class ReportErrorController extends Controller
 
     public function updateStatus($type, $id)
     {
-        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin() || auth()->user()->isQuestionsEditor());
         if (($model = ReportError::find($id)) == null) {
             return back();
         }
