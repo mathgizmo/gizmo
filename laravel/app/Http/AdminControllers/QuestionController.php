@@ -170,7 +170,8 @@ class QuestionController extends Controller
             'reply_mode' => 'required',
             'question' => 'required',
             'answer' => 'required|array|min:1|max:6',
-            'answer.*' => 'required|string'
+            'answer.*' => 'required|string',
+            'is_correct' => 'required|array|min:1|max:6',
         ]);
         $collectionQuestion = collect(['lesson_id' => $request['lesson_id'], 'reply_mode' => $request['reply_mode'], 'question' => $request['question']]);
         $collectionQuestion = $collectionQuestion->merge([
@@ -255,6 +256,7 @@ class QuestionController extends Controller
             'reply_mode' => 'required',
             'answer' => 'required|array|min:1|max:6',
             'answer.*' => 'required|string',
+            'is_correct' => 'required|array|min:1|max:6',
         ]);
         $collectionQuestion = collect([
             'lesson_id' => $request['lesson_id'],

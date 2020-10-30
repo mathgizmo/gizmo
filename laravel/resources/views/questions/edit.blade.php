@@ -170,8 +170,8 @@
                             ></label>
                         @if ($errors->has('question_order'))
                             <span class="form-text">
-                                    <strong>{{ $errors->first('question_order') }}</strong>
-                                </span>
+                                <strong>{{ $errors->first('question_order') }}</strong>
+                            </span>
                         @endif
                     </div>
                 </div>
@@ -216,8 +216,8 @@
                                 @endif
                                 @if ($errors->has('answer.' . $key))
                                     <span class="form-text">
-                                                    <strong>Answer can't be empty.</strong>
-                                                </span>
+                                        <strong>Answer can't be empty.</strong>
+                                    </span>
                                 @endif
                             </div>
                             <div class="col-md-1">
@@ -267,6 +267,16 @@
                             </div>
                         @endif
                     @endfor
+                    @if ($errors->has('is_correct'))
+                        <div class="form-group row answer">
+                            <label class="col-md-2 form-control-label ml-3 font-weight-bold"></label>
+                            <div class="col-md-8">
+                            <span class="form-text">
+                                <strong>{{ $errors->first('is_correct') }}</strong>
+                            </span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="form-group row add_answer_block" style="display: none;">

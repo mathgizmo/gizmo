@@ -355,7 +355,7 @@ class Application extends Model
     }
 
     public function getMaxTestoutAttempts() {
-        return $this->testout_attempts > 0 ? $this->testout_attempts : 999999;
+        return $this->testout_attempts >= 0 ? $this->testout_attempts : 999999;
     }
 
     public function incrementTestoutAttempts($student_id, $topic_id) {

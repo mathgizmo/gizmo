@@ -239,6 +239,16 @@
                             </div>
                         @endif
                     @endfor
+                    @if ($errors->has('is_correct'))
+                        <div class="form-group row answer">
+                            <label class="col-md-2 form-control-label ml-3 font-weight-bold"></label>
+                            <div class="col-md-8">
+                                <span class="form-text">
+                                    <strong>{{ $errors->first('is_correct') }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <div class="form-group row add_answer_block" style="display: none;">
                     <label for="answer" class="col-md-8 form-control-label"></label>
