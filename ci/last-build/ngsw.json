@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1603371671209,
+  "timestamp": 1604351928583,
   "index": "/gizmo/index.html",
   "assetGroups": [
     {
@@ -13,13 +13,13 @@
       "urls": [
         "/gizmo/favicon.ico",
         "/gizmo/index.html",
-        "/gizmo/main.f2aa59a3123db861e2f1.js",
+        "/gizmo/main.0abc7e7a93991a90437d.js",
         "/gizmo/manifest.webmanifest",
         "/gizmo/polyfills-es5.3efc8312ad35ebc554d8.js",
         "/gizmo/polyfills.b8039e8a3e2c9ac2c8df.js",
         "/gizmo/runtime.acf0dec4155e77772545.js",
         "/gizmo/scripts.2811da7938772f81eff6.js",
-        "/gizmo/styles.7e8b8541de6fc86f0bb7.css"
+        "/gizmo/styles.c72cab5b01f8886be42d.css"
       ],
       "patterns": []
     },
@@ -594,14 +594,14 @@
     "/gizmo/fontawesome-webfont.8b43027f47b20503057d.eot": "d980c2ce873dc43af460d4d572d441304499f400",
     "/gizmo/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg": "98a8aa5cf7d62c2eff5f07ede8d844b874ef06ed",
     "/gizmo/fontawesome-webfont.f691f37e57f04c152e23.woff": "28b782240b3e76db824e12c02754a9731a167527",
-    "/gizmo/index.html": "1033cefe341c878145e208d4bccdec82f7d9fc0d",
-    "/gizmo/main.f2aa59a3123db861e2f1.js": "d63226b3aad7e0f7e4fb721297fa2069bcad1c6f",
+    "/gizmo/index.html": "03277f1ae106a62c1aa3cdc1d208e0c52e2fafb8",
+    "/gizmo/main.0abc7e7a93991a90437d.js": "9aeeeab4738ac3c2855d2c8cc997d1b17b5d278b",
     "/gizmo/manifest.webmanifest": "76f0bd83fcb2ac568f286de2089dd5220fb6f464",
     "/gizmo/polyfills-es5.3efc8312ad35ebc554d8.js": "4a79c7efb29f3ef0d7e8fa8a8c0ae5f719f10468",
     "/gizmo/polyfills.b8039e8a3e2c9ac2c8df.js": "76d317ccea623b0a06c798178ea0543d8fec6e36",
     "/gizmo/runtime.acf0dec4155e77772545.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
     "/gizmo/scripts.2811da7938772f81eff6.js": "3ed68a3871664258d002b3bc2d1e81eb0d7cf2b2",
-    "/gizmo/styles.7e8b8541de6fc86f0bb7.css": "f251afe1e4cf60c0bcf0a2ad98f9593de2c90263"
+    "/gizmo/styles.c72cab5b01f8886be42d.css": "eda6b218ebc16c9a530886a72d35425df8a3bae6"
   },
   "navigationUrls": [
     {
