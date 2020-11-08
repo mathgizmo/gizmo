@@ -33,7 +33,12 @@
             ],
             "allowedCommonJsDependencies": [
               "chart.js",
-              "jquery"
+              "jquery",
+              "core-js",
+              "raf",
+              "xlsx",
+              "@babel/runtime",
+              "pdfmake/build/pdfmake.js"
             ]
           },
           "configurations": {
