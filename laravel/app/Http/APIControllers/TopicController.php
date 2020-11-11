@@ -388,7 +388,9 @@ class TopicController extends Controller
                 }
                 if (!$next_topic_id) {
                     $topic_level = Level::where('id', $topic_unit->level_id)->first();
+                    $break = false;
                     foreach ($this->app->getLevels() as $level) {
+                        if ($break) { break; }
                         if ($level->order_no < $topic_level->order_no || $level->id == $unit->level_id) { continue; }
                         foreach ($this->app->getUnits($level->id) as $unit) {
                             if ($unit->id == $topic->unit_id) { continue; }
@@ -397,6 +399,7 @@ class TopicController extends Controller
                                 $next_topic = collect($app_topics)->sortBy('order_no')->first();
                                 if ($next_topic) {
                                     $next_topic_id = $next_topic->id;
+                                    $break = true;
                                     break;
                                 }
                             }

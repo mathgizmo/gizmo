@@ -41,7 +41,7 @@ class Application extends Model
 
     public function getLevels() {
         // DB::select('select * from level where dev_mode = 0 order by order_no, id asc'); // all levels
-        return $this->getLevelsQuery()->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
+        return $this->getLevelsQuery()->where('dev_mode', 0)->orderBy('order_no', 'ASC')->get();
     }
 
     public function getLevelsQuery() {
@@ -77,7 +77,7 @@ class Application extends Model
         if ($level_id) {
             $items->where('level_id', $level_id);
         }
-        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
+        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->get();
     }
 
     public function getUnitsQuery() {
@@ -109,7 +109,7 @@ class Application extends Model
         if ($unit_id) {
             $items->where('unit_id', $unit_id);
         }
-        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->get();
+        return $items->where('dev_mode', 0)->orderBy('order_no', 'ASC')->get();
     }
 
     public function getTopicsQuery() {
