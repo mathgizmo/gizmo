@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1604351928583,
+  "timestamp": 1605131589242,
   "index": "/gizmo/index.html",
   "assetGroups": [
     {
@@ -11,15 +11,19 @@
         "ignoreVary": true
       },
       "urls": [
+        "/gizmo/canvg.e2facccb5571bc93491e.js",
+        "/gizmo/default~canvg~pdfmake.9b3ca40cb1afbb779435.js",
         "/gizmo/favicon.ico",
         "/gizmo/index.html",
-        "/gizmo/main.0abc7e7a93991a90437d.js",
+        "/gizmo/main.d388d49b82ee00df7d75.js",
         "/gizmo/manifest.webmanifest",
-        "/gizmo/polyfills-es5.3efc8312ad35ebc554d8.js",
-        "/gizmo/polyfills.b8039e8a3e2c9ac2c8df.js",
-        "/gizmo/runtime.acf0dec4155e77772545.js",
+        "/gizmo/pdfmake.849c55ab1fabbf26a796.js",
+        "/gizmo/polyfills-es5.4937589447a1be35f8b0.js",
+        "/gizmo/polyfills.d705563b78dbcf79ef57.js",
+        "/gizmo/runtime.22757f6205e436625f5b.js",
         "/gizmo/scripts.2811da7938772f81eff6.js",
-        "/gizmo/styles.c72cab5b01f8886be42d.css"
+        "/gizmo/styles.c72cab5b01f8886be42d.css",
+        "/gizmo/xlsx.5e0421120c079fb82636.js"
       ],
       "patterns": []
     },
@@ -588,20 +592,24 @@
     "/gizmo/assets/images/welcome-bg.png": "3d7f7b3852a9d748f9632c3d8d8255c9a5b4c524",
     "/gizmo/assets/js/jquery.jslatex.packed.js": "789c1f2f980b28a0b5be94c06f03e3582ce41df8",
     "/gizmo/assets/spinner.css": "d9fadab67f7ae88118201c343c40ce031c2e068c",
+    "/gizmo/canvg.e2facccb5571bc93491e.js": "fb4bf2c9f450f09832fb10a18dc591d9103815d5",
+    "/gizmo/default~canvg~pdfmake.9b3ca40cb1afbb779435.js": "ae33cda3f6b102a8dca44def9a1f4ec2af48dbf3",
     "/gizmo/favicon.ico": "576603399e50a3ecdc43db7b7b4b2ba83a0cc9e9",
     "/gizmo/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf": "13b1eab65a983c7a73bc7997c479d66943f7c6cb",
     "/gizmo/fontawesome-webfont.20fd1704ea223900efa9.woff2": "d6f48cba7d076fb6f2fd6ba993a75b9dc1ecbf0c",
     "/gizmo/fontawesome-webfont.8b43027f47b20503057d.eot": "d980c2ce873dc43af460d4d572d441304499f400",
     "/gizmo/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg": "98a8aa5cf7d62c2eff5f07ede8d844b874ef06ed",
     "/gizmo/fontawesome-webfont.f691f37e57f04c152e23.woff": "28b782240b3e76db824e12c02754a9731a167527",
-    "/gizmo/index.html": "03277f1ae106a62c1aa3cdc1d208e0c52e2fafb8",
-    "/gizmo/main.0abc7e7a93991a90437d.js": "9aeeeab4738ac3c2855d2c8cc997d1b17b5d278b",
+    "/gizmo/index.html": "61baa67759fce4782a58aaea74ca3cfdbf0e1654",
+    "/gizmo/main.d388d49b82ee00df7d75.js": "903e67b497f26f028a67eb558eec1b2a03e9eb2f",
     "/gizmo/manifest.webmanifest": "76f0bd83fcb2ac568f286de2089dd5220fb6f464",
-    "/gizmo/polyfills-es5.3efc8312ad35ebc554d8.js": "4a79c7efb29f3ef0d7e8fa8a8c0ae5f719f10468",
-    "/gizmo/polyfills.b8039e8a3e2c9ac2c8df.js": "76d317ccea623b0a06c798178ea0543d8fec6e36",
-    "/gizmo/runtime.acf0dec4155e77772545.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/gizmo/pdfmake.849c55ab1fabbf26a796.js": "2325b015f78086bb3cbb3cde8d268564b0a195e5",
+    "/gizmo/polyfills-es5.4937589447a1be35f8b0.js": "b9d3e769d6abea2717446b0b1491225189cc4237",
+    "/gizmo/polyfills.d705563b78dbcf79ef57.js": "17623657b39554bb02d49825ef165636223a466a",
+    "/gizmo/runtime.22757f6205e436625f5b.js": "de5f6f24af980fa03d3e662148c64267a7c1567b",
     "/gizmo/scripts.2811da7938772f81eff6.js": "3ed68a3871664258d002b3bc2d1e81eb0d7cf2b2",
-    "/gizmo/styles.c72cab5b01f8886be42d.css": "eda6b218ebc16c9a530886a72d35425df8a3bae6"
+    "/gizmo/styles.c72cab5b01f8886be42d.css": "eda6b218ebc16c9a530886a72d35425df8a3bae6",
+    "/gizmo/xlsx.5e0421120c079fb82636.js": "1ba6bd82d665c743afc58fbe3911b26df46b355f"
   },
   "navigationUrls": [
     {
