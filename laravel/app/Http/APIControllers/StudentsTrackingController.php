@@ -77,9 +77,13 @@ class StudentsTrackingController extends Controller
         }
         $app_id = $this->app ? $this->app->id : null;
         if (!$app_id) {
-            return $this->success('No application provided.', 404);
+            return $this->error('No application provided.', 404);
         }
+        $this->app->incrementTestoutAttempts($this->student->id, $topic_id);
         $lastLesson = Lesson::where('id', request()->lesson_id)->first();
+        if (!$lastLesson && request()->lesson_id) {
+            return $this->error('Lesson not found.', 404);
+        }
         $student = $this->student;
         // find all lessons from topic that are not done yet
         $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {

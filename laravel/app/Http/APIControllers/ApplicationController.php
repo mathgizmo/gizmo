@@ -43,7 +43,7 @@ class ApplicationController extends Controller
             }
             $app->teacher_id = $this->user->id;
             $app->allow_any_order = request('allow_any_order') ?: null;
-            $app->testout_attempts = request('testout_attempts') >= 0 ? request('testout_attempts') : -1;
+            $app->testout_attempts = request('testout_attempts') >= -1 ? intval(request('testout_attempts')) : 0;
             if (request()->has('question_num')) {
                 $question_num = request('question_num');
                 if (is_numeric($question_num)) {
@@ -77,7 +77,7 @@ class ApplicationController extends Controller
                     $app->icon = request('icon');
                 }
                 $app->allow_any_order = request('allow_any_order') ?: null;
-                $app->testout_attempts = request('testout_attempts') >= 0 ? request('testout_attempts') : -1;
+                $app->testout_attempts = request('testout_attempts') >= -1 ? intval(request('testout_attempts')) : 0;
                 if (request()->has('question_num')) {
                     $question_num = request('question_num');
                     if (is_numeric($question_num)) {

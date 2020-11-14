@@ -25,6 +25,31 @@ export class ReviewContentComponent implements OnInit {
         this.contentService.getContent()
             .subscribe(res => {
                 this.topicsTree = res;
+                const lastVisitedTopic = +localStorage.getItem('last-visited-topic-id');
+                if (lastVisitedTopic) {
+                    let found = false;
+                    for (const item of this.topicsTree) {
+                        for (const unit of item.units) {
+                            unit.show = false;
+                            for (const topic of unit.topics) {
+                                if (!found && topic.id === lastVisitedTopic) {
+                                    setTimeout(() => {
+                                        $('#unit' + unit.id + '-topics').slideDown('slow');
+                                        $('#topic' + lastVisitedTopic + '-lessons').slideDown('slow');
+                                        $('html, body').animate({
+                                            scrollTop: ($('#topic' + lastVisitedTopic).offset().top) - 8
+                                        }, 1000);
+                                    }, 100);
+                                    topic.show = true;
+                                    unit.show = true;
+                                    found = true;
+                                } else {
+                                    topic.show = false;
+                                }
+                            }
+                        }
+                    }
+                }
             });
     }
 

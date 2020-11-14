@@ -96,7 +96,7 @@
             <div class="form-group row mt-3 {{ $errors->has('testout_attempts') ? ' has-error' : '' }}">
                 <label for="testout_attempts" class="col-md-2 form-control-label ml-3 font-weight-bold">Number of attempts to testout (-1 – means unlimited attempts; 0 – for not testout)</label>
                 <div class="col-md-8">
-                    <input id="testout_attempts" type="text" class="form-control" name="testout_attempts" value="{{ old('testout_attempts', -1) }}">
+                    <input id="testout_attempts" type="text" class="form-control" name="testout_attempts" value="{{ old('testout_attempts', 0) }}">
                     @if ($errors->has('testout_attempts'))
                         <span class="form-text">
                                 <strong>{{ $errors->first('testout_attempts') }}</strong>

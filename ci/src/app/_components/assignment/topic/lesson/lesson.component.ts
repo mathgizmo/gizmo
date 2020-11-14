@@ -102,6 +102,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         this.sub = this.route.params.subscribe(params => {
             this.appId = +params['app_id'] || +localStorage.getItem('app_id') || 0;
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
+            localStorage.setItem('last-visited-topic-id', this.topic_id + '');
             this.lesson_id = (params['lesson_id'] === 'testout') ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
             // get lesson tree from API
@@ -524,16 +525,17 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                                 this.assignmentName = res['assignment_name'];
                             }
                         });
-                    }
-                    if (this.lesson_id === -1) {
-                        this.trackingService.finishTestout(this.topic_id, null, this.start_time, this.weak_questions, this.appId)
-                            .subscribe(res => {
-                                this.isAssignmentComplete = res['is_assignment_complete'];
-                                if (this.isAssignmentComplete) {
-                                    this.correctQuestionRate = +res['correct_question_rate'];
-                                    this.assignmentName = res['assignment_name'];
-                                }
-                        });
+                        if (this.lesson_id === -1) {
+                            this.trackingService.finishTestout(this.topic_id, null,
+                                this.start_time, this.weak_questions, this.appId)
+                                .subscribe(res => {
+                                    this.isAssignmentComplete = res['is_assignment_complete'];
+                                    if (this.isAssignmentComplete) {
+                                        this.correctQuestionRate = +res['correct_question_rate'];
+                                        this.assignmentName = res['assignment_name'];
+                                    }
+                                });
+                        }
                     }
                 }
             });
@@ -544,6 +546,16 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.next = this.question.lesson_id;
                     this.next_title = this.question.lesson_title;
                     this.question = null;
+                    if (!this.fromContentReview) {
+                        this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions, this.appId)
+                            .subscribe(res => {
+                                this.isAssignmentComplete = res['is_assignment_complete'];
+                                if (this.isAssignmentComplete) {
+                                    this.correctQuestionRate = +res['correct_question_rate'];
+                                    this.assignmentName = res['assignment_name'];
+                                }
+                            });
+                    }
                     return;
                     // this.router.navigate(['/topic/' + this.topic_id + '/lesson/' + this.question.lesson_id]);
                 }

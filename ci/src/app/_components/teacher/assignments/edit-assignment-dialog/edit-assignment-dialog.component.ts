@@ -17,7 +17,7 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
         'icon': null,
         'tree': null,
         'allow_any_order': false,
-        'testout_attempts': -1,
+        'testout_attempts': 0,
         'question_num': 3
     };
     tree = [];

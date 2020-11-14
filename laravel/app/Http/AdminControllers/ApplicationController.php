@@ -69,7 +69,7 @@ class ApplicationController extends Controller
             $application->icon = $request['icon'];
         }
         $application->allow_any_order = $request['allow_any_order'] ? true : false;
-        $application->testout_attempts = $request['testout_attempts'] >= 0 ? $request['testout_attempts'] : -1;
+        $application->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
         $application->question_num = $request['question_num'] ?: 3;
         $application->save();
         $application->updateTree($request);
@@ -111,7 +111,7 @@ class ApplicationController extends Controller
             $application->icon = $request['icon'];
         }
         $application->allow_any_order = $request['allow_any_order'] ? true : false;
-        $application->testout_attempts = $request['testout_attempts'] >= 0 ? $request['testout_attempts'] : -1;
+        $application->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
         $application->question_num = $request['question_num'] ?: 3;
         $application->save();
         $application->updateTree($request);

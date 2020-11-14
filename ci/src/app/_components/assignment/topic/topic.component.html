@@ -21,7 +21,7 @@
         [ngClass]="{'to-many-attempts' : topicTree.testout_attempts >= topicTree.max_testout_attempts}"
         routerLink="/assignment/{{appId}}/topic/{{topicTree.id}}/lesson/testout"
         routerLinkActive="active"
-        *ngIf="topicTree.lessons && topicTree.lessons.length">
+        *ngIf="topicTree.lessons && topicTree.lessons.length && topicTree.max_testout_attempts > 0">
         <button mat-raised-button class="button completion-button">
             <span>Test Out</span>
         </button>

@@ -1,8 +1,8 @@
 ﻿import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 
-import { flatMap } from 'rxjs/operators';
-import { Observable, Subscriber } from 'rxjs';
+import {flatMap} from 'rxjs/operators';
+import {Observable, Subscriber} from 'rxjs';
 
 import {AuthenticationService, TopicService, TrackingService} from '../../_services';
 import {environment} from '../../../environments/environment';

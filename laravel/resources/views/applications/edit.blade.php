@@ -98,7 +98,7 @@
                 <div class="form-group row mt-3 {{ $errors->has('testout_attempts') ? ' has-error' : '' }}">
                     <label for="testout_attempts" class="col-md-2 form-control-label ml-3 font-weight-bold">Number of attempts to testout (-1 – means unlimited attempts; 0 – for not testout)</label>
                     <div class="col-md-8">
-                        <input id="testout_attempts" type="text" class="form-control" name="testout_attempts" value="{{ $application->testout_attempts }}">
+                        <input id="testout_attempts" type="text" class="form-control" name="testout_attempts" value="{{ old('testout_attempts', $application->testout_attempts) }}">
                         @if ($errors->has('testout_attempts'))
                             <span class="form-text">
                                 <strong>{{ $errors->first('testout_attempts') }}</strong>
@@ -109,7 +109,7 @@
                 <div class="form-group row mt-3 {{ $errors->has('question_num') ? ' has-error' : '' }}">
                     <label for="question_num" class="col-md-2 form-control-label ml-3 font-weight-bold">Number of consecutive correct answers which will signify lesson completion (0 - to answer all questions)</label>
                     <div class="col-md-8">
-                        <input id="question_num" type="text" class="form-control" name="question_num" value="{{ $application->question_num }}">
+                        <input id="question_num" type="text" class="form-control" name="question_num" value="{{ old('question_num', $application->question_num) }}">
                         @if ($errors->has('question_num'))
                             <span class="form-text">
                                 <strong>{{ $errors->first('question_num') }}</strong>
