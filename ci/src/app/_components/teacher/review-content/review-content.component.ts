@@ -27,12 +27,11 @@ export class ReviewContentComponent implements OnInit {
                 this.topicsTree = res;
                 const lastVisitedTopic = +localStorage.getItem('last-visited-topic-id');
                 if (lastVisitedTopic) {
-                    let found = false;
                     for (const item of this.topicsTree) {
                         for (const unit of item.units) {
                             unit.show = false;
                             for (const topic of unit.topics) {
-                                if (!found && topic.id === lastVisitedTopic) {
+                                if (topic.id === lastVisitedTopic) {
                                     setTimeout(() => {
                                         $('#unit' + unit.id + '-topics').slideDown('slow');
                                         $('#topic' + lastVisitedTopic + '-lessons').slideDown('slow');
@@ -42,7 +41,6 @@ export class ReviewContentComponent implements OnInit {
                                     }, 100);
                                     topic.show = true;
                                     unit.show = true;
-                                    found = true;
                                 } else {
                                     topic.show = false;
                                 }

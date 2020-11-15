@@ -132,7 +132,7 @@ export class ClassesManagementService {
             );
     }
 
-    geAnswersStatistics(class_id, student_id = null, app_id = null, date_from = null, date_to = null) {
+    getAnswersStatistics(class_id, student_id = null, app_id = null, date_from = null, date_to = null) {
         return this.http.get( '/classes/' + class_id + '/answers-statistics',
             true, {
                 student_id: student_id ? student_id : '',

@@ -83,7 +83,7 @@ export class StudentsUsageBarChartComponent implements OnInit {
         // const dateStart = this.dateFrom ? moment(this.dateFrom, 'YYYY-MM-DD') : null;
         // const dateEnd = this.dateTo ? moment(this.dateTo, 'YYYY-MM-DD') : moment(this.dateNow, 'YYYY-MM-DD');
         // this.daysBetween = dateStart ? dateEnd.diff(dateStart, 'days') : 7;
-        this.classService.geAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo)
+        this.classService.getAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo)
             .subscribe(response => {
                 const labels = [];
                 const attempts = [];

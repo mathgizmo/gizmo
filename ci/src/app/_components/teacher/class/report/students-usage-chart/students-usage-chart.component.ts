@@ -78,7 +78,7 @@ export class StudentsUsageChartComponent implements OnInit, AfterViewInit, OnDes
     }
 
     public getStatistics() {
-        this.classService.geAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo)
+        this.classService.getAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo)
             .subscribe(response => {
                 // build chart
                 this.browserOnly(() => {

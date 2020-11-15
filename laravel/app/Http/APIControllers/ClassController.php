@@ -524,7 +524,7 @@ class ClassController extends Controller
         ]);
     }
 
-    public function geAnswersStatistics($class_id) {
+    public function getAnswersStatistics($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
         if (!$class) {
             return $this->error('Class not found!', 404);
@@ -561,6 +561,7 @@ class ClassController extends Controller
             }
             $query->where('created_at', '>=', $startDate->toDateString());
         }
+        /* Server side Group By
         $rows = $query->get();
         $data = [];
         for ($i = 0; $i < $startDate->diffInDays($endDate); $i++) {
@@ -579,7 +580,33 @@ class ClassController extends Controller
                 'attempts' => $attempts,
                 'correct' => $correct,
             ]);
+        } */
+        /* SQL side Group By */
+        $query->select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('COUNT(id) as attempts'),
+            DB::raw('SUM(is_right_answer) as correct')
+        )->groupBy(DB::raw('DATE(created_at)'));
+        $rows = $query->get();
+        $data = [];
+        for ($i = 0; $i < $startDate->diffInDays($endDate); $i++) {
+            $date = Carbon::parse($startDate->toDateString())->addDays($i)->toDateString();
+            $exists = $rows->where('date', $date)->first();
+            if ($exists) {
+                array_push($data, (object) [
+                    'date' => $date,
+                    'attempts' => (int) $exists->attempts,
+                    'correct' => (int) $exists->correct,
+                ]);
+            } else {
+                array_push($data, (object) [
+                    'date' => $date,
+                    'attempts' => 0,
+                    'correct' => 0,
+                ]);
+            }
         }
+
         return $this->success([
             'items' => $data
         ]);

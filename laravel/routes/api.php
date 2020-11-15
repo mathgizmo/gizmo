@@ -70,7 +70,7 @@ $api->version('v1', function ($api) {
         $api->delete('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@deleteAssignmentFromClass');
         $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
         $api->get('/classes/{class_id}/todo', 'App\Http\APIControllers\ClassController@getToDos');
-        $api->get('/classes/{class_id}/answers-statistics', 'App\Http\APIControllers\ClassController@geAnswersStatistics');
+        $api->get('/classes/{class_id}/answers-statistics', 'App\Http\APIControllers\ClassController@getAnswersStatistics');
 
         $api->get('/assignments', 'App\Http\APIControllers\ApplicationController@all');
         $api->post('/assignments', 'App\Http\APIControllers\ApplicationController@store');
