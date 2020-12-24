@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\ClassApplication;
 use App\Level;
 use App\Progress;
 use App\Question;
@@ -21,6 +22,7 @@ class StudentsTrackingController extends Controller
 
     private $student;
     private $app;
+    private $class_app;
 
     public function __construct()
     {
@@ -36,7 +38,13 @@ class StudentsTrackingController extends Controller
         } catch (\Exception $e) {
             abort(401, 'Unauthorized!');
         }
-        if (request()->has('app_id')) {
+        if (request()->has('class_app_id')) {
+            $this->class_app = ClassApplication::where('id', request('class_app_id'))->first();
+            $this->app = $this->class_app ? Application::where('id', $this->class_app->app_id)->first() : null;
+            if (!$this->app) {
+                $this->app = Application::where('id', $this->student->app_id)->first();
+            }
+        } else if (request()->has('app_id')) {
             $app_id = request('app_id');
             $this->app = Application::where('id', $app_id)->first();
             if (!$this->app) {
@@ -374,6 +382,7 @@ class StudentsTrackingController extends Controller
                 'student_id' => $this->student->id,
                 'question_id' => $question_id,
                 'app_id' => $app_id,
+                'class_app_id' => $this->class_app ? $this->class_app->id : null,
                 'is_right_answer' => request('is_right_answer'),
             ]);
         }

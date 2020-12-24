@@ -63,9 +63,11 @@ export class TrackingService {
         return this.http.get('/unit/last-visited/' + student_id);
     }
 
-    trackQuestionAnswer(question_id, is_right_answer, app_id = null) {
+    trackQuestionAnswer(question_id, is_right_answer, app_id = null, class_app_id = null) {
         let url = '/question/' + question_id + '/tracking';
-        if (this.appId || app_id) {
+        if (class_app_id) {
+            url += '?class_app_id=' + class_app_id;
+        } else if (this.appId || app_id) {
             url += '?app_id=' + (app_id ? app_id : this.appId);
         }
         return this.http.post(url, {'is_right_answer': is_right_answer});

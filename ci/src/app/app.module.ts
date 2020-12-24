@@ -37,20 +37,21 @@ import {AuthenticationService, HttpService, HTTPListener, HTTPStatus, CountrySer
 import {AppComponent} from './_components/app.component';
 import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
     ForgotPasswordComponent, ResetPasswordComponent, TryComponent, VerifyEmailComponent} from './_components/auth/index';
-import {AssignmentComponent} from './_components/assignment/index';
+import {AssignmentComponent, TestComponent} from './_components/assignment/index';
 import {TopicComponent} from './_components/assignment/topic/index';
 import {LessonComponent, ChartComponent} from './_components/assignment/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
-import {ToDoComponent, MyClassesComponent, MyClassReportComponent, MyInvitationsComponent} from './_components/student/index';
+import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, MyInvitationsComponent} from './_components/student/index';
 import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
-    EditAssignmentDialogComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassAssignmentsComponent, ClassAssignmentsCalendarComponent, ClassToDoComponent,
-    ClassMenuComponent, StudentsUsageChartComponent, StudentsUsageBarChartComponent, ClassDetailedReportComponent,
-    EditClassAssignmentDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
+    EditAssignmentDialogComponent, ManageTestsComponent, EditTestDialogComponent, TestReportDialogComponent,
+    ReviewContentComponent, ClassDashboardComponent, ClassAssignmentsComponent,
+    ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassToDoComponent, ClassMenuComponent,
+    StudentsUsageChartComponent, StudentsUsageBarChartComponent, ClassDetailedReportComponent,
+    EditClassAssignmentDialogComponent, EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
@@ -59,7 +60,7 @@ import {QuestionPreviewComponent} from './_components/previews/question-preview/
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 import {DraggableDirective} from './_directives/draggable.directive';
-import { TableFilterPipe, SafeHtmlPipe } from './_pipes/index';
+import { TableFilterPipe, SafeHtmlPipe, TimeFormatPipe } from './_pipes/index';
 
 import { ChartsModule } from 'ng2-charts';
 
@@ -126,6 +127,7 @@ FullCalendarModule.registerPlugins([
         VerifyEmailComponent,
         RegisterComponent,
         AssignmentComponent,
+        TestComponent,
         TopicComponent,
         LessonComponent,
         GoodDialogComponent,
@@ -136,6 +138,7 @@ FullCalendarModule.registerPlugins([
         ChartComponent,
         ProfileComponent,
         ToDoComponent,
+        MyTestsComponent,
         MyClassesComponent,
         MyClassReportComponent,
         MyInvitationsComponent,
@@ -147,12 +150,17 @@ FullCalendarModule.registerPlugins([
         AddStudentDialogComponent,
         ManageAssignmentsComponent,
         EditAssignmentDialogComponent,
+        ManageTestsComponent,
+        EditTestDialogComponent,
+        TestReportDialogComponent,
         EditClassAssignmentDialogComponent,
+        EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
         ReviewContentComponent,
         ClassDashboardComponent,
         ClassAssignmentsComponent,
         ClassAssignmentsCalendarComponent,
+        ClassTestsComponent,
         ClassToDoComponent,
         ClassMenuComponent,
         StudentsUsageChartComponent,
@@ -170,7 +178,8 @@ FullCalendarModule.registerPlugins([
         // QuestionNumDialogComponent,
         DraggableDirective,
         TableFilterPipe,
-        SafeHtmlPipe
+        SafeHtmlPipe,
+        TimeFormatPipe
     ],
     entryComponents: [
         GoodDialogComponent,
@@ -185,7 +194,10 @@ FullCalendarModule.registerPlugins([
         StudentAssignmentsDialogComponent,
         AddStudentDialogComponent,
         EditAssignmentDialogComponent,
+        EditTestDialogComponent,
+        TestReportDialogComponent,
         EditClassAssignmentDialogComponent,
+        EditClassTestDialogComponent,
         SelectStudentsDialogComponent
     ],
     providers: [

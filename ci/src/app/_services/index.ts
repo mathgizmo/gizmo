@@ -10,3 +10,6 @@ export * from './dashboard.service';
 export * from './classes-management.service';
 export * from './content.service';
 export * from './country.service';
+export * from './assignment.service';
+export * from './test.service';
+export * from './question.service';

@@ -82,18 +82,18 @@
                 </div>
 
                 <div class="form-group row mt-3">
-                    <label for="application-input" class="col-md-2 form-control-label ml-3 font-weight-bold">Assignments</label>
+                    <label for="assignment-input" class="col-md-2 form-control-label ml-3 font-weight-bold">Assignments</label>
                     <div class="col-md-8">
-                        <input id="application-input" class="form-control" name="applications-input" list="applications-datalist"
-                               placeholder="Enter Assignments Name" />
-                        <datalist id="applications-datalist"></datalist>
-                        <ul id="applications" class="list-group mt-3">
-                            @foreach($applications as $app)
+                        <input id="assignment-input" class="form-control" name="assignment-input" list="assignments-datalist"
+                               placeholder="Enter Assignment Name" />
+                        <datalist id="assignments-datalist"></datalist>
+                        <ul id="assignments" class="list-group mt-3">
+                            @foreach($applications->where('type', 'assignment') as $app)
                                 <li class="list-group-item d-flex flex-row justify-content-between align-items-center">
                                     <a href="{{route('applications.edit', $app->id)}}" target="_blank" class="font-weight-bold text-decoration-none text-dark">{{$app->name}}</a>
                                     <div class="d-flex flex-row align-items-center">
                                         <div class="mr-2" style="min-width: 80px;">Due Date:</div>
-                                        <input class="form-control mr-3" type="date" name="application[{{$app->id}}][due_date]" value="{{$app->getDueDate($class->id)}}" />
+                                        <input class="form-control mr-3" type="date" name="assignment[{{$app->id}}][due_date]" value="{{$app->getDueDate($class->id)}}" />
                                         <i class="fas fa-trash-alt" style="cursor: pointer;" onclick="this.parentNode.parentNode.remove();"></i>
                                     </div>
                                 </li>
@@ -101,6 +101,28 @@
                         </ul>
                     </div>
                 </div>
+
+                <div class="form-group row mt-3">
+                    <label for="test-input" class="col-md-2 form-control-label ml-3 font-weight-bold">Tests</label>
+                    <div class="col-md-8">
+                        <input id="test-input" class="form-control" name="test-input" list="tests-datalist"
+                               placeholder="Enter Test Name" />
+                        <datalist id="tests-datalist"></datalist>
+                        <ul id="tests" class="list-group mt-3">
+                            @foreach($applications->where('type', 'test') as $app)
+                                <li class="list-group-item d-flex flex-row justify-content-between align-items-center">
+                                    <a href="{{route('applications.edit', $app->id)}}" target="_blank" class="font-weight-bold text-decoration-none text-dark">{{$app->name}}</a>
+                                    <div class="d-flex flex-row align-items-center">
+                                        <div class="mr-2" style="min-width: 80px;">Due Date:</div>
+                                        <input class="form-control mr-3" type="date" name="test[{{$app->id}}][due_date]" value="{{$app->getDueDate($class->id)}}" />
+                                        <i class="fas fa-trash-alt" style="cursor: pointer;" onclick="this.parentNode.parentNode.remove();"></i>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
             <div class="card-footer">
@@ -157,14 +179,14 @@
                 }, 200);
             });
 
-            $('#application-input').keyup(function() {
-                const pattern = $('#application-input').val();
+            $('#assignment-input').keyup(function() {
+                const pattern = $('#assignment-input').val();
                 if(pattern) {
                     $.ajax({
-                        url: "{{route('applications.search')}}?pattern="+pattern+'&limit=5',
+                        url: "{{route('applications.search')}}?pattern="+pattern+'&type=assignment&limit=5',
                         type: "GET",
                         success: function(data, textStatus, jqXHR) {
-                            const dl = document.getElementById('applications-datalist');
+                            const dl = document.getElementById('assignments-datalist');
                             dl.innerHTML = '';
                             data.forEach((item, index) => {
                                 const option = document.createElement('option');
@@ -177,7 +199,7 @@
                 }
             }).change(function () {
                 setTimeout(() => {
-                    const options = document.getElementById("applications-datalist").options;
+                    const options = document.getElementById("assignments-datalist").options;
                     if (options.length > 0) {
                         const option = options.item(0);
                         const li = document.createElement('li');
@@ -207,7 +229,7 @@
                         dateInput.classList.add('form-control');
                         dateInput.classList.add('mr-3');
                         dateInput.setAttribute('type', 'date');
-                        dateInput.setAttribute('name', 'application['+option.getAttribute('key')+'][due_date]');
+                        dateInput.setAttribute('name', 'assignment['+option.getAttribute('key')+'][due_date]');
                         container.appendChild(dateInput);
                         const removeBtn = document.createElement('i');
                         removeBtn.classList.add('fas');
@@ -216,7 +238,73 @@
                         removeBtn.setAttribute('onclick', 'this.parentNode.parentNode.remove();');
                         container.appendChild(removeBtn);
                         li.appendChild(container);
-                        document.getElementById('applications').appendChild(li);
+                        document.getElementById('assignments').appendChild(li);
+                        $(this).val('');
+                    }
+                }, 200);
+            });
+
+            $('#test-input').keyup(function() {
+                const pattern = $('#test-input').val();
+                if(pattern) {
+                    $.ajax({
+                        url: "{{route('applications.search')}}?pattern="+pattern+'&type=test&limit=5',
+                        type: "GET",
+                        success: function(data, textStatus, jqXHR) {
+                            const dl = document.getElementById('tests-datalist');
+                            dl.innerHTML = '';
+                            data.forEach((item, index) => {
+                                const option = document.createElement('option');
+                                option.setAttribute('key', item.id);
+                                option.value = item.name;
+                                dl.appendChild(option);
+                            });
+                        }
+                    });
+                }
+            }).change(function () {
+                setTimeout(() => {
+                    const options = document.getElementById("tests-datalist").options;
+                    if (options.length > 0) {
+                        const option = options.item(0);
+                        const li = document.createElement('li');
+                        li.classList.add('list-group-item');
+                        li.classList.add('d-flex');
+                        li.classList.add('flex-row');
+                        li.classList.add('justify-content-between');
+                        li.classList.add('align-items-center');
+                        const name = document.createElement('a');
+                        name.classList.add('font-weight-bold');
+                        name.classList.add('text-decoration-none');
+                        name.classList.add('text-dark');
+                        name.setAttribute('href', '../../applications/'+option.getAttribute('key')+'/edit');
+                        name.setAttribute('target', '_blank');
+                        name.innerHTML = option.value;
+                        li.appendChild(name);
+                        const container = document.createElement('div');
+                        container.classList.add('d-flex');
+                        container.classList.add('flex-row');
+                        container.classList.add('align-items-center');
+                        const dateLabel = document.createElement('div');
+                        dateLabel.classList.add('mr-2');
+                        dateLabel.style.minWidth = '80px';
+                        dateLabel.innerHTML = 'Due Date:';
+                        container.appendChild(dateLabel);
+                        const dateInput = document.createElement('input');
+                        dateInput.classList.add('form-control');
+                        dateInput.classList.add('mr-3');
+                        dateInput.setAttribute('type', 'date');
+                        dateInput.setAttribute('name', 'test['+option.getAttribute('key')+'][due_date]');
+                        container.appendChild(dateInput);
+                        const removeBtn = document.createElement('i');
+                        removeBtn.classList.add('fas');
+                        removeBtn.classList.add('fa-trash-alt');
+                        removeBtn.style.cursor = 'pointer';
+                        removeBtn.setAttribute('onclick', 'this.parentNode.parentNode.remove();');
+                        container.appendChild(removeBtn);
+                        li.appendChild(container);
+                        document.getElementById('tests').appendChild(li);
+                        $(this).val('');
                     }
                 }, 200);
             });

@@ -3,6 +3,11 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\ClassApplication;
+use App\Http\Resources\TestResource;
+use App\Progress;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -24,13 +29,93 @@ class ApplicationController extends Controller
         }
     }
 
-    public function all() {
+    public function getAssignments() {
         return $this->success([
-            'items' => array_values(Application::where('teacher_id', $this->user->id)->get()->toArray())
+            'items' => array_values(Application::where('teacher_id', $this->user->id)
+                ->where('type', 'assignment')->get()->toArray())
         ]);
     }
 
-    public function store() {
+    public function getTests() {
+        return $this->success([
+            'items' => array_values(Application::where('teacher_id', $this->user->id)
+                ->where('type', 'test')->get()->toArray())
+        ]);
+    }
+
+    public function startTest(Request $request, $test_id) {
+        $test = ClassApplication::where('id', $test_id)->first();
+        if (!$test) {
+            abort(404, 'Test not found!');
+        }
+        $class_app_stud = DB::table('classes_applications_students')->where('class_app_id', $test->id)
+            ->where('student_id', $this->user->id)->first();
+        if ($class_app_stud && $class_app_stud->mark) {
+            return $this->error('You already finished this test!', 410);
+        }
+        $exists = DB::table('classes_applications_students')->where('class_app_id', $test->id)
+                ->where('student_id', $this->user->id)->count() > 0;
+        if (!$exists) {
+            if ($test->is_for_selected_students) {
+                return $this->error('The user dont have access to this test!', 400);
+            }
+            DB::table('classes_applications_students')->insert([
+                'class_app_id' => $test->id,
+                'student_id' => $this->user->id,
+                'start_at' => Carbon::now()->toDateTimeString(),
+                'questions_count' => count($test->application->getLessonsQuery()->pluck('id'))
+            ]);
+        } else {
+            DB::table('classes_applications_students')->where('class_app_id', $test->id)
+                ->where('student_id', $this->user->id)->update([
+                    'start_at' => Carbon::now()->toDateTimeString(),
+                    'end_at' => null,
+                    'mark' => null,
+                    'questions_count' => count($test->application->getLessonsQuery()->pluck('id'))
+                ]);
+        }
+        DB::table('students_tracking_questions')->where('class_app_id', $test_id)
+            ->where('student_id', $this->user->id)->delete();
+        return $this->success([
+            'test' => new TestResource($test)
+        ], 200);
+    }
+
+    public function finishTest(Request $request, $test_id) {
+        $test = ClassApplication::where('id', $test_id)->first();
+        if (!$test) {
+            abort(404, 'Test not found!');
+        }
+        DB::table('classes_applications_students')->where('class_app_id', $test->id)
+            ->where('student_id', $this->user->id)->update([
+                'end_at' => Carbon::now()->toDateTimeString()
+            ]);
+        $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+            // DB::raw("SUM(1) as total"),
+            DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+        )->where('class_app_id', $test_id)->where('student_id', $this->user->id)->first();
+        $class_app_stud = DB::table('classes_applications_students')->where('class_app_id', $test->id)
+            ->where('student_id', $this->user->id)->first();
+        $correct_question_rate = $class_app_stud && $class_app_stud->questions_count
+            ? $tracking_questions_statistics->complete / $class_app_stud->questions_count : 1;
+        DB::table('classes_applications_students')->where('class_app_id', $test->id)
+            ->where('student_id', $this->user->id)->update([
+                'mark' => $correct_question_rate
+            ]);
+        return $this->success([
+            'correct_question_rate' => $correct_question_rate
+        ], 200);
+    }
+
+    public function storeAssignment(Request $request) {
+        return $this->store($request, 'assignment');
+    }
+
+    public function storeTest(Request $request) {
+        return $this->store($request, 'test');
+    }
+
+    private function store(Request $request, $type = 'assignment') {
         try {
             $validator = Validator::make(request()->all(), [ 'name' => 'required|max:255' ]);
             if ($validator->fails()) {
@@ -53,6 +138,8 @@ class ApplicationController extends Controller
                     $app->question_num = (int) $question_num;
                 }
             }
+            $app->duration = request('duration') ?: null;
+            $app->type = $type;
             $app->save();
             parse_str(request('tree'), $tree);
             $app->updateTree($tree);
@@ -87,6 +174,7 @@ class ApplicationController extends Controller
                         $app->question_num = (int) $question_num;
                     }
                 }
+                $app->duration = request('duration') ?: null;
                 $app->save();
                 parse_str(request('tree'), $tree);
                 $success = $app->updateTree($tree);

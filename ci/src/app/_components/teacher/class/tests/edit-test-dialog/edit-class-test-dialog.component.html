@@ -1,0 +1,46 @@
+<!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Add Test!</h2> -->
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{title}}</div>
+    <div class="form-group">
+        <label for="test">Test:</label>
+        <select class="form-control" id="test" name="test" [(ngModel)]="test.id">
+            <option *ngFor="let app of available_tests" [value]="app.id">{{app.name}}</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" [(ngModel)]="test.start_date" [max]="test.due_date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="start_time">Start Time:</label>
+        <input type="time" name="start_time" id="start_time" [(ngModel)]="test.start_time" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="due_date">Due Date:</label>
+        <input type="date" name="due_date" id="due_date" [(ngModel)]="test.due_date" [min]="test.start_date"  class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="due_time">Due Time:</label>
+        <input type="time" name="due_time" id="due_time" [(ngModel)]="test.due_time" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="due_time">Duration in seconds (0 – means unlimited time):</label>
+        <input type="number" min="0" step="1" name="duration" id="duration" [(ngModel)]="test.duration" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="due_time">Password:</label>
+        <input type="text" name="password" id="password" [(ngModel)]="test.password" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="color">Color:</label>
+        <input type="color" name="color" id="color" [(ngModel)]="test.color" class="form-control" />
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
+    <div class="buttons-container flex-end">
+        <button *ngIf="showDeleteButton" mat-button (click)="onDelete()" class='button error-button' type="button">Delete</button>
+        <button mat-button (click)="onSave()" class='button moving-forward-button continue-button' type="button">Save</button>
+    </div>
+</mat-dialog-actions>
+

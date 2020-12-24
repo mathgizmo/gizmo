@@ -1,6 +1,5 @@
 @import '../../colors';
 
-
 .menu {
   background-color: transparent;
   display: inline-block;
@@ -18,7 +17,7 @@
 }
 
 .menu-item {
-  font-family: 'Quicksand' !important;
+  font-family: 'Quicksand', serif !important;
   color: $navy;
   margin: 0;
   outline: none;

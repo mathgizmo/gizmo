@@ -50,6 +50,15 @@ export class UserService {
             );
     }
 
+    public getTests() {
+        return this.http.get('/profile/tests')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                })
+            );
+    }
+
     public getClasses() {
         return this.http.get('/profile/classes');
     }

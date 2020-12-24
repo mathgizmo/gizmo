@@ -16,7 +16,10 @@
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row justify-content-between">
             Manage Assignments
-            <a class="btn btn-dark btn-sm" href="{{ route('applications.create') }}">+ add assignment</a>
+            <div class="d-flex">
+                <a class="btn btn-dark btn-sm" href="{{ route('applications.create', ['type' => 'assignment']) }}">+ add assignment</a>
+                <a class="btn btn-dark btn-sm ml-1" href="{{ route('applications.create', ['type' => 'test']) }}">+ add test</a>
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="d-flex justify-content-center mt-2" style="max-width: 100%;">
@@ -47,12 +50,13 @@
                                 <i class="fa fa-fw fa-sort{{ (request()->sort == 'teacher' && request()->order == 'asc') ? '-up' : '' }}{{ (request()->sort == 'teacher' && request()->order == 'desc') ? '-down' : '' }}"></i>
                             </a>
                         </th>
+                        <th style="min-width: 180px;">
+                            Type
+                        </th>
                         <th style="min-width: 180px;"></th>
                     </tr>
                     </thead>
-
                     <tbody>
-
                     <tr style="background: #999999;">
                         <td></td>
                         <td>
@@ -64,6 +68,13 @@
                         <td>
                             <input type="text" name="teacher" id="teacher-filter" list="teachers-datalist" style="width: 100%;">
                             <datalist id="teachers-datalist"></datalist>
+                        </td>
+                        <td>
+                            <select class="form-control" name="type" id="type-filter">
+                                <option></option>
+                                <option value="assignment">Assignment</option>
+                                <option value="test">Test</option>
+                            </select>
                         </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
@@ -78,6 +89,7 @@
                             <td>{{$application->id}}</td>
                             <td>{{$application->name}}</td>
                             <td>{{$application->teacher ? $application->teacher->name : ''}}</td>
+                            <td>{{ucfirst($application->type)}}</td>
                             <td class="text-right">
                                 <a class="btn btn-dark" href="{{ route('applications.edit', $application->id) }}">Edit</a>
                                 <form action="{{ route('applications.destroy', $application->id) }}"
@@ -113,6 +125,7 @@
             const id = document.getElementById("id-filter").value;
             const name = document.getElementById("name-filter").value;
             const teacher = document.getElementById("teacher-filter").value;
+            const type = document.getElementById("type-filter").value;
             if(id) {
                 url.searchParams.set('id', id);
             } else if (url.searchParams.get('id')) {
@@ -128,6 +141,11 @@
             } else if (url.searchParams.get('teacher')) {
                 url.searchParams.delete('teacher');
             }
+            if(type) {
+                url.searchParams.set('type', type);
+            } else if (url.searchParams.get('type')) {
+                url.searchParams.delete('type');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -136,6 +154,7 @@
             document.getElementById("id-filter").value = url.searchParams.get('id');
             document.getElementById("name-filter").value = url.searchParams.get('name');
             document.getElementById("teacher-filter").value = url.searchParams.get('teacher');
+            document.getElementById("type-filter").value = url.searchParams.get('type');
         }
         window.onload = initFilters;
 

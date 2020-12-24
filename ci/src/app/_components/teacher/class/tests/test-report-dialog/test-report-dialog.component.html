@@ -1,0 +1,48 @@
+<!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Test Report!</h2> -->
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{title}}</div>
+    <form novalidate #form="ngForm">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="email" scope="col">Student</th>
+                    <th mat-sort-header="mark" scope="col">Mark</th>
+                    <th mat-sort-header="start_at" scope="col">Start At</th>
+                    <th mat-sort-header="end_at" scope="col">End At</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="5">
+                        <input matInput placeholder="Email" class="filter-item"
+                               type="text" name="email" [(ngModel)]="email" [value]="" />
+                    </td>
+                </tr>
+                <tr *ngFor="let item of students | tableFilter: form.value">
+                    <td style="max-width: 260px;">{{item.email }}</td>
+                    <td>
+                        <span *ngIf="item.mark">
+                            {{(item.mark * 100).toFixed(0)}}%
+                        </span>
+                    </td>
+                    <td>
+                        {{ item.start_at | date:'yyyy-M-d h:mm a' }}
+                    </td>
+                    <td>
+                        {{ item.end_at | date:'yyyy-M-d h:mm a' }}
+                    </td>
+                    <td class="text-right">
+                        <button *ngIf="item.mark" class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container">
+    <button mat-button [mat-dialog-close]="false" class="button button-white" type="button">Close</button>
+</mat-dialog-actions>
+

@@ -1,0 +1,116 @@
+<a routerLink="/teacher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="tests">
+  <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
+  <mat-card *ngIf="!addTest" class="tests-content">
+    <div class="subtitle text-center">Tests of {{class.name}}</div>
+    <div class="actions-container">
+      <mat-button-toggle-group [(ngModel)]="calendarView" class="toggle-group button button-small button-outline">
+        <mat-button-toggle [value]="true" class="toggle-button">
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+          Calendar
+        </mat-button-toggle>
+        <mat-button-toggle [value]="false" class="toggle-button">
+          <i class="fa fa-list" aria-hidden="true"></i>
+          List
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <app-class-assignments-calendar #calendar *ngIf="calendarView"
+      [assignments]="tests"
+      [available_assignments]="available_tests"
+      (onAssignmentDateChanged)="onTestDateChanged($event)"
+      (onAssignmentAddClicked)="onTestAddClicked($event)"
+      (onAssignmentEditClicked)="onTestEditClicked($event)"
+    ></app-class-assignments-calendar>
+    <form *ngIf="!calendarView" novalidate #form="ngForm">
+      <div class="table-responsive">
+        <table matSort (matSortChange)="sortData($event)" class="table">
+          <thead>
+          <tr>
+            <th scope="col">Icon</th>
+            <th mat-sort-header="name" scope="col">Name</th>
+            <th mat-sort-header="start_date" scope="col">Start Date</th>
+            <th mat-sort-header="start_time" scope="col">Start Time</th>
+            <th mat-sort-header="due_date" scope="col">Due Date</th>
+            <th mat-sort-header="due_time" scope="col">Due Time</th>
+            <th mat-sort-header="duration" scope="col">Duration</th>
+            <th scope="col">Students</th>
+            <th class="text-right" style="min-width: 180px">
+              <button *ngIf="available_tests.length > 0" class="button button-small button-outline" mat-button (click)="addTest=!addTest">Add Test</button>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of tests" [class.for-selected-students]="item.is_for_selected_students">
+            <th scope="col" style="width: 40px;">
+              <div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div>
+            </th>
+            <td>{{item.name}}</td>
+            <td class="date-container">
+              <input type="date" name="start_date" #startDate [value]="item.start_date" [max]="item.due_date" (change)="onStartDateChanged(item, startDate.value)" class="form-control" />
+            </td>
+            <td class="date-container">
+              <input type="time" name="start_time" #startTime [value]="item.start_time || '00:00'" (change)="onStartTimeChanged(item, startTime.value)" class="form-control" />
+            </td>
+            <td class="date-container">
+              <input type="date" name="due_date" #dueDate [value]="item.due_date" [min]="item.start_date" (change)="onDueDateChanged(item, dueDate.value)" class="form-control" />
+            </td>
+            <td class="date-container">
+              <input *ngIf="item.due_date; else noDueTime" type="time" name="due_time" #dueTime [value]="item.due_time || '00:00'" (change)="onDueTimeChanged(item, dueTime.value)" class="form-control" />
+              <ng-template #noDueTime><span class="no-data">N/A</span></ng-template>
+            </td>
+            <td style="display: flex; min-width: 110px;">
+              <input type="number" name="duration" #duration [value]="item.duration" [min]="0" step="1" (change)="onDurationChanged(item, duration.value)" class="form-control" />
+              <span style="font-size: 0.8em; margin: 4px 0 4px 4px;">sec.</span>
+            </td>
+            <td>
+              <span *ngIf="item.is_for_selected_students" class="link" (click)="onShowTestStudents(item)">Selected</span>
+              <span *ngIf="!item.is_for_selected_students">All</span>
+            </td>
+            <td class="text-right" style="min-width: 210px;">
+              <button class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowTestReport(item)" style="margin-right: 8px;">Report</button>
+              <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onDeleteTest(item)">Remove</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </mat-card>
+  <mat-card *ngIf="addTest" class="tests-content">
+    <div class="subtitle text-center">Select Tests for {{class.name}}</div>
+    <form novalidate #form="ngForm">
+      <div class="table-responsive">
+        <table matSort (matSortChange)="sortAvailableTests($event)" class="table">
+          <thead>
+          <tr>
+            <th scope="col">Icon</th>
+            <th mat-sort-header="name" scope="col">Name</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td></td>
+            <td>
+              <input matInput  placeholder="Test Name" class="filter-item"
+                     name="name" pattern="[a-zA-Z0-9]{2,255}" [(ngModel)]="nameFilter" />
+            </td>
+            <td></td>
+          </tr>
+          <tr *ngFor="let item of available_tests | tableFilter: form.value">
+            <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
+            <td>{{item.name}}</td>
+            <td class="text-right">
+              <button class="button button-outline button-small" mat-stroked-button (click)="onAddTest(item)">Select</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-button class="button button-white" (click)="addTest=false">Close</button>
+    </div>
+  </mat-card>
+</div>

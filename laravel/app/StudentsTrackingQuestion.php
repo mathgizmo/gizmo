@@ -9,7 +9,7 @@ class StudentsTrackingQuestion extends Model
     protected $table = 'students_tracking_questions';
 
     protected $fillable = [
-        'student_id', 'question_id', 'app_id', 'is_right_answer',
+        'student_id', 'question_id', 'app_id', 'class_app_id', 'is_right_answer',
     ];
 
     public $timestamps = true;
@@ -24,5 +24,9 @@ class StudentsTrackingQuestion extends Model
 
     public function application() {
         return $this->belongsTo('App\Application', 'app_id');
+    }
+
+    public function classApplication() {
+        return $this->belongsTo('App\ClassApplication', 'class_app_id');
     }
 }

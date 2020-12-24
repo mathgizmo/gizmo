@@ -4,13 +4,13 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('applications.index')  }}">Manage Assignments</a></li>
-    <li class="breadcrumb-item active">Edit Assignment</li>
+    <li class="breadcrumb-item active">Edit {{ucfirst($application->type)}}</li>
 @endsection
 
 @section('content')
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row">
-            Edit Assignment
+            Edit {{ucfirst($application->type)}}
         </div>
         <form id="application" class="form-horizontal" role="form"
               action="{{ route('applications.update', $application->id) }}" method="POST">
@@ -85,8 +85,20 @@
                     <label for="allow_any_order" class="col-md-2 form-control-label ml-3 font-weight-bold">Order</label>
                     <div class="col-md-8">
                         <select id="allow_any_order" class="form-control" name="allow_any_order">
-                            <option value="0">Topics/Lessons need to be completed in linear order</option>
-                            <option value="1" {{old('allow_any_order', $application->allow_any_order) ? 'selected="selected"' : '' }}>Topics/Lessons can be completed in any order</option>
+                            <option value="0">
+                                @if($application->type == 'test')
+                                    Questions need to be answered in linear order
+                                @else
+                                    Topics/Lessons need to be completed in linear order
+                                @endif
+                            </option>
+                            <option value="1" {{old('allow_any_order', $application->allow_any_order) ? 'selected="selected"' : '' }}>
+                                @if($application->type == 'test')
+                                    Questions need to be answered in any order
+                                @else
+                                    Topics/Lessons can be completed in any order
+                                @endif
+                            </option>
                         </select>
                         @if ($errors->has('allow_any_order'))
                             <span class="form-text">
@@ -95,6 +107,19 @@
                         @endif
                     </div>
                 </div>
+                @if($application->type == 'test')
+                    <div class="form-group row mt-3 {{ $errors->has('duration') ? ' has-error' : '' }}">
+                        <label for="duration" class="col-md-2 form-control-label ml-3 font-weight-bold">Duration in seconds (0 – means unlimited time)</label>
+                        <div class="col-md-8">
+                            <input id="duration" type="number" min="0" step="1" class="form-control" name="duration" value="{{ old('duration', $application->duration) }}">
+                            @if ($errors->has('duration'))
+                                <span class="form-text">
+                                <strong>{{ $errors->first('duration') }}</strong>
+                        </span>
+                            @endif
+                        </div>
+                    </div>
+                @else
                 <div class="form-group row mt-3 {{ $errors->has('testout_attempts') ? ' has-error' : '' }}">
                     <label for="testout_attempts" class="col-md-2 form-control-label ml-3 font-weight-bold">Number of attempts to testout (-1 – means unlimited attempts; 0 – for not testout)</label>
                     <div class="col-md-8">
@@ -117,6 +142,7 @@
                         @endif
                     </div>
                 </div>
+                @endif
             </div>
             <div class="card-footer">
                 <a class="btn btn-secondary" href="{{ route('applications.index') }}">Back</a>

@@ -1,0 +1,50 @@
+﻿<a routerLink="/student/tests" routerLinkActive="active" class="back">
+  {{backLinkText}}
+</a>
+
+<div class="text-center lesson-cotainer">
+  <h2 class="title">{{test.name}}</h2>
+  <div class="lesson-progress-container" *ngIf="test.questions_count > 0">
+    <mat-progress-bar color="warn" class="lesson-progress" mode=determinate [value]="test.complete_percent"></mat-progress-bar>
+    <label class="lesson-progress-label">{{test.answered_questions_count}}/{{test.questions_count}}</label>
+  </div>
+  <div class="timer" [class.danger]="counter < 60" *ngIf="enableTimer && counter > 0">
+    {{counter | timeFormat}}
+  </div>
+
+  <div *ngIf="question !== null">
+    <app-question
+            [question]='question'
+            [incorrectAnswersCount]='0'
+            [ignoreAnswer]="false"
+            [handleEnterPress]="true"
+            (onAnswered)="checkAnswer($event)"
+    ></app-question>
+  </div>
+
+  <div *ngIf="question === null">
+    <div *ngIf="initialLoading == 1">
+      <h2 class="question">Loading....!</h2>
+    </div>
+    <div *ngIf="initialLoading == 0">
+      <div class="question-container">
+        <h2 class="subtitle">Congratulations!</h2>
+        <h3 class="question">
+          <span>You have finished the test.</span>
+          <span *ngIf="correctQuestionRate">
+            Your mark is {{(correctQuestionRate * 100).toFixed(0)}}%.
+          </span>
+        </h3>
+      </div>
+      <a class="button-container" routerLink="/student/tests" routerLinkActive="active">
+        <button
+                mat-raised-button
+                class="button moving-forward-button"
+                style="margin: 16px; color: #000; background-color: #f5f5f5;">
+          <span>Show Tests List</span>
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+

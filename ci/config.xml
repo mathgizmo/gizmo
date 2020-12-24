@@ -3,7 +3,7 @@
     <name>HealthNumeracy</name>
     <preference name="Hostname" value="https://healthnumeracyproject.com" />
     <preference name="Scheme" value="https" />
-    <description>Simple app that hapls peaple to learn math</description>
+    <description>Simple app that helps people to learn math</description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
     </author>

@@ -5,15 +5,15 @@ import {AuthGuard} from './_guards/index';
 
 import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
     ForgotPasswordComponent, ResetPasswordComponent, VerifyEmailComponent} from './_components/auth/index';
-import {AssignmentComponent, TopicComponent, LessonComponent} from './_components/assignment/index';
+import {AssignmentComponent, TestComponent, TopicComponent, LessonComponent} from './_components/assignment/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {ToDoComponent, MyClassesComponent, MyInvitationsComponent, MyClassReportComponent} from './_components/student/index';
+import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyInvitationsComponent, MyClassReportComponent} from './_components/student/index';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
-import {ClassReportComponent, ManageAssignmentsComponent,
+import {ClassReportComponent, ManageAssignmentsComponent, ManageTestsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassAssignmentsComponent, ClassStudentsComponent, ClassToDoComponent} from './_components/teacher/index';
+    ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent, ClassToDoComponent} from './_components/teacher/index';
 
 const authRoutes = [
     {path: 'welcome', component: WelcomeComponent},
@@ -29,9 +29,11 @@ const authRoutes = [
 const teacherRoutes = [
     {path: 'teacher/class', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/review-content', component: ReviewContentComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/assignment', component: ManageAssignmentsComponent,
-        canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/assignment', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/test', component: ManageTestsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/assignments', component: ClassAssignmentsComponent,
+        canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/tests', component: ClassTestsComponent,
         canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/report', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
@@ -43,6 +45,7 @@ const studentRoutes = [
     {path: 'student/class', component: MyClassesComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/class/:class_id/report', component: MyClassReportComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/invitations', component: MyInvitationsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
+    {path: 'student/tests', component: MyTestsComponent, canActivate: [AuthGuard]},
 ];
 
 const routes: Routes = [
@@ -51,6 +54,7 @@ const routes: Routes = [
     {path: 'assignment/:app_id', component: AssignmentComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:app_id/topic/:topic_id', component: TopicComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:app_id/topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
+    {path: 'test/:test_id', component: TestComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},

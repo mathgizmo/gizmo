@@ -3,11 +3,12 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\ClassApplication;
 use App\ClassOfStudents;
-use App\Lesson;
 use App\Progress;
 use App\Student;
 use App\StudentsTrackingQuestion;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -97,7 +98,7 @@ class ClassController extends Controller
             if ($show_extra) {
                 $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
                     $q1->where('classes.id', $class_id);
-                })->get();
+                })->where('type', 'assignment')->get();
                 $now = Carbon::now()->toDateTimeString();
                 foreach ($students as $student) {
                     $student->is_subscribed = true;
@@ -267,7 +268,7 @@ class ClassController extends Controller
                 }
                 return $this->success([
                     'class' => $class,
-                    'assignments' => array_values($class->applications()->orderBy('name', 'ASC')->get()->toArray()),
+                    'assignments' => array_values($class->assignments()->orderBy('name', 'ASC')->get()->toArray()),
                     'students' => array_values($data->toArray()),
                 ]);
             }
@@ -281,7 +282,7 @@ class ClassController extends Controller
                 foreach ($data as $row) {
                     $row->data = json_decode($row->data);
                 }
-                $apps = $class->applications()->orderBy('name', 'ASC')->get()->keyBy('id');
+                $apps = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
                 foreach ($apps as $app) {
                     $class_data = $app->getClassRelatedData($class->id);
                     if ($class_data->is_for_selected_students) {
@@ -304,12 +305,12 @@ class ClassController extends Controller
     public function getAssignments($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
-            $items = $class->applications()->orderBy('name', 'ASC')->get()->keyBy('id');
+            $items = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
             $students = $class->students()->get();
             $students_count = $students->count();
             foreach ($items as $item) {
+                $class_data = $item->getClassRelatedData($class->id);
                 if (!$this->user->is_teacher) {
-                    $class_data = $item->getClassRelatedData($class->id);
                     if ($class_data->is_for_selected_students) {
                         if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
                                 ->where('student_id', $this->user->id)->count() < 1) {
@@ -318,7 +319,6 @@ class ClassController extends Controller
                     }
                 }
                 $item->icon = $item->icon();
-                $class_data = $item->getClassRelatedData($class->id);
                 $item->start_date = $class_data && $class_data->start_date ? $class_data->start_date : null;
                 $item->start_time = $class_data && $class_data->start_time ? $class_data->start_time : null;
                 $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
@@ -372,7 +372,8 @@ class ClassController extends Controller
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
             $available = Application::where('teacher_id', $this->user->id)
-                ->whereNotIn('id', $items->pluck('id')->toArray())->orderBy('name', 'ASC')->get();
+                ->whereNotIn('id', $items->pluck('id')->toArray())
+                ->where('type', 'assignment')->orderBy('name', 'ASC')->get();
             foreach ($available as $item) {
                 $item->icon = $item->icon();
             }
@@ -380,38 +381,6 @@ class ClassController extends Controller
                 'assignments' => array_values($items->sortBy('due_date')->toArray()),
                 'available_assignments' => array_values($available->toArray())
             ]);
-        }
-        return $this->error('Error.');
-    }
-
-    public function addAssignmentToClass($class_id, $app_id) {
-        $students = null;
-        if (request()->filled('students') && request('students')) {
-            $students = Student::whereIn('id', request('students'))->get();
-        }
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-        $exists = DB::table('classes_applications')->where('class_id', $class_id)->where('app_id', $app_id)->first();
-        if ($class && !$exists) {
-            DB::table('classes_applications')->insert([
-                'class_id' => $class->id,
-                'app_id' => $app_id,
-                'start_date' => Carbon::now()->toDateString(),
-                'start_time' => Carbon::now()->format('H:i'),
-                'is_for_selected_students' => $students ? true : false
-            ]);
-            $item = DB::table('classes_applications')
-                ->where('class_id', $class->id)
-                ->where('app_id', $app_id)
-                ->first();
-            if ($students) {
-                foreach ($students as $student) {
-                    DB::table('classes_applications_students')->insert([
-                        'class_app_id' => $item->id,
-                        'student_id' => $student->id,
-                    ]);
-                }
-            }
-            return $this->success(['item' => $item ?: null]);
         }
         return $this->error('Error.');
     }
@@ -432,7 +401,100 @@ class ClassController extends Controller
         return $this->error('Error.');
     }
 
-    public function changeAssignmentStudents($class_id, $app_id) {
+    public function getTests($class_id) {
+        $class = ClassOfStudents::where('id', $class_id)->first();
+        if ($class) {
+            $items = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
+            foreach ($items as $item) {
+                $class_data = $item->getClassRelatedData($class->id);
+                if (!$this->user->is_teacher) {
+                    if ($class_data->is_for_selected_students) {
+                        if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                                ->where('student_id', $this->user->id)->count() < 1) {
+                            $items->forget($item->id);
+                        }
+                    }
+                }
+                $item->icon = $item->icon();
+                $item->start_date = $class_data && $class_data->start_date ? $class_data->start_date : null;
+                $item->start_time = $class_data && $class_data->start_time ? $class_data->start_time : null;
+                $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
+                $item->due_time = $class_data && $class_data->due_time ? $class_data->due_time : null;
+                $item->duration = $class_data && $class_data->duration ? $class_data->duration : null;
+                $item->password = $class_data && $class_data->password ? $class_data->password : null;
+                $item->color = $class_data && $class_data->color ? $class_data->color : null;
+                $item->is_for_selected_students = $class_data && $class_data->is_for_selected_students;
+                if ($item->is_for_selected_students) {
+                    $item->students = DB::table('classes_applications_students')
+                        ->where('class_app_id', $class_data->id)->pluck('student_id');
+                }
+            }
+            $available = Application::where('teacher_id', $this->user->id)
+                ->whereNotIn('id', $items->pluck('id')->toArray())
+                ->where('type', 'test')->orderBy('name', 'ASC')->get();
+            foreach ($available as $item) {
+                $item->icon = $item->icon();
+            }
+            return $this->success([
+                'tests' => array_values($items->sortBy('due_date')->toArray()),
+                'available_tests' => array_values($available->toArray())
+            ]);
+        }
+        return $this->error('Error.');
+    }
+
+    public function changeTest($class_id, $app_id) {
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        if ($class) {
+            DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)
+                ->update([
+                    'start_date' => request('start_date') ?: null,
+                    'start_time' => request('start_time') ?: null,
+                    'due_date' => request('due_date') ?: null,
+                    'due_time' => request('due_time') ?: null,
+                    'duration' => request('duration') ?: null,
+                    'password' => request('password') ?: null,
+                    'color' => request('color') ?: null
+                ]);
+            return $this->success('Ok.');
+        }
+        return $this->error('Error.');
+    }
+
+    public function addApplicationToClass($class_id, $app_id) {
+        $students = null;
+        if (request()->filled('students') && request('students')) {
+            $students = Student::whereIn('id', request('students'))->get();
+        }
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $exists = DB::table('classes_applications')->where('class_id', $class_id)->where('app_id', $app_id)->first();
+        if ($class && !$exists) {
+            DB::table('classes_applications')->insert([
+                'class_id' => $class->id,
+                'app_id' => $app_id,
+                'start_date' => Carbon::now()->toDateString(),
+                'start_time' => Carbon::now()->format('H:i'),
+                'duration' => $exists->duration ?: null,
+                'is_for_selected_students' => $students ? true : false
+            ]);
+            $item = DB::table('classes_applications')
+                ->where('class_id', $class->id)
+                ->where('app_id', $app_id)
+                ->first();
+            if ($students) {
+                foreach ($students as $student) {
+                    DB::table('classes_applications_students')->insert([
+                        'class_app_id' => $item->id,
+                        'student_id' => $student->id,
+                    ]);
+                }
+            }
+            return $this->success(['item' => $item ?: null]);
+        }
+        return $this->error('Error.');
+    }
+
+    public function changeApplicationStudents($class_id, $app_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if (!$class) {
             return $this->error('Class Not Found', 404);
@@ -460,7 +522,7 @@ class ClassController extends Controller
         return $this->success('Ok.');
     }
 
-    public function deleteAssignmentFromClass($class_id, $app_id) {
+    public function deleteApplicationFromClass($class_id, $app_id) {
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
             $item = DB::table('classes_applications')
@@ -536,7 +598,7 @@ class ClassController extends Controller
             $query->whereHas('application', function ($q1) use ($class_id) {
                 $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id) {
                     $q2->where('classes.id', intval($class_id));
-                });
+                })->where('type', 'assignment');
             });
         }
         if (request()->has('student_id') && request('student_id')) {
@@ -610,5 +672,42 @@ class ClassController extends Controller
         return $this->success([
             'items' => $data
         ]);
+    }
+
+    public function getTestReport($class_id, $app_id) {
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
+        if ($class && $class_app) {
+            $students = $class->students()
+                ->leftJoin('classes_applications_students', 'classes_applications_students.student_id', '=', 'students.id')
+                ->where('classes_applications_students.class_app_id', $class_app->id)
+                ->where('classes_applications_students.mark', '>', 0)
+                ->orderBy('email')
+                ->get([
+                    'students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered',
+                    'classes_applications_students.mark', 'classes_applications_students.start_at', 'classes_applications_students.end_at'
+                ]);
+            return $this->success(['students' => array_values($students->toArray())]);
+        }
+        return $this->error('Error.', 500);
+    }
+
+    public function resetTestProgress(Request $request, $class_id, $app_id) {
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
+        if ($class && $class_app) {
+            $students = request('students');
+            DB::table('classes_applications_students')->where('class_app_id', $class_app->id)
+                ->whereIn('student_id', $students)->update([
+                    'mark' => null,
+                    'start_at' => null,
+                    'end_at' => null,
+                    'questions_count' => null,
+                ]);
+            DB::table('students_tracking_questions')->where('class_app_id', $class_app->id)
+                ->whereIn('student_id', $students)->delete();
+            return $this->success(['students' => $students], 200);
+        }
+        return $this->error('Error.', 500);
     }
 }

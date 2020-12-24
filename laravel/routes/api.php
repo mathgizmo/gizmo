@@ -51,6 +51,7 @@ $api->version('v1', function ($api) {
         $api->post('/profile', 'App\Http\APIControllers\ProfileController@update');
         $api->post('/profile/app', 'App\Http\APIControllers\ProfileController@changeApplication');
         $api->get('/profile/todo', 'App\Http\APIControllers\ProfileController@getToDos');
+        $api->get('/profile/tests', 'App\Http\APIControllers\ProfileController@getTests');
         $api->get('/profile/classes', 'App\Http\APIControllers\ProfileController@getClasses');
         $api->get('/profile/classes/invitations', 'App\Http\APIControllers\ProfileController@getClassInvitations');
         $api->post('/profile/classes/{class_id}/subscribe', 'App\Http\APIControllers\ProfileController@subscribeClass');
@@ -64,19 +65,34 @@ $api->version('v1', function ($api) {
         $api->post('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@addStudent');
         $api->delete('/classes/{class_id}/students/{student_id}', 'App\Http\APIControllers\ClassController@deleteStudent');
         $api->get('/classes/{class_id}/assignments', 'App\Http\APIControllers\ClassController@getAssignments');
-        $api->post('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@addAssignmentToClass');
+        $api->post('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@addApplicationToClass');
         $api->put('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@changeAssignment');
-        $api->put('/classes/{class_id}/assignments/{app_id}/students', 'App\Http\APIControllers\ClassController@changeAssignmentStudents');
-        $api->delete('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@deleteAssignmentFromClass');
+        $api->put('/classes/{class_id}/assignments/{app_id}/students', 'App\Http\APIControllers\ClassController@changeApplicationStudents');
+        $api->delete('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@deleteApplicationFromClass');
+        $api->get('/classes/{class_id}/tests', 'App\Http\APIControllers\ClassController@getTests');
+        $api->post('/classes/{class_id}/tests/{app_id}', 'App\Http\APIControllers\ClassController@addApplicationToClass');
+        $api->put('/classes/{class_id}/tests/{app_id}', 'App\Http\APIControllers\ClassController@changeTest');
+        $api->put('/classes/{class_id}/tests/{app_id}/students', 'App\Http\APIControllers\ClassController@changeApplicationStudents');
+        $api->delete('/classes/{class_id}/tests/{app_id}', 'App\Http\APIControllers\ClassController@deleteApplicationFromClass');
+        $api->get('/classes/{class_id}/tests/{app_id}/report', 'App\Http\APIControllers\ClassController@getTestReport');
+        $api->post('/classes/{class_id}/tests/{app_id}/reset', 'App\Http\APIControllers\ClassController@resetTestProgress');
         $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
         $api->get('/classes/{class_id}/todo', 'App\Http\APIControllers\ClassController@getToDos');
         $api->get('/classes/{class_id}/answers-statistics', 'App\Http\APIControllers\ClassController@getAnswersStatistics');
 
-        $api->get('/assignments', 'App\Http\APIControllers\ApplicationController@all');
-        $api->post('/assignments', 'App\Http\APIControllers\ApplicationController@store');
+        $api->get('/assignments', 'App\Http\APIControllers\ApplicationController@getAssignments');
+        $api->post('/assignments', 'App\Http\APIControllers\ApplicationController@storeAssignment');
         $api->put('/assignments/{app_id}', 'App\Http\APIControllers\ApplicationController@update');
         $api->delete('/assignments/{app_id}', 'App\Http\APIControllers\ApplicationController@delete');
         $api->get('/assignments/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');
+
+        $api->post('/tests/{test_id}/start', 'App\Http\APIControllers\ApplicationController@startTest');
+        $api->post('/tests/{test_id}/finish', 'App\Http\APIControllers\ApplicationController@finishTest');
+        $api->get('/tests', 'App\Http\APIControllers\ApplicationController@getTests');
+        $api->post('/tests', 'App\Http\APIControllers\ApplicationController@storeTest');
+        $api->put('/tests/{app_id}', 'App\Http\APIControllers\ApplicationController@update');
+        $api->delete('/tests/{app_id}', 'App\Http\APIControllers\ApplicationController@delete');
+        $api->get('/tests/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');
 
         $api->get('/dashboard' , 'App\Http\APIControllers\DashboardController@getDashboards');
         $api->get('/content' , 'App\Http\APIControllers\ContentController@index');

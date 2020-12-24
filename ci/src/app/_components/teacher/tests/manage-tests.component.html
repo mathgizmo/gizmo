@@ -1,0 +1,39 @@
+<div class="tests">
+    <mat-card class="tests-content">
+        <span class="title">Manage Tests</span>
+        <form novalidate #form="ngForm">
+            <div class="table-responsive">
+                <table matSort (matSortChange)="sortData($event)" class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Icon</th>
+                        <th mat-sort-header="name" scope="col">Name</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input matInput class="filter-item" placeholder="Name"
+                                   type="text" name="name" id="name-filter" [(ngModel)]="name" [value]="">
+                        </td>
+                        <td class="text-right">
+                            <button mat-button class="button button-outline button-small" (click)="onAddTest()">Create Test</button>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let item of tests | tableFilter: form.value">
+                        <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
+                        <td>{{item.name}}</td>
+                        <td class="text-right" style="min-width: 160px">
+                            <button mat-stroked-button class="button button-outline button-small" style="margin-right: 8px;" (click)="onEditTest(item)">Edit</button>
+                            <button mat-stroked-button class="button button-danger button-small" type="button" (click)="onDeleteTest(item.id)">Remove</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+    </mat-card>
+</div>

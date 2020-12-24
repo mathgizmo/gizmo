@@ -1,7 +1,6 @@
 ﻿<div *ngIf="showMenu" class="menu" id='main-menu'>
     <button mat-icon-button [matMenuTriggerFor]="menu">
         <img src="./assets/images/menu-button-white.svg" class="menu-icon" alt="menu" />
-        <!--<mat-icon class="menu-icon">menu</mat-icon>-->
     </button>
     <mat-menu #menu="matMenu" class="menu">
         <a *ngIf="user.role === 'teacher' || user.role === 'student'" mat-menu-item routerLink="dashboard" class="menu-item">
@@ -13,8 +12,12 @@
             Home
         </a>
         <a *ngIf="user.role !== 'teacher'" mat-menu-item routerLink="to-do" class="menu-item">
-            <span class="material-icons">grading</span>
+            <span class="material-icons">assignment</span>
             To Do
+        </a>
+        <a *ngIf="user.role === 'student'" mat-menu-item routerLink="student/tests" class="menu-item">
+            <span class="material-icons">assignment_turned_in</span>
+            Tests
         </a>
         <a *ngIf="user.role === 'student'" mat-menu-item routerLink="student/class" class="menu-item">
             <span class="material-icons">class</span>
@@ -29,11 +32,15 @@
             Classrooms
         </a>
         <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/assignment" class="menu-item">
-            <span class="material-icons">edit</span>
+            <span class="material-icons">assignment</span>
             Assignments
         </a>
+        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/test" class="menu-item">
+            <span class="material-icons">assignment_turned_in</span>
+            Tests
+        </a>
         <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/review-content" class="menu-item">
-            <span class="material-icons">grading</span>
+            <span class="material-icons">extension</span>
             Review Content
         </a>
         <a mat-menu-item routerLink="profile" class="menu-item">
@@ -55,6 +62,7 @@
         <a mat-menu-item routerLink="student/invitations" class="menu-item">My Invitations</a>
     </mat-menu> -->
 </div>
+
 <router-outlet></router-outlet>
 
 <div [hidden] = !HTTPActivity>

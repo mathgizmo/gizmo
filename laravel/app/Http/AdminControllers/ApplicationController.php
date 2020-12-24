@@ -24,6 +24,9 @@ class ApplicationController extends Controller
         if ($request['name']) {
             $query->where('name', 'LIKE', '%' . $request['name'] . '%');
         }
+        if ($request['type']) {
+            $query->where('type', $request['type']);
+        }
         if ($request['teacher']) {
             $teacher = $request['teacher'];
             $query->whereHas('teacher', function ($q) use ($teacher) {
@@ -41,7 +44,7 @@ class ApplicationController extends Controller
         return view('applications.index', ['applications' => $query->paginate(10)->appends(request()->query())]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $icons = array();
@@ -53,7 +56,8 @@ class ApplicationController extends Controller
         $tree = (new Application())->getTree();
         return view('applications.create', array(
             'icons' => $icons,
-            'tree' => $tree
+            'tree' => $tree,
+            'type' => $request->input('type')
         ));
     }
 
@@ -63,16 +67,18 @@ class ApplicationController extends Controller
         $this->validate($request, [
             'name' => 'required',
         ]);
-        $application = new Application();
-        $application->name = $request['name'];
+        $app = new Application();
+        $app->name = $request['name'];
         if (isset($request['icon']) && $request['icon']) {
-            $application->icon = $request['icon'];
+            $app->icon = $request['icon'];
         }
-        $application->allow_any_order = $request['allow_any_order'] ? true : false;
-        $application->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
-        $application->question_num = $request['question_num'] ?: 3;
-        $application->save();
-        $application->updateTree($request);
+        $app->allow_any_order = $request['allow_any_order'] ? true : false;
+        $app->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
+        $app->question_num = $request['question_num'] ?: 3;
+        $app->type = $request['type'] ?: 'assignment';
+        $app->duration = $request['duration'] ?: null;
+        $app->save();
+        $app->updateTree($request);
         return redirect('/applications')->with(array('message' => 'Created successfully'));
     }
 
@@ -100,21 +106,22 @@ class ApplicationController extends Controller
         $this->validate($request, [
             'name' => 'required',
         ]);
-        $application = Application::where('id', $id)->first();
-        if (!$application) {
+        $app = Application::where('id', $id)->first();
+        if (!$app) {
             return redirect('/applications')->with(array('message' => 'Can\'t update'));
         }
         if (isset($request['name']) && $request['name']) {
-            $application->name = $request['name'];
+            $app->name = $request['name'];
         }
         if (isset($request['icon']) && $request['icon']) {
-            $application->icon = $request['icon'];
+            $app->icon = $request['icon'];
         }
-        $application->allow_any_order = $request['allow_any_order'] ? true : false;
-        $application->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
-        $application->question_num = $request['question_num'] ?: 3;
-        $application->save();
-        $application->updateTree($request);
+        $app->allow_any_order = $request['allow_any_order'] ? true : false;
+        $app->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
+        $app->question_num = $request['question_num'] ?: 3;
+        $app->duration = $request['duration'] ?: null;
+        $app->save();
+        $app->updateTree($request);
         return redirect('/applications')->with(array('message' => 'Updated successfully'));
     }
 
@@ -139,7 +146,11 @@ class ApplicationController extends Controller
         }
         $limit = $request['limit'] == 'all' ? null : ((int)$request['limit'] > 0 ? (int)$request['limit'] : 5);
         $pattern = $request['pattern'];
-        $query = Application::query()->where('name', 'LIKE', '%'.$pattern.'%');
+        $query = Application::query();
+        $query->where('name', 'LIKE', '%'.$pattern.'%');
+        if ($request['type']) {
+            $query->where('type', $request['type']);
+        }
         if ($limit) $query->limit($limit);
         return $query->get();
     }

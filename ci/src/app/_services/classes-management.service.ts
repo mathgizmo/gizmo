@@ -119,6 +119,39 @@ export class ClassesManagementService {
         return this.http.delete('/classes/' + class_id + '/assignments/' + app_id);
     }
 
+    public getTests(class_id) {
+        return this.http.get('/classes/' + class_id + '/tests');
+    }
+
+    public changeTest(class_id, item) {
+        return this.http.put('/classes/' + class_id + '/tests/' + item.id, item);
+    }
+
+    public changeTestStudents(class_id, app_id, students = null) {
+        return this.http.put('/classes/' + class_id + '/tests/' + app_id + '/students', { students: students });
+    }
+
+    public addTestToClass(class_id, app_id, students = null) {
+        return this.http.post('/classes/' + class_id + '/tests/' + app_id, { students: students })
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                })
+            );
+    }
+
+    public deleteTestFromClass(class_id, app_id) {
+        return this.http.delete('/classes/' + class_id + '/tests/' + app_id);
+    }
+
+    public getTestReport(class_id, app_id) {
+        return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/report');
+    }
+
+    public resetTestProgress(class_id, app_id, students = []) {
+        return this.http.post('/classes/' + class_id + '/tests/' + app_id + '/reset', { students: students });
+    }
+
     public getReport(class_id) {
         return this.http.get('/classes/' + class_id + '/report');
     }

@@ -60,7 +60,14 @@ class ClassController extends Controller
             ],
         ]);
         $class = ClassOfStudents::create($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations'));
-        foreach ($request['application'] as $key => $value) {
+        foreach ($request['assignment'] as $key => $value) {
+            DB::table('classes_applications')->insert([
+                'class_id' => $class->id,
+                'app_id' => $key,
+                'due_date' => $value['due_date'] ?: null
+            ]);
+        }
+        foreach ($request['test'] as $key => $value) {
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
                 'app_id' => $key,
@@ -98,8 +105,23 @@ class ClassController extends Controller
         }
         $class->update($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations'));
         $old_apps = $class->applications()->get()->keyBy('id');
-        if ($request['application']) {
-            foreach ($request['application'] as $key => $value) {
+        if ($request['assignment']) {
+            foreach ($request['assignment'] as $key => $value) {
+                if ($old_apps->where('id', $key)->count() > 0) {
+                    $old_apps->forget($key);
+                    DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $key)
+                        ->update(['due_date' => $value['due_date'] ?: null]);
+                } else {
+                    DB::table('classes_applications')->insert([
+                        'class_id' => $class->id,
+                        'app_id' => $key,
+                        'due_date' => $value['due_date'] ?: null
+                    ]);
+                }
+            }
+        }
+        if ($request['test']) {
+            foreach ($request['test'] as $key => $value) {
                 if ($old_apps->where('id', $key)->count() > 0) {
                     $old_apps->forget($key);
                     DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $key)

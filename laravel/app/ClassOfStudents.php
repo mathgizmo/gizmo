@@ -9,7 +9,8 @@ class ClassOfStudents extends Model
 {
     protected $table = 'classes';
 
-    protected $fillable = ['id', 'name', 'teacher_id', 'class_type', 'subscription_type', 'invitations'];
+    protected $fillable = ['id', 'name', 'teacher_id', 'class_type', 'subscription_type',
+        'invitations', 'test_duration_multiply_by'];
 
     public function teacher() {
         return $this->belongsTo('App\Student', 'teacher_id');
@@ -21,6 +22,16 @@ class ClassOfStudents extends Model
 
     public function applications() {
         return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id');
+    }
+
+    public function assignments() {
+        return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id')
+            ->where('type', 'assignment');
+    }
+
+    public function tests() {
+        return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id')
+            ->where('type', 'test');
     }
 
     public function delete()

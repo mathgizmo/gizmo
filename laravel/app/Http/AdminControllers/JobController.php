@@ -25,7 +25,7 @@ class JobController extends Controller
                 try {
                     $students = $class->students()->orderBy('name')
                         ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email']);
-                    $apps = $class->applications()->get();
+                    $apps = $class->assignments()->get();
                     foreach ($students as $student) {
                         $data = [];
                         foreach ($apps as $app) {
@@ -124,7 +124,7 @@ class JobController extends Controller
 
     public function deleteOldAnswersStatistics() {
         $this->checkAccess(auth()->user()->isSuperAdmin());
-        $date = Carbon::now()->subDays(100)->toDateString();
+        $date = Carbon::now()->subYears(1)->toDateString();
         StudentsTrackingQuestion::where('created_at', '<', $date)->delete();
         return response()->json(['status' => 'success'], 200);
     }

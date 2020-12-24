@@ -3,9 +3,11 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\ClassApplication;
 use App\ClassOfStudents;
 use App\Progress;
 use App\Student;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -94,6 +96,14 @@ class ProfileController extends Controller
     }
 
     public function getToDos() {
+        return $this->getApplications('assignment');
+    }
+
+    public function getTests() {
+        return $this->getApplications('test');
+    }
+
+    private function getApplications($type = 'assignment') {
         $student = $this->user;
         $items = [];
         if ($student->is_self_study) {
@@ -104,7 +114,7 @@ class ProfileController extends Controller
                 'subscription_type' => 'open',
                 'invitations' => null
             ];
-            foreach (Application::whereDoesntHave('teacher')->get() as $item) {
+            foreach (Application::whereDoesntHave('teacher')->where('type', $type)->get() as $item) {
                 $item->class = $classObj;
                 $item->icon = $item->icon();
                 $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
@@ -116,12 +126,14 @@ class ProfileController extends Controller
                 $item->due_at = null;
                 $item->is_blocked = false;
                 $item->start_at = null;
+                $item->duration = $item->duration ? CarbonInterval::seconds($item->duration)->cascade()->forHumans() : null;
                 $completed_at = $item->getCompletedDate($student->id);
                 $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
                 array_push($items, $item);
             }
         } else {
-            $apps = DB::table('classes_applications')->whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->get();
+            $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
+                ->whereHas($type)->get();
             foreach ($apps as $row) {
                 if ($row->is_for_selected_students) {
                     if (DB::table('classes_applications_students')->where('class_app_id', $row->id)
@@ -135,6 +147,7 @@ class ProfileController extends Controller
                     continue;
                 }
                 $item->class = $classObj;
+                $item->class_app_id = $row->id;
                 $item->icon = $item->icon();
                 $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
                         ->where('student_id', $student->id)->count() > 0;
@@ -148,16 +161,26 @@ class ProfileController extends Controller
                 $item->due_time = $row->due_time ?: '00:00:00';
                 $item->due_date = $row->due_date;
                 $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                $item->duration = $row->duration ? CarbonInterval::seconds($row->duration)->cascade()->forHumans() : null;
                 $now = Carbon::now()->toDateTimeString();
                 if ($row->start_date) {
                     $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
                 } else {
                     $start_at = null;
                 }
-                $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+                if ($type == 'test') {
+                    $stud_data = DB::table('classes_applications_students')->where('class_app_id', $row->id)
+                        ->where('student_id', $student->id)->first();
+                    $item->mark = $stud_data ? $stud_data->mark : null;
+                    $item->is_completed = $item->mark ? true : false;
+                    $item->completed_at = $stud_data && $stud_data->end_at ? Carbon::parse($stud_data->end_at)->format('Y-m-d g:i A') : null;
+                } else {
+                    $item->mark = null;
+                    $completed_at = $item->getCompletedDate($student->id);
+                    $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                }
+                $item->is_blocked = $item->mark || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
                 $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
-                $completed_at = $item->getCompletedDate($student->id);
-                $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
                 array_push($items, $item);
             }
         }
