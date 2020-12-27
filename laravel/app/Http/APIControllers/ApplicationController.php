@@ -77,7 +77,7 @@ class ApplicationController extends Controller
         DB::table('students_tracking_questions')->where('class_app_id', $test_id)
             ->where('student_id', $this->user->id)->delete();
         return $this->success([
-            'test' => new TestResource($test)
+            'test' => new TestResource($test, $this->user)
         ], 200);
     }
 

@@ -101,6 +101,10 @@ class ClassController extends Controller
                 })->where('type', 'assignment')->get();
                 $now = Carbon::now()->toDateTimeString();
                 foreach ($students as $student) {
+                    $class_student = DB::table('classes_students')
+                        ->where('class_id', $class_id)
+                        ->where('student_id', $student->id)->first();
+                    $student->test_duration_multiply_by = $class_student ? $class_student->test_duration_multiply_by : 1;
                     $student->is_subscribed = true;
                     $finished_count = 0; $past_due_count = 0;
                     $student_assignments = $apps->keyBy('id');
@@ -247,6 +251,16 @@ class ClassController extends Controller
             }
         }
         return $this->error('Error.', 404);
+    }
+
+    public function updateStudent(Request $request, $class_id, $student_id) {
+        DB::table('classes_students')
+            ->where('class_id', $class_id)
+            ->where('student_id', $student_id)
+            ->update([
+                'test_duration_multiply_by' => $request['test_duration_multiply_by'] ?: 1
+            ]);
+        return $this->success('updated!', 200);
     }
 
     public function deleteStudent($class_id, $student_id) {

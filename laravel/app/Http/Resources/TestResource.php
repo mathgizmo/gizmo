@@ -4,12 +4,22 @@ namespace App\Http\Resources;
 
 use App\Question;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class TestResource extends JsonResource
 {
+    protected $student;
+
+    public function __construct($resource, $student = null)
+    {
+        parent::__construct($resource);
+        $this->resource = $resource;
+        $this->student = $student;
+    }
+
     public function toArray($request)
     {
-       $test = [
+        $test = [
             'id' => $this->id,
             'class_id' => $this->class_id,
             'app_id' => $this->app_id,
@@ -20,6 +30,15 @@ class TestResource extends JsonResource
             'duration' => $this->duration,
             'has_password' => $this->password ? true : false,
         ];
+        if ($this->student) {
+            $class_student = DB::table('classes_students')
+                ->where('class_id', $this->class_id)
+                ->where('student_id', $this->student->id)->first();
+            $duration = $this->duration && $class_student
+                ? ($this->duration * $class_student->test_duration_multiply_by)
+                : ($this->duration ?: null);
+            $test['duration'] = $duration;
+        }
         $app = $this->application ?: null;
         $test['name'] = $app ? $app->name : $this->app_id;
         // $test['icon'] = $app ? $app->icon() : '/images/default-icon.svg';

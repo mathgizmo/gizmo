@@ -120,6 +120,22 @@ export class ClassStudentsComponent implements OnInit {
         });
     }
 
+    onTestDurationChanged(item, newDuration) {
+        item.test_duration_multiply_by = newDuration;
+        this.classService.changeStudent(this.classId, item)
+            .subscribe(assignments => {
+                this.snackBar.open('Test Duration Multiplier Saved!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                this.snackBar.open('Error occurred while saving Test Duration Multiplier!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
+            });
+    }
+
     sortData(sort: Sort) {
         const data = this.students.slice();
         if (!sort.active || sort.direction === '') {

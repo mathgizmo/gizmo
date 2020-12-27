@@ -94,6 +94,10 @@ export class ClassesManagementService {
         return this.http.delete('/classes/' + class_id + '/students/' + student_id);
     }
 
+    public changeStudent(class_id, item) {
+        return this.http.put('/classes/' + class_id + '/students/' + item.id, item);
+    }
+
     public getAssignments(class_id) {
         return this.http.get('/classes/' + class_id + '/assignments');
     }
