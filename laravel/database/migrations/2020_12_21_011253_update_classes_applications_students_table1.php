@@ -18,6 +18,7 @@ class UpdateClassesApplicationsStudentsTable1 extends Migration
             $table->double('mark')->nullable(true);
             $table->timestamp('start_at')->nullable(true);
             $table->timestamp('end_at')->nullable(true);
+            $table->boolean('is_revealed')->default(false);
         });
     }
 

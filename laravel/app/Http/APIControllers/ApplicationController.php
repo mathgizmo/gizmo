@@ -50,8 +50,28 @@ class ApplicationController extends Controller
         }
         $class_app_stud = DB::table('classes_applications_students')->where('class_app_id', $test->id)
             ->where('student_id', $this->user->id)->first();
-        if ($class_app_stud && $class_app_stud->mark) {
+        if ($class_app_stud && $class_app_stud->end_at) {
             return $this->error('You already finished this test!', 410);
+        }
+        if ($test->start_date || $test->due_date) {
+            $now = \Illuminate\Support\Carbon::now()->toDateTimeString();
+            if ($test->start_date) {
+                $start_at = $test->start_time ? $test->start_date.' '.$test->start_time : $test->start_date.' 00:00:00';
+            } else {
+                $start_at = null;
+            }
+            if ($test->due_date) {
+                $due_at = $test->due_time ? $test->due_date.' '.$test->due_time : $test->due_date.' 00:00:00';
+            } else {
+                $due_at = null;
+            }
+            $is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+            if ($is_blocked) {
+                return $this->error('This test in unavailable at the moment!', 400);
+            }
+        }
+        if ($test->password && (!$class_app_stud || !$class_app_stud->is_revealed)) {
+            return $this->error('The user dont have access to this test!', 400);
         }
         $exists = DB::table('classes_applications_students')->where('class_app_id', $test->id)
                 ->where('student_id', $this->user->id)->count() > 0;

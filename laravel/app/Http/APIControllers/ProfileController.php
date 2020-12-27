@@ -103,6 +103,41 @@ class ProfileController extends Controller
         return $this->getApplications('test');
     }
 
+    public function revealTest() {
+        $student = $this->user;
+        $selected = null;
+        if (request()->has('password')) {
+            $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
+                ->whereHas('test')->where('password', request('password'))->get();
+            foreach ($apps as $app) {
+                $class_app_stud = DB::table('classes_applications_students')->where('class_app_id', $app->id)
+                    ->where('student_id', $student->id)->first();
+                if ($app->is_for_selected_students && !$class_app_stud) {
+                    continue;
+                }
+                if ($class_app_stud) {
+                    DB::table('classes_applications_students')->where('class_app_id', $app->id)
+                        ->where('student_id', $student->id)->update([
+                            'is_revealed' => true
+                        ]);
+                } else {
+                    DB::table('classes_applications_students')->insert([
+                        'class_app_id' => $app->id,
+                        'student_id' => $student->id,
+                        'is_revealed' => true
+                    ]);
+                }
+                $selected = $app;
+            }
+        }
+        if ($selected) {
+            return $this->success([
+                'class_app_id' => $selected->id
+            ], 200);
+        }
+        return $this->error('Test Not Found!', 404);
+    }
+
     private function getApplications($type = 'assignment') {
         $student = $this->user;
         $items = [];
@@ -171,7 +206,7 @@ class ProfileController extends Controller
                     $stud_data = DB::table('classes_applications_students')->where('class_app_id', $row->id)
                         ->where('student_id', $student->id)->first();
                     $item->mark = $stud_data ? $stud_data->mark : null;
-                    $item->is_completed = $item->mark ? true : false;
+                    $item->is_completed = $stud_data && $stud_data->end_at;
                     $item->completed_at = $stud_data && $stud_data->end_at ? Carbon::parse($stud_data->end_at)->format('Y-m-d g:i A') : null;
                     $class_student = DB::table('classes_students')
                         ->where('class_id', $row->class_id)
@@ -180,12 +215,15 @@ class ProfileController extends Controller
                         ? ($row->duration * $class_student->test_duration_multiply_by)
                         : ($row->duration ?: null);
                     $item->duration = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
+                    if ($row->password && DB::table('classes_applications_students')->where('class_app_id', $row->id)
+                            ->where('student_id', $student->id)->where('is_revealed', 1)->count() < 1) {
+                        continue;
+                    }
                 } else {
-                    $item->mark = null;
                     $completed_at = $item->getCompletedDate($student->id);
                     $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
                 }
-                $item->is_blocked = $item->mark || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+                $item->is_blocked = $item->is_completed || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
                 $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
                 array_push($items, $item);
             }

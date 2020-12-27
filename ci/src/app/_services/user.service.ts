@@ -63,6 +63,10 @@ export class UserService {
             );
     }
 
+    public revealTest(secret) {
+        return this.http.post('/profile/tests/reveal', {password: secret});
+    }
+
     public getClasses() {
         return this.http.get('/profile/classes');
     }

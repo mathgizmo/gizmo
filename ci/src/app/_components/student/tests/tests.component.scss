@@ -1,3 +1,5 @@
+@import '../../../../colors';
+
 .applications {
   display: flex;
   justify-content: center;
@@ -129,6 +131,22 @@
 .disabled, .disabled * {
   cursor: not-allowed !important;
   opacity: 0.88 !important;
+}
+
+.active-test {
+  background: #f0f8ff;
+}
+
+.secret-test {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.button-small {
+  font-size: 0.8em !important;
 }
 
 mat-card {

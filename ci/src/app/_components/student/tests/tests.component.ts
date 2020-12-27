@@ -28,6 +28,9 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
+    public currentTest = null;
+    public password = null;
+
     constructor(
         private userService: UserService,
         private sanitizer: DomSanitizer,
@@ -43,25 +46,39 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        const test = localStorage.getItem('current_test');
+        if (test) {
+            this.currentTest = JSON.parse(test);
+        }
         this.userService.getTests()
             .subscribe(response => {
                 this.applications = response.filter(app => !app.is_completed);
                 this.completedApplications = response.filter(app => app.is_completed);
-            });
-        this.checkAvailabilityIntervalId = setInterval(() => {
-            const now = moment();
-            this.applications.forEach(app => {
-                if (app.start_date || app.due_date) {
-                    const start = app.start_date
-                        ? moment(app.start_date + ' ' + app.start_time, 'YYYY-MM-DD HH:mm:ss')
-                        : null;
-                    const due = app.due_date
-                        ? moment(app.due_date + ' ' + app.due_time, 'YYYY-MM-DD HH:mm:ss')
-                        : null;
-                    app.is_blocked = (start && start.isAfter(now)) || (due && due.isBefore(now));
+                if (this.currentTest) {
+                    this.checkAppsAvailability();
                 }
             });
+        this.checkAvailabilityIntervalId = setInterval(() => {
+            this.checkAppsAvailability();
         }, 3000);
+    }
+
+    checkAppsAvailability() {
+        const now = moment();
+        this.applications.forEach(app => {
+            if (app.start_date || app.due_date) {
+                const start = app.start_date
+                    ? moment(app.start_date + ' ' + app.start_time, 'YYYY-MM-DD HH:mm:ss')
+                    : null;
+                const due = app.due_date
+                    ? moment(app.due_date + ' ' + app.due_time, 'YYYY-MM-DD HH:mm:ss')
+                    : null;
+                app.is_blocked = (start && start.isAfter(now)) || (due && due.isBefore(now));
+            }
+            if (this.currentTest) {
+                app.is_blocked = app.class_app_id !== this.currentTest.id;
+            }
+        });
     }
 
     ngOnDestroy() {
@@ -73,6 +90,26 @@ export class MyTestsComponent implements OnInit, OnDestroy {
             return;
         }
         this.router.navigate(['/test/' + app.class_app_id]);
+    }
+
+    onStartSecretTest() {
+        this.userService.revealTest(this.password)
+            .subscribe(response => {
+                this.router.navigate(['/test/' + response.class_app_id]);
+            }, error => {
+                let message = '';
+                if (typeof error === 'object') {
+                    Object.values(error).forEach(x => {
+                        message += x + ' ';
+                    });
+                } else {
+                    message = error;
+                }
+                this.snackBar.open(message ? message : 'Unable to open secret test!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
+            });
     }
 
     setIcon(image) {

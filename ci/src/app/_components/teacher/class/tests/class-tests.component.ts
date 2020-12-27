@@ -244,6 +244,8 @@ export class ClassTestsComponent implements OnInit {
                     if (!students || students.length < 1) { return; }
                     this.classService.addTestToClass(this.classId, app.id, students)
                         .subscribe(newApp => {
+                            app.password = null;
+                            app.duration = newApp.duration || null;
                             app.start_date = newApp.start_date;
                             app.start_time = newApp.start_time;
                             app.is_for_selected_students = true;
@@ -275,6 +277,8 @@ export class ClassTestsComponent implements OnInit {
             } else {
                 this.classService.addTestToClass(this.classId, app.id)
                     .subscribe(newApp => {
+                        app.password = null;
+                        app.duration = newApp.duration || null;
                         app.start_date = newApp.start_date;
                         app.start_time = newApp.start_time;
                         app.is_for_selected_students = false;
@@ -382,6 +386,22 @@ export class ClassTestsComponent implements OnInit {
                 });
             }, error => {
                 this.snackBar.open('Error occurred while saving Duration!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
+            });
+    }
+
+    onPasswordChanged(item, newPassword) {
+        item.password = newPassword;
+        this.classService.changeTest(this.classId, item)
+            .subscribe(tests => {
+                this.snackBar.open('Password Saved!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                this.snackBar.open('Error occurred while saving Password!', '', {
                     duration: 3000,
                     panelClass: ['error-snackbar']
                 });

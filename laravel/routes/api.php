@@ -52,6 +52,7 @@ $api->version('v1', function ($api) {
         $api->post('/profile/app', 'App\Http\APIControllers\ProfileController@changeApplication');
         $api->get('/profile/todo', 'App\Http\APIControllers\ProfileController@getToDos');
         $api->get('/profile/tests', 'App\Http\APIControllers\ProfileController@getTests');
+        $api->post('/profile/tests/reveal', 'App\Http\APIControllers\ProfileController@revealTest');
         $api->post('/profile/options', 'App\Http\APIControllers\ProfileController@changeOptions');
         $api->get('/profile/classes', 'App\Http\APIControllers\ProfileController@getClasses');
         $api->get('/profile/classes/invitations', 'App\Http\APIControllers\ProfileController@getClassInvitations');

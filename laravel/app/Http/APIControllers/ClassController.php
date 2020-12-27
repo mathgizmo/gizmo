@@ -482,13 +482,17 @@ class ClassController extends Controller
         }
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         $exists = DB::table('classes_applications')->where('class_id', $class_id)->where('app_id', $app_id)->first();
+        $app = Application::where('id', $app_id)->first();
+        if (!$app) {
+            return $this->error('App not found!', 404);
+        }
         if ($class && !$exists) {
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
                 'app_id' => $app_id,
                 'start_date' => Carbon::now()->toDateString(),
                 'start_time' => Carbon::now()->format('H:i'),
-                'duration' => $exists->duration ?: null,
+                'duration' => $app ? $app->duration : null,
                 'is_for_selected_students' => $students ? true : false
             ]);
             $item = DB::table('classes_applications')
