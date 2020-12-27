@@ -1,0 +1,23 @@
+<!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Edit Test Options!</h2> -->
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">Test Options</div>
+    <div class="form-group">
+        <label>Timer:</label>
+        <mat-radio-group [(ngModel)]="user.options.is_test_timer_displayed" class="radio-group form-group">
+            <mat-radio-button [value]="1">Display timer</mat-radio-button>
+            <mat-radio-button [value]="0">Hide timer</mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <div class="form-group">
+        <label>Questions Num:</label>
+        <mat-radio-group [(ngModel)]="user.options.is_test_questions_count_displayed" class="radio-group form-group">
+            <mat-radio-button [value]="1">Display number of questions left</mat-radio-button>
+            <mat-radio-button [value]="0">Hide number of questions left</mat-radio-button>
+        </mat-radio-group>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
+    <button mat-button class='button moving-forward-button continue-button' type="button" (click)="onSave()">Save</button>
+</mat-dialog-actions>
+

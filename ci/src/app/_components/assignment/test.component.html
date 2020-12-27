@@ -4,11 +4,11 @@
 
 <div class="text-center lesson-cotainer">
   <h2 class="title">{{test.name}}</h2>
-  <div class="lesson-progress-container" *ngIf="test.questions_count > 0">
+  <div class="lesson-progress-container" *ngIf="options.is_test_questions_count_displayed && test.questions_count > 0">
     <mat-progress-bar color="warn" class="lesson-progress" mode=determinate [value]="test.complete_percent"></mat-progress-bar>
     <label class="lesson-progress-label">{{test.answered_questions_count}}/{{test.questions_count}}</label>
   </div>
-  <div class="timer" [class.danger]="counter < 60" *ngIf="enableTimer && counter > 0">
+  <div class="timer" [class.danger]="counter < 60" *ngIf="options.is_test_timer_displayed && enableTimer && counter > 0">
     {{counter | timeFormat}}
   </div>
 

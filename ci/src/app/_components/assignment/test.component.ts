@@ -3,13 +3,13 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { timer, Subscription } from 'rxjs';
 import {takeWhile, tap} from 'rxjs/operators';
 import { QuestionComponent } from './topic/lesson/question/question.component';
-import {QuestionService, TestService, TrackingService} from '../../_services';
+import {AuthenticationService, QuestionService, TestService, TrackingService} from '../../_services';
 
 @Component({
     selector: 'app-test',
     templateUrl: './test.component.html',
     styleUrls: ['./test.component.scss'],
-    providers: [TestService, TrackingService, QuestionService]
+    providers: [TestService, TrackingService, QuestionService, AuthenticationService]
 })
 export class TestComponent implements OnInit, OnDestroy {
 
@@ -30,6 +30,11 @@ export class TestComponent implements OnInit, OnDestroy {
     public counter = 1800;
     private countDown: Subscription;
 
+    public options = {
+        is_test_timer_displayed: 1,
+        is_test_questions_count_displayed: 1
+    };
+
     public backLinkText = 'Back';
     public initialLoading = 1;
 
@@ -48,10 +53,15 @@ export class TestComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private testService: TestService,
                 private trackingService: TrackingService,
-                private questionService: QuestionService
+                private questionService: QuestionService,
+                private authenticationService: AuthenticationService,
     ) {}
 
     ngOnInit() {
+        const user = this.authenticationService.userValue;
+        if (user && user.options) {
+            this.options = user.options;
+        }
         this.sub = this.route.params.subscribe(params => {
             this.testId = +params['test_id'] || 0;
         });

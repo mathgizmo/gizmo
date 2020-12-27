@@ -43,7 +43,8 @@ import {LessonComponent, ChartComponent} from './_components/assignment/topic/le
 import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
-import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, MyInvitationsComponent} from './_components/student/index';
+import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent,
+    MyInvitationsComponent, TestOptionsDialogComponent} from './_components/student/index';
 import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
@@ -156,6 +157,7 @@ FullCalendarModule.registerPlugins([
         EditClassAssignmentDialogComponent,
         EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
+        TestOptionsDialogComponent,
         ReviewContentComponent,
         ClassDashboardComponent,
         ClassAssignmentsComponent,
@@ -198,7 +200,8 @@ FullCalendarModule.registerPlugins([
         TestReportDialogComponent,
         EditClassAssignmentDialogComponent,
         EditClassTestDialogComponent,
-        SelectStudentsDialogComponent
+        SelectStudentsDialogComponent,
+        TestOptionsDialogComponent
     ],
     providers: [
         AuthGuard,

@@ -77,7 +77,7 @@ class ProfileController extends Controller
                 'name' => 'max:255',
                 'email' => 'email|max:255|unique:students,email,'.$student->id,
                 'email_new' => 'nullable|email|max:255|unique:students,email,'.$student->id,
-                'password' => 'min:6',
+                'password' => 'nullable|min:6',
             ]
         );
         if ($validator->fails()) {
@@ -278,6 +278,18 @@ class ProfileController extends Controller
     public function unsubscribeClass($class_id) {
         $student = $this->user;
         DB::table('classes_students')->where('class_id', $class_id)->where('student_id', $student->id)->delete();
+        return $this->success('OK.');
+    }
+
+    public function changeOptions() {
+        $student = $this->user;
+        if (request()->has('is_test_timer_displayed')) {
+            $student->is_test_timer_displayed = request('is_test_timer_displayed') ? true : false;
+        }
+        if (request()->has('is_test_questions_count_displayed')) {
+            $student->is_test_questions_count_displayed = request('is_test_questions_count_displayed') ? true : false;
+        }
+        $student->save();
         return $this->success('OK.');
     }
 }

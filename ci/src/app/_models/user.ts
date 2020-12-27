@@ -7,4 +7,5 @@
     password: string;
     role: string;
     country_id: number;
+    options: any;
 }

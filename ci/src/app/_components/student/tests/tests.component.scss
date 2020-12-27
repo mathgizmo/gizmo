@@ -95,6 +95,16 @@
   }
 }
 
+.options {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  color: #3D3D3D;
+  cursor: pointer;
+}
+
 .toggle-button {
   margin: 16px 0;
   cursor: pointer;

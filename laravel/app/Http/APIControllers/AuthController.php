@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\Http\Resources\AuthStudentResource;
 use App\Mail\PasswordResetMail;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
@@ -70,24 +71,11 @@ class AuthController extends Controller
             $student->app_id = $app->id ?: null;
             $student->save();
         }
-        $app_id = $student->app_id;
-        $role = 'student';
-        if ($student->is_self_study) {
-            $role = 'self_study';
-        }
-        if ($student->is_teacher) {
-            $role = 'teacher';
-        }
-        $user = json_encode([
-            'user_id' => $student->id,
-            'username' => $student->name,
-            'first_name' => $student->first_name,
-            'last_name' => $student->last_name,
-            'email' => $student->email,
-            'role' => $role,
-            'country_id' => $student->country_id
-        ]);
-        return $this->success(compact('token', 'app_id', 'user'));
+        return $this->success([
+            'app_id' => $student->app_id,
+            'token' => $token,
+            'user' => new AuthStudentResource($student)
+        ], 200);
     }
 
     public function loginByToken(Request $request)
@@ -109,24 +97,11 @@ class AuthController extends Controller
             $student->app_id = $app->id ?: null;
             $student->save();
         }
-        $app_id = $student->app_id;
-        $role = 'student';
-        if ($student->is_self_study) {
-            $role = 'self_study';
-        }
-        if ($student->is_teacher) {
-            $role = 'teacher';
-        }
-        $user = json_encode([
-            'user_id' => $student->id,
-            'username' => $student->name,
-            'first_name' => $student->first_name,
-            'last_name' => $student->last_name,
-            'email' => $student->email,
-            'role' => $role,
-            'country_id' => $student->country_id
-        ]);
-        return $this->success(compact('token', 'app_id', 'user'));
+        return $this->success([
+            'app_id' => $student->app_id,
+            'token' => $token,
+            'user' => new AuthStudentResource($student)
+        ], 200);
     }
 
     public function register(Request $request)

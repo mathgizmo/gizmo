@@ -4,6 +4,10 @@ import {Router} from '@angular/router';
 import * as moment from 'moment';
 import {UserService} from '../../../_services/user.service';
 import {environment} from '../../../../environments/environment';
+import {MatDialog} from '@angular/material/dialog';
+import {DeviceDetectorService} from 'ngx-device-detector';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TestOptionsDialogComponent} from './test-options-dialog/test-options-dialog.component';
 
 @Component({
     selector: 'app-my-tests',
@@ -19,11 +23,24 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     private readonly adminUrl = environment.adminUrl;
     private checkAvailabilityIntervalId = null;
 
+    dialogPosition: any;
+    private isMobile = this.deviceService.isMobile();
+    private isTablet = this.deviceService.isTablet();
+    private isDesktop = this.deviceService.isDesktop();
+
     constructor(
         private userService: UserService,
         private sanitizer: DomSanitizer,
-        private router: Router
-    ) { }
+        private router: Router,
+        public dialog: MatDialog,
+        private deviceService: DeviceDetectorService,
+        public snackBar: MatSnackBar
+    ) {
+        this.dialogPosition = {bottom: '18vh'};
+        if (this.isMobile || this.isTablet) {
+            this.dialogPosition = {bottom: '2vh'};
+        }
+    }
 
     ngOnInit() {
         this.userService.getTests()
@@ -64,6 +81,13 @@ export class MyTestsComponent implements OnInit, OnDestroy {
         }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
+    }
+
+    openOptionsDialog() {
+        const dialogRef = this.dialog.open(TestOptionsDialogComponent, {
+            data: { },
+            position: this.dialogPosition
+        });
     }
 
 }

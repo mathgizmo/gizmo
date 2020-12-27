@@ -1,0 +1,71 @@
+.dialog-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dialog-content {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 75%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.dialog-content {
+    display: block !important;
+    width: 100% !important;
+}
+
+.buttons-container {
+    height: 25%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0;
+    margin: 0;
+    .button {
+        max-width: 47%;
+        min-width: 120px;
+        padding: 0;
+        margin: 0;
+    }
+    .continue-button {
+        background-color: #fef65b;
+    }
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+    & > *:not(*:last-child) {
+        margin-bottom: 6px;
+    }
+}
+
+.dialog-content {
+    padding: 16px;
+}
+
+@media (max-width: 768px) {
+    .dialog-content {
+        height: 75%;
+    }
+    .buttons-container {
+        height: 25%;
+    }
+}
+
+@media (max-height: 620px) {
+    .dialog-content {
+        height: 60%;
+    }
+    .buttons-container {
+        height: 40%;
+    }
+}

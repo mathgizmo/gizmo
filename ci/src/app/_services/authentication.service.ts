@@ -28,6 +28,11 @@ export class AuthenticationService {
         return this.userSubject.value;
     }
 
+    public saveUserValue(user: User): void  {
+        localStorage.setItem('user', JSON.stringify(user));
+        this.userSubject.next(user);
+    }
+
     login(username: string, password: string, captcha_response = null, ignoreCaptcha = false): Observable<any> {
         const request = {email: username, password: password,
             'g-recaptcha-response': captcha_response, 'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null};
@@ -35,7 +40,7 @@ export class AuthenticationService {
             .pipe(
                 map((response: Response) => {
                     // login successful if there's a jwt token in the response
-                    const user = response && response['message'] && response['message']['user'] && JSON.parse(response['message']['user']);
+                    const user = response && response['message'] && response['message']['user'] && response['message']['user'];
                     const app_id = response && response['message'] && response['message']['app_id'];
                     const token = response && response['message'] && response['message']['token'];
                     if (token) {
@@ -52,6 +57,7 @@ export class AuthenticationService {
                     }
                 }),
                 catchError((errorResponse: HttpErrorResponse) => {
+                    console.log(errorResponse);
                     if (errorResponse.error && errorResponse.error.status_code && errorResponse.error.status_code === 420) {
                         return throwError('email_not_verified');
                     } else {

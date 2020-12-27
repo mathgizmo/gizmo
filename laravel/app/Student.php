@@ -16,7 +16,8 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     protected $fillable = [
         'first_name', 'last_name', 'name', 'email', 'email_new', 'password', 'country_id',
-        'is_teacher', 'is_super', 'is_admin', 'is_self_study', 'is_registered', 'email_verified_at'
+        'is_teacher', 'is_super', 'is_admin', 'is_self_study', 'is_registered', 'email_verified_at',
+        'is_test_timer_displayed', 'is_test_questions_count_displayed'
     ];
 
     protected $hidden = [

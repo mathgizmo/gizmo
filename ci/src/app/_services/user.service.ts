@@ -41,6 +41,10 @@ export class UserService {
         return this.http.post('/profile/app/', request);
     }
 
+    public changeOptions(options: any) {
+        return this.http.post('/profile/options', options);
+    }
+
     public getToDos() {
         return this.http.get('/profile/todo')
             .pipe(
