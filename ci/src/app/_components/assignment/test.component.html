@@ -20,6 +20,9 @@
             [handleEnterPress]="true"
             (onAnswered)="checkAnswer($event)"
     ></app-question>
+    <div *ngIf="test.allow_any_order">
+      <button mat-stroked-button class="button" type="button" (click)="onDoQuestionLater()">do this question later</button>
+    </div>
   </div>
 
   <div *ngIf="question === null">

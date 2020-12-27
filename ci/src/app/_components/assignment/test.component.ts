@@ -118,6 +118,11 @@ export class TestComponent implements OnInit, OnDestroy {
         this.question = this.test.questions.shift();
     }
 
+    onDoQuestionLater() {
+        this.test.questions.push(this.question);
+        this.nextQuestion();
+    }
+
     checkAnswer(answers: string[]) {
         const isCorrect = this.isCorrect(answers);
         this.trackingService.trackQuestionAnswer(this.question.id, isCorrect, null, this.testId).subscribe(() => {
