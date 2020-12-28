@@ -50,6 +50,18 @@ td {
     min-width: 0;
 }
 
+.level-details {
+    margin-bottom: 16px;
+    .level-units {
+        margin-left: 12px;
+        margin-top: 8px;
+        .unit-topics {
+            margin-left: 24px;
+            margin-top: 8px;
+        }
+    }
+}
+
 @media screen and (max-width: 1100px) {
     .button, button {
         font-size: 14px !important;

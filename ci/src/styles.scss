@@ -414,6 +414,19 @@ input[type="time"].form-control, input[type="date"].form-control {
   }
 }
 
+.d-flex {
+  display: flex !important;
+}
+.flex-row {
+  flex-direction: row !important;
+}
+.flex-column {
+  flex-direction: column !important;
+}
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+
 @media screen and (max-width: 1366px) {
   .welcome iframe, .welcome video {
     height: 28vh;

@@ -5,9 +5,12 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\ClassApplication;
 use App\ClassOfStudents;
+use App\Level;
 use App\Progress;
 use App\Student;
 use App\StudentsTrackingQuestion;
+use App\Topic;
+use App\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -699,7 +702,7 @@ class ClassController extends Controller
             $students = $class->students()
                 ->leftJoin('classes_applications_students', 'classes_applications_students.student_id', '=', 'students.id')
                 ->where('classes_applications_students.class_app_id', $class_app->id)
-                ->where('classes_applications_students.mark', '>', 0)
+                ->where('classes_applications_students.end_at', '<>', null)
                 ->orderBy('email')
                 ->get([
                     'students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered',
@@ -722,9 +725,76 @@ class ClassController extends Controller
                     'end_at' => null,
                     'questions_count' => null,
                 ]);
-            DB::table('students_tracking_questions')->where('class_app_id', $class_app->id)
+            DB::table('students_test_questions')->where('class_app_id', $class_app->id)
                 ->whereIn('student_id', $students)->delete();
+            /* DB::table('students_tracking_questions')->where('class_app_id', $class_app->id)
+                ->whereIn('student_id', $students)->delete(); */
             return $this->success(['students' => $students], 200);
+        }
+        return $this->error('Error.', 500);
+    }
+
+    public function getTestDetails(Request $request, $class_id, $app_id, $student_id) {
+        $student = Student::where('id', $student_id)->first();
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
+        if ($class && $class_app && $student) {
+            $data = DB::table('students_test_questions')
+                ->select(
+                    'topic_id', 'unit_id', 'level_id',
+                    DB::raw("SUM(1) as total"),
+                    DB::raw("SUM(IF(is_right_answer, 1, 0)) as correct")
+                )
+                ->where('class_app_id', $class_app->id)
+                ->where('student_id', $student->id)
+                ->groupBy('topic_id', 'unit_id', 'level_id')
+                ->get();
+            $levels = [];
+            foreach ($data->groupBy('level_id') as $level_data) {
+                $level_id = $level_data->first()->level_id;
+                $level_total = $level_data->sum('total');
+                $level_correct = $level_data->sum('correct');
+                $units = [];
+                foreach ($level_data->groupBy('unit_id') as $unit_data) {
+                    $unit_id = $unit_data->first()->unit_id;
+                    $unit_total = $unit_data->sum('total');
+                    $unit_correct = $unit_data->sum('correct');
+                    $topics = [];
+                    foreach ($unit_data->groupBy('topic_id') as $topic_data) {
+                        $topic_id = $topic_data->first()->topic_id;
+                        $topic_total = $topic_data->sum('total');
+                        $topic_correct = $topic_data->sum('correct');
+                        $topic = Topic::where('id', $topic_id)->first();
+                        $topics[] = [
+                            'topic_id' => $topic_id,
+                            'title' => $topic ? $topic->title : $topic_id,
+                            'mark' => $topic_total && $topic_total > 0 ? $topic_correct / $topic_total : 1,
+                            'correct' => $topic_correct,
+                            'total' => $topic_total
+                        ];
+                    }
+                    $unit = Unit::where('id', $unit_id)->first();
+                    $units[] = [
+                        'unit_id' => $unit_id,
+                        'title' => $unit ? $unit->title : $unit_id,
+                        'mark' => $unit_total && $unit_total > 0 ? $unit_correct / $unit_total : 1,
+                        'correct' => $unit_correct,
+                        'total' => $unit_total,
+                        'topics' => $topics
+                    ];
+                }
+                $level = Level::where('id', $level_id)->first();
+                $levels[] = [
+                    'level_id' => $level_id,
+                    'title' => $level ? $level->title : $level_id,
+                    'mark' => $level_total && $level_total > 0 ? $level_correct / $level_total : 1,
+                    'correct' => $level_correct,
+                    'total' => $level_total,
+                    'units' => $units
+                ];
+            }
+
+            return $this->success(['data' => $levels], 200);
         }
         return $this->error('Error.', 500);
     }

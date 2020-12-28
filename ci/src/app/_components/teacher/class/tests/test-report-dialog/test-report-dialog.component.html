@@ -20,23 +20,42 @@
                                type="text" name="email" [(ngModel)]="email" [value]="" />
                     </td>
                 </tr>
-                <tr *ngFor="let item of students | tableFilter: form.value">
-                    <td style="max-width: 260px;">{{item.email }}</td>
-                    <td>
+                <ng-container *ngFor="let item of students | tableFilter: form.value;">
+                    <tr class="tid-data-row">
+                        <td style="max-width: 260px;">{{item.email }}</td>
+                        <td>
                         <span *ngIf="item.mark">
                             {{(item.mark * 100).toFixed(0)}}%
                         </span>
-                    </td>
-                    <td>
-                        {{ item.start_at | date:'yyyy-M-d h:mm a' }}
-                    </td>
-                    <td>
-                        {{ item.end_at | date:'yyyy-M-d h:mm a' }}
-                    </td>
-                    <td class="text-right">
-                        <button *ngIf="item.mark" class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
-                    </td>
-                </tr>
+                        </td>
+                        <td>
+                            {{ item.start_at | date:'yyyy-M-d h:mm a' }}
+                        </td>
+                        <td>
+                            {{ item.end_at | date:'yyyy-M-d h:mm a' }}
+                        </td>
+                        <td class="text-right">
+                            <button *ngIf="item.end_at" class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowDetails(item)" style="margin-right: 8px;">Details</button>
+                            <button *ngIf="item.end_at" class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
+                        </td>
+                    </tr>
+                    <tr class="tid-detail-row" *ngIf="item.showDetail">
+                        <td colspan="5">
+                            <div *ngFor="let level of item.details" class="level-details d-flex flex-column">
+                                <div>Level: <strong>{{level.title }}</strong></div>
+                                <div>Mark: <strong>{{(level.mark * 100).toFixed(0)}}%</strong></div>
+                                <div *ngFor="let unit of level.units" class="level-units d-flex flex-column">
+                                    <div>Unit: <strong>{{unit.title }}</strong></div>
+                                    <div>Mark: <strong>{{(unit.mark * 100).toFixed(0)}}%</strong></div>
+                                    <div *ngFor="let topic of unit.topics" class="unit-topics d-flex flex-column">
+                                        <div>Topic: <strong>{{topic.title }}</strong></div>
+                                        <div>Mark: <strong>{{(topic.mark * 100).toFixed(0)}}%</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
                 </tbody>
             </table>
         </div>

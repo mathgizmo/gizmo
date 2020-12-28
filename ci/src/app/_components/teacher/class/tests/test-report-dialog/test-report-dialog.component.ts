@@ -39,6 +39,9 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
         }
         this.classService.getTestReport(this.test.pivot.class_id, this.test.pivot.app_id).subscribe(response => {
             this.students = response.students;
+            this.students.forEach(stud => {
+                stud.showDetail = false;
+            });
         });
     }
 
@@ -48,6 +51,15 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
                 item.mark = null;
                 item.start_at = null;
                 item.end_at = null;
+                item.details = [];
+            });
+    }
+
+    onShowDetails(item) {
+        item.showDetail = !item.showDetail;
+        this.classService.getTestDetails(this.test.pivot.class_id, this.test.pivot.app_id, item.id)
+            .subscribe(response => {
+                item.details = response.data;
             });
     }
 

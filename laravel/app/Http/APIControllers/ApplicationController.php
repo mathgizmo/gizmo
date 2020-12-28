@@ -4,8 +4,7 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\ClassApplication;
-use App\Http\Resources\TestResource;
-use App\Progress;
+use App\Question;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -73,6 +72,51 @@ class ApplicationController extends Controller
         if ($test->password && (!$class_app_stud || !$class_app_stud->is_revealed)) {
             return $this->error('The user dont have access to this test!', 400);
         }
+        $test_resource =  [
+            'id' => $test->id,
+            'class_id' => $test->class_id,
+            'app_id' => $test->app_id,
+            'start_date' => $test->start_date,
+            'start_time' => $test->start_time,
+            'due_date' => $test->due_date,
+            'due_time' => $test->due_time,
+            'duration' => $test->duration,
+            'has_password' => $test->password ? true : false,
+        ];
+        if ($test->student) {
+            $class_student = DB::table('classes_students')
+                ->where('class_id', $test->class_id)
+                ->where('student_id', $test->student->id)->first();
+            $duration = $test->duration && $class_student
+                ? ($test->duration * $class_student->test_duration_multiply_by)
+                : ($test->duration ?: null);
+            $test_resource['duration'] = $duration;
+        }
+        $app = $test->application ?: null;
+        $test_resource['name'] = $app ? $app->name : $test->app_id;
+        $test_resource['allow_any_order'] = $app ? ($app->allow_any_order ? true : false) : false;
+        $questions = [];
+        $lesson_ids = $app->getLessonsQuery()->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->pluck('id');
+        DB::table('students_test_questions')->where('class_app_id', $test_id)
+            ->where('student_id', $this->user->id)->delete();
+        foreach ($lesson_ids as $lesson_id) {
+            $question = Question::with('answers')->where('lesson_id', $lesson_id)->inRandomOrder()->first();
+            if ($question) {
+                $questions[] = $question;
+                $lesson = $question->lesson;
+                $topic = $lesson ? $lesson->topic : null;
+                $unit = $topic ? $topic->unit : null;
+                DB::table('students_test_questions')->insert([
+                    'class_app_id' => $test_id,
+                    'student_id' => $this->user->id,
+                    'question_id' => $question->id,
+                    'topic_id' => $lesson ? $lesson->topic_id : null,
+                    'unit_id' => $topic ? $topic->unit_id : null,
+                    'level_id' => $unit ? $unit->level_id : null,
+                ]);
+            }
+        }
+        $test_resource['questions'] = $questions;
         $exists = DB::table('classes_applications_students')->where('class_app_id', $test->id)
                 ->where('student_id', $this->user->id)->count() > 0;
         if (!$exists) {
@@ -83,7 +127,7 @@ class ApplicationController extends Controller
                 'class_app_id' => $test->id,
                 'student_id' => $this->user->id,
                 'start_at' => Carbon::now()->toDateTimeString(),
-                'questions_count' => count($test->application->getLessonsQuery()->pluck('id'))
+                'questions_count' => count($test_resource['questions'])
             ]);
         } else {
             DB::table('classes_applications_students')->where('class_app_id', $test->id)
@@ -91,13 +135,13 @@ class ApplicationController extends Controller
                     'start_at' => Carbon::now()->toDateTimeString(),
                     'end_at' => null,
                     'mark' => null,
-                    'questions_count' => count($test->application->getLessonsQuery()->pluck('id'))
+                    'questions_count' => count($test_resource['questions'])
                 ]);
         }
-        DB::table('students_tracking_questions')->where('class_app_id', $test_id)
-            ->where('student_id', $this->user->id)->delete();
+        /* DB::table('students_tracking_questions')->where('class_app_id', $test_id)
+            ->where('student_id', $this->user->id)->delete(); */
         return $this->success([
-            'test' => new TestResource($test, $this->user)
+            'test' => $test_resource
         ], 200);
     }
 
@@ -110,14 +154,12 @@ class ApplicationController extends Controller
             ->where('student_id', $this->user->id)->update([
                 'end_at' => Carbon::now()->toDateTimeString()
             ]);
-        $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
-            // DB::raw("SUM(1) as total"),
+        $answers_statistics = DB::table('students_test_questions')->select(
+            DB::raw("SUM(1) as total"),
             DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
         )->where('class_app_id', $test_id)->where('student_id', $this->user->id)->first();
-        $class_app_stud = DB::table('classes_applications_students')->where('class_app_id', $test->id)
-            ->where('student_id', $this->user->id)->first();
-        $correct_question_rate = $class_app_stud && $class_app_stud->questions_count
-            ? $tracking_questions_statistics->complete / $class_app_stud->questions_count : 1;
+        $correct_question_rate = $answers_statistics->total > 0
+            ? $answers_statistics->complete / $answers_statistics->total : 1;
         DB::table('classes_applications_students')->where('class_app_id', $test->id)
             ->where('student_id', $this->user->id)->update([
                 'mark' => $correct_question_rate

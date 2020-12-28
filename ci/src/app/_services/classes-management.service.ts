@@ -156,6 +156,10 @@ export class ClassesManagementService {
         return this.http.post('/classes/' + class_id + '/tests/' + app_id + '/reset', { students: students });
     }
 
+    public getTestDetails(class_id, app_id, student_id) {
+        return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/details');
+    }
+
     public getReport(class_id) {
         return this.http.get('/classes/' + class_id + '/report');
     }

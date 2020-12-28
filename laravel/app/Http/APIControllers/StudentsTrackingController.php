@@ -385,6 +385,15 @@ class StudentsTrackingController extends Controller
                 'class_app_id' => $this->class_app ? $this->class_app->id : null,
                 'is_right_answer' => request('is_right_answer'),
             ]);
+            if ($this->app && $this->app->type == 'test' && $this->class_app) {
+                DB::table('students_test_questions')
+                    ->where('class_app_id', $this->class_app->id)
+                    ->where('student_id', $this->student->id)
+                    ->where('question_id', $question_id)
+                    ->update([
+                        'is_right_answer' => request('is_right_answer')
+                    ]);
+            }
         }
         return $this->success('saved!');
     }

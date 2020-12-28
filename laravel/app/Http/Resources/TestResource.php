@@ -41,7 +41,6 @@ class TestResource extends JsonResource
         }
         $app = $this->application ?: null;
         $test['name'] = $app ? $app->name : $this->app_id;
-        // $test['icon'] = $app ? $app->icon() : '/images/default-icon.svg';
         $test['allow_any_order'] = $app ? ($app->allow_any_order ? true : false) : false;
         $questions = [];
         $lesson_ids = $app->getLessonsQuery()->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->pluck('id');
