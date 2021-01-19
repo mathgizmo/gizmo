@@ -39,14 +39,15 @@ export class ClassesManagementService {
     }
 
     public addClass(item) {
-        this.classes = [
-            ...this.classes,
-            item
-        ];
         return this.http.post('/classes/', item)
             .pipe(
                 map((response: Response) => {
-                    return response['item'];
+                    const classItem = response['item'];
+                    this.classes = [
+                        ...this.classes,
+                        classItem
+                    ];
+                    return classItem;
                 })
             );
     }

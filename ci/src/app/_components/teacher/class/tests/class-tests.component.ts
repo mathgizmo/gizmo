@@ -237,7 +237,7 @@ export class ClassTestsComponent implements OnInit {
         dialogRef.afterClosed().subscribe(forAll => {
             if (!forAll) {
                 const dialogRef2 = this.dialog.open(SelectStudentsDialogComponent, {
-                    data: { 'students': this.students},
+                    data: { 'students': this.students },
                     position: this.dialogPosition
                 });
                 dialogRef2.afterClosed().subscribe(students => {
@@ -249,6 +249,8 @@ export class ClassTestsComponent implements OnInit {
                             app.start_date = newApp.start_date;
                             app.start_time = newApp.start_time;
                             app.is_for_selected_students = true;
+                            app.class_id = newApp.class_id;
+                            app.app_id = newApp.app_id;
                             app.students = students;
                             this.tests.unshift(app);
                             this.available_tests = this.available_tests.filter(x => {
@@ -282,6 +284,8 @@ export class ClassTestsComponent implements OnInit {
                         app.start_date = newApp.start_date;
                         app.start_time = newApp.start_time;
                         app.is_for_selected_students = false;
+                        app.class_id = newApp.class_id;
+                        app.app_id = newApp.app_id;
                         this.tests.unshift(app);
                         this.available_tests = this.available_tests.filter(x => {
                             return +x.id !== +app.id;

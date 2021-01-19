@@ -441,6 +441,8 @@ class ClassController extends Controller
                 $item->password = $class_data && $class_data->password ? $class_data->password : null;
                 $item->color = $class_data && $class_data->color ? $class_data->color : null;
                 $item->is_for_selected_students = $class_data && $class_data->is_for_selected_students;
+                $item->class_id = $class_id;
+                $item->app_id = $class_data && $class_data->app_id ? $class_data->app_id : 0;
                 if ($item->is_for_selected_students) {
                     $item->students = DB::table('classes_applications_students')
                         ->where('class_app_id', $class_data->id)->pluck('student_id');
@@ -702,7 +704,7 @@ class ClassController extends Controller
             $students = $class->students()
                 ->leftJoin('classes_applications_students', 'classes_applications_students.student_id', '=', 'students.id')
                 ->where('classes_applications_students.class_app_id', $class_app->id)
-                ->where('classes_applications_students.end_at', '<>', null)
+                ->where('classes_applications_students.start_at', '<>', null)
                 ->orderBy('email')
                 ->get([
                     'students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered',

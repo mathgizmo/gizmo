@@ -15,10 +15,8 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
 
     title = 'Test Report';
     test = {
-        pivot: {
-            class_id: 0,
-            app_id: 0
-        }
+        class_id: 0,
+        app_id: 0
     };
     students = [];
     public email: string;
@@ -37,7 +35,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
             // tslint:disable-next-line:indent
             this.test = data.test;
         }
-        this.classService.getTestReport(this.test.pivot.class_id, this.test.pivot.app_id).subscribe(response => {
+        this.classService.getTestReport(this.test.class_id, this.test.app_id).subscribe(response => {
             this.students = response.students;
             this.students.forEach(stud => {
                 stud.showDetail = false;
@@ -46,7 +44,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
     }
 
     onResetProgress(item) {
-        this.classService.resetTestProgress(this.test.pivot.class_id, this.test.pivot.app_id, [item.id])
+        this.classService.resetTestProgress(this.test.class_id, this.test.app_id, [item.id])
             .subscribe(response => {
                 item.mark = null;
                 item.start_at = null;
@@ -57,7 +55,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
 
     onShowDetails(item) {
         item.showDetail = !item.showDetail;
-        this.classService.getTestDetails(this.test.pivot.class_id, this.test.pivot.app_id, item.id)
+        this.classService.getTestDetails(this.test.class_id, this.test.app_id, item.id)
             .subscribe(response => {
                 item.details = response.data;
             });

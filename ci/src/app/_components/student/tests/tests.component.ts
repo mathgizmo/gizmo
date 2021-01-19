@@ -28,7 +28,7 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
-    public currentTest = null;
+    // public currentTest = null;
     public password = null;
 
     constructor(
@@ -46,17 +46,17 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const test = localStorage.getItem('current_test');
-        if (test) {
-            this.currentTest = JSON.parse(test);
-        }
+        // const test = localStorage.getItem('current_test');
+        // if (test) {
+        //     this.currentTest = JSON.parse(test);
+        // }
         this.userService.getTests()
             .subscribe(response => {
                 this.applications = response.filter(app => !app.is_completed);
                 this.completedApplications = response.filter(app => app.is_completed);
-                if (this.currentTest) {
-                    this.checkAppsAvailability();
-                }
+                // if (this.currentTest) {
+                //     this.checkAppsAvailability();
+                // }
             });
         this.checkAvailabilityIntervalId = setInterval(() => {
             this.checkAppsAvailability();
@@ -75,9 +75,9 @@ export class MyTestsComponent implements OnInit, OnDestroy {
                     : null;
                 app.is_blocked = (start && start.isAfter(now)) || (due && due.isBefore(now));
             }
-            if (this.currentTest) {
-                app.is_blocked = app.class_app_id !== this.currentTest.id;
-            }
+            // if (this.currentTest) {
+            //     app.is_blocked = app.class_app_id !== this.currentTest.id;
+            // }
         });
     }
 

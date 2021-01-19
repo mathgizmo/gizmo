@@ -391,6 +391,7 @@ class StudentsTrackingController extends Controller
                     ->where('student_id', $this->student->id)
                     ->where('question_id', $question_id)
                     ->update([
+                        'is_answered' => true,
                         'is_right_answer' => request('is_right_answer')
                     ]);
             }

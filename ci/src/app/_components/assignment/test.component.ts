@@ -80,50 +80,52 @@ export class TestComponent implements OnInit, OnDestroy {
         }
     }
 
-    initData() {
-        if (this.checkState()) {
-            this.initialLoading = 0;
-            this.enableTimer = this.test.duration > 0;
-            if (this.enableTimer) {
-                this.counter = this.test.duration - ((Date.now() - this.test.start) / 1000);
-                this.initTimer();
-            }
-            if (this.test.questions_count) {
-                this.nextQuestion();
-            }
-        } else {
+    private initData() {
+        // if (this.checkState()) {
+        //     this.initialLoading = 0;
+        //     this.enableTimer = this.test.duration > 0;
+        //     if (this.enableTimer) {
+        //         this.counter = Math.round(this.test.duration - ((Date.now() - this.test.start) / 1000));
+        //         this.initTimer();
+        //     }
+        //     if (this.test.questions_count) {
+        //         this.nextQuestion();
+        //     }
+        // } else {
             this.testService.startTest(this.testId)
                 .subscribe(res => {
                     this.initialLoading = 0;
                     this.test = res.test;
-                    this.counter = res.test.duration;
+                    this.counter = res.test.time_left;
                     this.enableTimer = this.test.duration > 0;
                     if (this.enableTimer) {
                         this.initTimer();
                         this.test.start = Date.now();
                     }
-                    this.test.questions_count = +res.test.questions.length;
-                    this.test.complete_percent = this.test.answered_questions_count = 0;
+                    this.test.questions_count = +res.test.questions_count;
+                    this.test.answered_questions_count = this.test.questions_count - res.test.questions.length;
+                    this.test.complete_percent = this.test.questions_count > 0 ?
+                        (this.test.answered_questions_count / this.test.questions_count * 100) : 100;
                     if (this.test && this.test.questions_count) {
                         this.nextQuestion();
                     }
                 }, error => {
                     this.router.navigate(['student/tests']);
                 });
-        }
+        // }
     }
 
-    nextQuestion() {
-        this.saveState();
+    private nextQuestion() {
+        // this.saveState();
         this.question = this.test.questions.shift();
     }
 
-    onDoQuestionLater() {
+    public onDoQuestionLater() {
         this.test.questions.push(this.question);
         this.nextQuestion();
     }
 
-    checkAnswer(answers: string[]) {
+    public checkAnswer(answers: string[]) {
         const isCorrect = this.isCorrect(answers);
         this.trackingService.trackQuestionAnswer(this.question.id, isCorrect, null, this.testId).subscribe(() => {
             this.test.complete_percent = ++this.test.answered_questions_count / this.test.questions_count * 100;
@@ -131,14 +133,14 @@ export class TestComponent implements OnInit, OnDestroy {
         });
     }
 
-    isCorrect(answers: string[]) {
+    private isCorrect(answers: string[]) {
         const isCorrect = this.questionService.isCorrect(this.question, answers);
         this.answers = this.questionService.answers;
         this.question = this.questionService.question;
         return isCorrect;
     }
 
-    finishTest() {
+    private finishTest() {
         if (this.countDown) {
             this.countDown.unsubscribe();
         }
@@ -146,7 +148,7 @@ export class TestComponent implements OnInit, OnDestroy {
             this.correctQuestionRate = res['correct_question_rate'];
             this.question = null;
             this.counter = 0;
-            this.removeState();
+            // this.removeState();
         });
     }
 
@@ -167,26 +169,26 @@ export class TestComponent implements OnInit, OnDestroy {
         }
     }
 
-    private checkState() {
-        const test = localStorage.getItem('current_test');
-        if (test) {
-            this.test = JSON.parse(test);
-        }
-        const question = localStorage.getItem('current_question');
-        if (question) {
-            this.question = JSON.parse(question);
-        }
-        return !!test;
-    }
+    // private checkState() {
+    //     const test = localStorage.getItem('current_test');
+    //     if (test) {
+    //         this.test = JSON.parse(test);
+    //     }
+    //     const question = localStorage.getItem('current_question');
+    //     if (question) {
+    //         this.question = JSON.parse(question);
+    //     }
+    //     return !!test;
+    // }
 
-    private saveState() {
-        localStorage.setItem('current_test', JSON.stringify(this.test));
-        localStorage.setItem('current_question', JSON.stringify(this.question));
-    }
+    // private saveState() {
+    //     localStorage.setItem('current_test', JSON.stringify(this.test));
+    //     localStorage.setItem('current_question', JSON.stringify(this.question));
+    // }
 
-    private removeState() {
-        localStorage.removeItem('current_test');
-        localStorage.removeItem('current_question');
-    }
+    // private removeState() {
+    //     localStorage.removeItem('current_test');
+    //     localStorage.removeItem('current_question');
+    // }
 
 }
