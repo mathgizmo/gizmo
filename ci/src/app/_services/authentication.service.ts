@@ -71,7 +71,7 @@ export class AuthenticationService {
         return this.http.post(this.apiUrl + '/login/by-token', {token: tokenStr}, {headers: this.headers})
             .pipe(
                 map((response: Response) => {
-                    const user = response && response['message'] && response['message']['user'] && JSON.parse(response['message']['user']);
+                    const user = response && response['message'] && response['message']['user'];
                     const app_id = response && response['message'] && response['message']['app_id'];
                     const token = response && response['message'] && response['message']['token'];
                     if (token) {
