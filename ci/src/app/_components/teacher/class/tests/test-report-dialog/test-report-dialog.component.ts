@@ -55,10 +55,12 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
 
     onShowDetails(item) {
         item.showDetail = !item.showDetail;
-        this.classService.getTestDetails(this.test.class_id, this.test.app_id, item.id)
-            .subscribe(response => {
-                item.details = response.data;
-            });
+        if (item.showDetail) {
+            this.classService.getTestDetails(this.test.class_id, this.test.app_id, item.id)
+                .subscribe(response => {
+                    item.details = response.data;
+                });
+        }
     }
 
     resizeDialog() {

@@ -94,10 +94,13 @@ export class TestComponent implements OnInit, OnDestroy {
         // } else {
             this.testService.startTest(this.testId)
                 .subscribe(res => {
+                    if (!res.test) {
+                        this.router.navigate(['student/tests']);
+                    }
                     this.initialLoading = 0;
                     this.test = res.test;
-                    this.counter = res.test.time_left;
-                    this.enableTimer = this.test.duration > 0;
+                    this.enableTimer = res.test.duration > 0;
+                    this.counter = +res.test.time_left;
                     if (this.enableTimer) {
                         this.initTimer();
                         this.test.start = Date.now();

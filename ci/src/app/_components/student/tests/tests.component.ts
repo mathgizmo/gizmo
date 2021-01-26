@@ -1,13 +1,14 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Router} from '@angular/router';
-import * as moment from 'moment';
 import {UserService} from '../../../_services/user.service';
-import {environment} from '../../../../environments/environment';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TestOptionsDialogComponent} from './test-options-dialog/test-options-dialog.component';
+
+import * as moment from 'moment';
+import {environment} from '../../../../environments/environment';
 
 @Component({
     selector: 'app-my-tests',

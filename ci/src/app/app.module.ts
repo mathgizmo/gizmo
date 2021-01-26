@@ -4,7 +4,6 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {DeviceDetectorModule} from 'ngx-device-detector';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 
@@ -114,8 +113,7 @@ FullCalendarModule.registerPlugins([
         FlexLayoutModule,
         PerfectScrollbarModule,
         RecaptchaModule,
-        RecaptchaFormsModule,
-        DeviceDetectorModule.forRoot()
+        RecaptchaFormsModule
 ,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],

@@ -173,10 +173,6 @@ class ApplicationController extends Controller
         if (!$test) {
             abort(404, 'Test not found!');
         }
-        DB::table('classes_applications_students')->where('class_app_id', $test->id)
-            ->where('student_id', $this->user->id)->update([
-                'end_at' => Carbon::now()->toDateTimeString()
-            ]);
         $answers_statistics = DB::table('students_test_questions')->select(
             DB::raw("SUM(1) as total"),
             DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
@@ -185,7 +181,8 @@ class ApplicationController extends Controller
             ? $answers_statistics->complete / $answers_statistics->total : 1;
         DB::table('classes_applications_students')->where('class_app_id', $test->id)
             ->where('student_id', $this->user->id)->update([
-                'mark' => $correct_question_rate
+                'mark' => $correct_question_rate,
+                'end_at' => Carbon::now()->toDateTimeString()
             ]);
         return $this->success([
             'correct_question_rate' => $correct_question_rate
