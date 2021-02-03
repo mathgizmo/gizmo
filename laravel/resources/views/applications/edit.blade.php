@@ -108,6 +108,24 @@
                     </div>
                 </div>
                 @if($application->type == 'test')
+                    <div class="form-group row mt-3 {{ $errors->has('allow_back_tracking') ? ' has-error' : '' }}">
+                        <label for="allow_back_tracking" class="col-md-2 form-control-label ml-3 font-weight-bold">Back-tracking</label>
+                        <div class="col-md-8">
+                            <select id="allow_back_tracking" class="form-control" name="allow_back_tracking">
+                                <option value="0">
+                                    Disallow back-tracking
+                                </option>
+                                <option value="1" {{old('allow_back_tracking', $application->allow_back_tracking) ? 'selected="selected"' : '' }}>
+                                    Allow back-tracking
+                                </option>
+                            </select>
+                            @if ($errors->has('allow_back_tracking'))
+                                <span class="form-text">
+                                <strong>{{ $errors->first('allow_back_tracking') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
                     <div class="form-group row mt-3 {{ $errors->has('duration') ? ' has-error' : '' }}">
                         <label for="duration" class="col-md-2 form-control-label ml-3 font-weight-bold">Duration in seconds (0 – means unlimited time)</label>
                         <div class="col-md-8">

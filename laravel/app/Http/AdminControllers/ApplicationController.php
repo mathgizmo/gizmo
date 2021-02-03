@@ -73,6 +73,7 @@ class ApplicationController extends Controller
             $app->icon = $request['icon'];
         }
         $app->allow_any_order = $request['allow_any_order'] ? true : false;
+        $app->allow_back_tracking = $request['allow_back_tracking'] ? true : false;
         $app->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
         $app->question_num = $request['question_num'] ?: 3;
         $app->type = $request['type'] ?: 'assignment';
@@ -117,6 +118,7 @@ class ApplicationController extends Controller
             $app->icon = $request['icon'];
         }
         $app->allow_any_order = $request['allow_any_order'] ? true : false;
+        $app->allow_back_tracking = $request['allow_back_tracking'] ? true : false;
         $app->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
         $app->question_num = $request['question_num'] ?: 3;
         $app->duration = $request['duration'] ?: null;

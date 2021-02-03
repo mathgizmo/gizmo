@@ -42,6 +42,7 @@ class TestResource extends JsonResource
         $app = $this->application ?: null;
         $test['name'] = $app ? $app->name : $this->app_id;
         $test['allow_any_order'] = $app ? ($app->allow_any_order ? true : false) : false;
+        $test['allow_back_tracking'] = $app ? ($app->allow_back_tracking ? true : false) : false;
         $questions = [];
         $lesson_ids = $app->getLessonsQuery()->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->pluck('id');
         foreach ($lesson_ids as $lesson_id) {

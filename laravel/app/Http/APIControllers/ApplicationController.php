@@ -96,15 +96,18 @@ class ApplicationController extends Controller
         $app = $test->application ?: null;
         $test_resource['name'] = $app ? $app->name : $test->app_id;
         $test_resource['allow_any_order'] = $app ? ($app->allow_any_order ? true : false) : false;
+        $test_resource['allow_back_tracking'] = $app ? ($app->allow_back_tracking ? true : false) : false;
         $questions = [];
         if ($class_app_stud && $class_app_stud->start_at) {
             $stud_questions = DB::table('students_test_questions')
                 ->where('class_app_id', $test_id)
                 ->where('student_id', $this->user->id)
                 ->where('is_answered', false)
+                ->orderBy('order_no', 'ASC')
                 ->get();
             foreach ($stud_questions as $stud_question) {
                 $question = Question::with('answers')->where('id', $stud_question->question_id)->first();
+                $question->order_no = $stud_question->order_no;
                 $questions[] = $question;
             }
             $test_resource['questions'] = $questions;
@@ -113,14 +116,24 @@ class ApplicationController extends Controller
             $time_left = $test_resource['duration'] - Carbon::now()->diffInSeconds(Carbon::parse($class_app_stud->start_at));
             $test_resource['time_left'] = $time_left;
         } else {
-            $lesson_ids = $app->getLessonsQuery()->orderBy('order_no', 'ASC')->orderBy('id', 'ASC')->pluck('id');
+            $lesson_ids = $app->getLessonsQuery()
+                ->join('topic', 'topic.id', '=', 'lesson.topic_id')
+                ->join('unit', 'unit.id', '=', 'topic.unit_id')
+                ->join('level', 'level.id', '=', 'unit.level_id')
+                ->orderBy('level.order_no', 'ASC')
+                ->orderBy('unit.order_no', 'ASC')
+                ->orderBy('topic.order_no', 'ASC')
+                ->orderBy('lesson.order_no', 'ASC')
+                ->select('lesson.id')->pluck('lesson.id');
             DB::table('students_test_questions')->where('class_app_id', $test_id)
                 ->where('student_id', $this->user->id)->delete();
+            $question_order_no = 1;
             foreach ($lesson_ids as $lesson_id) {
                 $question = Question::with('answers')
                     ->where('lesson_id', $lesson_id)
                     ->inRandomOrder()->first();
                 if ($question) {
+                    $question->order_no = $question_order_no;
                     $questions[] = $question;
                     $lesson = $question->lesson;
                     $topic = $lesson ? $lesson->topic : null;
@@ -132,8 +145,10 @@ class ApplicationController extends Controller
                         'topic_id' => $lesson ? $lesson->topic_id : null,
                         'unit_id' => $topic ? $topic->unit_id : null,
                         'level_id' => $unit ? $unit->level_id : null,
-                        'is_answered' => false
+                        'is_answered' => false,
+                        'order_no' => $question_order_no
                     ]);
+                    $question_order_no++;
                 }
             }
             $test_resource['questions'] = $questions;
@@ -209,7 +224,8 @@ class ApplicationController extends Controller
                 $app->icon = request('icon');
             }
             $app->teacher_id = $this->user->id;
-            $app->allow_any_order = request('allow_any_order') ?: null;
+            $app->allow_any_order = request('allow_any_order') ? true : false;
+            $app->allow_back_tracking = request('allow_back_tracking') ? true : false;
             $app->testout_attempts = request('testout_attempts') >= -1 ? intval(request('testout_attempts')) : 0;
             if (request()->has('question_num')) {
                 $question_num = request('question_num');
@@ -245,7 +261,8 @@ class ApplicationController extends Controller
                 if (request('icon')) {
                     $app->icon = request('icon');
                 }
-                $app->allow_any_order = request('allow_any_order') ?: null;
+                $app->allow_any_order = request('allow_any_order') ? true : false;
+                $app->allow_back_tracking = request('allow_back_tracking') ? true : false;
                 $app->testout_attempts = request('testout_attempts') >= -1 ? intval(request('testout_attempts')) : 0;
                 if (request()->has('question_num')) {
                     $question_num = request('question_num');

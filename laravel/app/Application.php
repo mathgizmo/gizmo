@@ -10,7 +10,7 @@ class Application extends Model
     protected $table = 'applications';
 
     protected $fillable = ['icon', 'name', 'teacher_id', 'type', 'duration',
-        'allow_any_order', 'testout_attempts', 'question_num'];
+        'allow_any_order', 'allow_back_tracking', 'testout_attempts', 'question_num'];
 
     public function teacher() {
         return $this->belongsTo('App\Student', 'teacher_id');
@@ -165,22 +165,22 @@ class Application extends Model
         $app_id = $this->id;
         $query = DB::table('lesson');
         $query->where(function ($q1) use($app_id) {
-            $q1->whereIn('id', function($q2) use($app_id) {
+            $q1->whereIn('lesson.id', function($q2) use($app_id) {
                 $q2->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
-            })->orWhereIn('id', function($q3) use($app_id) {
-                $q3->select('id')->from('lesson')->whereIn('topic_id', function($q4) use($app_id) {
+            })->orWhereIn('lesson.id', function($q3) use($app_id) {
+                $q3->select('lesson.id')->from('lesson')->whereIn('topic_id', function($q4) use($app_id) {
                     $q4->select('model_id')->from('application_has_models')->where('model_type', 'topic')->where('app_id', $app_id);
                 });
-            })->orWhereIn('id', function($q5) use($app_id) {
-                $q5->select('id')->from('lesson')->whereIn('topic_id', function($q6) use($app_id) {
-                    $q6->select('id')->from('topic')->whereIn('unit_id', function($q7) use($app_id) {
+            })->orWhereIn('lesson.id', function($q5) use($app_id) {
+                $q5->select('lesson.id')->from('lesson')->whereIn('topic_id', function($q6) use($app_id) {
+                    $q6->select('topic.id')->from('topic')->whereIn('unit_id', function($q7) use($app_id) {
                         $q7->select('model_id')->from('application_has_models')->where('model_type', 'unit')->where('app_id', $app_id);
                     });
                 });
-            })->orWhereIn('id', function($q8) use($app_id) {
-                $q8->select('id')->from('lesson')->whereIn('topic_id', function($q9) use($app_id) {
-                    $q9->select('id')->from('topic')->whereIn('unit_id', function($q10) use($app_id) {
-                        $q10->select('id')->from('unit')->whereIn('level_id', function($q11) use($app_id) {
+            })->orWhereIn('lesson.id', function($q8) use($app_id) {
+                $q8->select('lesson.id')->from('lesson')->whereIn('topic_id', function($q9) use($app_id) {
+                    $q9->select('topic.id')->from('topic')->whereIn('unit_id', function($q10) use($app_id) {
+                        $q10->select('unit.id')->from('unit')->whereIn('level_id', function($q11) use($app_id) {
                             $q11->select('model_id')->from('application_has_models')->where('model_type', 'level')->where('app_id', $app_id);
                         });
                     });
@@ -188,7 +188,7 @@ class Application extends Model
             });
         });
         if (!$is_admin) {
-            $query->where('dev_mode', 0);
+            $query->where('lesson.dev_mode', 0);
         }
         return $query;
     }

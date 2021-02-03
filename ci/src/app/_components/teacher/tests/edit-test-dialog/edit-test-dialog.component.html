@@ -54,10 +54,20 @@
             </li>
         </ul>
     </form>
-    <mat-radio-group [(ngModel)]="test.allow_any_order" class="radio-group form-group">
-        <mat-radio-button [value]="0">Questions need to be answered in linear order</mat-radio-button>
-        <mat-radio-button [value]="1">Questions need to be answered in any order</mat-radio-button>
-    </mat-radio-group>
+    <div class="radio-container form-group">
+        <label>Questions need to be answered in:</label>
+        <mat-radio-group [(ngModel)]="test.allow_any_order" class="radio-group">
+            <mat-radio-button [value]="0">Linear order</mat-radio-button>
+            <mat-radio-button [value]="1">Random order</mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <div class="radio-container form-group">
+        <label>Back-tracking:</label>
+        <mat-radio-group [(ngModel)]="test.allow_back_tracking" class="radio-group">
+            <mat-radio-button [value]="0">Disallow back-tracking</mat-radio-button>
+            <mat-radio-button [value]="1">Allow back-tracking</mat-radio-button>
+        </mat-radio-group>
+    </div>
     <div class="form-group">
         <label for="duration">Duration in seconds (0 – means unlimited time):</label>
         <input id="duration" name="duration" type="number" step="1" min="0" [(ngModel)]="test.duration" required class="form-control"/>

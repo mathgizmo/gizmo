@@ -18,7 +18,8 @@ export class TestComponent implements OnInit, OnDestroy {
         id: 0,
         name: '',
         duration: null,
-        allow_any_order: false,
+        allow_any_order: 0,
+        allow_back_tracking: 0,
         has_password: true,
         questions: [],
         complete_percent: 0,
@@ -110,6 +111,20 @@ export class TestComponent implements OnInit, OnDestroy {
                     this.test.complete_percent = this.test.questions_count > 0 ?
                         (this.test.answered_questions_count / this.test.questions_count * 100) : 100;
                     if (this.test && this.test.questions_count) {
+                        if (this.test.allow_any_order) {
+                            const shuffle = (array) => {
+                                let currentIndex = array.length, temporaryValue, randomIndex;
+                                while (0 !== currentIndex) {
+                                    randomIndex = Math.floor(Math.random() * currentIndex);
+                                    currentIndex -= 1;
+                                    temporaryValue = array[currentIndex];
+                                    array[currentIndex] = array[randomIndex];
+                                    array[randomIndex] = temporaryValue;
+                                }
+                                return array;
+                            };
+                            this.test.questions = shuffle(this.test.questions);
+                        }
                         this.nextQuestion();
                     }
                 }, error => {
