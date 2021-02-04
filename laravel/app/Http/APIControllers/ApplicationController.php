@@ -36,9 +36,12 @@ class ApplicationController extends Controller
     }
 
     public function getTests() {
+        $items = Application::where('teacher_id', $this->user->id)->where('type', 'test')->get();
+        foreach ($items as $item) {
+            $item->duration = $item->duration ? round($item->duration / 60) : 0; // seconds to minutes
+        }
         return $this->success([
-            'items' => array_values(Application::where('teacher_id', $this->user->id)
-                ->where('type', 'test')->get()->toArray())
+            'items' => array_values($items->toArray())
         ]);
     }
 
@@ -236,7 +239,7 @@ class ApplicationController extends Controller
                     $app->question_num = (int) $question_num;
                 }
             }
-            $app->duration = request('duration') ?: null;
+            $app->duration = request('duration') ? request('duration') * 60 : null; // minutes to seconds
             $app->type = $type;
             $app->save();
             parse_str(request('tree'), $tree);
@@ -273,7 +276,7 @@ class ApplicationController extends Controller
                         $app->question_num = (int) $question_num;
                     }
                 }
-                $app->duration = request('duration') ?: null;
+                $app->duration = request('duration') ? request('duration') * 60 : null; // minutes to seconds
                 $app->save();
                 parse_str(request('tree'), $tree);
                 $success = $app->updateTree($tree);

@@ -4,7 +4,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
 import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
-
 @Component({
     selector: 'app-edit-test-dialog',
     templateUrl: 'edit-test-dialog.component.html',

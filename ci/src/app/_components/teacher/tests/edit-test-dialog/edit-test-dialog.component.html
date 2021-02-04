@@ -55,7 +55,7 @@
         </ul>
     </form>
     <div class="radio-container form-group">
-        <label>Questions need to be answered in:</label>
+        <label>Questions order:</label>
         <mat-radio-group [(ngModel)]="test.allow_any_order" class="radio-group">
             <mat-radio-button [value]="0">Linear order</mat-radio-button>
             <mat-radio-button [value]="1">Random order</mat-radio-button>
@@ -69,8 +69,8 @@
         </mat-radio-group>
     </div>
     <div class="form-group">
-        <label for="duration">Duration in seconds (0 – means unlimited time):</label>
-        <input id="duration" name="duration" type="number" step="1" min="0" [(ngModel)]="test.duration" required class="form-control"/>
+        <label for="duration">Duration in minutes (0 – means unlimited time):</label>
+        <input id="duration" class="form-control" name="duration" type="number" step="1" min="0" [(ngModel)]="test.duration" required />
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">

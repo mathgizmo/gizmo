@@ -114,7 +114,10 @@ export class ClassTestsComponent implements OnInit {
             start_time: event.start ? start.format('HH:mm') : null,
             due_date: event.end ? end.format('YYYY-MM-DD') : null,
             due_time: event.end ? end.format('HH:mm') : null,
-            color: '#7FA5C1'
+            duration: 0,
+            password: '',
+            color: '#7FA5C1',
+            delete: false
         };
         const dialogRef = this.dialog.open(EditClassTestDialogComponent, {
             data: { 'title': 'Add Test', 'test': item, 'available_tests': this.available_tests },
@@ -244,8 +247,8 @@ export class ClassTestsComponent implements OnInit {
                     if (!students || students.length < 1) { return; }
                     this.classService.addTestToClass(this.classId, app.id, students)
                         .subscribe(newApp => {
-                            app.password = null;
-                            app.duration = newApp.duration || null;
+                            app.password = '';
+                            app.duration = newApp.duration || 0;
                             app.start_date = newApp.start_date;
                             app.start_time = newApp.start_time;
                             app.is_for_selected_students = true;
@@ -279,8 +282,8 @@ export class ClassTestsComponent implements OnInit {
             } else {
                 this.classService.addTestToClass(this.classId, app.id)
                     .subscribe(newApp => {
-                        app.password = null;
-                        app.duration = newApp.duration || null;
+                        app.password = '';
+                        app.duration = newApp.duration || 0;
                         app.start_date = newApp.start_date;
                         app.start_time = newApp.start_time;
                         app.is_for_selected_students = false;

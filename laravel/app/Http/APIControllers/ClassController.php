@@ -438,6 +438,7 @@ class ClassController extends Controller
                 $item->due_date = $class_data && $class_data->due_date ? $class_data->due_date : null;
                 $item->due_time = $class_data && $class_data->due_time ? $class_data->due_time : null;
                 $item->duration = $class_data && $class_data->duration ? $class_data->duration : null;
+                $item->duration = round($item->duration/60); // seconds to minutes
                 $item->password = $class_data && $class_data->password ? $class_data->password : null;
                 $item->color = $class_data && $class_data->color ? $class_data->color : null;
                 $item->is_for_selected_students = $class_data && $class_data->is_for_selected_students;
@@ -471,7 +472,7 @@ class ClassController extends Controller
                     'start_time' => request('start_time') ?: null,
                     'due_date' => request('due_date') ?: null,
                     'due_time' => request('due_time') ?: null,
-                    'duration' => request('duration') ?: null,
+                    'duration' => request('duration') ? (request('duration') * 60) : null, // minutes to seconds
                     'password' => request('password') ?: null,
                     'color' => request('color') ?: null
                 ]);
@@ -511,6 +512,9 @@ class ClassController extends Controller
                         'student_id' => $student->id,
                     ]);
                 }
+            }
+            if ($item && $item->duration) {
+                $item->duration = round($item->duration / 60); // seconds to minutes
             }
             return $this->success(['item' => $item ?: null]);
         }

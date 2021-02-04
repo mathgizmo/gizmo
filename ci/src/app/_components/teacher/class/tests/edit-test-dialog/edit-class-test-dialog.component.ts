@@ -13,14 +13,14 @@ export class EditClassTestDialogComponent extends BaseDialogComponent<EditClassT
     title = 'Edit Test';
     test = {
         id: null,
-        name: null,
+        name: '',
         icon: null,
         start_date: null,
         start_time: null,
         due_date: null,
         due_time: null,
-        duration: null,
-        password: null,
+        duration: 0,
+        password: '',
         color: '#7FA5C1',
         delete: false
     };

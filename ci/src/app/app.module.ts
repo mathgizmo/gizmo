@@ -113,8 +113,7 @@ FullCalendarModule.registerPlugins([
         FlexLayoutModule,
         PerfectScrollbarModule,
         RecaptchaModule,
-        RecaptchaFormsModule
-,
+        RecaptchaFormsModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     exports: [],
