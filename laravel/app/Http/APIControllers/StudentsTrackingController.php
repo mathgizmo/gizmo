@@ -46,10 +46,21 @@ class StudentsTrackingController extends Controller
             }
         } else if (request()->has('app_id')) {
             $app_id = request('app_id');
-            $this->app = Application::where('id', $app_id)->first();
-            if (!$this->app) {
-                $this->app = Application::where('id', $this->student->app_id)->first();
+            if ($app_id == 0) {
+                $this->app = new Application();
+                $this->app->id = 0;
+                $this->app->name = 'Content Review';
+                $this->app->teacher_id = null;
+                $this->app->question_num = 0;
+                $this->app->testout_attempts = -1;
+                $this->app->allow_any_order = true;
+            } else {
+                $this->app = Application::where('id', $app_id)->first();
+                if (!$this->app) {
+                    $this->app = Application::where('id', $this->student->app_id)->first();
+                }
             }
+
         } else {
             $this->app = Application::where('id', $this->student->app_id)->first();
         }
@@ -62,20 +73,18 @@ class StudentsTrackingController extends Controller
         }
         $now = date("Y-m-d H:i:s");
         $app_id = $this->app ? $this->app->id : null;
-        if ($app_id) {
-            StudentsTracking::create([
-                'student_id' => $this->student->id,
-                'lesson_id' => $lesson,
-                'app_id' => $app_id,
-                'action' => 'start',
-                'date' => $now,
-                'start_datetime' => $now,
-                'weak_questions' => json_encode([]),
-                'ip' => request()->ip(),
-                'user_agent' => request()->server('HTTP_USER_AGENT'),
-            ]);
-        }
-        return $this->success($now);
+        StudentsTracking::create([
+            'student_id' => $this->student->id,
+            'lesson_id' => $lesson,
+            'app_id' => $app_id ?: null,
+            'action' => 'start',
+            'date' => $now,
+            'start_datetime' => $now,
+            'weak_questions' => json_encode([]),
+            'ip' => request()->ip(),
+            'user_agent' => request()->server('HTTP_USER_AGENT'),
+        ]);
+        return $this->success($now, 200);
     }
 
     function doneTestoutLessons($topic_id) {
@@ -139,14 +148,11 @@ class StudentsTrackingController extends Controller
             return $this->error('Invalid lesson.');
         }
         $app_id = $this->app ? $this->app->id : null;
-        if (!$app_id) {
-            return $this->success('No application provided.', 404);
-        }
         $student = $this->student;
         StudentsTracking::create([
             'student_id' => $this->student->id,
             'lesson_id' => $lesson,
-            'app_id' => $app_id,
+            'app_id' => $app_id ?: null,
             'action' => 'done',
             'date' => date("Y-m-d H:i:s"),
             'start_datetime' => date("Y-m-d H:i:s", (request()->start_datetime ? strtotime(request()->start_datetime) : date('U'))),
@@ -155,6 +161,9 @@ class StudentsTrackingController extends Controller
             'user_agent' => request()->server('HTTP_USER_AGENT'),
             'is_testout' => $is_testout
         ]);
+        if (!$app_id) {
+            return $this->success('Done!', 200);
+        }
         $progress_data = [
             'student_id' => $this->student->id,
             'entity_type' => 'lesson',

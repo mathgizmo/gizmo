@@ -38,8 +38,9 @@ class TopicController extends Controller
             if ($app_id == 0) {
                 $this->app = new Application();
                 $this->app->id = 0;
-                $this->app->name = '';
+                $this->app->name = 'Content Review';
                 $this->app->teacher_id = null;
+                $this->app->question_num = 0;
                 $this->app->testout_attempts = null;
                 $this->app->allow_any_order = true;
             } else {
@@ -466,6 +467,9 @@ class TopicController extends Controller
         if (($model = Topic::find($topic_id)) == null) {
             return $this->error('Invalid topic.');
         }
+        if (!$this->app) {
+            return $this->error('Assignment not provided!', 404);
+        }
         StudentsTrackingController::topicProgressDone($model->id, $this->student, $this->app->id);
         $this->app->incrementTestoutAttempts($this->student->id, $topic_id);
         $message = StudentsTrackingController::checkIfApplicationIsComplete($this->student->id, $this->app->id);
@@ -480,9 +484,9 @@ class TopicController extends Controller
                 $lesson = Lesson::where('id', $lesson_id)->first();
                 return $this->success($lesson);
             }
-            return abort(404, 'Last Visited Lesson Not Found!');
+            return $this->error('Last Visited Lesson Not Found!', 404);
         } catch (\Exception $e) {
-            return abort(404, 'Last Visited Lesson Not Found!');
+            return $this->error('Last Visited Lesson Not Found!', 404);
         }
     }
 

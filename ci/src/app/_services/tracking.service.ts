@@ -11,10 +11,10 @@ export class TrackingService {
         private http: HttpService) {
     }
 
-    startLesson(lesson_id, app_id = null) {
+    startLesson(lesson_id, app_id = -1) {
         let url = '/lesson/' + lesson_id + '/start';
-        if (this.appId) {
-            url += '?app_id=' + (app_id ? app_id : this.appId);
+        if (this.appId || app_id >= 0) {
+            url += '?app_id=' + (app_id >= 0 ? app_id : this.appId);
         }
         if (lesson_id !== -1) {
             return this.http.post(url, '');
@@ -23,22 +23,14 @@ export class TrackingService {
         }
     }
 
-    doneLesson(topic_id, lesson_id, start_datetime, weak_questions, app_id = null) {
+    doneLesson(topic_id, lesson_id, start_datetime, weak_questions, app_id = -1) {
         const request = { start_datetime: start_datetime,
             weak_questions: weak_questions };
-        if (lesson_id === -1) {
-            let url = '/topic/' + topic_id + '/testout/done';
-            if (this.appId || app_id) {
-                url += '?app_id=' + (app_id ? app_id : this.appId);
-            }
-            return this.http.post(url, request);
-        } else {
-            let url = '/lesson/' + lesson_id + '/done';
-            if (this.appId || app_id) {
-                url += '?app_id=' + this.appId;
-            }
-            return this.http.post(url, request);
+        let url = lesson_id === -1 ? ('/topic/' + topic_id + '/testout/done') : ('/lesson/' + lesson_id + '/done');
+        if (this.appId || app_id >= 0) {
+            url += '?app_id=' + (app_id >= 0 ? app_id : this.appId);
         }
+        return this.http.post(url, request);
     }
 
     finishTestout(topic_id, lesson_id, start_datetime, weak_questions, app_id = null) {
