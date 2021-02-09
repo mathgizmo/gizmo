@@ -59,6 +59,19 @@ export class AssignmentService {
             );
     }
 
+    public copyAssignment(app_id) {
+        return this.http.post('/assignments/' + app_id + '/copy')
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
     public getAppTree(app_id = 0) {
         return this.http.get('/assignments/' + app_id + '/tree')
             .pipe(

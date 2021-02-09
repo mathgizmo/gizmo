@@ -118,6 +118,31 @@ export class ManageAssignmentsComponent implements OnInit {
             });
     }
 
+    onCopyAssignment(item) {
+        this.assignmentService.copyAssignment(item.id).subscribe(assignment => {
+            if (assignment) {
+                this.assignments.unshift(assignment);
+                this.snackBar.open('Assignment have been successfully copied!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }
+        }, error => {
+            let message = '';
+            if (typeof error === 'object') {
+                Object.values(error).forEach(x => {
+                    message += x + ' ';
+                });
+            } else {
+                message = error;
+            }
+            this.snackBar.open(message ? message : 'Error occurred while copying assignment!', '', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+            });
+        });
+    }
+
     onDeleteAssignment(assignment_id) {
         const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
             data: {
