@@ -6,6 +6,7 @@ use App\Application;
 use App\ClassApplication;
 use App\Question;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -45,11 +46,47 @@ class ApplicationController extends Controller
         ]);
     }
 
+    public function getTest(Request $request, $test_id) {
+        $test = ClassApplication::where('id', $test_id)->first();
+        if (!$test) { abort(404, 'Test not found!'); }
+        $class_app_stud = DB::table('classes_applications_students')
+            ->where('class_app_id', $test->id)
+            ->where('student_id', $this->user->id)->first();
+        if ($test->password && (!$class_app_stud || !$class_app_stud->is_revealed)) {
+            return $this->error('The user dont have access to this test!', 400);
+        }
+        $test_resource = [
+            'id' => $test->id,
+            'class_id' => $test->class_id,
+            'app_id' => $test->app_id,
+            'start_date' => $test->start_date,
+            'start_time' => $test->start_time,
+            'due_date' => $test->due_date,
+            'due_time' => $test->due_time,
+            'duration' => $test->duration,
+            'has_password' => $test->password ? true : false,
+        ];
+        $app = $test->application ?: null;
+        $test_resource['name'] = $app ? $app->name : $test->app_id;
+        $test_resource['mark'] = $class_app_stud ? $class_app_stud->mark : null;
+        $test_resource['start_at'] = $class_app_stud ? $class_app_stud->start_at : null;
+        $test_resource['end_at'] = $class_app_stud ? $class_app_stud->end_at : null;
+        $test_resource['questions_count'] = $class_app_stud ? $class_app_stud->questions_count : null;
+        $class_student = DB::table('classes_students')
+            ->where('class_id', $test->class_id)
+            ->where('student_id', $this->user->id)->first();
+        $duration = $test->duration && $class_student
+            ? ($test->duration * $class_student->test_duration_multiply_by)
+            : ($test->duration ?: null);
+        $test_resource['duration'] = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
+        return $this->success([
+            'test' => $test_resource
+        ], 200);
+    }
+
     public function startTest(Request $request, $test_id) {
         $test = ClassApplication::where('id', $test_id)->first();
-        if (!$test) {
-            abort(404, 'Test not found!');
-        }
+        if (!$test) { abort(404, 'Test not found!'); }
         $class_app_stud = DB::table('classes_applications_students')
             ->where('class_app_id', $test->id)
             ->where('student_id', $this->user->id)->first();

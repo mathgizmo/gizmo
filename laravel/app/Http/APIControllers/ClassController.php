@@ -650,27 +650,6 @@ class ClassController extends Controller
             }
             $query->where('created_at', '>=', $startDate->toDateString());
         }
-        /* Server side Group By
-        $rows = $query->get();
-        $data = [];
-        for ($i = 0; $i < $startDate->diffInDays($endDate); $i++) {
-            $date = Carbon::parse($startDate->toDateString())->addDays($i)->toDateString();
-            $attempts = 0;
-            $correct = 0;
-            foreach ($rows->where('created_at', '>=', $date)
-                         ->where('created_at', '<', Carbon::parse($date)->addDays(1)->toDateString()) as $row) {
-                $attempts++;
-                if ($row->is_right_answer) {
-                    $correct++;
-                }
-            }
-            array_push($data, (object) [
-                'date' => $date,
-                'attempts' => $attempts,
-                'correct' => $correct,
-            ]);
-        } */
-        /* SQL side Group By */
         $query->select(
             DB::raw('DATE(created_at) as date'),
             DB::raw('COUNT(id) as attempts'),
@@ -695,7 +674,6 @@ class ClassController extends Controller
                 ]);
             }
         }
-
         return $this->success([
             'items' => $data
         ]);

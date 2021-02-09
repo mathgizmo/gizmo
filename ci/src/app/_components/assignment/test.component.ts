@@ -1,8 +1,8 @@
-﻿import {Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+﻿import {Component, OnInit, OnDestroy, ViewChildren, QueryList} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import { timer, Subscription } from 'rxjs';
+import {timer, Subscription} from 'rxjs';
 import {takeWhile, tap} from 'rxjs/operators';
-import { QuestionComponent } from './topic/lesson/question/question.component';
+import {QuestionComponent} from './topic/lesson/question/question.component';
 import {AuthenticationService, QuestionService, TestService, TrackingService} from '../../_services';
 
 @Component({
@@ -25,7 +25,8 @@ export class TestComponent implements OnInit, OnDestroy {
         complete_percent: 0,
         questions_count: 0,
         answered_questions_count: 0,
-        start: 0
+        start: 0,
+        start_at: null
     };
     public enableTimer = true;
     public counter = 1800;
@@ -56,7 +57,8 @@ export class TestComponent implements OnInit, OnDestroy {
                 private trackingService: TrackingService,
                 private questionService: QuestionService,
                 private authenticationService: AuthenticationService,
-    ) {}
+    ) {
+    }
 
     ngOnInit() {
         const user = this.authenticationService.userValue;
@@ -82,59 +84,58 @@ export class TestComponent implements OnInit, OnDestroy {
     }
 
     private initData() {
-        // if (this.checkState()) {
-        //     this.initialLoading = 0;
-        //     this.enableTimer = this.test.duration > 0;
-        //     if (this.enableTimer) {
-        //         this.counter = Math.round(this.test.duration - ((Date.now() - this.test.start) / 1000));
-        //         this.initTimer();
-        //     }
-        //     if (this.test.questions_count) {
-        //         this.nextQuestion();
-        //     }
-        // } else {
-            this.testService.startTest(this.testId)
-                .subscribe(res => {
-                    if (!res.test) {
-                        this.router.navigate(['student/tests']);
-                    }
-                    this.initialLoading = 0;
-                    this.test = res.test;
-                    this.enableTimer = res.test.duration > 0;
-                    this.counter = +res.test.time_left;
-                    if (this.enableTimer) {
-                        this.initTimer();
-                        this.test.start = Date.now();
-                    }
-                    this.test.questions_count = +res.test.questions_count;
-                    this.test.answered_questions_count = this.test.questions_count - res.test.questions.length;
-                    this.test.complete_percent = this.test.questions_count > 0 ?
-                        (this.test.answered_questions_count / this.test.questions_count * 100) : 100;
-                    if (this.test && this.test.questions_count) {
-                        if (this.test.allow_any_order) {
-                            const shuffle = (array) => {
-                                let currentIndex = array.length, temporaryValue, randomIndex;
-                                while (0 !== currentIndex) {
-                                    randomIndex = Math.floor(Math.random() * currentIndex);
-                                    currentIndex -= 1;
-                                    temporaryValue = array[currentIndex];
-                                    array[currentIndex] = array[randomIndex];
-                                    array[randomIndex] = temporaryValue;
-                                }
-                                return array;
-                            };
-                            this.test.questions = shuffle(this.test.questions);
-                        }
-                        this.nextQuestion();
-                    }
-                }, error => {
+        this.testService.getTest(this.testId).subscribe(res => {
+            if (!res.test) {
+                this.router.navigate(['student/tests']);
+            }
+            this.test = res.test;
+            if (this.test.start_at) {
+                this.startTest();
+            }
+        });
+    }
+
+    public startTest() {
+        this.testService.startTest(this.testId)
+            .subscribe(res => {
+                if (!res.test) {
                     this.router.navigate(['student/tests']);
-                });
-        // }
+                }
+                this.initialLoading = 0;
+                this.test = res.test;
+                this.enableTimer = res.test.duration > 0;
+                this.counter = +res.test.time_left;
+                if (this.enableTimer) {
+                    this.initTimer();
+                    this.test.start = Date.now();
+                }
+                this.test.questions_count = +res.test.questions_count;
+                this.test.answered_questions_count = this.test.questions_count - res.test.questions.length;
+                this.test.complete_percent = this.test.questions_count > 0 ?
+                    (this.test.answered_questions_count / this.test.questions_count * 100) : 100;
+                if (this.test && this.test.questions_count) {
+                    if (this.test.allow_any_order) {
+                        const shuffle = (array) => {
+                            let currentIndex = array.length, temporaryValue, randomIndex;
+                            while (0 !== currentIndex) {
+                                randomIndex = Math.floor(Math.random() * currentIndex);
+                                currentIndex -= 1;
+                                temporaryValue = array[currentIndex];
+                                array[currentIndex] = array[randomIndex];
+                                array[randomIndex] = temporaryValue;
+                            }
+                            return array;
+                        };
+                        this.test.questions = shuffle(this.test.questions);
+                    }
+                    this.nextQuestion();
+                }
+            }, error => {
+                this.router.navigate(['student/tests']);
+            });
     }
 
     private nextQuestion() {
-        // this.saveState();
         this.question = this.test.questions.shift();
     }
 
@@ -166,14 +167,13 @@ export class TestComponent implements OnInit, OnDestroy {
             this.correctQuestionRate = res['correct_question_rate'];
             this.question = null;
             this.counter = 0;
-            // this.removeState();
         });
     }
 
     private initTimer() {
         this.countDown = timer(0, 1000)
             .pipe(
-                takeWhile( () => this.counter > 0),
+                takeWhile(() => this.counter > 0),
                 tap(() => {
                     --this.counter;
                     if (this.counter <= 0) {
@@ -181,32 +181,11 @@ export class TestComponent implements OnInit, OnDestroy {
                     }
                 })
             )
-            .subscribe( () => {});
+            .subscribe(() => {
+            });
         if (this.counter <= 0) {
             this.finishTest();
         }
     }
-
-    // private checkState() {
-    //     const test = localStorage.getItem('current_test');
-    //     if (test) {
-    //         this.test = JSON.parse(test);
-    //     }
-    //     const question = localStorage.getItem('current_question');
-    //     if (question) {
-    //         this.question = JSON.parse(question);
-    //     }
-    //     return !!test;
-    // }
-
-    // private saveState() {
-    //     localStorage.setItem('current_test', JSON.stringify(this.test));
-    //     localStorage.setItem('current_question', JSON.stringify(this.question));
-    // }
-
-    // private removeState() {
-    //     localStorage.removeItem('current_test');
-    //     localStorage.removeItem('current_question');
-    // }
 
 }

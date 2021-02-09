@@ -98,6 +98,10 @@ export class TestService {
             );
     }
 
+    public getTest(testId) {
+        return this.http.get('/tests/' + testId);
+    }
+
     public startTest(testId) {
         return this.http.post('/tests/' + testId + '/start');
     }
