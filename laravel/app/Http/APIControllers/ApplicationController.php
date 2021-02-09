@@ -297,6 +297,15 @@ class ApplicationController extends Controller
         return $this->error('Error.');
     }
 
+    public function copy($app_id) {
+        $app = Application::where('id', $app_id)->where('teacher_id', $this->user->id)->first();
+        if ($app) {
+            $new_app = $app->replicateWithRelations();
+            return $this->success(['item' => $new_app, 'success' => true]);
+        }
+        return $this->error('Not Found!', 404);
+    }
+
     public function getAppTree($app_id) {
         $app = Application::where('id', $app_id)->where('teacher_id', $this->user->id)->first();
         if (!$app) {

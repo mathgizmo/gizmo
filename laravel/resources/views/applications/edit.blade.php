@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Gizmo - Admin: Manage Assignments')
+@section('title', 'Gizmo - Admin: Manage Applications')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('applications.index')  }}">Manage Assignments</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('applications.index')  }}">Manage Applications</a></li>
     <li class="breadcrumb-item active">Edit {{ucfirst($application->type)}}</li>
 @endsection
 

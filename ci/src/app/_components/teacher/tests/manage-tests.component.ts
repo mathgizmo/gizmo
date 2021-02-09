@@ -118,6 +118,31 @@ export class ManageTestsComponent implements OnInit {
             });
     }
 
+    onCopyTest(item) {
+        this.testService.copyTest(item.id).subscribe(test => {
+            if (test) {
+                this.tests.unshift(test);
+                this.snackBar.open('Test have been successfully copied!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }
+        }, error => {
+            let message = '';
+            if (typeof error === 'object') {
+                Object.values(error).forEach(x => {
+                    message += x + ' ';
+                });
+            } else {
+                message = error;
+            }
+            this.snackBar.open(message ? message : 'Error occurred while copying test!', '', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+            });
+        });
+    }
+
     onDeleteTest(test_id) {
         const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
             data: {

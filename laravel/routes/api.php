@@ -94,6 +94,7 @@ $api->version('v1', function ($api) {
         $api->post('/tests/{test_id}/finish', 'App\Http\APIControllers\ApplicationController@finishTest');
         $api->get('/tests', 'App\Http\APIControllers\ApplicationController@getTests');
         $api->post('/tests', 'App\Http\APIControllers\ApplicationController@storeTest');
+        $api->post('/tests/{test_id}/copy', 'App\Http\APIControllers\ApplicationController@copy');
         $api->put('/tests/{app_id}', 'App\Http\APIControllers\ApplicationController@update');
         $api->delete('/tests/{app_id}', 'App\Http\APIControllers\ApplicationController@delete');
         $api->get('/tests/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');

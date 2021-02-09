@@ -21,6 +21,7 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::resource('applications', 'ApplicationController', ['except' => ['show']]);
+    Route::post('applications/{application}/copy', 'ApplicationController@copy')->name('applications.copy');
     Route::get('applications/search', 'ApplicationController@find')->name('applications.search');
     Route::resource('levels', 'LevelController');
     Route::resource('units', 'UnitController');

@@ -76,7 +76,7 @@
                             Participants
                         </a>
                         <a class="nav-link" href="{{ url('/applications') }}">
-                            Manage Assignments
+                            Manage Applications
                         </a>
                         <a class="nav-link" href="{{ url('/classes') }}">
                             Manage Classes

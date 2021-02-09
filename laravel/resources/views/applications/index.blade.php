@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Gizmo - Admin: Manage Assignments')
+@section('title', 'Gizmo - Admin: Manage Applications')
 
 @section('breadcrumb')
-    <li class="breadcrumb-item active">Manage Assignments</li>
+    <li class="breadcrumb-item active">Manage Applications</li>
 @endsection
 
 @section('content')
@@ -15,7 +15,7 @@
     @endif
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row justify-content-between">
-            Manage Assignments
+            Manage Applications
             <div class="d-flex">
                 <a class="btn btn-dark btn-sm" href="{{ route('applications.create', ['type' => 'assignment']) }}">+ add assignment</a>
                 <a class="btn btn-dark btn-sm ml-1" href="{{ route('applications.create', ['type' => 'test']) }}">+ add test</a>
@@ -91,6 +91,12 @@
                             <td>{{$application->teacher ? $application->teacher->name : ''}}</td>
                             <td>{{ucfirst($application->type)}}</td>
                             <td class="text-right">
+                                <form action="{{ route('applications.copy', $application->id) }}"
+                                      method="POST" style="display: inline;">
+                                    <input type="hidden" name="_method" value="POST">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <button class="btn btn-outline-dark" type="submit">Copy</button>
+                                </form>
                                 <a class="btn btn-dark" href="{{ route('applications.edit', $application->id) }}">Edit</a>
                                 <form action="{{ route('applications.destroy', $application->id) }}"
                                       method="POST" style="display: inline;"

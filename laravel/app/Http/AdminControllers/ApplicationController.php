@@ -137,6 +137,12 @@ class ApplicationController extends Controller
         return redirect('/applications')->with(array('message' => 'Deleted successfully'));
     }
 
+    public function copy(Request $request, Application $application) {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $copy = $application->replicateWithRelations();
+        return redirect()->route('applications.edit', $copy)->with(array('message' => 'Copied successfully!'));
+    }
+
     public function find(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());

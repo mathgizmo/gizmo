@@ -36,6 +36,19 @@ export class TestService {
             );
     }
 
+    public copyTest(app_id) {
+        return this.http.post('/tests/' + app_id + '/copy')
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
     public updateTest(app_id, item) {
         return this.http.put('/tests/' + app_id, item)
             .pipe(

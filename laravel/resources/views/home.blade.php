@@ -49,7 +49,7 @@
             Participants
         </a>
         <a class="btn btn-outline-dark mr-2" href="{{ url('/applications') }}">
-            Manage Assignments
+            Manage Applications
         </a>
         <a class="btn btn-outline-dark mr-2" href="{{ url('/classes') }}">
             Manage Classes

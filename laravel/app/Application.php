@@ -423,5 +423,19 @@ class Application extends Model
         return '/images/default-icon.svg';
     }
 
+    public function replicateWithRelations(): Application {
+        $copy = $this->replicate();
+        $copy->name = $this->name . ' - Copy';
+        $copy->push();
+        foreach (DB::table('application_has_models')->where('app_id', $this->id)->get() as $row) {
+            $relation = DB::table('application_has_models')->insert([
+                'app_id' => $copy->id,
+                'model_type' => $row->model_type,
+                'model_id' => $row->model_id
+            ]);
+        }
+        return $copy;
+    }
+
     public $timestamps = false;
 }
