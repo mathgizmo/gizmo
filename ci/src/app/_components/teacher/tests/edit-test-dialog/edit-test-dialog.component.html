@@ -72,6 +72,10 @@
         <label for="duration">Duration in minutes (0 – means unlimited time):</label>
         <input id="duration" class="form-control" name="duration" type="number" step="1" min="0" [(ngModel)]="test.duration" required />
     </div>
+    <div class="form-group">
+        <label for="question_num">Questions per lesson:</label>
+        <input id="question_num" name="question_num" type="number" step="1" min="1" [(ngModel)]="test.question_num" required class="form-control"/>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>

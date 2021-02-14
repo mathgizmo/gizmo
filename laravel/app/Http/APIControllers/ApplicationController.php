@@ -169,26 +169,28 @@ class ApplicationController extends Controller
                 ->where('student_id', $this->user->id)->delete();
             $question_order_no = 1;
             foreach ($lesson_ids as $lesson_id) {
-                $question = Question::with('answers')
+                $questions_list = Question::with('answers')
                     ->where('lesson_id', $lesson_id)
-                    ->inRandomOrder()->first();
-                if ($question) {
-                    $question->order_no = $question_order_no;
-                    $questions[] = $question;
-                    $lesson = $question->lesson;
-                    $topic = $lesson ? $lesson->topic : null;
-                    $unit = $topic ? $topic->unit : null;
-                    DB::table('students_test_questions')->insert([
-                        'class_app_id' => $test_id,
-                        'student_id' => $this->user->id,
-                        'question_id' => $question->id,
-                        'topic_id' => $lesson ? $lesson->topic_id : null,
-                        'unit_id' => $topic ? $topic->unit_id : null,
-                        'level_id' => $unit ? $unit->level_id : null,
-                        'is_answered' => false,
-                        'order_no' => $question_order_no
-                    ]);
-                    $question_order_no++;
+                    ->inRandomOrder()->limit($app->question_num)->get();
+                if ($questions_list && count($questions_list) > 0) {
+                    foreach ($questions_list as $question) {
+                        $question->order_no = $question_order_no;
+                        $questions[] = $question;
+                        $lesson = $question->lesson;
+                        $topic = $lesson ? $lesson->topic : null;
+                        $unit = $topic ? $topic->unit : null;
+                        DB::table('students_test_questions')->insert([
+                            'class_app_id' => $test_id,
+                            'student_id' => $this->user->id,
+                            'question_id' => $question->id,
+                            'topic_id' => $lesson ? $lesson->topic_id : null,
+                            'unit_id' => $topic ? $topic->unit_id : null,
+                            'level_id' => $unit ? $unit->level_id : null,
+                            'is_answered' => false,
+                            'order_no' => $question_order_no
+                        ]);
+                        $question_order_no++;
+                    }
                 }
             }
             $test_resource['questions'] = $questions;

@@ -17,7 +17,8 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         'tree': null,
         'allow_any_order': 0,
         'allow_back_tracking': 0,
-        'duration': 0
+        'duration': 0,
+        'question_num': 1,
     };
     tree = [];
     title = 'Edit Test';
