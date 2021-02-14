@@ -91,6 +91,7 @@ $api->version('v1', function ($api) {
         $api->delete('/assignments/{app_id}', 'App\Http\APIControllers\ApplicationController@delete');
         $api->get('/assignments/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');
 
+        $api->post('/tests/get-questions-count', 'App\Http\APIControllers\ApplicationController@getQuestionsCount');
         $api->post('/tests/{test_id}/start', 'App\Http\APIControllers\ApplicationController@startTest');
         $api->post('/tests/{test_id}/finish', 'App\Http\APIControllers\ApplicationController@finishTest');
         $api->get('/tests', 'App\Http\APIControllers\ApplicationController@getTests');

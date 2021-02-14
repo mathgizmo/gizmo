@@ -110,4 +110,17 @@ export class TestService {
         return this.http.post('/tests/' + testId + '/finish');
     }
 
+    public getQuestionsCount(tree, questions_per_lesson = 1) {
+        return this.http.post('/tests/get-questions-count', { tree: tree, questions_per_lesson: questions_per_lesson})
+            .pipe(
+                map((response: Response) => {
+                    return response['questions_count'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
 }

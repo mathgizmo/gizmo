@@ -416,6 +416,26 @@ class Application extends Model
         return $data ? $data->attempts + 1 : 1;
     }
 
+    public function getQuestionsCount() {
+        $count = 0;
+        try {
+            $lesson_ids = $this->getLessonsQuery()->select('lesson.id')->pluck('lesson.id');
+            foreach ($lesson_ids as $lesson_id) {
+                try {
+                    if ($this->type == 'test') {
+                        $count += count(Question::where('lesson_id', $lesson_id)
+                            ->limit($this->question_num)
+                            ->select('id')->pluck('id'));
+                    } else {
+                        $count += count(Question::where('lesson_id', $lesson_id)
+                            ->select('id')->pluck('id'));
+                    }
+                } catch (\Exception $e) { }
+            }
+        } catch (\Exception $e) { }
+        return $count;
+    }
+
     public function icon() {
         if ($this->icon) {
             return $this->icon;

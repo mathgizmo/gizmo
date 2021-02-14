@@ -4,14 +4,16 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
 import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
+import {TestService} from '../../../../_services';
 @Component({
     selector: 'app-edit-test-dialog',
     templateUrl: 'edit-test-dialog.component.html',
     styleUrls: ['edit-test-dialog.component.scss'],
+    providers: [TestService]
 })
 export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogComponent> {
 
-    test = {
+    public test = {
         'name': '',
         'icon': null,
         'tree': null,
@@ -19,9 +21,11 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         'allow_back_tracking': 0,
         'duration': 0,
         'question_num': 1,
+        'total_questions_count': 0
     };
-    tree = [];
-    title = 'Edit Test';
+    public questionsCount = 0;
+    public tree = [];
+    public title = 'Edit Test';
     public icons = [];
 
     public showImages = false;
@@ -29,6 +33,7 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
     private readonly adminUrl = environment.adminUrl;
 
     constructor(
+        private testService: TestService,
         private sanitizer: DomSanitizer,
         public dialogRef: MatDialogRef<EditTestDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -36,6 +41,8 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         if (data.test) {
             // tslint:disable-next-line:indent
         	this.test = data.test;
+            // tslint:disable-next-line:indent
+        	this.questionsCount = this.test.total_questions_count || 0;
         }
         if (data.title) {
             // tslint:disable-next-line:indent
@@ -54,6 +61,13 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
     onSave() {
         this.test.tree = $('#tree-form').serialize();
         this.dialogRef.close(this.test);
+    }
+
+    getQuestionsCount() {
+        const tree = $('#tree-form').serialize();
+        this.testService.getQuestionsCount(tree, this.test.question_num).subscribe(questions_count => {
+            this.questionsCount = questions_count;
+        });
     }
 
     hasCheckedChildrenLevel(level) {
@@ -141,6 +155,7 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
             }
         }
         checkSiblings(container);
+        this.getQuestionsCount();
     }
 
 }

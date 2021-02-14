@@ -4,7 +4,10 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\ClassApplication;
+use App\Lesson;
 use App\Question;
+use App\Topic;
+use App\Unit;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
@@ -40,6 +43,7 @@ class ApplicationController extends Controller
         $items = Application::where('teacher_id', $this->user->id)->where('type', 'test')->get();
         foreach ($items as $item) {
             $item->duration = $item->duration ? round($item->duration / 60) : 0; // seconds to minutes
+            $item->total_questions_count = $item->getQuestionsCount();
         }
         return $this->success([
             'items' => array_values($items->toArray())
@@ -362,6 +366,79 @@ class ApplicationController extends Controller
             $icons[] = str_replace('../admin/', '', $icon);
         }
         return $this->success(['items' => array_values($icons)]);
+    }
+
+    public function getQuestionsCount(Request $request) {
+        parse_str(request('tree'), $tree);
+        $questions_per_lesson = request('questions_per_lesson') ?: 1;
+        $levels = [];
+        $units = [];
+        $topics = [];
+        $lessons = [];
+        try {
+            if ((is_array($tree) ? array_key_exists('level', $tree) : $tree['level']) && is_array($tree['level'])) {
+                foreach ($tree['level'] as $key => $value) {
+                    array_push($levels, $key);
+                }
+            }
+            if ((is_array($tree) ? array_key_exists('unit', $tree) : $tree['unit']) && is_array($tree['unit'])) {
+                foreach ($tree['unit'] as $key => $value) {
+                    $unit = Unit::where('id', $key)->first();
+                    if (!$unit || in_array($unit->level_id, $levels)) {
+                        continue;
+                    }
+                    array_push($units, $key);
+                }
+            }
+            if ((is_array($tree) ? array_key_exists('topic', $tree) : $tree['topic']) && is_array($tree['topic'])) {
+                foreach ($tree['topic'] as $key => $value) {
+                    $topic = Topic::where('id', $key)->first();
+                    $unit = $topic ? $topic->unit : null;
+                    if (!$topic || !$unit || in_array($unit->level_id, $levels) || in_array($topic->unit_id, $units)) {
+                        continue;
+                    }
+                    array_push($topics, $key);
+                }
+            }
+            if ((is_array($tree) ? array_key_exists('lesson', $tree) : $tree['lesson']) && is_array($tree['lesson'])) {
+                foreach ($tree['lesson'] as $key => $value) {
+                    $lesson = Lesson::where('id', $key)->first();
+                    $topic = $lesson ? $lesson->topic : null;
+                    $unit = $topic ? $topic->unit : null;
+                    if (!$lesson || !$topic || !$unit || in_array($unit->level_id, $levels)
+                        || in_array($topic->unit_id, $units) || in_array($lesson->topic_id, $topics)) {
+                        continue;
+                    }
+                    array_push($lessons, $key);
+                }
+            }
+        } catch (\Exception $e) { }
+        $questions_count = 0;
+        $lesson_ids = DB::table('lesson')
+            ->where(function ($q1) use($levels, $units, $topics, $lessons) {
+                $q1->whereIn('lesson.id', $lessons)->orWhereIn('lesson.id', function($q3) use($topics) {
+                    $q3->select('lesson.id')->from('lesson')->whereIn('topic_id', $topics);
+                })->orWhereIn('lesson.id', function($q5) use($units) {
+                    $q5->select('lesson.id')->from('lesson')->whereIn('topic_id', function($q6) use($units) {
+                        $q6->select('topic.id')->from('topic')->whereIn('unit_id', $units);
+                    });
+                })->orWhereIn('lesson.id', function($q8) use($levels) {
+                    $q8->select('lesson.id')->from('lesson')->whereIn('topic_id', function($q9) use($levels) {
+                        $q9->select('topic.id')->from('topic')->whereIn('unit_id', function($q10) use($levels) {
+                            $q10->select('unit.id')->from('unit')->whereIn('level_id', $levels);
+                        });
+                    });
+                });
+            })
+            ->where('lesson.dev_mode', 0)
+            ->select('lesson.id')->pluck('lesson.id');
+        foreach ($lesson_ids as $lesson_id) {
+            try {
+                $questions_count += count(Question::where('lesson_id', $lesson_id)
+                    ->limit($questions_per_lesson)->select('id')->pluck('id'));
+            } catch (\Exception $e) { }
+        }
+        return $this->success(['questions_count' => $questions_count, 'success' => true]);
     }
 
 }
