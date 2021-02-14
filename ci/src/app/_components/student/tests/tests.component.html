@@ -13,6 +13,11 @@
               <span class="app-title">
                 <strong>{{application.name}}</strong>
                 <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
+                <strong *ngIf="application.total_questions_count" class="app-class">
+                  {{application.total_questions_count}}
+                  <span *ngIf="application.total_questions_count > 1">questions</span>
+                  <span *ngIf="application.total_questions_count == 1">question</span>
+                </strong>
                 <strong *ngIf="application.duration" class="app-class">{{application.duration}}</strong>
               </span>
               <span class="app-date">

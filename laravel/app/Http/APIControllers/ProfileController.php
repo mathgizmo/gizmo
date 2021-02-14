@@ -219,6 +219,7 @@ class ProfileController extends Controller
                             ->where('student_id', $student->id)->where('is_revealed', 1)->count() < 1) {
                         continue;
                     }
+                    $item->total_questions_count = $item->getQuestionsCount();
                 } else {
                     $completed_at = $item->getCompletedDate($student->id);
                     $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
