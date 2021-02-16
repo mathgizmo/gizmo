@@ -26,6 +26,9 @@
                         <td>
                             <span *ngIf="item.mark">
                                 {{(item.mark * 100).toFixed(0)}}%
+                                <span *ngIf="item.questions_count">
+                                    ({{(item.mark*item.questions_count).toFixed(0)}}/{{item.questions_count}})
+                                </span>
                             </span>
                             <span *ngIf="!item.mark">
                                 N/A
@@ -46,13 +49,37 @@
                         <td colspan="5">
                             <div *ngFor="let level of item.details" class="level-details d-flex flex-column">
                                 <div>Level: <strong>{{level.title }}</strong></div>
-                                <div>Mark: <strong>{{(level.mark * 100).toFixed(0)}}%</strong></div>
+                                <div>
+                                    Mark:
+                                    <strong>
+                                        {{(level.mark * 100).toFixed(0)}}%
+                                        <span *ngIf="level.correct && level.total">
+                                            ({{level.correct}}/{{level.total}})
+                                        </span>
+                                    </strong>
+                                </div>
                                 <div *ngFor="let unit of level.units" class="level-units d-flex flex-column">
                                     <div>Unit: <strong>{{unit.title }}</strong></div>
-                                    <div>Mark: <strong>{{(unit.mark * 100).toFixed(0)}}%</strong></div>
+                                    <div>
+                                        Mark:
+                                        <strong>
+                                            {{(unit.mark * 100).toFixed(0)}}%
+                                            <span *ngIf="unit.correct && unit.total">
+                                                ({{unit.correct}}/{{unit.total}})
+                                            </span>
+                                        </strong>
+                                    </div>
                                     <div *ngFor="let topic of unit.topics" class="unit-topics d-flex flex-column">
                                         <div>Topic: <strong>{{topic.title }}</strong></div>
-                                        <div>Mark: <strong>{{(topic.mark * 100).toFixed(0)}}%</strong></div>
+                                        <div>
+                                            Mark:
+                                            <strong>
+                                                {{(topic.mark * 100).toFixed(0)}}%
+                                                <span *ngIf="topic.correct && topic.total">
+                                                    ({{topic.correct}}/{{topic.total}})
+                                                </span>
+                                            </strong>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

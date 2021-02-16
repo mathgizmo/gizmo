@@ -704,7 +704,7 @@ class ClassController extends Controller
             $query->orderBy('email');
             $students = $query->get([
                 'students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered',
-                'classes_applications_students.mark', 'classes_applications_students.start_at', 'classes_applications_students.end_at'
+                'classes_applications_students.mark', 'classes_applications_students.questions_count', 'classes_applications_students.start_at', 'classes_applications_students.end_at'
             ]);
             return $this->success(['students' => array_values($students->toArray())]);
         }
