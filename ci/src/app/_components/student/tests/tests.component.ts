@@ -6,9 +6,11 @@ import {MatDialog} from '@angular/material/dialog';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TestOptionsDialogComponent} from './test-options-dialog/test-options-dialog.component';
+import {TestStartDialogComponent} from './test-start-dialog/test-start-dialog.component';
 
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
+import {EditAssignmentDialogComponent} from '../../teacher';
 
 @Component({
     selector: 'app-my-tests',
@@ -28,7 +30,7 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
-    
+
     public password = null;
 
     constructor(
@@ -79,13 +81,13 @@ export class MyTestsComponent implements OnInit, OnDestroy {
         if (!app || (app.is_blocked)) {
             return;
         }
-        this.router.navigate(['/test/' + app.class_app_id]);
+        this.openStartTestDialog(app);
     }
 
     onStartSecretTest() {
         this.userService.revealTest(this.password)
             .subscribe(response => {
-                this.router.navigate(['/test/' + response.class_app_id]);
+                this.openStartTestDialog(response);
             }, error => {
                 let message = '';
                 if (typeof error === 'object') {
@@ -102,19 +104,31 @@ export class MyTestsComponent implements OnInit, OnDestroy {
             });
     }
 
+    openOptionsDialog() {
+        const dialogRef = this.dialog.open(TestOptionsDialogComponent, {
+            data: { },
+            position: this.dialogPosition
+        });
+    }
+
+    openStartTestDialog(test) {
+        const dialogRef = this.dialog.open(TestStartDialogComponent, {
+            data: { test: test },
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.router.navigate(['/test/' + test.class_app_id]);
+            }
+        });
+    }
+
     setIcon(image) {
         if (!image) {
             image = 'images/default-icon.svg';
         }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
-    }
-
-    openOptionsDialog() {
-        const dialogRef = this.dialog.open(TestOptionsDialogComponent, {
-            data: { },
-            position: this.dialogPosition
-        });
     }
 
 }

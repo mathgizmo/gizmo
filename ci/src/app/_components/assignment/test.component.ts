@@ -70,10 +70,10 @@ export class TestComponent implements OnInit, OnDestroy {
         });
         this.routerEvent = this.router.events.subscribe((evt) => {
             if (evt instanceof NavigationEnd) {
-                this.initData();
+                this.startTest();
             }
         });
-        this.initData();
+        this.startTest();
     }
 
     ngOnDestroy() {
@@ -81,18 +81,6 @@ export class TestComponent implements OnInit, OnDestroy {
         if (this.countDown) {
             this.countDown.unsubscribe();
         }
-    }
-
-    private initData() {
-        this.testService.getTest(this.testId).subscribe(res => {
-            if (!res.test) {
-                this.router.navigate(['student/tests']);
-            }
-            this.test = res.test;
-            if (this.test.start_at) {
-                this.startTest();
-            }
-        });
     }
 
     public startTest() {

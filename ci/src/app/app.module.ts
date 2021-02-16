@@ -26,7 +26,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatListModule} from '@angular/material/list';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
@@ -43,7 +43,7 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
 import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent,
-    MyInvitationsComponent, TestOptionsDialogComponent} from './_components/student/index';
+    MyInvitationsComponent, TestOptionsDialogComponent, TestStartDialogComponent} from './_components/student/index';
 import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
@@ -155,6 +155,7 @@ FullCalendarModule.registerPlugins([
         EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
         TestOptionsDialogComponent,
+        TestStartDialogComponent,
         ReviewContentComponent,
         ClassDashboardComponent,
         ClassAssignmentsComponent,
@@ -198,7 +199,8 @@ FullCalendarModule.registerPlugins([
         EditClassAssignmentDialogComponent,
         EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
-        TestOptionsDialogComponent
+        TestOptionsDialogComponent,
+        TestStartDialogComponent
     ],
     providers: [
         AuthGuard,
