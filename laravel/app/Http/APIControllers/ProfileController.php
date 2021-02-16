@@ -128,11 +128,23 @@ class ProfileController extends Controller
                     ]);
                 }
                 $selected = $app;
+                break;
             }
         }
         if ($selected) {
+            $test = $selected->test()->first();
+            $class_student = DB::table('classes_students')
+                ->where('class_id', $selected->class_id)
+                ->where('student_id', $student->id)->first();
+            $duration = $selected->duration && $class_student
+                ? ($selected->duration * $class_student->test_duration_multiply_by)
+                : ($selected->duration ?: null);
+            $test_duration = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
             return $this->success([
-                'class_app_id' => $selected->id
+                'class_app_id' => $selected->id,
+                'name' => $test->name,
+                'duration' => $test_duration,
+                'total_questions_count' => $test->getQuestionsCount()
             ], 200);
         }
         return $this->error('Test Not Found!', 404);
