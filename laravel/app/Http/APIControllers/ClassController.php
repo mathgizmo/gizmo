@@ -536,13 +536,23 @@ class ClassController extends Controller
         if (request()->filled('students') && request('students')) {
             $students = Student::whereIn('id', request('students'))->get();
             if ($students) {
-                DB::table('classes_applications_students')
-                    ->where('class_app_id', $class_app->id)->delete();
+                $old_students = array_values(DB::table('classes_applications_students')
+                    ->where('class_app_id', $class_app->id)->get()->pluck('student_id')->toArray());
                 foreach ($students as $student) {
-                    DB::table('classes_applications_students')->insert([
-                        'class_app_id' => $class_app->id,
-                        'student_id' => $student->id,
-                    ]);
+                    if (($key = array_search($student->id, $old_students)) !== false) {
+                        unset($old_students[$key]);
+                    } else {
+                        DB::table('classes_applications_students')->insert([
+                            'class_app_id' => $class_app->id,
+                            'student_id' => $student->id,
+                        ]);
+                    }
+                }
+                foreach ($old_students as $stud_id) {
+                    DB::table('classes_applications_students')
+                        ->where('class_app_id', $class_app->id)
+                        ->where('student_id', $stud_id)
+                        ->delete();
                 }
             }
         }
@@ -683,15 +693,19 @@ class ClassController extends Controller
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
         if ($class && $class_app) {
-            $students = $class->students()
-                ->leftJoin('classes_applications_students', 'classes_applications_students.student_id', '=', 'students.id')
-                ->where('classes_applications_students.class_app_id', $class_app->id)
-                ->where('classes_applications_students.start_at', '<>', null)
-                ->orderBy('email')
-                ->get([
-                    'students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered',
-                    'classes_applications_students.mark', 'classes_applications_students.start_at', 'classes_applications_students.end_at'
-                ]);
+            $query = $class->students();
+            $query->leftJoin('classes_applications_students', function ($join) use ($class_app) {
+                $join->on('classes_applications_students.student_id', '=', 'students.id')
+                    ->where('classes_applications_students.class_app_id', $class_app->id);
+            });
+            if ($class_app->is_for_selected_students) {
+                $query->whereNotNull('classes_applications_students.id');
+            }
+            $query->orderBy('email');
+            $students = $query->get([
+                'students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered',
+                'classes_applications_students.mark', 'classes_applications_students.start_at', 'classes_applications_students.end_at'
+            ]);
             return $this->success(['students' => array_values($students->toArray())]);
         }
         return $this->error('Error.', 500);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\AdminControllers;
 
 use App\ClassOfStudents;
 use App\Mail\CustomMail;
