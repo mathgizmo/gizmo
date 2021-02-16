@@ -218,7 +218,7 @@ class ProfileController extends Controller
                     $stud_data = DB::table('classes_applications_students')->where('class_app_id', $row->id)
                         ->where('student_id', $student->id)->first();
                     $item->mark = $stud_data ? $stud_data->mark : null;
-                    $item->is_completed = $stud_data && $stud_data->end_at;
+                    $item->is_completed = $stud_data && ($stud_data->end_at || $stud_data->mark);
                     $item->completed_at = $stud_data && $stud_data->end_at ? Carbon::parse($stud_data->end_at)->format('Y-m-d g:i A') : null;
                     $class_student = DB::table('classes_students')
                         ->where('class_id', $row->class_id)

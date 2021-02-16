@@ -41,7 +41,7 @@
                             {{ item.end_at ? (item.end_at | date:'yyyy-M-d h:mm a') : 'N/A' }}
                         </td>
                         <td class="text-right" style="min-width: 160px">
-                            <button *ngIf="item.end_at" class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowDetails(item)" style="margin-right: 8px;">Details</button>
+                            <button *ngIf="item.end_at || item.mark" class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowDetails(item)" style="margin-right: 8px;">Details</button>
                             <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
                         </td>
                     </tr>
