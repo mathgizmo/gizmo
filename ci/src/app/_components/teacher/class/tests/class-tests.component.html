@@ -35,6 +35,7 @@
             <th mat-sort-header="due_date" scope="col">Due Date</th>
             <th mat-sort-header="due_time" scope="col">Due Time</th>
             <th mat-sort-header="duration" scope="col">Duration</th>
+            <th mat-sort-header="attempts" scope="col">Attempts</th>
             <th scope="col">Students</th>
             <th class="text-right" style="min-width: 180px">
               <button *ngIf="available_tests.length > 0" class="button button-small button-outline" mat-button (click)="addTest=!addTest">Add Test</button>
@@ -66,6 +67,9 @@
             <td style="display: flex; min-width: 110px;">
               <input type="number" name="duration" #duration [value]="item.duration" [min]="0" step="1" (change)="onDurationChanged(item, duration.value)" class="form-control" />
               <span style="font-size: 0.8em; margin: 4px 0 4px 4px;">min.</span>
+            </td>
+            <td style="max-width: 110px">
+              <input type="number" min="1" step="1" name="attempts" #attempts [value]="item.attempts" (change)="onAttemptsChanged(item, attempts.value)" class="form-control" />
             </td>
             <td>
               <span *ngIf="item.is_for_selected_students" class="link" (click)="onShowTestStudents(item)">Selected</span>

@@ -78,7 +78,7 @@ $api->version('v1', function ($api) {
         $api->put('/classes/{class_id}/tests/{app_id}/students', 'App\Http\APIControllers\ClassController@changeApplicationStudents');
         $api->delete('/classes/{class_id}/tests/{app_id}', 'App\Http\APIControllers\ClassController@deleteApplicationFromClass');
         $api->get('/classes/{class_id}/tests/{app_id}/report', 'App\Http\APIControllers\ClassController@getTestReport');
-        $api->post('/classes/{class_id}/tests/{app_id}/reset', 'App\Http\APIControllers\ClassController@resetTestProgress');
+        $api->post('classes/{class_id}/tests/{app_id}/student/{student_id}/reset', 'App\Http\APIControllers\ClassController@resetTestProgress');
         $api->get('/classes/{class_id}/tests/{app_id}/student/{student_id}/details', 'App\Http\APIControllers\ClassController@getTestDetails');
         $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
         $api->get('/classes/{class_id}/todo', 'App\Http\APIControllers\ClassController@getToDos');
@@ -95,7 +95,6 @@ $api->version('v1', function ($api) {
         $api->post('/tests/{test_id}/start', 'App\Http\APIControllers\ApplicationController@startTest');
         $api->post('/tests/{test_id}/finish', 'App\Http\APIControllers\ApplicationController@finishTest');
         $api->get('/tests', 'App\Http\APIControllers\ApplicationController@getTests');
-        $api->get('/tests/{test_id}', 'App\Http\APIControllers\ApplicationController@getTest');
         $api->post('/tests', 'App\Http\APIControllers\ApplicationController@storeTest');
         $api->post('/tests/{app_id}/copy', 'App\Http\APIControllers\ApplicationController@copy');
         $api->put('/tests/{app_id}', 'App\Http\APIControllers\ApplicationController@update');

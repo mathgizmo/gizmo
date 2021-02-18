@@ -44,7 +44,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
     }
 
     onResetProgress(item) {
-        this.classService.resetTestProgress(this.test.class_id, this.test.app_id, [item.id])
+        this.classService.resetTestProgress(this.test.class_id, this.test.app_id, item.id, item.attempt_id)
             .subscribe(response => {
                 item.mark = null;
                 item.start_at = null;
@@ -56,7 +56,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
     onShowDetails(item) {
         item.showDetail = !item.showDetail;
         if (item.showDetail) {
-            this.classService.getTestDetails(this.test.class_id, this.test.app_id, item.id)
+            this.classService.getTestDetails(this.test.class_id, this.test.app_id, item.id, item.attempt_id)
                 .subscribe(response => {
                     item.details = response.data;
                 });

@@ -4,6 +4,7 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\ClassApplication;
+use App\ClassApplicationStudent;
 use App\ClassOfStudents;
 use App\Level;
 use App\Progress;
@@ -114,7 +115,8 @@ class ClassController extends Controller
                     foreach ($apps as $app) {
                         $class_data = $app->getClassRelatedData($class_id);
                         if ($class_data->is_for_selected_students) {
-                            if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                            if (DB::table('classes_applications_students')
+                                    ->where('class_app_id', $class_data->id)
                                     ->where('student_id', $student->id)->count() < 1) {
                                 $student_assignments->forget($app->id);
                                 continue;
@@ -303,7 +305,8 @@ class ClassController extends Controller
                 foreach ($apps as $app) {
                     $class_data = $app->getClassRelatedData($class->id);
                     if ($class_data->is_for_selected_students) {
-                        if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                        if (DB::table('classes_applications_students')
+                                ->where('class_app_id', $class_data->id)
                                 ->where('student_id', $this->user->id)->count() < 1) {
                             $apps->forget($app->id);
                         }
@@ -329,7 +332,8 @@ class ClassController extends Controller
                 $class_data = $item->getClassRelatedData($class->id);
                 if (!$this->user->is_teacher) {
                     if ($class_data->is_for_selected_students) {
-                        if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                        if (DB::table('classes_applications_students')
+                                ->where('class_app_id', $class_data->id)
                                 ->where('student_id', $this->user->id)->count() < 1) {
                             $items->forget($item->id);
                         }
@@ -426,7 +430,8 @@ class ClassController extends Controller
                 $class_data = $item->getClassRelatedData($class->id);
                 if (!$this->user->is_teacher) {
                     if ($class_data->is_for_selected_students) {
-                        if (DB::table('classes_applications_students')->where('class_app_id', $class_data->id)
+                        if (DB::table('classes_applications_students')
+                                ->where('class_app_id', $class_data->id)
                                 ->where('student_id', $this->user->id)->count() < 1) {
                             $items->forget($item->id);
                         }
@@ -440,6 +445,7 @@ class ClassController extends Controller
                 $item->duration = $class_data && $class_data->duration ? $class_data->duration : null;
                 $item->duration = round($item->duration/60); // seconds to minutes
                 $item->password = $class_data && $class_data->password ? $class_data->password : null;
+                $item->attempts = $class_data && $class_data->attempts ? $class_data->attempts : 1;
                 $item->color = $class_data && $class_data->color ? $class_data->color : null;
                 $item->is_for_selected_students = $class_data && $class_data->is_for_selected_students;
                 $item->class_id = $class_id;
@@ -474,6 +480,7 @@ class ClassController extends Controller
                     'due_time' => request('due_time') ?: null,
                     'duration' => request('duration') ? (request('duration') * 60) : null, // minutes to seconds
                     'password' => request('password') ?: null,
+                    'attempts' => request('attempts') ?: 1,
                     'color' => request('color') ?: null
                 ]);
             return $this->success('Ok.');
@@ -586,7 +593,7 @@ class ClassController extends Controller
         }
         $items = [];
         foreach (DB::table('classes_applications')->where('class_id', $class_id)->get() as $row) {
-            $item = Application::where('id', $row->app_id)->first();
+            $item = Application::where('id', $row->app_id)->where('type', 'assignment')->first();
             if (!$item) {
                 continue;
             }
@@ -698,36 +705,63 @@ class ClassController extends Controller
                 $join->on('classes_applications_students.student_id', '=', 'students.id')
                     ->where('classes_applications_students.class_app_id', $class_app->id);
             });
+            $query->leftJoin('students_test_attempts', function ($join) use ($class_app) {
+                $join->on('students_test_attempts.test_student_id', '=', 'classes_applications_students.id');
+            });
             if ($class_app->is_for_selected_students) {
                 $query->whereNotNull('classes_applications_students.id');
             }
             $query->orderBy('email');
             $students = $query->get([
-                'students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered',
-                'classes_applications_students.mark', 'classes_applications_students.questions_count', 'classes_applications_students.start_at', 'classes_applications_students.end_at'
+                'students.id',
+                'students.name',
+                'students.first_name',
+                'students.last_name',
+                'students.email',
+                'students.is_registered',
+                'students_test_attempts.id as attempt_id',
+                'students_test_attempts.attempt_no',
+                'students_test_attempts.mark',
+                'students_test_attempts.questions_count',
+                'students_test_attempts.start_at',
+                'students_test_attempts.end_at'
             ]);
             return $this->success(['students' => array_values($students->toArray())]);
         }
         return $this->error('Error.', 500);
     }
 
-    public function resetTestProgress(Request $request, $class_id, $app_id) {
+    public function resetTestProgress(Request $request, $class_id, $app_id, $student_id) {
+        $student = Student::where('id', $student_id)->first();
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
-        if ($class && $class_app) {
-            $students = request('students');
-            DB::table('classes_applications_students')->where('class_app_id', $class_app->id)
-                ->whereIn('student_id', $students)->update([
-                    'mark' => null,
-                    'start_at' => null,
-                    'end_at' => null,
-                    'questions_count' => null,
-                ]);
-            DB::table('students_test_questions')->where('class_app_id', $class_app->id)
-                ->whereIn('student_id', $students)->delete();
-            /* DB::table('students_tracking_questions')->where('class_app_id', $class_app->id)
-                ->whereIn('student_id', $students)->delete(); */
-            return $this->success(['students' => $students], 200);
+        $test_student = $class_app ? $class_app->classApplicationStudents()->where('student_id', $student_id)->first() : null;
+        if ($class && $class_app && $student && $test_student) {
+            $attempt_id = $request->filled('attempt_id') ? intval($request['attempt_id']) : null;
+            if ($attempt_id) {
+                $rows_count = DB::table('students_test_attempts')
+                    ->where('test_student_id', $test_student->id)
+                    ->where('id', $attempt_id)
+                    ->delete();
+                $test_student->resets_count += $rows_count && $rows_count >= 0 ? intval($rows_count) : 1;
+                $test_student->save();
+                DB::table('students_test_questions')
+                    ->where('class_app_id', $class_app->id)
+                    ->where('attempt_id', $attempt_id)
+                    ->where('student_id', $student->id)
+                    ->delete();
+            } else {
+                $rows_count = DB::table('students_test_attempts')
+                    ->where('test_student_id', $test_student->id)
+                    ->delete();
+                $test_student->resets_count += $rows_count && $rows_count >= 0 ? intval($rows_count) : 1;
+                $test_student->save();
+                DB::table('students_test_questions')
+                    ->where('class_app_id', $class_app->id)
+                    ->where('student_id', $student->id)
+                    ->delete();
+            }
+            return $this->success(['success' => true], 200);
         }
         return $this->error('Error.', 500);
     }
@@ -737,13 +771,27 @@ class ClassController extends Controller
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
         if ($class && $class_app && $student) {
+            $attempt_id = $request->filled('attempt_id') ? intval($request['attempt_id']) : null;
+            if (!$attempt_id) {
+                $test_student = DB::table('classes_applications_students')
+                    ->where('class_app_id', $class_app->id)
+                    ->where('student_id', $student_id)
+                    ->first();
+                if ($test_student) {
+                    $attempt = DB::table('students_test_attempts')
+                        ->where('test_student_id', $test_student->id)
+                        ->orderBy('mark', 'DESC')
+                        ->first();
+                    $attempt_id = $attempt ? $attempt->id : null;
+                }
+            }
             $data = DB::table('students_test_questions')
                 ->select(
                     'topic_id', 'unit_id', 'level_id',
                     DB::raw("SUM(1) as total"),
                     DB::raw("SUM(IF(is_right_answer, 1, 0)) as correct")
                 )
-                ->where('class_app_id', $class_app->id)
+                ->where('attempt_id', $attempt_id)
                 ->where('student_id', $student->id)
                 ->groupBy('topic_id', 'unit_id', 'level_id')
                 ->get();
@@ -791,7 +839,6 @@ class ClassController extends Controller
                     'units' => $units
                 ];
             }
-
             return $this->success(['data' => $levels], 200);
         }
         return $this->error('Error.', 500);

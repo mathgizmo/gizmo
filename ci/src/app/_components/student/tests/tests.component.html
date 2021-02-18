@@ -6,23 +6,26 @@
     </div>
     <div *ngIf="!showCompletedApplications" class="applications-list">
       <mat-button-toggle-group *ngIf="applications.length > 0" #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
-        <mat-button-toggle *ngFor="let application of applications" [value]="application.id" (click)="onChangeToDo(application)" [class.active-test]="currentTest && currentTest.id === application.class_app_id">
-          <div class="app-select-container" [class.disabled]="application.is_blocked">
-            <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+        <mat-button-toggle *ngFor="let test of applications" [value]="test.id" (click)="onChangeToDo(test)" [class.active-test]="test.in_progress">
+          <div class="app-select-container" [class.disabled]="test.is_blocked">
+            <div class="app-img" [style.background-image]="setIcon(test.icon)"></div>
             <div class="app-data">
               <span class="app-title">
-                <strong>{{application.name}}</strong>
-                <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
-                <strong *ngIf="application.total_questions_count" class="app-class">
-                  {{application.total_questions_count}}
-                  <span *ngIf="application.total_questions_count > 1">questions</span>
-                  <span *ngIf="application.total_questions_count == 1">question</span>
+                <strong>{{test.name}}</strong>
+                <span *ngIf="test.class" class="app-class">{{test.class.name}}</span>
+                <strong *ngIf="test.in_progress" class="app-class">in progress...</strong>
+                <strong *ngIf="!test.in_progress" class="app-class">
+                  <span *ngIf="test.total_questions_count">{{test.total_questions_count}} questions</span>
+                  <span *ngIf="test.total_questions_count && test.duration"> / </span>
+                  <span *ngIf="test.duration">{{test.duration}}</span>
                 </strong>
-                <strong *ngIf="application.duration" class="app-class">{{application.duration}}</strong>
+                <strong *ngIf="test.attempts_remaining" class="app-class">
+                  {{test.attempts_remaining + ' attempt' + (test.attempts_remaining > 1 ? 's' : '') + ' remaining' }}
+                </strong>
               </span>
               <span class="app-date">
-                <span *ngIf="application.is_blocked && application.start_at" class="due-date">Start At: {{application.start_at}}</span>
-                <span *ngIf="application.due_at" class="due-date">Due At: {{application.due_at}}</span>
+                <span *ngIf="test.is_blocked && test.start_at" class="due-date">Start At: {{test.start_at}}</span>
+                <span *ngIf="test.due_at" class="due-date">Due At: {{test.due_at}}</span>
               </span>
             </div>
           </div>
@@ -41,18 +44,19 @@
     </div>
     <div *ngIf="showCompletedApplications" class="applications-list">
       <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
-        <mat-button-toggle *ngFor="let application of completedApplications" [value]="application.id" (click)="onChangeToDo(application)" >
-          <div class="app-select-container completed" [class.disabled]="application.is_blocked">
-            <div class="app-img" [style.background-image]="setIcon(application.icon)"></div>
+        <mat-button-toggle *ngFor="let test of completedApplications" [value]="test.id" (click)="onChangeToDo(test)" >
+          <div class="app-select-container completed" [class.disabled]="test.is_blocked">
+            <div class="app-img" [style.background-image]="setIcon(test.icon)"></div>
             <div class="app-data">
               <span class="app-title">
-                <strong>{{application.name}}</strong>
-                <span *ngIf="application.class" class="app-class">{{application.class.name}}</span>
-                <strong *ngIf="application.mark" class="app-class">Mark: {{(application.mark * 100).toFixed(0)}}%</strong>
+                <strong>{{test.name}}</strong>
+                <span *ngIf="test.class" class="app-class">{{test.class.name}}</span>
+                <strong *ngIf="test.mark" class="app-class">Mark: {{(test.mark * 100).toFixed(0)}}%</strong>
+                <strong *ngIf="test.attempt_no" class="app-class">Attempt #{{test.attempt_no}}</strong>
               </span>
               <div class="date-container">
-                <span *ngIf="application.completed_at" class="due-date">
-                  Finished At: {{application.completed_at}}
+                <span *ngIf="test.completed_at" class="due-date">
+                  Finished At: {{test.completed_at}}
                 </span>
               </div>
             </div>

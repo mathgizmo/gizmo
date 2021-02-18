@@ -4,6 +4,7 @@ namespace App\Http\APIControllers;
 
 use App\Application;
 use App\ClassApplication;
+use App\ClassApplicationStudent;
 use App\Level;
 use App\Progress;
 use App\Question;
@@ -395,10 +396,21 @@ class StudentsTrackingController extends Controller
                 'is_right_answer' => request('is_right_answer'),
             ]);
             if ($this->app && $this->app->type == 'test' && $this->class_app) {
+                $test_student = ClassApplicationStudent::where('class_app_id', $this->class_app->id)
+                    ->where('student_id', $this->student->id)->first();
+                $current_attempt = $test_student ?
+                    DB::table('students_test_attempts')
+                        ->where('test_student_id', $test_student->id)
+                        ->whereNull('end_at')
+                        ->first() : null;
+                if (!$current_attempt) {
+                    return $this->error('Attempt not found!', 404);
+                }
                 DB::table('students_test_questions')
-                    ->where('class_app_id', $this->class_app->id)
-                    ->where('student_id', $this->student->id)
+                    // ->where('class_app_id', $this->class_app->id)
+                    // ->where('student_id', $this->student->id)
                     ->where('question_id', $question_id)
+                    ->where('attempt_id', $current_attempt->id)
                     ->update([
                         'is_answered' => true,
                         'is_right_answer' => request('is_right_answer')

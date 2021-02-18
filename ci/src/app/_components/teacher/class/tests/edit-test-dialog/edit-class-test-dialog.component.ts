@@ -20,6 +20,7 @@ export class EditClassTestDialogComponent extends BaseDialogComponent<EditClassT
         due_date: null,
         due_time: null,
         duration: 0,
+        attempts: 1,
         password: '',
         color: '#7FA5C1',
         delete: false

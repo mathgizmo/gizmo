@@ -115,6 +115,7 @@ export class ClassTestsComponent implements OnInit {
             due_date: event.end ? end.format('YYYY-MM-DD') : null,
             due_time: event.end ? end.format('HH:mm') : null,
             duration: 0,
+            attempts: 1,
             password: '',
             color: '#7FA5C1',
             delete: false
@@ -247,8 +248,9 @@ export class ClassTestsComponent implements OnInit {
                     if (!students || students.length < 1) { return; }
                     this.classService.addTestToClass(this.classId, app.id, students)
                         .subscribe(newApp => {
-                            app.password = '';
+                            app.password = newApp.password || '';
                             app.duration = newApp.duration || 0;
+                            app.attempts = newApp.attempts || 1;
                             app.start_date = newApp.start_date;
                             app.start_time = newApp.start_time;
                             app.is_for_selected_students = true;
@@ -282,8 +284,9 @@ export class ClassTestsComponent implements OnInit {
             } else {
                 this.classService.addTestToClass(this.classId, app.id)
                     .subscribe(newApp => {
-                        app.password = '';
+                        app.password = newApp.password || '';
                         app.duration = newApp.duration || 0;
+                        app.attempts = newApp.attempts || 1;
                         app.start_date = newApp.start_date;
                         app.start_time = newApp.start_time;
                         app.is_for_selected_students = false;
@@ -415,6 +418,22 @@ export class ClassTestsComponent implements OnInit {
             });
     }
 
+    onAttemptsChanged(item, newAttempts) {
+        item.attempts = newAttempts;
+        this.classService.changeTest(this.classId, item)
+            .subscribe(tests => {
+                this.snackBar.open('Attempts Saved!', '', {
+                    duration: 3000,
+                    panelClass: ['success-snackbar']
+                });
+            }, error => {
+                this.snackBar.open('Error occurred while saving attempts!', '', {
+                    duration: 3000,
+                    panelClass: ['error-snackbar']
+                });
+            });
+    }
+
     onDeleteTest(item) {
         const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
             data: {
@@ -513,6 +532,7 @@ export class ClassTestsComponent implements OnInit {
                 case 'due_date': return compare(a.due_date, b.due_date, isAsc);
                 case 'due_time': return compare(a.due_time, b.due_time, isAsc);
                 case 'duration': return compare(a.duration, b.duration, isAsc);
+                case 'attempts': return compare(a.attempts, b.attempts, isAsc);
                 default: return 0;
             }
         });

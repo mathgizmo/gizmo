@@ -28,6 +28,10 @@
         <input type="number" min="0" step="1" name="duration" id="duration" [(ngModel)]="test.duration" class="form-control" />
     </div>
     <div class="form-group">
+        <label for="attempts">Attempts:</label>
+        <input type="number" min="1" step="1" name="attempts" id="attempts" [(ngModel)]="test.attempts" class="form-control" />
+    </div>
+    <div class="form-group">
         <label for="due_time">Password:</label>
         <input type="text" name="password" id="password" [(ngModel)]="test.password" class="form-control" />
     </div>

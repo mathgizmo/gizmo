@@ -7,6 +7,7 @@
                 <thead>
                 <tr>
                     <th mat-sort-header="email" scope="col">Student</th>
+                    <th mat-sort-header="attempt_no" scope="col">Attempt No</th>
                     <th mat-sort-header="mark" scope="col">Mark</th>
                     <th mat-sort-header="start_at" scope="col">Start At</th>
                     <th mat-sort-header="end_at" scope="col">End At</th>
@@ -15,7 +16,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         <input matInput placeholder="Email" class="filter-item"
                                type="text" name="email" [(ngModel)]="email" [value]="" />
                     </td>
@@ -23,6 +24,7 @@
                 <ng-container *ngFor="let item of students | tableFilter: form.value;">
                     <tr class="tid-data-row">
                         <td style="max-width: 260px;">{{item.email }}</td>
+                        <td>{{item.attempt_no}}</td>
                         <td>
                             <span *ngIf="item.mark">
                                 {{(item.mark * 100).toFixed(0)}}%

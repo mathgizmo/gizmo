@@ -10,7 +10,6 @@ import {TestStartDialogComponent} from './test-start-dialog/test-start-dialog.co
 
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
-import {EditAssignmentDialogComponent} from '../../teacher';
 
 @Component({
     selector: 'app-my-tests',

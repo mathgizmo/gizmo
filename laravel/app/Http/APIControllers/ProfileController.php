@@ -96,11 +96,157 @@ class ProfileController extends Controller
     }
 
     public function getToDos() {
-        return $this->getApplications('assignment');
+        $student = $this->user;
+        $items = [];
+        if ($student->is_self_study) {
+            $classObj = (object) [
+                'teacher_id' => null,
+                'name' => 'Gizmo',
+                'class_type' => 'other',
+                'subscription_type' => 'open',
+                'invitations' => null
+            ];
+            foreach (Application::whereDoesntHave('teacher')->where('type', 'assignment')->get() as $item) {
+                $item->class = $classObj;
+                $item->icon = $item->icon();
+                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                        ->where('student_id', $student->id)->count() > 0;
+                $item->start_time = null;
+                $item->start_date = null;
+                $item->due_time = null;
+                $item->due_date = null;
+                $item->due_at = null;
+                $item->is_blocked = false;
+                $item->start_at = null;
+                $item->duration = $item->duration ? CarbonInterval::seconds($item->duration)->cascade()->forHumans() : null;
+                $completed_at = $item->getCompletedDate($student->id);
+                $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                array_push($items, $item);
+            }
+        } else {
+            $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
+                ->whereHas('assignment')->get();
+            foreach ($apps as $row) {
+                if ($row->is_for_selected_students) {
+                    if (DB::table('classes_applications_students')->where('class_app_id', $row->id)
+                            ->where('student_id', $student->id)->count() < 1) {
+                        continue;
+                    }
+                }
+                $item = Application::where('id', $row->app_id)->first();
+                $classObj = ClassOfStudents::where('id', $row->class_id)->first();
+                if (!$item || !$classObj) {
+                    continue;
+                }
+                $item->class = $classObj;
+                $item->class_app_id = $row->id;
+                $item->icon = $item->icon();
+                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                        ->where('student_id', $student->id)->count() > 0;
+                if ($row->due_date) {
+                    $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
+                } else {
+                    $due_at = null;
+                }
+                $item->start_time = $row->start_time ?: '00:00:00';
+                $item->start_date = $row->start_date;
+                $item->due_time = $row->due_time ?: '00:00:00';
+                $item->due_date = $row->due_date;
+                $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                $now = Carbon::now()->toDateTimeString();
+                if ($row->start_date) {
+                    $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
+                } else {
+                    $start_at = null;
+                }
+                $completed_at = $item->getCompletedDate($student->id);
+                $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                $item->is_blocked = $item->is_completed || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+                $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+                array_push($items, $item);
+            }
+        }
+        return $this->success([
+            'items' => array_values(collect($items)->sortBy('due_at')->toArray())
+        ]);
     }
 
     public function getTests() {
-        return $this->getApplications('test');
+        $student = $this->user;
+        $items = [];
+        $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->whereHas('test')->get();
+        foreach ($apps as $row) {
+            $item = Application::where('id', $row->app_id)->first();
+            $classObj = ClassOfStudents::where('id', $row->class_id)->first();
+            $test_student = DB::table('classes_applications_students')
+                ->where('class_app_id', $row->id)
+                ->where('student_id', $student->id)
+                ->first();
+            if (!$item || !$classObj || ($row->is_for_selected_students && !$test_student)) {
+                continue;
+            }
+            $class_student = DB::table('classes_students')
+                ->where('class_id', $row->class_id)
+                ->where('student_id', $student->id)->first();
+            $now = Carbon::now()->toDateTimeString();
+            $item->class = $classObj;
+            $item->class_app_id = $row->id;
+            $item->icon = $item->icon();
+            $item->start_time = $row->start_time ?: '00:00:00';
+            $item->start_date = $row->start_date;
+            if ($row->start_date) {
+                $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
+            } else {
+                $start_at = null;
+            }
+            $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+            $item->due_time = $row->due_time ?: '00:00:00';
+            $item->due_date = $row->due_date;
+            if ($row->due_date) {
+                $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
+            } else {
+                $due_at = null;
+            }
+            $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+            $duration = $row->duration && $class_student
+                ? ($row->duration * $class_student->test_duration_multiply_by)
+                : ($row->duration ?: null);
+            $item->duration = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
+            if ($row->password && (!$test_student || !$test_student->is_revealed)) {
+                continue;
+            }
+            $attempts = $test_student ? DB::table('students_test_attempts')
+                ->where('test_student_id', $test_student->id)
+                ->get() : [];
+            $current_attempt = $test_student ? $attempts->whereNull('end_at')->first() : null;
+            $attempts_count = count($attempts);
+            $max_mark = $attempts_count ? $attempts->sortByDesc('mark')->first()->mark : 0;
+            foreach ($attempts as $attempt) {
+                $attempt_item = clone $item;
+                $attempt_item->total_questions_count = $attempt->questions_count;
+                $attempt_item->attempt_no = $attempt->attempt_no;
+                // $attempt_item->attempts_remaining = $row->attempts - $attempts_count;
+                $attempt_item->mark = $attempt->mark;
+                $attempt_item->is_completed = ($attempt->end_at || $attempt->mark) ? true : false;
+                $attempt_item->completed_at = $attempt->end_at ? Carbon::parse($attempt->end_at)->format('Y-m-d g:i A') : null;
+                $attempt_item->is_blocked = $attempt_item->is_completed || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+                $attempt_item->in_progress = ($current_attempt && $current_attempt->id == $attempt->id) ? true : false;
+                array_push($items, $attempt_item);
+            }
+            if ($attempts_count < $row->attempts && !$current_attempt && $max_mark < 0.99) {
+                $item->total_questions_count = $item->getQuestionsCount();
+                // $item->attempt_no = ($test_student ? ($test_student->attempts_count + $test_student->resets_count + 1) : 1);
+                $item->attempts_remaining = $row->attempts - $attempts_count;
+                // $item->mark = 0;
+                $item->is_completed = false;
+                // $item->completed_at = null;
+                $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+                array_push($items, $item);
+            }
+        }
+        return $this->success([
+            'items' => array_values(collect($items)->sortBy('due_at')->toArray())
+        ]);
     }
 
     public function revealTest() {
@@ -110,7 +256,8 @@ class ProfileController extends Controller
             $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
                 ->whereHas('test')->where('password', request('password'))->get();
             foreach ($apps as $app) {
-                $class_app_stud = DB::table('classes_applications_students')->where('class_app_id', $app->id)
+                $class_app_stud = DB::table('classes_applications_students')
+                    ->where('class_app_id', $app->id)
                     ->where('student_id', $student->id)->first();
                 if ($app->is_for_selected_students && !$class_app_stud) {
                     continue;
@@ -148,102 +295,6 @@ class ProfileController extends Controller
             ], 200);
         }
         return $this->error('Test Not Found!', 404);
-    }
-
-    private function getApplications($type = 'assignment') {
-        $student = $this->user;
-        $items = [];
-        if ($student->is_self_study) {
-            $classObj = (object) [
-                'teacher_id' => null,
-                'name' => 'Gizmo',
-                'class_type' => 'other',
-                'subscription_type' => 'open',
-                'invitations' => null
-            ];
-            foreach (Application::whereDoesntHave('teacher')->where('type', $type)->get() as $item) {
-                $item->class = $classObj;
-                $item->icon = $item->icon();
-                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
-                        ->where('student_id', $student->id)->count() > 0;
-                $item->start_time = null;
-                $item->start_date = null;
-                $item->due_time = null;
-                $item->due_date = null;
-                $item->due_at = null;
-                $item->is_blocked = false;
-                $item->start_at = null;
-                $item->duration = $item->duration ? CarbonInterval::seconds($item->duration)->cascade()->forHumans() : null;
-                $completed_at = $item->getCompletedDate($student->id);
-                $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
-                array_push($items, $item);
-            }
-        } else {
-            $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
-                ->whereHas($type)->get();
-            foreach ($apps as $row) {
-                if ($row->is_for_selected_students) {
-                    if (DB::table('classes_applications_students')->where('class_app_id', $row->id)
-                            ->where('student_id', $student->id)->count() < 1) {
-                        continue;
-                    }
-                }
-                $item = Application::where('id', $row->app_id)->first();
-                $classObj = ClassOfStudents::where('id', $row->class_id)->first();
-                if (!$item || !$classObj) {
-                    continue;
-                }
-                $item->class = $classObj;
-                $item->class_app_id = $row->id;
-                $item->icon = $item->icon();
-                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
-                        ->where('student_id', $student->id)->count() > 0;
-                if ($row->due_date) {
-                    $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
-                } else {
-                    $due_at = null;
-                }
-                $item->start_time = $row->start_time ?: '00:00:00';
-                $item->start_date = $row->start_date;
-                $item->due_time = $row->due_time ?: '00:00:00';
-                $item->due_date = $row->due_date;
-                $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                $now = Carbon::now()->toDateTimeString();
-                if ($row->start_date) {
-                    $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
-                } else {
-                    $start_at = null;
-                }
-                if ($type == 'test') {
-                    $stud_data = DB::table('classes_applications_students')->where('class_app_id', $row->id)
-                        ->where('student_id', $student->id)->first();
-                    $item->mark = $stud_data ? $stud_data->mark : null;
-                    $item->is_completed = $stud_data && ($stud_data->end_at || $stud_data->mark);
-                    $item->completed_at = $stud_data && $stud_data->end_at ? Carbon::parse($stud_data->end_at)->format('Y-m-d g:i A') : null;
-                    $class_student = DB::table('classes_students')
-                        ->where('class_id', $row->class_id)
-                        ->where('student_id', $student->id)->first();
-                    $duration = $row->duration && $class_student
-                        ? ($row->duration * $class_student->test_duration_multiply_by)
-                        : ($row->duration ?: null);
-                    $item->duration = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
-                    if ($row->password && DB::table('classes_applications_students')->where('class_app_id', $row->id)
-                            ->where('student_id', $student->id)->where('is_revealed', 1)->count() < 1) {
-                        continue;
-                    }
-                    $item->total_questions_count = $item->getQuestionsCount();
-                } else {
-                    $completed_at = $item->getCompletedDate($student->id);
-                    $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
-                }
-                $item->is_blocked = $item->is_completed || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
-                $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
-                array_push($items, $item);
-            }
-        }
-        return $this->success([
-            'items' => array_values(collect($items)->sortBy('due_at')->toArray())
-        ]);
     }
 
     public function changeApplication() {

@@ -10,7 +10,7 @@ class ClassApplication extends Model
     protected $table = 'classes_applications';
 
     protected $fillable = ['class_id', 'app_id', 'start_date', 'start_time',
-        'due_date', 'due_time', 'color', 'duration', 'password', 'is_for_selected_students'];
+        'due_date', 'due_time', 'color', 'duration', 'password', 'attempts', 'is_for_selected_students'];
 
     public function classOfStudents() {
         return $this->belongsTo('App\ClassOfStudents', 'class_id', 'id');
@@ -26,6 +26,10 @@ class ClassApplication extends Model
 
     public function test() {
         return $this->belongsTo('App\Application', 'app_id', 'id')->where('type', 'test');
+    }
+
+    public function classApplicationStudents() {
+        return $this->hasMany('App\ClassApplicationStudent', 'class_app_id', 'id');
     }
 
     public function students() {

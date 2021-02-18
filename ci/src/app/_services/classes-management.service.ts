@@ -153,12 +153,14 @@ export class ClassesManagementService {
         return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/report');
     }
 
-    public resetTestProgress(class_id, app_id, students = []) {
-        return this.http.post('/classes/' + class_id + '/tests/' + app_id + '/reset', { students: students });
+    public resetTestProgress(class_id, app_id, student_id, attempt_id = null) {
+        return this.http.post('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/reset', {
+            attempt_id: attempt_id
+        });
     }
 
-    public getTestDetails(class_id, app_id, student_id) {
-        return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/details');
+    public getTestDetails(class_id, app_id, student_id, attempt_id = null) {
+        return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/details?attempt_id=' + attempt_id);
     }
 
     public getReport(class_id) {
