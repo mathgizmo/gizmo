@@ -15,14 +15,16 @@ export class ClassReportComponent implements OnInit {
         id: 0,
         name: ''
     };
-    public assignments;
     public students;
+    public assignments;
+    public tests;
 
     public backLinkText = 'Back';
 
     private sub: any;
 
     public reportShow = [
+        true,
         true,
         true
     ];
@@ -36,8 +38,9 @@ export class ClassReportComponent implements OnInit {
         this.classService.getReport(this.classId)
             .subscribe(response => {
                 this.class = response.class;
-                this.assignments = response.assignments;
                 this.students = response.students;
+                this.assignments = response.assignments;
+                this.tests = response.tests;
                 this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Report';
             });
     }

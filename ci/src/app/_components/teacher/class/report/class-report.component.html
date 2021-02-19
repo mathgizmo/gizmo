@@ -14,5 +14,11 @@
       </i>
       <app-class-detailed-report id="report1" [assignments]="assignments" [students]="students"></app-class-detailed-report>
     </mat-card>
+    <mat-card>
+      <i class="arrow" [class.arrow-up]="reportShow[2]" [class.arrow-down]="!reportShow[2]"
+         (click)="slideToggle(2)">
+      </i>
+      <app-class-tests-report id="report2" [classId]="classId" [tests]="tests"></app-class-tests-report>
+    </mat-card>
   </div>
 </div>

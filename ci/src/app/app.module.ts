@@ -50,7 +50,7 @@ import {ClassReportComponent, ClassStudentsComponent,
     EditAssignmentDialogComponent, ManageTestsComponent, EditTestDialogComponent, TestReportDialogComponent,
     ReviewContentComponent, ClassDashboardComponent, ClassAssignmentsComponent,
     ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassToDoComponent, ClassMenuComponent,
-    StudentsUsageChartComponent, StudentsUsageBarChartComponent, ClassDetailedReportComponent,
+    StudentsUsageChartComponent, StudentsUsageBarChartComponent, ClassDetailedReportComponent, ClassTestsReportComponent,
     EditClassAssignmentDialogComponent, EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
@@ -166,6 +166,7 @@ FullCalendarModule.registerPlugins([
         StudentsUsageChartComponent,
         StudentsUsageBarChartComponent,
         ClassDetailedReportComponent,
+        ClassTestsReportComponent,
         TryComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,

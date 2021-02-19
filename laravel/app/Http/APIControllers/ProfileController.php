@@ -233,7 +233,7 @@ class ProfileController extends Controller
                 $attempt_item->in_progress = ($current_attempt && $current_attempt->id == $attempt->id) ? true : false;
                 array_push($items, $attempt_item);
             }
-            if ($attempts_count < $row->attempts && !$current_attempt && $max_mark < 0.99) {
+            if ($attempts_count < $row->attempts && !$current_attempt && $max_mark < 0.9999) {
                 $item->total_questions_count = $item->getQuestionsCount();
                 // $item->attempt_no = ($test_student ? ($test_student->attempts_count + $test_student->resets_count + 1) : 1);
                 $item->attempts_remaining = $row->attempts - $attempts_count;

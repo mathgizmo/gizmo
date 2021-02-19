@@ -277,47 +277,71 @@ class ClassController extends Controller
     }
 
     public function getReport($class_id) {
-        if ($this->user->is_teacher) {
-            $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-            if ($class) {
-                $data = DB::table('class_detailed_reports')->where('class_id', $class->id)
-                    ->orderBy('student_email', 'ASC')->get();
-                foreach ($data as $row) {
-                    $row->data = json_decode($row->data);
-                }
-                return $this->success([
-                    'class' => $class,
-                    'assignments' => array_values($class->assignments()->orderBy('name', 'ASC')->get()->toArray()),
-                    'students' => array_values($data->toArray()),
-                ]);
-            }
-        } else {
-            $class = ClassOfStudents::where('id', $class_id)->first();
-            if ($class) {
-                $data = DB::table('class_detailed_reports')
+        $is_teacher = $this->user->is_teacher;
+        $class_query = ClassOfStudents::query();
+        $class_query->where('id', $class_id);
+        if ($is_teacher) {
+            $class_query->where('teacher_id', $this->user->id);
+        }
+        $class = $class_query->first();
+        if ($class) {
+            $data = $is_teacher
+                ? DB::table('class_detailed_reports')
+                    ->where('class_id', $class->id)
+                    ->orderBy('student_email', 'ASC')
+                    ->get()
+                : DB::table('class_detailed_reports')
                     ->where('class_id', $class->id)
                     ->where('student_id', $this->user->id)
                     ->get();
-                foreach ($data as $row) {
-                    $row->data = json_decode($row->data);
-                }
-                $apps = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
-                foreach ($apps as $app) {
+            foreach ($data as $row) {
+                $row->data = json_decode($row->data);
+            }
+            $assignments = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
+            if (!$is_teacher) {
+                foreach ($assignments as $app) {
                     $class_data = $app->getClassRelatedData($class->id);
                     if ($class_data->is_for_selected_students) {
                         if (DB::table('classes_applications_students')
                                 ->where('class_app_id', $class_data->id)
                                 ->where('student_id', $this->user->id)->count() < 1) {
-                            $apps->forget($app->id);
+                            $assignments->forget($app->id);
                         }
                     }
                 }
-                return $this->success([
-                    'class' => $class,
-                    'assignments' => array_values($apps->toArray()),
-                    'students' => array_values($data->toArray()),
-                ]);
             }
+            $tests = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
+            foreach ($tests as $test) {
+                $class_data = $test->getClassRelatedData($class->id);
+                if (!$is_teacher && $class_data->is_for_selected_students) {
+                    if (DB::table('classes_applications_students')
+                            ->where('class_app_id', $class_data->id)
+                            ->where('student_id', $this->user->id)->count() < 1) {
+                        $tests->forget($test->id);
+                    }
+                }
+                $test->icon = $test->icon();
+                $test->class_id = $class_id;
+                $test->app_id = $class_data && $class_data->app_id ? $class_data->app_id : 0;
+                if ($class_data && $class_data->start_date) {
+                    $start_at = $class_data->start_time ? $class_data->start_date.' '.$class_data->start_time : $class_data->start_date.' 00:00:00';
+                } else {
+                    $start_at = null;
+                }
+                $test->start_at = $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+                if ($class_data && $class_data->due_date) {
+                    $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                } else {
+                    $due_at = null;
+                }
+                $test->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+            }
+            return $this->success([
+                'class' => $class,
+                'assignments' => array_values($assignments->toArray()),
+                'tests' => array_values($tests->toArray()),
+                'students' => array_values($data->toArray()),
+            ]);
         }
         return $this->error('Error.', 404);
     }

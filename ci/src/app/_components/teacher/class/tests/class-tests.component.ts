@@ -52,7 +52,8 @@ export class ClassTestsComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         public snackBar: MatSnackBar,
-        public dialog: MatDialog, private deviceService: DeviceDetectorService,
+        public dialog: MatDialog,
+        private deviceService: DeviceDetectorService,
         private classService: ClassesManagementService,
         private sanitizer: DomSanitizer) {
         this.dialogPosition = {bottom: '18vh'};

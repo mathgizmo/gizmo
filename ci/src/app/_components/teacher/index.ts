@@ -3,6 +3,7 @@ export * from './class/report/class-report.component';
 export * from './class/report/students-usage-chart/students-usage-chart.component';
 export * from './class/report/students-usage-bar-chart/students-usage-bar-chart.component';
 export * from './class/report/detailed-report/class-detailed-report.component';
+export * from './class/report/tests-report/class-tests-report.component';
 export * from './class/dashboard/class-dashboard.component';
 export * from './class/assignments/class-assignments.component';
 export * from './class/assignments/calendar/class-assignments-calendar.component';

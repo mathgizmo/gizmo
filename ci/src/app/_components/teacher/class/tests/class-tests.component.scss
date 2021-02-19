@@ -86,13 +86,6 @@ mat-card:last-child {
   }
 }
 
-.button-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
 .filter-item, .filter-item:focus {
   width: 100%;
   border: none;
@@ -102,6 +95,13 @@ mat-card:last-child {
 
 td {
   word-wrap: break-word !important;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .buttons-container {
