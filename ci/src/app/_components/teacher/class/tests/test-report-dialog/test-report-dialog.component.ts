@@ -1,9 +1,12 @@
 import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Sort} from '@angular/material/sort';
 import {ClassesManagementService} from '../../../../../_services';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {DeviceDetectorService} from 'ngx-device-detector';
+import {TestReportResetAttemptDialogComponent} from './reset-attempt-dialog/test-report-reset-attempt-dialog.component';
 
 @Component({
     selector: 'app-test-report-dialog',
@@ -13,17 +16,29 @@ import {ClassesManagementService} from '../../../../../_services';
 })
 export class TestReportDialogComponent extends BaseDialogComponent<TestReportDialogComponent> {
 
-    title = 'Test Report';
-    test = {
+    public title = 'Test Report';
+    public test = {
         class_id: 0,
-        app_id: 0
+        app_id: 0,
+        attempts: [],
+        attempts_count: 1,
+        resets_count: 0,
     };
-    students = [];
+    public students = [];
+    public attempts = [0];
     public email: string;
+
+    public dialogPosition: any;
+    private isMobile = this.deviceService.isMobile();
+    private isTablet = this.deviceService.isTablet();
+    private isDesktop = this.deviceService.isDesktop();
 
     constructor(
         private classService: ClassesManagementService,
         private sanitizer: DomSanitizer,
+        public snackBar: MatSnackBar,
+        public dialog: MatDialog,
+        private deviceService: DeviceDetectorService,
         public dialogRef: MatDialogRef<TestReportDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
@@ -34,6 +49,8 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
         if (data.test) {
             // tslint:disable-next-line:indent
             this.test = data.test;
+            // @ts-ignore
+            this.attempts = Array(this.test.attempts).fill(0).map((x, i) => i);
         }
         this.classService.getTestReport(this.test.class_id, this.test.app_id).subscribe(response => {
             this.students = response.students;
@@ -41,22 +58,42 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
                 stud.showDetail = false;
             });
         });
+        this.dialogPosition = {bottom: '18vh'};
+        if (this.isMobile || this.isTablet) {
+            this.dialogPosition = {bottom: '2vh'};
+        }
     }
 
     onResetProgress(item) {
-        this.classService.resetTestProgress(this.test.class_id, this.test.app_id, item.id, item.attempt_id)
-            .subscribe(response => {
-                item.mark = null;
-                item.start_at = null;
-                item.end_at = null;
-                item.details = [];
-            });
+        const dialogRef = this.dialog.open(TestReportResetAttemptDialogComponent, {
+            data: {
+                item: item
+            },
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(attempt_id => {
+            if (attempt_id) {
+                this.classService.resetTestProgress(this.test.class_id, this.test.app_id, item.id, attempt_id)
+                    .subscribe(response => {
+                        item.attempts = item.attempts.filter(o => +o.id !== +attempt_id);
+                        item.resets_count++;
+                        this.snackBar.open('The attempt have been successfully reset!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    });
+            }
+        });
     }
 
-    onShowDetails(item) {
+    onShowDetails(item, attempt) {
         item.showDetail = !item.showDetail;
+        if (!item.showDetail && item.selectedAttempt !== attempt) {
+            item.showDetail = true;
+        }
         if (item.showDetail) {
-            this.classService.getTestDetails(this.test.class_id, this.test.app_id, item.id, item.attempt_id)
+            item.selectedAttempt = attempt;
+            this.classService.getTestDetails(this.test.class_id, this.test.app_id, item.id, item.attempts[attempt].id)
                 .subscribe(response => {
                     item.details = response.data;
                 });
@@ -77,14 +114,10 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
         this.students = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
-                case 'id': return compare(a.id, b.id, isAsc);
-                case 'name': return compare(a.name, b.name, isAsc);
-                case 'first_name': return compare(a.first_name, b.first_name, isAsc);
-                case 'last_name': return compare(a.last_name, b.last_name, isAsc);
                 case 'email': return compare(a.email, b.email, isAsc);
                 case 'mark': return compare(a.mark, b.mark, isAsc);
-                case 'start_at': return compare(a.start_at, b.start_at, isAsc);
-                case 'end_at': return compare(a.end_at, b.end_at, isAsc);
+                case 'attempts_count': return compare(a.attempts_count, b.attempts_count, isAsc);
+                case 'resets_count': return compare(a.resets_count, b.resets_count, isAsc);
                 default: return 0;
             }
         });

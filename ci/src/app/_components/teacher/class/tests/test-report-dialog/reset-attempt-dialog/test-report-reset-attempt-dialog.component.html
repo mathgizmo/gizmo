@@ -1,0 +1,24 @@
+<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Reset!</h2>
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">
+        Are you sure that you want to reset the progress for <strong>{{item.email}}</strong>?
+    </div>
+    <select class="form-control" [(ngModel)]="attemptId">
+        <option *ngFor="let attempt of item.attempts" [attr.value]="attempt.id">
+            Attempt #{{attempt.attempt_no}}
+            <span *ngIf="attempt.mark">{{(attempt.mark * 100).toFixed(0)}}%</span>
+        </option>
+    </select>
+    <div *ngIf="isNotCompleted()" class="alert alert-danger">
+        <span class="material-icons">warning</span>
+        <span class="answer">&nbsp;The attempt you want to reset is NOT completed yet!</span>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="attemptId" class='button error-button' style="order: 1;">
+        Yes, reset
+    </button>
+    <button mat-button [mat-dialog-close]="false" class='button button-outline'>
+        Ooops, take me back
+    </button>
+</mat-dialog-actions>

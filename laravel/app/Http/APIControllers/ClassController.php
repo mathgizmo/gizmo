@@ -335,6 +335,7 @@ class ClassController extends Controller
                     $due_at = null;
                 }
                 $test->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                $test->attempts = $class_data ? $class_data->attempts : 1;
             }
             return $this->success([
                 'class' => $class,
@@ -735,22 +736,40 @@ class ClassController extends Controller
             if ($class_app->is_for_selected_students) {
                 $query->whereNotNull('classes_applications_students.id');
             }
+            $query->groupBy('students.id', 'students.email', 'students.is_registered');
             $query->orderBy('email');
             $students = $query->get([
                 'students.id',
-                'students.name',
-                'students.first_name',
-                'students.last_name',
                 'students.email',
                 'students.is_registered',
-                'students_test_attempts.id as attempt_id',
-                'students_test_attempts.attempt_no',
-                'students_test_attempts.mark',
-                'students_test_attempts.questions_count',
-                'students_test_attempts.start_at',
-                'students_test_attempts.end_at'
+                DB::raw("JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'id', students_test_attempts.id,
+                        'attempt_no', students_test_attempts.attempt_no,
+                        'mark', students_test_attempts.mark,
+                        'questions_count', students_test_attempts.questions_count,
+                        'start_at', students_test_attempts.start_at,
+                        'end_at', students_test_attempts.end_at
+                    )
+                ) AS attempts"),
+                'classes_applications_students.attempts_count',
+                'classes_applications_students.resets_count',
             ]);
-            return $this->success(['students' => array_values($students->toArray())]);
+            $students = $students->map(function ($student) {
+                $attempts = json_decode($student->attempts);
+                usort($attempts, function($a, $b) {return strcmp($a->attempt_no, $b->attempt_no);});
+                return [
+                    'id' => $student->id,
+                    'email' => $student->email,
+                    'is_registered' => $student->is_registered,
+                    'attempts' => $attempts,
+                    'attempts_count' => $student->attempts_count,
+                    'resets_count' => $student->resets_count
+                ];
+            });
+            return $this->success([
+                'students' => array_values($students->toArray()),
+            ]);
         }
         return $this->error('Error.', 500);
     }

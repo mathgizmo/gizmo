@@ -8,6 +8,7 @@
         <th mat-sort-header="name" scope="col">Name</th>
         <th mat-sort-header="start_at" scope="col">Start At</th>
         <th mat-sort-header="due_at" scope="col">Due At</th>
+        <th mat-sort-header="attempts" scope="col">Attempts</th>
         <th class="text-right"></th>
       </tr>
       </thead>
@@ -17,12 +18,9 @@
           <div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div>
         </th>
         <td>{{item.name}}</td>
-        <td class="date-container">
-          {{item.start_at}}
-        </td>
-        <td class="date-container">
-          {{item.due_at}}
-        </td>
+        <td>{{item.start_at}}</td>
+        <td>{{item.due_at}}</td>
+        <td>{{item.attempts}}</td>
         <td class="text-right" style="min-width: 210px;">
           <button class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowTestReport(item)">Report</button>
         </td>

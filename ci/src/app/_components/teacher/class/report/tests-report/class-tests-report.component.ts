@@ -56,6 +56,7 @@ export class ClassTestsReportComponent implements OnInit {
                 case 'name': return compare(a.name, b.name, isAsc);
                 case 'start_at': return compare(a.start_at, b.start_at, isAsc, true);
                 case 'due_at': return compare(a.due_at, b.due_at, isAsc, true);
+                case 'attempts': return compare(a.attempts, b.attempts, isAsc);
                 default: return 0;
             }
         });

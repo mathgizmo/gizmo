@@ -7,48 +7,48 @@
                 <thead>
                 <tr>
                     <th mat-sort-header="email" scope="col">Student</th>
-                    <th mat-sort-header="attempt_no" scope="col">Attempt No</th>
-                    <th mat-sort-header="mark" scope="col">Mark</th>
-                    <th mat-sort-header="start_at" scope="col">Start At</th>
-                    <th mat-sort-header="end_at" scope="col">End At</th>
+                    <th scope="col" *ngFor="let attempt of attempts">Attempt #{{attempt+1}}</th>
+                    <th mat-sort-header="attempts_count" scope="col">Attempts count</th>
+                    <th mat-sort-header="resets_count" scope="col">Resets count</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td colspan="6">
-                        <input matInput placeholder="Email" class="filter-item"
-                               type="text" name="email" [(ngModel)]="email" [value]="" />
+                    <td [attr.colspan]="test.attempts + 4">
+                        <input matInput placeholder="Email" class="filter-item" type="text" name="email" [(ngModel)]="email" [value]="" />
                     </td>
                 </tr>
                 <ng-container *ngFor="let item of students | tableFilter: form.value;">
                     <tr class="tid-data-row">
                         <td style="max-width: 260px;">{{item.email }}</td>
-                        <td>{{item.attempt_no}}</td>
-                        <td>
-                            <span *ngIf="item.mark">
-                                {{(item.mark * 100).toFixed(0)}}%
-                                <span *ngIf="item.questions_count">
-                                    ({{(item.mark*item.questions_count).toFixed(0)}}/{{item.questions_count}})
+                        <td *ngFor="let attempt of attempts">
+                            <span *ngIf="item.attempts[attempt] && item.attempts[attempt].id; else attemptNotStarted" (click)="onShowDetails(item, attempt)" style="cursor: pointer" title="Show details">
+                                <span *ngIf="item.attempts[attempt].end_at || item.attempts[attempt].mark; else attemptInProgress">
+                                    {{(item.attempts[attempt].mark * 100).toFixed(0)}}%
+                                    <span *ngIf="item.attempts[attempt].questions_count">
+                                        ({{(item.attempts[attempt].mark*item.attempts[attempt].questions_count).toFixed(0)}}/{{item.attempts[attempt].questions_count}})
+                                    </span>
                                 </span>
+                                <ng-template #attemptInProgress>
+                                    <img class="test-progress-icon" src="assets/images/test_in_progress.png" alt="Test In Progress" />
+                                </ng-template>
                             </span>
-                            <span *ngIf="!item.mark">
-                                N/A
-                            </span>
+                            <ng-template #attemptNotStarted>
+                                <img class="test-progress-icon" src="assets/images/test_not_started.png" alt="Test Not Started" />
+                            </ng-template>
                         </td>
-                        <td>
-                            {{ item.start_at ? (item.start_at | date:'yyyy-M-d h:mm a') : 'N/A' }}
-                        </td>
-                        <td>
-                            {{ item.end_at ? (item.end_at | date:'yyyy-M-d h:mm a') : 'N/A' }}
-                        </td>
+                        <td>{{item.attempts_count}}</td>
+                        <td>{{item.resets_count}}</td>
                         <td class="text-right" style="min-width: 160px">
-                            <button *ngIf="item.end_at || item.mark" class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowDetails(item)" style="margin-right: 8px;">Details</button>
-                            <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
+                            <button *ngIf="item.attempts && item.attempts[0] && item.attempts[0].id" class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
                         </td>
                     </tr>
                     <tr class="tid-detail-row" *ngIf="item.showDetail">
-                        <td colspan="5">
+                        <td [attr.colspan]="test.attempts + 4">
+                            <h4>Attempt #{{item.attempts[item.selectedAttempt].attempt_no}}</h4>
+                            <h5 *ngIf="item.attempts[item.selectedAttempt].start_at">Start At: {{ item.attempts[item.selectedAttempt].start_at | date:'yyyy-M-d h:mm a' }}</h5>
+                            <h5 *ngIf="item.attempts[item.selectedAttempt].end_at">End At: {{ item.attempts[item.selectedAttempt].end_at | date:'yyyy-M-d h:mm a' }}</h5>
                             <div *ngFor="let level of item.details" class="level-details d-flex flex-column">
                                 <div>Level: <strong>{{level.title }}</strong></div>
                                 <div>
