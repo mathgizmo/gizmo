@@ -224,9 +224,11 @@ class ProfileController extends Controller
             foreach ($attempts as $attempt) {
                 $attempt_item = clone $item;
                 $attempt_item->total_questions_count = $attempt->questions_count;
+                $attempt_item->attempt_id = $attempt->id;
                 $attempt_item->attempt_no = $attempt->attempt_no;
                 // $attempt_item->attempts_remaining = $row->attempts - $attempts_count;
                 $attempt_item->mark = $attempt->mark;
+                $attempt_item->questions_count = $attempt->questions_count;
                 $attempt_item->is_completed = ($attempt->end_at || $attempt->mark) ? true : false;
                 $attempt_item->completed_at = $attempt->end_at ? Carbon::parse($attempt->end_at)->format('Y-m-d g:i A') : null;
                 $attempt_item->is_blocked = $attempt_item->is_completed || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);

@@ -811,7 +811,15 @@ class ClassController extends Controller
 
     public function getTestDetails(Request $request, $class_id, $app_id, $student_id) {
         $student = Student::where('id', $student_id)->first();
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $class_query = ClassOfStudents::query();
+        $class_query->where('id', $class_id);
+        if ($student->isTeacher()) {
+            $class_query->where('teacher_id', $this->user->id);
+        } else {
+            $student = $this->user;
+            $student_id = $student->id;
+        }
+        $class = $class_query->first();
         $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
         if ($class && $class_app && $student) {
             $attempt_id = $request->filled('attempt_id') ? intval($request['attempt_id']) : null;

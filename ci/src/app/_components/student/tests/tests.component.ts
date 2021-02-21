@@ -7,6 +7,7 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TestOptionsDialogComponent} from './test-options-dialog/test-options-dialog.component';
 import {TestStartDialogComponent} from './test-start-dialog/test-start-dialog.component';
+import {TestReportDialogComponent} from './test-report-dialog/test-report-dialog.component';
 
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
@@ -81,6 +82,13 @@ export class MyTestsComponent implements OnInit, OnDestroy {
             return;
         }
         this.openStartTestDialog(app);
+    }
+
+    onShowTestReport(app) {
+        const dialogRef = this.dialog.open(TestReportDialogComponent, {
+            data: { test: app },
+            position: this.dialogPosition
+        });
     }
 
     onStartSecretTest() {

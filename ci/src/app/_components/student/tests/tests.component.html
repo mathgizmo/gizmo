@@ -43,9 +43,9 @@
       </div>
     </div>
     <div *ngIf="showCompletedApplications" class="applications-list">
-      <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
-        <mat-button-toggle *ngFor="let test of completedApplications" [value]="test.id" (click)="onChangeToDo(test)" >
-          <div class="app-select-container completed" [class.disabled]="test.is_blocked">
+      <mat-button-toggle-group #group="matButtonToggleGroup" vertical>
+        <mat-button-toggle *ngFor="let test of completedApplications" [value]="test.id" (click)="onShowTestReport(test)">
+          <div class="app-select-container completed">
             <div class="app-img" [style.background-image]="setIcon(test.icon)"></div>
             <div class="app-data">
               <span class="app-title">
@@ -58,6 +58,7 @@
                 <span *ngIf="test.completed_at" class="due-date">
                   Finished At: {{test.completed_at}}
                 </span>
+                <button class="button button-small button-outline" mat-stroked-button type="button">Report</button>
               </div>
             </div>
 
