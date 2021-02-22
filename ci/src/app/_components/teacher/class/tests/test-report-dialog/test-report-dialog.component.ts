@@ -20,9 +20,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
     public test = {
         class_id: 0,
         app_id: 0,
-        attempts: [],
-        attempts_count: 1,
-        resets_count: 0,
+        attempts: 1
     };
     public students = [];
     public attempts = [0];
