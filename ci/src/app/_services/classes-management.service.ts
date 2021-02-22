@@ -153,6 +153,10 @@ export class ClassesManagementService {
         return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/report');
     }
 
+    public downloadTestReportPDF(class_id, app_id, student_id): Observable<Blob> {
+        return this.http.download('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/report.pdf');
+    }
+
     public resetTestProgress(class_id, app_id, student_id, attempt_id = null) {
         return this.http.post('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/reset', {
             attempt_id: attempt_id

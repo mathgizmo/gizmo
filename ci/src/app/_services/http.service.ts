@@ -131,4 +131,17 @@ export class HttpService {
             );
     }
 
+    download(url: string, auth: boolean = true, params = null) {
+        if (auth) {
+            this.headers = new HttpHeaders({
+                'Authorization': 'Bearer ' + this.authenticationService.token,
+            });
+        }
+        return this.http.get(this.apiUrl + url, {
+            headers: this.headers,
+            params: params,
+            responseType: 'blob'
+        });
+    }
+
 }

@@ -40,8 +40,11 @@
                         </td>
                         <td>{{item.attempts_count}}</td>
                         <td>{{item.resets_count}}</td>
-                        <td class="text-right" style="min-width: 160px">
-                            <button *ngIf="item.attempts && item.attempts[0] && item.attempts[0].id" class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
+                        <td class="text-right" style="min-width: 200px">
+                            <div *ngIf="item.attempts && item.attempts[0] && item.attempts[0].id">
+                                <button class="button button-small button-outline" mat-stroked-button type="button" style="margin-right: 4px" (click)="onDownloadPDF(item)">Download PDF</button>
+                                <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onResetProgress(item)">Reset</button>
+                            </div>
                         </td>
                     </tr>
                     <tr class="tid-detail-row" *ngIf="item.showDetail">

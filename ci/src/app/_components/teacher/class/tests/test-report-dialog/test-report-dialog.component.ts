@@ -86,6 +86,26 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
         });
     }
 
+    onDownloadPDF(item) {
+        this.classService.downloadTestReportPDF(this.test.class_id, this.test.app_id, item.id)
+            .subscribe(file => {
+                const newBlob = new Blob([file], { type: 'application/pdf' });
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(newBlob);
+                    return;
+                }
+                const data = window.URL.createObjectURL(newBlob);
+                const link = document.createElement('a');
+                link.href = data;
+                link.download = 'test_report.pdf';
+                link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                setTimeout(function () {
+                    window.URL.revokeObjectURL(data);
+                    link.remove();
+                }, 100);
+            });
+    }
+
     onShowDetails(item, attempt) {
         item.showDetail = !item.showDetail;
         if (!item.showDetail && item.selectedAttempt !== attempt) {

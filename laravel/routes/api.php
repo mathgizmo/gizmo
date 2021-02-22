@@ -80,6 +80,7 @@ $api->version('v1', function ($api) {
         $api->get('/classes/{class_id}/tests/{app_id}/report', 'App\Http\APIControllers\ClassController@getTestReport');
         $api->post('classes/{class_id}/tests/{app_id}/student/{student_id}/reset', 'App\Http\APIControllers\ClassController@resetTestProgress');
         $api->get('/classes/{class_id}/tests/{app_id}/student/{student_id}/details', 'App\Http\APIControllers\ClassController@getTestDetails');
+        $api->get('/classes/{class_id}/tests/{app_id}/student/{student_id}/report.pdf', 'App\Http\APIControllers\ClassController@getTestReportPDF');
         $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
         $api->get('/classes/{class_id}/todo', 'App\Http\APIControllers\ClassController@getToDos');
         $api->get('/classes/{class_id}/answers-statistics', 'App\Http\APIControllers\ClassController@getAnswersStatistics');
