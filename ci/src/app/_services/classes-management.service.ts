@@ -82,11 +82,11 @@ export class ClassesManagementService {
             );
     }
 
-    public addStudent(class_id, email) {
-        return this.http.post('/classes/' + class_id + '/students', { email: email })
+    public addStudents(class_id, emails) {
+        return this.http.post('/classes/' + class_id + '/students', { email: emails })
             .pipe(
                 map((response: Response) => {
-                    return response['item'];
+                    return response['items'];
                 })
             );
     }

@@ -86,29 +86,26 @@ export class ClassStudentsComponent implements OnInit {
         });
     }
 
-    addStudent() {
+    addStudents() {
         const dialogRef = this.dialog.open(AddStudentDialogComponent, {
             data: { },
             position: this.dialogPosition
         });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.classService.addStudent(this.classId, result)
-                    .subscribe(item => {
-                        if (item && item.id) {
-                            this.students.unshift(item);
-                            this.snackBar.open('Student was successfully added to the classroom!', '', {
+        dialogRef.afterClosed().subscribe(students => {
+            if (students) {
+                this.classService.addStudents(this.classId, students)
+                    .subscribe(items => {
+                        if (items && items.length) {
+                            items.forEach(item => {
+                                this.students.unshift(item);
+                            });
+                            this.snackBar.open('Students was successfully added to the classroom!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
-                        } else {
-                            this.snackBar.open('Unable to add student with email you provided to the classroom!', '', {
-                                duration: 3000,
-                                panelClass: ['error-snackbar']
-                            });
                         }
                     }, error => {
-                        this.snackBar.open('Unable to add student with email you provided to the classroom!', '', {
+                        this.snackBar.open('Unable to add students to the classroom!', '', {
                             duration: 3000,
                             panelClass: ['error-snackbar']
                         });
