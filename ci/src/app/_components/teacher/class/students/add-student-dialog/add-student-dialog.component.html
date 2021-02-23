@@ -1,4 +1,4 @@
-<h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Add Student!</h2>
+<!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Add Student!</h2> -->
 <mat-dialog-content class="dialog-content" id="dialog-content">
     <div class="subtitle text-center">Add Students</div>
         <div class="form-group">
@@ -7,6 +7,7 @@
                       cdkAutosizeMaxRows="12" placeholder="Please enter comma separated email list"
                       [(ngModel)]="email" class="form-control"></textarea>
         </div>
+        <input type="file" (change)="fileChanged($event)" class="file-input">
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>

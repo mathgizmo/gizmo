@@ -204,11 +204,14 @@ class ClassController extends Controller
         if (!$class) { return $this->error('Class not found.', 404); }
         $students = [];
         foreach ($emails as $email) {
+            $email = str_replace('"', '', trim($email));
             $validator = Validator::make(
                 ['email' => $email],
                 ['email' => 'required|email|max:255']
             );
-            if ($validator->fails()) { continue; }
+            if ($validator->fails()) {
+                continue;
+            }
             try {
                 $student = Student::where('email', $email)->first();
                 if (!$student) {
