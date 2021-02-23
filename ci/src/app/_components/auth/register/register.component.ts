@@ -42,9 +42,9 @@ export class RegisterComponent implements OnInit {
     }
 
     register() {
-        if (this.model.username && this.model.email && this.model.password && (this.captchaResponse || this.ignoreCaptcha)) {
+        if (this.model.email && this.model.password && (this.captchaResponse || this.ignoreCaptcha)) {
             this.loading = true;
-            this.authenticationService.register(this.model.username, this.model.email,
+            this.authenticationService.register(this.model.email,
                 this.model.password, this.model.first_name, this.model.last_name,
                 this.model.role, this.selectedCountry.id, this.captchaResponse, this.ignoreCaptcha)
                 .subscribe(success => {

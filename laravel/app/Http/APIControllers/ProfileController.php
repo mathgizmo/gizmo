@@ -35,7 +35,6 @@ class ProfileController extends Controller
     {
         $student = $this->user;
         return $this->success([
-            'name' => $student->name,
             'first_name' => $student->first_name,
             'last_name' => $student->last_name,
             'email' => $student->email,
@@ -50,9 +49,6 @@ class ProfileController extends Controller
     {
         $student = $this->user;
         $update = [];
-        if (request()->has('name')) {
-            $update['name'] = request('name');
-        }
         if (request()->has('first_name')) {
             $update['first_name'] = request('first_name');
         }
@@ -74,7 +70,6 @@ class ProfileController extends Controller
         $validator = Validator::make(
             $update,
             [
-                'name' => 'max:255',
                 'email' => 'email|max:255|unique:students,email,'.$student->id,
                 'email_new' => 'nullable|email|max:255|unique:students,email,'.$student->id,
                 'password' => 'nullable|min:6',

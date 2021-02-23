@@ -31,10 +31,7 @@
                         </mat-checkbox>
                     </td>
                     <td style="max-width: 260px;">{{item.email }}</td>
-                    <td style="max-width: 260px;">
-                        <span>{{item.name}} </span>
-                        <span *ngIf="item.first_name || item.last_name">({{item.first_name}} {{item.last_name}})</span>
-                    </td>
+                    <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
                 </tr>
                 </tbody>
             </table>

@@ -4,9 +4,6 @@ import {AuthenticationService, CountryService, UserService} from '../../_service
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {timer} from 'rxjs';
 import {takeWhile, tap} from 'rxjs/operators';
-// import {DomSanitizer} from '@angular/platform-browser';
-// import {Router} from '@angular/router';
-// import {environment} from '../../../environments/environment';
 
 @Component({
     selector: 'app-profile',
@@ -31,17 +28,11 @@ export class ProfileComponent implements OnInit {
         code: 'CA'
     };
 
-    // public applications = [];
-    // public selectedAppId;
-    // private readonly adminUrl = environment.adminUrl;
-
     constructor(
         private userService: UserService,
         private authenticationService: AuthenticationService,
         private countryService: CountryService,
-        public snackBar: MatSnackBar,
-        // private sanitizer: DomSanitizer,
-        // private router: Router
+        public snackBar: MatSnackBar
     ) {
         this.user = new User();
     }
@@ -52,15 +43,12 @@ export class ProfileComponent implements OnInit {
             this.userService.getProfile()
                 .subscribe(res => {
                     localStorage.setItem('app_id', res['app_id']);
-                    this.user.username = res['name'];
                     this.user.first_name = res['first_name'];
                     this.user.last_name = res['last_name'];
                     this.oldEmail = res['email'];
                     this.user.email = res['email_new'] ? res['email_new'] : res['email'];
                     this.showOldEmail = this.oldEmail !== this.user.email;
                     this.user.country_id = res['country_id'];
-                    // this.applications = res['applications'];
-                    // this.selectedAppId = res['app_id'];
                     const userCountry = this.countries.filter(x => x.id === this.user.country_id);
                     if (userCountry.length > 0) {
                         this.selectedCountry = userCountry[0];
@@ -160,33 +148,5 @@ export class ProfileComponent implements OnInit {
             )
             .subscribe( () => {});
     }
-
-    /* onChangeApplication(appId: number) {
-        if (!appId) {
-            return;
-        }
-        this.userService.changeApplication(appId)
-            .subscribe(res => {
-                localStorage.setItem('app_id', appId + '');
-                this.selectedAppId = appId;
-                const redirectTo = localStorage.getItem('redirect_to');
-                if (redirectTo) {
-                    localStorage.removeItem('redirect_to');
-                    this.router.navigate([redirectTo]);
-                } else {
-                    this.router.navigate(['/']);
-                }
-            }, error => {
-                // console.log(error);
-            });
-    }
-
-    setIcon(image) {
-        if (!image) {
-            image = 'images/default-icon.svg';
-        }
-        const link = `url(` + this.adminUrl + `/${image})`;
-        return this.sanitizer.bypassSecurityTrustStyle(link);
-    } */
 
 }

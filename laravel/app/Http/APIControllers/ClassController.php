@@ -98,7 +98,13 @@ class ClassController extends Controller
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
             $students = $class->students()->orderBy('email')
-                ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email', 'students.is_registered']);
+                ->get([
+                    'students.id',
+                    'students.first_name',
+                    'students.last_name',
+                    'students.email',
+                    'students.is_registered'
+                ]);
             if ($show_extra) {
                 $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
                     $q1->where('classes.id', $class_id);
@@ -168,7 +174,8 @@ class ClassController extends Controller
                 foreach (array_filter($emails) as $email) {
                     if ($students->where('email', trim($email))->count() < 1) {
                         array_push($not_subscribed, (object) [
-                            'name' => $email,
+                            'first_name' => null,
+                            'last_name' => null,
                             'email' => $email,
                             'is_registered' => false,
                             'is_subscribed' => false,
@@ -201,7 +208,6 @@ class ClassController extends Controller
             $student = Student::where('email', $email)->first();
             if (!$student) {
                 $student = Student::create([
-                    'name' => $email,
                     'email' => strtolower($email),
                     'password' => 'phantom',
                     'is_registered' => false

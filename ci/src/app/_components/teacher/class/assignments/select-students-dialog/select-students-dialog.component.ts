@@ -54,7 +54,7 @@ export class SelectStudentsDialogComponent extends BaseDialogComponent<SelectStu
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
                 case 'id': return compare(a.id, b.id, isAsc);
-                case 'name': return compare(a.name, b.name, isAsc);
+                case 'name': return compare(a.first_name + ' ' + a.last_name, b.first_name + ' ' + b.last_name, isAsc);
                 case 'first_name': return compare(a.first_name, b.first_name, isAsc);
                 case 'last_name': return compare(a.last_name, b.last_name, isAsc);
                 case 'email': return compare(a.email, b.email, isAsc);

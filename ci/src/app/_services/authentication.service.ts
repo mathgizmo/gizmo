@@ -33,8 +33,8 @@ export class AuthenticationService {
         this.userSubject.next(user);
     }
 
-    login(username: string, password: string, captcha_response = null, ignoreCaptcha = false): Observable<any> {
-        const request = {email: username, password: password,
+    login(email: string, password: string, captcha_response = null, ignoreCaptcha = false): Observable<any> {
+        const request = {email: email, password: password,
             'g-recaptcha-response': captcha_response, 'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null};
         return this.http.post(this.apiUrl + '/login', request, {headers: this.headers})
             .pipe(
@@ -46,7 +46,7 @@ export class AuthenticationService {
                     if (token) {
                         // set token property
                         this.token = token;
-                        // store username and jwt token in local storage to keep user logged in between page refreshes
+                        // store user and jwt token in local storage to keep user logged in between page refreshes
                         localStorage.setItem('token', token);
                         localStorage.setItem('user', JSON.stringify(user));
                         this.userSubject.next(user);
@@ -91,13 +91,12 @@ export class AuthenticationService {
             );
     }
 
-    register(username: string, email: string, password: string,
+    register(email: string, password: string,
              first_name: string = null, last_name: string = null,
              role: string = 'student', country_id: number = 1,
              captcha_response = null, ignoreCaptcha = false): Observable<any> {
         return this.http.post(this.apiUrl + '/register', {
             email: email,
-            name: username,
             password: password,
             first_name: first_name,
             last_name: last_name,

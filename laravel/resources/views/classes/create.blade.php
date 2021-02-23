@@ -139,7 +139,8 @@
                             data.forEach((item, index) => {
                                 const option = document.createElement('option');
                                 option.setAttribute('key', item.id);
-                                option.value = item.name;
+                                option.value = item.email;
+                                option.label = item.last_name ? (item.first_name + ' ' + item.last_name) : item.email;
                                 dl.appendChild(option);
                             });
                         }

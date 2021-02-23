@@ -38,7 +38,7 @@
                     <label for="teacher_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Teacher</label>
                     <div class="col-md-8">
                         <input id="teacher-input" class="form-control" name="teacher" list="teachers-datalist"
-                               placeholder="Enter Class Teacher" value="{{ old('teacher', $class->teacher ? $class->teacher->name : '') }}"/>
+                               placeholder="Enter Class Teacher" value="{{ old('teacher', $class->teacher ? $class->teacher->email : '') }}"/>
                         <datalist id="teachers-datalist"></datalist>
                         <input id="teacher_id" name="teacher_id" type="hidden" value="{{old('teacher_id', $class->teacher_id)}}"/>
                         @if ($errors->has('teacher_id'))
@@ -162,7 +162,8 @@
                             data.forEach((item, index) => {
                                 const option = document.createElement('option');
                                 option.setAttribute('key', item.id);
-                                option.value = item.name;
+                                option.value = item.email;
+                                option.label = item.last_name ? (item.first_name + ' ' + item.last_name) : item.email;
                                 dl.appendChild(option);
                             });
                         }

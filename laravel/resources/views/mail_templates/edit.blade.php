@@ -83,7 +83,17 @@
     <script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
     <script>
         $(document).ready(function () {
-            CKEDITOR.replace('body', { toolbar : [ ['Bold','Italic','Font','FontSize'] ] });
+            CKEDITOR.replace('body', {
+                toolbar : [ [
+                    'Bold','Italic','Underline','Strike',
+                    'Font','FontSize',
+                    'NumberedList','BulletedList',
+                    'Blockquote',
+                    'Link','Unlink','Anchor',
+                    'Image','Table',
+                    'TextColor','BGColor'
+                ] ]
+            });
         });
     </script>
 @endsection

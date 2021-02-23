@@ -23,11 +23,6 @@
                             </a>
                         </th>
                         <th>
-                            Username <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'name', 'order' => ((request()->sort == 'name' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'name' && request()->order == 'asc') ? '' : 'desc'))])) }}">
-                                <i class="fa fa-fw fa-sort{{ (request()->sort == 'name' && request()->order == 'asc') ? '-up' : '' }}{{ (request()->sort == 'name' && request()->order == 'desc') ? '-down' : '' }}"></i>
-                            </a>
-                        </th>
-                        <th>
                             First Name <a href="{{ route('students.index', array_merge(request()->all(), ['sort' => 'first_name', 'order' => ((request()->sort == 'first_name' && request()->order == 'desc') ? 'asc' : ((request()->sort == 'first_name' && request()->order == 'asc') ? '' : 'desc'))])) }}">
                                 <i class="fa fa-fw fa-sort{{ (request()->sort == 'first_name' && request()->order == 'asc') ? '-up' : '' }}{{ (request()->sort == 'first_name' && request()->order == 'desc') ? '-down' : '' }}"></i>
                             </a>
@@ -67,9 +62,6 @@
                             <input type="number" min="0" name="id" id="id-filter" style="width: 50px;">
                         </td>
                         <td>
-                            <input type="text" name="name" id="name-filter" style="width: 100px;">
-                        </td>
-                        <td>
                             <input type="text" name="first_name" id="first-name-filter" style="width: 110px;">
                         </td>
                         <td>
@@ -101,7 +93,6 @@
                     @foreach($students as $student)
                         <tr>
                             <td>{{ $student->id }}</td>
-                            <td style="max-width: 120px;">{{ $student->name }}</td>
                             <td style="max-width: 120px;">{{ $student->first_name }}</td>
                             <td style="max-width: 120px;">{{ $student->last_name }}</td>
                             <td style="max-width: 160px;">{{ $student->email }}</td>
@@ -114,7 +105,7 @@
                                 <a href="{{ route('students.edit', $student->id) }}" class="btn btn-dark">Edit</a>
                                 <form action="{{ route('students.delete', $student->id) }}"
                                       method="POST" style="display: inline;"
-                                      onsubmit="if(confirm('Are you about to delete {{ $student->name }}, all participant information will be lost. This action is irreversible.')) { return true } else {return false };">
+                                      onsubmit="if(confirm('Are you about to delete {{ $student->email }}, all participant information will be lost. This action is irreversible.')) { return true } else {return false };">
                                     <input type="hidden" name="_method" value="POST">
                                     {{ csrf_field() }}
                                     <button class="btn btn-danger" type="submit">Delete</button>

@@ -23,8 +23,8 @@ class JobController extends Controller
             }
             foreach ($classes as $class) {
                 try {
-                    $students = $class->students()->orderBy('name')
-                        ->get(['students.id', 'students.name', 'students.first_name', 'students.last_name', 'students.email']);
+                    $students = $class->students()->orderBy('email')
+                        ->get(['students.id', 'students.first_name', 'students.last_name', 'students.email']);
                     $apps = $class->assignments()->get();
                     foreach ($students as $student) {
                         $data = [];

@@ -147,7 +147,17 @@
         var classIndex = 0;
 
         $(document).ready(function () {
-            CKEDITOR.replace('body', { toolbar : [ ['Bold','Italic','Font','FontSize'] ] });
+            CKEDITOR.replace('body', {
+                toolbar : [ [
+                    'Bold','Italic','Underline','Strike',
+                    'Font','FontSize',
+                    'NumberedList','BulletedList',
+                    'Blockquote',
+                    'Link','Unlink','Anchor',
+                    'Image','Table',
+                    'TextColor','BGColor'
+                ] ]
+            });
 
             $('#send-to-select').change(function () {
                 if (this.value == 'class') {
@@ -184,8 +194,8 @@
                                 response($.map(data, function (item) {
                                     return {
                                         id: item.id,
-                                        value: item.name,
-                                        label: item.last_name ? (item.first_name + ' ' + item.last_name) : item.name
+                                        value: item.email,
+                                        label: item.last_name ? (item.first_name + ' ' + item.last_name) : item.email
                                     }
                                 }));
                             }

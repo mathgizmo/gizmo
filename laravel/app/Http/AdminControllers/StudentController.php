@@ -93,9 +93,9 @@ class StudentController extends Controller
             $limit = $request['limit'] == 'all' ? null : ((int) $request['limit'] > 0 ? (int) $request['limit'] : 5);
             $pattern = $request['pattern'];
             $query->where(function ($q) use($pattern) {
-                $q->where('name', 'LIKE', $pattern.'%')
-                    ->orWhere('first_name', 'LIKE', $pattern.'%')
-                    ->orWhere('last_name', 'LIKE', $pattern.'%');
+                $q->where('email', 'LIKE', $pattern.'%');
+                $q->orWhere('first_name', 'LIKE', $pattern.'%');
+                $q->orWhere('last_name', 'LIKE', $pattern.'%');
             });
             $names = explode(' ', $pattern);
             if (count($names) > 1) {

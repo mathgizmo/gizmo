@@ -7,7 +7,7 @@
         @endcomponent
     @endslot
 
-    You received a new error report from {{ $student->name }}.
+    You received a new error report from {{ $student->email }}.
 
     {{-- Subcopy --}}
     @isset($subcopy)

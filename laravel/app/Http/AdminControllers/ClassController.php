@@ -22,7 +22,7 @@ class ClassController extends Controller
         if ($request['teacher']) {
             $teacher = $request['teacher'];
             $query->whereHas('teacher', function ($q) use ($teacher) {
-                $q->where('name', 'LIKE', '%'.$teacher.'%');
+                $q->where('email', 'LIKE', '%'.$teacher.'%');
             });
         }
         if ($request['subscription_type']) {
@@ -34,7 +34,7 @@ class ClassController extends Controller
         if ($request['sort'] && $request['order']) {
             if ($request['sort'] == 'teacher') {
                 $query->leftJoin('students', 'students.id', '=', 'classes.teacher_id')
-                    ->orderBy('students.name', request('order'))->select('classes.*');
+                    ->orderBy('students.email', request('order'))->select('classes.*');
             } else {
                 $query->orderBy($request['sort'], $request['order']);
             }
@@ -168,7 +168,7 @@ class ClassController extends Controller
         }
         return view('classes.students.index', [
             'class' => $class,
-            'students' => $class->students()->orderBy('last_name', 'ASC')->orderBy('name', 'ASC')->get()
+            'students' => $class->students()->orderBy('email', 'ASC')->get()
         ]);
     }
 

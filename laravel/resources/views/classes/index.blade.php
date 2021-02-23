@@ -95,7 +95,7 @@
                         <tr>
                             <td>{{$class->id}}</td>
                             <td>{{$class->name}}</td>
-                            <td>{{$class->teacher ? $class->teacher->name : ''}}</td>
+                            <td>{{$class->teacher ? $class->teacher->email : ''}}</td>
                             <td>{{ucfirst($class->class_type)}}</td>
                             <td>{{$class->subscription_type == 'closed' ? 'Closed' : ($class->subscription_type == 'invitation' ? 'Invitation Only' : 'Open')}}</td>
                             <td class="text-right" style="min-width: 260px;">
@@ -186,7 +186,8 @@
                         dl.innerHTML = '';
                         data.forEach((item, index) => {
                             const option = document.createElement('option');
-                            option.value = item.name;
+                            option.value = item.email;
+                            option.label = item.last_name ? (item.first_name + ' ' + item.last_name) : item.email;
                             dl.appendChild(option);
                         });
                     }

@@ -3,11 +3,6 @@
     <mat-card>
         <h2 class="title">Register</h2>
         <form name="form" (ngSubmit)="f.form.valid && password.value == repassword.value && register()" #f="ngForm" novalidate>
-            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-                <label for="username" class="required">Username</label>
-                <input type="text" class="form-control answer" name="username" id="username" [(ngModel)]="model.username" #username="ngModel" required />
-                <div *ngIf="f.submitted && !username.valid" class="help-block">Username is required</div>
-            </div>
             <div class="form-row">
                 <div class="col-md-6">
                     <div class="form-group">

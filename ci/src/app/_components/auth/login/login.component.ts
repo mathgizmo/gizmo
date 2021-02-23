@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
                             this.router.navigate(['dashboard']);
                         }
                     } else {
-                        this.error = 'Username or password is incorrect!';
+                        this.error = 'Email or password is incorrect!';
                         this.loading = false;
                     }
                 }, error => {
@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
                         } else {
                             message = error;
                         }
-                        this.error = message || 'Username or password is incorrect!';
+                        this.error = message || 'Email or password is incorrect!';
                         this.loading = false;
                     }
                 });

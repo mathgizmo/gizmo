@@ -54,7 +54,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                return $this->error('Username or password is incorrect!', 401);
+                return $this->error('Email or password is incorrect!', 401);
             }
         } catch (JWTException $e) {
             return $this->error('Could Not Create Token!', 500);
@@ -106,7 +106,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $fields = ['email', 'password', 'name'];
+        $fields = ['email', 'password'];
         $credentials = $request->only($fields);
         foreach ($fields as $field) {
             $credentials[$field] = trim($credentials[$field]);
@@ -116,17 +116,15 @@ class AuthController extends Controller
         if ($student) {
             if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
                 $validator = Validator::make(
-                    $request->only(['password', 'name', 'g-recaptcha-response']),
+                    $request->only(['password', 'g-recaptcha-response']),
                     [
-                        'name' => 'required|max:255',
                         'password' => 'required|min:6',
                     ]
                 );
             } else {
                 $validator = Validator::make(
-                    $request->only(['password', 'name', 'g-recaptcha-response']),
+                    $request->only(['password', 'g-recaptcha-response']),
                     [
-                        'name' => 'required|max:255',
                         'password' => 'required|min:6',
                         'g-recaptcha-response' => 'required|recaptcha',
                     ]
@@ -136,7 +134,6 @@ class AuthController extends Controller
                 return $this->error($validator->messages(), 400);
             }
             $student = $student->update([
-                'name' => $credentials['name'],
                 'first_name' => request('first_name') ?: null,
                 'last_name' => request('last_name') ?: null,
                 'password' => bcrypt($credentials['password']),
@@ -149,18 +146,16 @@ class AuthController extends Controller
         } else {
             if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
                 $validator = Validator::make(
-                    $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                    $request->only(['email', 'password', 'g-recaptcha-response']),
                     [
-                        'name' => 'required|max:255',
                         'email' => 'required|email|max:255|unique:students',
                         'password' => 'required|min:6'
                     ]
                 );
             } else {
                 $validator = Validator::make(
-                    $request->only(['email', 'password', 'name', 'g-recaptcha-response']),
+                    $request->only(['email', 'password', 'g-recaptcha-response']),
                     [
-                        'name' => 'required|max:255',
                         'email' => 'required|email|max:255|unique:students',
                         'password' => 'required|min:6',
                         'g-recaptcha-response' => 'required|recaptcha',
@@ -171,7 +166,6 @@ class AuthController extends Controller
                 return $this->error($validator->messages(), 400);
             }
             $student = Student::create([
-                'name' => $credentials['name'],
                 'first_name' => request('first_name') ?: null,
                 'last_name' => request('last_name') ?: null,
                 'email' => strtolower($credentials['email']),

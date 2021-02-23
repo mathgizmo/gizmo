@@ -88,7 +88,7 @@
                             </td>
                             <td>{{$application->id}}</td>
                             <td>{{$application->name}}</td>
-                            <td>{{$application->teacher ? $application->teacher->name : ''}}</td>
+                            <td>{{$application->teacher ? $application->teacher->email : ''}}</td>
                             <td>{{ucfirst($application->type)}}</td>
                             <td class="text-right">
                                 <form action="{{ route('applications.copy', $application->id) }}"
@@ -175,7 +175,8 @@
                         dl.innerHTML = '';
                         data.forEach((item, index) => {
                             const option = document.createElement('option');
-                            option.value = item.name;
+                            option.value = item.email;
+                            option.label = item.last_name ? (item.first_name + ' ' + item.last_name) : item.email;
                             dl.appendChild(option);
                         });
                     }

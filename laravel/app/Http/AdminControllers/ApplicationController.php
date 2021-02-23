@@ -30,13 +30,13 @@ class ApplicationController extends Controller
         if ($request['teacher']) {
             $teacher = $request['teacher'];
             $query->whereHas('teacher', function ($q) use ($teacher) {
-                $q->where('name', 'LIKE', '%'.$teacher.'%');
+                $q->where('email', 'LIKE', '%'.$teacher.'%');
             });
         }
         if ($request['sort'] && $request['order']) {
             if ($request['sort'] == 'teacher') {
                 $query->leftJoin('students', 'students.id', '=', 'applications.teacher_id')
-                    ->orderBy('students.name', request('order'))->select('applications.*');
+                    ->orderBy('students.email', request('order'))->select('applications.*');
             } else {
                 $query->orderBy($request['sort'], $request['order']);
             }

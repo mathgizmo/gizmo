@@ -70,7 +70,7 @@
                         <tr>
                             <td>{{ $error_report->id }}</td>
                             <td><a href="{{ route('questions.show', $error_report->question_id) }}" target="_blank">{{ $error_report->question_id }}</a></td>
-                            <td>{{ $error_report->student_id }}</td>
+                            <td><a href="{{ route('students.edit', $error_report->student_id) }}" target="_blank">{{ $error_report->student_id }}</a></td>
                             <td>{{ $error_report->options }}</td>
                             <td>{{ $error_report->comment }}</td>
                             <td>{{ $error_report->answers }}</td>

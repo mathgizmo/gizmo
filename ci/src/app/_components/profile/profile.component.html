@@ -20,15 +20,6 @@
     <form #changeProfile="ngForm" (ngSubmit)="changeProfile.form.valid && onChangeProfile()">
       <mat-form-field>
         <input matInput
-          name="username"
-          required
-          minlength="2"
-          placeholder="Username"
-          [(ngModel)]="user.username"
-          class="answer" />
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput
                name="first_name"
                placeholder="First Name"
                [(ngModel)]="user.first_name"

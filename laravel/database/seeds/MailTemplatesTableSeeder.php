@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class MailTemplatesTableSeeder extends Seeder
@@ -16,7 +17,7 @@ class MailTemplatesTableSeeder extends Seeder
             DB::table('mail_templates')->insert([
                 'mail_type' => 'App\Mail\ClassInviteMail',
                 'subject' => 'Class invitation',
-                'body' => 'Hello, {{ $studentName }}.<br/>{{ $teacherName }} has invited you to join the {{ $className }} class.<br/><br/>Best regards, Health Numeracy Project team.'
+                'body' => 'Hello, {{ $studentFirstName }} {{ $studentLastName }}.<br/>{{ $teacherFirstName }} {{ $teacherLastName }} has invited you to join the {{ $className }} class.<br/><br/>Best regards, Health Numeracy Project team.'
             ]);
         }
     }

@@ -37,7 +37,7 @@
                     @foreach($students as $student)
                         <tr>
                             <td>{{$student->id}}</td>
-                            <td>{{$student->name . ' (' . $student->first_name . ' ' . $student->last_name . ')'}}</td>
+                            <td>{{$student->first_name . ' ' . $student->last_name}}</td>
                             <td>{{$student->email}}</td>
                             <td class="text-right" style="min-width: 260px;">
                                 <a class="btn btn-outline-dark" href="{{route('students.edit', $student->id)}}">Show</a>

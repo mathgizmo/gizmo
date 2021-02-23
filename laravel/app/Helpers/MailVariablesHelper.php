@@ -8,13 +8,13 @@ use App\Student;
 class MailVariablesHelper {
 
     public $studentVariablesKeys = array(
-        'studentName',
+        'studentEmail',
         'studentFirstName',
         'studentLastName',
     );
 
     public $classVariablesKeys = array(
-        'teacherName',
+        'teacherEmail',
         'teacherFirstName',
         'teacherLastName',
         'className',
@@ -30,7 +30,7 @@ class MailVariablesHelper {
 
     public function getStudentVariables(Student $user) {
         return array(
-            'studentName' => $user->name,
+            'studentEmail' => $user->email,
             'studentFirstName' => $user->first_name,
             'studentLastName' => $user->last_name,
         );
@@ -38,7 +38,7 @@ class MailVariablesHelper {
 
     public function getClassVariables(ClassOfStudents $class = null) {
         return array(
-            'teacherName' => $class && $class->teacher ? $class->teacher->name : '',
+            'teacherEmail' => $class && $class->teacher ? $class->teacher->email : '',
             'teacherFirstName' => $class && $class->teacher ? $class->teacher->first_name : '',
             'teacherLastName' => $class && $class->teacher ? $class->teacher->last_name : '',
             'className' => $class ? $class->name : '',
