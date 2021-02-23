@@ -736,9 +736,10 @@ class ClassController extends Controller
             if ($class_app->is_for_selected_students) {
                 $query->whereNotNull('classes_applications_students.id');
             }
+            /* using SQL JSON_ARRAYAGG function (require MySQL 5.7.22 / MariaDB 10.5.0)
             $query->groupBy('students.id', 'students.email', 'students.is_registered');
             $query->orderBy('email');
-            $students = $query->get([
+            $data = $query->get([
                 'students.id',
                 'students.email',
                 'students.is_registered',
@@ -755,7 +756,7 @@ class ClassController extends Controller
                 'classes_applications_students.attempts_count',
                 'classes_applications_students.resets_count',
             ]);
-            $students = $students->map(function ($student) {
+            $data = $data->map(function ($student) {
                 $attempts = json_decode($student->attempts);
                 usort($attempts, function($a, $b) {return strcmp($a->attempt_no, $b->attempt_no);});
                 return [
@@ -767,8 +768,59 @@ class ClassController extends Controller
                     'resets_count' => $student->resets_count
                 ];
             });
+            $students = array_values($data->toArray()); */
+            $query->orderBy('email');
+            $data = $query->get([
+                'students.id',
+                'students.email',
+                'students.is_registered',
+                'students_test_attempts.id as attempt_id',
+                'students_test_attempts.attempt_no',
+                'students_test_attempts.mark',
+                'students_test_attempts.questions_count',
+                'students_test_attempts.start_at',
+                'students_test_attempts.end_at',
+                'classes_applications_students.attempts_count',
+                'classes_applications_students.resets_count',
+            ]);
+            $students = [];
+            foreach ($data as $row) {
+                if (array_key_exists($row->id, $students)) {
+                    array_push($students[$row->id]->attempts, (object) [
+                        'id' => $row->attempt_id,
+                        'attempt_no' => $row->attempt_no,
+                        'mark' => $row->mark,
+                        'questions_count' => $row->questions_count,
+                        'start_at' => $row->start_at,
+                        'end_at' => $row->end_at
+                    ]);
+                } else {
+                    $students[$row->id] = (object) [
+                        'id' => $row->id,
+                        'email' => $row->email,
+                        'is_registered' => $row->is_registered,
+                        'attempts_count' => $row->attempts_count,
+                        'resets_count' => $row->resets_count,
+                        'attempts' => [
+                            (object) [
+                                'id' => $row->attempt_id,
+                                'attempt_no' => $row->attempt_no,
+                                'mark' => $row->mark,
+                                'questions_count' => $row->questions_count,
+                                'start_at' => $row->start_at,
+                                'end_at' => $row->end_at
+                            ]
+                        ]
+                    ];
+                }
+            }
+            foreach ($students as $student) {
+                usort($student->attempts, function($a, $b) {
+                    return strcmp($a->attempt_no, $b->attempt_no);
+                });
+            }
             return $this->success([
-                'students' => array_values($students->toArray()),
+                'students' => array_values($students),
             ]);
         }
         return $this->error('Error.', 500);
