@@ -34,10 +34,6 @@
       <div class="subtitle text-center" *ngIf="applications.length < 1">
         You have no Tests!
       </div>
-      <div class="secret-test" style="margin-top: 12px;">
-        <input id="password" name="password" placeholder="Write Password..." [(ngModel)]="password" class="form-control"/>
-        <button *ngIf="password" mat-stroked-button class="button button-outline button-small" type="button" style="margin-top: 8px;" (click)="onStartSecretTest()">Start Secret Test</button>
-      </div>
       <div *ngIf="completedApplications.length > 0" class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications">
         See Finished Tests
       </div>

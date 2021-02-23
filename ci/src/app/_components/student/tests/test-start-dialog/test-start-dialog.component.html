@@ -6,9 +6,13 @@
         <span *ngIf="test.duration">You will have <strong>{{test.duration}}</strong> to do the test.&nbsp;</span>
         <span>If you are ready, press 'Start', if not press 'Go Back'.</span>
     </div>
+    <div *ngIf="!test.is_revealed" class="secret-test" style="margin-top: 12px;">
+        <input id="password" name="password" placeholder="Write Password..." [(ngModel)]="password" class="form-control"/>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class="button button-outline" type="button">Go Back</button>
-    <button mat-button [mat-dialog-close]="true" class="button moving-forward-button continue-button" type="button">Start</button>
+    <button *ngIf="test.is_revealed" mat-button [mat-dialog-close]="true" class="button moving-forward-button continue-button" type="button">Start</button>
+    <button *ngIf="!test.is_revealed" mat-button [mat-dialog-close]="password" class="button moving-forward-button continue-button" type="button" [disabled]="!password">Start</button>
 </mat-dialog-actions>
 

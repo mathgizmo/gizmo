@@ -62,8 +62,8 @@ export class UserService {
             );
     }
 
-    public revealTest(secret) {
-        return this.http.post('/profile/tests/reveal', {password: secret});
+    public revealTest(test_id, password) {
+        return this.http.post('/profile/tests/' + test_id + '/reveal', {password: password});
     }
 
     public getClasses() {

@@ -207,9 +207,7 @@ class ProfileController extends Controller
                 ? ($row->duration * $class_student->test_duration_multiply_by)
                 : ($row->duration ?: null);
             $item->duration = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
-            if ($row->password && (!$test_student || !$test_student->is_revealed)) {
-                continue;
-            }
+            $item->is_revealed = ($row->password && (!$test_student || !$test_student->is_revealed)) ? false : true;
             $attempts = $test_student ? DB::table('students_test_attempts')
                 ->where('test_student_id', $test_student->id)
                 ->get() : [];
@@ -246,52 +244,50 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function revealTest() {
+    public function revealTest(Request $request, $test_id) {
         $student = $this->user;
-        $selected = null;
-        if (request()->has('password')) {
-            $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
-                ->whereHas('test')->where('password', request('password'))->get();
-            foreach ($apps as $app) {
-                $class_app_stud = DB::table('classes_applications_students')
-                    ->where('class_app_id', $app->id)
-                    ->where('student_id', $student->id)->first();
-                if ($app->is_for_selected_students && !$class_app_stud) {
-                    continue;
-                }
-                if ($class_app_stud) {
-                    DB::table('classes_applications_students')->where('class_app_id', $app->id)
-                        ->where('student_id', $student->id)->update([
-                            'is_revealed' => true
-                        ]);
-                } else {
-                    DB::table('classes_applications_students')->insert([
-                        'class_app_id' => $app->id,
-                        'student_id' => $student->id,
-                        'is_revealed' => true
-                    ]);
-                }
-                $selected = $app;
-                break;
-            }
+        if (!request()->has('password')) {
+            return $this->error('Password is required!', 400);
         }
-        if ($selected) {
-            $test = $selected->test()->first();
-            $class_student = DB::table('classes_students')
-                ->where('class_id', $selected->class_id)
-                ->where('student_id', $student->id)->first();
-            $duration = $selected->duration && $class_student
-                ? ($selected->duration * $class_student->test_duration_multiply_by)
-                : ($selected->duration ?: null);
-            $test_duration = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
-            return $this->success([
-                'class_app_id' => $selected->id,
-                'name' => $test->name,
-                'duration' => $test_duration,
-                'total_questions_count' => $test->getQuestionsCount()
-            ], 200);
+        $app = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
+            ->whereHas('test')->where('password', trim(request('password')))
+            ->where('id', $test_id)
+            ->first();
+        if (!$app) {
+            return $this->error('Wrong Password!', 400);
         }
-        return $this->error('Test Not Found!', 404);
+        $test = $app->test()->first();
+        $class_app_stud = DB::table('classes_applications_students')
+            ->where('class_app_id', $app->id)
+            ->where('student_id', $student->id)->first();
+        if (($app->is_for_selected_students && !$class_app_stud) || !$test) {
+            return $this->error('Test Not Found!', 404);
+        }
+        if ($class_app_stud) {
+            DB::table('classes_applications_students')->where('class_app_id', $app->id)
+                ->where('student_id', $student->id)->update([
+                    'is_revealed' => true
+                ]);
+        } else {
+            DB::table('classes_applications_students')->insert([
+                'class_app_id' => $app->id,
+                'student_id' => $student->id,
+                'is_revealed' => true
+            ]);
+        }
+        $class_student = DB::table('classes_students')
+            ->where('class_id', $app->class_id)
+            ->where('student_id', $student->id)->first();
+        $duration = $app->duration && $class_student
+            ? ($app->duration * $class_student->test_duration_multiply_by)
+            : ($app->duration ?: null);
+        $test_duration = $duration ? CarbonInterval::seconds($duration)->cascade()->forHumans() : null;
+        return $this->success([
+            'class_app_id' => $app->id,
+            'name' => $test->name,
+            'duration' => $test_duration,
+            'total_questions_count' => $test->getQuestionsCount()
+        ], 200);
     }
 
     public function changeApplication() {

@@ -8,7 +8,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {TestOptionsDialogComponent} from './test-options-dialog/test-options-dialog.component';
 import {TestStartDialogComponent} from './test-start-dialog/test-start-dialog.component';
 import {TestReportDialogComponent} from './test-report-dialog/test-report-dialog.component';
-
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 
@@ -30,8 +29,6 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
-
-    public password = null;
 
     constructor(
         private userService: UserService,
@@ -81,7 +78,10 @@ export class MyTestsComponent implements OnInit, OnDestroy {
         if (!app || (app.is_blocked)) {
             return;
         }
-        this.openStartTestDialog(app);
+        if (app.in_progress) {
+            return this.router.navigate(['/test/' + app.class_app_id]);
+        }
+        return this.openStartTestDialog(app);
     }
 
     onShowTestReport(app) {
@@ -89,26 +89,6 @@ export class MyTestsComponent implements OnInit, OnDestroy {
             data: { test: app },
             position: this.dialogPosition
         });
-    }
-
-    onStartSecretTest() {
-        this.userService.revealTest(this.password)
-            .subscribe(response => {
-                this.openStartTestDialog(response);
-            }, error => {
-                let message = '';
-                if (typeof error === 'object') {
-                    Object.values(error).forEach(x => {
-                        message += x + ' ';
-                    });
-                } else {
-                    message = error;
-                }
-                this.snackBar.open(message ? message : 'Unable to open secret test!', '', {
-                    duration: 3000,
-                    panelClass: ['error-snackbar']
-                });
-            });
     }
 
     openOptionsDialog() {
@@ -125,7 +105,27 @@ export class MyTestsComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.router.navigate(['/test/' + test.class_app_id]);
+                if (test.is_revealed) {
+                    this.router.navigate(['/test/' + test.class_app_id]);
+                } else {
+                    this.userService.revealTest(test.class_app_id, result)
+                        .subscribe(response => {
+                            this.router.navigate(['/test/' + test.class_app_id]);
+                        }, error => {
+                            let message = '';
+                            if (typeof error === 'object') {
+                                Object.values(error).forEach(x => {
+                                    message += x + ' ';
+                                });
+                            } else {
+                                message = error;
+                            }
+                            this.snackBar.open(message ? message : 'Unable to open the test!', '', {
+                                duration: 3000,
+                                panelClass: ['error-snackbar']
+                            });
+                        });
+                }
             }
         });
     }

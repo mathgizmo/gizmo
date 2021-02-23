@@ -43,11 +43,13 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
 import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent,
-    MyInvitationsComponent, TestOptionsDialogComponent, TestStartDialogComponent, TestReportDialogComponent as StudentTestReportDialogComponent} from './_components/student/index';
+    MyInvitationsComponent, TestOptionsDialogComponent, TestStartDialogComponent,
+    TestReportDialogComponent as StudentTestReportDialogComponent} from './_components/student/index';
 import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
     EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
-    EditAssignmentDialogComponent, ManageTestsComponent, EditTestDialogComponent, TestReportDialogComponent, TestReportResetAttemptDialogComponent,
+    EditAssignmentDialogComponent, ManageTestsComponent, EditTestDialogComponent,
+    TestReportDialogComponent, TestReportResetAttemptDialogComponent,
     ReviewContentComponent, ClassDashboardComponent, ClassAssignmentsComponent,
     ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassToDoComponent, ClassMenuComponent,
     StudentsUsageChartComponent, StudentsUsageBarChartComponent, ClassDetailedReportComponent, ClassTestsReportComponent,
