@@ -137,6 +137,10 @@ export class TestComponent implements OnInit, OnDestroy {
         this.trackingService.trackQuestionAnswer(this.question.id, isCorrect, null, this.testId).subscribe(() => {
             this.test.complete_percent = ++this.test.answered_questions_count / this.test.questions_count * 100;
             this.test.questions.length ? this.nextQuestion() : this.finishTest();
+        }, error => {
+            alert(error);
+            this.question = null;
+            this.counter = 0;
         });
     }
 

@@ -7,15 +7,14 @@
                 <thead>
                 <tr>
                     <th mat-sort-header="email" scope="col">Student</th>
-                    <th scope="col" *ngFor="let attempt of attempts">Attempt #{{attempt+1}}</th>
-                    <th mat-sort-header="attempts_count" scope="col">Attempts count</th>
+                    <th scope="col" *ngFor="let attempt of attempts">Attempt #{{attempt}}</th>
                     <th mat-sort-header="resets_count" scope="col">Resets count</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td [attr.colspan]="test.attempts + 4">
+                    <td [attr.colspan]="test.attempts + 3">
                         <input matInput placeholder="Email" class="filter-item" type="text" name="email" [(ngModel)]="email" [value]="" />
                     </td>
                 </tr>
@@ -38,7 +37,6 @@
                                 <img class="test-progress-icon" src="assets/images/test_not_started.png" alt="Test Not Started" />
                             </ng-template>
                         </td>
-                        <td>{{item.attempts_count}}</td>
                         <td>{{item.resets_count}}</td>
                         <td class="text-right" style="min-width: 200px">
                             <div *ngIf="item.attempts && item.attempts[0] && item.attempts[0].id">
@@ -48,8 +46,8 @@
                         </td>
                     </tr>
                     <tr class="tid-detail-row" *ngIf="item.showDetail">
-                        <td [attr.colspan]="test.attempts + 4">
-                            <h4>Attempt #{{item.attempts[item.selectedAttempt].attempt_no}}</h4>
+                        <td [attr.colspan]="test.attempts + 3">
+                            <h4>Attempt #{{item.selectedAttempt}}</h4>
                             <h5 *ngIf="item.attempts[item.selectedAttempt].start_at">Start At: {{ item.attempts[item.selectedAttempt].start_at | date:'yyyy-M-d h:mm a' }}</h5>
                             <h5 *ngIf="item.attempts[item.selectedAttempt].end_at">End At: {{ item.attempts[item.selectedAttempt].end_at | date:'yyyy-M-d h:mm a' }}</h5>
                             <div *ngFor="let level of item.details" class="level-details d-flex flex-column">

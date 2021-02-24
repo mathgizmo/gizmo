@@ -16,7 +16,7 @@ class CreateStudentsTestAttemptsTable extends Migration
     {
         Schema::create('students_test_attempts', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('attempt_no')->default(1);
+            $table->unsignedInteger('attempt_no')->default(0);
             $table->unsignedInteger('test_student_id');
             $table->unsignedInteger('questions_count')->nullable(true);
             $table->double('mark')->nullable(true);

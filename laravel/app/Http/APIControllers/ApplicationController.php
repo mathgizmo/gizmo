@@ -140,7 +140,7 @@ class ApplicationController extends Controller
                 $test_resource['time_left'] = $time_left;
             } else {
                 $attempt_id = DB::table('students_test_attempts')->insertGetId([
-                    'attempt_no' => $test_student->attempts_count + $test_student->resets_count + 1,
+                    'attempt_no' => $test_student->attempts_count + 1,
                     'test_student_id' => $test_student->id,
                     'start_at' => Carbon::now()->toDateTimeString(),
                 ]);

@@ -210,16 +210,16 @@ class ProfileController extends Controller
             $item->is_revealed = ($row->password && (!$test_student || !$test_student->is_revealed)) ? false : true;
             $attempts = $test_student ? DB::table('students_test_attempts')
                 ->where('test_student_id', $test_student->id)
+                ->orderBy('attempt_no', 'ASC')
                 ->get() : [];
             $current_attempt = $test_student ? $attempts->whereNull('end_at')->first() : null;
             $attempts_count = count($attempts);
             $max_mark = $attempts_count ? $attempts->sortByDesc('mark')->first()->mark : 0;
-            foreach ($attempts as $attempt) {
+            foreach ($attempts as $index => $attempt) {
                 $attempt_item = clone $item;
                 $attempt_item->total_questions_count = $attempt->questions_count;
                 $attempt_item->attempt_id = $attempt->id;
-                $attempt_item->attempt_no = $attempt->attempt_no;
-                // $attempt_item->attempts_remaining = $row->attempts - $attempts_count;
+                $attempt_item->attempt_no = $index;
                 $attempt_item->mark = $attempt->mark;
                 $attempt_item->questions_count = $attempt->questions_count;
                 $attempt_item->is_completed = ($attempt->end_at || $attempt->mark) ? true : false;
@@ -230,11 +230,8 @@ class ProfileController extends Controller
             }
             if ($attempts_count < $row->attempts && !$current_attempt && $max_mark < 0.9999) {
                 $item->total_questions_count = $item->getQuestionsCount();
-                // $item->attempt_no = ($test_student ? ($test_student->attempts_count + $test_student->resets_count + 1) : 1);
                 $item->attempts_remaining = $row->attempts - $attempts_count;
-                // $item->mark = 0;
                 $item->is_completed = false;
-                // $item->completed_at = null;
                 $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
                 array_push($items, $item);
             }

@@ -959,7 +959,7 @@ class ClassController extends Controller
             } else {
                 $attempts_rows = DB::table('students_test_attempts')
                     ->where('test_student_id', $test_student->id)
-                    ->orderBy('mark', 'DESC')
+                    ->orderBy('attempt_no', 'ASC')
                     ->get();
             }
             $attempts = [];

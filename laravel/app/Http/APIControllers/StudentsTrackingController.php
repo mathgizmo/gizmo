@@ -404,7 +404,7 @@ class StudentsTrackingController extends Controller
                         ->whereNull('end_at')
                         ->first() : null;
                 if (!$current_attempt) {
-                    return $this->error('Attempt not found!', 404);
+                    return $this->error('This test has been reset by the teacher, if you think an error has been made please take a screenshot of your progress!', 404);
                 }
                 DB::table('students_test_questions')
                     // ->where('class_app_id', $this->class_app->id)

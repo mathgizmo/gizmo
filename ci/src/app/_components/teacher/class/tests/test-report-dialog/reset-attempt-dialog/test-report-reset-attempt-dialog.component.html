@@ -4,8 +4,8 @@
         Are you sure that you want to reset the progress for <strong>{{item.email}}</strong>?
     </div>
     <select class="form-control" [(ngModel)]="attemptId">
-        <option *ngFor="let attempt of item.attempts" [attr.value]="attempt.id">
-            Attempt #{{attempt.attempt_no}}
+        <option *ngFor="let attempt of item.attempts; let i = index" [attr.value]="attempt.id">
+            Attempt #{{i}}
             <span *ngIf="attempt.mark">{{(attempt.mark * 100).toFixed(0)}}%</span>
         </option>
     </select>
