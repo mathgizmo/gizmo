@@ -14,6 +14,15 @@
     width: 100% !important;
 }
 
+.students-list {
+    max-height: 240px;
+    overflow-y: scroll;
+}
+
+:host ::ng-deep .mat-list-item {
+    height: 32px !important;
+}
+
 :host ::ng-deep .ck-editor__editable_inline {
     min-height: 240px !important;
 }

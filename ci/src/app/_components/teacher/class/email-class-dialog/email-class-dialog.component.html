@@ -9,9 +9,16 @@
         <label for="body">Body:</label>
         <ckeditor id="body" [editor]="editor" [(ngModel)]="mail.body" class="body-input"></ckeditor>
     </div>
+    <perfect-scrollbar *ngIf="!mail.for_all_students" class="students-list">
+        <label>Students:</label>
+        <mat-selection-list [(ngModel)]="mail.students">
+            <mat-list-option *ngFor="let student of students" [value]="student.email" checkboxPosition="before">
+                {{student.email}}
+            </mat-list-option>
+        </mat-selection-list>
+    </perfect-scrollbar>
     <div class="form-group">
-        <input name="for_all_students" [(ngModel)]="mail.for_all_students" type="checkbox" />
-        For all students
+        <mat-checkbox name="for_all_students" [(ngModel)]="mail.for_all_students">For all students</mat-checkbox>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
