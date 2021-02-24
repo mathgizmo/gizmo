@@ -9,6 +9,7 @@ export * from './class/assignments/class-assignments.component';
 export * from './class/assignments/calendar/class-assignments-calendar.component';
 export * from './class/assignments/select-students-dialog/select-students-dialog.component';
 export * from './class/edit-class-dialog/edit-class-dialog.component';
+export * from './class/email-class-dialog/email-class-dialog.component';
 export * from './class/tests/class-tests.component';
 export * from './class/students/class-students.component';
 export * from './class/to-do/class-to-do.component';

@@ -2,6 +2,8 @@
 
 namespace App\Http\APIControllers;
 
+use App\Mail\ClassMail;
+use App\Mail\CustomMail;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Application;
 use App\ClassApplication;
@@ -15,6 +17,7 @@ use App\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -91,6 +94,29 @@ class ClassController extends Controller
             return $this->success('Ok.');
         }
         return $this->error('Error.', 404);
+    }
+
+    public function emailClass(Request $request, $class_id) {
+        $user = $this->user;
+        $class = ClassOfStudents::where('id', $class_id)->first();
+        if (!$class) {
+            return $this->error('Class not found.', 404);
+        }
+        if ($user->isTeacher()) {
+            $emails = request('for_all_students')
+                ? array_values($class->students->pluck('email')->toArray())
+                : request('students');
+        } else {
+            $emails = [$class->teacher->email];
+        }
+        if (config('app.env') == 'production') {
+            foreach ($emails as $email) {
+                try {
+                    Mail::to($email)->send(new ClassMail($request['subject'], $request['body'], $user, $class));
+                } catch (\Exception $e) { return $e;}
+            }
+        }
+        return $this->success(['success' => true, 'items' => $emails]);
     }
 
     public function getStudents($class_id) {

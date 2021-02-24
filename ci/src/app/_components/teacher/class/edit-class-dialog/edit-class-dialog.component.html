@@ -1,16 +1,17 @@
 <!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Edit Class!</h2> -->
 <mat-dialog-content class="dialog-content" id="dialog-content">
     <div class="subtitle text-center">{{title}}</div>
-        <div class="form-group">
-            <label for="name">Class Name:</label>
-            <input id="name" name="name" placeholder="Class Name" [(ngModel)]="class.name" #name="ngModel" required class="form-control" />
+    <div class="form-group">
+        <label for="name">Class Name:</label>
+        <input id="name" name="name" placeholder="Class Name" [(ngModel)]="class.name" #name="ngModel" required
+               class="form-control"/>
+    </div>
+    <div *ngIf="name.invalid && (name.dirty || name.touched)"
+         class="alert alert-danger">
+        <div *ngIf="name.errors.required">
+            Name is required.
         </div>
-        <div *ngIf="name.invalid && (name.dirty || name.touched)"
-             class="alert alert-danger">
-            <div *ngIf="name.errors.required">
-                Name is required.
-            </div>
-        </div>
+    </div>
     <div class="form-group">
         <label for="class_type">Type of Classroom:</label>
         <select id="class_type" class="form-control" name="class_type" [(ngModel)]="class.class_type">
@@ -22,24 +23,29 @@
             <option value="other">Other</option>
         </select>
     </div>
-        <div class="form-group">
-            <label for="subscription_type">Subscription Type:</label>
-            <select id="subscription_type" class="form-control" name="subscription_type" [(ngModel)]="class.subscription_type">
-                <option value="open">Open</option>
-                <option value="invitation">Invitation</option>
-                <option value="closed">Closed</option>
-            </select>
-        </div>
-        <div *ngIf="class.subscription_type === 'invitation'" class="form-group">
-            <label for="invitations">Invitations:</label>
-            <textarea id="invitations" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3"
-                    cdkAutosizeMaxRows="12" name="invitations" placeholder="Please enter comma separated email list"
-                    [(ngModel)]="class.invitations" class="form-control"></textarea>
-        </div>
+    <div class="form-group">
+        <label for="subscription_type">Subscription Type:</label>
+        <select id="subscription_type" class="form-control" name="subscription_type"
+                [(ngModel)]="class.subscription_type">
+            <option value="open">Open</option>
+            <option value="invitation">Invitation</option>
+            <option value="closed">Closed</option>
+        </select>
+    </div>
+    <div *ngIf="class.subscription_type === 'invitation'" class="form-group">
+        <label for="invitations">Invitations:</label>
+        <textarea id="invitations" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3"
+                  cdkAutosizeMaxRows="12" name="invitations" placeholder="Please enter comma separated email list"
+                  [(ngModel)]="class.invitations" class="form-control"></textarea>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
-    <button *ngIf="name.invalid" mat-button class='button moving-forward-button continue-button' type="button" disabled>Save</button>
-    <button *ngIf="!name.invalid" mat-button [mat-dialog-close]="class" class='button moving-forward-button continue-button' type="button">Save</button>
+    <button *ngIf="name.invalid" mat-button class='button moving-forward-button continue-button' type="button" disabled>
+        Save
+    </button>
+    <button *ngIf="!name.invalid" mat-button [mat-dialog-close]="class"
+            class='button moving-forward-button continue-button' type="button">Save
+    </button>
 </mat-dialog-actions>
 

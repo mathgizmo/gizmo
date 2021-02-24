@@ -1,15 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../../../_services/user.service';
 import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
+import {EmailTeacherDialogComponent} from './email-teacher-dialog/email-teacher-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {UserService, ClassesManagementService} from '../../../_services';
 
 @Component({
     selector: 'app-my-classes',
     templateUrl: './classes.component.html',
     styleUrls: ['./classes.component.scss'],
-    providers: [UserService]
+    providers: [UserService, ClassesManagementService]
 })
 export class MyClassesComponent implements OnInit {
 
@@ -26,7 +28,9 @@ export class MyClassesComponent implements OnInit {
     private isDesktop = this.deviceService.isDesktop();
 
     constructor(
+        private classService: ClassesManagementService,
         private userService: UserService,
+        public snackBar: MatSnackBar,
         public dialog: MatDialog,
         private deviceService: DeviceDetectorService) {
         this.dialogPosition = {bottom: '18vh'};
@@ -80,6 +84,36 @@ export class MyClassesComponent implements OnInit {
                 });
                 this.addClass = false;
             });
+    }
+
+    onEmail(item) {
+        const dialogRef = this.dialog.open(EmailTeacherDialogComponent, {
+            data: {'class': item},
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(mail => {
+            if (mail) {
+                this.classService.emailClass(item.id, mail).subscribe(res => {
+                    this.snackBar.open('Email have been successfully sent!', '', {
+                        duration: 3000,
+                        panelClass: ['success-snackbar']
+                    });
+                }, error => {
+                    let message = '';
+                    if (typeof error === 'object') {
+                        Object.values(error).forEach(x => {
+                            message += x + ' ';
+                        });
+                    } else {
+                        message = error;
+                    }
+                    this.snackBar.open(message ? message : 'Error occurred while sending email!', '', {
+                        duration: 3000,
+                        panelClass: ['error-snackbar']
+                    });
+                });
+            }
+        });
     }
 
     sortMyClasses(sort: Sort) {

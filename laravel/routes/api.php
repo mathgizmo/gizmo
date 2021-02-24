@@ -63,6 +63,7 @@ $api->version('v1', function ($api) {
         $api->post('/classes', 'App\Http\APIControllers\ClassController@store');
         $api->put('/classes/{class_id}', 'App\Http\APIControllers\ClassController@update');
         $api->delete('/classes/{class_id}', 'App\Http\APIControllers\ClassController@delete');
+        $api->post('/classes/{class_id}/email', 'App\Http\APIControllers\ClassController@emailClass');
         $api->get('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@getStudents');
         $api->post('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@addStudents');
         $api->put('/classes/{class_id}/students/{student_id}', 'App\Http\APIControllers\ClassController@updateStudent');

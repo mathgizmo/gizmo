@@ -27,6 +27,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatListModule} from '@angular/material/list';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
@@ -42,12 +43,12 @@ import {LessonComponent, ChartComponent} from './_components/assignment/topic/le
 import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
-import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent,
+import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, EmailTeacherDialogComponent,
     MyInvitationsComponent, TestOptionsDialogComponent, TestStartDialogComponent,
     TestReportDialogComponent as StudentTestReportDialogComponent} from './_components/student/index';
 import {ClassReportComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, AddStudentDialogComponent,
-    EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
+    EditClassDialogComponent, EmailClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, ManageTestsComponent, EditTestDialogComponent,
     TestReportDialogComponent, TestReportResetAttemptDialogComponent,
     ReviewContentComponent, ClassDashboardComponent, ClassAssignmentsComponent,
@@ -116,6 +117,7 @@ FullCalendarModule.registerPlugins([
         PerfectScrollbarModule,
         RecaptchaModule,
         RecaptchaFormsModule,
+        CKEditorModule,
         ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     exports: [],
@@ -146,6 +148,7 @@ FullCalendarModule.registerPlugins([
         YesNoDialogComponent,
         DeleteConfirmationDialogComponent,
         EditClassDialogComponent,
+        EmailClassDialogComponent,
         StudentAssignmentsDialogComponent,
         AddStudentDialogComponent,
         ManageAssignmentsComponent,
@@ -157,6 +160,7 @@ FullCalendarModule.registerPlugins([
         EditClassAssignmentDialogComponent,
         EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
+        EmailTeacherDialogComponent,
         TestOptionsDialogComponent,
         TestStartDialogComponent,
         StudentTestReportDialogComponent,
@@ -196,6 +200,7 @@ FullCalendarModule.registerPlugins([
         YesNoDialogComponent,
         DeleteConfirmationDialogComponent,
         EditClassDialogComponent,
+        EmailClassDialogComponent,
         StudentAssignmentsDialogComponent,
         AddStudentDialogComponent,
         EditAssignmentDialogComponent,
@@ -205,6 +210,7 @@ FullCalendarModule.registerPlugins([
         EditClassAssignmentDialogComponent,
         EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
+        EmailTeacherDialogComponent,
         TestOptionsDialogComponent,
         TestStartDialogComponent,
         StudentTestReportDialogComponent

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {ClassesManagementService} from '../../../_services/classes-management.service';
 import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.component';
+import {EmailClassDialogComponent} from './email-class-dialog/email-class-dialog.component';
 import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
@@ -136,6 +137,36 @@ export class ManageClassesComponent implements OnInit {
                             panelClass: ['error-snackbar']
                         });
                     });
+            }
+        });
+    }
+
+    onEmail(item) {
+        const dialogRef = this.dialog.open(EmailClassDialogComponent, {
+            data: { 'class': item },
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(mail => {
+            if (mail) {
+                this.classService.emailClass(item.id, mail).subscribe(res => {
+                    this.snackBar.open('Email have been successfully sent!', '', {
+                        duration: 3000,
+                        panelClass: ['success-snackbar']
+                    });
+                }, error => {
+                    let message = '';
+                    if (typeof error === 'object') {
+                        Object.values(error).forEach(x => {
+                            message += x + ' ';
+                        });
+                    } else {
+                        message = error;
+                    }
+                    this.snackBar.open(message ? message : 'Error occurred while sending email!', '', {
+                        duration: 3000,
+                        panelClass: ['error-snackbar']
+                    });
+                });
             }
         });
     }

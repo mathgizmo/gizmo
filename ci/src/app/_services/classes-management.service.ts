@@ -73,6 +73,10 @@ export class ClassesManagementService {
         return this.http.delete('/classes/' + class_id);
     }
 
+    public emailClass(class_id, mail) {
+        return this.http.post('/classes/' + class_id + '/email', mail);
+    }
+
     public getStudents(class_id, extraData = true) {
         return this.http.get('/classes/' + class_id + '/students?extra=' + extraData)
             .pipe(
