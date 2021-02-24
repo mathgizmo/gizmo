@@ -128,7 +128,6 @@
         function filter() {
             let url = new URL(window.location.href);
             const id = document.getElementById("id-filter").value;
-            const name = document.getElementById("name-filter").value;
             const first_name = document.getElementById("first-name-filter").value;
             const last_name = document.getElementById("last-name-filter").value;
             const email = document.getElementById("email-filter").value;
@@ -139,11 +138,6 @@
                 url.searchParams.set('id', id);
             } else if (url.searchParams.get('id')) {
                 url.searchParams.delete('id');
-            }
-            if (name) {
-                url.searchParams.set('name', name);
-            } else if (url.searchParams.get('name')) {
-                url.searchParams.delete('name');
             }
             if (first_name) {
                 url.searchParams.set('first_name', first_name);
@@ -177,7 +171,6 @@
         function init() {
             const url = new URL(window.location.href);
             document.getElementById("id-filter").value = url.searchParams.get('id');
-            document.getElementById("name-filter").value = url.searchParams.get('name');
             document.getElementById("first-name-filter").value = url.searchParams.get('first_name');
             document.getElementById("last-name-filter").value = url.searchParams.get('last_name');
             document.getElementById("email-filter").value = url.searchParams.get('email');
