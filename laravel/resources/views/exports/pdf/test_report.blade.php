@@ -48,7 +48,7 @@
                 Level: <strong>{{ $level->title }}</strong> -
                 <strong>
                     {{round($level->mark * 100)}}%
-                    @if($level->correct && $level->total) ({{$level->correct}}/{{$level->total}}) @endif
+                    @if($level->total) ({{$level->correct}}/{{$level->total}}) @endif
                 </strong>
             </div>
             @foreach($level->units as $unit)
@@ -57,11 +57,7 @@
                         Unit: <strong>{{ $unit->title }}</strong> -
                         <strong>
                             {{round($unit->mark * 100)}}%
-                            @if($unit->correct && $unit->total)
-                                <span>
-                                ({{$unit->correct}}/{{$unit->total}})
-                            </span>
-                            @endif
+                            @if($unit->total) ({{$unit->correct}}/{{$unit->total}}) @endif
                         </strong>
                     </div>
                     @foreach($unit->topics as $topic)
@@ -70,11 +66,7 @@
                                 Topic: <strong>{{ $topic->title }}</strong> -
                                 <strong>
                                     {{round($topic->mark * 100)}}%
-                                    @if($topic->correct && $topic->total)
-                                        <span>
-                                    ({{$topic->correct}}/{{$topic->total}})
-                                </span>
-                                    @endif
+                                    @if($topic->total) ({{$topic->correct}}/{{$topic->total}}) @endif
                                 </strong>
                             </div>
                         </div>

@@ -58,7 +58,7 @@
                                     Mark:
                                     <strong>
                                         {{(level.mark * 100).toFixed(0)}}%
-                                        <span *ngIf="level.correct && level.total">
+                                        <span *ngIf="level.total">
                                             ({{level.correct}}/{{level.total}})
                                         </span>
                                     </strong>
@@ -69,7 +69,7 @@
                                         Mark:
                                         <strong>
                                             {{(unit.mark * 100).toFixed(0)}}%
-                                            <span *ngIf="unit.correct && unit.total">
+                                            <span *ngIf="unit.total">
                                                 ({{unit.correct}}/{{unit.total}})
                                             </span>
                                         </strong>
@@ -80,7 +80,7 @@
                                             Mark:
                                             <strong>
                                                 {{(topic.mark * 100).toFixed(0)}}%
-                                                <span *ngIf="topic.correct && topic.total">
+                                                <span *ngIf="topic.total">
                                                     ({{topic.correct}}/{{topic.total}})
                                                 </span>
                                             </strong>
