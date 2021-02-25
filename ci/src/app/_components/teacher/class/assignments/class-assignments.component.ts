@@ -13,6 +13,7 @@ import {EditClassAssignmentDialogComponent} from './edit-assignment-dialog/edit-
 import {SelectStudentsDialogComponent} from './select-students-dialog/select-students-dialog.component';
 import {ClassAssignmentsCalendarComponent} from './calendar/class-assignments-calendar.component';
 import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../../dialogs/index';
+import {AssignmentReportDialogComponent} from './assignment-report-dialog/assignment-report-dialog.component';
 
 @Component({
     selector: 'app-class-assignments',
@@ -441,6 +442,21 @@ export class ClassAssignmentsComponent implements OnInit {
                     });
                 });
         });
+    }
+
+    onShowAssignmentReport(item) {
+        this.classService.getReport(this.classId)
+            .subscribe(response => {
+                const students = response.students;
+                const dialogRef = this.dialog.open(AssignmentReportDialogComponent, {
+                    data: {
+                        title: item.name + ': report',
+                        assignment: item,
+                        students: students
+                    },
+                    position: this.dialogPosition
+                });
+            });
     }
 
     sortData(sort: Sort) {

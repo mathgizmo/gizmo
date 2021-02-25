@@ -312,7 +312,7 @@ class ClassController extends Controller
         return $this->success('deleted');
     }
 
-    public function getReport($class_id) {
+    public function getReport(Request $request, $class_id) {
         $is_teacher = $this->user->is_teacher;
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);

@@ -38,7 +38,8 @@
               "raf",
               "xlsx",
               "@babel/runtime",
-              "pdfmake/build/pdfmake.js"
+              "pdfmake/build/pdfmake.js",
+              "@ckeditor/ckeditor5-build-classic"
             ]
           },
           "configurations": {

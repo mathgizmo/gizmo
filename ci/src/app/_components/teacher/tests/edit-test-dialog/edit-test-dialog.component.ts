@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, HostListener, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
@@ -156,6 +156,14 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         }
         checkSiblings(container);
         this.getQuestionsCount();
+    }
+
+    // prevent dialog close on Enter pressed
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        /* if (event.key === 'Enter') {
+            this.dialogRef.close();
+        } */
     }
 
 }

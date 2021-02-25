@@ -1,0 +1,36 @@
+<!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Assignment Report!</h2> -->
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{title}}</div>
+    <form novalidate #form="ngForm" class="report-data">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                <tr>
+                    <th mat-sort-header="name" scope="col">Student</th>
+                    <th scope="col">Progress</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let row of students | tableFilter: form.value">
+                    <td style="width: 300px">{{row.student_email}}</td>
+                    <td [class]="row.data[assignment.id] && row.data[assignment.id].status">
+                          <span *ngIf="row.data[assignment.id]">
+                            {{row.data[assignment.id].status == 'completed' ? 'Completed' :
+                              (row.data[assignment.id].status == 'overdue' ? 'Overdue' : row.data[assignment.id].status == 'progress' ? 'In progress' : 'Pending')}}
+                          </span>
+                        <span *ngIf="!row.data[assignment.id]">N/A</span>
+                        <div *ngIf="row.data[assignment.id] && row.data[assignment.id].status !== 'pending'">
+                            <span style="font-size: 0.8em;">{{(row.data[assignment.id].progress * 100).toFixed(1)}}%</span>
+                            <mat-progress-bar mode="determinate" [value]="row.data[assignment.id].progress * 100"></mat-progress-bar>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container">
+    <button mat-button [mat-dialog-close]="false" class="button button-white" type="button">Close</button>
+</mat-dialog-actions>
+

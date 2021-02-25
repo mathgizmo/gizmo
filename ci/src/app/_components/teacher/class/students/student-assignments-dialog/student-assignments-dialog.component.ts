@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, HostListener, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
@@ -32,9 +32,11 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
         if (data.student) {
+            // tslint:disable-next-line:indent
         	this.student = data.student;
         }
         if (data.assignments) {
+            // tslint:disable-next-line:indent
         	this.assignments = data.assignments;
         }
         this.dialogPosition = {bottom: '18vh'};
@@ -72,6 +74,14 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
         }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
+    }
+
+    // prevent dialog close on Enter pressed
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        /* if (event.key === 'Enter') {
+            this.dialogRef.close();
+        } */
     }
 }
 

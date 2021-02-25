@@ -4,6 +4,10 @@
   <mat-card *ngIf="!addAssignment" class="assignments-content">
     <div class="subtitle text-center">Assignments of {{class.name}}</div>
     <div class="actions-container">
+      <div class="buttons-group"></div>
+      <div class="links-group">
+        <!-- <button class="button button-small button-outline" mat-button>Status Report</button> -->
+      </div>
       <mat-button-toggle-group [(ngModel)]="calendarView" class="toggle-group button button-small button-outline">
         <mat-button-toggle [value]="true" class="toggle-button">
           <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -71,7 +75,8 @@
               <span *ngIf="item.is_for_selected_students" class="link" (click)="onShowAssignmentStudents(item)">Selected</span>
               <span *ngIf="!item.is_for_selected_students">All</span>
             </td>
-            <td class="text-right">
+            <td class="text-right" style="min-width: 210px;">
+              <button class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowAssignmentReport(item)" style="margin-right: 8px;">Report</button>
               <button class="button button-small button-danger" mat-stroked-button type="button" (click)="onDeleteAssignment(item)">Remove</button>
             </td>
           </tr>

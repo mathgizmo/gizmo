@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, HostListener, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../../../dialogs/base-dialog.component';
@@ -39,5 +39,13 @@ export class TestReportResetAttemptDialogComponent extends BaseDialogComponent<T
         const width = (this.orientation === 'portrait') ? '80vw' : '38vw';
         const height = (this.orientation === 'portrait') ? '30vh' : '38vh';
         this.updateDialogSize(width, height);
+    }
+
+    // prevent dialog close on Enter pressed
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        /* if (event.key === 'Enter') {
+            this.dialogRef.close();
+        } */
     }
 }

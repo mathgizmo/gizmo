@@ -1,14 +1,22 @@
 @import '../../../../../colors';
 .actions-container {
   display: flex;
-  justify-content: flex-end;
-  .toggle-group {
+  justify-content: space-between;
+  .toggle-group, .buttons-group, .links-group {
     display: flex;
-    justify-content: flex-end;
     width: 240px;
     max-width: 100%;
     padding: 0 !important;
     margin: 12px 0;
+  }
+  .links-group {
+    justify-content: center;
+    .button {
+
+    }
+  }
+  .toggle-group {
+    justify-content: flex-end;
     .toggle-button {
       width: 50%;
       margin: 0 !important;

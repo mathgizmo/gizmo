@@ -4,6 +4,10 @@
   <mat-card *ngIf="!addTest" class="tests-content">
     <div class="subtitle text-center">Tests of {{class.name}}</div>
     <div class="actions-container">
+      <div class="buttons-group"></div>
+      <div class="links-group">
+        <!-- <button class="button button-small button-outline" mat-button>Status Report</button> -->
+      </div>
       <mat-button-toggle-group [(ngModel)]="calendarView" class="toggle-group button button-small button-outline">
         <mat-button-toggle [value]="true" class="toggle-button">
           <i class="fa fa-calendar" aria-hidden="true"></i>
