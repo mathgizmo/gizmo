@@ -697,108 +697,17 @@ class ClassController extends Controller
     }
 
     public function getTestReport($class_id, $app_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-        $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
-        if ($class && $class_app) {
-            $query = $class->students();
-            $query->leftJoin('classes_applications_students', function ($join) use ($class_app) {
-                $join->on('classes_applications_students.student_id', '=', 'students.id')
-                    ->where('classes_applications_students.class_app_id', $class_app->id);
-            });
-            $query->leftJoin('students_test_attempts', function ($join) use ($class_app) {
-                $join->on('students_test_attempts.test_student_id', '=', 'classes_applications_students.id');
-            });
-            if ($class_app->is_for_selected_students) {
-                $query->whereNotNull('classes_applications_students.id');
-            }
-            /* using SQL JSON_ARRAYAGG function (require MySQL 5.7.22 / MariaDB 10.5.0)
-            $query->groupBy('students.id', 'students.email', 'students.is_registered');
-            $query->orderBy('email');
-            $data = $query->get([
-                'students.id',
-                'students.email',
-                'students.is_registered',
-                DB::raw("JSON_ARRAYAGG(
-                    JSON_OBJECT(
-                        'id', students_test_attempts.id,
-                        'attempt_no', students_test_attempts.attempt_no,
-                        'mark', students_test_attempts.mark,
-                        'questions_count', students_test_attempts.questions_count,
-                        'start_at', students_test_attempts.start_at,
-                        'end_at', students_test_attempts.end_at
-                    )
-                ) AS attempts"),
-                'classes_applications_students.attempts_count',
-                'classes_applications_students.resets_count',
-            ]);
-            $data = $data->map(function ($student) {
-                $attempts = json_decode($student->attempts);
-                usort($attempts, function($a, $b) {return strcmp($a->attempt_no, $b->attempt_no);});
-                return [
-                    'id' => $student->id,
-                    'email' => $student->email,
-                    'is_registered' => $student->is_registered,
-                    'attempts' => $attempts,
-                    'attempts_count' => $student->attempts_count,
-                    'resets_count' => $student->resets_count
-                ];
-            });
-            $students = array_values($data->toArray()); */
-            $query->orderBy('email');
-            $data = $query->get([
-                'students.id',
-                'students.email',
-                'students.is_registered',
-                'students_test_attempts.id as attempt_id',
-                'students_test_attempts.attempt_no',
-                'students_test_attempts.mark',
-                'students_test_attempts.questions_count',
-                'students_test_attempts.start_at',
-                'students_test_attempts.end_at',
-                'classes_applications_students.attempts_count',
-                'classes_applications_students.resets_count',
-            ]);
-            $students = [];
-            foreach ($data as $row) {
-                if (array_key_exists($row->id, $students)) {
-                    array_push($students[$row->id]->attempts, (object) [
-                        'id' => $row->attempt_id,
-                        'attempt_no' => $row->attempt_no,
-                        'mark' => $row->mark,
-                        'questions_count' => $row->questions_count,
-                        'start_at' => $row->start_at,
-                        'end_at' => $row->end_at
-                    ]);
-                } else {
-                    $students[$row->id] = (object) [
-                        'id' => $row->id,
-                        'email' => $row->email,
-                        'is_registered' => $row->is_registered,
-                        'attempts_count' => $row->attempts_count,
-                        'resets_count' => $row->resets_count,
-                        'attempts' => [
-                            (object) [
-                                'id' => $row->attempt_id,
-                                'attempt_no' => $row->attempt_no,
-                                'mark' => $row->mark,
-                                'questions_count' => $row->questions_count,
-                                'start_at' => $row->start_at,
-                                'end_at' => $row->end_at
-                            ]
-                        ]
-                    ];
-                }
-            }
-            foreach ($students as $student) {
-                usort($student->attempts, function($a, $b) {
-                    return strcmp($a->attempt_no, $b->attempt_no);
-                });
-            }
-            return $this->success([
-                'students' => array_values($students),
-            ]);
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where('teacher_id', $this->user->id)->first();
+        $class_app = ClassApplication::where('class_id', $class_id)
+            ->where('app_id', $app_id)->first();
+        if (!$class || !$class_app) {
+            return $this->error('Not Found!', 404);
         }
-        return $this->error('Error.', 500);
+        $students = $this->getTestReportData($class, $class_app);
+        return $this->success([
+            'students' => array_values($students),
+        ]);
     }
 
     public function resetTestProgress(Request $request, $class_id, $app_id, $student_id) {
@@ -922,113 +831,42 @@ class ClassController extends Controller
         return $this->error('Error.', 500);
     }
 
-    private function getTestAttemptReport($student_id, $attempt_id, $with_questions = false) {
-        $data = DB::table('students_test_questions')
-            ->select(
-                'topic_id', 'unit_id', 'level_id',
-                DB::raw("SUM(1) as total"),
-                DB::raw("SUM(IF(is_right_answer, 1, 0)) as correct")
-            )
-            ->where('attempt_id', $attempt_id)
-            ->where('student_id', $student_id)
-            ->groupBy('topic_id', 'unit_id', 'level_id')
-            ->get();
-        $levels = [];
-        foreach ($data->groupBy('level_id') as $level_data) {
-            $level_id = $level_data->first()->level_id;
-            $level_total = $level_data->sum('total');
-            $level_correct = $level_data->sum('correct');
-            $units = [];
-            foreach ($level_data->groupBy('unit_id') as $unit_data) {
-                $unit_id = $unit_data->first()->unit_id;
-                $unit_total = $unit_data->sum('total');
-                $unit_correct = $unit_data->sum('correct');
-                $topics = [];
-                foreach ($unit_data->groupBy('topic_id') as $topic_data) {
-                    $topic_id = $topic_data->first()->topic_id;
-                    $topic_total = $topic_data->sum('total');
-                    $topic_correct = $topic_data->sum('correct');
-                    $topic = Topic::where('id', $topic_id)->first();
-                    if ($with_questions) {
-                        $questions = DB::table('students_test_questions')
-                            ->leftJoin('question', 'question.id', '=', 'students_test_questions.question_id')
-                            ->leftJoin('lesson', 'lesson.id', '=', 'question.lesson_id')
-                            ->where('students_test_questions.attempt_id', $attempt_id)
-                            ->where('students_test_questions.student_id', $student_id)
-                            ->where('students_test_questions.topic_id', $topic_id)
-                            ->orderBy('students_test_questions.order_no', 'ASC')
-                            ->get([
-                                'students_test_questions.question_id',
-                                'question.question as question',
-                                'lesson.id as lesson_id',
-                                'lesson.title as lesson',
-                                'students_test_questions.is_answered',
-                                'students_test_questions.is_right_answer'
-                            ]);
-                        $topics[] = (object) [
-                            'topic_id' => $topic_id,
-                            'title' => $topic ? $topic->title : $topic_id,
-                            'mark' => $topic_total && $topic_total > 0 ? $topic_correct / $topic_total : 1,
-                            'correct' => $topic_correct,
-                            'total' => $topic_total,
-                            'questions' => $questions
-                        ];
-                    } else {
-                        $topics[] = (object) [
-                            'topic_id' => $topic_id,
-                            'title' => $topic ? $topic->title : $topic_id,
-                            'mark' => $topic_total && $topic_total > 0 ? $topic_correct / $topic_total : 1,
-                            'correct' => $topic_correct,
-                            'total' => $topic_total,
-                        ];
-                    }
-                }
-                $unit = Unit::where('id', $unit_id)->first();
-                $units[] = (object) [
-                    'unit_id' => $unit_id,
-                    'title' => $unit ? $unit->title : $unit_id,
-                    'mark' => $unit_total && $unit_total > 0 ? $unit_correct / $unit_total : 1,
-                    'correct' => $unit_correct,
-                    'total' => $unit_total,
-                    'topics' => $topics
-                ];
-            }
-            $level = Level::where('id', $level_id)->first();
-            $levels[] = (object) [
-                'level_id' => $level_id,
-                'title' => $level ? $level->title : $level_id,
-                'mark' => $level_total && $level_total > 0 ? $level_correct / $level_total : 1,
-                'correct' => $level_correct,
-                'total' => $level_total,
-                'units' => $units
-            ];
-        }
-        return $levels;
-    }
-
     public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where('teacher_id', $this->user->id)->first();
+        if (!$class) {
+            return $this->error('Not Found!', 404);
+        }
+        $students = $class->students()->orderBy('email', 'ASC')->get(['email']);
+        $tests = [];
+        foreach ($class->classApplications()->whereHas('test')->orderBy('start_date', 'ASC')->get() as $class_app) {
+            $test = $class_app->test()->first('name');
+            $test->attempts = $class_app->attempts ?: 1;
+            $test->students = $this->getTestReportData($class, $class_app);
+            array_push($tests, $test);
+        }
         switch ($format) {
             case 'xls':
-                return (new ClassTestsReportExport($class_id))
+                return (new ClassTestsReportExport($class, $students, $tests))
                     ->download('tests_report.xls', \Maatwebsite\Excel\Excel::XLS);
             case 'xlsx':
-                return (new ClassTestsReportExport($class_id))
+                return (new ClassTestsReportExport($class, $students, $tests))
                     ->download('tests_report.xlsx', \Maatwebsite\Excel\Excel::XLSX);
             case 'tsv':
-                return (new ClassTestsReportExport($class_id))
+                return (new ClassTestsReportExport($class, $students, $tests))
                     ->download('tests_report.tsv', \Maatwebsite\Excel\Excel::TSV);
             case 'ods':
-                return (new ClassTestsReportExport($class_id))
+                return (new ClassTestsReportExport($class, $students, $tests))
                     ->download('tests_report.ods', \Maatwebsite\Excel\Excel::ODS);
             case 'html':
-                return (new ClassTestsReportExport($class_id))
+                return (new ClassTestsReportExport($class, $students, $tests))
                     ->download('tests_report.html', \Maatwebsite\Excel\Excel::HTML);
             /** PDF export require extra library: https://phpspreadsheet.readthedocs.io/en/latest/topics/reading-and-writing-to-file/#pdf
             case 'pdf':
-                return (new ClassTestsReportExport($class_id))
+                return (new ClassTestsReportExport($class, $students, $tests))
                     ->download('tests_report.pdf', \Maatwebsite\Excel\Excel::MPDF/DOMPDF/TCPDF); */
             default:
-                return (new ClassTestsReportExport($class_id))
+                return (new ClassTestsReportExport($class, $students, $tests))
                     ->download('tests_report.csv', \Maatwebsite\Excel\Excel::CSV, [
                         'Content-Type' => 'text/csv',
                     ]);
@@ -1145,5 +983,187 @@ class ClassController extends Controller
             }
         }
         return null;
+    }
+
+    private function getTestReportData($class, $class_app) {
+        $query = $class->students();
+        $query->leftJoin('classes_applications_students', function ($join) use ($class_app) {
+            $join->on('classes_applications_students.student_id', '=', 'students.id')
+                ->where('classes_applications_students.class_app_id', $class_app->id);
+        });
+        $query->leftJoin('students_test_attempts', function ($join) use ($class_app) {
+            $join->on('students_test_attempts.test_student_id', '=', 'classes_applications_students.id');
+        });
+        if ($class_app->is_for_selected_students) {
+            $query->whereNotNull('classes_applications_students.id');
+        }
+        /* using SQL JSON_ARRAYAGG function (require MySQL 5.7.22 / MariaDB 10.5.0)
+        $query->groupBy('students.id', 'students.email', 'students.is_registered');
+        $query->orderBy('email');
+        $data = $query->get([
+            'students.id',
+            'students.email',
+            'students.is_registered',
+            DB::raw("JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'id', students_test_attempts.id,
+                    'attempt_no', students_test_attempts.attempt_no,
+                    'mark', students_test_attempts.mark,
+                    'questions_count', students_test_attempts.questions_count,
+                    'start_at', students_test_attempts.start_at,
+                    'end_at', students_test_attempts.end_at
+                )
+            ) AS attempts"),
+            'classes_applications_students.attempts_count',
+            'classes_applications_students.resets_count',
+        ]);
+        $data = $data->map(function ($student) {
+            $attempts = json_decode($student->attempts);
+            usort($attempts, function($a, $b) {return strcmp($a->attempt_no, $b->attempt_no);});
+            return [
+                'id' => $student->id,
+                'email' => $student->email,
+                'is_registered' => $student->is_registered,
+                'attempts' => $attempts,
+                'attempts_count' => $student->attempts_count,
+                'resets_count' => $student->resets_count
+            ];
+        });
+        $students = array_values($data->toArray()); */
+        $query->orderBy('email');
+        $data = $query->get([
+            'students.id',
+            'students.email',
+            'students.is_registered',
+            'students_test_attempts.id as attempt_id',
+            'students_test_attempts.attempt_no',
+            'students_test_attempts.mark',
+            'students_test_attempts.questions_count',
+            'students_test_attempts.start_at',
+            'students_test_attempts.end_at',
+            'classes_applications_students.attempts_count',
+            'classes_applications_students.resets_count',
+        ]);
+        $students = [];
+        foreach ($data as $row) {
+            if (array_key_exists($row->id, $students)) {
+                array_push($students[$row->id]->attempts, (object) [
+                    'id' => $row->attempt_id,
+                    'attempt_no' => $row->attempt_no,
+                    'mark' => $row->mark,
+                    'questions_count' => $row->questions_count,
+                    'start_at' => $row->start_at,
+                    'end_at' => $row->end_at
+                ]);
+            } else {
+                $students[$row->id] = (object) [
+                    'id' => $row->id,
+                    'email' => $row->email,
+                    'is_registered' => $row->is_registered,
+                    'attempts_count' => $row->attempts_count,
+                    'resets_count' => $row->resets_count,
+                    'attempts' => [
+                        (object) [
+                            'id' => $row->attempt_id,
+                            'attempt_no' => $row->attempt_no,
+                            'mark' => $row->mark,
+                            'questions_count' => $row->questions_count,
+                            'start_at' => $row->start_at,
+                            'end_at' => $row->end_at
+                        ]
+                    ]
+                ];
+            }
+        }
+        foreach ($students as $student) {
+            usort($student->attempts, function($a, $b) {
+                return strcmp($a->attempt_no, $b->attempt_no);
+            });
+        }
+        return $students;
+    }
+
+    private function getTestAttemptReport($student_id, $attempt_id, $with_questions = false) {
+        $data = DB::table('students_test_questions')
+            ->select(
+                'topic_id', 'unit_id', 'level_id',
+                DB::raw("SUM(1) as total"),
+                DB::raw("SUM(IF(is_right_answer, 1, 0)) as correct")
+            )
+            ->where('attempt_id', $attempt_id)
+            ->where('student_id', $student_id)
+            ->groupBy('topic_id', 'unit_id', 'level_id')
+            ->get();
+        $levels = [];
+        foreach ($data->groupBy('level_id') as $level_data) {
+            $level_id = $level_data->first()->level_id;
+            $level_total = $level_data->sum('total');
+            $level_correct = $level_data->sum('correct');
+            $units = [];
+            foreach ($level_data->groupBy('unit_id') as $unit_data) {
+                $unit_id = $unit_data->first()->unit_id;
+                $unit_total = $unit_data->sum('total');
+                $unit_correct = $unit_data->sum('correct');
+                $topics = [];
+                foreach ($unit_data->groupBy('topic_id') as $topic_data) {
+                    $topic_id = $topic_data->first()->topic_id;
+                    $topic_total = $topic_data->sum('total');
+                    $topic_correct = $topic_data->sum('correct');
+                    $topic = Topic::where('id', $topic_id)->first();
+                    if ($with_questions) {
+                        $questions = DB::table('students_test_questions')
+                            ->leftJoin('question', 'question.id', '=', 'students_test_questions.question_id')
+                            ->leftJoin('lesson', 'lesson.id', '=', 'question.lesson_id')
+                            ->where('students_test_questions.attempt_id', $attempt_id)
+                            ->where('students_test_questions.student_id', $student_id)
+                            ->where('students_test_questions.topic_id', $topic_id)
+                            ->orderBy('students_test_questions.order_no', 'ASC')
+                            ->get([
+                                'students_test_questions.question_id',
+                                'question.question as question',
+                                'lesson.id as lesson_id',
+                                'lesson.title as lesson',
+                                'students_test_questions.is_answered',
+                                'students_test_questions.is_right_answer'
+                            ]);
+                        $topics[] = (object) [
+                            'topic_id' => $topic_id,
+                            'title' => $topic ? $topic->title : $topic_id,
+                            'mark' => $topic_total && $topic_total > 0 ? $topic_correct / $topic_total : 1,
+                            'correct' => $topic_correct,
+                            'total' => $topic_total,
+                            'questions' => $questions
+                        ];
+                    } else {
+                        $topics[] = (object) [
+                            'topic_id' => $topic_id,
+                            'title' => $topic ? $topic->title : $topic_id,
+                            'mark' => $topic_total && $topic_total > 0 ? $topic_correct / $topic_total : 1,
+                            'correct' => $topic_correct,
+                            'total' => $topic_total,
+                        ];
+                    }
+                }
+                $unit = Unit::where('id', $unit_id)->first();
+                $units[] = (object) [
+                    'unit_id' => $unit_id,
+                    'title' => $unit ? $unit->title : $unit_id,
+                    'mark' => $unit_total && $unit_total > 0 ? $unit_correct / $unit_total : 1,
+                    'correct' => $unit_correct,
+                    'total' => $unit_total,
+                    'topics' => $topics
+                ];
+            }
+            $level = Level::where('id', $level_id)->first();
+            $levels[] = (object) [
+                'level_id' => $level_id,
+                'title' => $level ? $level->title : $level_id,
+                'mark' => $level_total && $level_total > 0 ? $level_correct / $level_total : 1,
+                'correct' => $level_correct,
+                'total' => $level_total,
+                'units' => $units
+            ];
+        }
+        return $levels;
     }
 }

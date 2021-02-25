@@ -2,21 +2,32 @@
 
 namespace App\Exports;
 
+use App\ClassOfStudents;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ClassTestsReportExport implements FromCollection, WithHeadings, WithMapping
+class ClassTestsReportExport implements FromCollection
 {
 
     use Exportable;
 
     protected $collection;
 
-    public function __construct($class_id)
+    protected $class;
+    protected $tests;
+    protected $students;
+
+    public function __construct($class, $students, $tests)
     {
-        $this->collection = [];
+        $this->class = $class;
+        $this->students = $students;
+        $this->tests = $tests;
+        $output = [];
+        $output[] = $this->headings();
+        foreach ($this->students as $student) {
+            $output[] = $this->map($student);
+        }
+        $this->collection = collect($output);
     }
 
     public function collection()
@@ -26,15 +37,34 @@ class ClassTestsReportExport implements FromCollection, WithHeadings, WithMappin
 
     public function headings(): array
     {
-        return [
-            'Name',
-        ];
+        $heading = ['Student'];
+        foreach ($this->tests as $test) {
+            for ($i = 0; $i < $test->attempts; $i++) {
+                array_push($heading, $test->name.' (Attempt #'.$i.')');
+            }
+        }
+        return $heading;
     }
 
-    public function map($item): array
+    public function map($student): array
     {
-        return [
-            $item->name,
-        ];
+        $row = [$student->email];
+        foreach ($this->tests as $test) {
+            $stud_data_collection = collect($test->students);
+            $stud_data = $stud_data_collection->where('email', $student->email)->first();
+            $attempts = $stud_data ? $stud_data->attempts : null;
+            for ($i = 0; $i < $test->attempts; $i++) {
+                $attempt = $attempts && array_key_exists($i, $attempts) ? $attempts[$i] : null;
+                $data = '';
+                if ($stud_data && $attempts && $attempt) {
+                    if ($attempt->questions_count) {
+                        $data = round($attempt->mark * 100) . '%';
+                        $data   .= ' (' . round($attempt->mark*$attempt->questions_count) . '/' .$attempt->questions_count .')';
+                    }
+                }
+                array_push($row, $data);
+            }
+        }
+        return $row;
     }
 }

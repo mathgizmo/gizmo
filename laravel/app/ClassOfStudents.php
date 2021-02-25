@@ -34,6 +34,10 @@ class ClassOfStudents extends Model
             ->where('type', 'test');
     }
 
+    public function classApplications() {
+        return $this->hasMany('App\ClassApplication', 'class_id', 'id');
+    }
+
     public function delete()
     {
         DB::table('classes_applications')->where('class_id', $this->id)->delete();
