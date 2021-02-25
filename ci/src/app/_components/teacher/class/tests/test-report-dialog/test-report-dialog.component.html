@@ -7,7 +7,7 @@
                 <thead>
                 <tr>
                     <th mat-sort-header="email" scope="col">Student</th>
-                    <th scope="col" *ngFor="let attempt of attempts">Attempt #{{attempt}}</th>
+                    <th scope="col" *ngFor="let attempt of attempts">Attempt #{{attempt+1}}</th>
                     <th mat-sort-header="resets_count" scope="col">Resets count</th>
                     <th scope="col"></th>
                 </tr>
@@ -47,7 +47,7 @@
                     </tr>
                     <tr class="tid-detail-row" *ngIf="item.showDetail">
                         <td [attr.colspan]="test.attempts + 3">
-                            <h4>Attempt #{{item.selectedAttempt}}</h4>
+                            <h4>Attempt #{{item.selectedAttempt+1}}</h4>
                             <h5 *ngIf="item.attempts[item.selectedAttempt].start_at">Start At: {{ item.attempts[item.selectedAttempt].start_at | date:'yyyy-M-d h:mm a' }}</h5>
                             <h5 *ngIf="item.attempts[item.selectedAttempt].end_at">End At: {{ item.attempts[item.selectedAttempt].end_at | date:'yyyy-M-d h:mm a' }}</h5>
                             <div *ngFor="let level of item.details" class="level-details d-flex flex-column">

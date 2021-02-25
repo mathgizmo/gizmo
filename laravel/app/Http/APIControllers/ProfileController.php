@@ -219,7 +219,7 @@ class ProfileController extends Controller
                 $attempt_item = clone $item;
                 $attempt_item->total_questions_count = $attempt->questions_count;
                 $attempt_item->attempt_id = $attempt->id;
-                $attempt_item->attempt_no = $index;
+                $attempt_item->attempt_no = $index + 1;
                 $attempt_item->mark = $attempt->mark;
                 $attempt_item->questions_count = $attempt->questions_count;
                 $attempt_item->is_completed = ($attempt->end_at || $attempt->mark) ? true : false;

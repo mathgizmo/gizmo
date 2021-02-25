@@ -36,7 +36,7 @@
 <div class="subtitle">Test: <strong>{{$test->name}}</strong></div>
 <div class="subtitle">Student: <strong>{{$student->email}}</strong></div>
 @foreach($attempts as $attempt)
-    <h2>Attempt #{{$loop->index}}{{--$attempt->attempt_no--}}</h2>
+    <h2>Attempt #{{$loop->index + 1}}{{--$attempt->attempt_no--}}</h2>
     <div class="info">Mark: {{round($attempt->mark * 100)}}% @if($attempt->questions_count)
             ({{round($attempt->mark * $attempt->questions_count)}}/{{$attempt->questions_count}}) @endif</div>
     <div class="info">Start At: {{$attempt->start_at}}</div>

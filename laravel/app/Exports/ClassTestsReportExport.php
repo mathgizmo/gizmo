@@ -40,7 +40,7 @@ class ClassTestsReportExport implements FromCollection
         $heading = ['Student'];
         foreach ($this->tests as $test) {
             for ($i = 0; $i < $test->attempts; $i++) {
-                array_push($heading, $test->name.' (Attempt #'.$i.')');
+                array_push($heading, $test->name.' (Attempt #'.($i+1).')');
             }
         }
         return $heading;
