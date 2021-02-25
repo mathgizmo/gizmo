@@ -10,9 +10,16 @@
     margin: 12px 0;
   }
   .links-group {
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    * {
+      margin: 0 4px 0 0 !important;
+      max-width: unset !important;
+      white-space: nowrap;
+    }
     .button {
-
+      max-height: 36px !important;
+      padding: 2px !important;
     }
   }
   .toggle-group {

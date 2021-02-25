@@ -28,6 +28,7 @@ export class ClassTestsComponent implements OnInit {
     tests = [];
     available_tests = [];
     class = {
+        id: 0,
         name: ''
     };
     addTest = false;
@@ -515,6 +516,35 @@ export class ClassTestsComponent implements OnInit {
                     });
                 });
         });
+    }
+
+    onDownload(format = 'csv') {
+        this.classService.downloadTestsReport(this.class.id, format)
+            .subscribe(file => {
+                let type = 'text/csv;charset=utf-8;';
+                switch (format) {
+                    case 'xls':
+                    case 'xlsx':
+                        type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;';
+                        break;
+                    default:
+                        break;
+                }
+                const newBlob = new Blob([file], { type: type });
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(newBlob);
+                    return;
+                }
+                const data = window.URL.createObjectURL(newBlob);
+                const link = document.createElement('a');
+                link.href = data;
+                link.download = 'tests_report.' + format;
+                link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                setTimeout(function () {
+                    window.URL.revokeObjectURL(data);
+                    link.remove();
+                }, 100);
+            });
     }
 
     sortData(sort: Sort) {

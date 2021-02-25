@@ -161,6 +161,14 @@ export class ClassesManagementService {
         return this.http.download('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/report.pdf');
     }
 
+    public downloadTestsReport(class_id, format = 'csv') {
+        return this.http.download('/classes/' + class_id + '/tests-report.' + format);
+    }
+
+    public downloadAssignmentsReport(class_id, format = 'csv') {
+        return this.http.download('/classes/' + class_id + '/assignments-report.' + format);
+    }
+
     public resetTestProgress(class_id, app_id, student_id, attempt_id = null) {
         return this.http.post('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/reset', {
             attempt_id: attempt_id

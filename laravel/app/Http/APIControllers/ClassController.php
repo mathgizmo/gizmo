@@ -2,8 +2,9 @@
 
 namespace App\Http\APIControllers;
 
+use App\Exports\ClassAssignmentsReportExport;
+use App\Exports\ClassTestsReportExport;
 use App\Mail\ClassMail;
-use App\Mail\CustomMail;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Application;
 use App\ClassApplication;
@@ -313,74 +314,12 @@ class ClassController extends Controller
     }
 
     public function getReport(Request $request, $class_id) {
-        $is_teacher = $this->user->is_teacher;
-        $class_query = ClassOfStudents::query();
-        $class_query->where('id', $class_id);
-        if ($is_teacher) {
-            $class_query->where('teacher_id', $this->user->id);
+        $data = $this->getReportData($request, $class_id, true);
+        if ($data) {
+            return $this->success($data);
+        } else {
+            return $this->error('Error.', 404);
         }
-        $class = $class_query->first();
-        if ($class) {
-            $data = $is_teacher
-                ? DB::table('class_detailed_reports')
-                    ->where('class_id', $class->id)
-                    ->orderBy('student_email', 'ASC')
-                    ->get()
-                : DB::table('class_detailed_reports')
-                    ->where('class_id', $class->id)
-                    ->where('student_id', $this->user->id)
-                    ->get();
-            foreach ($data as $row) {
-                $row->data = json_decode($row->data);
-            }
-            $assignments = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
-            if (!$is_teacher) {
-                foreach ($assignments as $app) {
-                    $class_data = $app->getClassRelatedData($class->id);
-                    if ($class_data->is_for_selected_students) {
-                        if (DB::table('classes_applications_students')
-                                ->where('class_app_id', $class_data->id)
-                                ->where('student_id', $this->user->id)->count() < 1) {
-                            $assignments->forget($app->id);
-                        }
-                    }
-                }
-            }
-            $tests = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
-            foreach ($tests as $test) {
-                $class_data = $test->getClassRelatedData($class->id);
-                if (!$is_teacher && $class_data->is_for_selected_students) {
-                    if (DB::table('classes_applications_students')
-                            ->where('class_app_id', $class_data->id)
-                            ->where('student_id', $this->user->id)->count() < 1) {
-                        $tests->forget($test->id);
-                    }
-                }
-                $test->icon = $test->icon();
-                $test->class_id = $class_id;
-                $test->app_id = $class_data && $class_data->app_id ? $class_data->app_id : 0;
-                if ($class_data && $class_data->start_date) {
-                    $start_at = $class_data->start_time ? $class_data->start_date.' '.$class_data->start_time : $class_data->start_date.' 00:00:00';
-                } else {
-                    $start_at = null;
-                }
-                $test->start_at = $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
-                if ($class_data && $class_data->due_date) {
-                    $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
-                } else {
-                    $due_at = null;
-                }
-                $test->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                $test->attempts = $class_data ? $class_data->attempts : 1;
-            }
-            return $this->success([
-                'class' => $class,
-                'assignments' => array_values($assignments->toArray()),
-                'tests' => array_values($tests->toArray()),
-                'students' => array_values($data->toArray()),
-            ]);
-        }
-        return $this->error('Error.', 404);
     }
 
     public function getAssignments($class_id) {
@@ -931,7 +870,7 @@ class ClassController extends Controller
         return $this->error('Error.', 500);
     }
 
-    public function getTestReportPDF(Request $request, $class_id, $app_id, $student_id) {
+    public function downloadTestReportPDF(Request $request, $class_id, $app_id, $student_id) {
         $student = Student::where('id', $student_id)->first();
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
@@ -1065,5 +1004,146 @@ class ClassController extends Controller
             ];
         }
         return $levels;
+    }
+
+    public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
+        switch ($format) {
+            case 'xls':
+                return (new ClassTestsReportExport($class_id))
+                    ->download('tests_report.xls', \Maatwebsite\Excel\Excel::XLS);
+            case 'xlsx':
+                return (new ClassTestsReportExport($class_id))
+                    ->download('tests_report.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            case 'tsv':
+                return (new ClassTestsReportExport($class_id))
+                    ->download('tests_report.tsv', \Maatwebsite\Excel\Excel::TSV);
+            case 'ods':
+                return (new ClassTestsReportExport($class_id))
+                    ->download('tests_report.ods', \Maatwebsite\Excel\Excel::ODS);
+            case 'html':
+                return (new ClassTestsReportExport($class_id))
+                    ->download('tests_report.html', \Maatwebsite\Excel\Excel::HTML);
+            /** PDF export require extra library: https://phpspreadsheet.readthedocs.io/en/latest/topics/reading-and-writing-to-file/#pdf
+            case 'pdf':
+                return (new ClassTestsReportExport($class_id))
+                    ->download('tests_report.pdf', \Maatwebsite\Excel\Excel::MPDF/DOMPDF/TCPDF); */
+            default:
+                return (new ClassTestsReportExport($class_id))
+                    ->download('tests_report.csv', \Maatwebsite\Excel\Excel::CSV, [
+                        'Content-Type' => 'text/csv',
+                    ]);
+        }
+    }
+
+    public function downloadAssignmentsReport(Request $request, $class_id, $format = 'csv') {
+        $data = $this->getReportData($request, $class_id, false);
+        if (!$data) {
+            return $this->error('Error.', 404);
+        }
+        switch ($format) {
+            case 'xls':
+                return (new ClassAssignmentsReportExport($data))
+                    ->download('assignments_report.xls', \Maatwebsite\Excel\Excel::XLS);
+            case 'xlsx':
+                return (new ClassAssignmentsReportExport($data))
+                    ->download('assignments_report.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            case 'tsv':
+                return (new ClassAssignmentsReportExport($data))
+                    ->download('assignments_report.tsv', \Maatwebsite\Excel\Excel::TSV);
+            case 'ods':
+                return (new ClassAssignmentsReportExport($data))
+                    ->download('assignments_report.ods', \Maatwebsite\Excel\Excel::ODS);
+            case 'html':
+                return (new ClassAssignmentsReportExport($data))
+                    ->download('assignments_report.html', \Maatwebsite\Excel\Excel::HTML);
+            /** PDF export require extra library: https://phpspreadsheet.readthedocs.io/en/latest/topics/reading-and-writing-to-file/#pdf
+            case 'pdf':
+                return (new ClassAssignmentsReportExport($data))
+                    ->download('assignments_report.pdf', \Maatwebsite\Excel\Excel::MPDF/DOMPDF/TCPDF); */
+            default:
+                return (new ClassAssignmentsReportExport($data))
+                    ->download('assignments_report.csv', \Maatwebsite\Excel\Excel::CSV, [
+                        'Content-Type' => 'text/csv',
+                    ]);
+        }
+    }
+
+    private function getReportData(Request $request, $class_id, $with_tests = true) {
+        $is_teacher = $this->user->is_teacher;
+        $class_query = ClassOfStudents::query();
+        $class_query->where('id', $class_id);
+        if ($is_teacher) {
+            $class_query->where('teacher_id', $this->user->id);
+        }
+        $class = $class_query->first();
+        if ($class) {
+            $data = $is_teacher
+                ? DB::table('class_detailed_reports')
+                    ->where('class_id', $class->id)
+                    ->orderBy('student_email', 'ASC')
+                    ->get()
+                : DB::table('class_detailed_reports')
+                    ->where('class_id', $class->id)
+                    ->where('student_id', $this->user->id)
+                    ->get();
+            foreach ($data as $row) {
+                $row->data = json_decode($row->data);
+            }
+            $assignments = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
+            if (!$is_teacher) {
+                foreach ($assignments as $app) {
+                    $class_data = $app->getClassRelatedData($class->id);
+                    if ($class_data->is_for_selected_students) {
+                        if (DB::table('classes_applications_students')
+                                ->where('class_app_id', $class_data->id)
+                                ->where('student_id', $this->user->id)->count() < 1) {
+                            $assignments->forget($app->id);
+                        }
+                    }
+                }
+            }
+            if ($with_tests) {
+                $tests = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
+                foreach ($tests as $test) {
+                    $class_data = $test->getClassRelatedData($class->id);
+                    if (!$is_teacher && $class_data->is_for_selected_students) {
+                        if (DB::table('classes_applications_students')
+                                ->where('class_app_id', $class_data->id)
+                                ->where('student_id', $this->user->id)->count() < 1) {
+                            $tests->forget($test->id);
+                        }
+                    }
+                    $test->icon = $test->icon();
+                    $test->class_id = $class_id;
+                    $test->app_id = $class_data && $class_data->app_id ? $class_data->app_id : 0;
+                    if ($class_data && $class_data->start_date) {
+                        $start_at = $class_data->start_time ? $class_data->start_date.' '.$class_data->start_time : $class_data->start_date.' 00:00:00';
+                    } else {
+                        $start_at = null;
+                    }
+                    $test->start_at = $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+                    if ($class_data && $class_data->due_date) {
+                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                    } else {
+                        $due_at = null;
+                    }
+                    $test->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                    $test->attempts = $class_data ? $class_data->attempts : 1;
+                }
+                return [
+                    'class' => $class,
+                    'assignments' => array_values($assignments->toArray()),
+                    'tests' => array_values($tests->toArray()),
+                    'students' => array_values($data->toArray()),
+                ];
+            } else {
+                return [
+                    'class' => $class,
+                    'assignments' => array_values($assignments->toArray()),
+                    'students' => array_values($data->toArray()),
+                ];
+            }
+        }
+        return null;
     }
 }

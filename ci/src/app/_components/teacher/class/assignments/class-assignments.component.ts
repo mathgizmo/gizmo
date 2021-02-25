@@ -28,6 +28,7 @@ export class ClassAssignmentsComponent implements OnInit {
     assignments = [];
     available_assignments = [];
     class = {
+        id: 0,
         name: ''
     };
     addAssignment = false;
@@ -456,6 +457,35 @@ export class ClassAssignmentsComponent implements OnInit {
                     },
                     position: this.dialogPosition
                 });
+            });
+    }
+
+    onDownload(format = 'csv') {
+        this.classService.downloadAssignmentsReport(this.class.id, format)
+            .subscribe(file => {
+                let type = 'text/csv;charset=utf-8;';
+                switch (format) {
+                    case 'xls':
+                    case 'xlsx':
+                        type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;';
+                        break;
+                    default:
+                        break;
+                }
+                const newBlob = new Blob([file], { type: type });
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(newBlob);
+                    return;
+                }
+                const data = window.URL.createObjectURL(newBlob);
+                const link = document.createElement('a');
+                link.href = data;
+                link.download = 'assignments_report.' + format;
+                link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                setTimeout(function () {
+                    window.URL.revokeObjectURL(data);
+                    link.remove();
+                }, 100);
             });
     }
 
