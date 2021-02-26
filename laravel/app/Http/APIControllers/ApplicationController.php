@@ -403,21 +403,21 @@ class ApplicationController extends Controller
         $lesson_ids = DB::table('lesson')
             ->where(function ($q1) use($levels, $units, $topics, $lessons) {
                 $q1->whereIn('lesson.id', $lessons)->orWhereIn('lesson.id', function($q3) use($topics) {
-                    $q3->select('lesson.id')->from('lesson')->whereIn('topic_id', $topics);
+                    $q3->select('lesson.id')->from('lesson')->where('lesson.dev_mode', 0)->whereIn('topic_id', $topics);
                 })->orWhereIn('lesson.id', function($q5) use($units) {
-                    $q5->select('lesson.id')->from('lesson')->whereIn('topic_id', function($q6) use($units) {
-                        $q6->select('topic.id')->from('topic')->whereIn('unit_id', $units);
+                    $q5->select('lesson.id')->from('lesson')->where('lesson.dev_mode', 0)->whereIn('topic_id', function($q6) use($units) {
+                        $q6->select('topic.id')->from('topic')->where('topic.dev_mode', 0)->whereIn('unit_id', $units);
                     });
                 })->orWhereIn('lesson.id', function($q8) use($levels) {
-                    $q8->select('lesson.id')->from('lesson')->whereIn('topic_id', function($q9) use($levels) {
-                        $q9->select('topic.id')->from('topic')->whereIn('unit_id', function($q10) use($levels) {
-                            $q10->select('unit.id')->from('unit')->whereIn('level_id', $levels);
+                    $q8->select('lesson.id')->from('lesson')->where('lesson.dev_mode', 0)->whereIn('topic_id', function($q9) use($levels) {
+                        $q9->select('topic.id')->from('topic')->where('topic.dev_mode', 0)->whereIn('unit_id', function($q10) use($levels) {
+                            $q10->select('unit.id')->from('unit')->where('unit.dev_mode', 0)->whereIn('level_id', $levels);
                         });
                     });
                 });
             })
-            ->where('lesson.dev_mode', 0)
-            ->select('lesson.id')->pluck('lesson.id');
+            ->select('lesson.id')
+            ->pluck('lesson.id');
         foreach ($lesson_ids as $lesson_id) {
             try {
                 $questions_count += count(Question::where('lesson_id', $lesson_id)
