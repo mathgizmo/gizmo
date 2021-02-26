@@ -13,3 +13,4 @@ export * from './country.service';
 export * from './assignment.service';
 export * from './test.service';
 export * from './question.service';
+export * from './class-threads.service';

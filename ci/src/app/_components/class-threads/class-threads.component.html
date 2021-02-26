@@ -1,0 +1,51 @@
+<a routerLink="/student/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="threads">
+  <h3 class="discussion-title title">Class {{class.name}} discussion</h3>
+  <div *ngIf="!activeThread">
+    <div class="top-buttons">
+      <div (click)="onCreateThread()" class="top-button">Add Thread</div>
+    </div>
+    <mat-card class="thread" *ngFor="let thread of threads;" (click)="openThread(thread)" style="cursor: pointer">
+      <div class="thread-title" [innerHtml]="thread.title | safeHtml"></div>
+      <div class="thread-info">
+        <span>{{thread.replies_count}} answers</span>
+        <span>asked at {{thread.created_at}} by <a href="mailto:{{thread.student_email}}">{{thread.student_name}}</a></span>
+      </div>
+    </mat-card>
+  </div>
+  <div *ngIf="activeThread">
+    <div class="top-buttons">
+      <div (click)="activeThread = null" class="top-button">Back to list</div>
+      <div (click)="onCreateReply()" class="top-button">Add Answer</div>
+    </div>
+    <mat-card class="thread">
+      <div class="thread-title" [innerHtml]="activeThread.title | safeHtml"></div>
+      <div class="thread-message" [innerHtml]="activeThread.message | safeHtml"></div>
+      <div class="thread-info">
+        <span class="buttons-container">
+          <button *ngIf="user.user_id == activeThread.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditThread(activeThread)">Edit</button>
+          <button *ngIf="user.user_id == activeThread.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteThread(activeThread)">Remove</button>
+        </span>
+        <span>asked at {{activeThread.created_at}} by <a href="mailto:{{activeThread.student_email}}">{{activeThread.student_name}}</a></span>
+      </div>
+      <div class="replies">
+        <div class="replies-title">{{activeThread.replies_count}} answers</div>
+        <mat-list>
+          <mat-list-item class="reply" *ngFor="let reply of replies; last as last">
+            <div class="reply-message" [innerHtml]="reply.message | safeHtml"></div>
+            <div class="reply-info">
+              <span class="buttons-container">
+                <button *ngIf="user.user_id == reply.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditReply(reply)">Edit</button>
+                <button *ngIf="user.user_id == reply.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteReply(reply)">Remove</button>
+              </span>
+              <span>answered at {{reply.created_at}} by <a href="mailto:{{reply.student_email}}">{{reply.student_name}}</a></span>
+            </div>
+            <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+

@@ -1,0 +1,19 @@
+<!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Edit Thread!</h2> -->
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">{{title}}</div>
+    <div *ngIf="withTitle" class="form-group">
+        <label for="title">Title:</label>
+        <input id="title" name="title" [(ngModel)]="thread.title" required class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="message">Message:</label>
+        <ckeditor id="message" [editor]="editor" [(ngModel)]="thread.message"></ckeditor>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
+    <button mat-button class='button moving-forward-button continue-button'
+            type="button" (click)="onSave()">Save
+    </button>
+</mat-dialog-actions>
+

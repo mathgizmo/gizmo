@@ -18,8 +18,9 @@
                     <td>{{item.id}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.teacher}}</td>
-                    <td class="text-right" style="min-width: 240px;">
+                    <td class="text-right" style="min-width: 370px;">
                         <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEmail(item)">Email</button>
+                        <a class="button button-small button-outline" mat-stroked-button routerLink="/student/class/{{item.id}}/threads" style="margin-right: 8px;">Discussion</a>
                         <a class="button button-small button-outline" mat-stroked-button routerLink="/student/class/{{item.id}}/report" style="margin-right: 8px;">Report</a>
                         <button class="button button-small button-outline" mat-stroked-button (click)="onUnsubscribe(item.id)">Unsubscribe</button>
                     </td>

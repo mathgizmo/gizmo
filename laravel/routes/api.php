@@ -64,6 +64,14 @@ $api->version('v1', function ($api) {
         $api->put('/classes/{class_id}', 'App\Http\APIControllers\ClassController@update');
         $api->delete('/classes/{class_id}', 'App\Http\APIControllers\ClassController@delete');
         $api->post('/classes/{class_id}/email', 'App\Http\APIControllers\ClassController@emailClass');
+        $api->get('/classes/{class_id}/threads', 'App\Http\APIControllers\ClassThreadController@index');
+        $api->post('/classes/{class_id}/threads', 'App\Http\APIControllers\ClassThreadController@store');
+        $api->put('/classes/{class_id}/threads/{thread_id}', 'App\Http\APIControllers\ClassThreadController@update');
+        $api->delete('/classes/{class_id}/threads/{thread_id}', 'App\Http\APIControllers\ClassThreadController@destroy');
+        $api->get('/classes/{class_id}/threads/{thread_id}', 'App\Http\APIControllers\ClassThreadController@getReplies');
+        $api->post('/classes/{class_id}/threads/{thread_id}/reply', 'App\Http\APIControllers\ClassThreadController@storeReply');
+        $api->put('/classes/{class_id}/threads/{thread_id}/reply/{reply_id}', 'App\Http\APIControllers\ClassThreadController@updateReply');
+        $api->delete('/classes/{class_id}/threads/{thread_id}/reply/{reply_id}', 'App\Http\APIControllers\ClassThreadController@destroyReply');
         $api->get('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@getStudents');
         $api->post('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@addStudents');
         $api->put('/classes/{class_id}/students/{student_id}', 'App\Http\APIControllers\ClassController@updateStudent');

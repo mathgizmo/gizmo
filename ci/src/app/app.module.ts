@@ -55,6 +55,7 @@ import {ClassReportComponent, ClassStudentsComponent,
     ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassToDoComponent, ClassMenuComponent,
     StudentsUsageChartComponent, StudentsUsageBarChartComponent, ClassDetailedReportComponent, ClassTestsReportComponent,
     EditClassAssignmentDialogComponent, EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
+import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
@@ -181,9 +182,11 @@ FullCalendarModule.registerPlugins([
         ResetPasswordComponent,
         QuestionComponent,
         QuestionPreviewComponent,
+        ClassThreadsComponent,
         DashboardComponent,
         ClassReportComponent,
         ClassStudentsComponent,
+        EditThreadDialogComponent,
         // PlacementComponent,
         // QuestionNumDialogComponent,
         DraggableDirective,
@@ -215,7 +218,8 @@ FullCalendarModule.registerPlugins([
         EmailTeacherDialogComponent,
         TestOptionsDialogComponent,
         TestStartDialogComponent,
-        StudentTestReportDialogComponent
+        StudentTestReportDialogComponent,
+        EditThreadDialogComponent
     ],
     providers: [
         AuthGuard,
