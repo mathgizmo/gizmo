@@ -19,5 +19,9 @@ class ClassApplicationStudent extends Model
         return $this->belongsTo('App\ClassApplication', 'class_app_id', 'id');
     }
 
+    public function testAttempts() {
+        return $this->hasMany('App\StudentTestAttempt', 'test_student_id', 'id');
+    }
+
     public $timestamps = false;
 }

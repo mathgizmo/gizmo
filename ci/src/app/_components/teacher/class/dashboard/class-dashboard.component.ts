@@ -21,6 +21,7 @@ export class ClassDashboardComponent implements OnInit {
     };
 
     public assignments = [];
+    public tests = [];
     public currentDate = (new Date()).toISOString().split('T')[0];
     private readonly adminUrl = environment.adminUrl;
 
@@ -45,7 +46,15 @@ export class ClassDashboardComponent implements OnInit {
                     this.assignments = res['assignments'];
                     this.assignments.forEach(item => {
                         item.start_time = item.start_time ? moment(item.start_time, 'HH:mm').format('hh:mm A') : '12:00 AM';
-                        item.due_time = moment(item.due_time, 'HH:mm').format('hh:mm A');
+                        item.due_time = item.due_time ? moment(item.due_time, 'HH:mm').format('hh:mm A') : '12:00 AM';
+                    });
+                });
+            this.classService.getTests(this.classId)
+                .subscribe(res => {
+                    this.tests = res['tests'];
+                    this.tests.forEach(item => {
+                        item.start_time = item.start_time ? moment(item.start_time, 'HH:mm').format('hh:mm A') : '12:00 AM';
+                        item.due_time = item.due_time ? moment(item.due_time, 'HH:mm').format('hh:mm A') : '12:00 AM';
                     });
                 });
         });

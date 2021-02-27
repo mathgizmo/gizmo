@@ -2,6 +2,7 @@
 
 namespace App\Http\APIControllers;
 
+use App\ClassApplicationStudent;
 use App\Exports\ClassAssignmentsReportExport;
 use App\Exports\ClassTestsReportExport;
 use App\Mail\ClassMail;
@@ -427,6 +428,8 @@ class ClassController extends Controller
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
             $items = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
+            $students = $class->students()->get();
+            $students_count = $students->count();
             foreach ($items as $item) {
                 $class_data = $item->getClassRelatedData($class->id);
                 if (!$this->user->is_teacher) {
@@ -454,7 +457,31 @@ class ClassController extends Controller
                 if ($item->is_for_selected_students) {
                     $item->students = DB::table('classes_applications_students')
                         ->where('class_app_id', $class_data->id)->pluck('student_id');
+                    $app_students_count = count($item->students);
+                } else {
+                    $app_students_count = $students_count;
                 }
+                $item->students_count = $app_students_count;
+                $complete_count = ClassApplicationStudent::where('class_app_id', $class_data->id)
+                    ->whereIn('student_id', $students->pluck('id'))
+                    ->whereHas('testAttempts', function ($q) {
+                        $q->whereNotNull('end_at');
+                    })
+                    ->select('classes_applications_students.id')
+                    ->distinct()->count();
+                $item->progress = $app_students_count > 0 ? (round($complete_count / $app_students_count, 3)) : 1;
+                if ($item->is_for_selected_students) {
+                    $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                        DB::raw("SUM(1) as total"),
+                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                    )->where('app_id', $item->id)->whereIn('student_id', $item->students)->first();
+                } else {
+                    $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                        DB::raw("SUM(1) as total"),
+                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                    )->where('app_id', $item->id)->first();
+                }
+                $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
             $available = Application::where('teacher_id', $this->user->id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())
