@@ -201,6 +201,9 @@ a.button:hover, a.button:focus {
   // Every toolbar row uses a flexbox row layout.
   flex: 1 1 auto;
 }
+.explanation img {
+  max-width:100% !important;
+}
 .radio-group {
     display: inline-flex;
     flex-direction: column;

@@ -20,7 +20,8 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
     public test = {
         class_id: 0,
         app_id: 0,
-        attempts: 1
+        attempts: 1,
+        name: ''
     };
     public students = [];
     public attempts = [0];
@@ -48,7 +49,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
             // tslint:disable-next-line:indent
             this.test = data.test;
             // @ts-ignore
-            this.attempts = Array(this.test.attempts).fill(0).map((x, i) => i);
+            this.attempts = Array(+this.test.attempts).fill(0).map((x, i) => i);
         }
         this.classService.getTestReport(this.test.class_id, this.test.app_id).subscribe(response => {
             this.students = response.students;
@@ -95,7 +96,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
                 const data = window.URL.createObjectURL(newBlob);
                 const link = document.createElement('a');
                 link.href = data;
-                link.download = 'test_report.pdf';
+                link.download = item.email + ' - ' + this.test.name + ' Test Report.pdf';
                 link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
                 setTimeout(function () {
                     window.URL.revokeObjectURL(data);

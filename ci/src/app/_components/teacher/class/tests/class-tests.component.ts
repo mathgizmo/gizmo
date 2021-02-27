@@ -538,7 +538,7 @@ export class ClassTestsComponent implements OnInit {
                 const data = window.URL.createObjectURL(newBlob);
                 const link = document.createElement('a');
                 link.href = data;
-                link.download = 'tests_report.' + format;
+                link.download = this.class.name + ' - Tests Report.' + format;
                 link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
                 setTimeout(function () {
                     window.URL.revokeObjectURL(data);

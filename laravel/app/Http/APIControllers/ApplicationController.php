@@ -63,7 +63,7 @@ class ApplicationController extends Controller
                 ->where('test_student_id', $test_student->id)
                 ->get() : [];
             $attempts_count = count($attempts);
-            if ($attempts_count > $test->attempts) {
+            if ($attempts_count >= $test->attempts) {
                 return $this->error('You already finished this test!', 410);
             }
             if ($test->start_date || $test->due_date) {

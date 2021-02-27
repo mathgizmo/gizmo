@@ -370,6 +370,7 @@ class ClassController extends Controller
                     ->whereIn('student_id', $students->pluck('id'))
                     ->select('student_id')->distinct()->count();
                 $item->progress = $app_students_count > 0 ? (round($complete_count / $app_students_count, 3)) : 1;
+                $item->students_count = $app_students_count;
                 if ($item->progress >= 1) {
                     $item->status = 'completed';
                 } else if ($due_at && $due_at < $now) {

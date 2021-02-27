@@ -17,7 +17,7 @@
             <th mat-sort-header="start_time" scope="col">Start Time</th>
             <th mat-sort-header="due_date" scope="col">Due Date</th>
             <th mat-sort-header="due_time" scope="col">Due Time</th>
-            <th scope="col">Completion Rate</th>
+            <th scope="col">Portion Completed</th>
             <th scope="col">Error Rate</th>
           </tr>
           </thead>
@@ -44,7 +44,8 @@
               {{item.status == 'completed' ? 'Closed' :
                     (item.status == 'overdue' ? 'Overdue' : item.status == 'progress' ?  'In progress' : 'Pending')}}
               <div *ngIf="item.progress !== undefined && item.status !== 'pending' && item.status !== 'completed'">
-                <span style="font-size: 0.8em;">{{(item.progress * 100).toFixed(1)}}%</span>
+                <!-- <span style="font-size: 0.8em;">{{(item.progress * 100).toFixed(1)}}%</span> -->
+                <span style="font-size: 0.8em;">{{(item.progress * item.students_count).toFixed(0)}}/{{item.students_count}}</span>
                 <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
               </div>
             </td>

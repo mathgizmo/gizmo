@@ -51,7 +51,7 @@ class ClassAssignmentsReportExport implements FromCollection
         foreach ($this->assignments as $assignment) {
             $app_id = $assignment['id'];
             $data = 'N/A';
-            if ($student->data->{$app_id}) {
+            if (property_exists($student->data, $app_id)) {
                 $app_data = $student->data->{$app_id};
                 $status = $app_data->status;
                 $data = $status == 'completed' ? 'Completed' : ($status == 'overdue' ? 'Overdue' : ($status == 'progress' ?  'In progress' : 'Pending'));
