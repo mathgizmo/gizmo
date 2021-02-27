@@ -29,11 +29,12 @@
     </div>
     <div *ngIf="question === null">
       <div class="question-container">
-        <h2 class="subtitle">Congratulations!</h2>
+        <h2 class="subtitle" *ngIf="correctQuestionRate > 0">Congratulations!</h2>
         <h3 class="question">
-          <span>You have finished the test.</span>
-          <span *ngIf="correctQuestionRate">
-            Your mark is {{(correctQuestionRate * 100).toFixed(0)}}%.
+          <span *ngIf="correctQuestionRate > 0">You have finished the test.</span>
+          <span>
+            Your score was {{(correctQuestionRate * 100).toFixed(0)}}%
+            ({{(test.questions_count*correctQuestionRate).toFixed(0)}}/{{test.questions_count}}).
           </span>
         </h3>
       </div>

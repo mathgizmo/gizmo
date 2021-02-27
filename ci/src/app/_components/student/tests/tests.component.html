@@ -47,7 +47,7 @@
               <span class="app-title">
                 <strong>{{test.name}}</strong>
                 <span *ngIf="test.class" class="app-class">{{test.class.name}}</span>
-                <strong *ngIf="test.mark" class="app-class">Mark: {{(test.mark * 100).toFixed(0)}}%</strong>
+                <strong class="app-class">Mark: {{(test.mark * 100).toFixed(0)}}%</strong>
                 <strong class="app-class">Attempt #{{test.attempt_no}}</strong>
               </span>
               <div class="date-container">
