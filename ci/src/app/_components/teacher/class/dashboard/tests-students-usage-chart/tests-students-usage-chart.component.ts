@@ -1,24 +1,23 @@
 import {Component, OnInit, Input, Inject, NgZone, PLATFORM_ID, OnDestroy, AfterViewInit} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import {AuthenticationService, ClassesManagementService} from '../../../../../_services';
 
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
-
-import {AuthenticationService, ClassesManagementService} from '../../../../../_services/index';
 import * as moment from 'moment';
 
 @Component({
-    selector: 'app-students-usage-chart',
-    templateUrl: './students-usage-chart.component.html',
-    styleUrls: ['./students-usage-chart.component.scss'],
+    selector: 'app-tests-students-usage-chart',
+    templateUrl: './tests-students-usage-chart.component.html',
+    styleUrls: ['./tests-students-usage-chart.component.scss'],
     providers: [ClassesManagementService]
 })
-export class StudentsUsageChartComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TestsStudentsUsageChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Input() classId: number;
     @Input() forStudent = false;
-    @Input() assignments = [];
+    @Input() tests = [];
 
     public studentId = '';
     public appId = '';
@@ -57,10 +56,10 @@ export class StudentsUsageChartComponent implements OnInit, AfterViewInit, OnDes
                     this.availableStudents = students;
                 });
         }
-        if (!this.assignments) {
-            this.classService.getAssignments(this.classId)
-                .subscribe(assignments => {
-                    this.assignments = assignments.assignments;
+        if (!this.tests) {
+            this.classService.getTests(this.classId)
+                .subscribe(tests => {
+                    this.tests = tests.tests;
                 });
         }
     }
@@ -78,12 +77,12 @@ export class StudentsUsageChartComponent implements OnInit, AfterViewInit, OnDes
     }
 
     public getStatistics() {
-        this.classService.getAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo)
+        this.classService.getAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo, 'test')
             .subscribe(response => {
                 // build chart
                 this.browserOnly(() => {
                     am4core.useTheme(am4themes_animated);
-                    const chart = am4core.create('chartdiv', am4charts.XYChart);
+                    const chart = am4core.create('tests-usage-chart', am4charts.XYChart);
                     chart.data = [];
                     response.forEach(row => {
                         // const dayOfWeek = moment(row.date, 'YYYY-MM-DD').format('ddd');

@@ -3,14 +3,13 @@
   <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
   <div class="dashboard-content">
     <mat-card>
-      <app-students-usage-chart [classId]="classId" [assignments]="assignments"></app-students-usage-chart>
+      <app-assignments-students-usage-chart [classId]="classId" [assignments]="assignments"></app-assignments-students-usage-chart>
     </mat-card>
     <mat-card>
       <app-class-assignments-list [classId]="classId" [assignments]="assignments"></app-class-assignments-list>
     </mat-card>
     <mat-card>
-      <div class="subtitle text-center">Tests Student Usage Report</div>
-      <div>The data will be available soon</div>
+      <app-tests-students-usage-chart [classId]="classId" [tests]="tests"></app-tests-students-usage-chart>
     </mat-card>
     <mat-card>
       <app-class-tests-list [classId]="classId" [tests]="tests"></app-class-tests-list>

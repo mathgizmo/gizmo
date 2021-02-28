@@ -192,13 +192,14 @@ export class ClassesManagementService {
             );
     }
 
-    getAnswersStatistics(class_id, student_id = null, app_id = null, date_from = null, date_to = null) {
+    getAnswersStatistics(class_id, student_id = null, app_id = null, date_from = null, date_to = null, type = 'assignment') {
         return this.http.get( '/classes/' + class_id + '/answers-statistics',
             true, {
                 student_id: student_id ? student_id : '',
                 app_id: app_id ? app_id : '',
                 date_from: date_from ? date_from : '',
-                date_to: date_to ? date_to : ''
+                date_to: date_to ? date_to : '',
+                type: type
             })
             .pipe(
                 map((response: Response) => {

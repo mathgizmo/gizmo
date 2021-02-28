@@ -663,14 +663,15 @@ class ClassController extends Controller
         if (!$class) {
             return $this->error('Class not found!', 404);
         }
+        $type = request()->has('type') ? request('type') : 'assignment';
         $query = StudentsTrackingQuestion::query()->with('application');
         if (request()->has('app_id') && request('app_id')) {
             $query->where('app_id', request('app_id'));
         } else {
-            $query->whereHas('application', function ($q1) use ($class_id) {
-                $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id) {
+            $query->whereHas('application', function ($q1) use ($class_id, $type) {
+                $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id, $type) {
                     $q2->where('classes.id', intval($class_id));
-                })->where('type', 'assignment');
+                })->where('type', $type);
             });
         }
         if (request()->has('student_id') && request('student_id')) {
