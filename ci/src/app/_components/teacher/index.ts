@@ -1,6 +1,6 @@
 ﻿export * from './class/manage-classes.component';
 export * from './class/report/class-report.component';
-export * from './class/report/detailed-report/class-detailed-report.component';
+export * from './class/report/assignments-report/class-assignments-report.component';
 export * from './class/report/tests-report/class-tests-report.component';
 export * from './class/dashboard/class-dashboard.component';
 export * from './class/dashboard/assignments-list/assignments-list.component';

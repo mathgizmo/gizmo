@@ -15,7 +15,8 @@ import * as moment from 'moment/moment';
 })
 export class ClassTestsReportComponent implements OnInit {
 
-    @Input() tests;
+    @Input() tests: any[];
+    @Input() students: any[];
     @Input() classId: number;
     @Input() forStudent = false;
 
@@ -31,7 +32,42 @@ export class ClassTestsReportComponent implements OnInit {
                 public dialog: MatDialog
     ) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+    }
+
+    public getAttempts(tests) {
+        const attempts = [];
+        tests.forEach(test => {
+            for (let i = 0; i < +test.attempts; i++) {
+                attempts.push({...test, attempt: i});
+            }
+        });
+        return attempts;
+    }
+
+    public getData(test, email, index = 0, data = null) {
+        const students = Object.values(test.students);
+        // @ts-ignore
+        const studData = students.find(stud => stud.email === email);
+        // @ts-ignore
+        const attempt = (studData && studData.attempts) ? studData.attempts[index] : null;
+        switch (data) {
+            case 'is_started':
+                return attempt && attempt.id;
+            case 'is_finished':
+                return attempt && (attempt.end_at || attempt.mark);
+            case 'mark':
+                return attempt && attempt.questions_count
+                    ? (attempt.mark * 100).toFixed(0) + '%'
+                        + ' (' + (attempt.mark * attempt.questions_count).toFixed(0)
+                        + '/' + attempt.questions_count + ')'
+                    : null;
+            case 'progress':
+                return attempt && attempt.questions_count ? attempt.mark * 100 : 0;
+            default:
+                break;
+        }
+    }
 
     onShowTestReport(item) {
         const dialogRef = this.dialog.open(TestReportDialogComponent, {
@@ -49,6 +85,19 @@ export class ClassTestsReportComponent implements OnInit {
             this.tests = data;
             return;
         }
+        const compare = (a: number | string, b: number | string, isAsc: boolean, isDate = false) => {
+            if (isDate) {
+                const aDate = moment(a, 'YYYY-MM-DD hh:mm A');
+                const bDate = moment(b, 'YYYY-MM-DD hh:mm A');
+                return (aDate.isBefore(bDate) ? -1 : 1) * (isAsc ? 1 : -1);
+            } else {
+                if (typeof a === 'string' || typeof b === 'string') {
+                    a = ('' + a).toLowerCase();
+                    b = ('' + b).toLowerCase();
+                }
+                return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+            }
+        };
         this.tests = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
@@ -68,19 +117,5 @@ export class ClassTestsReportComponent implements OnInit {
         }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
-    }
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean, isDate = false) {
-    if (isDate) {
-        const aDate = moment(a, 'YYYY-MM-DD hh:mm A');
-        const bDate = moment(b, 'YYYY-MM-DD hh:mm A');
-        return (aDate.isBefore(bDate) ? -1 : 1) * (isAsc ? 1 : -1);
-    } else {
-        if (typeof a === 'string' || typeof b === 'string') {
-            a = ('' + a).toLowerCase();
-            b = ('' + b).toLowerCase();
-        }
-        return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
 }

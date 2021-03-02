@@ -2,23 +2,29 @@
 <div class="report">
   <app-class-menu [classId]="class.id" class="class-menu"></app-class-menu>
   <div class="report-content">
-    <mat-card>
+    <mat-card *ngIf="assignments">
       <i class="arrow" [class.arrow-up]="reportShow[0]" [class.arrow-down]="!reportShow[0]"
          (click)="slideToggle(0)">
       </i>
       <app-assignments-students-usage-chart id="report0" [classId]="classId" [assignments]="assignments"></app-assignments-students-usage-chart>
     </mat-card>
-    <mat-card>
+    <mat-card *ngIf="assignments">
       <i class="arrow" [class.arrow-up]="reportShow[1]" [class.arrow-down]="!reportShow[1]"
          (click)="slideToggle(1)">
       </i>
-      <app-class-detailed-report id="report1" [assignments]="assignments" [students]="students"></app-class-detailed-report>
+      <app-class-assignments-report id="report1" [assignments]="assignments" [students]="assignment_students"></app-class-assignments-report>
     </mat-card>
-    <mat-card>
+    <mat-card *ngIf="tests">
       <i class="arrow" [class.arrow-up]="reportShow[2]" [class.arrow-down]="!reportShow[2]"
          (click)="slideToggle(2)">
       </i>
-      <app-class-tests-report id="report2" [classId]="classId" [tests]="tests"></app-class-tests-report>
+      <app-tests-students-usage-chart id="report2" [classId]="classId" [tests]="tests"></app-tests-students-usage-chart>
+    </mat-card>
+    <mat-card *ngIf="tests">
+      <i class="arrow" [class.arrow-up]="reportShow[3]" [class.arrow-down]="!reportShow[3]"
+         (click)="slideToggle(3)">
+      </i>
+      <app-class-tests-report id="report3" [classId]="classId" [tests]="tests" [students]="students"></app-class-tests-report>
     </mat-card>
   </div>
 </div>

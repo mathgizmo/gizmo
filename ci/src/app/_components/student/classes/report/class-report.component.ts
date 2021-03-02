@@ -17,12 +17,16 @@ export class MyClassReportComponent implements OnInit {
     };
     public assignments;
     public students;
+    public tests;
+    public class_students;
 
     public backLinkText = 'Back';
 
     private sub: any;
 
     public reportShow = [
+        true,
+        true,
         true,
         true
     ];
@@ -38,6 +42,8 @@ export class MyClassReportComponent implements OnInit {
                 this.class = response.class;
                 this.assignments = response.assignments;
                 this.students = response.students;
+                this.tests = response.tests;
+                this.class_students = response.class_students;
                 this.backLinkText = 'My Classes > ' + (this.class ? this.class.name : this.classId) + ' > Report';
             });
     }

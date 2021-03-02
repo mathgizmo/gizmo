@@ -54,7 +54,7 @@ import {ClassReportComponent, ClassStudentsComponent,
     ClassDashboardComponent, ClassAssignmentsListComponent, ClassTestsListComponent,
     ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassToDoComponent, ClassMenuComponent,
     AssignmentsStudentsUsageChartComponent, TestsStudentsUsageChartComponent, StudentsUsageBarChartComponent,
-    ClassDetailedReportComponent, ClassTestsReportComponent, EditClassAssignmentDialogComponent,
+    ClassAssignmentsReportComponent, ClassTestsReportComponent, EditClassAssignmentDialogComponent,
     EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
@@ -179,7 +179,7 @@ FullCalendarModule.registerPlugins([
         AssignmentsStudentsUsageChartComponent,
         TestsStudentsUsageChartComponent,
         StudentsUsageBarChartComponent,
-        ClassDetailedReportComponent,
+        ClassAssignmentsReportComponent,
         ClassTestsReportComponent,
         TryComponent,
         ForgotPasswordComponent,

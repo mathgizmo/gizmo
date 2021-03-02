@@ -4,6 +4,35 @@
     <table matSort (matSortChange)="sortData($event)" class="table">
       <thead>
       <tr>
+        <th *ngIf="!forStudent" mat-sort-header="name" scope="col">Student</th>
+        <th scope="col" *ngFor="let test of getAttempts(tests)" class="test-table-row">
+          {{test.name}} (Attempt #{{test.attempt+1}})
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let student of students | tableFilter: form.value" style="cursor: pointer;">
+        <td *ngIf="!forStudent" style="max-width: 300px">{{student.email}}</td>
+        <th *ngFor="let test of getAttempts(tests)" class="test-table-row">
+          <div *ngIf="getData(test, student.email, test.attempt, 'is_started'); else attemptNotStarted">
+            <div *ngIf="getData(test, student.email, test.attempt, 'is_finished'); else attemptInProgress">
+              <span style="font-size: 0.8em;">{{getData(test, student.email, test.attempt, 'mark')}}</span>
+              <mat-progress-bar  mode="determinate" [value]="getData(test, student.email, test.attempt, 'progress')"></mat-progress-bar>
+            </div>
+            <ng-template #attemptInProgress>
+              <img class="test-progress-icon" src="assets/images/test_in_progress.png" alt="Test In Progress" />
+            </ng-template>
+          </div>
+          <ng-template #attemptNotStarted>
+            <img class="test-progress-icon" src="assets/images/test_not_started.png" alt="Test Not Started" />
+          </ng-template>
+        </th>
+      </tr>
+      </tbody>
+    </table>
+    <!-- <table matSort (matSortChange)="sortData($event)" class="table">
+      <thead>
+      <tr>
         <th scope="col">Icon</th>
         <th mat-sort-header="name" scope="col">Name</th>
         <th mat-sort-header="start_at" scope="col">Start At</th>
@@ -26,6 +55,6 @@
         </td>
       </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </form>

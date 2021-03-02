@@ -2,12 +2,12 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 
 @Component({
-    selector: 'app-class-detailed-report',
-    templateUrl: './class-detailed-report.component.html',
-    styleUrls: ['./class-detailed-report.component.scss'],
+    selector: 'app-class-assignments-report',
+    templateUrl: './class-assignments-report.component.html',
+    styleUrls: ['./class-assignments-report.component.scss'],
     providers: []
 })
-export class ClassDetailedReportComponent implements OnInit {
+export class ClassAssignmentsReportComponent implements OnInit {
 
     @Input() assignments;
     @Input() students;

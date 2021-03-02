@@ -972,38 +972,44 @@ class ClassController extends Controller
                 }
             }
             if ($with_tests) {
-                $tests = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
-                foreach ($tests as $test) {
-                    $class_data = $test->getClassRelatedData($class->id);
-                    if (!$is_teacher && $class_data->is_for_selected_students) {
+                $tests = [];
+                foreach ($class->classApplications()->whereHas('test')->orderBy('start_date', 'ASC')->get() as $class_app) {
+                    $test = $class_app->test()->first();
+                    if (!$is_teacher && $class_app->is_for_selected_students) {
                         if (DB::table('classes_applications_students')
-                                ->where('class_app_id', $class_data->id)
+                                ->where('class_app_id', $class_app->id)
                                 ->where('student_id', $this->user->id)->count() < 1) {
-                            $tests->forget($test->id);
+                            continue;
                         }
                     }
                     $test->icon = $test->icon();
                     $test->class_id = $class_id;
-                    $test->app_id = $class_data && $class_data->app_id ? $class_data->app_id : 0;
-                    if ($class_data && $class_data->start_date) {
-                        $start_at = $class_data->start_time ? $class_data->start_date.' '.$class_data->start_time : $class_data->start_date.' 00:00:00';
+                    $test->app_id = $class_app && $class_app->app_id ? $class_app->app_id : 0;
+                    $test->attempts = $class_app->attempts ?: 1;
+                    $test->students = $this->getTestReportData($class, $class_app);
+                    if ($class_app->start_date) {
+                        $start_at = $class_app->start_time ? $class_app->start_date.' '.$class_app->start_time : $class_app->start_date.' 00:00:00';
                     } else {
                         $start_at = null;
                     }
                     $test->start_at = $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
-                    if ($class_data && $class_data->due_date) {
-                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+                    if ($class_app->due_date) {
+                        $due_at = $class_app->due_time ? $class_app->due_date.' '.$class_app->due_time : $class_app->due_date.' 00:00:00';
                     } else {
                         $due_at = null;
                     }
                     $test->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                    $test->attempts = $class_data ? $class_data->attempts : 1;
+                    array_push($tests, $test);
                 }
+                $class_students = $is_teacher
+                    ? array_values($class->students()->orderBy('email', 'ASC')->get(['email'])->toArray())
+                    : [$this->user];
                 return [
                     'class' => $class,
                     'assignments' => array_values($assignments->toArray()),
-                    'tests' => array_values($tests->toArray()),
                     'students' => array_values($data->toArray()),
+                    'tests' => $tests,
+                    'class_students' => $class_students,
                 ];
             } else {
                 return [

@@ -6,11 +6,43 @@
   margin-bottom: 16px;
 }
 
+.pending {
+  // background: rgba(255, 246, 143, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.progress {
+  background: rgba(198, 226, 255, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.overdue {
+  background: rgba(255, 115, 115, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.completed {
+  background: rgba(90, 193, 142, 0.2);
+  border-radius: 0;
+  color: $navy;
+}
+
+.test-table-row {
+  min-width: 100px;
+  width: 160px;
+  max-width: 160px !important;
+  word-break: break-all;
+}
+
+.test-progress-icon {
+  width: 32px;
+  height: 32px;
+}
+
 td {
   white-space: pre-wrap !important;
   word-break: break-word !important;
-}
-
-.button {
-  font-size: 18px !important;
 }
