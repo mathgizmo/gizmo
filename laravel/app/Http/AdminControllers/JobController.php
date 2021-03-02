@@ -2,9 +2,12 @@
 
 namespace App\Http\AdminControllers;
 
+use App\ClassApplication;
+use App\ClassApplicationStudent;
 use App\ClassOfStudents;
 use App\Progress;
 use App\StudentsTrackingQuestion;
+use App\StudentTestAttempt;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -127,6 +130,60 @@ class JobController extends Controller
         $date = Carbon::now()->subYears(1)->toDateString();
         StudentsTrackingQuestion::where('created_at', '<', $date)->delete();
         return response()->json(['status' => 'success'], 200);
+    }
+
+    public function checkTestsTimeout() {
+        $error = false;
+        $attempts = [];
+        $now = \Illuminate\Support\Carbon::now()->toDateTimeString();
+        foreach (StudentTestAttempt::whereNull('end_at')->get() as $attempt) {
+            try {
+                $test_student = ClassApplicationStudent::where('id', $attempt->test_student_id)->first();
+                if (!$test_student) { continue; }
+                $test = ClassApplication::where('id', $test_student->class_app_id)->first();
+                if ($test && ($test->duration || $test->due_date)) {
+                    $is_ended = false;
+                    if ($test->due_date) {
+                        $due_at = $test->due_time ? $test->due_date.' '.$test->due_time : $test->due_date.' 00:00:00';
+                        $is_ended = $now > $due_at;
+                    }
+                    if ($test->duration) {
+                        $class_student = DB::table('classes_students')
+                            ->where('class_id', $test->class_id)
+                            ->where('student_id', $test_student->student_id)
+                            ->first();
+                        $duration = $class_student
+                            ? ($test->duration * $class_student->test_duration_multiply_by)
+                            : $test->duration;
+                        $time_left = $duration - Carbon::now()->diffInSeconds(Carbon::parse($attempt->start_at));
+                        if ($time_left < 1) {
+                            $is_ended = true;
+                        }
+                    }
+                    if ($is_ended) {
+                        $answers_statistics = DB::table('students_test_questions')
+                            ->select(
+                                DB::raw("SUM(1) as total"),
+                                DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                            )
+                            ->where('attempt_id', $attempt->id)
+                            ->first();
+                        $attempt->mark = $answers_statistics->total > 0
+                            ? $answers_statistics->complete / $answers_statistics->total : 1;
+                        $attempt->end_at = $now;
+                        $attempt->save();
+                        array_push($attempts, $attempt->id);
+                    }
+                }
+            } catch (\Exception $e) {
+                $error = $e->getMessage();
+            }
+        }
+        if ($error) {
+            return response()->json(['status' => 'error', 'message' => $error], 500);
+        } else {
+            return response()->json(['status' => 'success', 'attempts' => $attempts], 200);
+        }
     }
 
 }

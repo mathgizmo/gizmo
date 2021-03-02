@@ -1,6 +1,6 @@
 <!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Email Class!</h2> -->
 <mat-dialog-content class="dialog-content" id="dialog-content">
-    <div class="subtitle text-center">Email to the teacher (class {{class.name}})</div>
+    <div class="subtitle text-center">Email to the teacher {{class.teacher_email}} (class {{class.name}})</div>
     <div class="form-group">
         <label for="subject">Subject:</label>
         <input name="subject" id="subject" [(ngModel)]="mail.subject" required class="form-control"/>

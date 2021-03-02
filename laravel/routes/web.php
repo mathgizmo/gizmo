@@ -70,8 +70,13 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('mails', 'MailController', ['except' => ['show', 'create', 'store', 'destroy']]);
     Route::get('mails/new', 'MailController@newMail')->name('mails.new');
     Route::post('mails/send', 'MailController@sendMail')->name('mails.send');
+});
 
-    Route::delete('job/statistics/answers', 'JobController@deleteOldAnswersStatistics')->name('job.statistics.answers.delete');
-    Route::get('job/reports/class-detailed/generate', 'JobController@generateClassDetailedReports')->name('job.reports.class-detailed.generate');
-
+Route::group(['prefix'=>'job','as'=>'job.'], function() {
+    Route::delete('statistics/answers', 'JobController@deleteOldAnswersStatistics')
+        ->name('statistics.answers.delete')->middleware('auth');
+    Route::get('reports/class-detailed/generate', 'JobController@generateClassDetailedReports')
+        ->name('reports.class-detailed.generate');
+    Route::get('tests/check-timeout', 'JobController@checkTestsTimeout')
+        ->name('tests.check-timeout');
 });

@@ -14,6 +14,7 @@ export class EmailTeacherDialogComponent extends BaseDialogComponent<EmailTeache
     public class = {
         id: 0,
         name: '',
+        teacher_email: ''
     };
     public mail = {
         subject: '',

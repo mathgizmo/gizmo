@@ -42,7 +42,7 @@ class ReportGenerate extends Command
         switch( $reportname ) {
             case 'detailed-report':
                 $request = new \Illuminate\Http\Request();
-                $this->info(app('\App\Http\Controllers\JobController')->generateClassDetailedReports($request));
+                $this->info(app('\App\Http\AdminControllers\JobController')->generateClassDetailedReports($request));
                 break;
             default:
                 $this->info('report "'.$reportname.'" does not exists');

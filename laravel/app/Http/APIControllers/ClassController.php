@@ -385,7 +385,9 @@ class ClassController extends Controller
                     $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
                         DB::raw("SUM(1) as total"),
                         DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
-                    )->where('app_id', $item->id)->whereIn('student_id', $item->students)->first();
+                    )->where('app_id', $item->id)
+                        ->whereIn('student_id', $item->students)
+                        ->first();
                 } else {
                     $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
                         DB::raw("SUM(1) as total"),

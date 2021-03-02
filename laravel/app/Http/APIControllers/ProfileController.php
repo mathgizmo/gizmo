@@ -307,6 +307,7 @@ class ProfileController extends Controller
         foreach ($my_classes as $item) {
             $teacher = Student::where('id', $item->teacher_id)->first();
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
+            $item->teacher_email = $teacher ? $teacher->email : '';
         }
         $available_classes = ClassOfStudents::where(function ($q1) use ($student) {
             $q1->where('subscription_type', 'open')->orWhere(function ($q2) use ($student) {
