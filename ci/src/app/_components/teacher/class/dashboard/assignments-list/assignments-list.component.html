@@ -32,14 +32,9 @@
         <span *ngIf="item.due_date">{{item.due_time || '00:00'}}</span>
         <span *ngIf="!item.due_date">N/A</span>
       </td>
-      <td [class]="item.status">
-        {{item.status == 'completed' ? 'Closed' :
-              (item.status == 'overdue' ? 'Overdue' : item.status == 'progress' ?  'In progress' : 'Pending')}}
-        <div *ngIf="item.progress !== undefined && item.status !== 'pending' && item.status !== 'completed'">
-          <!-- <span style="font-size: 0.8em;">{{(item.progress * 100).toFixed(1)}}%</span> -->
-          <span style="font-size: 0.8em;">{{(item.progress * item.students_count).toFixed(0)}}/{{item.students_count}}</span>
-          <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
-        </div>
+      <td>
+        <span style="font-size: 0.8em;">{{(item.progress * item.students_count).toFixed(0)}}/{{item.students_count}}</span>
+        <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
       </td>
       <td>
         <span style="font-size: 0.8em;">{{(item.error_rate * 100).toFixed(1)}}%</span>

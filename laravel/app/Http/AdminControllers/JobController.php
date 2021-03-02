@@ -11,7 +11,6 @@ use App\StudentTestAttempt;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Dashboard;
 
 class JobController extends Controller
 {
@@ -51,22 +50,13 @@ class JobController extends Controller
                                         ->where('student_id', $student->id)->count() > 0;
                                 $is_past_due = (!$is_completed && $due_at && $due_at < $now) ||
                                     ($is_completed && $due_at && $completed_at && $due_at < $completed_at);
-                                $complete_lessons_count = Progress::where('entity_type', 'lesson')->where('app_id', $app->id)
-                                    ->where('student_id', $student->id)->count();
-                                $lessons_count = 0;
-                                if (!$is_completed && $complete_lessons_count > 0) {
-                                    foreach ($app->getTopics() as $topic) {
-                                        $topic_lessons_count = DB::table('lesson')->whereIn('id', function($q) use($app) {
-                                            $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')
-                                                ->where('app_id', $app->id);
-                                        })->where('topic_id', $topic->id)->count();
-                                        if ($topic_lessons_count) {
-                                            $lessons_count += $topic_lessons_count;
-                                        } else {
-                                            $lessons_count += DB::table('lesson')->where('topic_id', $topic->id)->count();
-                                        }
-                                    }
-                                }
+                                $app_lessons = $app->getLessonsQuery()->pluck('id');
+                                $complete_lessons_count = Progress::where('entity_type', 'lesson')
+                                    ->whereIn('entity_id', $app_lessons)
+                                    ->where('app_id', $app->id)
+                                    ->where('student_id', $student->id)
+                                    ->count();
+                                $lessons_count = $app_lessons->count() ?: 0;
                                 $status = 'pending';
                                 $progress = 0;
                                 if ($is_completed) {
@@ -125,13 +115,6 @@ class JobController extends Controller
         }
     }
 
-    public function deleteOldAnswersStatistics() {
-        $this->checkAccess(auth()->user()->isSuperAdmin());
-        $date = Carbon::now()->subYears(1)->toDateString();
-        StudentsTrackingQuestion::where('created_at', '<', $date)->delete();
-        return response()->json(['status' => 'success'], 200);
-    }
-
     public function checkTestsTimeout() {
         $error = false;
         $attempts = [];
@@ -184,6 +167,13 @@ class JobController extends Controller
         } else {
             return response()->json(['status' => 'success', 'attempts' => $attempts], 200);
         }
+    }
+
+    public function deleteOldAnswersStatistics() {
+        $this->checkAccess(auth()->user()->isSuperAdmin());
+        $date = Carbon::now()->subYears(1)->toDateString();
+        StudentsTrackingQuestion::where('created_at', '<', $date)->delete();
+        return response()->json(['status' => 'success'], 200);
     }
 
 }

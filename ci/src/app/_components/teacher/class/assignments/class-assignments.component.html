@@ -68,7 +68,10 @@
               {{item.status == 'completed' ? 'Closed' :
                     (item.status == 'overdue' ? 'Overdue' : item.status == 'progress' ?  'In progress' : 'Pending')}}
               <div *ngIf="item.progress !== undefined && item.status !== 'pending' && item.status !== 'completed'">
-                <span style="font-size: 0.8em;">{{(item.progress * 100).toFixed(1)}}%</span>
+                <span style="font-size: 0.8em;">
+                  <!-- {{(item.progress * 100).toFixed(1)}}% -->
+                  {{(item.progress * item.students_count).toFixed(0)}}/{{item.students_count}}
+                </span>
                 <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
               </div>
             </td>

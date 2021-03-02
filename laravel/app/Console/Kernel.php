@@ -25,9 +25,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('report:generate detailed-report')
+        /* $schedule->command('report:generate detailed-report')
             ->hourlyAt(59)->unlessBetween('23:00', '7:00');
         $schedule->command('check-test-timeout')
-            ->hourlyAt(29)->unlessBetween('23:00', '7:00');
+            ->hourlyAt(29)->unlessBetween('23:00', '7:00'); */
     }
 }
