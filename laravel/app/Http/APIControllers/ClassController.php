@@ -674,7 +674,9 @@ class ClassController extends Controller
                 $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id, $type) {
                     $q2->where('classes.id', intval($class_id));
                 })->where('type', $type);
-            });
+            }); /* ->whereHas('classApplication', function ($q1) use ($class_id) {
+                $q1->where('class_id', $class_id);
+            }); */
         }
         if (request()->has('student_id') && request('student_id')) {
             $query->where('student_id', request('student_id'));
