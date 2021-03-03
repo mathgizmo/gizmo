@@ -4,7 +4,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
 
 @Component({
-    selector: 'edit-class-dialog',
+    selector: 'app-edit-class-dialog',
     templateUrl: 'edit-class-dialog.component.html',
     styleUrls: ['edit-class-dialog.component.scss'],
 })
@@ -17,6 +17,7 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
         'invitations': ''
     };
     title = 'Edit Class';
+    public file: any;
 
     constructor(
         public dialogRef: MatDialogRef<EditClassDialogComponent>,
@@ -29,6 +30,17 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
         if (data.title) {
             // tslint:disable-next-line:indent
         	this.title = data.title;
+        }
+    }
+
+    fileChanged(e) {
+        this.file = e.target.files[0];
+        if (this.file) {
+            const fileReader = new FileReader();
+            fileReader.onload = (e) => {
+                this.class.invitations = fileReader.result.toString();
+            };
+            fileReader.readAsText(this.file);
         }
     }
 

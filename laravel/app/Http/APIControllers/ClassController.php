@@ -200,7 +200,8 @@ class ClassController extends Controller
                     }
                 }
                 foreach (array_filter($emails) as $email) {
-                    if ($students->where('email', trim($email))->count() < 1) {
+                    $email = str_replace('"', '', trim($email));
+                    if ($students->where('email', $email)->count() < 1) {
                         array_push($not_subscribed, (object) [
                             'first_name' => null,
                             'last_name' => null,

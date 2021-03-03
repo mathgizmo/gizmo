@@ -29,7 +29,8 @@ class ClassObserver
             if (config('app.env') == 'production' && $class->subscription_type == 'invitation') {
                 foreach (array_filter($emails) as $email) {
                     try {
-                        $student = Student::where('email', trim($email))->first();
+                        $email = str_replace('"', '', trim($email));
+                        $student = Student::where('email', $email)->first();
                         if ($student) {
                             $subscribed = DB::table('classes_students')->where('class_id', $class->id)
                                 ->where('student_id', $student->id)->exists();

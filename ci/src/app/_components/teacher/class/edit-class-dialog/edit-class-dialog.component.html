@@ -34,9 +34,10 @@
     </div>
     <div *ngIf="class.subscription_type === 'invitation'" class="form-group">
         <label for="invitations">Invitations:</label>
-        <textarea id="invitations" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3"
+        <textarea id="invitations" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6"
                   cdkAutosizeMaxRows="12" name="invitations" placeholder="Please enter comma separated email list"
                   [(ngModel)]="class.invitations" class="form-control"></textarea>
+        <input type="file" (change)="fileChanged($event)" class="file-input">
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">

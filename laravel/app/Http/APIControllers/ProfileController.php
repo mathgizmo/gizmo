@@ -317,6 +317,9 @@ class ProfileController extends Controller
         foreach ($available_classes as $item) {
             if ($item->subscription_type == 'invitation') {
                 $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations))));
+                $emails = array_map(function ($email) {
+                    return str_replace('"', '', trim($email));
+                }, $emails);
                 if (!in_array($student->email, $emails)) {
                     $available_classes->forget($item->id);
                     continue;
@@ -341,6 +344,9 @@ class ProfileController extends Controller
         })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
         foreach ($class_invitations as $item) {
             $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations))));
+            $emails = array_map(function ($email) {
+                return str_replace('"', '', trim($email));
+            }, $emails);
             if (!in_array($student->email, $emails)) {
                 $class_invitations->forget($item->id);
                 continue;
