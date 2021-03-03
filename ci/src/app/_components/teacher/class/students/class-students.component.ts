@@ -63,7 +63,7 @@ export class ClassStudentsComponent implements OnInit {
     deleteStudent(studentId) {
         const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
             data: {
-                // 'message': 'Are you sure that you want to delete this student from the class?'
+                'message': 'Are you sure that you want to delete this student from the class?'
             },
             position: this.dialogPosition
         });
@@ -145,7 +145,7 @@ export class ClassStudentsComponent implements OnInit {
                 case 'last_name': return compare(a.last_name, b.last_name, isAsc);
                 case 'email': return compare(a.email, b.email, isAsc);
                 case 'assignments_finished_count': return compare(a.assignments_finished_count, b.assignments_finished_count, isAsc);
-                case 'assignments_past_due_count': return compare(a.assignments_past_due_count, b.assignments_past_due_count, isAsc);
+                case 'tests_finished_count': return compare(a.tests_finished_count, b.tests_finished_count, isAsc);
                 default: return 0;
             }
         });

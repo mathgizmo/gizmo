@@ -1,6 +1,6 @@
 <h2 mat-dialog-title class="subtitle hide">Assignments!</h2>
 <mat-dialog-content class="dialog-content">
-    <div class="subtitle text-center">Assignments of {{student.name}}</div>
+    <div class="subtitle text-center">Assignments of {{student.email}}</div>
     <form novalidate #form="ngForm">
         <div class="table-responsive">
             <table matSort (matSortChange)="sortData($event)" class="table">

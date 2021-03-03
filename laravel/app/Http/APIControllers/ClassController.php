@@ -144,7 +144,7 @@ class ClassController extends Controller
                         ->where('student_id', $student->id)->first();
                     $student->test_duration_multiply_by = $class_student ? $class_student->test_duration_multiply_by : 1;
                     $student->is_subscribed = true;
-                    $finished_count = 0; $past_due_count = 0;
+                    $assignments_finished_count = 0;
                     $student_assignments = $apps->keyBy('id');
                     foreach ($apps as $app) {
                         $class_data = $app->getClassRelatedData($class_id);
@@ -170,35 +170,25 @@ class ClassController extends Controller
                         $app->is_past_due = (!$app->is_completed && $due_at && $due_at < $now) ||
                             ($app->is_completed && $due_at && $completed_at && $due_at < $completed_at);
                         if ($app->is_completed) {
-                            $finished_count++;
-                        }
-                        if ($app->is_past_due) {
-                            $past_due_count++;
+                            $assignments_finished_count++;
                         }
                     }
                     $student->assignments = array_values($student_assignments->sortBy('due_date')->toArray());
-                    $student->assignments_finished_count = $finished_count;
-                    $student->assignments_past_due_count = $past_due_count;
+                    $student->assignments_finished_count = $assignments_finished_count;
+                    $tests_finished_count = ClassApplication::where('class_id', $class_id)
+                        ->whereHas('classApplicationStudents', function ($q) use ($student) {
+                            $q->where('student_id', $student->id)
+                                ->whereHas('testAttempts', function ($q) {
+                                    $q->whereNotNull('end_at');
+                                });
+                        })
+                        ->select('classes_applications.id')->distinct()->count();
+                    $student->tests_finished_count = $tests_finished_count;
                 }
             }
             if ($class->subscription_type == 'invitation' && $show_extra) {
                 $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
                 $not_subscribed = [];
-                $assignments_past_due_count = 0;
-                foreach ($apps as $app) {
-                    $class_data = $app->getClassRelatedData($class_id);
-                    if ($class_data->is_for_selected_students) {
-                        continue;
-                    }
-                    if ($class_data->due_date) {
-                        $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
-                    } else {
-                        $due_at = null;
-                    }
-                    if ($due_at && $due_at < $now) {
-                        $assignments_past_due_count++;
-                    }
-                }
                 foreach (array_filter($emails) as $email) {
                     $email = str_replace('"', '', trim($email));
                     if ($students->where('email', $email)->count() < 1) {
@@ -209,7 +199,7 @@ class ClassController extends Controller
                             'is_registered' => false,
                             'is_subscribed' => false,
                             'assignments_finished_count' => 0,
-                            'assignments_past_due_count' => $assignments_past_due_count
+                            'tests_finished_count' => 0
                         ]);
                     }
                 }
@@ -238,9 +228,7 @@ class ClassController extends Controller
                 ['email' => $email],
                 ['email' => 'required|email|max:255']
             );
-            if ($validator->fails()) {
-                continue;
-            }
+            if ($validator->fails()) { continue; }
             try {
                 $student = Student::where('email', $email)->first();
                 if (!$student) {
@@ -258,13 +246,13 @@ class ClassController extends Controller
                         'class_id' => $class_id,
                         'student_id' => $student->id
                     ]);
-                    $items = Application::whereHas('classes', function ($q1) use ($student, $class_id) {
+                    $assignments = Application::whereHas('classes', function ($q1) use ($student, $class_id) {
                         $q1->whereHas('students', function ($q2) use ($student) {
                             $q2->where('students.id', $student->id);
                         })->where('classes.id', $class_id);
                     })->get();
-                    $finished_count = 0; $past_due_count = 0;
-                    foreach ($items as $item) {
+                    $assignments_finished_count = 0;
+                    foreach ($assignments as $item) {
                         $item->icon = $item->icon();
                         $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
                                 ->where('student_id', $student->id)->count() > 0;
@@ -281,15 +269,20 @@ class ClassController extends Controller
                         $item->is_past_due = (!$item->is_completed && $due_at && $due_at < $now) ||
                             ($item->is_completed && $due_at && $completed_at && $due_at < $completed_at);
                         if ($item->is_completed) {
-                            $finished_count++;
-                        }
-                        if ($item->is_past_due) {
-                            $past_due_count++;
+                            $assignments_finished_count++;
                         }
                     }
-                    $student->assignments = array_values($items->sortBy('due_date')->toArray());
-                    $student->assignments_finished_count = $finished_count;
-                    $student->assignments_past_due_count = $past_due_count;
+                    $student->assignments = array_values($assignments->sortBy('due_date')->toArray());
+                    $student->assignments_finished_count = $assignments_finished_count;
+                    $tests_finished_count = ClassApplication::where('class_id', $class_id)
+                        ->whereHas('classApplicationStudents', function ($q) use ($student) {
+                            $q->where('student_id', $student->id)
+                                ->whereHas('testAttempts', function ($q) {
+                                    $q->whereNotNull('end_at');
+                                });
+                        })
+                        ->select('classes_applications.id')->distinct()->count();
+                    $student->tests_finished_count = $tests_finished_count;
                     array_push($students, $student);
                 }
             } catch (\Exception $e) { }

@@ -11,7 +11,7 @@
             <th mat-sort-header="email" scope="col">Email</th>
             <th mat-sort-header="name" scope="col">Name</th>
             <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
-            <th mat-sort-header="assignments_past_due_count" scope="col">Past Due Assignments</th>
+            <th mat-sort-header="tests_finished_count" scope="col">Finished Tests</th>
             <th mat-sort-header="test_duration_multiply_by" scope="col">Test Duration Multiplier</th>
             <th></th>
             <th class="text-right" style="min-width: 154px">
@@ -30,7 +30,7 @@
             <td style="max-width: 260px;">{{item.email }}</td>
             <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
             <td style="max-width: 60px;">{{item.assignments_finished_count }}</td>
-            <td style="max-width: 60px;">{{item.assignments_past_due_count }}</td>
+            <td style="max-width: 60px;">{{item.tests_finished_count }}</td>
             <td style="max-width: 72px !important;">
               <input type="number" min="0.1" step="0.1" name="test_duration_multiply_by" #testDurationMultiplyBy [value]="item.test_duration_multiply_by || 1" (change)="onTestDurationChanged(item, testDurationMultiplyBy.value)" class="form-control" style="max-width: 72px !important;" />
             </td>
@@ -42,15 +42,9 @@
                 <span class="badge">Not Subscribed</span>
               </span>
             </td>
-            <td style="max-width: 60px;">
-              <div class="buttons-container" style="cursor: pointer">
-                <div [class.disabled]="!item.is_registered || !item.is_subscribed" (click)="showAssignments(item)">
-                  <i class="fa fa-info-circle"></i>
-                </div>
-                <div [class.disabled]="!item.is_subscribed" (click)="deleteStudent(item.id)">
-                  <i class="fa fa-trash"></i>
-                </div>
-              </div>
+            <td class="text-right" style="min-width: 260px;">
+              <button class="button button-small button-outline" mat-stroked-button type="button" [class.disabled]="!item.is_registered || !item.is_subscribed" (click)="showAssignments(item)" style="margin-right: 8px;">Assignments</button>
+              <button class="button button-small button-danger" mat-stroked-button type="button" [class.disabled]="!item.is_subscribed" (click)="deleteStudent(item.id)">Remove</button>
             </td>
           </tr>
           </tbody>
