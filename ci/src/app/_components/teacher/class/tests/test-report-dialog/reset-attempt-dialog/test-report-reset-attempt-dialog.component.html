@@ -7,6 +7,7 @@
         <option *ngFor="let attempt of item.attempts; let i = index" [attr.value]="attempt.id">
             Attempt #{{i+1}}
             <span *ngIf="attempt.mark">{{(attempt.mark * 100).toFixed(0)}}%</span>
+            <span *ngIf="attempt.is_error"> ERROR!</span>
         </option>
     </select>
     <div *ngIf="isNotCompleted()" class="alert alert-danger">

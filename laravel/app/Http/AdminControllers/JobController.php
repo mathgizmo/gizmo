@@ -5,12 +5,15 @@ namespace App\Http\AdminControllers;
 use App\ClassApplication;
 use App\ClassApplicationStudent;
 use App\ClassOfStudents;
+use App\Mail\ClassMail;
+use App\Mail\TestErrorMail;
 use App\Progress;
 use App\StudentsTrackingQuestion;
 use App\StudentTestAttempt;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
 {
@@ -131,16 +134,22 @@ class JobController extends Controller
                         $is_ended = $now > $due_at;
                     }
                     if ($test->duration) {
-                        $class_student = DB::table('classes_students')
-                            ->where('class_id', $test->class_id)
-                            ->where('student_id', $test_student->student_id)
-                            ->first();
-                        $duration = $class_student
-                            ? ($test->duration * $class_student->test_duration_multiply_by)
-                            : $test->duration;
-                        $time_left = $duration - Carbon::now()->diffInSeconds(Carbon::parse($attempt->start_at));
-                        if ($time_left < 1) {
+                        if ($attempt->isCorrupted()) {
+                            $attempt->is_error = true;
+                            $attempt->save();
                             $is_ended = true;
+                        } else {
+                            $class_student = DB::table('classes_students')
+                                ->where('class_id', $test->class_id)
+                                ->where('student_id', $test_student->student_id)
+                                ->first();
+                            $duration = $class_student
+                                ? ($test->duration * $class_student->test_duration_multiply_by)
+                                : $test->duration;
+                            $time_left = $duration - Carbon::now()->diffInSeconds(Carbon::parse($attempt->start_at));
+                            if ($time_left < 1) {
+                                $is_ended = true;
+                            }
                         }
                     }
                     if ($is_ended) {
@@ -160,6 +169,22 @@ class JobController extends Controller
                 }
             } catch (\Exception $e) {
                 $error = $e->getMessage();
+            }
+        }
+        if (config('app.env') == 'production') {
+            foreach (StudentTestAttempt::where('is_error', true)->whereNull('error_emailed_at')->get() as $attempt) {
+                try {
+                    $test_student = $attempt->testStudent;
+                    $test = $test_student ? $test_student->classApplication : null;
+                    $class = $test ? $test->classOfStudents : null;
+                    $teacher = $class ? $class->teacher : null;
+                    $student = $test_student->student;
+                    if ($teacher && $student) {
+                        Mail::to($teacher->email)->send(new TestErrorMail($student, $class, $test));
+                        $attempt->error_emailed_at = Carbon::now()->toDateTimeString();
+                        $attempt->save();
+                    }
+                } catch (\Exception $e) { return $e;}
             }
         }
         if ($error) {

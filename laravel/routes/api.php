@@ -105,6 +105,7 @@ $api->version('v1', function ($api) {
 
         $api->post('/tests/get-questions-count', 'App\Http\APIControllers\ApplicationController@getQuestionsCount');
         $api->post('/tests/{test_id}/start', 'App\Http\APIControllers\ApplicationController@startTest');
+        $api->post('/tests/{test_id}/track', 'App\Http\APIControllers\ApplicationController@trackTest');
         $api->post('/tests/{test_id}/finish', 'App\Http\APIControllers\ApplicationController@finishTest');
         $api->get('/tests', 'App\Http\APIControllers\ApplicationController@getTests');
         $api->post('/tests', 'App\Http\APIControllers\ApplicationController@storeTest');

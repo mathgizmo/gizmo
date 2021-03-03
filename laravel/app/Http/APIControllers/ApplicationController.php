@@ -7,6 +7,7 @@ use App\ClassApplication;
 use App\ClassApplicationStudent;
 use App\Lesson;
 use App\Question;
+use App\StudentTestAttemptHealthTracker;
 use App\Topic;
 use App\Unit;
 use Carbon\Carbon;
@@ -63,7 +64,8 @@ class ApplicationController extends Controller
                 ->where('test_student_id', $test_student->id)
                 ->get() : [];
             $attempts_count = count($attempts);
-            if ($attempts_count >= $test->attempts) {
+            $finished_attempts_count = $attempts && $attempts_count > 0 ? $attempts->whereNotNull('end_at')->count() : 0;
+            if ($finished_attempts_count >= $test->attempts) {
                 return $this->error('You already finished this test!', 410);
             }
             if ($test->start_date || $test->due_date) {
@@ -199,6 +201,25 @@ class ApplicationController extends Controller
         } catch (\Exception $e) {
             return $this->error($e->getLine(), 500);
         }
+    }
+
+    public function trackTest(Request $request, $test_id) {
+        $test = ClassApplication::where('id', $test_id)->first();
+        if (!$test) { abort(404, 'Test not found!'); }
+        $test_student = ClassApplicationStudent::where('class_app_id', $test->id)
+            ->where('student_id', $this->user->id)->first();
+        $current_attempt = $test_student ?
+            DB::table('students_test_attempts')
+                ->where('test_student_id', $test_student->id)
+                ->whereNull('end_at')
+                ->first() : null;
+        if (!$current_attempt) { abort(404, 'Attempt not found!'); }
+        $track = StudentTestAttemptHealthTracker::create([
+            'attempt_id' => $current_attempt->id
+        ]);
+        return $this->success([
+            'item' => $track
+        ], 200);
     }
 
     public function finishTest(Request $request, $test_id) {

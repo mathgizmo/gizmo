@@ -137,6 +137,15 @@
   background: #f0f8ff;
 }
 
+.error {
+  background: rgba(255, 115, 115, 0.2);
+}
+
+.error-message {
+  color: darkred !important;
+  font-weight: bold;
+}
+
 .secret-test {
   display: flex;
   align-items: center;

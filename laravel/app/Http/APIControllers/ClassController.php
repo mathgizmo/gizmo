@@ -1044,7 +1044,8 @@ class ClassController extends Controller
                     'mark', students_test_attempts.mark,
                     'questions_count', students_test_attempts.questions_count,
                     'start_at', students_test_attempts.start_at,
-                    'end_at', students_test_attempts.end_at
+                    'end_at', students_test_attempts.end_at,
+                    'is_error', students_test_attempts.is_error,
                 )
             ) AS attempts"),
             'classes_applications_students.attempts_count',
@@ -1074,6 +1075,7 @@ class ClassController extends Controller
             'students_test_attempts.questions_count',
             'students_test_attempts.start_at',
             'students_test_attempts.end_at',
+            'students_test_attempts.is_error',
             'classes_applications_students.attempts_count',
             'classes_applications_students.resets_count',
         ]);
@@ -1086,7 +1088,8 @@ class ClassController extends Controller
                     'mark' => $row->mark,
                     'questions_count' => $row->questions_count,
                     'start_at' => $row->start_at,
-                    'end_at' => $row->end_at
+                    'end_at' => $row->end_at,
+                    'is_error' => $row->is_error
                 ]);
             } else {
                 $students[$row->id] = (object) [
@@ -1102,7 +1105,8 @@ class ClassController extends Controller
                             'mark' => $row->mark,
                             'questions_count' => $row->questions_count,
                             'start_at' => $row->start_at,
-                            'end_at' => $row->end_at
+                            'end_at' => $row->end_at,
+                            'is_error' => $row->is_error
                         ]
                     ]
                 ];

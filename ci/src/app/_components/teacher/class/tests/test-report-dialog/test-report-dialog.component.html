@@ -22,17 +22,20 @@
                     <tr class="tid-data-row">
                         <td style="max-width: 260px;">{{item.email }}</td>
                         <td *ngFor="let attempt of attempts">
-                            <span *ngIf="item.attempts[attempt] && item.attempts[attempt].id; else attemptNotStarted" (click)="onShowDetails(item, attempt)" style="cursor: pointer" title="Show details">
-                                <span *ngIf="item.attempts[attempt].end_at || item.attempts[attempt].mark; else attemptInProgress">
+                            <div *ngIf="item.attempts[attempt] && item.attempts[attempt].id; else attemptNotStarted" (click)="onShowDetails(item, attempt)" style="cursor: pointer" title="Show details">
+                                <div *ngIf="item.attempts[attempt].end_at || item.attempts[attempt].mark; else attemptInProgress">
                                     {{(item.attempts[attempt].mark * 100).toFixed(0)}}%
                                     <span *ngIf="item.attempts[attempt].questions_count">
                                         ({{(item.attempts[attempt].mark*item.attempts[attempt].questions_count).toFixed(0)}}/{{item.attempts[attempt].questions_count}})
                                     </span>
-                                </span>
+                                </div>
                                 <ng-template #attemptInProgress>
                                     <img class="test-progress-icon" src="assets/images/test_in_progress.png" alt="Test In Progress" />
                                 </ng-template>
-                            </span>
+                                <div *ngIf="item.attempts[attempt].is_error" class="error-message">
+                                    ERROR!
+                                </div>
+                            </div>
                             <ng-template #attemptNotStarted>
                                 <img class="test-progress-icon" src="assets/images/test_not_started.png" alt="Test Not Started" />
                             </ng-template>
@@ -48,6 +51,9 @@
                     <tr class="tid-detail-row" *ngIf="item.showDetail">
                         <td [attr.colspan]="test.attempts + 3">
                             <h4>Attempt #{{item.selectedAttempt+1}}</h4>
+                            <h4 *ngIf="item.attempts[item.selectedAttempt].is_error" class="error-message">
+                                Error occurred while passing the test!
+                            </h4>
                             <h5 *ngIf="item.attempts[item.selectedAttempt].start_at">Start At: {{ item.attempts[item.selectedAttempt].start_at | date:'yyyy-M-d h:mm a' }}</h5>
                             <h5 *ngIf="item.attempts[item.selectedAttempt].end_at">End At: {{ item.attempts[item.selectedAttempt].end_at | date:'yyyy-M-d h:mm a' }}</h5>
                             <div *ngFor="let level of item.details" class="level-details d-flex flex-column">

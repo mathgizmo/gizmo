@@ -36,6 +36,10 @@ export class HTTPListener implements HttpInterceptor {
         req: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
+        const hideLoader = req.params.get('hideLoader') || false;
+        if (hideLoader) {
+            return next.handle(req);
+        }
         this.status.setHttpStatus(true);
         return next.handle(req).pipe(
             /* map(event => {

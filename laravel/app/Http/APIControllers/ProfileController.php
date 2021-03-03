@@ -226,6 +226,7 @@ class ProfileController extends Controller
                 $attempt_item->completed_at = $attempt->end_at ? Carbon::parse($attempt->end_at)->format('Y-m-d g:i A') : null;
                 $attempt_item->is_blocked = $attempt_item->is_completed || ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
                 $attempt_item->in_progress = ($current_attempt && $current_attempt->id == $attempt->id) ? true : false;
+                $attempt_item->is_error = $attempt->is_error;
                 array_push($items, $attempt_item);
             }
             if ($attempts_count < $row->attempts && !$current_attempt && $max_mark < 0.9999) {

@@ -40,16 +40,19 @@
     </div>
     <div *ngIf="showCompletedApplications" class="applications-list">
       <mat-button-toggle-group #group="matButtonToggleGroup" vertical>
-        <mat-button-toggle *ngFor="let test of completedApplications" [value]="test.id" (click)="onShowTestReport(test)">
+        <mat-button-toggle *ngFor="let test of completedApplications" [value]="test.id" (click)="onShowTestReport(test)" [class.error]="test.is_error">
           <div class="app-select-container completed">
             <div class="app-img" [style.background-image]="setIcon(test.icon)"></div>
             <div class="app-data">
-              <span class="app-title">
+              <div class="app-title">
                 <strong>{{test.name}}</strong>
                 <span *ngIf="test.class" class="app-class">{{test.class.name}}</span>
                 <strong class="app-class">Mark: {{(test.mark * 100).toFixed(0)}}%</strong>
                 <strong class="app-class">Attempt #{{test.attempt_no}}</strong>
-              </span>
+                <div *ngIf="test.is_error" class="app-class error-message">
+                  Error: please contact your teacher to reset!
+                </div>
+              </div>
               <div class="date-container">
                 <span *ngIf="test.completed_at" class="due-date">
                   Finished At: {{test.completed_at}}

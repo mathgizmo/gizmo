@@ -72,6 +72,17 @@ export class TestService {
             );
     }
 
+    public trackTest(app_id) {
+        return this.http.post('/tests/' + app_id + '/track', null, true, {
+            hideLoader: true
+        }).pipe(
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
     public getAppTree(app_id = 0) {
         return this.http.get('/tests/' + app_id + '/tree')
             .pipe(

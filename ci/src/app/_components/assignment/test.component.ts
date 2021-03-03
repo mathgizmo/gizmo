@@ -31,6 +31,7 @@ export class TestComponent implements OnInit, OnDestroy {
     public enableTimer = true;
     public counter = 1800;
     private countDown: Subscription;
+    private tracker: Subscription;
 
     public options = {
         is_test_timer_displayed: 1,
@@ -81,6 +82,9 @@ export class TestComponent implements OnInit, OnDestroy {
         if (this.countDown) {
             this.countDown.unsubscribe();
         }
+        if (this.tracker) {
+            this.tracker.unsubscribe();
+        }
     }
 
     public startTest() {
@@ -96,6 +100,9 @@ export class TestComponent implements OnInit, OnDestroy {
                 if (this.enableTimer) {
                     this.initTimer();
                     this.test.start = Date.now();
+                }
+                if (this.test.duration > 0) {
+                    this.initTracker();
                 }
                 this.test.questions_count = +res.test.questions_count;
                 this.test.answered_questions_count = this.test.questions_count - res.test.questions.length;
@@ -155,6 +162,9 @@ export class TestComponent implements OnInit, OnDestroy {
         if (this.countDown) {
             this.countDown.unsubscribe();
         }
+        if (this.tracker) {
+            this.tracker.unsubscribe();
+        }
         this.testService.finishTest(this.testId).subscribe((res) => {
             this.correctQuestionRate = res['correct_question_rate'];
             this.question = null;
@@ -172,12 +182,22 @@ export class TestComponent implements OnInit, OnDestroy {
                         this.finishTest();
                     }
                 })
-            )
-            .subscribe(() => {
-            });
+            ).subscribe(() => { });
         if (this.counter <= 0) {
             this.finishTest();
         }
+    }
+
+    private initTracker() {
+        this.tracker = timer(0, 60000) // every 60 sec.
+            .pipe(
+                takeWhile(() => this.counter > 0),
+                tap(() => {
+                    this.testService.trackTest(this.testId).subscribe(() => { }, error => {
+                        alert('Connection Error: ' + error);
+                    });
+                })
+            ).subscribe(() => { });
     }
 
 }
