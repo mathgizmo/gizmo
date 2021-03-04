@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1614775978577,
+  "timestamp": 1614866663555,
   "index": "/gizmo/index.html",
   "assetGroups": [
     {
@@ -14,7 +14,7 @@
         "/gizmo/canvg.25abf2567712288ebcc7.js",
         "/gizmo/favicon.ico",
         "/gizmo/index.html",
-        "/gizmo/main.5c8f05ad91acdacb449c.js",
+        "/gizmo/main.2f676f0216f12cf2c69f.js",
         "/gizmo/manifest.webmanifest",
         "/gizmo/pdfmake.cf21bff01fd23bce756e.js",
         "/gizmo/polyfills-es5.122f0eb2c9b5704fba1d.js",
@@ -602,8 +602,8 @@
     "/gizmo/fontawesome-webfont.8b43027f47b20503057d.eot": "d980c2ce873dc43af460d4d572d441304499f400",
     "/gizmo/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg": "98a8aa5cf7d62c2eff5f07ede8d844b874ef06ed",
     "/gizmo/fontawesome-webfont.f691f37e57f04c152e23.woff": "28b782240b3e76db824e12c02754a9731a167527",
-    "/gizmo/index.html": "bd575c10c95ce6d42bb3fd963aef9ae61b9a8bb3",
-    "/gizmo/main.5c8f05ad91acdacb449c.js": "05103abd36a584e9659f97b519604aa1fbe6c8d7",
+    "/gizmo/index.html": "c3e84b08eec6092cad4629144394251899a0d1d4",
+    "/gizmo/main.2f676f0216f12cf2c69f.js": "8a6952fa88b215b6f4680e112190931b31618bd2",
     "/gizmo/manifest.webmanifest": "76f0bd83fcb2ac568f286de2089dd5220fb6f464",
     "/gizmo/pdfmake.cf21bff01fd23bce756e.js": "d5c71bc8ccf95eca2979871ed8d363a171e00953",
     "/gizmo/polyfills-es5.122f0eb2c9b5704fba1d.js": "e74ed01eb1754388ed2b3bb372bf2f0b6eac9eca",
