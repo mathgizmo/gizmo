@@ -8,13 +8,15 @@
                 <tr>
                     <th mat-sort-header="email" scope="col">Student</th>
                     <th scope="col" *ngFor="let attempt of attempts">Attempt #{{attempt+1}}</th>
+                    <th mat-sort-header="mark" scope="col">Score</th>
+                    <th mat-sort-header="completed_at" scope="col">Completed at</th>
                     <th mat-sort-header="resets_count" scope="col">Resets count</th>
                     <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td [attr.colspan]="test.attempts + 3">
+                    <td [attr.colspan]="test.attempts + 5">
                         <input matInput placeholder="Email" class="filter-item" type="text" name="email" [(ngModel)]="email" [value]="" />
                     </td>
                 </tr>
@@ -40,6 +42,8 @@
                                 <img class="test-progress-icon" src="assets/images/test_not_started.png" alt="Test Not Started" />
                             </ng-template>
                         </td>
+                        <td>{{(item.mark * 100).toFixed(0)}}%</td>
+                        <td>{{item.completed_at}}</td>
                         <td>{{item.resets_count}}</td>
                         <td class="text-right" style="min-width: 200px">
                             <div *ngIf="item.attempts && item.attempts[0] && item.attempts[0].id">
@@ -49,7 +53,7 @@
                         </td>
                     </tr>
                     <tr class="tid-detail-row" *ngIf="item.showDetail">
-                        <td [attr.colspan]="test.attempts + 3">
+                        <td [attr.colspan]="test.attempts + 5">
                             <h4>Attempt #{{item.selectedAttempt+1}}</h4>
                             <h4 *ngIf="item.attempts[item.selectedAttempt].is_error" class="error-message">
                                 Error occurred while passing the test!

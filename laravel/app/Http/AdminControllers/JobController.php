@@ -104,6 +104,10 @@ class JobController extends Controller
                             ]);
                         }
                     }
+                    DB::table('class_detailed_reports')
+                        ->where('class_id', $class->id)
+                        ->whereNotIn('student_id', $students->pluck('id')->toArray())
+                        ->delete();
                 } catch (\Exception $e) {
                     $error = $e->getMessage();
                 }

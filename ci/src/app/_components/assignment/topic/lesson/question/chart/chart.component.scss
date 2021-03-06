@@ -1,3 +1,5 @@
+@import '../../../../../../../colors';
+
 .slider-control-buttons {
   margin-bottom: 32px;
   button {
@@ -121,5 +123,22 @@ input {
   }
   .question:not([class^='mjx']), .question *:not([class^='mjx']), .question p:not([class^='mjx']) {
     font-size: 14px !important;
+  }
+}
+
+/* White theme */
+#controls {
+  ::ng-deep .mat-progress-bar .mat-progress-bar-buffer {
+    background-color: rgba(255, 255, 255, .2) !important;
+  }
+  ::ng-deep .mat-progress-bar-fill::after {
+    background-color: $navy !important;
+  }
+  ::ng-deep .slider-control-buttons .mat-button {
+    background-color: #f1f1f1 !important;
+    color: $navy !important;
+  }
+  ::ng-deep .mat-slider-thumb, ::ng-deep .mat-slider-thumb-label, ::ng-deep .mat-slider-track-fill {
+    background-color: $navy !important;
   }
 }

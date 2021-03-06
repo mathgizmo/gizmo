@@ -1113,9 +1113,15 @@ class ClassController extends Controller
             }
         }
         foreach ($students as $student) {
-            usort($student->attempts, function($a, $b) {
+            /* usort($student->attempts, function($a, $b) {
                 return strcmp($a->attempt_no, $b->attempt_no);
-            });
+            }); */
+            $attempts = collect($student->attempts)->sortBy('attempt_no');
+            $student->attempts = $attempts;
+            $completed_at = $attempts ? $attempts->sortByDesc('end_at')->first() : null;
+            $student->completed_at = $completed_at && $completed_at->end_at ? Carbon::parse($completed_at->end_at)->format('Y-m-d g:i A') : null;
+            $mark = $attempts ? $attempts->sortByDesc('mark')->first() : null;
+            $student->mark = $mark ? $mark->mark : null;
         }
         return $students;
     }

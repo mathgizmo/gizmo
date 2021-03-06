@@ -7,6 +7,7 @@ import {ClassesManagementService} from '../../../../../_services';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {TestReportResetAttemptDialogComponent} from './reset-attempt-dialog/test-report-reset-attempt-dialog.component';
+import * as moment from "moment/moment";
 
 @Component({
     selector: 'app-test-report-dialog',
@@ -130,6 +131,19 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
             this.students = data;
             return;
         }
+        const compare = (a: number | string, b: number | string, isAsc: boolean, isDate = false) => {
+            if (isDate) {
+                const aDate = moment(a, 'YYYY-MM-DD hh:mm A');
+                const bDate = moment(b, 'YYYY-MM-DD hh:mm A');
+                return (aDate.isBefore(bDate) ? -1 : 1) * (isAsc ? 1 : -1);
+            } else {
+                if (typeof a === 'string' || typeof b === 'string') {
+                    a = ('' + a).toLowerCase();
+                    b = ('' + b).toLowerCase();
+                }
+                return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+            }
+        };
         this.students = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
@@ -137,6 +151,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
                 case 'mark': return compare(a.mark, b.mark, isAsc);
                 case 'attempts_count': return compare(a.attempts_count, b.attempts_count, isAsc);
                 case 'resets_count': return compare(a.resets_count, b.resets_count, isAsc);
+                case 'completed_at': return compare(a.completed_at, b.completed_at, isAsc, true);
                 default: return 0;
             }
         });
@@ -149,12 +164,4 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
             this.dialogRef.close();
         } */
     }
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
