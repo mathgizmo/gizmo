@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1614866663555,
+  "timestamp": 1615159520213,
   "index": "/gizmo/index.html",
   "assetGroups": [
     {
@@ -14,14 +14,14 @@
         "/gizmo/canvg.25abf2567712288ebcc7.js",
         "/gizmo/favicon.ico",
         "/gizmo/index.html",
-        "/gizmo/main.2f676f0216f12cf2c69f.js",
+        "/gizmo/main.9a93c1aba514f98010b1.js",
         "/gizmo/manifest.webmanifest",
         "/gizmo/pdfmake.cf21bff01fd23bce756e.js",
         "/gizmo/polyfills-es5.122f0eb2c9b5704fba1d.js",
         "/gizmo/polyfills.a6b0903e6ce8671cfb24.js",
         "/gizmo/runtime.2fb9053d6dfb3b5a4096.js",
         "/gizmo/scripts.e0ad4063661e53b6aeb0.js",
-        "/gizmo/styles.853bb36d118d188e8e8e.css",
+        "/gizmo/styles.b08905ac464a59939d97.css",
         "/gizmo/xlsx.7b20422da86d8f85bc2f.js"
       ],
       "patterns": []
@@ -602,15 +602,15 @@
     "/gizmo/fontawesome-webfont.8b43027f47b20503057d.eot": "d980c2ce873dc43af460d4d572d441304499f400",
     "/gizmo/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg": "98a8aa5cf7d62c2eff5f07ede8d844b874ef06ed",
     "/gizmo/fontawesome-webfont.f691f37e57f04c152e23.woff": "28b782240b3e76db824e12c02754a9731a167527",
-    "/gizmo/index.html": "c3e84b08eec6092cad4629144394251899a0d1d4",
-    "/gizmo/main.2f676f0216f12cf2c69f.js": "8a6952fa88b215b6f4680e112190931b31618bd2",
+    "/gizmo/index.html": "bcdeedc317fa41cd6d8fcfdbc4358e2f7ee51d8f",
+    "/gizmo/main.9a93c1aba514f98010b1.js": "753e3029c49cbcb02883ac8371f8b94110a1dd99",
     "/gizmo/manifest.webmanifest": "76f0bd83fcb2ac568f286de2089dd5220fb6f464",
     "/gizmo/pdfmake.cf21bff01fd23bce756e.js": "d5c71bc8ccf95eca2979871ed8d363a171e00953",
     "/gizmo/polyfills-es5.122f0eb2c9b5704fba1d.js": "e74ed01eb1754388ed2b3bb372bf2f0b6eac9eca",
     "/gizmo/polyfills.a6b0903e6ce8671cfb24.js": "b7a66c103d63cf1301bed807fb4b6ac369240796",
     "/gizmo/runtime.2fb9053d6dfb3b5a4096.js": "1008e49b34149b31b7e2eaffbeb7ce7d7eac2505",
     "/gizmo/scripts.e0ad4063661e53b6aeb0.js": "300bc5cecdc966c055db07cf8189eb9685dd43d9",
-    "/gizmo/styles.853bb36d118d188e8e8e.css": "ffc0ab00f76732b727407e7aed2dd857cad162f2",
+    "/gizmo/styles.b08905ac464a59939d97.css": "ea5f7cbbd01fee6bd9257dda5e8aecfb652ba6d9",
     "/gizmo/xlsx.7b20422da86d8f85bc2f.js": "e399f04250be95b8f5151ff5a5292c205b7601b4"
   },
   "navigationUrls": [
