@@ -4,42 +4,47 @@ import { HttpService } from './http.service';
 
 @Injectable()
 export class TopicService {
-
-    private appId = +localStorage.getItem('app_id');
-
     constructor(
         private http: HttpService) {
     }
 
     // get topics from api
-    getTopics(app_id = null) {
-        this.appId = +localStorage.getItem('app_id'); // fix navigation to home from home
+    getTopics(assignmentId = null) {
         let url = '/topic';
-        if (this.appId) {
-            url += '?app_id=' + (app_id ? app_id : this.appId);
+        if (assignmentId > 0) {
+            url += '?class_app_id=' + assignmentId;
+        } else {
+            const appId = (assignmentId === 0 ? 0 : +localStorage.getItem('app_id')); // fix navigation to home from home
+            url += '?app_id=' + appId;
         }
         return this.http.get(url);
     }
 
     // get topic from api
-    getTopic(id, app_id = null) {
+    getTopic(id, assignmentId = null) {
         let url = '/topic/' + id;
-        if (this.appId || app_id) {
-            url += '?app_id=' + (app_id ? app_id : this.appId);
+        if (assignmentId > 0) {
+            url += '?class_app_id=' + assignmentId;
+        } else {
+            const appId = (assignmentId === 0 ? 0 : +localStorage.getItem('app_id'));
+            url += '?app_id=' + appId;
         }
         return this.http.get(url);
     }
 
     // get lesson from api
-    getLesson(topic_id, lesson_id, from_content_review = false, app_id = null) {
+    getLesson(topic_id, lesson_id, from_content_review = false, assignmentId = null) {
         let url = '/topic/' + topic_id;
         if (lesson_id === -1) {
             url += '/testout';
         } else {
             url += '/lesson/' + lesson_id;
         }
-        if (this.appId || app_id) {
-            url += '?app_id=' + (from_content_review ? 0 : (app_id ? app_id : this.appId));
+        if (assignmentId > 0) {
+            url += '?class_app_id=' + (from_content_review ? 0 : assignmentId);
+        } else {
+            const appId = (assignmentId === 0 ? 0 : +localStorage.getItem('app_id'));
+            url += '?app_id=' + (from_content_review ? 0 : appId);
         }
         return this.http.get(url);
     }

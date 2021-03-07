@@ -597,3 +597,11 @@ input[type="time"].form-control, input[type="date"].form-control {
     color: $navy !important;
   }
 }
+#testout-confident-level, #question-confident-level {
+  .question-container {
+    background: $white !important;
+  }
+  * {
+    color: $navy !important;
+  }
+}

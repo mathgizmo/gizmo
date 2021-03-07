@@ -12,12 +12,12 @@ import {environment} from '../../../../environments/environment';
 })
 
 export class TopicComponent implements OnInit {
-    backLinkText = 'Back';
-    topicTree: any = [];
-    id: number;
-    appId: number;
+    public backLinkText = 'Back';
+    public topicTree: any = [];
+    public id: number;
+    public assignmentId: number;
     private sub: any;
-    topicDone: boolean;
+    public topicDone: boolean;
 
     private readonly adminUrl = environment.adminUrl;
 
@@ -32,10 +32,10 @@ export class TopicComponent implements OnInit {
         this.topicDone = false;
         this.sub = this.route.params.subscribe(params => {
             this.id = +params['topic_id']; // (+) converts string 'id' to a number
-            this.appId = +params['app_id'] || +localStorage.getItem('app_id') || 0;
+            this.assignmentId = +params['assignment_id'] || -1;
             // In a real app: dispatch action to load the details here.
             // get topics tree from API
-            this.topicService.getTopic(this.id, this.appId)
+            this.topicService.getTopic(this.id, this.assignmentId)
                 .subscribe(topicTree => {
                     this.topicTree = topicTree;
                     localStorage.setItem('last-visited-unit-id', this.topicTree.unit_id + '');

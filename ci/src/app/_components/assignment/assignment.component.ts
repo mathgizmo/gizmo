@@ -17,7 +17,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 export class AssignmentComponent implements OnInit, OnDestroy {
     public topicsTree: any = [];
-    public appId: number;
+    public assignmentId: number;
     private readonly adminUrl = environment.adminUrl;
     private routerEvent;
     private sub: any;
@@ -32,7 +32,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            this.appId = +params['app_id'] || +localStorage.getItem('app_id') || 0;
+            this.assignmentId = +params['assignment_id'] || -1;
         });
         this.routerEvent = this.router.events.subscribe((evt) => {
             if (evt instanceof NavigationEnd) {
@@ -48,7 +48,7 @@ export class AssignmentComponent implements OnInit, OnDestroy {
 
     initData() {
         const user = this.authenticationService.userValue;
-        const result = this.topicService.getTopics(this.appId).pipe(
+        const result = this.topicService.getTopics(this.assignmentId).pipe(
             flatMap(topicsTree => {
                 this.topicsTree = topicsTree;
                 if (!isNaN(+localStorage.getItem('last-visited-unit-id'))) {

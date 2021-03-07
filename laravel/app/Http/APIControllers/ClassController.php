@@ -382,13 +382,24 @@ class ClassController extends Controller
                     )->where('app_id', $item->id)
                         ->whereIn('student_id', $item->students)
                         ->first();
+                    $class_tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                        DB::raw("SUM(1) as total"),
+                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                    )->where('class_app_id', $class_data->id)
+                        ->whereIn('student_id', $item->students)
+                        ->first();
                 } else {
                     $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
                         DB::raw("SUM(1) as total"),
                         DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
                     )->where('app_id', $item->id)->first();
+                    $class_tracking_questions_statistics = DB::table('students_tracking_questions')->select(
+                        DB::raw("SUM(1) as total"),
+                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                    )->where('class_app_id', $class_data->id)->first();
                 }
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
+                $item->class_error_rate = 1 - ($class_tracking_questions_statistics->total ? $class_tracking_questions_statistics->complete / $class_tracking_questions_statistics->total : 1);
             }
             $available = Application::where('teacher_id', $this->user->id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())
@@ -668,9 +679,10 @@ class ClassController extends Controller
                 $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id, $type) {
                     $q2->where('classes.id', intval($class_id));
                 })->where('type', $type);
-            }); /* ->whereHas('classApplication', function ($q1) use ($class_id) {
+            });
+            $query->whereHas('classApplication', function ($q1) use ($class_id) {
                 $q1->where('class_id', $class_id);
-            }); */
+            });
         }
         if (request()->has('student_id') && request('student_id')) {
             $query->where('student_id', request('student_id'));

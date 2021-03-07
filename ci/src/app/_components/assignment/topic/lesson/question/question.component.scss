@@ -145,10 +145,7 @@
 }
 
 /* White theme */
-.order-list .order-item {
-  color: $navy !important;
-}
-.question-container, .title, .subtitle, .question, .answer, .question *, .answer * {
+.order-list .order-item, .question-container, .title, .subtitle, .question, .answer, .question *, .answer * {
   color: $navy !important;
 }
 .question-container {

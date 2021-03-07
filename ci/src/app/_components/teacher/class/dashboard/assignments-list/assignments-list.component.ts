@@ -45,6 +45,9 @@ export class ClassAssignmentsListComponent implements OnInit {
                 case 'start_time': return compare(a.start_time, b.start_time, isAsc);
                 case 'due_date': return compare(a.due_date, b.due_date, isAsc);
                 case 'due_time': return compare(a.due_time, b.due_time, isAsc);
+                case 'progress': return compare(a.progress, b.progress, isAsc);
+                case 'error_rate': return compare(a.error_rate, b.error_rate, isAsc);
+                case 'class_error_rate': return compare(a.class_error_rate, b.class_error_rate, isAsc);
                 default: return 0;
             }
         });

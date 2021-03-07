@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\Application;
+use App\ClassApplication;
 use App\Lesson;
 use App\Level;
 use App\Setting;
@@ -18,6 +19,7 @@ class TopicController extends Controller
 
     private $student;
     private $app;
+    private $class_app;
 
     public function __construct()
     {
@@ -33,24 +35,30 @@ class TopicController extends Controller
         } catch (\Exception $e) {
             abort(401, 'Unauthorized!');
         }
-        if (request()->has('app_id')) {
-            $app_id = request('app_id');
-            if ($app_id == 0) {
-                $this->app = new Application();
-                $this->app->id = 0;
-                $this->app->name = 'Content Review';
-                $this->app->teacher_id = null;
-                $this->app->question_num = 0;
-                $this->app->testout_attempts = null;
-                $this->app->allow_any_order = true;
-            } else {
-                $this->app = Application::where('id', $app_id)->first();
-                if (!$this->app) {
-                    $this->app = Application::where('id', $this->student->app_id)->first();
+        if (request()->has('class_app_id')) {
+            $this->class_app = ClassApplication::where('id', request('class_app_id'))->first();
+            $this->app = $this->class_app ? Application::where('id', $this->class_app->app_id)->first() : null;
+        }
+        if (!$this->app) {
+            if (request()->has('app_id')) {
+                $app_id = request('app_id');
+                if ($app_id == 0) {
+                    $this->app = new Application();
+                    $this->app->id = 0;
+                    $this->app->name = 'Content Review';
+                    $this->app->teacher_id = null;
+                    $this->app->question_num = 0;
+                    $this->app->testout_attempts = null;
+                    $this->app->allow_any_order = true;
+                } else {
+                    $this->app = Application::where('id', $app_id)->first();
+                    if (!$this->app) {
+                        $this->app = Application::where('id', $this->student->app_id)->first();
+                    }
                 }
+            } else {
+                $this->app = Application::where('id', $this->student->app_id)->first();
             }
-        } else {
-            $this->app = Application::where('id', $this->student->app_id)->first();
         }
         if (!$this->app) {
             abort(453, 'Application Not Selected!');

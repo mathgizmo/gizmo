@@ -9,8 +9,9 @@
       <th mat-sort-header="start_time" scope="col">Start Time</th>
       <th mat-sort-header="due_date" scope="col">Due Date</th>
       <th mat-sort-header="due_time" scope="col">Due Time</th>
-      <th scope="col">Portion Completed</th>
-      <th scope="col">Error Rate</th>
+      <th mat-sort-header="progress" scope="col">Portion Completed</th>
+      <th mat-sort-header="class_error_rate" scope="col">Class related Error Rate</th>
+      <th mat-sort-header="error_rate" scope="col">Historical Error Rate</th>
     </tr>
     </thead>
     <tbody>
@@ -35,6 +36,10 @@
       <td>
         <span style="font-size: 0.8em;">{{(item.progress * item.students_count).toFixed(0)}}/{{item.students_count}}</span>
         <mat-progress-bar  mode="determinate" [value]="item.progress * 100"></mat-progress-bar>
+      </td>
+      <td>
+        <span style="font-size: 0.8em;">{{(item.class_error_rate * 100).toFixed(1)}}%</span>
+        <mat-progress-bar  mode="determinate" [value]="item.class_error_rate * 100"></mat-progress-bar>
       </td>
       <td>
         <span style="font-size: 0.8em;">{{(item.error_rate * 100).toFixed(1)}}%</span>

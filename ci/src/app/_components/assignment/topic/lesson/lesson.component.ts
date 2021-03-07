@@ -15,41 +15,41 @@ import { QuestionComponent } from './question/question.component';
     styleUrls: ['./lesson.component.scss']
 })
 export class LessonComponent implements OnInit, AfterViewChecked {
-    lessonTree: any = [];
-    topic_id: number;
-    next_topic_id: number;
-    lesson_id: number;
-    isChallenge: false;
-    appId: number;
+    public lessonTree: any = [];
+    public topic_id: number;
+    public next_topic_id: number;
+    public lesson_id: number;
+    public isChallenge: false;
+    public assignmentId: number;
 
     @ViewChildren(QuestionComponent)
     private questionComponents: QueryList<QuestionComponent>;
 
-    weak_questions: string[] = [];
-    start_time: any = '';
-    initial_loading = 1;
-    next = 0;
-    unfinishedLessonsCount = 0;
-    isUnfinished = false;
+    public weak_questions: string[] = [];
+    public start_time: any = '';
+    public initial_loading = 1;
+    public next = 0;
+    public unfinishedLessonsCount = 0;
+    public isUnfinished = false;
     private sub: any;
 
-    question_num = 3;
-    correct_answers: number;
-    complete_percent: number;
+    public question_num = 3;
+    public correct_answers: number;
+    public complete_percent: number;
 
-    incorrect_answers: number;
-    randomisation = true;
+    public incorrect_answers: number;
+    public randomisation = true;
 
-    question: any = null;
-    answers: string[] = null;
+    public question: any = null;
+    public answers: string[] = null;
 
-    all_questions: any = [];
-    current_question_index = 0;
+    public all_questions: any = [];
+    public current_question_index = 0;
 
-    dialogPosition: any;
+    public dialogPosition: any;
 
-    backLinkText = 'Back';
-    titleText = 'Lesson';
+    public backLinkText = 'Back';
+    public titleText = 'Lesson';
 
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
@@ -102,16 +102,16 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         this.incorrect_answers = 0;
         this.sub = this.route.params.subscribe(params => {
             if (this.fromContentReview) {
-                this.appId = 0;
+                this.assignmentId = 0;
             } else {
-                this.appId = +params['app_id'] || +localStorage.getItem('app_id') || 0;
+                this.assignmentId = +params['assignment_id'] || -1;
             }
             this.topic_id = +params['topic_id']; // (+) converts string 'id' to a number
             localStorage.setItem('last-visited-topic-id', this.topic_id + '');
             this.lesson_id = (params['lesson_id'] === 'testout') ? -1 :
                 +params['lesson_id']; // (+) converts string 'id' to a number
             // get lesson tree from API
-            this.topicService.getLesson(this.topic_id, this.lesson_id, this.fromContentReview, this.appId)
+            this.topicService.getLesson(this.topic_id, this.lesson_id, this.fromContentReview, this.assignmentId)
                 .subscribe(lessonTree => {
                     this.question_num = +lessonTree.question_num || 3;
                     if (this.lesson_id === -1) {
@@ -152,7 +152,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                         }
                         this.nextQuestion();
                         if (this.lesson_id !== -1) {
-                            this.trackingService.startLesson(this.lesson_id, this.appId)
+                            this.trackingService.startLesson(this.lesson_id, this.assignmentId)
                                 .subscribe(start_time => {
                                     this.start_time = start_time;
                                 });
@@ -195,7 +195,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 this.next = this.question.lesson_id;
                 this.next_title = this.question.lesson_title;
                 this.question = null;
-                this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions, this.appId)
+                this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions, this.assignmentId)
                     .subscribe( res => {
                         this.isAssignmentComplete = res['is_assignment_complete'];
                         if (this.isAssignmentComplete) {
@@ -257,7 +257,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.incorrect_answers++;
                 }
                 if (!this.fromContentReview) {
-                    this.trackingService.trackQuestionAnswer(this.question.id, isCorrect, this.appId).subscribe();
+                    this.trackingService.trackQuestionAnswer(this.question.id, isCorrect, this.assignmentId).subscribe();
                 }
             }
         };
@@ -265,7 +265,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
             if (this.incorrect_answers === 0) {
                 this.lessonTree['questions'] = [];
                 this.question = null;
-                this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions, this.appId)
+                this.trackingService.doneLesson(this.topic_id, this.lesson_id, this.start_time, this.weak_questions, this.assignmentId)
                     .subscribe(res => {
                         this.isAssignmentComplete = res['is_assignment_complete'];
                         if (this.isAssignmentComplete) {
@@ -321,7 +321,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
         }
         const isCorrect = this.isCorrect(answers);
         if (!this.fromContentReview) {
-            this.trackingService.trackQuestionAnswer(this.question.id, isCorrect, this.appId).subscribe();
+            this.trackingService.trackQuestionAnswer(this.question.id, isCorrect, this.assignmentId).subscribe();
         }
         if (isCorrect) {
             if (this.lesson_id === -1) {
@@ -368,7 +368,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 } else {
                     this.question = null;
                     this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions, this.appId).subscribe(res => {
+                        this.lesson_id, this.start_time, this.weak_questions, this.assignmentId).subscribe(res => {
                         this.isAssignmentComplete = res['is_assignment_complete'];
                         if (this.isAssignmentComplete) {
                             this.correctQuestionRate = +res['correct_question_rate'];
@@ -377,7 +377,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     });
                     if (this.lesson_id === -1 && !this.fromContentReview) {
                         this.trackingService.finishTestout(this.topic_id, null,
-                            this.start_time, this.weak_questions, this.appId)
+                            this.start_time, this.weak_questions, this.assignmentId)
                             .subscribe(res => {
                                 this.isAssignmentComplete = res['is_assignment_complete'];
                                 if (this.isAssignmentComplete) {
@@ -396,7 +396,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                     this.next_title = this.question.lesson_title;
                     this.question = null;
                     if (!this.fromContentReview) {
-                        this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions, this.appId)
+                        this.trackingService.finishTestout(this.topic_id, this.next, this.start_time, this.weak_questions, this.assignmentId)
                             .subscribe(res => {
                                 this.isAssignmentComplete = res['is_assignment_complete'];
                                 if (this.isAssignmentComplete) {
@@ -447,7 +447,7 @@ export class LessonComponent implements OnInit, AfterViewChecked {
                 } else {
                     this.question = null;
                     this.trackingService.doneLesson(this.topic_id,
-                        this.lesson_id, this.start_time, this.weak_questions, this.appId).subscribe(res => {
+                        this.lesson_id, this.start_time, this.weak_questions, this.assignmentId).subscribe(res => {
                         this.isAssignmentComplete = res['is_assignment_complete'];
                         if (this.isAssignmentComplete) {
                             this.correctQuestionRate = +res['correct_question_rate'];

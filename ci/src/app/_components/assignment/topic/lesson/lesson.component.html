@@ -1,4 +1,4 @@
-﻿<a routerLink="/assignment/{{appId}}/topic/{{topic_id}}" routerLinkActive="active" class="back" *ngIf="!fromContentReview">
+﻿<a routerLink="/assignment/{{assignmentId}}/topic/{{topic_id}}" routerLinkActive="active" class="back" *ngIf="!fromContentReview">
     {{backLinkText}}
 </a>
 <a routerLink="/teacher/review-content" routerLinkActive="active" class="back" *ngIf="fromContentReview">
@@ -78,7 +78,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/assignment/{{appId}}/topic/{{topic_id}}/lesson/{{next}}"
+                    routerLink="/assignment/{{assignmentId}}/topic/{{topic_id}}/lesson/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0 && !isChallenge">
                 <button
@@ -90,7 +90,7 @@
             </a>
             <a
                     class="button-container"
-                    routerLink="/assignment/{{appId}}"
+                    routerLink="/assignment/{{assignmentId}}"
                     routerLinkActive="active"
                     *ngIf="(next == 0 || isChallenge) && !next_topic_id">
                 <button
@@ -102,7 +102,7 @@
             </a>
             <a
                     class="button-container"
-                    routerLink="/assignment/{{appId}}/topic/{{next_topic_id}}"
+                    routerLink="/assignment/{{assignmentId}}/topic/{{next_topic_id}}"
                     routerLinkActive="active"
                     *ngIf="(next == 0 || isChallenge) && next_topic_id">
                 <button
@@ -120,7 +120,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/assignment/{{appId}}/topic/{{next}}"
+                    routerLink="/assignment/{{assignmentId}}/topic/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0">
                 <button
@@ -132,7 +132,7 @@
             </a>
             <a
                     class="button-container"
-                    routerLink="/assignment/{{appId}}"
+                    routerLink="/assignment/{{assignmentId}}"
                     routerLinkActive="active"
                     *ngIf="next == 0">
                 <button
@@ -150,7 +150,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/assignment/{{appId}}/topic/{{next}}"
+                    routerLink="/assignment/{{assignmentId}}/topic/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0">
                 <button
@@ -170,7 +170,7 @@
             </div>
             <a
                     class="button-container"
-                    routerLink="/assignment/{{appId}}/topic/{{topic_id}}/lesson/{{next}}"
+                    routerLink="/assignment/{{assignmentId}}/topic/{{topic_id}}/lesson/{{next}}"
                     routerLinkActive="active"
                     *ngIf="next != 0">
                 <button

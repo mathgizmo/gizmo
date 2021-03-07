@@ -14,7 +14,7 @@ import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {ClassReportComponent, ManageAssignmentsComponent, ManageTestsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent, ClassToDoComponent} from './_components/teacher/index';
+    ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent} from './_components/teacher/index';
 
 const authRoutes = [
     {path: 'welcome', component: WelcomeComponent},
@@ -40,7 +40,6 @@ const teacherRoutes = [
     {path: 'teacher/class/:class_id/threads', component: ClassThreadsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/students', component: ClassStudentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/to-do', component: ClassToDoComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
 ];
 
 const studentRoutes = [
@@ -54,9 +53,9 @@ const studentRoutes = [
 const routes: Routes = [
     ...authRoutes,
     {path: '', component: AssignmentComponent, canActivate: [AuthGuard]},
-    {path: 'assignment/:app_id', component: AssignmentComponent, canActivate: [AuthGuard]},
-    {path: 'assignment/:app_id/topic/:topic_id', component: TopicComponent, canActivate: [AuthGuard]},
-    {path: 'assignment/:app_id/topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
+    {path: 'assignment/:assignment_id', component: AssignmentComponent, canActivate: [AuthGuard]},
+    {path: 'assignment/:assignment_id/topic/:topic_id', component: TopicComponent, canActivate: [AuthGuard]},
+    {path: 'assignment/:assignment_id/topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
     {path: 'test/:test_id', component: TestComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},

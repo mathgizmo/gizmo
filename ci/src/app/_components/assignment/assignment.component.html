@@ -11,7 +11,7 @@
         </i>
         <div [id]="'unit'+unit.id+'-topics'" style="display: none;">
           <div *ngFor="let topic of unit.topics; let topicIndex = 'index'" class="topics-container" [class.locked]="topic.status == 0 ? true : null" [id]="'topic'+topic.id">
-            <a [routerLink]="topic.status == 0 ? '' : '/assignment/'+appId+'/topic/'+topic.id" routerLinkActive="active" [class.disabled]="topic.status == 0 ? true : null" class="topic">
+            <a [routerLink]="topic.status == 0 ? '' : '/assignment/'+assignmentId+'/topic/'+topic.id" routerLinkActive="active" [class.disabled]="topic.status == 0 ? true : null" class="topic">
               <div [class.complete]="topic.status == 1 ? true : null" class="topic-img" [style.background-image]="setTopicIcon(topic.icon_src)">
               </div>
               <!-- Old template with 2 different images
