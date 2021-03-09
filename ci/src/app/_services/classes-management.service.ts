@@ -103,6 +103,27 @@ export class ClassesManagementService {
         return this.http.put('/classes/' + class_id + '/students/' + item.id, item);
     }
 
+    public getTeachers(class_id) {
+        return this.http.get('/classes/' + class_id + '/teachers');
+    }
+
+    public addTeacher(class_id, teacher_id) {
+        return this.http.post('/classes/' + class_id + '/teachers/' + teacher_id)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                })
+            );
+    }
+
+    public changeTeacher(class_id, item) {
+        return this.http.put('/classes/' + class_id + '/teachers/' + item.id, item);
+    }
+
+    public deleteTeacher(class_id, teacher_id) {
+        return this.http.delete('/classes/' + class_id + '/teachers/' + teacher_id);
+    }
+
     public getAssignments(class_id) {
         return this.http.get('/classes/' + class_id + '/assignments');
     }
@@ -181,15 +202,6 @@ export class ClassesManagementService {
 
     public getReport(class_id) {
         return this.http.get('/classes/' + class_id + '/report');
-    }
-
-    public getToDos(class_id) {
-        return this.http.get('/classes/' + class_id + '/todo')
-            .pipe(
-                map((response: Response) => {
-                    return response['items'];
-                })
-            );
     }
 
     getAnswersStatistics(class_id, student_id = null, app_id = null, date_from = null, date_to = null, type = 'assignment') {

@@ -309,6 +309,7 @@ class ProfileController extends Controller
             $teacher = Student::where('id', $item->teacher_id)->first();
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
             $item->teacher_email = $teacher ? $teacher->email : '';
+            $item->teachers = $item->teachers()->get(['students.id', 'students.email', 'students.first_name', 'students.last_name']);
         }
         $available_classes = ClassOfStudents::where(function ($q1) use ($student) {
             $q1->where('subscription_type', 'open')->orWhere(function ($q2) use ($student) {
@@ -328,6 +329,8 @@ class ProfileController extends Controller
             }
             $teacher = Student::where('id', $item->teacher_id)->first();
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
+            $item->teacher_email = $teacher ? $teacher->email : '';
+            $item->teachers = $item->teachers()->get(['students.id', 'students.email', 'students.first_name', 'students.last_name']);
         }
         return $this->success([
             'my_classes' => array_values($my_classes->toArray()),

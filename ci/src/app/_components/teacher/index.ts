@@ -17,6 +17,7 @@ export * from './class/tests/class-tests.component';
 export * from './class/students/class-students.component';
 export * from './class/students/student-assignments-dialog/student-assignments-dialog.component';
 export * from './class/students/add-student-dialog/add-student-dialog.component';
+export * from './class/teachers/class-teachers.component';
 export * from './class/assignments/edit-assignment-dialog/edit-class-assignment-dialog.component';
 export * from './class/assignments/assignment-report-dialog/assignment-report-dialog.component';
 export * from './class/tests/edit-test-dialog/edit-class-test-dialog.component';

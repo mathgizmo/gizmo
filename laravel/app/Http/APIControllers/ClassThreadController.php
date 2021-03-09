@@ -29,9 +29,7 @@ class ClassThreadController extends Controller
 
     public function index(Request $request, $class_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404); }
         $threads = ClassThread::where('class_id', $class_id)->orderBy('updated_at', 'DESC')->get();
         $threads = $threads->map(function ($thread) {
             $student = Student::where('id', $thread->student_id)->first();
@@ -56,9 +54,7 @@ class ClassThreadController extends Controller
 
     public function store(Request $request, $class_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404); }
         try {
             $item = ClassThread::create([
                 'class_id' => $class_id,
@@ -87,9 +83,7 @@ class ClassThreadController extends Controller
 
     public function update(Request $request, $class_id, $thread_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404); }
         try {
             $user = $this->user;
             $thread = ClassThread::where('id', $thread_id)->where(function ($q) use ($user) {
@@ -109,9 +103,7 @@ class ClassThreadController extends Controller
 
     public function destroy(Request $request, $class_id, $thread_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404); }
         try {
             $user = $this->user;
             $thread = ClassThread::where('id', $thread_id)->where(function ($q) use ($user) {
@@ -130,9 +122,7 @@ class ClassThreadController extends Controller
 
     public function getReplies(Request $request, $class_id, $thread_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404); }
         $items = ClassThreadReply::where('thread_id', $thread_id)
             ->orderBy('updated_at', 'DESC')->get();
         $items = $items->map(function ($item) {
@@ -155,9 +145,7 @@ class ClassThreadController extends Controller
 
     public function storeReply(Request $request, $class_id, $thread_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404); }
         try {
             $item = ClassThreadReply::create([
                 'thread_id' => $thread_id,
@@ -184,9 +172,7 @@ class ClassThreadController extends Controller
 
     public function updateReply(Request $request, $class_id, $thread_id, $reply_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404); }
         try {
             $user = $this->user;
             $reply = ClassThreadReply::where('id', $reply_id)->where(function ($q) use ($user) {
@@ -205,9 +191,7 @@ class ClassThreadController extends Controller
 
     public function destroyReply(Request $request, $class_id, $thread_id, $reply_id) {
         $class = $this->getClass($class_id);
-        if (!$class) {
-            return$this->error('Not Found!', 404);
-        }
+        if (!$class) { return$this->error('Not Found!', 404);}
         try {
             $user = $this->user;
             $reply = ClassThreadReply::where('id', $reply_id)->where(function ($q) use ($user) {
@@ -226,7 +210,14 @@ class ClassThreadController extends Controller
     private function getClass($class_id) {
         $user_id = $this->user->id;
         if ($this->user->isTeacher()) {
-            $class = ClassOfStudents::where('teacher_id', $user_id)->where('id', $class_id)->first();
+            $class = ClassOfStudents::where('id', $class_id)
+                ->where(function ($q1) use($user_id) {
+                    $q1->where('classes.teacher_id', $user_id)
+                        ->orWhereHas('teachers', function ($q2) use($user_id) {
+                            $q2->where('students.id', $user_id);
+                        });
+                })
+                ->first();
         } else {
             $class = ClassOfStudents::whereHas('students', function ($q) use ($user_id) {
                 $q->where('students.id', $user_id);

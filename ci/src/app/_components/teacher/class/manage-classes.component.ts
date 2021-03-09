@@ -1,20 +1,23 @@
 import {Component, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
-import {ClassesManagementService} from '../../../_services/classes-management.service';
 import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.component';
 import {EmailClassDialogComponent} from './email-class-dialog/email-class-dialog.component';
 import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {ClassesManagementService, AuthenticationService} from '../../../_services';
+import {User} from '../../../_models';
 
 @Component({
     selector: 'app-manage-classes',
     templateUrl: './manage-classes.component.html',
     styleUrls: ['./manage-classes.component.scss'],
-    providers: [ClassesManagementService]
+    providers: [ClassesManagementService, AuthenticationService]
 })
 export class ManageClassesComponent implements OnInit {
+
+    public user: User;
 
     public classes = [];
 
@@ -28,8 +31,11 @@ export class ManageClassesComponent implements OnInit {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
-    constructor(private classService: ClassesManagementService, public dialog: MatDialog,
-                private deviceService: DeviceDetectorService, public snackBar: MatSnackBar) {
+    constructor(private classService: ClassesManagementService,
+                private authenticationService: AuthenticationService,
+                public dialog: MatDialog,
+                private deviceService: DeviceDetectorService,
+                public snackBar: MatSnackBar) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -37,6 +43,7 @@ export class ManageClassesComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.user = this.authenticationService.userValue;
         this.classService.getClasses()
             .subscribe(response => {
                 this.classes = response;

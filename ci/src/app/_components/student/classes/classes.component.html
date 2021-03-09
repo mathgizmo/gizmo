@@ -17,8 +17,20 @@
                 <tr *ngFor="let item of myClasses">
                     <td>{{item.id}}</td>
                     <td>{{item.name}}</td>
-                    <td>{{item.teacher}}</td>
-                    <td class="text-right" style="min-width: 370px;">
+                    <td *ngIf="!item.teachers.length">{{item.teacher}} ({{item.teacher_email}})</td>
+                    <td *ngIf="item.teachers.length">
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            {{item.teacher}} ({{item.teacher_email}})
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <div>Co-teachers:</div>
+                            <button *ngFor="let teacher of item.teachers" mat-menu-item>
+                                {{teacher.first_name}} {{teacher.last_name}} ({{teacher.email}})
+                            </button>
+                        </mat-menu>
+                    </td>
+                    <td class="text-right" style="min-width: 480px;">
                         <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEmail(item)">Email</button>
                         <a class="button button-small button-outline" mat-stroked-button routerLink="/student/class/{{item.id}}/threads" style="margin-right: 8px;">Discussion</a>
                         <a class="button button-small button-outline" mat-stroked-button routerLink="/student/class/{{item.id}}/report" style="margin-right: 8px;">Report</a>
@@ -72,7 +84,19 @@
                 <tr *ngFor="let item of availableClasses | tableFilter: form.value">
                     <td>{{item.id}}</td>
                     <td>{{item.name}}</td>
-                    <td>{{item.teacher}}</td>
+                    <td *ngIf="!item.teachers.length">{{item.teacher}} ({{item.teacher_email}})</td>
+                    <td *ngIf="item.teachers.length">
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            {{item.teacher}} ({{item.teacher_email}})
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <div>Co-teachers:</div>
+                            <button *ngFor="let teacher of item.teachers" mat-menu-item>
+                                {{teacher.first_name}} {{teacher.last_name}} ({{teacher.email}})
+                            </button>
+                        </mat-menu>
+                    </td>
                     <td class="text-right">
                         <button class="button button-small button-outline" mat-stroked-button (click)="onSubscribe(item.id)">Subscribe</button>
                     </td>

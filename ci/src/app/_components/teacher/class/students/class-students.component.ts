@@ -17,16 +17,16 @@ import {DeleteConfirmationDialogComponent} from '../../../dialogs/index';
 })
 export class ClassStudentsComponent implements OnInit {
 
-    classId: number;
-    class = {
+    public classId: number;
+    public class = {
+        id: 0,
         name: ''
     };
-
-    students = [];
+    public students = [];
 
     public email: string;
 
-    dialogPosition: any;
+    public dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
@@ -136,6 +136,13 @@ export class ClassStudentsComponent implements OnInit {
             this.students = data;
             return;
         }
+        const compare = (a: number | string, b: number | string, isAsc: boolean) => {
+            if (typeof a === 'string' || typeof b === 'string') {
+                a = ('' + a).toLowerCase();
+                b = ('' + b).toLowerCase();
+            }
+            return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+        };
         this.students = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
@@ -158,12 +165,4 @@ export class ClassStudentsComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {});
     }
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

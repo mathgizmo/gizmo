@@ -48,15 +48,25 @@ td {
   overflow: hidden;
 }
 
+::ng-deep .mat-icon-button {
+  font-size: unset !important;
+}
+
 @media screen and (max-width: 1100px) {
-  .button, button {
+  .button {
     font-size: 14px !important;
+  }
+  ::ng-deep .mat-icon-button {
+    font-size: unset !important;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .button, button {
+  .button {
     font-size: 12px !important;
+  }
+  ::ng-deep .mat-icon-button {
+    font-size: unset !important;
   }
   .table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th {
     white-space: normal !important;
@@ -67,8 +77,11 @@ td {
   .profile-classes {
     width: 96vw;
   }
-  .button, button {
+  .button {
     font-size: 9px !important;
+  }
+  ::ng-deep .mat-icon-button {
+    font-size: unset !important;
   }
   .table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th {
     white-space: normal !important;

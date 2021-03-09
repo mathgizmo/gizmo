@@ -41,8 +41,15 @@ class ClassController extends Controller
     }
 
     public function all() {
+        $user_id = $this->user->id;
+        $items = ClassOfStudents::where(function ($q1) use($user_id) {
+            $q1->where('classes.teacher_id', $user_id)
+                ->orWhereHas('teachers', function ($q2) use($user_id) {
+                    $q2->where('students.id', $user_id);
+                });
+        })->get();
         return $this->success([
-            'items' => array_values(ClassOfStudents::where('teacher_id', $this->user->id)->get()->toArray())
+            'items' => array_values($items->toArray())
         ]);
     }
 
@@ -64,7 +71,14 @@ class ClassController extends Controller
 
     public function update($class_id) {
         try {
-            $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+            $user_id = $this->user->id;
+            $class = ClassOfStudents::where('id', $class_id)
+                ->where(function ($q1) use($user_id) {
+                    $q1->where('classes.teacher_id', $user_id)
+                        ->orWhereHas('teachers', function ($q2) use($user_id) {
+                            $q2->where('students.id', $user_id);
+                        });
+                })->first();
             if ($class) {
                 if (request()->has('name')) {
                     $class->name = request('name');
@@ -101,15 +115,16 @@ class ClassController extends Controller
     public function emailClass(Request $request, $class_id) {
         $user = $this->user;
         $class = ClassOfStudents::where('id', $class_id)->first();
-        if (!$class) {
-            return $this->error('Class not found.', 404);
-        }
+        if (!$class) { return $this->error('Class not found!', 404); }
         if ($user->isTeacher()) {
             $emails = request('for_all_students')
                 ? array_values($class->students->pluck('email')->toArray())
                 : request('students');
         } else {
-            $emails = [$class->teacher->email];
+            $teachers = $class->teachers()
+                ->where('receive_emails_from_students', true)
+                ->pluck('email')->toArray();
+            $emails = array_merge([$class->teacher->email], array_values($teachers));
         }
         if (config('app.env') == 'production') {
             foreach ($emails as $email) {
@@ -123,7 +138,14 @@ class ClassController extends Controller
 
     public function getStudents($class_id) {
         $show_extra = request()->filled('extra') && request('extra') == 'true' ? true : false;
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
         if ($class) {
             $students = $class->students()->orderBy('email')
                 ->get([
@@ -214,12 +236,19 @@ class ClassController extends Controller
     }
 
     public function addStudents(Request $request, $class_id) {
+        $user_id = $this->user->id;
         $request_emails = request('email');
         if (!$request_emails) {
             return $this->error('Email is required', 400);
         }
         $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $request_emails))));
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
         if (!$class) { return $this->error('Class not found.', 404); }
         $students = [];
         foreach ($emails as $email) {
@@ -291,6 +320,15 @@ class ClassController extends Controller
     }
 
     public function updateStudent(Request $request, $class_id, $student_id) {
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
         DB::table('classes_students')
             ->where('class_id', $class_id)
             ->where('student_id', $student_id)
@@ -301,11 +339,96 @@ class ClassController extends Controller
     }
 
     public function deleteStudent($class_id, $student_id) {
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
         DB::table('classes_students')
             ->where('class_id', $class_id)
             ->where('student_id', $student_id)
             ->delete();
         return $this->success('deleted');
+    }
+
+    public function getTeachers($class_id) {
+        $class = ClassOfStudents::where('id', $class_id)->first();
+        if ($class) {
+            $items = $class->teachers()->orderBy('email', 'ASC')->get()->keyBy('id');
+            foreach ($items as $item) {
+                $class_data = DB::table('classes_teachers')
+                    ->where('class_id', $class_id)
+                    ->where('student_id', $item->id)
+                    ->first();
+                $item->receive_emails_from_students = $class_data->receive_emails_from_students;
+            }
+            $available = Student::where('is_teacher', true)
+                ->whereNotIn('id', $items->pluck('id')->toArray())
+                ->where('id', '<>', $this->user->id)
+                ->orderBy('email', 'ASC')->get();
+            $main_teacher = $class->teacher;
+            $main_teacher->receive_emails_from_students = 1;
+            return $this->success([
+                'teachers' => array_merge([$main_teacher], array_values($items->toArray())),
+                'available_teachers' => array_values($available->toArray())
+            ]);
+        }
+        return $this->error('Error.', 500);
+    }
+
+    public function addTeacherToClass($class_id, $teacher_id) {
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where('teacher_id', $this->user->id
+            )->first();
+        $exists = DB::table('classes_teachers')
+            ->where('class_id', $class_id)
+            ->where('student_id', $teacher_id)
+            ->first();
+        $teacher = Student::where('id', $teacher_id)->where('is_teacher', true)->first();
+        if (!$teacher) {
+            return $this->error('Teacher not found!', 404);
+        }
+        if ($class && !$exists) {
+            DB::table('classes_teachers')->insert([
+                'class_id' => $class->id,
+                'student_id' => $teacher_id,
+            ]);
+            $item = DB::table('classes_teachers')
+                ->where('class_id', $class->id)
+                ->where('student_id', $teacher_id)
+                ->first();
+            return $this->success(['item' => $item ?: null]);
+        }
+        return $this->error('Error.');
+    }
+
+    public function updateTeacher(Request $request, $class_id, $teacher_id) {
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $user_id)->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
+        DB::table('classes_teachers')
+            ->where('class_id', $class_id)
+            ->where('student_id', $teacher_id)
+            ->update([
+                'receive_emails_from_students' => $request['receive_emails_from_students'] ? true : false
+            ]);
+        return $this->success('updated!', 200);
+    }
+
+    public function deleteTeacherFromClass($class_id, $teacher_id) {
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        if ($class) {
+            DB::table('classes_teachers')
+                ->where('class_id', $class->id)
+                ->where('student_id', $teacher_id)
+                ->delete();
+            return $this->success('Ok.');
+        }
+        return $this->error('Error.');
     }
 
     public function getReport(Request $request, $class_id) {
@@ -416,19 +539,26 @@ class ClassController extends Controller
     }
 
     public function changeAssignment($class_id, $app_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-        if ($class) {
-            DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)
-                ->update([
-                    'start_date' => request('start_date') ?: null,
-                    'start_time' => request('start_time') ?: null,
-                    'due_date' => request('due_date') ?: null,
-                    'due_time' => request('due_time') ?: null,
-                    'color' => request('color') ?: null
-                ]);
-            return $this->success('Ok.');
-        }
-        return $this->error('Error.');
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
+        DB::table('classes_applications')
+            ->where('class_id', $class->id)
+            ->where('app_id', $app_id)
+            ->update([
+                'start_date' => request('start_date') ?: null,
+                'start_time' => request('start_time') ?: null,
+                'due_date' => request('due_date') ?: null,
+                'due_time' => request('due_time') ?: null,
+                'color' => request('color') ?: null
+            ]);
+        return $this->success('Ok.');
     }
 
     public function getTests($class_id) {
@@ -505,22 +635,27 @@ class ClassController extends Controller
     }
 
     public function changeTest($class_id, $app_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-        if ($class) {
-            DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)
-                ->update([
-                    'start_date' => request('start_date') ?: null,
-                    'start_time' => request('start_time') ?: null,
-                    'due_date' => request('due_date') ?: null,
-                    'due_time' => request('due_time') ?: null,
-                    'duration' => request('duration') ? (request('duration') * 60) : null, // minutes to seconds
-                    'password' => request('password') ?: null,
-                    'attempts' => request('attempts') ?: 1,
-                    'color' => request('color') ?: null
-                ]);
-            return $this->success('Ok.');
-        }
-        return $this->error('Error.');
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
+        DB::table('classes_applications')->where('class_id', $class->id)->where('app_id', $app_id)
+            ->update([
+                'start_date' => request('start_date') ?: null,
+                'start_time' => request('start_time') ?: null,
+                'due_date' => request('due_date') ?: null,
+                'due_time' => request('due_time') ?: null,
+                'duration' => request('duration') ? (request('duration') * 60) : null, // minutes to seconds
+                'password' => request('password') ?: null,
+                'attempts' => request('attempts') ?: 1,
+                'color' => request('color') ?: null
+            ]);
+        return $this->success('Ok.');
     }
 
     public function addApplicationToClass($class_id, $app_id) {
@@ -528,7 +663,15 @@ class ClassController extends Controller
         if (request()->filled('students') && request('students')) {
             $students = Student::whereIn('id', request('students'))->get();
         }
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
         $exists = DB::table('classes_applications')->where('class_id', $class_id)->where('app_id', $app_id)->first();
         $app = Application::where('id', $app_id)->first();
         if (!$app) {
@@ -564,10 +707,15 @@ class ClassController extends Controller
     }
 
     public function changeApplicationStudents($class_id, $app_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-        if (!$class) {
-            return $this->error('Class Not Found', 404);
-        }
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
         $class_app = DB::table('classes_applications')
             ->where('class_id', $class->id)
             ->where('app_id', $app_id)->first();
@@ -602,67 +750,27 @@ class ClassController extends Controller
     }
 
     public function deleteApplicationFromClass($class_id, $app_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
-        if ($class) {
-            $item = DB::table('classes_applications')
-                ->where('class_id', $class->id)
-                ->where('app_id', $app_id)
-                ->first();
-            if ($item) {
-                DB::table('classes_applications_students')->where('class_app_id', $item->id)->delete();
-            }
-            DB::table('classes_applications')
-                ->where('class_id', $class->id)
-                ->where('app_id', $app_id)
-                ->delete();
-            return $this->success('Ok.');
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
+        $item = DB::table('classes_applications')
+            ->where('class_id', $class->id)
+            ->where('app_id', $app_id)
+            ->first();
+        if ($item) {
+            DB::table('classes_applications_students')->where('class_app_id', $item->id)->delete();
         }
-        return $this->error('Error.');
-    }
-
-    public function getToDos($class_id) {
-        $student = $this->user;
-        $class = ClassOfStudents::where('id', $class_id)->first();
-        if (!$class) {
-            return $this->error('Class not found.', 404);
-        }
-        $items = [];
-        foreach (DB::table('classes_applications')->where('class_id', $class_id)->get() as $row) {
-            $item = Application::where('id', $row->app_id)->where('type', 'assignment')->first();
-            if (!$item) {
-                continue;
-            }
-            if ($item) {
-                $item->class = $class;
-                $item->icon = $item->icon();
-                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
-                        ->where('student_id', $student->id)->count() > 0;
-                if ($row->due_date) {
-                    $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
-                } else {
-                    $due_at = null;
-                }
-                $item->start_time = $row->start_time ?: '00:00:00';
-                $item->start_date = $row->start_date;
-                $item->due_time = $row->due_time ?: '00:00:00';
-                $item->due_date = $row->due_date;
-                $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                $now = Carbon::now()->toDateTimeString();
-                if ($row->start_date) {
-                    $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
-                } else {
-                    $start_at = null;
-                }
-                $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
-                $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
-                $completed_at = $item->getCompletedDate($student->id);
-                $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
-                array_push($items, $item);
-            }
-        }
-        return $this->success([
-            'items' => array_values(collect($items)->sortBy('due_at')->toArray())
-        ]);
+        DB::table('classes_applications')
+            ->where('class_id', $class->id)
+            ->where('app_id', $app_id)
+            ->delete();
+        return $this->success('Ok.');
     }
 
     public function getAnswersStatistics($class_id) {
@@ -736,12 +844,19 @@ class ClassController extends Controller
     }
 
     public function getTestReport($class_id, $app_id) {
+        $user_id = $this->user->id;
         $class = ClassOfStudents::where('id', $class_id)
-            ->where('teacher_id', $this->user->id)->first();
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
         $class_app = ClassApplication::where('class_id', $class_id)
             ->where('app_id', $app_id)->first();
-        if (!$class || !$class_app) {
-            return $this->error('Not Found!', 404);
+        if (!$class_app) {
+            return $this->error('Test not found!', 404);
         }
         $students = $this->getTestReportData($class, $class_app);
         return $this->success([
@@ -751,7 +866,15 @@ class ClassController extends Controller
 
     public function resetTestProgress(Request $request, $class_id, $app_id, $student_id) {
         $student = Student::where('id', $student_id)->first();
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
         $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
         $test_student = $class_app ? $class_app->classApplicationStudents()->where('student_id', $student_id)->first() : null;
         if ($class && $class_app && $student && $test_student) {
@@ -789,7 +912,13 @@ class ClassController extends Controller
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
         if ($this->user->isTeacher()) {
-            $class_query->where('teacher_id', $this->user->id);
+            $user_id = $this->user->id;
+            $class_query->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            });
         } else {
             $student = $this->user;
             $student_id = $student->id;
@@ -823,7 +952,13 @@ class ClassController extends Controller
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
         if ($this->user->isTeacher()) {
-            $class_query->where('teacher_id', $this->user->id);
+            $user_id = $this->user->id;
+            $class_query->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            });
         } else {
             $student = $this->user;
             $student_id = $student->id;
@@ -871,11 +1006,15 @@ class ClassController extends Controller
     }
 
     public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
+        $user_id = $this->user->id;
         $class = ClassOfStudents::where('id', $class_id)
-            ->where('teacher_id', $this->user->id)->first();
-        if (!$class) {
-            return $this->error('Not Found!', 404);
-        }
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found!', 404); }
         $students = $class->students()->orderBy('email', 'ASC')->get(['email']);
         $tests = [];
         foreach ($class->classApplications()->whereHas('test')->orderBy('start_date', 'ASC')->get() as $class_app) {
@@ -950,7 +1089,13 @@ class ClassController extends Controller
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
         if ($is_teacher) {
-            $class_query->where('teacher_id', $this->user->id);
+            $user_id = $this->user->id;
+            $class_query->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            });
         }
         $class = $class_query->first();
         if ($class) {
@@ -1221,4 +1366,49 @@ class ClassController extends Controller
         }
         return $levels;
     }
+
+    /* public function getToDos($class_id) {
+        $student = $this->user;
+        $class = ClassOfStudents::where('id', $class_id)->first();
+        if (!$class) {
+            return $this->error('Class not found.', 404);
+        }
+        $items = [];
+        foreach (DB::table('classes_applications')->where('class_id', $class_id)->get() as $row) {
+            $item = Application::where('id', $row->app_id)->where('type', 'assignment')->first();
+            if (!$item) {
+                continue;
+            }
+            if ($item) {
+                $item->class = $class;
+                $item->icon = $item->icon();
+                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
+                        ->where('student_id', $student->id)->count() > 0;
+                if ($row->due_date) {
+                    $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
+                } else {
+                    $due_at = null;
+                }
+                $item->start_time = $row->start_time ?: '00:00:00';
+                $item->start_date = $row->start_date;
+                $item->due_time = $row->due_time ?: '00:00:00';
+                $item->due_date = $row->due_date;
+                $item->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+                $now = Carbon::now()->toDateTimeString();
+                if ($row->start_date) {
+                    $start_at = $row->start_time ? $row->start_date.' '.$row->start_time : $row->start_date.' 00:00:00';
+                } else {
+                    $start_at = null;
+                }
+                $item->is_blocked = ($start_at && $now < $start_at) || ($due_at && $now > $due_at);
+                $item->start_at = $start_at && $now < $start_at ? Carbon::parse($start_at)->format('Y-m-d g:i A') : null;
+                $completed_at = $item->getCompletedDate($student->id);
+                $item->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+                array_push($items, $item);
+            }
+        }
+        return $this->success([
+            'items' => array_values(collect($items)->sortBy('due_at')->toArray())
+        ]);
+    } */
 }

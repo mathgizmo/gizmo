@@ -63,7 +63,9 @@ $api->version('v1', function ($api) {
         $api->post('/classes', 'App\Http\APIControllers\ClassController@store');
         $api->put('/classes/{class_id}', 'App\Http\APIControllers\ClassController@update');
         $api->delete('/classes/{class_id}', 'App\Http\APIControllers\ClassController@delete');
+
         $api->post('/classes/{class_id}/email', 'App\Http\APIControllers\ClassController@emailClass');
+
         $api->get('/classes/{class_id}/threads', 'App\Http\APIControllers\ClassThreadController@index');
         $api->post('/classes/{class_id}/threads', 'App\Http\APIControllers\ClassThreadController@store');
         $api->put('/classes/{class_id}/threads/{thread_id}', 'App\Http\APIControllers\ClassThreadController@update');
@@ -72,10 +74,17 @@ $api->version('v1', function ($api) {
         $api->post('/classes/{class_id}/threads/{thread_id}/reply', 'App\Http\APIControllers\ClassThreadController@storeReply');
         $api->put('/classes/{class_id}/threads/{thread_id}/reply/{reply_id}', 'App\Http\APIControllers\ClassThreadController@updateReply');
         $api->delete('/classes/{class_id}/threads/{thread_id}/reply/{reply_id}', 'App\Http\APIControllers\ClassThreadController@destroyReply');
+
         $api->get('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@getStudents');
         $api->post('/classes/{class_id}/students', 'App\Http\APIControllers\ClassController@addStudents');
         $api->put('/classes/{class_id}/students/{student_id}', 'App\Http\APIControllers\ClassController@updateStudent');
         $api->delete('/classes/{class_id}/students/{student_id}', 'App\Http\APIControllers\ClassController@deleteStudent');
+
+        $api->get('/classes/{class_id}/teachers', 'App\Http\APIControllers\ClassController@getTeachers');
+        $api->post('/classes/{class_id}/teachers/{teacher_id}', 'App\Http\APIControllers\ClassController@addTeacherToClass');
+        $api->put('/classes/{class_id}/teachers/{teacher_id}', 'App\Http\APIControllers\ClassController@updateTeacher');
+        $api->delete('/classes/{class_id}/teachers/{teacher_id}', 'App\Http\APIControllers\ClassController@deleteTeacherFromClass');
+
         $api->get('/classes/{class_id}/assignments', 'App\Http\APIControllers\ClassController@getAssignments');
         $api->post('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@addApplicationToClass');
         $api->put('/classes/{class_id}/assignments/{app_id}', 'App\Http\APIControllers\ClassController@changeAssignment');
@@ -93,7 +102,6 @@ $api->version('v1', function ($api) {
         $api->get('/classes/{class_id}/tests/{app_id}/student/{student_id}/details', 'App\Http\APIControllers\ClassController@getTestDetails');
         $api->get('/classes/{class_id}/tests/{app_id}/student/{student_id}/report.pdf', 'App\Http\APIControllers\ClassController@downloadTestReportPDF');
         $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
-        $api->get('/classes/{class_id}/todo', 'App\Http\APIControllers\ClassController@getToDos');
         $api->get('/classes/{class_id}/answers-statistics', 'App\Http\APIControllers\ClassController@getAnswersStatistics');
 
         $api->get('/assignments', 'App\Http\APIControllers\ApplicationController@getAssignments');

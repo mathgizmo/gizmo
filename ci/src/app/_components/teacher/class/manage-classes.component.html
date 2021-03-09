@@ -55,7 +55,7 @@
                             <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEmail(item)">Email</button>
                             <a class="button button-small button-outline" mat-stroked-button routerLink="/teacher/class/{{item.id}}/threads" style="margin-right: 8px;">Discussion</a>
                             <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditClass(item)">Edit</button>
-                            <button mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteClass(item.id)">Remove</button>
+                            <button [disabled]="user.user_id != item.teacher_id" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteClass(item.id)">Remove</button>
                         </td>
                     </tr>
                     </tbody>

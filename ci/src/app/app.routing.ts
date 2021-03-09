@@ -12,9 +12,11 @@ import {ClassThreadsComponent} from './_components/class-threads/class-threads.c
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
-import {ClassReportComponent, ManageAssignmentsComponent, ManageTestsComponent,
+import {
+    ClassReportComponent, ManageAssignmentsComponent, ManageTestsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
-    ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent} from './_components/teacher/index';
+    ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent, ClassTeachersComponent
+} from './_components/teacher/index';
 
 const authRoutes = [
     {path: 'welcome', component: WelcomeComponent},
@@ -40,6 +42,7 @@ const teacherRoutes = [
     {path: 'teacher/class/:class_id/threads', component: ClassThreadsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/students', component: ClassStudentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/teachers', component: ClassTeachersComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
 ];
 
 const studentRoutes = [
