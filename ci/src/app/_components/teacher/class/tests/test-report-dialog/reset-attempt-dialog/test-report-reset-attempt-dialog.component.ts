@@ -14,7 +14,7 @@ export class TestReportResetAttemptDialogComponent extends BaseDialogComponent<T
         email: '',
         attempts: []
     };
-    public attemptId;
+    public attemptId = 0;
 
     constructor(
         public dialogRef: MatDialogRef<TestReportResetAttemptDialogComponent>,

@@ -1284,7 +1284,7 @@ class ClassController extends Controller
                 return strcmp($a->attempt_no, $b->attempt_no);
             }); */
             $attempts = collect($student->attempts)->sortBy('attempt_no');
-            $student->attempts = $attempts;
+            $student->attempts = array_values($attempts->toArray());
             $completed_at = $attempts ? $attempts->sortByDesc('end_at')->first() : null;
             $student->completed_at = $completed_at && $completed_at->end_at ? Carbon::parse($completed_at->end_at)->format('Y-m-d g:i A') : null;
             $mark = $attempts ? $attempts->sortByDesc('mark')->first() : null;
