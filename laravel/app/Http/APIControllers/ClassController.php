@@ -505,10 +505,12 @@ class ClassController extends Controller
                     )->where('app_id', $item->id)
                         ->whereIn('student_id', $item->students)
                         ->first();
-                    $class_tracking_questions_statistics = DB::table('students_tracking_questions')->select(
-                        DB::raw("SUM(1) as total"),
-                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
-                    )->where('class_app_id', $class_data->id)
+                    $class_tracking_questions_statistics = DB::table('students_tracking_questions')
+                        ->select(
+                            DB::raw("SUM(1) as total"),
+                            DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                        )
+                        ->where('class_app_id', $class_data->id)
                         ->whereIn('student_id', $item->students)
                         ->first();
                 } else {
@@ -516,10 +518,14 @@ class ClassController extends Controller
                         DB::raw("SUM(1) as total"),
                         DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
                     )->where('app_id', $item->id)->first();
-                    $class_tracking_questions_statistics = DB::table('students_tracking_questions')->select(
-                        DB::raw("SUM(1) as total"),
-                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
-                    )->where('class_app_id', $class_data->id)->first();
+                    $class_tracking_questions_statistics = DB::table('students_tracking_questions')
+                        ->select(
+                            DB::raw("SUM(1) as total"),
+                            DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                        )
+                        ->where('class_app_id', $class_data->id)
+                        ->whereIn('student_id', array_values($students->pluck('id')->toArray()))
+                        ->first();
                 }
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
                 $item->class_error_rate = 1 - ($class_tracking_questions_statistics->total ? $class_tracking_questions_statistics->complete / $class_tracking_questions_statistics->total : 1);
@@ -608,15 +614,23 @@ class ClassController extends Controller
                     ->distinct()->count();
                 $item->progress = $app_students_count > 0 ? (round($complete_count / $app_students_count, 3)) : 1;
                 if ($item->is_for_selected_students) {
-                    $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
-                        DB::raw("SUM(1) as total"),
-                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
-                    )->where('app_id', $item->id)->whereIn('student_id', $item->students)->first();
+                    $tracking_questions_statistics = DB::table('students_tracking_questions')
+                        ->select(
+                            DB::raw("SUM(1) as total"),
+                            DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                        )
+                        ->where('class_app_id', $class_data->id)
+                        ->whereIn('student_id', $item->students)
+                        ->first();
                 } else {
-                    $tracking_questions_statistics = DB::table('students_tracking_questions')->select(
-                        DB::raw("SUM(1) as total"),
-                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
-                    )->where('app_id', $item->id)->first();
+                    $tracking_questions_statistics = DB::table('students_tracking_questions')
+                        ->select(
+                            DB::raw("SUM(1) as total"),
+                            DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
+                        )
+                        ->where('class_app_id', $class_data->id)
+                        ->whereIn('student_id', array_values($students->pluck('id')->toArray()))
+                        ->first();
                 }
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
@@ -775,21 +789,17 @@ class ClassController extends Controller
 
     public function getAnswersStatistics($class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
-        if (!$class) {
-            return $this->error('Class not found!', 404);
-        }
+        if (!$class) { return $this->error('Class not found!', 404); }
         $type = request()->has('type') ? request('type') : 'assignment';
         $query = StudentsTrackingQuestion::query()->with('application');
+        $query->whereHas('classApplication', function ($q1) use ($class_id) {
+            $q1->where('class_id', $class_id);
+        });
         if (request()->has('app_id') && request('app_id')) {
             $query->where('app_id', request('app_id'));
         } else {
-            $query->whereHas('application', function ($q1) use ($class_id, $type) {
-                $q1->with('classes')->whereHas('classes', function ($q2) use ($class_id, $type) {
-                    $q2->where('classes.id', intval($class_id));
-                })->where('type', $type);
-            });
-            $query->whereHas('classApplication', function ($q1) use ($class_id) {
-                $q1->where('class_id', $class_id);
+            $query->whereHas('application', function ($q1) use ($type) {
+                $q1->where('type', $type);
             });
         }
         if (request()->has('student_id') && request('student_id')) {
