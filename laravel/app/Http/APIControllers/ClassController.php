@@ -3,6 +3,7 @@
 namespace App\Http\APIControllers;
 
 use App\ClassApplicationStudent;
+use App\ClassStudent;
 use App\Exports\ClassAssignmentsReportExport;
 use App\Exports\ClassTestsReportExport;
 use App\Mail\ClassMail;
@@ -348,11 +349,8 @@ class ClassController extends Controller
                     });
             })->first();
         if (!$class) { return $this->error('Class not found.', 404); }
-        DB::table('classes_students')
-            ->where('class_id', $class_id)
-            ->where('student_id', $student_id)
-            ->delete();
-        return $this->success('deleted');
+        ClassStudent::where('class_id', $class_id)->where('student_id', $student_id)->delete();
+        return $this->success(['success' => true]);
     }
 
     public function getTeachers($class_id) {
