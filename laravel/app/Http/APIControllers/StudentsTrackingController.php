@@ -66,8 +66,7 @@ class StudentsTrackingController extends Controller
         }
     }
 
-    public function start($lesson)
-    {
+    public function start($lesson) {
         if (($model = Lesson::find($lesson)) == null) {
             return $this->error('Invalid lesson.');
         }
@@ -142,8 +141,7 @@ class StudentsTrackingController extends Controller
         return $this->success($message, 200);
     }
 
-    public function done($lesson, $is_testout = false)
-    {
+    public function done($lesson, $is_testout = false) {
         if (($model = Lesson::find($lesson)) == null) {
             return $this->error('Invalid lesson.');
         }
@@ -161,7 +159,8 @@ class StudentsTrackingController extends Controller
             'user_agent' => request()->server('HTTP_USER_AGENT'),
             'is_testout' => $is_testout
         ]);
-        if (!$app_id) {
+        $is_completed = $this->app ? $this->app->isFinished($student->id) : false;
+        if (!$app_id || $is_completed) {
             return $this->success('Done!', 200);
         }
         $progress_data = [
@@ -232,8 +231,7 @@ class StudentsTrackingController extends Controller
         ];
     }
 
-    public static function topicProgressDone($topic_id, $student, $app_id = null)
-    {
+    public static function topicProgressDone($topic_id, $student, $app_id = null) {
         $student = Student::where('id', $student->id)->first();
         if (!$app_id) {
             $app_id = $student ? $student->app_id : null;
@@ -380,8 +378,7 @@ class StudentsTrackingController extends Controller
         }
     }
 
-    public function trackQuestionAnswer($question_id)
-    {
+    public function trackQuestionAnswer($question_id) {
         if (($model = Question::find($question_id)) == null) {
             return $this->error('Invalid question.');
         }

@@ -465,6 +465,11 @@ class Application extends Model
         return '/images/default-icon.svg';
     }
 
+    public function isFinished($student_id): bool {
+        return Progress::where('entity_type', 'application')->where('entity_id', $this->id)
+            ->where('student_id', $student_id)->count() > 0;
+    }
+
     public function replicateWithRelations(): Application {
         $copy = $this->replicate();
         $copy->name = $this->name . ' - Copy';

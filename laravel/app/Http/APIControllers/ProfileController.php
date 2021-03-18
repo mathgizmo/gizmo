@@ -104,8 +104,7 @@ class ProfileController extends Controller
             foreach (Application::whereDoesntHave('teacher')->where('type', 'assignment')->get() as $item) {
                 $item->class = $classObj;
                 $item->icon = $item->icon();
-                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
-                        ->where('student_id', $student->id)->count() > 0;
+                $item->is_completed = $item->isFinished($student->id);
                 $item->start_time = null;
                 $item->start_date = null;
                 $item->due_time = null;
@@ -136,8 +135,7 @@ class ProfileController extends Controller
                 $item->class = $classObj;
                 $item->class_app_id = $row->id;
                 $item->icon = $item->icon();
-                $item->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $item->id)
-                        ->where('student_id', $student->id)->count() > 0;
+                $item->is_completed = $item->isFinished($student->id);
                 if ($row->due_date) {
                     $due_at = $row->due_time ? $row->due_date.' '.$row->due_time : $row->due_date.' 00:00:00';
                 } else {

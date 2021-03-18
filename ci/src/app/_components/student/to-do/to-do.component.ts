@@ -52,7 +52,7 @@ export class ToDoComponent implements OnInit, OnDestroy {
     }
 
     onChangeToDo(app) {
-        if (!app || (app.is_blocked)) {
+        if (!app || (app.is_blocked && !app.is_completed)) {
             return;
         }
         localStorage.setItem('app_id', app.id + '');

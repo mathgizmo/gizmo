@@ -6,6 +6,7 @@ use App\Application;
 use App\ClassApplication;
 use App\Lesson;
 use App\Level;
+use App\Progress;
 use App\Setting;
 use App\Student;
 use App\StudentsTracking;
@@ -65,8 +66,7 @@ class TopicController extends Controller
         }
     }
 
-    public function index()
-    {
+    public function index() {
         $student = $this->student;
         $app_id = $this->app->id;
         $any_order = $this->app->allow_any_order ?: false;
@@ -208,17 +208,14 @@ class TopicController extends Controller
         return $this->success($response);
     }
 
-    public function get($id)
-    {
-        if(!$id || !is_numeric($id)) {
-            return $this->error('id must be integer');
-        }
+    public function get($id) {
         $student = $this->student;
         $app_id = $this->app->id;
         $any_order = $this->app->allow_any_order ?: false;
         $topic = DB::table('topic')->where('id', $id)->first();
+        if (!$topic) { return $this->error('Topic not found!', 404); }
         try {
-            if($topic->icon_src == '' || !file_exists('../admin/'.$topic->icon_src)) {
+            if ($topic->icon_src == '' || !file_exists('../admin/'.$topic->icon_src)) {
                 $topic->icon_src = 'images/default-icon.svg';
             }
         } catch (\Exception $e) {
@@ -228,9 +225,6 @@ class TopicController extends Controller
         $level = DB::table('level')->where('id', $unit->level_id)->first();
         $topic->unit = $unit->title;
         $topic->level = $level->title;
-        if(!$topic) {
-            return $this->error('topic not found');
-        }
         $topic->lessons = $this->app->getLessons($id, $student->isAdmin())->toArray();
         $lessons_ids = [];
         foreach ($topic->lessons as $id => $lesson) {
@@ -283,13 +277,13 @@ class TopicController extends Controller
         } else {
             $topic->next_topic_id = isset($ids[$topic_order_id+1]) ? $ids[$topic_order_id+1] : 0;
         }
-        $topic->testout_attempts = $this->app->getTestoutAttempts($this->student->id, $topic->id);
-        $topic->max_testout_attempts = $this->app->getMaxTestoutAttempts();
+        $is_completed = $this->app ? $this->app->isFinished($student->id) : false;
+        $topic->testout_attempts = $is_completed ? 0 : $this->app->getTestoutAttempts($this->student->id, $topic->id);
+        $topic->max_testout_attempts = $is_completed ? 0 : $this->app->getMaxTestoutAttempts();
         return $this->success($topic);
     }
 
-    public function getLesson($id, $lesson_id)
-    {
+    public function getLesson($id, $lesson_id) {
         if(!$id || !is_numeric($id)) {
             return $this->error('id must be integer');
         }
@@ -428,6 +422,10 @@ class TopicController extends Controller
             return $this->error('Too many testout attempts.', 429);
         }
         $app_id = $this->app->id;
+        $is_completed = $this->app ? $this->app->isFinished($this->student->id) : false;
+        if (!$app_id || $is_completed) {
+            return $this->error('The assignment is already finished!', 400);
+        }
         $topic->questions = DB::table('question')->whereIn('lesson_id', function ($q1) use ($app_id, $topic_id) {
             $q1->select('id')->from('lesson')->whereIn('id', function($q2) use($app_id, $topic_id) {
                 $q2->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
