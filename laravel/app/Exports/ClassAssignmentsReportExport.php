@@ -54,9 +54,10 @@ class ClassAssignmentsReportExport implements FromCollection
             if (property_exists($student->data, $app_id)) {
                 $app_data = $student->data->{$app_id};
                 $status = $app_data->status;
-                $data = $status == 'completed' ? 'Completed' : ($status == 'overdue' ? 'Overdue' : ($status == 'progress' ?  'In progress' : 'Pending'));
+                // $data = $status == 'completed' ? 'Completed' : ($status == 'overdue' ? 'Overdue' : ($status == 'progress' ?  'In progress' : 'Pending'));
                 if ($status != 'pending') {
-                    $data .= ' (' .round($app_data->progress * 100, 1) . '%)';
+                    // $data .= ' (' .round($app_data->progress * 100, 1) . '%)';
+                    $data = round($app_data->progress * 100, 1) . '%';
                 }
             }
             array_push($row, $data);
