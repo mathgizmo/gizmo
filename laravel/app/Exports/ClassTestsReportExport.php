@@ -42,6 +42,7 @@ class ClassTestsReportExport implements FromCollection
             for ($i = 0; $i < $test->attempts; $i++) {
                 array_push($heading, $test->name.' (Attempt #'.($i+1).')');
             }
+            array_push($heading, $test->name.' Score');
         }
         return $heading;
     }
@@ -64,6 +65,8 @@ class ClassTestsReportExport implements FromCollection
                 }
                 array_push($row, $data);
             }
+            $score = $stud_data && $stud_data->mark ? (round($stud_data->mark * 100) . '%') : '';
+            array_push($row, $score);
         }
         return $row;
     }

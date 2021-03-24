@@ -1278,9 +1278,6 @@ class ClassController extends Controller
             }
         }
         foreach ($students as $student) {
-            /* usort($student->attempts, function($a, $b) {
-                return strcmp($a->attempt_no, $b->attempt_no);
-            }); */
             $attempts = collect($student->attempts)->sortBy('attempt_no');
             $student->attempts = array_values($attempts->toArray());
             $completed_at = $attempts ? $attempts->sortByDesc('end_at')->first() : null;
