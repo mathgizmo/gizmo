@@ -1013,7 +1013,7 @@ class ClassController extends Controller
         return $this->error('Error.', 500);
     }
 
-    public function downloadTestPoorQuestionsReportPDF(Request $request, $class_id, $app_id) {
+    /* public function downloadTestPoorQuestionsReportPDF(Request $request, $class_id, $app_id) {
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
         $user_id = $this->user->id;
@@ -1035,7 +1035,7 @@ class ClassController extends Controller
             return $pdf->download('test_poor_questions_report.pdf');
         }
         return $this->error('Error.', 500);
-    }
+    } */
 
     public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
         $user_id = $this->user->id;

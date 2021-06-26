@@ -7,7 +7,7 @@ import {ClassesManagementService} from '../../../../../_services';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {TestReportResetAttemptDialogComponent} from './reset-attempt-dialog/test-report-reset-attempt-dialog.component';
-import * as moment from "moment/moment";
+import * as moment from 'moment/moment';
 
 @Component({
     selector: 'app-test-report-dialog',
@@ -106,7 +106,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
             });
     }
 
-    onDownloadPoorQuestionsPDF() {
+    /* onDownloadPoorQuestionsPDF() {
         this.classService.downloadPoorQuestionsPDF(this.test.class_id, this.test.app_id)
             .subscribe(file => {
                 const newBlob = new Blob([file], { type: 'application/pdf' });
@@ -124,7 +124,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
                     link.remove();
                 }, 100);
             });
-    }
+    } */
 
     onShowDetails(item, attempt) {
         item.showDetail = !item.showDetail;

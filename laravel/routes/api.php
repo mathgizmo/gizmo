@@ -101,7 +101,7 @@ $api->version('v1', function ($api) {
         $api->post('classes/{class_id}/tests/{app_id}/student/{student_id}/reset', 'App\Http\APIControllers\ClassController@resetTestProgress');
         $api->get('/classes/{class_id}/tests/{app_id}/student/{student_id}/details', 'App\Http\APIControllers\ClassController@getTestDetails');
         $api->get('/classes/{class_id}/tests/{app_id}/student/{student_id}/report.pdf', 'App\Http\APIControllers\ClassController@downloadTestReportPDF');
-        $api->get('/classes/{class_id}/tests/{app_id}/poor-questions-report.pdf', 'App\Http\APIControllers\ClassController@downloadTestPoorQuestionsReportPDF');
+        // $api->get('/classes/{class_id}/tests/{app_id}/poor-questions-report.pdf', 'App\Http\APIControllers\ClassController@downloadTestPoorQuestionsReportPDF');
         $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
         $api->get('/classes/{class_id}/answers-statistics', 'App\Http\APIControllers\ClassController@getAnswersStatistics');
 
