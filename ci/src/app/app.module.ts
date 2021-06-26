@@ -53,7 +53,7 @@ import {ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
     TestReportDialogComponent, TestReportResetAttemptDialogComponent, ReviewContentComponent, ClassAssignmentsComponent,
     ClassDashboardComponent, ClassAssignmentsListComponent, ClassTestsListComponent,
     ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassMenuComponent,
-    AssignmentsStudentsUsageChartComponent, TestsStudentsUsageChartComponent, StudentsUsageBarChartComponent,
+    AssignmentsStudentsUsageChartComponent, TestsStudentsUsageChartComponent,
     ClassAssignmentsReportComponent, ClassTestsReportComponent, EditClassAssignmentDialogComponent,
     EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
@@ -66,8 +66,6 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 import {DraggableDirective} from './_directives/draggable.directive';
 import { TableFilterPipe, SafeHtmlPipe, TimeFormatPipe } from './_pipes/index';
-
-import { ChartsModule } from 'ng2-charts';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -94,7 +92,6 @@ FullCalendarModule.registerPlugins([
         AppRoutingModule,
         BrowserAnimationsModule,
         FullCalendarModule,
-        ChartsModule,
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
@@ -177,7 +174,6 @@ FullCalendarModule.registerPlugins([
         ClassMenuComponent,
         AssignmentsStudentsUsageChartComponent,
         TestsStudentsUsageChartComponent,
-        StudentsUsageBarChartComponent,
         ClassAssignmentsReportComponent,
         ClassTestsReportComponent,
         TryComponent,

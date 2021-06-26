@@ -7,7 +7,6 @@ export * from './class/dashboard/assignments-list/assignments-list.component';
 export * from './class/dashboard/tests-list/tests-list.component';
 export * from './class/dashboard/assignments-students-usage-chart/assignments-students-usage-chart.component';
 export * from './class/dashboard/tests-students-usage-chart/tests-students-usage-chart.component';
-export * from './class/dashboard/students-usage-bar-chart/students-usage-bar-chart.component';
 export * from './class/assignments/class-assignments.component';
 export * from './class/assignments/calendar/class-assignments-calendar.component';
 export * from './class/assignments/select-students-dialog/select-students-dialog.component';

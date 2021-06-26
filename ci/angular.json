@@ -28,11 +28,9 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/chart.js/dist/Chart.min.js"
+              "node_modules/jquery/dist/jquery.min.js"
             ],
             "allowedCommonJsDependencies": [
-              "chart.js",
               "jquery",
               "core-js",
               "raf",
@@ -40,7 +38,14 @@
               "@babel/runtime",
               "pdfmake/build/pdfmake.js",
               "@ckeditor/ckeditor5-build-classic"
-            ]
+            ],
+            "aot": false,
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -96,7 +101,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -123,8 +129,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/chart.js/dist/Chart.min.js"
+              "node_modules/jquery/dist/jquery.min.js"
             ],
             "styles": [
               "node_modules/font-awesome/css/font-awesome.css",

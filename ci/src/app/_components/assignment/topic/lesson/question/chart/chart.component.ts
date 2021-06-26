@@ -120,7 +120,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                         accuracy)) / Math.pow(10, accuracy);
                 }
             }
-            resolve();
+            resolve(null);
         }).then(() => {
             this.buildChart();
         });
@@ -916,7 +916,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                     this.inputValue = Math.round(this.value * Math.pow(10,
                         accuracy)) / Math.pow(10, accuracy);
                 }
-                resolve();
+                resolve(null);
             }).then(() => {
                 this.buildChart();
             });

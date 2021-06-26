@@ -1,6 +1,11 @@
 <!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Test Report!</h2> -->
 <mat-dialog-content class="dialog-content" id="dialog-content">
     <div class="subtitle text-center">{{title}}</div>
+    <div class="actions-container">
+        <div class="links-group">
+            <button class="button button-small button-outline" mat-button (click)="onDownloadPoorQuestionsPDF()">Poorly answered questions PDF</button>
+        </div>
+    </div>
     <form novalidate #form="ngForm">
         <div class="table-responsive">
             <table matSort (matSortChange)="sortData($event)" class="table">

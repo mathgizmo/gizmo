@@ -182,6 +182,10 @@ export class ClassesManagementService {
         return this.http.download('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/report.pdf');
     }
 
+    public downloadPoorQuestionsPDF(class_id, app_id): Observable<Blob> {
+        return this.http.download('/classes/' + class_id + '/tests/' + app_id + '/poor-questions-report.pdf');
+    }
+
     public downloadTestsReport(class_id, format = 'csv') {
         return this.http.download('/classes/' + class_id + '/tests-report.' + format);
     }

@@ -53,9 +53,7 @@
                         <th style="min-width: 160px;"></th>
                     </tr>
                     </thead>
-
                     <tbody>
-
                     <tr style="background: #999999;">
                         <td>
                             <input type="number" min="0" name="id" id="id-filter" style="width: 50px;">
@@ -90,7 +88,6 @@
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
                     </tr>
-
                     @foreach($classes as $class)
                         <tr>
                             <td>{{$class->id}}</td>
@@ -98,7 +95,7 @@
                             <td>{{$class->teacher ? $class->teacher->email : ''}}</td>
                             <td>{{ucfirst($class->class_type)}}</td>
                             <td>{{$class->subscription_type == 'closed' ? 'Closed' : ($class->subscription_type == 'invitation' ? 'Invitation Only' : 'Open')}}</td>
-                            <td class="text-right" style="min-width: 260px;">
+                            <td class="text-right" style="min-width: 320px;">
                                 <a class="btn btn-outline-dark" href="{{ route('classes.students.index', $class->id) }}">Manage Students</a>
                                 <a class="btn btn-dark" href="{{ route('classes.edit', $class->id) }}">Edit</a>
                                 <form action="{{ route('classes.destroy', $class->id) }}"

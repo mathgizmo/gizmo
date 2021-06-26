@@ -1013,6 +1013,30 @@ class ClassController extends Controller
         return $this->error('Error.', 500);
     }
 
+    public function downloadTestPoorQuestionsReportPDF(Request $request, $class_id, $app_id) {
+        $class_query = ClassOfStudents::query();
+        $class_query->where('id', $class_id);
+        $user_id = $this->user->id;
+        $class_query->where(function ($q1) use($user_id) {
+            $q1->where('classes.teacher_id', $user_id)
+                ->orWhereHas('teachers', function ($q2) use($user_id) {
+                    $q2->where('students.id', $user_id);
+                });
+        });
+        $class = $class_query->first();
+        $app = Application::where('id', $app_id)->first();
+        $class_app = ClassApplication::where('class_id', $class_id)->where('app_id', $app_id)->first();
+        if ($class && $app && $class_app) {
+            $questions = [];
+            $pdf = PDF::loadView('exports.pdf.test_poor_questions_report', [
+                'test' => $app,
+                'questions' => $questions,
+            ]);
+            return $pdf->download('test_poor_questions_report.pdf');
+        }
+        return $this->error('Error.', 500);
+    }
+
     public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
         $user_id = $this->user->id;
         $class = ClassOfStudents::where('id', $class_id)
