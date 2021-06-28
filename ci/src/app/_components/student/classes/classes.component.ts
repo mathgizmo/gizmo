@@ -3,7 +3,6 @@ import {YesNoDialogComponent} from '../../dialogs/yes-no-dialog/yes-no-dialog.co
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
-import {EmailTeacherDialogComponent} from './email-teacher-dialog/email-teacher-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService, ClassesManagementService} from '../../../_services';
 
@@ -86,36 +85,6 @@ export class MyClassesComponent implements OnInit {
             });
     }
 
-    onEmail(item) {
-        const dialogRef = this.dialog.open(EmailTeacherDialogComponent, {
-            data: {'class': item},
-            position: this.dialogPosition
-        });
-        dialogRef.afterClosed().subscribe(mail => {
-            if (mail) {
-                this.classService.emailClass(item.id, mail).subscribe(res => {
-                    this.snackBar.open('Email have been successfully sent!', '', {
-                        duration: 3000,
-                        panelClass: ['success-snackbar']
-                    });
-                }, error => {
-                    let message = '';
-                    if (typeof error === 'object') {
-                        Object.values(error).forEach(x => {
-                            message += x + ' ';
-                        });
-                    } else {
-                        message = error;
-                    }
-                    this.snackBar.open(message ? message : 'Error occurred while sending email!', '', {
-                        duration: 3000,
-                        panelClass: ['error-snackbar']
-                    });
-                });
-            }
-        });
-    }
-
     sortMyClasses(sort: Sort) {
         const data = this.myClasses.slice();
         if (!sort.active || sort.direction === '') {
@@ -149,7 +118,6 @@ export class MyClassesComponent implements OnInit {
             }
         });
     }
-
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {

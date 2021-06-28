@@ -1,6 +1,7 @@
 ﻿export * from './classes/classes.component';
 export * from './classes/report/class-report.component';
 export * from './classes/email-teacher-dialog/email-teacher-dialog.component';
+export * from './classes/menu/class-menu.component';
 export * from './invitations/invitations.component';
 export * from './to-do/to-do.component';
 export * from './tests/tests.component';

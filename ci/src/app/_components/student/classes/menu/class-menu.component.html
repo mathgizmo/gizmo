@@ -1,0 +1,7 @@
+<mat-nav-list class="menu">
+    <a mat-list-item routerLink="/student/class/{classId}}/report">Dashboard</a>
+    <!-- <a mat-list-item routerLink="/student/class/{{classId}}/assignments">Assignments</a>
+    <a mat-list-item routerLink="/student/class/{{classId}}/tests">Tests</a> -->
+    <a mat-list-item (click)="onEmail()">Email</a>
+    <a mat-list-item routerLink="/student/class/{{classId}}/threads">Discussion</a>
+</mat-nav-list>
