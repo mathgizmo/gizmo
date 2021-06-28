@@ -43,7 +43,7 @@ import {LessonComponent, ChartComponent} from './_components/assignment/topic/le
 import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
-import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, EmailTeacherDialogComponent,
+import {MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, EmailTeacherDialogComponent,
     MyInvitationsComponent, TestOptionsDialogComponent, TestStartDialogComponent, MyClassMenuComponent,
     TestReportDialogComponent as StudentTestReportDialogComponent} from './_components/student/index';
 import {ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
@@ -56,6 +56,7 @@ import {ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
     AssignmentsStudentsUsageChartComponent, TestsStudentsUsageChartComponent,
     ClassAssignmentsReportComponent, ClassTestsReportComponent, EditClassAssignmentDialogComponent,
     EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
+import {ToDoComponent} from './_components/self_study/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {TutorialComponent} from './_components/tutorial/tutorial.component';
@@ -140,12 +141,13 @@ FullCalendarModule.registerPlugins([
         BadChallengeDialogComponent,
         ChartComponent,
         ProfileComponent,
-        ToDoComponent,
+        MyAssignmentsComponent,
         MyTestsComponent,
         MyClassesComponent,
         MyClassMenuComponent,
         MyClassReportComponent,
         MyInvitationsComponent,
+        ToDoComponent,
         ManageClassesComponent,
         YesNoDialogComponent,
         DeleteConfirmationDialogComponent,

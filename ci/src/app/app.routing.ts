@@ -7,7 +7,13 @@ import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
     ForgotPasswordComponent, ResetPasswordComponent, VerifyEmailComponent} from './_components/auth/index';
 import {AssignmentComponent, TestComponent, TopicComponent, LessonComponent} from './_components/assignment/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {ToDoComponent, MyTestsComponent, MyClassesComponent, MyInvitationsComponent, MyClassReportComponent} from './_components/student/index';
+import {
+    MyAssignmentsComponent,
+    MyTestsComponent,
+    MyClassesComponent,
+    MyInvitationsComponent,
+    MyClassReportComponent
+} from './_components/student/index';
 import {ClassThreadsComponent} from './_components/class-threads/class-threads.component';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
@@ -19,6 +25,7 @@ import {
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
     ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent, ClassTeachersComponent
 } from './_components/teacher/index';
+import {ToDoComponent} from './_components/self_study';
 
 const authRoutes = [
     {path: 'welcome', component: WelcomeComponent},
@@ -51,19 +58,20 @@ const studentRoutes = [
     {path: 'student/class', component: MyClassesComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/class/:class_id/report', component: MyClassReportComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/class/:class_id/threads', component: ClassThreadsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
+    {path: 'student/class/:class_id/assignments', component: MyAssignmentsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
+    {path: 'student/class/:class_id/tests', component: MyTestsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
+    {path: 'test/:test_id', component: TestComponent, canActivate: [AuthGuard]},
     {path: 'student/invitations', component: MyInvitationsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
-    {path: 'student/tests', component: MyTestsComponent, canActivate: [AuthGuard]},
 ];
 
 const routes: Routes = [
     ...authRoutes,
     {path: '', component: AssignmentComponent, canActivate: [AuthGuard]},
+    {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:assignment_id', component: AssignmentComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:assignment_id/topic/:topic_id', component: TopicComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:assignment_id/topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
-    {path: 'test/:test_id', component: TestComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
-    {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
     {path: 'tutorial', component: TutorialComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
     {path: 'faq', component: FaqComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},

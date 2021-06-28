@@ -90,7 +90,7 @@ class ProfileController extends Controller
         return $this->success('OK.');
     }
 
-    public function getToDos() {
+    public function getToDos(Request $request) {
         $student = $this->user;
         $items = [];
         if ($student->is_self_study) {
@@ -118,8 +118,10 @@ class ProfileController extends Controller
                 array_push($items, $item);
             }
         } else {
-            $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())
-                ->whereHas('assignment')->get();
+            $class_id = $request->filled('class_id') ? $request['class_id'] : null;
+            $student_classes = $student->classes()->get()->pluck('id')->toArray();
+            $class_ids = $class_id && in_array($class_id, $student_classes) ? [$class_id] : $student_classes;
+            $apps = ClassApplication::whereIn('class_id', $class_ids)->whereHas('assignment')->get();
             foreach ($apps as $row) {
                 if ($row->is_for_selected_students) {
                     if (DB::table('classes_applications_students')->where('class_app_id', $row->id)
@@ -164,10 +166,13 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function getTests() {
+    public function getTests(Request $request) {
         $student = $this->user;
         $items = [];
-        $apps = ClassApplication::whereIn('class_id', $student->classes()->get()->pluck('id')->toArray())->whereHas('test')->get();
+        $class_id = $request->filled('class_id') ? $request['class_id'] : null;
+        $student_classes = $student->classes()->get()->pluck('id')->toArray();
+        $class_ids = $class_id && in_array($class_id, $student_classes) ? [$class_id] : $student_classes;
+        $apps = ClassApplication::whereIn('class_id', $class_ids)->whereHas('test')->get();
         foreach ($apps as $row) {
             $item = Application::where('id', $row->app_id)->first();
             $classObj = ClassOfStudents::where('id', $row->class_id)->first();

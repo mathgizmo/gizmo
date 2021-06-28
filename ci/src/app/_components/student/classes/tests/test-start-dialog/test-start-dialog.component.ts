@@ -1,6 +1,6 @@
 import {Component, HostListener, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
+import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
 
 @Component({
     selector: 'app-test-start-dialog',

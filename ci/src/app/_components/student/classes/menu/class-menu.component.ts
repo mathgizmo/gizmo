@@ -37,7 +37,6 @@ export class MyClassMenuComponent implements OnInit {
     }
 
     onEmail() {
-        const classes = this.classService.classes;
         this.userService.getClasses()
             .subscribe(response => {
                 this.myClasses = response['my_classes'];

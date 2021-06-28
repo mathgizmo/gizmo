@@ -1,10 +1,10 @@
 import {Component, HostListener, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
-import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
-import {AuthenticationService, UserService} from '../../../../_services';
+import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
+import {AuthenticationService, UserService} from '../../../../../_services';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {User} from '../../../../_models';
+import {User} from '../../../../../_models';
 
 @Component({
     selector: 'app-test-options-dialog',

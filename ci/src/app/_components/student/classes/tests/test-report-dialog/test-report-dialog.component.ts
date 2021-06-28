@@ -1,8 +1,8 @@
 import {Component, HostListener, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
-import {AuthenticationService, ClassesManagementService} from '../../../../_services';
-import {User} from '../../../../_models';
+import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
+import {AuthenticationService, ClassesManagementService} from '../../../../../_services';
+import {User} from '../../../../../_models';
 
 @Component({
     selector: 'app-test-report-dialog',

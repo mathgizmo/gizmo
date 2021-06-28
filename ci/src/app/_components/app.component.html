@@ -11,13 +11,9 @@
             <span class="material-icons">home</span>
             Home
         </a>
-        <a *ngIf="user.role !== 'teacher'" mat-menu-item routerLink="to-do" class="menu-item">
+        <a *ngIf="user.role !== 'teacher' && user.role !== 'student'" mat-menu-item routerLink="to-do" class="menu-item">
             <span class="material-icons">assignment</span>
             To Do
-        </a>
-        <a *ngIf="user.role === 'student'" mat-menu-item routerLink="student/tests" class="menu-item">
-            <span class="material-icons">assignment_turned_in</span>
-            Tests
         </a>
         <a *ngIf="user.role === 'student'" mat-menu-item routerLink="student/class" class="menu-item">
             <span class="material-icons">class</span>

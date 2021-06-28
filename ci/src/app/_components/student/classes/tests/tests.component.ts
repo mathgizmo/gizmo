@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import {Router} from '@angular/router';
-import {UserService} from '../../../_services/user.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {UserService} from '../../../../_services/user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -9,7 +9,7 @@ import {TestOptionsDialogComponent} from './test-options-dialog/test-options-dia
 import {TestStartDialogComponent} from './test-start-dialog/test-start-dialog.component';
 import {TestReportDialogComponent} from './test-report-dialog/test-report-dialog.component';
 import * as moment from 'moment';
-import {environment} from '../../../../environments/environment';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
     selector: 'app-my-tests',
@@ -18,6 +18,14 @@ import {environment} from '../../../../environments/environment';
     providers: [UserService]
 })
 export class MyTestsComponent implements OnInit, OnDestroy {
+    public classId: number;
+    public myClass = {
+        id: 0,
+        name: ''
+    };
+
+    public backLinkText = 'Back';
+
     public applications = [];
     public completedApplications = [];
     public selectedAppId = null;
@@ -30,10 +38,14 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
+    public myClasses = [];
+    private sub: any;
+
     constructor(
         private userService: UserService,
         private sanitizer: DomSanitizer,
         private router: Router,
+        private route: ActivatedRoute,
         public dialog: MatDialog,
         private deviceService: DeviceDetectorService,
         public snackBar: MatSnackBar
@@ -45,7 +57,18 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.userService.getTests()
+        this.sub = this.route.params.subscribe(params => {
+            this.classId = +params['class_id'];
+            this.userService.getClasses()
+                .subscribe(response => {
+                    this.myClasses = response['my_classes'];
+                    this.myClass = this.myClasses.find(obj => {
+                        return obj.id === this.classId;
+                    });
+                    this.backLinkText = 'My Classes > ' + (this.myClass ? this.myClass.name : this.classId) + ' > Report';
+                });
+        });
+        this.userService.getTests(this.classId)
             .subscribe(response => {
                 this.applications = response.filter(app => !app.is_completed);
                 this.completedApplications = response.filter(app => app.is_completed);

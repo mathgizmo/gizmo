@@ -44,8 +44,8 @@ export class UserService {
         return this.http.post('/profile/options', options);
     }
 
-    public getToDos() {
-        return this.http.get('/profile/todo')
+    public getToDos(classId = null) {
+        return this.http.get('/profile/todo?class_id=' + classId)
             .pipe(
                 map((response: Response) => {
                     return response['items'];
@@ -53,8 +53,8 @@ export class UserService {
             );
     }
 
-    public getTests() {
-        return this.http.get('/profile/tests')
+    public getTests(classId = null) {
+        return this.http.get('/profile/tests?class_id=' + classId)
             .pipe(
                 map((response: Response) => {
                     return response['items'];
