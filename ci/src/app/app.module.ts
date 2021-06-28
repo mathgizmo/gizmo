@@ -58,6 +58,8 @@ import {ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
     EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
+import {TutorialComponent} from './_components/tutorial/tutorial.component';
+import {FaqComponent} from './_components/faq/faq.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
@@ -183,6 +185,8 @@ FullCalendarModule.registerPlugins([
         QuestionPreviewComponent,
         ClassThreadsComponent,
         DashboardComponent,
+        TutorialComponent,
+        FaqComponent,
         ClassReportComponent,
         ClassTeachersComponent,
         ClassStudentsComponent,

@@ -19,12 +19,11 @@ CKEDITOR.editorConfig = function( config ) {
 	// are not needed in a basic editor. They are removed here.
 	config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Strike,Subscript,Superscript';
 
-	// Dialog windows are also simplified.
-	// config.removeDialogTabs = 'link:advanced';
-
 	config.mathJaxLib = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
 
-    config.extraPlugins = 'filebrowser,image,sourcedialog,dialog,dialogui,font,format,chart,tooltip';
+    config.extraPlugins = 'filebrowser,image,sourcedialog,dialog,dialogui,font,format,youtube';
+
+	config.youtube_related = false;
 
     config.filebrowserUploadUrl = '/admin/questions/uploadImage';
     config.filebrowserBrowseUrl = '/admin/js/ckeditor/plugins/imagebrowser/imagebrowser.html?imgroot=/admin/uploads';
@@ -33,5 +32,7 @@ CKEDITOR.editorConfig = function( config ) {
     config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre;address;div';
 
 	config.allowedContent = true;
+
+	config.height = 500;
 
 };

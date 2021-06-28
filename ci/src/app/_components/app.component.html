@@ -43,6 +43,14 @@
             <span class="material-icons">extension</span>
             Review Content
         </a>
+        <a *ngIf="user.role === 'teacher' || user.role === 'student'" mat-menu-item routerLink="tutorial" class="menu-item">
+            <span class="material-icons">topic</span>
+            Tutorials
+        </a>
+        <a *ngIf="user.role === 'teacher' || user.role === 'student'" mat-menu-item routerLink="faq" class="menu-item">
+            <span class="material-icons">quiz</span>
+            FAQs
+        </a>
         <a mat-menu-item routerLink="profile" class="menu-item">
             <span class="material-icons">account_circle</span>
             Profile

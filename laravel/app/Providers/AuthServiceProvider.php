@@ -44,7 +44,10 @@ class AuthServiceProvider extends ServiceProvider
         Student::class => StudentPolicy::class,
         Setting::class => SettingPolicy::class,
         ReportError::class => ReportErrorPolicy::class,
-        MailTemplate::class => MailTemplatePolicy::class, */
+        MailTemplate::class => MailTemplatePolicy::class,
+        Faq::class => FaqPolicy::class,
+        Dashboard::class => DashboardPolicy::class,
+        Tutorial::class => TutorialPolicy::class */
     ];
 
     public function boot(GateContract $gate)

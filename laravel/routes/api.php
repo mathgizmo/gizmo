@@ -123,8 +123,10 @@ $api->version('v1', function ($api) {
         $api->delete('/tests/{app_id}', 'App\Http\APIControllers\ApplicationController@delete');
         $api->get('/tests/{app_id}/tree', 'App\Http\APIControllers\ApplicationController@getAppTree');
 
-        $api->get('/dashboard' , 'App\Http\APIControllers\DashboardController@getDashboards');
         $api->get('/content' , 'App\Http\APIControllers\ContentController@index');
+        $api->get('/dashboard' , 'App\Http\APIControllers\DashboardController@index');
+        $api->get('/tutorial' , 'App\Http\APIControllers\TutorialController@index');
+        $api->get('/faq' , 'App\Http\APIControllers\FaqController@index');
 
         $api->get('/available-icons', 'App\Http\APIControllers\ApplicationController@getAvailableIcons');
     });

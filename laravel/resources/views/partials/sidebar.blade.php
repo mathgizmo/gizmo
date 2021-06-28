@@ -95,7 +95,7 @@
                         <i class="fas fa-angle-down"></i>
                     </div>
                 </a>
-                <div class="collapse {{ Route::is('settings.*') || Route::is('users.*') || Route::is('mails.*') || Route::is('dashboards.*') ? 'show' : '' }}" id="collapseSettings" aria-labelledby="headingThree" data-parent="#sidenavAccordion">
+                <div class="collapse {{ Route::is('settings.*') || Route::is('users.*') || Route::is('mails.*') || Route::is('dashboards.*') || Route::is('tutorials.*') || Route::is('faqs.*') ? 'show' : '' }}" id="collapseSettings" aria-labelledby="headingThree" data-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="{{ route('mails.index') }}">
                             Mails
@@ -103,8 +103,14 @@
                         <a class="nav-link" href="{{ route('users.index') }}">
                             Administrators
                         </a>
-                        <a class="nav-link" href="{{ url('/dashboards') }}">
+                        <a class="nav-link" href="{{ route('dashboards.index') }}">
                             Dashboards
+                        </a>
+                        <a class="nav-link" href="{{ route('tutorials.index') }}">
+                            Tutorials
+                        </a>
+                        <a class="nav-link" href="{{ route('faqs.index') }}">
+                            FAQs
                         </a>
                         <a class="nav-link" href="{{ route('settings.index') }}">
                             Settings

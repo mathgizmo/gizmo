@@ -1,0 +1,6 @@
+<div class="tutorial">
+  <mat-card *ngFor="let tutorial of tutorials">
+    <div class="title">{{tutorial.title}}</div>
+    <div class="data" [innerHtml]="tutorial.data | safeHtml"></div>
+  </mat-card>
+</div>

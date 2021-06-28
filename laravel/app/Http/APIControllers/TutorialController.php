@@ -2,11 +2,11 @@
 
 namespace App\Http\APIControllers;
 
-use App\Dashboard;
+use App\Tutorial;
 use App\Student;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class DashboardController extends Controller
+class TutorialController extends Controller
 {
     private $student;
 
@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $query = Dashboard::query();
+        $query = Tutorial::query();
         if ($this->student->isTeacher()) {
             $query->where('is_for_teacher', true);
         } else {

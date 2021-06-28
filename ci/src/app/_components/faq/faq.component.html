@@ -1,0 +1,6 @@
+<div class="faq">
+  <mat-card *ngFor="let faq of faqs">
+    <div class="title">{{faq.title}}</div>
+    <div class="data" [innerHtml]="faq.data | safeHtml"></div>
+  </mat-card>
+</div>

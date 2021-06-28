@@ -7,6 +7,8 @@ export * from './placement.service';
 export * from './http-listener.service';
 export * from './welcome.service';
 export * from './dashboard.service';
+export * from './tutorial.service';
+export * from './faq.service';
 export * from './classes-management.service';
 export * from './content.service';
 export * from './country.service';

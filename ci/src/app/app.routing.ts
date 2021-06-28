@@ -12,6 +12,8 @@ import {ClassThreadsComponent} from './_components/class-threads/class-threads.c
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
+import {TutorialComponent} from './_components/tutorial/tutorial.component';
+import {FaqComponent} from './_components/faq/faq.component';
 import {
     ClassReportComponent, ManageAssignmentsComponent, ManageTestsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
@@ -63,6 +65,8 @@ const routes: Routes = [
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
+    {path: 'tutorial', component: TutorialComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
+    {path: 'faq', component: FaqComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
     ...studentRoutes,
     ...teacherRoutes,
     {path: 'preview/question', component: QuestionPreviewComponent},
