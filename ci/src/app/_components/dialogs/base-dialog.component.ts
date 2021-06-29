@@ -1,6 +1,7 @@
-import {OnInit, OnDestroy, Inject, HostListener} from '@angular/core';
+import {Injectable, OnInit, OnDestroy, Inject, HostListener} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
+@Injectable()
 export abstract class BaseDialogComponent<T> implements OnInit, OnDestroy {
 
     protected orientation = (window.innerHeight > window.innerWidth) ? 'portrait' : 'landscape';
