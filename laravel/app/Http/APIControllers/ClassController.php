@@ -154,7 +154,8 @@ class ClassController extends Controller
                     'students.first_name',
                     'students.last_name',
                     'students.email',
-                    'students.is_registered'
+                    'students.is_registered',
+                    'students.created_at',
                 ]);
             if ($show_extra) {
                 $apps = Application::whereHas('classes', function ($q1) use ($class_id) {

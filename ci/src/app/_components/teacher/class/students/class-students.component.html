@@ -13,7 +13,7 @@
             <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
             <th mat-sort-header="tests_finished_count" scope="col">Finished Tests</th>
             <th mat-sort-header="test_duration_multiply_by" scope="col">Test Duration Multiplier</th>
-            <th></th>
+            <th mat-sort-header="created_at" scope="col">Registration Date</th>
             <th class="text-right" style="min-width: 154px">
               <button  class="button button-small button-outline" mat-button (click)="addStudents()">Add Students</button>
             </th>
@@ -35,6 +35,9 @@
               <input type="number" min="0.1" step="0.1" name="test_duration_multiply_by" #testDurationMultiplyBy [value]="item.test_duration_multiply_by || 1" (change)="onTestDurationChanged(item, testDurationMultiplyBy.value)" class="form-control" style="max-width: 72px !important;" />
             </td>
             <td style="max-width: 100px;">
+              <span *ngIf="item.is_registered">
+                {{ item.created_at | date: 'h:mm a YYYY-MM-dd' }}
+              </span>
               <span *ngIf="!item.is_registered">
                 <span class="badge">Not Registered</span>
               </span>
