@@ -92,4 +92,12 @@ export class UserService {
         };
         return this.http.post('/profile/classes/' + classId + '/unsubscribe', request);
     }
+
+    public downloadAssignmentsReport(class_id, format = 'csv') {
+        return this.http.download('/profile/classes/' + class_id + '/assignments-report.' + format);
+    }
+
+    public downloadTestsReport(class_id, format = 'csv') {
+        return this.http.download('/profile/classes/' + class_id + '/tests-report.' + format);
+    }
 }

@@ -59,7 +59,7 @@ const studentRoutes = [
     {path: 'student/class/:class_id/assignments', component: MyAssignmentsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/class/:class_id/tests', component: MyTestsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/class/:class_id/email', component: StudentEmailTeacherComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
-    {path: 'test/:test_id', component: TestComponent, canActivate: [AuthGuard]},
+    {path: 'student/class/:class_id/test/:test_id', component: TestComponent, canActivate: [AuthGuard]},
     {path: 'student/invitations', component: MyInvitationsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
 ];
 

@@ -5,8 +5,11 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\ClassApplication;
 use App\ClassOfStudents;
+use App\Exports\StudentClassAssignmentsReportExport;
+use App\Exports\StudentClassTestsReportExport;
 use App\Progress;
 use App\Student;
+use App\StudentTestAttempt;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -397,5 +400,112 @@ class ProfileController extends Controller
         }
         $student->save();
         return $this->success('OK.');
+    }
+
+    public function downloadAssignmentsReport(Request $request, $class_id, $format = 'csv') {
+        $user_id = $this->user->id;
+        $detailed_report = DB::table('class_detailed_reports')
+            ->where('class_id', $class_id)
+            ->where('student_id', $user_id)
+            ->first();
+        if (!$detailed_report) {
+            return $this->error('Error.', 404);
+        }
+        $data = json_decode($detailed_report->data);
+        $assignments = Application::where('type', 'assignment')
+            ->whereHas('classes', function ($q) use ($class_id) {
+                $q->where('classes.id', $class_id);
+            })
+            ->orderBy('name', 'ASC')
+            ->get()->keyBy('id');
+        foreach ($assignments as $app) {
+            $class_data = $app->getClassRelatedData($class_id);
+            if ($class_data->is_for_selected_students) {
+                if (DB::table('classes_applications_students')
+                        ->where('class_app_id', $class_data->id)
+                        ->where('student_id', $this->user->id)->count() < 1) {
+                    $assignments->forget($app->id);
+                }
+            }
+        }
+        switch ($format) {
+            case 'xls':
+                return (new StudentClassAssignmentsReportExport($assignments, $data))
+                    ->download('assignments_report.xls', \Maatwebsite\Excel\Excel::XLS);
+            case 'xlsx':
+                return (new StudentClassAssignmentsReportExport($assignments, $data))
+                    ->download('assignments_report.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            case 'tsv':
+                return (new StudentClassAssignmentsReportExport($assignments, $data))
+                    ->download('assignments_report.tsv', \Maatwebsite\Excel\Excel::TSV);
+            case 'ods':
+                return (new StudentClassAssignmentsReportExport($assignments, $data))
+                    ->download('assignments_report.ods', \Maatwebsite\Excel\Excel::ODS);
+            case 'html':
+                return (new StudentClassAssignmentsReportExport($assignments, $data))
+                    ->download('assignments_report.html', \Maatwebsite\Excel\Excel::HTML);
+            /** PDF export require extra library: https://phpspreadsheet.readthedocs.io/en/latest/topics/reading-and-writing-to-file/#pdf
+            case 'pdf':
+            return (new StudentClassAssignmentsReportExport($assignments, $data))
+            ->download('assignments_report.pdf', \Maatwebsite\Excel\Excel::MPDF/DOMPDF/TCPDF); */
+            default:
+                return (new StudentClassAssignmentsReportExport($assignments, $data))
+                    ->download('assignments_report.csv', \Maatwebsite\Excel\Excel::CSV, [
+                        'Content-Type' => 'text/csv',
+                    ]);
+        }
+    }
+
+    public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
+        $user_id = $this->user->id;
+        $max_attempts = 1;
+        $tests = Application::where('type', 'test')
+            ->whereHas('classes', function ($q) use ($class_id) {
+                $q->where('classes.id', $class_id);
+            })
+            ->orderBy('name', 'ASC')
+            ->get()->keyBy('id');
+        foreach ($tests as $test) {
+            $class_data = $test->getClassRelatedData($class_id);
+            $class_app_id = $class_data->id;
+            if ($class_data->is_for_selected_students && DB::table('classes_applications_students')
+                    ->where('class_app_id', $class_app_id)->where('student_id', $user_id)->count() < 1) {
+                $tests->forget($test->id);
+                continue;
+            }
+            $test->attempts = StudentTestAttempt::whereHas('testStudent', function ($q1) use ($user_id, $class_app_id) {
+                $q1->where('student_id', $user_id)->where('class_app_id', $class_app_id);
+            })->get();
+            $attempts_count = count($test->attempts);
+            if ($attempts_count > $max_attempts) {
+                $max_attempts = $attempts_count;
+            }
+        }
+        switch ($format) {
+            case 'xls':
+                return (new StudentClassTestsReportExport($tests, $max_attempts))
+                    ->download('tests_report.xls', \Maatwebsite\Excel\Excel::XLS);
+            case 'xlsx':
+                return (new StudentClassTestsReportExport($tests, $max_attempts))
+                    ->download('tests_report.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            case 'tsv':
+                return (new StudentClassTestsReportExport($tests, $max_attempts))
+                    ->download('tests_report.tsv', \Maatwebsite\Excel\Excel::TSV);
+            case 'ods':
+                return (new StudentClassTestsReportExport($tests, $max_attempts))
+                    ->download('tests_report.ods', \Maatwebsite\Excel\Excel::ODS);
+            case 'html':
+                return (new StudentClassTestsReportExport($tests, $max_attempts))
+                    ->download('tests_report.html', \Maatwebsite\Excel\Excel::HTML);
+            /** PDF export require extra library: https://phpspreadsheet.readthedocs.io/en/latest/topics/reading-and-writing-to-file/#pdf
+            case 'pdf':
+            return (new StudentClassTestsReportExport($tests, $max_attempts))
+            ->download('tests_report.pdf', \Maatwebsite\Excel\Excel::MPDF/DOMPDF/TCPDF); */
+            default:
+                return (new StudentClassTestsReportExport($tests, $max_attempts))
+                    ->download('tests_report.csv', \Maatwebsite\Excel\Excel::CSV, [
+                        'Content-Type' => 'text/csv',
+                    ]);
+        }
     }
 }

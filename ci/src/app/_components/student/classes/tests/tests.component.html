@@ -3,9 +3,16 @@
   <app-my-class-menu [classId]="classId" class="class-menu"></app-my-class-menu>
   <div class="dashboard-content">
     <mat-card>
-      <div class="title">
-        <span *ngIf="!showCompletedApplications">My Tests</span>
-        <span *ngIf="showCompletedApplications">Finished Tests</span>
+      <div class="subtitle text-center">
+        {{ showCompletedApplications ? 'Finished Tests' : 'My Tests' }}
+      </div>
+      <div class="actions-container">
+        <div class="links-group">
+          <strong>Status Report:</strong>
+          <button class="button button-small button-outline" mat-button (click)="onDownload('csv')">CSV</button>
+          <button class="button button-small button-outline" mat-button (click)="onDownload('xls')">XLS</button>
+        </div>
+        <div></div>
       </div>
       <div *ngIf="!showCompletedApplications" class="applications-list">
         <mat-button-toggle-group *ngIf="applications.length > 0" #group="matButtonToggleGroup" [value]="selectedAppId" vertical>

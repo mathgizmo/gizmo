@@ -58,7 +58,8 @@ $api->version('v1', function ($api) {
         $api->get('/profile/classes/invitations', 'App\Http\APIControllers\ProfileController@getClassInvitations');
         $api->post('/profile/classes/{class_id}/subscribe', 'App\Http\APIControllers\ProfileController@subscribeClass');
         $api->post('/profile/classes/{class_id}/unsubscribe', 'App\Http\APIControllers\ProfileController@unsubscribeClass');
-
+        $api->get('/profile/classes/{class_id}/assignments-report.{format}', 'App\Http\APIControllers\ProfileController@downloadAssignmentsReport');
+        $api->get('/profile/classes/{class_id}/tests-report.{format}', 'App\Http\APIControllers\ProfileController@downloadTestsReport');
         $api->get('/classes', 'App\Http\APIControllers\ClassController@all');
         $api->post('/classes', 'App\Http\APIControllers\ClassController@store');
         $api->put('/classes/{class_id}', 'App\Http\APIControllers\ClassController@update');

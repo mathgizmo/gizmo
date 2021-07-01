@@ -1,4 +1,4 @@
-﻿<a routerLink="/student/tests" routerLinkActive="active" class="back">
+﻿<a routerLink="/student/class/{{classId}}/tests" routerLinkActive="active" class="back">
   {{backLinkText}}
 </a>
 
@@ -38,7 +38,7 @@
           </span>
         </h3>
       </div>
-      <a class="button-container" routerLink="/student/tests" routerLinkActive="active">
+      <a class="button-container" routerLink="/student/class/{{classId}}/tests" routerLinkActive="active">
         <button
                 mat-raised-button
                 class="button moving-forward-button"

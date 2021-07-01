@@ -90,4 +90,33 @@ export class MyAssignmentsComponent implements OnInit, OnDestroy {
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
+    onDownload(format = 'csv') {
+        this.userService.downloadAssignmentsReport(this.myClass.id, format)
+            .subscribe(file => {
+                let type = 'text/csv;charset=utf-8;';
+                switch (format) {
+                    case 'xls':
+                    case 'xlsx':
+                        type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;';
+                        break;
+                    default:
+                        break;
+                }
+                const newBlob = new Blob([file], { type: type });
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(newBlob);
+                    return;
+                }
+                const data = window.URL.createObjectURL(newBlob);
+                const link = document.createElement('a');
+                link.href = data;
+                link.download = this.myClass.name + 'Assignments Report.' + format;
+                link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                setTimeout(function () {
+                    window.URL.revokeObjectURL(data);
+                    link.remove();
+                }, 100);
+            });
+    }
+
 }

@@ -102,20 +102,20 @@ export class MyTestsComponent implements OnInit, OnDestroy {
             return;
         }
         if (app.in_progress) {
-            return this.router.navigate(['/test/' + app.class_app_id]);
+            return this.router.navigate(['/student/class/' + this.classId + '/test/' + app.class_app_id]);
         }
         return this.openStartTestDialog(app);
     }
 
     onShowTestReport(app) {
-        const dialogRef = this.dialog.open(TestReportDialogComponent, {
+        this.dialog.open(TestReportDialogComponent, {
             data: { test: app },
             position: this.dialogPosition
         });
     }
 
     openOptionsDialog() {
-        const dialogRef = this.dialog.open(TestOptionsDialogComponent, {
+        this.dialog.open(TestOptionsDialogComponent, {
             data: { },
             position: this.dialogPosition
         });
@@ -129,11 +129,11 @@ export class MyTestsComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 if (test.is_revealed) {
-                    this.router.navigate(['/test/' + test.class_app_id]);
+                    this.router.navigate(['/student/class/' + this.classId + '/test/' + test.class_app_id]);
                 } else {
                     this.userService.revealTest(test.class_app_id, result)
                         .subscribe(response => {
-                            this.router.navigate(['/test/' + test.class_app_id]);
+                            this.router.navigate(['/student/class/' + this.classId + '/test/' + test.class_app_id]);
                         }, error => {
                             let message = '';
                             if (typeof error === 'object') {
@@ -159,6 +159,35 @@ export class MyTestsComponent implements OnInit, OnDestroy {
         }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
+    }
+
+    onDownload(format = 'csv') {
+        this.userService.downloadTestsReport(this.myClass.id, format)
+            .subscribe(file => {
+                let type = 'text/csv;charset=utf-8;';
+                switch (format) {
+                    case 'xls':
+                    case 'xlsx':
+                        type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;';
+                        break;
+                    default:
+                        break;
+                }
+                const newBlob = new Blob([file], { type: type });
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(newBlob);
+                    return;
+                }
+                const data = window.URL.createObjectURL(newBlob);
+                const link = document.createElement('a');
+                link.href = data;
+                link.download = this.myClass.name + ' - Tests Report.' + format;
+                link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+                setTimeout(function () {
+                    window.URL.revokeObjectURL(data);
+                    link.remove();
+                }, 100);
+            });
     }
 
 }
