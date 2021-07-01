@@ -46,7 +46,7 @@ export class MyAssignmentsComponent implements OnInit, OnDestroy {
                     this.myClass = this.myClasses.find(obj => {
                         return obj.id === this.classId;
                     });
-                    this.backLinkText = 'My Classes > ' + (this.myClass ? this.myClass.name : this.classId) + ' > Report';
+                    this.backLinkText = 'My Classes > ' + (this.myClass ? this.myClass.name : this.classId) + ' > Assignments';
                 });
         });
         this.userService.getToDos(this.classId)

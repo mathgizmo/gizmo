@@ -43,19 +43,21 @@ import {LessonComponent, ChartComponent} from './_components/assignment/topic/le
 import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
-import {MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, EmailTeacherDialogComponent,
+import {MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, StudentEmailTeacherComponent,
     MyInvitationsComponent, TestOptionsDialogComponent, TestStartDialogComponent, MyClassMenuComponent,
     TestReportDialogComponent as StudentTestReportDialogComponent} from './_components/student/index';
-import {ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
+import {
+    ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
     StudentAssignmentsDialogComponent, StudentTestsDialogComponent, AddStudentDialogComponent,
-    EditClassDialogComponent, EmailClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
+    EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
     EditAssignmentDialogComponent, AssignmentReportDialogComponent, ManageTestsComponent, EditTestDialogComponent,
     TestReportDialogComponent, TestReportResetAttemptDialogComponent, ReviewContentComponent, ClassAssignmentsComponent,
     ClassDashboardComponent, ClassAssignmentsListComponent, ClassTestsListComponent,
     ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassMenuComponent,
     AssignmentsStudentsUsageChartComponent, TestsStudentsUsageChartComponent,
     ClassAssignmentsReportComponent, ClassTestsReportComponent, EditClassAssignmentDialogComponent,
-    EditClassTestDialogComponent, SelectStudentsDialogComponent} from './_components/teacher/index';
+    EditClassTestDialogComponent, SelectStudentsDialogComponent, TeacherClassEmailComponent
+} from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
@@ -147,12 +149,12 @@ FullCalendarModule.registerPlugins([
         MyClassMenuComponent,
         MyClassReportComponent,
         MyInvitationsComponent,
+        StudentEmailTeacherComponent,
         ToDoComponent,
         ManageClassesComponent,
         YesNoDialogComponent,
         DeleteConfirmationDialogComponent,
         EditClassDialogComponent,
-        EmailClassDialogComponent,
         StudentAssignmentsDialogComponent,
         StudentTestsDialogComponent,
         AddStudentDialogComponent,
@@ -166,7 +168,6 @@ FullCalendarModule.registerPlugins([
         EditClassAssignmentDialogComponent,
         EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
-        EmailTeacherDialogComponent,
         TestOptionsDialogComponent,
         TestStartDialogComponent,
         StudentTestReportDialogComponent,
@@ -194,6 +195,7 @@ FullCalendarModule.registerPlugins([
         ClassReportComponent,
         ClassTeachersComponent,
         ClassStudentsComponent,
+        TeacherClassEmailComponent,
         EditThreadDialogComponent,
         // PlacementComponent,
         // QuestionNumDialogComponent,
@@ -212,7 +214,6 @@ FullCalendarModule.registerPlugins([
         YesNoDialogComponent,
         DeleteConfirmationDialogComponent,
         EditClassDialogComponent,
-        EmailClassDialogComponent,
         StudentAssignmentsDialogComponent,
         StudentTestsDialogComponent,
         AddStudentDialogComponent,
@@ -224,7 +225,6 @@ FullCalendarModule.registerPlugins([
         EditClassAssignmentDialogComponent,
         EditClassTestDialogComponent,
         SelectStudentsDialogComponent,
-        EmailTeacherDialogComponent,
         TestOptionsDialogComponent,
         TestStartDialogComponent,
         StudentTestReportDialogComponent,

@@ -1,0 +1,78 @@
+@import '../../../../../colors';
+
+.dashboard {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0;
+    margin: 60px auto 0;
+    width: 90vw;
+    .dashboard-content {
+        margin-left: 220px;
+        width: calc(100% - 240px);
+        max-width: calc(100% - 240px) !important;
+    }
+    @media (max-width: 1024px) {
+        flex-direction: column;
+        align-items: center;
+        ::ng-deep .class-menu {
+            width: calc(100% - 20px);
+            max-width: calc(100% - 20px);
+            min-width: calc(100% - 20px);
+        }
+        .dashboard-content {
+            margin-left: 0;
+            width: calc(100% - 20px);
+            max-width: calc(100% - 20px) !important;
+        }
+    }
+}
+
+.title {
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.dashboard-content {
+    width: calc(100% - 20px);
+    margin: 10px;
+    ::ng-deep .mat-card {
+        min-width: 250px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    ::ng-deep .mat-card:last-child {
+        margin-bottom: 28px;
+    }
+}
+
+:host ::ng-deep .ck-editor__editable_inline {
+    min-height: 240px !important;
+}
+
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 600px) {
+    .dashboard {
+        width: 100vw;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    .dashboard {
+        width: calc(100% - 20px);
+        justify-content: center;
+        align-items: center;
+    }
+    .dashboard-content {
+        margin-right: 0;
+    }
+}
