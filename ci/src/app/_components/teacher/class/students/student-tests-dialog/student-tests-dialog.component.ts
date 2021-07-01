@@ -10,18 +10,18 @@ import {compare} from '../../../../../_helpers/compare.helper';
 import {ClassesManagementService} from '../../../../../_services';
 
 @Component({
-    selector: 'app-student-assignments-dialog',
-    templateUrl: 'student-assignments-dialog.component.html',
-    styleUrls: ['student-assignments-dialog.component.scss'],
+    selector: 'app-student-tests-dialog',
+    templateUrl: 'student-tests-dialog.component.html',
+    styleUrls: ['student-tests-dialog.component.scss'],
     providers: [ClassesManagementService]
 })
-export class StudentAssignmentsDialogComponent extends BaseDialogComponent<StudentAssignmentsDialogComponent> implements OnInit {
+export class StudentTestsDialogComponent extends BaseDialogComponent<StudentTestsDialogComponent> implements OnInit {
 
-    public assignments = [];
+    public tests = [];
     public student: any;
     public classId: number;
 
-    public dialogPosition: any;
+    dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
@@ -31,7 +31,7 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
     constructor(private classService: ClassesManagementService,
         public dialog: MatDialog, private deviceService: DeviceDetectorService,
         private sanitizer: DomSanitizer,
-        public dialogRef: MatDialogRef<StudentAssignmentsDialogComponent>,
+        public dialogRef: MatDialogRef<StudentTestsDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
         if (data.student) {
@@ -40,7 +40,7 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
         }
         if (data.class_id) {
             // tslint:disable-next-line:indent
-        	this.classId = data.class_id;
+            this.classId = data.class_id;
         }
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
@@ -50,9 +50,9 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
 
     public ngOnInit() {
         this.resizeDialog();
-        this.classService.getStudentAssignmentsReport(this.classId, this.student.id)
+        this.classService.getStudentTestsReport(this.classId, this.student.id)
             .subscribe(items => {
-                this.assignments = items;
+                this.tests = items;
             });
     }
 
@@ -62,20 +62,19 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
     }
 
     sortData(sort: Sort) {
-        const data = this.assignments.slice();
+        const data = this.tests.slice();
         if (!sort.active || sort.direction === '') {
-            this.assignments = data;
+            this.tests = data;
             return;
         }
-        this.assignments = data.sort((a, b) => {
+        this.tests = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
                 case 'id': return compare(a.id, b.id, isAsc);
                 case 'name': return compare(a.name, b.name, isAsc);
+                case 'mark': return compare(a.mark, b.mark, isAsc);
                 case 'due_at': return compare(a.due_at, b.due_at, isAsc);
                 case 'completed_at': return compare(a.completed_at, b.completed_at, isAsc);
-                case 'lessons_complete': return compare(a.lessons_complete, b.lessons_complete, isAsc);
-                case 'correct_rate': return compare(a.correct_rate, b.correct_rate, isAsc);
                 default: return 0;
             }
         });

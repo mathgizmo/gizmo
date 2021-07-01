@@ -1,0 +1,34 @@
+<h2 mat-dialog-title class="subtitle hide">Tests!</h2>
+<mat-dialog-content class="dialog-content">
+    <div class="subtitle text-center">Tests of {{student.email}}</div>
+    <form novalidate #form="ngForm">
+        <div class="table-responsive">
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Icon</th>
+                    <th mat-sort-header="name" scope="col">Name</th>
+                    <th mat-sort-header="mark" scope="col">Score</th>
+                    <th mat-sort-header="due_at" scope="col">Due At</th>
+                    <th mat-sort-header="completed_at" scope="col">Completed At</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of tests" [class.completed]="item.is_completed && !item.is_past_due" [class.past-due]="item.is_past_due && !item.is_completed" [class.completed-past-due]="item.is_past_due && item.is_completed">
+                    <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
+                    <td>{{ item.name }}</td>
+                    <td>
+                        {{ item.mark ? (item.mark * 100).toFixed(0)+'%' : 'N/A' }}
+                        <span *ngIf="item.mark && item.questions_count">({{(item.mark * item.questions_count).toFixed(0) }}/{{item.questions_count}})</span>
+                    </td>
+                    <td>{{ item.due_at }}</td>
+                    <td>{{ item.completed_at ? item.completed_at : 'N/A' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class="button button-white" type="button">Close</button>
+</mat-dialog-actions>

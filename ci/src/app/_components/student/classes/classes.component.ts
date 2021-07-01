@@ -5,6 +5,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService, ClassesManagementService} from '../../../_services';
+import {compare} from '../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-my-classes',
@@ -118,12 +119,4 @@ export class MyClassesComponent implements OnInit {
             }
         });
     }
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
+import {compare} from '../../../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-class-assignments-report',
@@ -31,12 +32,4 @@ export class ClassAssignmentsReportComponent implements OnInit {
             }
         });
     }
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

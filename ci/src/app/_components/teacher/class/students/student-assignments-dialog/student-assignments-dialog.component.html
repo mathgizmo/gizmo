@@ -9,6 +9,8 @@
                     <th scope="col">Icon</th>
                     <th mat-sort-header="name" scope="col">Name</th>
                     <th mat-sort-header="due_at" scope="col">Due At</th>
+                    <th mat-sort-header="lessons_complete" scope="col">Lessons Complete</th>
+                    <th mat-sort-header="correct_rate" scope="col">Correct Rate</th>
                     <th mat-sort-header="completed_at" scope="col">Completed At</th>
                 </tr>
                 </thead>
@@ -17,6 +19,14 @@
                     <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
                     <td>{{item.name}}</td>
                     <td>{{item.due_at}}</td>
+                    <td>
+                        <span>{{item.lessons_complete}}/{{item.lessons_count}} ({{(item.lessons_complete/item.lessons_count * 100).toFixed(0)}}%)</span>
+                        <mat-progress-bar  mode="determinate" [value]="item.lessons_complete/item.lessons_count * 100"></mat-progress-bar>
+                    </td>
+                    <td>
+                        <span>{{item.questions_correct}}/{{item.questions_attempted}} ({{(item.correct_rate * 100).toFixed(0)}}%)</span>
+                        <mat-progress-bar  mode="determinate" [value]="item.correct_rate * 100"></mat-progress-bar>
+                    </td>
                     <td>{{item.completed_at ? item.completed_at : 'N/A'}}</td>
                 </tr>
                 </tbody>

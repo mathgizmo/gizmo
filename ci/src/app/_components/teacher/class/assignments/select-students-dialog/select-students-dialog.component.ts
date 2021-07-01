@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Sort} from '@angular/material/sort';
+import {compare} from '../../../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-select-students-dialog',
@@ -92,12 +93,4 @@ export class SelectStudentsDialogComponent extends BaseDialogComponent<SelectStu
         } */
     }
 
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

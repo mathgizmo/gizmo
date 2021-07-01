@@ -4,10 +4,12 @@ import {ActivatedRoute} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {Sort} from '@angular/material/sort';
 import {StudentAssignmentsDialogComponent} from '../../class/students/student-assignments-dialog/student-assignments-dialog.component';
+import {StudentTestsDialogComponent} from '../../class/students/student-tests-dialog/student-tests-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {AddStudentDialogComponent} from './add-student-dialog/add-student-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DeleteConfirmationDialogComponent} from '../../../dialogs/index';
+import {compare} from '../../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-class-students',
@@ -53,7 +55,7 @@ export class ClassStudentsComponent implements OnInit {
             const classes = this.classService.classes;
             this.class = classes.filter(x => x.id === this.classId)[0];
             this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Students';
-            this.classService.getStudents(this.classId)
+            this.classService.getStudents(this.classId, true)
                 .subscribe(students => {
                     this.students = students;
                 });
@@ -136,13 +138,6 @@ export class ClassStudentsComponent implements OnInit {
             this.students = data;
             return;
         }
-        const compare = (a: number | string, b: number | string, isAsc: boolean) => {
-            if (typeof a === 'string' || typeof b === 'string') {
-                a = ('' + a).toLowerCase();
-                b = ('' + b).toLowerCase();
-            }
-            return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-        };
         this.students = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {
@@ -153,6 +148,7 @@ export class ClassStudentsComponent implements OnInit {
                 case 'email': return compare(a.email, b.email, isAsc);
                 case 'assignments_finished_count': return compare(a.assignments_finished_count, b.assignments_finished_count, isAsc);
                 case 'tests_finished_count': return compare(a.tests_finished_count, b.tests_finished_count, isAsc);
+                case 'created_at': return compare(a.created_at, b.created_at, isAsc);
                 default: return 0;
             }
         });
@@ -160,7 +156,15 @@ export class ClassStudentsComponent implements OnInit {
 
     showAssignments(student) {
         const dialogRef = this.dialog.open(StudentAssignmentsDialogComponent, {
-            data: { 'assignments': student.assignments, 'student': student},
+            data: { 'class_id': this.classId, 'student': student},
+            position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(result => {});
+    }
+
+    showTests(student) {
+        const dialogRef = this.dialog.open(StudentTestsDialogComponent, {
+            data: { 'class_id': this.classId, 'student': student},
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {});

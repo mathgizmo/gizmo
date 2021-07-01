@@ -5,7 +5,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {TestReportDialogComponent} from '../../tests/test-report-dialog/test-report-dialog.component';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
-import * as moment from 'moment/moment';
+import {compare} from '../../../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-class-tests-report',
@@ -85,19 +85,6 @@ export class ClassTestsReportComponent implements OnInit {
             this.tests = data;
             return;
         }
-        const compare = (a: number | string, b: number | string, isAsc: boolean, isDate = false) => {
-            if (isDate) {
-                const aDate = a ? moment(a, 'YYYY-MM-DD hh:mm A') : moment(0);
-                const bDate = b ? moment(b, 'YYYY-MM-DD hh:mm A') : moment(0);
-                return (aDate.isBefore(bDate) ? -1 : 1) * (isAsc ? 1 : -1);
-            } else {
-                if (typeof a === 'string' || typeof b === 'string') {
-                    a = ('' + a).toLowerCase();
-                    b = ('' + b).toLowerCase();
-                }
-                return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-            }
-        };
         this.tests = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {

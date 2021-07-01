@@ -50,7 +50,7 @@ export class AssignmentsStudentsUsageChartComponent implements OnInit, AfterView
             const user = this.authenticationService.userValue;
             this.studentId = user.user_id + '';
         } else {
-            this.classService.getStudents(this.classId, false)
+            this.classService.getStudents(this.classId)
                 .subscribe(students => {
                     this.students = students;
                     this.availableStudents = students;

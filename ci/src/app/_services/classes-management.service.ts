@@ -77,8 +77,8 @@ export class ClassesManagementService {
         return this.http.post('/classes/' + class_id + '/email', mail);
     }
 
-    public getStudents(class_id, extraData = true) {
-        return this.http.get('/classes/' + class_id + '/students?extra=' + extraData)
+    public getStudents(class_id, withExtra = false) {
+        return this.http.get('/classes/' + class_id + '/students?extra=' + withExtra)
             .pipe(
                 map((response: Response) => {
                     return response['items'];
@@ -95,12 +95,30 @@ export class ClassesManagementService {
             );
     }
 
+    public changeStudent(class_id, item) {
+        return this.http.put('/classes/' + class_id + '/students/' + item.id, item);
+    }
+
     public deleteStudent(class_id, student_id) {
         return this.http.delete('/classes/' + class_id + '/students/' + student_id);
     }
 
-    public changeStudent(class_id, item) {
-        return this.http.put('/classes/' + class_id + '/students/' + item.id, item);
+    public getStudentAssignmentsReport(class_id, student_id) {
+        return this.http.get('/classes/' + class_id + '/students/' + student_id + '/report/assignments')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                })
+            );
+    }
+
+    public getStudentTestsReport(class_id, student_id) {
+        return this.http.get('/classes/' + class_id + '/students/' + student_id + '/report/tests')
+            .pipe(
+                map((response: Response) => {
+                    return response['items'];
+                })
+            );
     }
 
     public getTeachers(class_id) {

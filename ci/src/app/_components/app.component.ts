@@ -1,4 +1,4 @@
-﻿import {Component} from '@angular/core';
+﻿import {Component, OnInit} from '@angular/core';
 import {Router, NavigationEnd, ActivatedRoute} from '@angular/router';
 import {map, filter} from 'rxjs/operators';
 import {HTTPStatus, AuthenticationService} from '../_services/index';
@@ -14,9 +14,8 @@ declare var $: any;
     animations: []
 })
 
-export class AppComponent {
-    HTTPActivity: boolean;
-
+export class AppComponent implements OnInit {
+    public HTTPActivity = false;
     public showMenu = this.isLoggedIn();
     public user: User;
 
@@ -24,19 +23,24 @@ export class AppComponent {
         return !!this.user;
     }
 
-    constructor(private router: Router, private activatedRoute: ActivatedRoute,
-                private httpStatus: HTTPStatus, private authenticationService: AuthenticationService) {
+    constructor(private router: Router,
+                private activatedRoute: ActivatedRoute,
+                private httpStatus: HTTPStatus,
+                private authenticationService: AuthenticationService) {
+    }
+
+    ngOnInit() {
         this.httpStatus.getHttpStatus()
             .subscribe((status: boolean) => {
                 this.HTTPActivity = status;
             });
-        router.events
+        this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
-                map(() => activatedRoute)
+                map(() => this.activatedRoute)
             )
             .subscribe((event) => {
-                if (router.url === '/login') {
+                if (this.router.url === '/login') {
                     this.showMenu = false;
                 } else {
                     this.showMenu = this.isLoggedIn();

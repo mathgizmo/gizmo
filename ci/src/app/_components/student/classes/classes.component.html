@@ -8,7 +8,6 @@
                     <th mat-sort-header="id" scope="col">Class ID</th>
                     <th mat-sort-header="name" scope="col">Class Name</th>
                     <th mat-sort-header="teacher" scope="col">Teacher</th>
-                    <th></th>
                     <td class="text-right">
                         <button *ngIf="availableClasses.length > 0" mat-button class="button button-small button-outline" (click)="onAddClass()">Add Class</button>
                     </td>
@@ -18,22 +17,22 @@
                 <tr *ngFor="let item of myClasses">
                     <td routerLink="/student/class/{{item.id}}/report" class="clickable">{{item.id}}</td>
                     <td routerLink="/student/class/{{item.id}}/report" class="clickable">{{item.name}}</td>
-                    <td routerLink="/student/class/{{item.id}}/report" class="clickable">
+                    <td style="min-width: 220px">
                         <span *ngIf="!item.teachers.length">{{item.teacher}} ({{item.teacher_email}})</span>
-                    </td>
-                    <td *ngIf="item.teachers.length">
-                        <button mat-icon-button [matMenuTriggerFor]="menu">
-                            {{item.teacher}} ({{item.teacher_email}})
-                            <mat-icon>more_vert</mat-icon>
-                        </button>
-                        <mat-menu #menu="matMenu">
-                            <div>Co-teachers:</div>
-                            <button *ngFor="let teacher of item.teachers" mat-menu-item>
-                                {{teacher.first_name}} {{teacher.last_name}} ({{teacher.email}})
+                        <span *ngIf="item.teachers.length">
+                            <button mat-icon-button [matMenuTriggerFor]="menu">
+                                {{item.teacher}} ({{item.teacher_email}})
+                                <mat-icon>more_vert</mat-icon>
                             </button>
-                        </mat-menu>
+                            <mat-menu #menu="matMenu">
+                                <div>Co-teachers:</div>
+                                <button *ngFor="let teacher of item.teachers" mat-menu-item>
+                                    {{teacher.first_name}} {{teacher.last_name}} ({{teacher.email}})
+                                </button>
+                            </mat-menu>
+                        </span>
                     </td>
-                    <td class="text-right" style="min-width: 480px;">
+                    <td class="text-right" style="min-width: 200px">
                         <a class="button button-small button-outline" mat-stroked-button routerLink="/student/class/{{item.id}}/report" style="margin-right: 8px;">Enter</a>
                         <button class="button button-small button-outline" mat-stroked-button (click)="onUnsubscribe(item.id)">Unsubscribe</button>
                     </td>
