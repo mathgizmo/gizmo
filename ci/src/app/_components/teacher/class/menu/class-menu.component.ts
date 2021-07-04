@@ -14,5 +14,4 @@ export class ClassMenuComponent implements OnInit {
 
     ngOnInit() {
     }
-
 }

@@ -1,7 +1,5 @@
 @import '../../../../../colors';
 
-@import '../../../../../colors';
-
 .dashboard {
   display: flex;
   justify-content: center;
@@ -113,6 +111,49 @@
       margin-left: 0;
       width: calc(100% - 20px);
       max-width: calc(100% - 20px) !important;
+    }
+  }
+}
+
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  .toggle-group, .buttons-group, .links-group {
+    display: flex;
+    width: 240px;
+    max-width: 100%;
+    padding: 0 !important;
+    margin: 12px 0;
+  }
+  .links-group {
+    justify-content: flex-start;
+    align-items: center;
+    * {
+      margin: 0 4px 0 0 !important;
+      max-width: unset !important;
+      white-space: nowrap;
+    }
+    .button {
+      max-height: 36px !important;
+      padding: 2px !important;
+    }
+  }
+  .button {
+    font-size: 18px !important;
+  }
+  @media screen and (max-width: 1100px) {
+    .button, button {
+      font-size: 14px !important;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .button, button {
+      font-size: 12px !important;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .button, button {
+      font-size: 9px !important;
     }
   }
 }

@@ -14,6 +14,7 @@ import {SelectStudentsDialogComponent} from '../assignments/select-students-dial
 import {TestReportDialogComponent} from './test-report-dialog/test-report-dialog.component';
 import {ClassAssignmentsCalendarComponent} from '../assignments/calendar/class-assignments-calendar.component';
 import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../../dialogs/index';
+import {compare} from '../../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-class-tests',
@@ -74,7 +75,7 @@ export class ClassTestsComponent implements OnInit {
                     this.tests = res['tests'];
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Tests';
                 });
-            this.classService.getStudents(this.classId, false).subscribe(students => {
+            this.classService.getStudents(this.classId).subscribe(students => {
                 this.students = students;
             });
         });
@@ -593,12 +594,4 @@ export class ClassTestsComponent implements OnInit {
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

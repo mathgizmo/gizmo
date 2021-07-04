@@ -2,9 +2,19 @@
 <div class="dashboard">
   <app-my-class-menu [classId]="classId" class="class-menu"></app-my-class-menu>
   <div class="dashboard-content">
-    <mat-card *ngIf="!showCompletedApplications">
-      <span class="title">Assignments To Do</span>
-      <div class="applications-list" *ngIf="applications.length > 0">
+    <mat-card>
+      <div class="subtitle text-center">
+        {{ showCompletedApplications ? 'Completed Assignments' : 'Assignments To Do' }}
+      </div>
+      <div class="actions-container">
+        <div class="links-group">
+          <strong>Status Report:</strong>
+          <button class="button button-small button-outline" mat-button (click)="onDownload('csv')">CSV</button>
+          <button class="button button-small button-outline" mat-button (click)="onDownload('xls')">XLS</button>
+        </div>
+        <div></div>
+      </div>
+      <div *ngIf="!showCompletedApplications && applications.length > 0" class="applications-list">
         <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
           <mat-button-toggle *ngFor="let application of applications" [value]="application.id" (click)="onChangeToDo(application)" >
             <div class="app-select-container" [class.disabled]="application.is_blocked">
@@ -25,7 +35,7 @@
           See Completed Assignments
         </div>
       </div>
-      <div *ngIf="applications.length < 1">
+      <div *ngIf="!showCompletedApplications && applications.length <= 0">
         <div class="subtitle text-center">
           You have no Assignments To Do!
         </div>
@@ -36,10 +46,7 @@
           <a *ngIf="completedApplications.length < 1" mat-button class="button button-outline" routerLink="../my-classes" >Search for Class</a>
         </div>
       </div>
-    </mat-card>
-    <mat-card *ngIf="showCompletedApplications">
-      <span class="title">Completed Assignments</span>
-      <div class="applications-list">
+      <div *ngIf="showCompletedApplications" class="applications-list">
         <mat-button-toggle-group #group="matButtonToggleGroup" [value]="selectedAppId" vertical>
           <mat-button-toggle *ngFor="let application of completedApplications" [value]="application.id" (click)="onChangeToDo(application)" >
             <div class="app-select-container completed"> <!-- <div class="app-select-container completed" [class.disabled]="application.is_blocked"> -->

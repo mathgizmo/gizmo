@@ -14,6 +14,7 @@ import {AuthenticationService, QuestionService, TestService, TrackingService} fr
 export class TestComponent implements OnInit, OnDestroy {
 
     public testId: number;
+    public classId: number;
     public test = {
         id: 0,
         name: '',
@@ -68,6 +69,7 @@ export class TestComponent implements OnInit, OnDestroy {
         }
         this.sub = this.route.params.subscribe(params => {
             this.testId = +params['test_id'] || 0;
+            this.classId = +params['class_id'] || 0;
         });
         this.routerEvent = this.router.events.subscribe((evt) => {
             if (evt instanceof NavigationEnd) {

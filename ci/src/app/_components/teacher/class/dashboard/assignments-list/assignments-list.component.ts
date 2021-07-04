@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {environment} from '../../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
+import {compare} from '../../../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-class-assignments-list',
@@ -29,13 +30,6 @@ export class ClassAssignmentsListComponent implements OnInit {
             this.assignments = data;
             return;
         }
-        const compare = (a: number | string, b: number | string, isAsc: boolean) => {
-            if (typeof a === 'string' || typeof b === 'string') {
-                a = ('' + a).toLowerCase();
-                b = ('' + b).toLowerCase();
-            }
-            return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-        };
         this.assignments = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {

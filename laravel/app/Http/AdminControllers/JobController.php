@@ -8,6 +8,7 @@ use App\ClassOfStudents;
 use App\Mail\ClassMail;
 use App\Mail\TestErrorMail;
 use App\Progress;
+use App\StudentsTracking;
 use App\StudentsTrackingQuestion;
 use App\StudentTestAttempt;
 use Carbon\Carbon;
@@ -72,10 +73,33 @@ class JobController extends Controller
                                     $status = 'progress';
                                     $progress = $lessons_count > 0 ? (round($complete_lessons_count / $lessons_count, 3)) : 0;
                                 }
+
+                                $class_tracking_questions_statistics = DB::table('students_tracking_questions')
+                                    ->select(
+                                        DB::raw("SUM(1) as total"),
+                                        DB::raw("SUM(IF(is_right_answer, 1, 0)) as correct")
+                                    )
+                                    ->where('class_app_id', $class_data->id)
+                                    ->where('student_id', $student->id)
+                                    ->first();
+                                $questions_correct = $class_tracking_questions_statistics && $class_tracking_questions_statistics->correct ? $class_tracking_questions_statistics->correct : 0;
+                                $questions_attempted = $class_tracking_questions_statistics && $class_tracking_questions_statistics->total ? $class_tracking_questions_statistics->total : 0;
+                                $start_datetime = StudentsTracking::where('student_id', $student->id)
+                                    ->where('app_id', $app->id)
+                                    ->orderBy('start_datetime', 'ASC')
+                                    ->first();
+                                $recent_activity_datetime = StudentsTracking::where('student_id', $student->id)
+                                    ->where('app_id', $app->id)
+                                    ->orderBy('start_datetime', 'DESC')
+                                    ->first();
                                 $data[$app->id] = (object) [
                                     'app_id' => $app->id,
                                     'status' => $status,
-                                    'progress' => $progress
+                                    'progress' => $progress,
+                                    'questions_correct' => $questions_correct,
+                                    'questions_attempted' => $questions_attempted,
+                                    'start_datetime' => $start_datetime ? $start_datetime->start_datetime : null,
+                                    'recent_activity_datetime' => $recent_activity_datetime ? $recent_activity_datetime->start_datetime : null,
                                 ];
                             } catch (\Exception $e) {
                                 $error = $e->getMessage();

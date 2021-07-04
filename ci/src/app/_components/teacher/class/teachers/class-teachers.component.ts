@@ -7,6 +7,7 @@ import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {DeleteConfirmationDialogComponent} from '../../../dialogs/index';
 import {User} from '../../../../_models';
+import {compare} from '../../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-class-teachers',
@@ -146,13 +147,6 @@ export class ClassTeachersComponent implements OnInit {
             }
             return;
         }
-        const compare = (a: number | string, b: number | string, isAsc: boolean) => {
-            if (typeof a === 'string' || typeof b === 'string') {
-                a = ('' + a).toLowerCase();
-                b = ('' + b).toLowerCase();
-            }
-            return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-        };
         const sorted = data.sort((a, b) => {
             const isAsc = sort.direction === 'asc';
             switch (sort.active) {

@@ -24,6 +24,10 @@ class Application extends Model
         return $this->belongsToMany('App\ClassOfStudents', 'classes_applications', 'app_id', 'class_id');
     }
 
+    public function classApplications() {
+        return $this->hasMany('App\ClassApplication', 'app_id', 'id');
+    }
+
     public function levels() {
         return $this->belongsToMany('App\Level', 'application_has_models', 'app_id', 'model_id')->where('model_type', 'level');
     }
@@ -395,10 +399,19 @@ class Application extends Model
 
     public function getCompletedDate($student_id)
     {
-        $model = Progress::where('entity_type', 'application')->where('entity_id', $this->id)
-            ->where('student_id', $student_id)->orderBy('completed_at', 'ASC')->first();
-        if ($model) {
-            return $model->completed_at;
+        if ($this->type == 'test') {
+            $model = StudentTestAttempt::whereHas('testStudent', function ($q1) use($student_id) {
+                $q1->where('student_id', $student_id);
+            })->orderBy('mark', 'DESC')->first();
+            if ($model) {
+                return $model->end_at;
+            }
+        } else {
+            $model = Progress::where('entity_type', 'application')->where('entity_id', $this->id)
+                ->where('student_id', $student_id)->orderBy('completed_at', 'ASC')->first();
+            if ($model) {
+                return $model->completed_at;
+            }
         }
         return null;
     }

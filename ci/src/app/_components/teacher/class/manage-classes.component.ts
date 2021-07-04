@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.component';
-import {EmailClassDialogComponent} from './email-class-dialog/email-class-dialog.component';
 import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ClassesManagementService, AuthenticationService} from '../../../_services';
 import {User} from '../../../_models';
+import {compare} from '../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-manage-classes',
@@ -148,36 +148,6 @@ export class ManageClassesComponent implements OnInit {
         });
     }
 
-    onEmail(item) {
-        const dialogRef = this.dialog.open(EmailClassDialogComponent, {
-            data: { 'class': item },
-            position: this.dialogPosition
-        });
-        dialogRef.afterClosed().subscribe(mail => {
-            if (mail) {
-                this.classService.emailClass(item.id, mail).subscribe(res => {
-                    this.snackBar.open('Email have been successfully sent!', '', {
-                        duration: 3000,
-                        panelClass: ['success-snackbar']
-                    });
-                }, error => {
-                    let message = '';
-                    if (typeof error === 'object') {
-                        Object.values(error).forEach(x => {
-                            message += x + ' ';
-                        });
-                    } else {
-                        message = error;
-                    }
-                    this.snackBar.open(message ? message : 'Error occurred while sending email!', '', {
-                        duration: 3000,
-                        panelClass: ['error-snackbar']
-                    });
-                });
-            }
-        });
-    }
-
     sortData(sort: Sort) {
         const data = this.classes.slice();
         if (!sort.active || sort.direction === '') {
@@ -198,10 +168,4 @@ export class ManageClassesComponent implements OnInit {
 
 }
 
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-}
+

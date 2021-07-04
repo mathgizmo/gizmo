@@ -51,9 +51,7 @@
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.name}}</td>
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.class_type.charAt(0).toUpperCase() + item.class_type.slice(1) }}</td>
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
-                        <td class="text-right" style="min-width: 380px;">
-                            <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEmail(item)">Email</button>
-                            <a class="button button-small button-outline" mat-stroked-button routerLink="/teacher/class/{{item.id}}/threads" style="margin-right: 8px;">Discussion</a>
+                        <td class="text-right" style="min-width: 200px;">
                             <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditClass(item)">Edit</button>
                             <button [disabled]="user.user_id != item.teacher_id" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteClass(item.id)">Remove</button>
                         </td>

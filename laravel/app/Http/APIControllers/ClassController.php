@@ -7,6 +7,7 @@ use App\ClassStudent;
 use App\Exports\ClassAssignmentsReportExport;
 use App\Exports\ClassTestsReportExport;
 use App\Mail\ClassMail;
+use App\StudentTestAttempt;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Application;
 use App\ClassApplication;
@@ -161,43 +162,29 @@ class ClassController extends Controller
                 $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
                     $q1->where('classes.id', $class_id);
                 })->where('type', 'assignment')->get();
-                $now = Carbon::now()->toDateTimeString();
                 foreach ($students as $student) {
                     $class_student = DB::table('classes_students')
                         ->where('class_id', $class_id)
-                        ->where('student_id', $student->id)->first();
+                        ->where('student_id', $student->id)
+                        ->first();
                     $student->test_duration_multiply_by = $class_student ? $class_student->test_duration_multiply_by : 1;
                     $student->is_subscribed = true;
                     $assignments_finished_count = 0;
-                    $student_assignments = $apps->keyBy('id');
                     foreach ($apps as $app) {
                         $class_data = $app->getClassRelatedData($class_id);
                         if ($class_data->is_for_selected_students) {
                             if (DB::table('classes_applications_students')
                                     ->where('class_app_id', $class_data->id)
                                     ->where('student_id', $student->id)->count() < 1) {
-                                $student_assignments->forget($app->id);
                                 continue;
                             }
                         }
-                        $app->icon = $app->icon();
                         $app->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
                                 ->where('student_id', $student->id)->count() > 0;
-                        if ($class_data->due_date) {
-                            $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
-                        } else {
-                            $due_at = null;
-                        }
-                        $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
-                        $completed_at = $app->getCompletedDate($student->id);
-                        $app->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
-                        $app->is_past_due = (!$app->is_completed && $due_at && $due_at < $now) ||
-                            ($app->is_completed && $due_at && $completed_at && $due_at < $completed_at);
                         if ($app->is_completed) {
                             $assignments_finished_count++;
                         }
                     }
-                    $student->assignments = array_values($student_assignments->sortBy('due_date')->toArray());
                     $student->assignments_finished_count = $assignments_finished_count;
                     $tests_finished_count = ClassApplication::where('class_id', $class_id)
                         ->whereHas('classApplicationStudents', function ($q) use ($student) {
@@ -209,30 +196,46 @@ class ClassController extends Controller
                         ->select('classes_applications.id')->distinct()->count();
                     $student->tests_finished_count = $tests_finished_count;
                 }
-            }
-            if ($class->subscription_type == 'invitation' && $show_extra) {
-                $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
-                $not_subscribed = [];
-                foreach (array_filter($emails) as $email) {
-                    $email = str_replace('"', '', trim($email));
-                    if ($students->where('email', $email)->count() < 1) {
-                        array_push($not_subscribed, (object) [
-                            'first_name' => null,
-                            'last_name' => null,
-                            'email' => $email,
-                            'is_registered' => false,
-                            'is_subscribed' => false,
-                            'assignments_finished_count' => 0,
-                            'tests_finished_count' => 0
-                        ]);
+                if ($class->subscription_type == 'invitation') {
+                    $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
+                    $not_subscribed = [];
+                    foreach (array_filter($emails) as $email) {
+                        $email = str_replace('"', '', trim($email));
+                        if ($students->where('email', $email)->count() < 1) {
+                            $student = Student::where('email', $email)->first();
+                            if ($student) {
+                                array_push($not_subscribed, (object) [
+                                    'id' => $student->id,
+                                    'first_name' => $student->first_name,
+                                    'last_name' => $student->last_name,
+                                    'email' => $email,
+                                    'is_registered' => $student->is_registered,
+                                    'is_subscribed' => false,
+                                    'assignments_finished_count' => 0,
+                                    'tests_finished_count' => 0,
+                                    'created_at' => $student->created_at
+                                ]);
+                            } else {
+                                array_push($not_subscribed, (object) [
+                                    'id' => null,
+                                    'first_name' => null,
+                                    'last_name' => null,
+                                    'email' => $email,
+                                    'is_registered' => false,
+                                    'is_subscribed' => false,
+                                    'assignments_finished_count' => 0,
+                                    'tests_finished_count' => 0,
+                                    'created_at' => null
+                                ]);
+                            }
+                        }
                     }
+                    $not_sorted_items = array_merge(array_values($students->toArray()), $not_subscribed);
+                    $items = array_values(collect($not_sorted_items)->sortBy('email')->toArray());
+                    return $this->success(['items' => $items]);
                 }
-                $not_sorted_items = array_merge(array_values($students->toArray()), $not_subscribed);
-                $items = array_values(collect($not_sorted_items)->sortBy('email')->toArray());
-                return $this->success(['items' => $items]);
-            } else {
-                return $this->success(['items' => array_values($students->toArray())]);
             }
+            return $this->success(['items' => array_values($students->toArray())]);
         }
         return $this->error('Error.', 500);
     }
@@ -352,6 +355,112 @@ class ClassController extends Controller
         if (!$class) { return $this->error('Class not found.', 404); }
         ClassStudent::where('class_id', $class_id)->where('student_id', $student_id)->delete();
         return $this->success(['success' => true]);
+    }
+
+    public function getStudentAssignmentsReport(Request $request, $class_id, $student_id)
+    {
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use ($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use ($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
+        $now = Carbon::now()->toDateTimeString();
+        $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
+            $q1->where('classes.id', $class_id);
+        })->where('type', 'assignment')->get();
+        $student_assignments = $apps->keyBy('id');
+        foreach ($apps as $app) {
+            $class_data = $app->getClassRelatedData($class_id);
+            if ($class_data->is_for_selected_students) {
+                if (DB::table('classes_applications_students')
+                        ->where('class_app_id', $class_data->id)
+                        ->where('student_id', $student_id)->count() < 1) {
+                    $student_assignments->forget($app->id);
+                    continue;
+                }
+            }
+            $app->icon = $app->icon();
+            $app->lessons_count = $app->getLessonsQuery()->count();
+            $app->lessons_complete = Progress::where('entity_type', 'lesson')->where('app_id', $app->id)
+                ->where('student_id', $student_id)->count();
+            $class_tracking_questions_statistics = DB::table('students_tracking_questions')
+                ->select(
+                    DB::raw("SUM(1) as total"),
+                    DB::raw("SUM(IF(is_right_answer, 1, 0)) as correct")
+                )
+                ->where('class_app_id', $class_data->id)
+                ->where('student_id', $student_id)
+                ->first();
+            $app->questions_correct = $class_tracking_questions_statistics && $class_tracking_questions_statistics->correct ? $class_tracking_questions_statistics->correct : 0;
+            $app->questions_attempted = $class_tracking_questions_statistics && $class_tracking_questions_statistics->total ? $class_tracking_questions_statistics->total : 0;
+            $app->correct_rate = $app->questions_attempted > 0 ? $app->questions_correct / $app->questions_attempted : 1;
+            $app->is_completed = Progress::where('entity_type', 'application')->where('entity_id', $app->id)
+                    ->where('student_id', $student_id)->count() > 0;
+             if ($class_data->due_date) {
+                 $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+             } else {
+                 $due_at = null;
+             }
+             $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+             $completed_at = $app->getCompletedDate($student_id);
+             $app->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+             $app->is_past_due = (!$app->is_completed && $due_at && $due_at < $now) || ($app->is_completed && $due_at && $completed_at && $due_at < $completed_at);
+        }
+        return $this->success(['items' => array_values($student_assignments->sortBy('due_date')->toArray())]);
+    }
+
+    public function getStudentTestsReport(Request $request, $class_id, $student_id)
+    {
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use ($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use ($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
+        $now = Carbon::now()->toDateTimeString();
+        $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
+            $q1->where('classes.id', $class_id);
+        })->where('type', 'test')->get();
+        $student_tests = $apps->keyBy('id');
+        foreach ($apps as $app) {
+            $app_id = $app->id;
+            $class_data = $app->getClassRelatedData($class_id);
+            if ($class_data->is_for_selected_students) {
+                if (DB::table('classes_applications_students')
+                        ->where('class_app_id', $class_data->id)
+                        ->where('student_id', $student_id)->count() < 1) {
+                    $student_tests->forget($app_id);
+                    continue;
+                }
+            }
+            $app->icon = $app->icon();
+            $attempt = StudentTestAttempt::whereHas('testStudent', function ($q1) use($student_id, $class_id, $app_id) {
+                $q1->where('student_id', $student_id)
+                    ->whereHas('classApplication', function ($q2) use ($class_id, $app_id) {
+                        $q2->where('class_id', $class_id)->where('app_id', $app_id);
+                    });
+            })->orderBy('mark', 'DESC')->first();
+            $app->is_completed = $attempt && $attempt->mark;
+            $app->mark = $app->is_completed ? $attempt->mark : null;
+            $app->questions_count = $attempt ? $attempt->questions_count : null;
+            if ($class_data->due_date) {
+                $due_at = $class_data->due_time ? $class_data->due_date.' '.$class_data->due_time : $class_data->due_date.' 00:00:00';
+            } else {
+                $due_at = null;
+            }
+            $app->due_at = $due_at ? Carbon::parse($due_at)->format('Y-m-d g:i A') : null;
+            $completed_at = $app->is_completed ? $attempt->end_at : null;
+            $app->completed_at = $completed_at ? Carbon::parse($completed_at)->format('Y-m-d g:i A') : null;
+            $app->is_past_due = (!$app->is_completed && $due_at && $due_at < $now) || ($app->is_completed && $due_at && $completed_at && $due_at < $completed_at);
+        }
+        return $this->success(['items' => array_values($student_tests->sortBy('due_date')->toArray())]);
     }
 
     public function getTeachers($class_id) {

@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA, MatDialog} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
@@ -6,26 +6,29 @@ import {Sort} from '@angular/material/sort';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {environment} from '../../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
+import {compare} from '../../../../../_helpers/compare.helper';
+import {ClassesManagementService} from '../../../../../_services';
 
 @Component({
-    selector: 'student-assignments-dialog',
+    selector: 'app-student-assignments-dialog',
     templateUrl: 'student-assignments-dialog.component.html',
     styleUrls: ['student-assignments-dialog.component.scss'],
-    providers: []
+    providers: [ClassesManagementService]
 })
-export class StudentAssignmentsDialogComponent extends BaseDialogComponent<StudentAssignmentsDialogComponent> {
+export class StudentAssignmentsDialogComponent extends BaseDialogComponent<StudentAssignmentsDialogComponent> implements OnInit {
 
-    assignments = [];
-    student: any;
+    public assignments = [];
+    public student: any;
+    public classId: number;
 
-    dialogPosition: any;
+    public dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
     private isTablet = this.deviceService.isTablet();
     private isDesktop = this.deviceService.isDesktop();
 
     private readonly adminUrl = environment.adminUrl;
 
-    constructor(
+    constructor(private classService: ClassesManagementService,
         public dialog: MatDialog, private deviceService: DeviceDetectorService,
         private sanitizer: DomSanitizer,
         public dialogRef: MatDialogRef<StudentAssignmentsDialogComponent>,
@@ -35,14 +38,22 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
             // tslint:disable-next-line:indent
         	this.student = data.student;
         }
-        if (data.assignments) {
+        if (data.class_id) {
             // tslint:disable-next-line:indent
-        	this.assignments = data.assignments;
+        	this.classId = data.class_id;
         }
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
         }
+    }
+
+    public ngOnInit() {
+        this.resizeDialog();
+        this.classService.getStudentAssignmentsReport(this.classId, this.student.id)
+            .subscribe(items => {
+                this.assignments = items;
+            });
     }
 
     resizeDialog() {
@@ -63,32 +74,20 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
                 case 'name': return compare(a.name, b.name, isAsc);
                 case 'due_at': return compare(a.due_at, b.due_at, isAsc);
                 case 'completed_at': return compare(a.completed_at, b.completed_at, isAsc);
+                case 'lessons_complete': return compare(a.lessons_complete, b.lessons_complete, isAsc);
+                case 'correct_rate': return compare(a.correct_rate, b.correct_rate, isAsc);
                 default: return 0;
             }
         });
     }
 
     setIcon(image) {
-        if (!image) {
-            image = 'images/default-icon.svg';
-        }
+        if (!image) { image = 'images/default-icon.svg'; }
         const link = `url(` + this.adminUrl + `/${image})`;
         return this.sanitizer.bypassSecurityTrustStyle(link);
     }
 
     // prevent dialog close on Enter pressed
     @HostListener('document:keypress', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent) {
-        /* if (event.key === 'Enter') {
-            this.dialogRef.close();
-        } */
-    }
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    if (typeof a === 'string' || typeof b === 'string') {
-        a = ('' + a).toLowerCase();
-        b = ('' + b).toLowerCase();
-    }
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    handleKeyboardEvent(event: KeyboardEvent) { }
 }
