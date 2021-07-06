@@ -2,16 +2,19 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
 import * as moment from 'moment';
-import {UserService} from '../../../../_services/index';
+import {User} from '../../../../_models';
+import {UserService, AuthenticationService} from '../../../../_services/index';
 import {environment} from '../../../../../environments/environment';
 
 @Component({
     selector: 'app-my-assignments',
     templateUrl: './assignments.component.html',
     styleUrls: ['./assignments.component.scss'],
-    providers: [UserService]
+    providers: [UserService, AuthenticationService]
 })
 export class MyAssignmentsComponent implements OnInit, OnDestroy {
+
+    public user: User;
     public classId: number;
     public myClass = {
         id: 0,
@@ -31,6 +34,7 @@ export class MyAssignmentsComponent implements OnInit, OnDestroy {
     private sub: any;
 
     constructor(
+        private authenticationService: AuthenticationService,
         private userService: UserService,
         private sanitizer: DomSanitizer,
         private router: Router,
@@ -38,6 +42,7 @@ export class MyAssignmentsComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        this.user = this.authenticationService.userValue;
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
             this.userService.getClasses()
@@ -110,7 +115,7 @@ export class MyAssignmentsComponent implements OnInit, OnDestroy {
                 const data = window.URL.createObjectURL(newBlob);
                 const link = document.createElement('a');
                 link.href = data;
-                link.download = this.myClass.name + 'Assignments Report.' + format;
+                link.download = this.myClass.name + 'Assignments Report ' + this.user.email + '.' + format;
                 link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
                 setTimeout(function () {
                     window.URL.revokeObjectURL(data);

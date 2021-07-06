@@ -1,13 +1,14 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../../../_services/user.service';
+import {UserService, AuthenticationService} from '../../../../_services/index';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {TestOptionsDialogComponent} from './test-options-dialog/test-options-dialog.component';
 import {TestStartDialogComponent} from './test-start-dialog/test-start-dialog.component';
 import {TestReportDialogComponent} from './test-report-dialog/test-report-dialog.component';
+import {User} from '../../../../_models';
 import * as moment from 'moment';
 import {environment} from '../../../../../environments/environment';
 
@@ -15,9 +16,11 @@ import {environment} from '../../../../../environments/environment';
     selector: 'app-my-tests',
     templateUrl: './tests.component.html',
     styleUrls: ['./tests.component.scss'],
-    providers: [UserService]
+    providers: [UserService, AuthenticationService]
 })
 export class MyTestsComponent implements OnInit, OnDestroy {
+
+    public user: User;
     public classId: number;
     public myClass = {
         id: 0,
@@ -42,6 +45,7 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     private sub: any;
 
     constructor(
+        private authenticationService: AuthenticationService,
         private userService: UserService,
         private sanitizer: DomSanitizer,
         private router: Router,
@@ -57,6 +61,7 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.user = this.authenticationService.userValue;
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
             this.userService.getClasses()
@@ -181,7 +186,7 @@ export class MyTestsComponent implements OnInit, OnDestroy {
                 const data = window.URL.createObjectURL(newBlob);
                 const link = document.createElement('a');
                 link.href = data;
-                link.download = this.myClass.name + ' - Tests Report.' + format;
+                link.download = this.myClass.name + ' - Tests Report ' + this.user.email + '.' + format;
                 link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
                 setTimeout(function () {
                     window.URL.revokeObjectURL(data);
