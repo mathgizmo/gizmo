@@ -101,7 +101,7 @@ export class ClassStudentsComponent implements OnInit {
                             items.forEach(item => {
                                 this.students.unshift(item);
                             });
-                            this.snackBar.open('Students was successfully added to the classroom!', '', {
+                            this.snackBar.open('Students were successfully added to the classroom!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
