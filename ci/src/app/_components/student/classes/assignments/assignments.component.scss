@@ -115,6 +115,19 @@
   }
 }
 
+.dashboard-content {
+  width: calc(100% - 20px);
+  margin: 10px;
+  ::ng-deep .mat-card {
+    min-width: 250px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  ::ng-deep .mat-card:last-child {
+    margin-bottom: 28px;
+  }
+}
+
 .actions-container {
   display: flex;
   justify-content: space-between;

@@ -400,7 +400,7 @@ class ProfileController extends Controller
                     return $this->error('The classroom is closed!', 400);
             }
             DB::table('classes_students')->insert([
-                'class_id' => $class_id,
+                'class_id' => $class->id,
                 'student_id' => $student->id
             ]);
             return $this->success([
