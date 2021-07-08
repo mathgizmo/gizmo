@@ -36,7 +36,7 @@ class StudentClassAssignmentsReportExport implements FromCollection
     {
         return [
             'Assignment',
-            'Progress',
+            'Completion rate',
             'Questions correct',
             'Questions attempted',
             'Start date/time',

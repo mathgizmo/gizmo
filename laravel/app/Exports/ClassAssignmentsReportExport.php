@@ -39,7 +39,7 @@ class ClassAssignmentsReportExport implements FromCollection
         $heading = ['Student'];
         foreach ($this->assignments as $assignment) {
             $name = $assignment['name'];
-            array_push($heading, $name.': progress');
+            array_push($heading, $name.': completion rate');
             array_push($heading, $name.': questions correct');
             array_push($heading, $name.': questions attempted');
             array_push($heading, $name.': start date/time');
