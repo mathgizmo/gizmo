@@ -43,7 +43,6 @@
           <div *ngIf="completedApplications.length > 0" class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications">
             See Completed Assignments
           </div>
-          <a *ngIf="completedApplications.length < 1" mat-button class="button button-outline" routerLink="../my-classes" >Search for Class</a>
         </div>
       </div>
       <div *ngIf="showCompletedApplications" class="applications-list">
