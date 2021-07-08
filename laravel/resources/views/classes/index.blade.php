@@ -80,6 +80,7 @@
                             <select class="form-control" name="subscription_type" id="subscription-type-filter">
                                 <option></option>
                                 <option value="open">Open</option>
+                                <option value="assigned">Assigned</option>
                                 <option value="invitation">Invitation</option>
                                 <option value="closed">Closed</option>
                             </select>
@@ -94,7 +95,7 @@
                             <td>{{$class->name}}</td>
                             <td>{{$class->teacher ? $class->teacher->email : ''}}</td>
                             <td>{{ucfirst($class->class_type)}}</td>
-                            <td>{{$class->subscription_type == 'closed' ? 'Closed' : ($class->subscription_type == 'invitation' ? 'Invitation Only' : 'Open')}}</td>
+                            <td>{{$class->subscription_type == 'closed' ? 'Closed' : ($class->subscription_type == 'assigned' ? 'Assigned' : ($class->subscription_type == 'invitation' ? 'Invitation' : 'Open'))}}</td>
                             <td class="text-right" style="min-width: 320px;">
                                 <a class="btn btn-outline-dark" href="{{ route('classes.students.index', $class->id) }}">Manage Students</a>
                                 <a class="btn btn-dark" href="{{ route('classes.edit', $class->id) }}">Edit</a>

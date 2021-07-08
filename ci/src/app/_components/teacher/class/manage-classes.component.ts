@@ -5,6 +5,7 @@ import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
 import {ClassesManagementService, AuthenticationService} from '../../../_services';
 import {User} from '../../../_models';
 import {compare} from '../../../_helpers/compare.helper';
@@ -34,6 +35,7 @@ export class ManageClassesComponent implements OnInit {
     constructor(private classService: ClassesManagementService,
                 private authenticationService: AuthenticationService,
                 public dialog: MatDialog,
+                private router: Router,
                 private deviceService: DeviceDetectorService,
                 public snackBar: MatSnackBar) {
         this.dialogPosition = {bottom: '18vh'};
@@ -52,7 +54,7 @@ export class ManageClassesComponent implements OnInit {
 
     onAddClass() {
         const dialogRef = this.dialog.open(EditClassDialogComponent, {
-            data: { 'title': 'Create Class' },
+            data: { 'title': 'Create Classroom' },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -60,10 +62,13 @@ export class ManageClassesComponent implements OnInit {
                 this.classService.addClass(result)
                     .subscribe(item => {
                         this.classes.unshift(item);
-                        this.snackBar.open('Class have been successfully created!', '', {
+                        this.snackBar.open('Classroom have been successfully created!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
+                        if (item.subscription_type === 'invitation') {
+                            this.router.navigate(['teacher/class/' + item.id + '/invitation-settings']);
+                        }
                     }, error => {
                         let message = '';
                         if (typeof error === 'object') {
@@ -73,7 +78,7 @@ export class ManageClassesComponent implements OnInit {
                         } else {
                             message = error;
                         }
-                        this.snackBar.open(message ? message : 'Error occurred while creating class!', '', {
+                        this.snackBar.open(message ? message : 'Error occurred while creating classroom!', '', {
                             duration: 3000,
                             panelClass: ['error-snackbar']
                         });
@@ -84,13 +89,13 @@ export class ManageClassesComponent implements OnInit {
 
     onEditClass(item) {
         const dialogRef = this.dialog.open(EditClassDialogComponent, {
-            data: { 'title': 'Edit Class', 'class': item},
+            data: { 'title': 'Edit Classroom', 'class': item},
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.classService.updateClass(item.id, result).subscribe(res => {
-                    this.snackBar.open('Class have been successfully updated!', '', {
+                    this.snackBar.open('Classroom have been successfully updated!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
@@ -103,7 +108,7 @@ export class ManageClassesComponent implements OnInit {
                     } else {
                         message = error;
                     }
-                    this.snackBar.open(message ? message : 'Error occurred while updating class!', '', {
+                    this.snackBar.open(message ? message : 'Error occurred while updating classroom!', '', {
                         duration: 3000,
                         panelClass: ['error-snackbar']
                     });
@@ -126,7 +131,7 @@ export class ManageClassesComponent implements OnInit {
                         this.classes = this.classes.filter( (item) => {
                             return item.id !== class_id;
                         });
-                        this.snackBar.open('Class have been successfully deleted!', '', {
+                        this.snackBar.open('Classroom have been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
@@ -139,7 +144,7 @@ export class ManageClassesComponent implements OnInit {
                         } else {
                             message = error;
                         }
-                        this.snackBar.open(message ? message : 'Error occurred while deleting class!', '', {
+                        this.snackBar.open(message ? message : 'Error occurred while deleting classroom!', '', {
                             duration: 3000,
                             panelClass: ['error-snackbar']
                         });

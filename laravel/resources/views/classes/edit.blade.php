@@ -21,6 +21,13 @@
                 <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
+                <div class="form-group row mt-3">
+                    <label for="key" class="col-md-2 form-control-label ml-3 font-weight-bold">Key</label>
+                    <div class="col-md-8">
+                        <div class="form-control">{{$class->key}}</div>
+                    </div>
+                </div>
+
                 <div class="form-group row mt-3 {{ $errors->has('name') ? ' has-error' : '' }}">
                     <label for="name" class="col-md-2 form-control-label ml-3 font-weight-bold">Name</label>
                     <div class="col-md-8">
@@ -68,12 +75,13 @@
                     <div class="col-md-8">
                         <select id="subscription_type" name="subscription_type" class="form-control" style="max-width: 200px;">
                             <option value="open" {{ $class->subscription_type == 'open' ? 'selected="selected"' : '' }}>Open</option>
-                            <option value="invitation" {{ $class->subscription_type == 'invitation' ? 'selected="selected"' : '' }}>Invitation Only</option>
+                            <option value="assigned" {{ $class->subscription_type == 'assigned' ? 'selected="selected"' : '' }}>Assigned</option>
+                            <option value="invitation" {{ $class->subscription_type == 'invitation' ? 'selected="selected"' : '' }}>Invitation</option>
                             <option value="closed" {{ $class->subscription_type == 'closed' ? 'selected="selected"' : '' }}>Closed</option>
                         </select>
                     </div>
                 </div>
-                <div id="invitations-container" class="form-group row mt-3" style="display: {{ $class->subscription_type == 'invitation' ? 'flex' : 'none' }};">
+                <div id="invitations-container" class="form-group row mt-3" style="display: {{ $class->subscription_type == 'assigned' ? 'flex' : 'none' }};">
                     <label for="invitations" class="col-md-2 form-control-label ml-3 font-weight-bold">Invitations</label>
                     <div class="col-md-8">
                         <textarea id="invitations" class="form-control" name="invitations"
@@ -143,7 +151,7 @@
 
             $("#subscription_type").change(function () {
                 let invitations = document.getElementById("invitations-container");
-                if ($(this).val() === 'invitation') {
+                if ($(this).val() === 'assigned') {
                     invitations.style.display = 'flex';
                 } else {
                     invitations.style.display = 'none';

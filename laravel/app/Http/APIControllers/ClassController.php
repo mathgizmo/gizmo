@@ -196,7 +196,7 @@ class ClassController extends Controller
                         ->select('classes_applications.id')->distinct()->count();
                     $student->tests_finished_count = $tests_finished_count;
                 }
-                if ($class->subscription_type == 'invitation') {
+                if ($class->subscription_type == 'assigned') {
                     $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
                     $not_subscribed = [];
                     foreach (array_filter($emails) as $email) {

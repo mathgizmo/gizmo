@@ -67,7 +67,8 @@
                     <div class="col-md-8">
                         <select id="subscription_type" name="subscription_type" class="form-control" style="max-width: 200px;">
                             <option value="open" selected="selected">Open</option>
-                            <option value="invitation">Invitation Only</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="invitation">Invitation</option>
                             <option value="closed">Closed</option>
                         </select>
                     </div>
@@ -120,7 +121,7 @@
 
             $("#subscription_type").change(function () {
                 let invitations = document.getElementById("invitations-container");
-                if ($(this).val() === 'invitation') {
+                if ($(this).val() === 'assigned') {
                     invitations.style.display = 'flex';
                 } else {
                     invitations.style.display = 'none';

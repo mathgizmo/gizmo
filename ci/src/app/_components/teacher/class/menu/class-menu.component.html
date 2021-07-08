@@ -7,4 +7,5 @@
     <a mat-list-item routerLink="/teacher/class/{{classId}}/teachers">Teachers</a>
     <a mat-list-item routerLink="/teacher/class/{{classId}}/email">Email</a>
     <a mat-list-item routerLink="/teacher/class/{{classId}}/threads">Discussion</a>
+    <a *ngIf="class && class.subscription_type && class.subscription_type === 'invitation'" mat-list-item routerLink="/teacher/class/{{classId}}/invitation-settings">Invitation Settings</a>
 </mat-nav-list>

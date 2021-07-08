@@ -1,0 +1,20 @@
+<a routerLink="/teacher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="dashboard">
+  <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
+  <div class="dashboard-content">
+    <mat-card>
+      <div class="subtitle text-center">Invitation Settings</div>
+      <div class="form-group">
+        <label for="key">Class URL:</label>
+        <div id="key" [cdkCopyToClipboard]="classJoinURL" class="copy-text form-control">{{classJoinURL}}</div>
+      </div>
+      <div>Copy paste the following text to students you wish to invite to this classroom.</div>
+      <blockquote>
+        <cite class="copy-text" [cdkCopyToClipboard]="citeText.innerText.trim()" #citeText>
+          Please follow instructions to join the webapp classroom: Click on the following <a href="{{classJoinURL}}">link</a>, then follow instructions provided.<br/>
+          Before emailing your teacher for help please go to <a href="{{tutorialURL}}">this web-site</a> where we have posted helpful resources.
+        </cite>
+      </blockquote>
+    </mat-card>
+  </div>
+</div>

@@ -319,11 +319,11 @@ class ProfileController extends Controller
         }
         $available_classes = ClassOfStudents::where(function ($q1) use ($student) {
             $q1->where('subscription_type', 'open')->orWhere(function ($q2) use ($student) {
-                $q2->where('subscription_type', 'invitation')->where('invitations', 'LIKE', '%'.$student->email.'%');
+                $q2->where('subscription_type', 'assigned')->where('invitations', 'LIKE', '%'.$student->email.'%');
             });
         })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
         foreach ($available_classes as $item) {
-            if ($item->subscription_type == 'invitation') {
+            if ($item->subscription_type == 'assigned') {
                 $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations))));
                 $emails = array_map(function ($email) {
                     return str_replace('"', '', trim($email));
@@ -350,7 +350,7 @@ class ProfileController extends Controller
             $q->where('students.id', $student->id);
         })->orderBy('name')->get();
         $class_invitations = ClassOfStudents::where(function ($q1) use ($student) {
-            $q1->where('subscription_type', 'invitation')->where('invitations', 'LIKE', '%'.$student->email.'%');
+            $q1->where('subscription_type', 'assigned')->where('invitations', 'LIKE', '%'.$student->email.'%');
         })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
         foreach ($class_invitations as $item) {
             $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations))));

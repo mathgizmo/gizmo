@@ -10,13 +10,15 @@ import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
 })
 export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialogComponent> {
 
-    class = {
-        'name': '',
-        'class_type': 'other',
-        'subscription_type': 'open',
-        'invitations': ''
+    public class = {
+        id: 0,
+        key: null,
+        name: '',
+        class_type: 'other',
+        subscription_type: 'open',
+        invitations: ''
     };
-    title = 'Edit Class';
+    public title = 'Edit Class';
     public file: any;
 
     constructor(

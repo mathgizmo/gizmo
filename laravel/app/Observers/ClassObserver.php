@@ -26,7 +26,7 @@ class ClassObserver
     private function sendInvites(ClassOfStudents $class) {
         try {
             $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
-            if (config('app.env') == 'production' && $class->subscription_type == 'invitation') {
+            if (config('app.env') == 'production' && $class->subscription_type == 'assigned') {
                 foreach (array_filter($emails) as $email) {
                     try {
                         $email = str_replace('"', '', trim($email));

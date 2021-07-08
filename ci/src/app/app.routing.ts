@@ -20,7 +20,7 @@ import {
     ClassReportComponent, ManageAssignmentsComponent, ManageTestsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
     ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent,
-    ClassTeachersComponent, TeacherClassEmailComponent
+    ClassTeachersComponent, TeacherClassEmailComponent, ClassInvitationSettingsComponent
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study';
 
@@ -50,6 +50,8 @@ const teacherRoutes = [
     {path: 'teacher/class/:class_id/students', component: ClassStudentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/teachers', component: ClassTeachersComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
     {path: 'teacher/class/:class_id/email', component: TeacherClassEmailComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class/:class_id/invitation-settings', component: ClassInvitationSettingsComponent,
+        canActivate: [AuthGuard], data: {roles: ['teacher']}},
 ];
 
 const studentRoutes = [

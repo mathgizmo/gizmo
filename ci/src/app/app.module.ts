@@ -26,6 +26,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatListModule} from '@angular/material/list';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
@@ -56,7 +57,7 @@ import {
     ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassMenuComponent,
     AssignmentsStudentsUsageChartComponent, TestsStudentsUsageChartComponent,
     ClassAssignmentsReportComponent, ClassTestsReportComponent, EditClassAssignmentDialogComponent,
-    EditClassTestDialogComponent, SelectStudentsDialogComponent, TeacherClassEmailComponent
+    EditClassTestDialogComponent, SelectStudentsDialogComponent, TeacherClassEmailComponent, ClassInvitationSettingsComponent
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
@@ -71,6 +72,8 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 import {DraggableDirective} from './_directives/draggable.directive';
 import { TableFilterPipe, SafeHtmlPipe, TimeFormatPipe } from './_pipes/index';
+
+import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -117,6 +120,7 @@ FullCalendarModule.registerPlugins([
         MatListModule,
         NgxMatSelectSearchModule,
         DragDropModule,
+        ClipboardModule,
         FlexLayoutModule,
         PerfectScrollbarModule,
         RecaptchaModule,
@@ -196,6 +200,7 @@ FullCalendarModule.registerPlugins([
         ClassTeachersComponent,
         ClassStudentsComponent,
         TeacherClassEmailComponent,
+        ClassInvitationSettingsComponent,
         EditThreadDialogComponent,
         // PlacementComponent,
         // QuestionNumDialogComponent,
@@ -248,6 +253,11 @@ FullCalendarModule.registerPlugins([
                 suppressScrollX: true
             }
         },
+        {
+            provide: APP_BASE_HREF,
+            useFactory: (s: PlatformLocation) => s.getBaseHrefFromDOM(),
+            deps: [PlatformLocation]
+        }
     ],
     bootstrap: [AppComponent]
 })

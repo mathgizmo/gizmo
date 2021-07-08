@@ -4,12 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ClassOfStudents extends Model
 {
     protected $table = 'classes';
 
-    protected $fillable = ['id', 'name', 'teacher_id', 'class_type', 'subscription_type',
+    protected $fillable = ['id', 'teacher_id', 'key', 'name', 'class_type', 'subscription_type',
         'invitations', 'test_duration_multiply_by'];
 
     public function teacher() {
@@ -50,4 +51,14 @@ class ClassOfStudents extends Model
     }
 
     public $timestamps = false;
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            if (empty($model->key)) {
+                $model->key = Str::uuid()->toString(); // generate key
+            }
+        });
+    }
 }
