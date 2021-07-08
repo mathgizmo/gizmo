@@ -12,6 +12,7 @@ import { MyAssignmentsComponent, MyTestsComponent, MyClassesComponent,
 } from './_components/student/index';
 import {ClassThreadsComponent} from './_components/class-threads/class-threads.component';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
+import {ClassJoinComponent} from './_components/class-join/class-join.component';
 import {QuestionPreviewComponent} from './_components/previews/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
 import {TutorialComponent} from './_components/tutorial/tutorial.component';
@@ -78,6 +79,7 @@ const routes: Routes = [
     {path: 'faq', component: FaqComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
     ...studentRoutes,
     ...teacherRoutes,
+    {path: 'classroom/:class_key/join', component: ClassJoinComponent},
     {path: 'preview/question', component: QuestionPreviewComponent},
     {path: '**', redirectTo: 'welcome'}
 ];

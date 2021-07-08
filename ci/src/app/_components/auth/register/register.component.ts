@@ -50,12 +50,22 @@ export class RegisterComponent implements OnInit {
                 .subscribe(success => {
                     this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.ignoreCaptcha)
                         .subscribe(user => {
-                            if (user.role === 'teacher') {
-                                this.router.navigate(['teacher/class']);
-                            } else if (user.role === 'self_study') {
-                                this.router.navigate(['/']);
+                            const redirectTo = localStorage.getItem('redirect_to');
+                            if (redirectTo) {
+                                localStorage.removeItem('redirect_to');
+                                this.router.navigate([redirectTo]);
                             } else {
-                                this.router.navigate(['dashboard']);
+                                switch (user.role) {
+                                    case 'teacher':
+                                        this.router.navigate(['teacher/class']);
+                                        break;
+                                    case 'self_study':
+                                        this.router.navigate(['/']);
+                                        break;
+                                    default:
+                                        this.router.navigate(['dashboard']);
+                                        break;
+                                }
                             }
                         }, error => {
                             if (error === 'email_not_verified') {

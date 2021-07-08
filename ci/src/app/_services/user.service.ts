@@ -79,11 +79,16 @@ export class UserService {
             );
     }
 
-    public subscribeClass(classId: number) {
+    public subscribeClass(classId: number|string) {
         const request = {
             class_id: classId,
         };
-        return this.http.post('/profile/classes/' + classId + '/subscribe', request);
+        return this.http.post('/profile/classes/' + classId + '/subscribe', request)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+            );
     }
 
     public unsubscribeClass(classId: number) {

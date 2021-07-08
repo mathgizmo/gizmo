@@ -371,14 +371,41 @@ class ProfileController extends Controller
 
     public function subscribeClass($class_id) {
         $student = $this->user;
-        $class = ClassOfStudents::where('id', $class_id)->first();
-        $exists = DB::table('classes_students')->where('class_id', $class_id)->where('student_id', $student->id)->first();
+        $class = ClassOfStudents::where('id', $class_id)->orWhere('key', $class_id)->first();
+        if (!$class) {
+            return $this->error('Classroom not exists!', 404);
+        }
+        $exists = DB::table('classes_students')->where('class_id', $class->id)
+            ->where('student_id', $student->id)->first();
         if ($class && !$exists) {
+            switch ($class->subscription_type) {
+                default:
+                case 'open':
+                    break;
+                case 'assigned':
+                    $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
+                    $emails = array_map(function ($email) {
+                        return str_replace('"', '', trim($email));
+                    }, $emails);
+                    if (!in_array($student->email, $emails)) {
+                        return $this->error('The classroom is available only for assigned students!', 403);
+                    }
+                    break;
+                case 'invitation':
+                    if ($class->key !== $class_id) {
+                        return $this->error('Invalid classroom URL!', 404);
+                    }
+                    break;
+                case 'closed':
+                    return $this->error('The classroom is closed!', 403);
+            }
             DB::table('classes_students')->insert([
                 'class_id' => $class_id,
                 'student_id' => $student->id
             ]);
-            return $this->success('OK.');
+            return $this->success([
+                'item' => $class,
+            ]);
         } else {
             return $this->error('Error.', 400);
         }

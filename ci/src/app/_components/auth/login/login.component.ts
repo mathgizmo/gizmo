@@ -42,15 +42,9 @@ export class LoginComponent implements OnInit {
                 this.authenticationService.loginByToken(this.token)
                     .subscribe(user => {
                         if (user && user.user_id) {
-                            if (user.role === 'self_study') {
-                                this.router.navigate(['/']);
-                            } else {
-                                if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
-                                    localStorage.setItem('redirect_to', '/');
-                                    this.router.navigate(['to-do']);
-                                }
-                                this.router.navigate(['dashboard']);
-                            }
+                            user.role === 'self_study'
+                                ? this.router.navigate(['/'])
+                                : this.router.navigate(['dashboard']);
                         }
                     }, error => {
                         this.authenticationService.logout();
@@ -66,14 +60,14 @@ export class LoginComponent implements OnInit {
             this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.ignoreCaptcha)
                 .subscribe(user => {
                     if (user && user.user_id) {
-                        if (user.role === 'self_study') {
-                            this.router.navigate(['/']);
+                        const redirectTo = localStorage.getItem('redirect_to');
+                        if (redirectTo) {
+                            localStorage.removeItem('redirect_to');
+                            this.router.navigate([redirectTo]);
                         } else {
-                            if (user.role !== 'teacher' && isNaN(+localStorage.getItem('app_id'))) {
-                                localStorage.setItem('redirect_to', '/');
-                                this.router.navigate(['to-do']);
-                            }
-                            this.router.navigate(['dashboard']);
+                            user.role === 'self_study'
+                                ? this.router.navigate(['/'])
+                                : this.router.navigate(['dashboard']);
                         }
                     } else {
                         this.error = 'Email or password is incorrect!';

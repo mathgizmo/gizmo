@@ -66,6 +66,7 @@ import {TutorialComponent} from './_components/tutorial/tutorial.component';
 import {FaqComponent} from './_components/faq/faq.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
 import {QuestionPreviewComponent} from './_components/previews/question-preview/question-preview.component';
+import {ClassJoinComponent} from './_components/class-join/class-join.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
@@ -196,6 +197,7 @@ FullCalendarModule.registerPlugins([
         DashboardComponent,
         TutorialComponent,
         FaqComponent,
+        ClassJoinComponent,
         ClassReportComponent,
         ClassTeachersComponent,
         ClassStudentsComponent,
