@@ -388,7 +388,7 @@ class ProfileController extends Controller
                         return str_replace('"', '', trim($email));
                     }, $emails);
                     if (!in_array($student->email, $emails)) {
-                        return $this->error('The classroom is available only for assigned students!', 403);
+                        return $this->error('The classroom is available only for assigned students!', 400);
                     }
                     break;
                 case 'invitation':
@@ -397,7 +397,7 @@ class ProfileController extends Controller
                     }
                     break;
                 case 'closed':
-                    return $this->error('The classroom is closed!', 403);
+                    return $this->error('The classroom is closed!', 400);
             }
             DB::table('classes_students')->insert([
                 'class_id' => $class_id,

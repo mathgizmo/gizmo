@@ -103,7 +103,7 @@ class ClassController extends Controller
 
     public function delete($class_id) {
         if ($class_id == 1) {
-            abort('403', 'Default class can\'t be deleted!');
+            abort('400', 'Default class can\'t be deleted!');
         }
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
         if ($class) {
