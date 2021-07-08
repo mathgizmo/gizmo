@@ -1,0 +1,14 @@
+<div class="dashboard">
+  <mat-card>
+    <div class="title">Join the classroom</div>
+    <div class="data">
+      <div class="form-group">
+        <label for="key">Invitation code:</label>
+        <input id="key" name="key" [(ngModel)]="classKey" required class="form-control"/>
+      </div>
+      <div class="buttons-container">
+        <button class="button button-outline" mat-stroked-button (click)="subscribeClass()">Subscribe</button>
+      </div>
+    </div>
+  </mat-card>
+</div>

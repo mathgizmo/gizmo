@@ -6,7 +6,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-class-join',
-    template: '',
+    templateUrl: './class-join.component.html',
+    styleUrls: ['./class-join.component.scss'],
     providers: [AuthenticationService, UserService]
 })
 export class ClassJoinComponent implements OnInit {
@@ -33,23 +34,20 @@ export class ClassJoinComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.authenticationService.user.subscribe(x => {
+            if (!x) {
+                localStorage.setItem('redirect_to', this.router.url + '');
+                this.router.navigate(['login']);
+                return;
+            }
+            this.user = x;
+        });
         this.sub = this.route.params.subscribe(params => {
             this.classKey = params['class_key'];
-            this.authenticationService.user.subscribe(x => {
-                if (!x) {
-                    localStorage.setItem('redirect_to', this.router.url + '');
-                    this.router.navigate(['login']);
-                    return;
-                } else {
-                    this.user = x;
-                    this.joinClass();
-                }
-            });
         });
     }
 
-    joinClass() {
-        console.log(this.classKey);
+    subscribeClass() {
         this.userService.subscribeClass(this.classKey)
             .subscribe(response => {
                 this.class = response;
