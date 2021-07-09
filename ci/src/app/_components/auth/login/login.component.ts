@@ -42,9 +42,15 @@ export class LoginComponent implements OnInit {
                 this.authenticationService.loginByToken(this.token)
                     .subscribe(user => {
                         if (user && user.user_id) {
-                            user.role === 'self_study'
-                                ? this.router.navigate(['/'])
-                                : this.router.navigate(['dashboard']);
+                            const redirectTo = localStorage.getItem('redirect_to');
+                            if (redirectTo) {
+                                localStorage.removeItem('redirect_to');
+                                this.router.navigate([redirectTo]);
+                            } else {
+                                user.role === 'self_study'
+                                    ? this.router.navigate(['/'])
+                                    : this.router.navigate(['dashboard']);
+                            }
                         }
                     }, error => {
                         this.authenticationService.logout();
