@@ -71,6 +71,10 @@ export class LoginComponent implements OnInit {
                             localStorage.removeItem('redirect_to');
                             this.router.navigate([redirectTo]);
                         } else {
+                            /* const isFirstTimeLogin = false;
+                            if (user.role === 'teacher' && isFirstTimeLogin) {
+                                this.router.navigate(['teacher/class']);
+                            } */
                             user.role === 'self_study'
                                 ? this.router.navigate(['/'])
                                 : this.router.navigate(['dashboard']);

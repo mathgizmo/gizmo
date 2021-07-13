@@ -47,39 +47,13 @@ export class RegisterComponent implements OnInit {
             this.authenticationService.register(this.model.email,
                 this.model.password, this.model.first_name, this.model.last_name,
                 this.model.role, this.selectedCountry.id, this.captchaResponse, this.ignoreCaptcha)
-                .subscribe(success => {
-                    this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.ignoreCaptcha)
-                        .subscribe(user => {
-                            const redirectTo = localStorage.getItem('redirect_to');
-                            if (redirectTo) {
-                                localStorage.removeItem('redirect_to');
-                                this.router.navigate([redirectTo]);
-                            } else {
-                                switch (user.role) {
-                                    case 'teacher':
-                                        this.router.navigate(['teacher/class']);
-                                        break;
-                                    case 'self_study':
-                                        this.router.navigate(['/']);
-                                        break;
-                                    default:
-                                        this.router.navigate(['dashboard']);
-                                        break;
-                                }
-                            }
-                        }, error => {
-                            if (error === 'email_not_verified') {
-                                this.router.navigate(['verify-email'], {
-                                    state: {
-                                        email: this.model.email,
-                                        message: 'We sent email verification link to your email address!'
-                                    }
-                                });
-                            } else {
-                                this.error = error;
-                                this.loading = false;
-                            }
-                        });
+                .subscribe(() => {
+                    this.router.navigate(['verify-email'], {
+                        state: {
+                            email: this.model.email,
+                            message: 'We sent email verification link to your email address!'
+                        }
+                    });
                 }, error => {
                     if (error.error && error.error['message'] && error.error['message']['email']) {
                         this.error = error.error['message']['email'];
