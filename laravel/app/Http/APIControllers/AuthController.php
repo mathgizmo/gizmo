@@ -308,7 +308,7 @@ class AuthController extends Controller
         }
         $user = Student::where('email', $request['email'])->first();
         return $this->success([
-            'is_registered' => $user ? true : false
+            'is_registered' => $user && $user->is_registered ? true : false
         ], 200);
     }
 
