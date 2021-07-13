@@ -196,4 +196,13 @@ export class AuthenticationService {
                 })
             );
     }
+
+    checkEmail(email) {
+        return this.http.post(this.apiUrl + '/email/check', {email: email}, {headers: this.headers})
+            .pipe(
+                map((response: Response) => {
+                    return response && response['message'];
+                }),
+            );
+    }
 }

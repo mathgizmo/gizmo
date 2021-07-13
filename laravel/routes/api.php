@@ -23,6 +23,7 @@ $api->version('v1', function ($api) {
     $api->post('/reset-password' , 'App\Http\APIControllers\AuthController@resetPassword');
     $api->get('email-verify/{id}', 'App\Http\APIControllers\AuthController@verifyEmail')->name('verification.verify');
     $api->post('email-verify', 'App\Http\APIControllers\AuthController@resendVerificationEmail')->name('verification.resend');
+    $api->post('email/check', 'App\Http\APIControllers\AuthController@checkEmail');
 
     $api->group(['middleware' => ['api.auth', 'verified']], function () use ($api) {
         $api->get('/lesson/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedLesson');

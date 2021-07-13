@@ -16,7 +16,8 @@ export class LoginComponent implements OnInit {
         password: ''
     };
     public loading = false;
-    public error = '';
+    public error: string;
+    public message: string;
     public captchaResponse = '';
     public siteKey = environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
     public ignoreCaptcha = environment.ignoreCaptcha || false;
@@ -30,8 +31,14 @@ export class LoginComponent implements OnInit {
         private authenticationService: AuthenticationService) {
         const navigation = this.router.getCurrentNavigation();
         const state = navigation && navigation.extras && navigation.extras.state;
+        if (state && state.email) {
+            this.model.email = state.email;
+        }
         if (state && state.error) {
             this.error = state.error;
+        }
+        if (state && state.message) {
+            this.message = state.message;
         }
     }
 

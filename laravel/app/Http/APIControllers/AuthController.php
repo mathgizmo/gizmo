@@ -23,7 +23,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('throttle:6,1')->only('verifyEmail', 'resendVerificationEmail');
+        $this->middleware('throttle:6,1')->only('verifyEmail', 'resendVerificationEmail', 'checkEmail');
         $this->middleware('signed')->only('verifyEmail');
     }
 
@@ -296,6 +296,20 @@ class AuthController extends Controller
             }
         }
         return $this->error('User with email you provided not found!', 404);
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $validator = Validator::make(
+            $request->only(['email']), ['email' => 'required|email|max:255']
+        );
+        if ($validator->fails()) {
+            return $this->error($validator->messages(), 400);
+        }
+        $user = Student::where('email', $request['email'])->first();
+        return $this->success([
+            'is_registered' => $user ? true : false
+        ], 200);
     }
 
 }

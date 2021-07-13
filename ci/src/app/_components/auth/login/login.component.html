@@ -2,6 +2,10 @@
 <mat-card class="auth-container">
     <mat-card>
         <h2 class="title">Login</h2>
+        <div *ngIf="message" class="alert alert-info">
+            <span class="material-icons">info</span>
+            <span class="answer">&nbsp;{{message}}</span>
+        </div>
         <form name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
             <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
                 <label for="email">Email</label>

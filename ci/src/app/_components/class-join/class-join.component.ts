@@ -23,6 +23,7 @@ export class ClassJoinComponent implements OnInit {
     };
 
     public user: User;
+    public email: string;
 
     private sub: any;
 
@@ -33,21 +34,18 @@ export class ClassJoinComponent implements OnInit {
                 public snackBar: MatSnackBar) {
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.authenticationService.user.subscribe(x => {
-            if (!x) {
-                localStorage.setItem('redirect_to', this.router.url + '');
-                this.router.navigate(['login']);
-                return;
+            if (x) {
+                this.user = x;
             }
-            this.user = x;
         });
         this.sub = this.route.params.subscribe(params => {
             this.classKey = params['class_key'];
         });
     }
 
-    subscribeClass() {
+    public subscribeClass() {
         this.userService.subscribeClass(this.classKey)
             .subscribe(response => {
                 this.class = response;
@@ -66,6 +64,27 @@ export class ClassJoinComponent implements OnInit {
                     panelClass: ['error-snackbar']
                 });
             });
+    }
+
+    public checkEmail() {
+        this.authenticationService.checkEmail(this.email).subscribe(res => {
+            localStorage.setItem('redirect_to', this.router.url + '');
+            const redirect = res && res.is_registered ? 'login' : 'register';
+            const message = res && res.is_registered ? 'Login to your account to continue!' : 'Register new account to continue!';
+            this.router.navigate([redirect], {
+                state: {
+                    email: this.email,
+                    role: 'student',
+                    message: message
+                }
+            });
+        }, error => {
+            this.router.navigate(['login'], {
+                state: {
+                    email: this.email
+                }
+            });
+        });
     }
 
 }

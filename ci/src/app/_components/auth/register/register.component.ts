@@ -15,7 +15,8 @@ export class RegisterComponent implements OnInit {
         country_id: 1
     };
     public loading = false;
-    public error = '';
+    public error: string;
+    public message: string;
     public isRoleSelected = false;
     public countries = [];
     public selectedCountry = {
@@ -31,6 +32,20 @@ export class RegisterComponent implements OnInit {
         private router: Router,
         private authenticationService: AuthenticationService,
         private countryService: CountryService) {
+        const navigation = this.router.getCurrentNavigation();
+        const state = navigation && navigation.extras && navigation.extras.state;
+        if (state && state.email) {
+            this.model.email = state.email;
+        }
+        if (state && state.role) {
+            this.onRoleSelected(state.role);
+        }
+        if (state && state.error) {
+            this.error = state.error;
+        }
+        if (state && state.message) {
+            this.message = state.message;
+        }
     }
 
     ngOnInit() {

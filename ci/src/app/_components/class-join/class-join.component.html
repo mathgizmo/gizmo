@@ -1,7 +1,16 @@
 <div class="dashboard">
   <mat-card>
     <div class="title">Join the classroom</div>
-    <div class="data">
+    <div *ngIf="!user" class="data">
+      <div class="form-group">
+        <label for="email">Please enter your institutional email address with name format (not student id number format)</label>
+        <input #emailInput="ngModel" id="email" name="email" type="email" placeholder="Email" [(ngModel)]="email" required email class="form-control"/>
+      </div>
+      <div class="buttons-container">
+        <button class="button button-outline" mat-stroked-button (click)="checkEmail()" [disabled]="!email || emailInput.invalid">Submit</button>
+      </div>
+    </div>
+    <div *ngIf="user" class="data">
       <div class="form-group">
         <label for="key">Invitation code:</label>
         <input id="key" name="key" [(ngModel)]="classKey" required class="form-control"/>

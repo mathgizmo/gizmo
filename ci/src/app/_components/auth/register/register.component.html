@@ -2,6 +2,10 @@
 <mat-card class="auth-container" *ngIf="isRoleSelected">
     <mat-card>
         <h2 class="title">Register</h2>
+        <div *ngIf="message" class="alert alert-info">
+            <span class="material-icons">info</span>
+            <span class="answer">&nbsp;{{message}}</span>
+        </div>
         <form name="form" (ngSubmit)="f.form.valid && password.value == repassword.value && register()" #f="ngForm" novalidate>
             <div class="form-row">
                 <div class="col-md-6">
