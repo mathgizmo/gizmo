@@ -23,7 +23,11 @@ export class StudentEmailTeacherComponent implements OnInit {
     public mail = {
         subject: '',
         body: '',
+        teachers: [],
+        for_all_teachers: true
     };
+    public message: string;
+    public teachers = [];
 
     public editor = ClassicEditor;
 
@@ -41,6 +45,11 @@ export class StudentEmailTeacherComponent implements OnInit {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
+            this.classService.getTeachers(this.classId, {
+                receive_emails_from_students: true
+            }).subscribe(res => {
+                this.teachers = res['teachers'];
+            });
             this.userService.getClasses()
                 .subscribe(response => {
                     this.myClasses = response['my_classes'];
@@ -58,6 +67,13 @@ export class StudentEmailTeacherComponent implements OnInit {
                 duration: 3000,
                 panelClass: ['success-snackbar']
             });
+            this.mail = {
+                subject: '',
+                body: '',
+                teachers: [],
+                for_all_teachers: true
+            };
+            this.message = 'Email has been successfully sent!';
         }, error => {
             let message = '';
             if (typeof error === 'object') {

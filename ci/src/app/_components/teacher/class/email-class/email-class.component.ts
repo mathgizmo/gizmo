@@ -26,6 +26,7 @@ export class TeacherClassEmailComponent implements OnInit {
         students: [],
         for_all_students: true
     };
+    public message: string;
 
     public editor = ClassicEditor;
 
@@ -57,6 +58,14 @@ export class TeacherClassEmailComponent implements OnInit {
                 duration: 3000,
                 panelClass: ['success-snackbar']
             });
+            this.mail = {
+                class_id: 0,
+                subject: '',
+                body: '',
+                students: [],
+                for_all_students: true
+            };
+            this.message = 'Email has been successfully sent!';
         }, error => {
             let message = '';
             if (typeof error === 'object') {

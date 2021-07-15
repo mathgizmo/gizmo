@@ -3,7 +3,11 @@
     <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
     <div class="dashboard-content">
         <mat-card>
-            <div class="subtitle text-center">Email to students (class {{class.name}})</div>
+            <div class="subtitle text-center">Email to students</div>
+            <div *ngIf="message" class="alert alert-info">
+                <span class="material-icons">info</span>
+                <span class="answer">&nbsp;{{message}}</span>
+            </div>
             <div class="form-group">
                 <label for="subject">Subject:</label>
                 <input name="subject" id="subject" [(ngModel)]="mail.subject" required class="form-control"/>

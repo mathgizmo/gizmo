@@ -3,7 +3,11 @@
     <app-my-class-menu [classId]="classId" class="class-menu"></app-my-class-menu>
     <div class="dashboard-content">
         <mat-card>
-            <div class="subtitle text-center">Email to the teacher {{myClass.teacher_email}} (class {{myClass.name}})</div>
+            <div class="subtitle text-center">Email to teachers</div>
+            <div *ngIf="message" class="alert alert-info">
+                <span class="material-icons">info</span>
+                <span class="answer">&nbsp;{{message}}</span>
+            </div>
             <div class="form-group">
                 <label for="subject">Subject:</label>
                 <input name="subject" id="subject" [(ngModel)]="mail.subject" required class="form-control"/>
@@ -11,6 +15,17 @@
             <div class="form-group">
                 <label for="body">Body:</label>
                 <ckeditor id="body" [editor]="editor" [(ngModel)]="mail.body" class="body-input"></ckeditor>
+            </div>
+            <div *ngIf="!mail.for_all_teachers">
+                <label>Teachers:</label>
+                <mat-selection-list [(ngModel)]="mail.teachers">
+                    <mat-list-option *ngFor="let teacher of teachers" [value]="teacher.email" checkboxPosition="before">
+                        {{teacher.email}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+            <div class="form-group">
+                <mat-checkbox name="for_all_students" [(ngModel)]="mail.for_all_teachers">For default teachers</mat-checkbox>
             </div>
             <div class="button-container">
                 <button mat-button (click)="onEmail()" class="button moving-forward-button continue-button" [disabled]="!mail.subject || !mail.body">Send</button>

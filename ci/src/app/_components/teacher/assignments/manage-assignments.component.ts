@@ -12,7 +12,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {compare} from '../../../_helpers/compare.helper';
 
 @Component({
-    selector: 'manage-assignments',
+    selector: 'app-manage-assignments',
     templateUrl: './manage-assignments.component.html',
     styleUrls: ['./manage-assignments.component.scss'],
     providers: [AssignmentService]

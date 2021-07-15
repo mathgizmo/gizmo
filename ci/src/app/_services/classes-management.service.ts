@@ -121,8 +121,12 @@ export class ClassesManagementService {
             );
     }
 
-    public getTeachers(class_id) {
-        return this.http.get('/classes/' + class_id + '/teachers');
+    public getTeachers(class_id, filters = null) {
+        let url = '/classes/' + class_id + '/teachers';
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url);
     }
 
     public addTeacher(class_id, teacher_id) {

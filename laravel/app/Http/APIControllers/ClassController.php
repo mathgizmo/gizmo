@@ -123,10 +123,14 @@ class ClassController extends Controller
                 ? array_values($class->students->pluck('email')->toArray())
                 : request('students');
         } else {
-            $teachers = $class->teachers()
-                ->where('receive_emails_from_students', true)
-                ->pluck('email')->toArray();
-            $emails = array_merge([$class->teacher->email], array_values($teachers));
+            if (request('for_all_teachers')) {
+                $teachers = $class->teachers()
+                    ->where('receive_emails_from_students', true)
+                    ->pluck('email')->toArray();
+                $emails = array_merge([$class->teacher->email], array_values($teachers));
+            } else {
+                $emails = request('teachers');
+            }
         }
         if (config('app.env') == 'production') {
             foreach ($emails as $email) {
@@ -463,7 +467,7 @@ class ClassController extends Controller
         return $this->success(['items' => array_values($student_tests->sortBy('due_date')->toArray())]);
     }
 
-    public function getTeachers($class_id) {
+    public function getTeachers(Request $request, $class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
             $items = $class->teachers()->orderBy('email', 'ASC')->get()->keyBy('id');
@@ -473,6 +477,9 @@ class ClassController extends Controller
                     ->where('student_id', $item->id)
                     ->first();
                 $item->receive_emails_from_students = $class_data->receive_emails_from_students;
+                if ($request->filled('receive_emails_from_students') && $request['receive_emails_from_students'] && !$item->receive_emails_from_students) {
+                    $items->forget($item->id);
+                }
             }
             $available = Student::where('is_teacher', true)
                 ->whereNotIn('id', $items->pluck('id')->toArray())
