@@ -93,7 +93,7 @@ export class ClassTestsComponent implements OnInit {
             item.due_time = end.format('HH:mm');
             this.classService.changeTest(this.classId, item)
                 .subscribe(tests => {
-                    this.snackBar.open('Test have been successfully moved!', '', {
+                    this.snackBar.open('Test has been successfully moved!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
@@ -137,7 +137,7 @@ export class ClassTestsComponent implements OnInit {
                                 return +x.id !== +app.id;
                             });
                             this.calendarComponent.updateCalendarEvents();
-                            this.snackBar.open('Test have been successfully added!', '', {
+                            this.snackBar.open('Test has been successfully added!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -191,7 +191,7 @@ export class ClassTestsComponent implements OnInit {
                             setTimeout(() => {
                                 this.calendarComponent.updateCalendarEvents();
                             }, 10);
-                            this.snackBar.open('Test have been successfully deleted!', '', {
+                            this.snackBar.open('Test has been successfully deleted!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -213,7 +213,7 @@ export class ClassTestsComponent implements OnInit {
                     this.classService.changeTest(this.classId, app)
                         .subscribe(response => {
                             this.calendarComponent.updateCalendarEvents();
-                            this.snackBar.open('Test have been successfully updated!', '', {
+                            this.snackBar.open('Test has been successfully updated!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -265,7 +265,7 @@ export class ClassTestsComponent implements OnInit {
                                 return +x.id !== +app.id;
                             });
                             this.addTest = !this.addTest;
-                            this.snackBar.open('Test have been successfully added!', '', {
+                            this.snackBar.open('Test has been successfully added!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -300,7 +300,7 @@ export class ClassTestsComponent implements OnInit {
                             return +x.id !== +app.id;
                         });
                         this.addTest = !this.addTest;
-                        this.snackBar.open('Test have been successfully added!', '', {
+                        this.snackBar.open('Test has been successfully added!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
@@ -452,7 +452,7 @@ export class ClassTestsComponent implements OnInit {
                         this.tests  = this.tests.filter(x => {
                             return +x.id !== +item.id;
                         });
-                        this.snackBar.open('Test have been successfully deleted!', '', {
+                        this.snackBar.open('Test has been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });

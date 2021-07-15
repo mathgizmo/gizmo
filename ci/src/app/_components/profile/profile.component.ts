@@ -71,7 +71,7 @@ export class ProfileComponent implements OnInit {
                     this.badEmail = false;
                 }
                 this.showOldEmail = this.oldEmail !== this.user.email;
-                this.snackBar.open('Profile info have been successfully updated!', '', {
+                this.snackBar.open('Profile info has been successfully updated!', '', {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });
@@ -106,7 +106,7 @@ export class ProfileComponent implements OnInit {
             this.userService.changePassword(this.newPassword, this.confirmedPassword)
                 .subscribe(res => {
                     this.authenticationService.login(this.user.email, this.newPassword);
-                    this.snackBar.open('Password have been successfully updated!', '', {
+                    this.snackBar.open('Password has been successfully updated!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });

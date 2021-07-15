@@ -53,7 +53,7 @@ export class TeacherClassEmailComponent implements OnInit {
 
     onEmail() {
         this.classService.emailClass(this.classId, this.mail).subscribe(res => {
-            this.snackBar.open('Email have been successfully sent!', '', {
+            this.snackBar.open('Email has been successfully sent!', '', {
                 duration: 3000,
                 panelClass: ['success-snackbar']
             });

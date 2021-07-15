@@ -62,7 +62,7 @@ export class ManageAssignmentsComponent implements OnInit {
                             .subscribe(item => {
                                 if (item) {
                                     this.assignments.unshift(item);
-                                    this.snackBar.open('Assignment have been successfully created!', '', {
+                                    this.snackBar.open('Assignment has been successfully created!', '', {
                                         duration: 3000,
                                         panelClass: ['success-snackbar']
                                     });
@@ -96,7 +96,7 @@ export class ManageAssignmentsComponent implements OnInit {
                 dialogRef.afterClosed().subscribe(result => {
                     if (result) {
                         this.assignmentService.updateAssignment(item.id, result).subscribe(res => {
-                            this.snackBar.open('Assignment have been successfully updated!', '', {
+                            this.snackBar.open('Assignment has been successfully updated!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -123,7 +123,7 @@ export class ManageAssignmentsComponent implements OnInit {
         this.assignmentService.copyAssignment(item.id).subscribe(assignment => {
             if (assignment) {
                 this.assignments.unshift(assignment);
-                this.snackBar.open('Assignment have been successfully copied!', '', {
+                this.snackBar.open('Assignment has been successfully copied!', '', {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });
@@ -158,7 +158,7 @@ export class ManageAssignmentsComponent implements OnInit {
                         this.assignments = this.assignments.filter( (item) => {
                             return item.id !== assignment_id;
                         });
-                        this.snackBar.open('Assignment have been successfully deleted!', '', {
+                        this.snackBar.open('Assignment has been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });

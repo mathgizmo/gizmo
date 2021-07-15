@@ -62,7 +62,7 @@ export class ManageClassesComponent implements OnInit {
                 this.classService.addClass(result)
                     .subscribe(item => {
                         this.classes.unshift(item);
-                        this.snackBar.open('Classroom have been successfully created!', '', {
+                        this.snackBar.open('Classroom has been successfully created!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
@@ -95,7 +95,7 @@ export class ManageClassesComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.classService.updateClass(item.id, result).subscribe(res => {
-                    this.snackBar.open('Classroom have been successfully updated!', '', {
+                    this.snackBar.open('Classroom has been successfully updated!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
@@ -131,7 +131,7 @@ export class ManageClassesComponent implements OnInit {
                         this.classes = this.classes.filter( (item) => {
                             return item.id !== class_id;
                         });
-                        this.snackBar.open('Classroom have been successfully deleted!', '', {
+                        this.snackBar.open('Classroom has been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });

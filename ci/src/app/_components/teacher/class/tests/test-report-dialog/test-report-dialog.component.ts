@@ -78,7 +78,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
                     .subscribe(response => {
                         item.attempts = item.attempts.filter(o => +o.id !== +attempt_id);
                         item.resets_count++;
-                        this.snackBar.open('The attempt have been successfully reset!', '', {
+                        this.snackBar.open('The attempt has been successfully reset!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });

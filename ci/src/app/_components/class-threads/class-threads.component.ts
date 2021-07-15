@@ -81,7 +81,7 @@ export class ClassThreadsComponent implements OnInit {
                     .subscribe(item => {
                         if (item) {
                             this.threads.unshift(item);
-                            this.snackBar.open('Thread have been successfully created!', '', {
+                            this.snackBar.open('Thread has been successfully created!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -112,7 +112,7 @@ export class ClassThreadsComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.threadService.updateThread(this.classId, thread.id, result.title, result.message).subscribe(res => {
-                    this.snackBar.open('Thread have been successfully updated!', '', {
+                    this.snackBar.open('Thread has been successfully updated!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
@@ -150,7 +150,7 @@ export class ClassThreadsComponent implements OnInit {
                         });
                         this.activeThread = null;
                         this.replies = [];
-                        this.snackBar.open('Thread have been successfully deleted!', '', {
+                        this.snackBar.open('Thread has been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
@@ -184,7 +184,7 @@ export class ClassThreadsComponent implements OnInit {
                         if (item) {
                             this.replies.unshift(item);
                             this.activeThread.replies_count++;
-                            this.snackBar.open('Answer have been successfully created!', '', {
+                            this.snackBar.open('Answer has been successfully created!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -215,7 +215,7 @@ export class ClassThreadsComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.threadService.updateThreadReply(this.classId, reply.thread_id, reply.id, result.message).subscribe(res => {
-                    this.snackBar.open('Answer have been successfully updated!', '', {
+                    this.snackBar.open('Answer has been successfully updated!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
@@ -252,7 +252,7 @@ export class ClassThreadsComponent implements OnInit {
                             return item.id !== reply.id;
                         });
                         this.activeThread.replies_count--;
-                        this.snackBar.open('Answer have been successfully deleted!', '', {
+                        this.snackBar.open('Answer has been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });

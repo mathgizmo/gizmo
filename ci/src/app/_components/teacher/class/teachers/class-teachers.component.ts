@@ -76,7 +76,7 @@ export class ClassTeachersComponent implements OnInit {
                     return +x.id !== +teacher.id;
                 });
                 this.showAvailable = false;
-                this.snackBar.open('Teacher have been successfully added!', '', {
+                this.snackBar.open('Teacher has been successfully added!', '', {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });

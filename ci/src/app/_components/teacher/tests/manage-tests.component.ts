@@ -62,7 +62,7 @@ export class ManageTestsComponent implements OnInit {
                             .subscribe(item => {
                                 if (item) {
                                     this.tests.unshift(item);
-                                    this.snackBar.open('Test have been successfully created!', '', {
+                                    this.snackBar.open('Test has been successfully created!', '', {
                                         duration: 3000,
                                         panelClass: ['success-snackbar']
                                     });
@@ -96,7 +96,7 @@ export class ManageTestsComponent implements OnInit {
                 dialogRef.afterClosed().subscribe(result => {
                     if (result) {
                         this.testService.updateTest(item.id, result).subscribe(res => {
-                            this.snackBar.open('Test have been successfully updated!', '', {
+                            this.snackBar.open('Test has been successfully updated!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -123,7 +123,7 @@ export class ManageTestsComponent implements OnInit {
         this.testService.copyTest(item.id).subscribe(test => {
             if (test) {
                 this.tests.unshift(test);
-                this.snackBar.open('Test have been successfully copied!', '', {
+                this.snackBar.open('Test has been successfully copied!', '', {
                     duration: 3000,
                     panelClass: ['success-snackbar']
                 });
@@ -158,7 +158,7 @@ export class ManageTestsComponent implements OnInit {
                         this.tests = this.tests.filter( (item) => {
                             return item.id !== test_id;
                         });
-                        this.snackBar.open('Test have been successfully deleted!', '', {
+                        this.snackBar.open('Test has been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });

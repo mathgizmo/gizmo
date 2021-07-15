@@ -92,7 +92,7 @@ export class ClassAssignmentsComponent implements OnInit {
             item.due_time = end.format('HH:mm');
             this.classService.changeAssignment(this.classId, item)
                 .subscribe(assignments => {
-                    this.snackBar.open('Assignment have been successfully moved!', '', {
+                    this.snackBar.open('Assignment has been successfully moved!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
@@ -132,7 +132,7 @@ export class ClassAssignmentsComponent implements OnInit {
                                 return +x.id !== +app.id;
                             });
                             this.calendarComponent.updateCalendarEvents();
-                            this.snackBar.open('Assignment have been successfully added!', '', {
+                            this.snackBar.open('Assignment has been successfully added!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -186,7 +186,7 @@ export class ClassAssignmentsComponent implements OnInit {
                             setTimeout(() => {
                                 this.calendarComponent.updateCalendarEvents();
                             }, 10);
-                            this.snackBar.open('Assignment have been successfully deleted!', '', {
+                            this.snackBar.open('Assignment has been successfully deleted!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -208,7 +208,7 @@ export class ClassAssignmentsComponent implements OnInit {
                     this.classService.changeAssignment(this.classId, app)
                         .subscribe(response => {
                             this.calendarComponent.updateCalendarEvents();
-                            this.snackBar.open('Assignment have been successfully updated!', '', {
+                            this.snackBar.open('Assignment has been successfully updated!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -255,7 +255,7 @@ export class ClassAssignmentsComponent implements OnInit {
                                 return +x.id !== +app.id;
                             });
                             this.addAssignment = !this.addAssignment;
-                            this.snackBar.open('Assignment have been successfully added!', '', {
+                            this.snackBar.open('Assignment has been successfully added!', '', {
                                 duration: 3000,
                                 panelClass: ['success-snackbar']
                             });
@@ -285,7 +285,7 @@ export class ClassAssignmentsComponent implements OnInit {
                             return +x.id !== +app.id;
                         });
                         this.addAssignment = !this.addAssignment;
-                        this.snackBar.open('Assignment have been successfully added!', '', {
+                        this.snackBar.open('Assignment has been successfully added!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
@@ -389,7 +389,7 @@ export class ClassAssignmentsComponent implements OnInit {
                         this.assignments  = this.assignments.filter(x => {
                             return +x.id !== +item.id;
                         });
-                        this.snackBar.open('Assignment have been successfully deleted!', '', {
+                        this.snackBar.open('Assignment has been successfully deleted!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
