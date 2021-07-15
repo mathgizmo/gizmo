@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
@@ -8,7 +8,7 @@ import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
     templateUrl: 'edit-class-dialog.component.html',
     styleUrls: ['edit-class-dialog.component.scss'],
 })
-export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialogComponent> {
+export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialogComponent> implements OnInit {
 
     public class = {
         id: 0,
@@ -25,21 +25,23 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
         public dialogRef: MatDialogRef<EditClassDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.class) {
-            // tslint:disable-next-line:indent
-        	this.class = data.class;
+    }
+
+    public ngOnInit() {
+        if (this.data.class) {
+            this.class = this.data.class;
         }
-        if (data.title) {
-            // tslint:disable-next-line:indent
-        	this.title = data.title;
+        if (this.data.title) {
+            this.title = this.data.title;
         }
+        this.resizeDialog();
     }
 
     fileChanged(e) {
         this.file = e.target.files[0];
         if (this.file) {
             const fileReader = new FileReader();
-            fileReader.onload = (e) => {
+            fileReader.onload = () => {
                 this.class.invitations = fileReader.result.toString();
             };
             fileReader.readAsText(this.file);

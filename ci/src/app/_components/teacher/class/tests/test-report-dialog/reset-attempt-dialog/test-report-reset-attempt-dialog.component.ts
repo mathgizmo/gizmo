@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../../../dialogs/base-dialog.component';
@@ -8,7 +8,7 @@ import {BaseDialogComponent} from '../../../../../dialogs/base-dialog.component'
     templateUrl: 'test-report-reset-attempt-dialog.component.html',
     styleUrls: ['test-report-reset-attempt-dialog.component.scss']
 })
-export class TestReportResetAttemptDialogComponent extends BaseDialogComponent<TestReportResetAttemptDialogComponent> {
+export class TestReportResetAttemptDialogComponent extends BaseDialogComponent<TestReportResetAttemptDialogComponent> implements OnInit {
 
     public item = {
         email: '',
@@ -20,13 +20,16 @@ export class TestReportResetAttemptDialogComponent extends BaseDialogComponent<T
         public dialogRef: MatDialogRef<TestReportResetAttemptDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.item) {
-            // tslint:disable-next-line:indent
-            this.item = data.item;
+    }
+
+    public ngOnInit() {
+        if (this.data.item) {
+            this.item = this.data.item;
             if (this.item.attempts && this.item.attempts[0].id) {
                 this.attemptId = this.item.attempts[0].id;
             }
         }
+        this.resizeDialog();
     }
 
     isNotCompleted() {

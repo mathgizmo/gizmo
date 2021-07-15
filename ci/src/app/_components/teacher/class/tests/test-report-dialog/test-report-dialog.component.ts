@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -15,7 +15,7 @@ import {compare} from '../../../../../_helpers/compare.helper';
     styleUrls: ['test-report-dialog.component.scss'],
     providers: [ClassesManagementService]
 })
-export class TestReportDialogComponent extends BaseDialogComponent<TestReportDialogComponent> {
+export class TestReportDialogComponent extends BaseDialogComponent<TestReportDialogComponent> implements OnInit {
 
     public title = 'Test Report';
     public test = {
@@ -42,14 +42,18 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
         public dialogRef: MatDialogRef<TestReportDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.title) {
-            // tslint:disable-next-line:indent
-            this.title = data.title;
+        this.dialogPosition = {bottom: '18vh'};
+        if (this.isMobile || this.isTablet) {
+            this.dialogPosition = {bottom: '2vh'};
         }
-        if (data.test) {
-            // tslint:disable-next-line:indent
-            this.test = data.test;
-            // @ts-ignore
+    }
+
+    public ngOnInit() {
+        if (this.data.title) {
+            this.title = this.data.title;
+        }
+        if (this.data.test) {
+            this.test = this.data.test;
             this.attempts = Array(+this.test.attempts).fill(0).map((x, i) => i);
         }
         this.classService.getTestReport(this.test.class_id, this.test.app_id).subscribe(response => {
@@ -58,10 +62,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
                 stud.showDetail = false;
             });
         });
-        this.dialogPosition = {bottom: '18vh'};
-        if (this.isMobile || this.isTablet) {
-            this.dialogPosition = {bottom: '2vh'};
-        }
+        this.resizeDialog();
     }
 
     onResetProgress(item) {

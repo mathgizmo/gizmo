@@ -34,14 +34,6 @@ export class StudentTestsDialogComponent extends BaseDialogComponent<StudentTest
         public dialogRef: MatDialogRef<StudentTestsDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.student) {
-            // tslint:disable-next-line:indent
-        	this.student = data.student;
-        }
-        if (data.class_id) {
-            // tslint:disable-next-line:indent
-            this.classId = data.class_id;
-        }
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -49,6 +41,12 @@ export class StudentTestsDialogComponent extends BaseDialogComponent<StudentTest
     }
 
     public ngOnInit() {
+        if (this.data.student) {
+            this.student = this.data.student;
+        }
+        if (this.data.class_id) {
+            this.classId = this.data.class_id;
+        }
         this.resizeDialog();
         this.classService.getStudentTestsReport(this.classId, this.student.id)
             .subscribe(items => {

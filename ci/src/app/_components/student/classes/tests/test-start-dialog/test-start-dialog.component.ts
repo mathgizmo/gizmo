@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
 
@@ -7,7 +7,7 @@ import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
     templateUrl: 'test-start-dialog.component.html',
     styleUrls: ['test-start-dialog.component.scss'],
 })
-export class TestStartDialogComponent extends BaseDialogComponent<TestStartDialogComponent> {
+export class TestStartDialogComponent extends BaseDialogComponent<TestStartDialogComponent> implements OnInit {
 
     public test: {
         class_app_id: 0,
@@ -23,10 +23,13 @@ export class TestStartDialogComponent extends BaseDialogComponent<TestStartDialo
         public dialogRef: MatDialogRef<TestStartDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.test) {
-            // tslint:disable-next-line:indent
-            this.test = data.test;
+    }
+
+    public ngOnInit() {
+        if (this.data.test) {
+            this.test = this.data.test;
         }
+        this.resizeDialog();
     }
 
     resizeDialog() {

@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
@@ -10,7 +10,7 @@ import {DomSanitizer} from '@angular/platform-browser';
     templateUrl: 'edit-assignment-dialog.component.html',
     styleUrls: ['edit-assignment-dialog.component.scss'],
 })
-export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssignmentDialogComponent> {
+export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssignmentDialogComponent> implements OnInit {
 
     assignment = {
         'name': '',
@@ -33,22 +33,22 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
         public dialogRef: MatDialogRef<EditAssignmentDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.assignment) {
-            // tslint:disable-next-line:indent
-        	this.assignment = data.assignment;
+    }
+
+    public ngOnInit() {
+        if (this.data.assignment) {
+            this.assignment = this.data.assignment;
         }
-        if (data.title) {
-            // tslint:disable-next-line:indent
-        	this.title = data.title;
+        if (this.data.title) {
+            this.title = this.data.title;
         }
-        if (data.tree) {
-            // tslint:disable-next-line:indent
-            this.tree = data.tree;
+        if (this.data.tree) {
+            this.tree = this.data.tree;
         }
-        if (data.icons) {
-            // tslint:disable-next-line:indent
-            this.icons = data.icons;
+        if (this.data.icons) {
+            this.icons = this.data.icons;
         }
+        this.resizeDialog();
     }
 
     onSave() {

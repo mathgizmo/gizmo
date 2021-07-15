@@ -34,14 +34,6 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
         public dialogRef: MatDialogRef<StudentAssignmentsDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.student) {
-            // tslint:disable-next-line:indent
-        	this.student = data.student;
-        }
-        if (data.class_id) {
-            // tslint:disable-next-line:indent
-        	this.classId = data.class_id;
-        }
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -49,6 +41,12 @@ export class StudentAssignmentsDialogComponent extends BaseDialogComponent<Stude
     }
 
     public ngOnInit() {
+        if (this.data.student) {
+            this.student = this.data.student;
+        }
+        if (this.data.class_id) {
+            this.classId = this.data.class_id;
+        }
         this.resizeDialog();
         this.classService.getStudentAssignmentsReport(this.classId, this.student.id)
             .subscribe(items => {

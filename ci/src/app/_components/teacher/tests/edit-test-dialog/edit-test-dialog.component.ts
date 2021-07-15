@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
@@ -11,7 +11,7 @@ import {TestService} from '../../../../_services';
     styleUrls: ['edit-test-dialog.component.scss'],
     providers: [TestService]
 })
-export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogComponent> {
+export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogComponent> implements OnInit {
 
     public test = {
         'name': '',
@@ -38,24 +38,23 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         public dialogRef: MatDialogRef<EditTestDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.test) {
-            // tslint:disable-next-line:indent
-        	this.test = data.test;
-            // tslint:disable-next-line:indent
-        	this.questionsCount = this.test.total_questions_count || 0;
+    }
+
+    public ngOnInit() {
+        if (this.data.test) {
+            this.test = this.data.test;
+            this.questionsCount = this.test.total_questions_count || 0;
         }
-        if (data.title) {
-            // tslint:disable-next-line:indent
-        	this.title = data.title;
+        if (this.data.title) {
+            this.title = this.data.title;
         }
-        if (data.tree) {
-            // tslint:disable-next-line:indent
-            this.tree = data.tree;
+        if (this.data.tree) {
+            this.tree = this.data.tree;
         }
-        if (data.icons) {
-            // tslint:disable-next-line:indent
-            this.icons = data.icons;
+        if (this.data.icons) {
+            this.icons = this.data.icons;
         }
+        this.resizeDialog();
     }
 
     onSave() {

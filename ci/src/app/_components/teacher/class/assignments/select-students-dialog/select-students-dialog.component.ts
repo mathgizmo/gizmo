@@ -1,7 +1,6 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
-import {DomSanitizer} from '@angular/platform-browser';
 import {Sort} from '@angular/material/sort';
 import {compare} from '../../../../../_helpers/compare.helper';
 
@@ -10,7 +9,7 @@ import {compare} from '../../../../../_helpers/compare.helper';
     templateUrl: 'select-students-dialog.component.html',
     styleUrls: ['select-students-dialog.component.scss'],
 })
-export class SelectStudentsDialogComponent extends BaseDialogComponent<SelectStudentsDialogComponent> {
+export class SelectStudentsDialogComponent extends BaseDialogComponent<SelectStudentsDialogComponent> implements OnInit {
 
     title = 'Select Students';
     students = [];
@@ -18,22 +17,22 @@ export class SelectStudentsDialogComponent extends BaseDialogComponent<SelectStu
     public email: string;
 
     constructor(
-        private sanitizer: DomSanitizer,
         public dialogRef: MatDialogRef<SelectStudentsDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.title) {
-            // tslint:disable-next-line:indent
-            this.title = data.title;
+    }
+
+    public ngOnInit() {
+        if (this.data.title) {
+            this.title = this.data.title;
         }
-        if (data.students) {
-            // tslint:disable-next-line:indent
-            this.students = data.students;
+        if (this.data.students) {
+            this.students = this.data.students;
         }
-        if (data.selected_students) {
-            // tslint:disable-next-line:indent
-            this.selected_students = data.selected_students;
+        if (this.data.selected_students) {
+            this.selected_students = this.data.selected_students;
         }
+        this.resizeDialog();
     }
 
     onSave() {

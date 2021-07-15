@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject} from '@angular/core';
+import {Component, HostListener, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../../../../dialogs/base-dialog.component';
 import {ClassesManagementService} from '../../../../../_services';
@@ -11,7 +11,7 @@ import {compare} from '../../../../../_helpers/compare.helper';
     styleUrls: ['assignment-report-dialog.component.scss'],
     providers: [ClassesManagementService]
 })
-export class AssignmentReportDialogComponent extends BaseDialogComponent<AssignmentReportDialogComponent> {
+export class AssignmentReportDialogComponent extends BaseDialogComponent<AssignmentReportDialogComponent> implements OnInit{
 
     public title = 'Assignment Report';
     public assignment = {
@@ -23,18 +23,19 @@ export class AssignmentReportDialogComponent extends BaseDialogComponent<Assignm
         public dialogRef: MatDialogRef<AssignmentReportDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
-        if (data.title) {
-            // tslint:disable-next-line:indent
-            this.title = data.title;
+    }
+
+    public ngOnInit() {
+        if (this.data.title) {
+            this.title = this.data.title;
         }
-        if (data.assignment) {
-            // tslint:disable-next-line:indent
-            this.assignment = data.assignment;
+        if (this.data.assignment) {
+            this.assignment = this.data.assignment;
         }
-        if (data.students) {
-            // tslint:disable-next-line:indent
-            this.students = data.students;
+        if (this.data.students) {
+            this.students = this.data.students;
         }
+        this.resizeDialog();
     }
 
     resizeDialog() {
