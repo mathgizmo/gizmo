@@ -173,6 +173,7 @@ class ClassController extends Controller
                         ->first();
                     $student->test_duration_multiply_by = $class_student ? $class_student->test_duration_multiply_by : 1;
                     $student->is_subscribed = true;
+                    $student->is_unsubscribed = $class_student ? $class_student->is_unsubscribed : false;
                     $assignments_finished_count = 0;
                     foreach ($apps as $app) {
                         $class_data = $app->getClassRelatedData($class_id);
@@ -279,11 +280,24 @@ class ClassController extends Controller
                     $student->is_registered = true;
                 }
                 $student->is_subscribed = true;
-                if (DB::table('classes_students')->where('class_id', $class_id)->where('student_id', $student->id)->count() < 1) {
-                    DB::table('classes_students')->insert([
-                        'class_id' => $class_id,
-                        'student_id' => $student->id
-                    ]);
+                $exists = DB::table('classes_students')
+                    ->where('class_id', $class_id)
+                    ->where('student_id', $student->id)
+                    ->first();
+                if (!$exists || $exists->is_unsubscribed) {
+                    if ($exists && $exists->is_unsubscribed) {
+                        DB::table('classes_students')
+                            ->where('class_id', $class_id)
+                            ->where('student_id', $student->id)
+                            ->update([
+                                'is_unsubscribed' => false
+                            ]);
+                    } else {
+                        DB::table('classes_students')->insert([
+                            'class_id' => $class_id,
+                            'student_id' => $student->id
+                        ]);
+                    }
                     $assignments = Application::whereHas('classes', function ($q1) use ($student, $class_id) {
                         $q1->whereHas('students', function ($q2) use ($student) {
                             $q2->where('students.id', $student->id);
@@ -358,6 +372,32 @@ class ClassController extends Controller
             })->first();
         if (!$class) { return $this->error('Class not found.', 404); }
         ClassStudent::where('class_id', $class_id)->where('student_id', $student_id)->delete();
+        return $this->success(['success' => true]);
+    }
+
+    public function addStudent($class_id, $student_id) {
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found.', 404); }
+
+        $exists = ClassStudent::where('class_id', $class_id)
+            ->where('student_id', $student_id)
+            ->first();
+        if ($exists) {
+            $exists->is_unsubscribed = false;
+            $exists->save();
+        } else {
+            DB::table('classes_students')->insert([
+                'class_id' => $class_id,
+                'student_id' => $student_id
+            ]);
+        }
         return $this->success(['success' => true]);
     }
 

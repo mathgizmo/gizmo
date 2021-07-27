@@ -63,6 +63,11 @@ a.button:hover, a.button:focus {
   color: $white !important;
   border: solid 1px $red !important;
 }
+.button-amber {
+  background: #FFBF00 !important;
+  color: $white !important;
+  border: solid 1px orange !important;
+}
 .completion-button {
   background-color: $gold !important;
 }

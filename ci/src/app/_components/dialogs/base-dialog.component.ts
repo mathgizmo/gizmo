@@ -27,7 +27,7 @@ export abstract class BaseDialogComponent<T> implements OnInit, OnDestroy {
 
     protected abstract resizeDialog(): void;
 
-    protected updateDialogSize(width: string, height: string) {
+    protected updateDialogSize(width: string = null, height: string = null) {
         this.dialogRef.updateSize(width, height);
     }
 

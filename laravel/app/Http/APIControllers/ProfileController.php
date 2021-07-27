@@ -308,8 +308,8 @@ class ProfileController extends Controller
 
     public function getClasses() {
         $student = $this->user;
-        $my_classes = ClassOfStudents::whereHas('students', function ($q) use ($student) {
-            $q->where('students.id', $student->id);
+        $my_classes = ClassOfStudents::whereHas('classStudents', function ($q) use ($student) {
+            $q->where('student_id', $student->id)->where('is_unsubscribed', '<>', true);
         })->orderBy('name')->get();
         foreach ($my_classes as $item) {
             $teacher = Student::where('id', $item->teacher_id)->first();
@@ -352,7 +352,7 @@ class ProfileController extends Controller
         }
         $exists = DB::table('classes_students')->where('class_id', $class->id)
             ->where('student_id', $student->id)->first();
-        if ($class && !$exists) {
+        if (!$exists) {
             switch ($class->subscription_type) {
                 default:
                 case 'open':
@@ -378,17 +378,27 @@ class ProfileController extends Controller
                 'class_id' => $class->id,
                 'student_id' => $student->id
             ]);
-            return $this->success([
-                'item' => $class,
-            ]);
-        } else {
-            return $this->error('Error.', 400);
+        } else if ($exists->is_unsubscribed) {
+            DB::table('classes_students')
+                ->where('class_id', $class_id)
+                ->where('student_id', $student->id)
+                ->update([
+                    'is_unsubscribed' => false
+                ]);
         }
+        return $this->success([
+            'item' => $class,
+        ]);
     }
 
     public function unsubscribeClass($class_id) {
         $student = $this->user;
-        DB::table('classes_students')->where('class_id', $class_id)->where('student_id', $student->id)->delete();
+        DB::table('classes_students')
+            ->where('class_id', $class_id)
+            ->where('student_id', $student->id)
+            ->update([
+                'is_unsubscribed' => true
+            ]);
         return $this->success('OK.');
     }
 

@@ -4,8 +4,8 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
+import {PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -28,7 +28,7 @@ import {MatListModule} from '@angular/material/list';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
 
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
@@ -36,28 +36,57 @@ import {AuthGuard} from './_guards/index';
 import {AuthenticationService, HttpService, HTTPListener, HTTPStatus, CountryService} from './_services/index';
 
 import {AppComponent} from './_components/app.component';
-import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
-    ForgotPasswordComponent, ResetPasswordComponent, TryComponent, VerifyEmailComponent} from './_components/auth/index';
+import {
+    WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
+    ForgotPasswordComponent, ResetPasswordComponent, TryComponent, VerifyEmailComponent
+} from './_components/auth/index';
 import {AssignmentComponent, TestComponent} from './_components/assignment/index';
 import {TopicComponent} from './_components/assignment/topic/index';
 import {LessonComponent, ChartComponent} from './_components/assignment/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
-    FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
-import {MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, StudentEmailTeacherComponent,
-    TestOptionsDialogComponent, TestStartDialogComponent, MyClassMenuComponent,
-    TestReportDialogComponent as StudentTestReportDialogComponent} from './_components/student/index';
 import {
-    ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
-    StudentAssignmentsDialogComponent, StudentTestsDialogComponent, AddStudentDialogComponent,
-    EditClassDialogComponent, ManageClassesComponent, ManageAssignmentsComponent,
-    EditAssignmentDialogComponent, AssignmentReportDialogComponent, ManageTestsComponent, EditTestDialogComponent,
-    TestReportDialogComponent, TestReportResetAttemptDialogComponent, ReviewContentComponent, ClassAssignmentsComponent,
-    ClassDashboardComponent, ClassAssignmentsListComponent, ClassTestsListComponent,
-    ClassAssignmentsCalendarComponent, ClassTestsComponent, ClassMenuComponent,
-    AssignmentsStudentsUsageChartComponent, TestsStudentsUsageChartComponent,
-    ClassAssignmentsReportComponent, ClassTestsReportComponent, EditClassAssignmentDialogComponent,
-    EditClassTestDialogComponent, SelectStudentsDialogComponent, TeacherClassEmailComponent, ClassInvitationSettingsComponent
+    GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
+    FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent,
+    DeleteConfirmationDialogComponent, InfoDialogComponent
+} from './_components/dialogs/index';
+import {
+    MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, StudentEmailTeacherComponent,
+    TestOptionsDialogComponent, TestStartDialogComponent, MyClassMenuComponent,
+    TestReportDialogComponent as StudentTestReportDialogComponent
+} from './_components/student/index';
+import {
+    ClassReportComponent,
+    ClassTeachersComponent,
+    ClassStudentsComponent,
+    StudentAssignmentsDialogComponent,
+    StudentTestsDialogComponent,
+    AddStudentDialogComponent,
+    EditClassDialogComponent,
+    ManageClassesComponent,
+    ManageAssignmentsComponent,
+    EditAssignmentDialogComponent,
+    AssignmentReportDialogComponent,
+    ManageTestsComponent,
+    EditTestDialogComponent,
+    TestReportDialogComponent,
+    TestReportResetAttemptDialogComponent,
+    ReviewContentComponent,
+    ClassAssignmentsComponent,
+    ClassDashboardComponent,
+    ClassAssignmentsListComponent,
+    ClassTestsListComponent,
+    ClassAssignmentsCalendarComponent,
+    ClassTestsComponent,
+    ClassMenuComponent,
+    AssignmentsStudentsUsageChartComponent,
+    TestsStudentsUsageChartComponent,
+    ClassAssignmentsReportComponent,
+    ClassTestsReportComponent,
+    EditClassAssignmentDialogComponent,
+    EditClassTestDialogComponent,
+    SelectStudentsDialogComponent,
+    TeacherClassEmailComponent,
+    ClassInvitationSettingsComponent
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
@@ -69,21 +98,21 @@ import {QuestionPreviewComponent} from './_components/previews/question-preview/
 import {ClassJoinComponent} from './_components/class-join/class-join.component';
 // import {PlacementComponent, QuestionNumDialogComponent} from './_components/welcome/placement/index';
 
-import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import {RecaptchaModule, RecaptchaFormsModule} from 'ng-recaptcha';
 
 import {DraggableDirective} from './_directives/draggable.directive';
-import { TableFilterPipe, SafeHtmlPipe, TimeFormatPipe } from './_pipes/index';
+import {TableFilterPipe, SafeHtmlPipe, TimeFormatPipe} from './_pipes/index';
 
-import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
+import {APP_BASE_HREF, PlatformLocation} from '@angular/common';
 
-import { FullCalendarModule } from '@fullcalendar/angular';
+import {FullCalendarModule} from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import adaptivePlugin from '@fullcalendar/adaptive';
 import scrollGridPlugin from '@fullcalendar/scrollgrid';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 FullCalendarModule.registerPlugins([
     dayGridPlugin,
@@ -127,7 +156,7 @@ FullCalendarModule.registerPlugins([
         RecaptchaModule,
         RecaptchaFormsModule,
         CKEditorModule,
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production})
     ],
     exports: [],
     declarations: [
@@ -158,6 +187,7 @@ FullCalendarModule.registerPlugins([
         ManageClassesComponent,
         YesNoDialogComponent,
         DeleteConfirmationDialogComponent,
+        InfoDialogComponent,
         EditClassDialogComponent,
         StudentAssignmentsDialogComponent,
         StudentTestsDialogComponent,
@@ -219,6 +249,7 @@ FullCalendarModule.registerPlugins([
         BadChallengeDialogComponent,
         YesNoDialogComponent,
         DeleteConfirmationDialogComponent,
+        InfoDialogComponent,
         EditClassDialogComponent,
         StudentAssignmentsDialogComponent,
         StudentTestsDialogComponent,

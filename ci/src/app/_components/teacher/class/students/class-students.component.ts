@@ -8,7 +8,7 @@ import {StudentTestsDialogComponent} from '../../class/students/student-tests-di
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {AddStudentDialogComponent} from './add-student-dialog/add-student-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {DeleteConfirmationDialogComponent} from '../../../dialogs/index';
+import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../../dialogs/index';
 import {compare} from '../../../../_helpers/compare.helper';
 
 @Component({
@@ -62,13 +62,19 @@ export class ClassStudentsComponent implements OnInit {
         });
     }
 
-    deleteStudent(studentId) {
-        const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
-            data: {
-                'message': 'Are you sure that you want to delete this student from the class?'
-            },
-            position: this.dialogPosition
-        });
+    deleteStudent(student) {
+        const studentId = student.id;
+        const dialogRef = student.is_unsubscribed
+            ? this.dialog.open(YesNoDialogComponent, {
+                data: {
+                    message: `Student (${student.email}) has indicated that they wish to unsubscribe from this class. If you press 'yes' they will be removed from your class list and will lose information about their progress. If you press 'no' they will be resubscribed to the class.`
+                }, position: this.dialogPosition
+            })
+            : this.dialog.open(DeleteConfirmationDialogComponent, {
+                data: {
+                    message: `Are you sure that you want to delete the student (${student.email}) from the class? If you press 'yes' they will be removed from your class list and will lose information about their progress.` },
+                position: this.dialogPosition
+            });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.classService.deleteStudent(this.classId, studentId)
@@ -80,6 +86,20 @@ export class ClassStudentsComponent implements OnInit {
                         });
                     }, error => {
                         this.snackBar.open('Unable to delete student from the classroom!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
+                    });
+            } else if (student.is_unsubscribed) {
+                this.classService.addStudent(this.classId, studentId)
+                    .subscribe(res => {
+                        student.is_unsubscribed = false;
+                        this.snackBar.open('Student was successfully resubscribed to the classroom!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        this.snackBar.open('Unable to resubscribed student to the classroom!', '', {
                             duration: 3000,
                             panelClass: ['error-snackbar']
                         });

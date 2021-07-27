@@ -56,7 +56,13 @@
               </span>
             </td>
             <td class="text-right">
-              <button class="button button-small button-danger" mat-stroked-button type="button" [class.disabled]="!item.is_subscribed" (click)="deleteStudent(item.id)">Remove</button>
+              <button class="button button-small button-danger"
+                      mat-stroked-button type="button"
+                      [class.disabled]="!item.is_subscribed"
+                      [class.button-amber]="item.is_unsubscribed"
+                      (click)="deleteStudent(item)">
+                {{ item.is_unsubscribed ? 'Unsubscribed' : 'Remove'}}
+              </button>
             </td>
           </tr>
           </tbody>

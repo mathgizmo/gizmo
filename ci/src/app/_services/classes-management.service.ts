@@ -103,6 +103,10 @@ export class ClassesManagementService {
         return this.http.delete('/classes/' + class_id + '/students/' + student_id);
     }
 
+    public addStudent(class_id, student_id) {
+        return this.http.post('/classes/' + class_id + '/students/' + student_id + '/subscribe');
+    }
+
     public getStudentAssignmentsReport(class_id, student_id) {
         return this.http.get('/classes/' + class_id + '/students/' + student_id + '/report/assignments')
             .pipe(

@@ -4,7 +4,7 @@ import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {BaseDialogComponent} from '../base-dialog.component';
 
 @Component({
-    selector: 'yes-no-dialog',
+    selector: 'app-yes-no-dialog',
     templateUrl: 'yes-no-dialog.component.html',
     styleUrls: ['yes-no-dialog.component.scss']
 })
@@ -18,7 +18,7 @@ export class YesNoDialogComponent extends BaseDialogComponent<YesNoDialogCompone
 
     resizeDialog() {
         const width = (this.orientation === 'portrait') ? '80vw' : '35vw';
-        const height = (this.orientation === 'portrait') ? '18vh' : '24vh';
-        this.updateDialogSize(width, height);
+        // const height = (this.orientation === 'portrait') ? '18vh' : '24vh';
+        this.updateDialogSize(width, null);
     }
 }
