@@ -45,7 +45,7 @@ import {ProfileComponent} from './_components/profile/profile.component';
 import {GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
     FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent, DeleteConfirmationDialogComponent} from './_components/dialogs/index';
 import {MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, StudentEmailTeacherComponent,
-    MyInvitationsComponent, TestOptionsDialogComponent, TestStartDialogComponent, MyClassMenuComponent,
+    TestOptionsDialogComponent, TestStartDialogComponent, MyClassMenuComponent,
     TestReportDialogComponent as StudentTestReportDialogComponent} from './_components/student/index';
 import {
     ClassReportComponent, ClassTeachersComponent, ClassStudentsComponent,
@@ -153,7 +153,6 @@ FullCalendarModule.registerPlugins([
         MyClassesComponent,
         MyClassMenuComponent,
         MyClassReportComponent,
-        MyInvitationsComponent,
         StudentEmailTeacherComponent,
         ToDoComponent,
         ManageClassesComponent,

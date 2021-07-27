@@ -19,10 +19,6 @@
             <span class="material-icons">class</span>
             My Classes
         </a>
-        <a *ngIf="user.role === 'student'" mat-menu-item routerLink="student/invitations" class="menu-item">
-            <span class="material-icons">vpn_key</span>
-            My Invitations
-        </a>
         <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/class" class="menu-item">
             <span class="material-icons">class</span>
             Classrooms
@@ -55,16 +51,7 @@
             <span class="material-icons">power_settings_new</span>
             Logout
         </a>
-        <!-- <button mat-menu-item [matMenuTriggerFor]="studentViews" class="menu-item">
-            <span class="material-icons">bubble_chart</span>
-            Student Views
-        </button> -->
     </mat-menu>
-    <!-- <mat-menu #studentViews="matMenu">
-        <a mat-menu-item routerLink="to-do" class="menu-item">To Do</a>
-        <a mat-menu-item routerLink="student/class" class="menu-item">My Classes</a>
-        <a mat-menu-item routerLink="student/invitations" class="menu-item">My Invitations</a>
-    </mat-menu> -->
 </div>
 
 <router-outlet></router-outlet>

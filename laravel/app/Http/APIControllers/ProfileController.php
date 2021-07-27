@@ -344,31 +344,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function getClassInvitations() {
-        $student = $this->user;
-        $my_classes = ClassOfStudents::whereHas('students', function ($q) use ($student) {
-            $q->where('students.id', $student->id);
-        })->orderBy('name')->get();
-        $class_invitations = ClassOfStudents::where(function ($q1) use ($student) {
-            $q1->where('subscription_type', 'assigned')->where('invitations', 'LIKE', '%'.$student->email.'%');
-        })->whereNotIn('id', $my_classes->pluck('id')->toArray())->orderBy('name')->get()->keyBy('id');
-        foreach ($class_invitations as $item) {
-            $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $item->invitations))));
-            $emails = array_map(function ($email) {
-                return str_replace('"', '', trim($email));
-            }, $emails);
-            if (!in_array($student->email, $emails)) {
-                $class_invitations->forget($item->id);
-                continue;
-            }
-            $teacher = Student::where('id', $item->teacher_id)->first();
-            $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
-        }
-        return $this->success([
-            'items' => array_values($class_invitations->toArray()),
-        ]);
-    }
-
     public function subscribeClass($class_id) {
         $student = $this->user;
         $class = ClassOfStudents::where('id', $class_id)->orWhere('key', $class_id)->first();

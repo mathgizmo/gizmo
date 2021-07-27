@@ -2,7 +2,6 @@
 export * from './classes/report/class-report.component';
 export * from './classes/email-teacher/email-teacher.component';
 export * from './classes/menu/class-menu.component';
-export * from './invitations/invitations.component';
 export * from './classes/assignments/assignments.component';
 export * from './classes/tests/tests.component';
 export * from './classes/tests/test-options-dialog/test-options-dialog.component';

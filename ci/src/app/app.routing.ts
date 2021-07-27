@@ -7,9 +7,7 @@ import {WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
     ForgotPasswordComponent, ResetPasswordComponent, VerifyEmailComponent} from './_components/auth/index';
 import {AssignmentComponent, TestComponent, TopicComponent, LessonComponent} from './_components/assignment/index';
 import {ProfileComponent} from './_components/profile/profile.component';
-import { MyAssignmentsComponent, MyTestsComponent, MyClassesComponent,
-    MyInvitationsComponent, MyClassReportComponent, StudentEmailTeacherComponent
-} from './_components/student/index';
+import { MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, StudentEmailTeacherComponent } from './_components/student/index';
 import {ClassThreadsComponent} from './_components/class-threads/class-threads.component';
 // import {PlacementComponent} from './_components/welcome/placement/placement.component';
 import {ClassJoinComponent} from './_components/class-join/class-join.component';
@@ -63,7 +61,6 @@ const studentRoutes = [
     {path: 'student/class/:class_id/tests', component: MyTestsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/class/:class_id/email', component: StudentEmailTeacherComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'student/class/:class_id/test/:test_id', component: TestComponent, canActivate: [AuthGuard]},
-    {path: 'student/invitations', component: MyInvitationsComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
 ];
 
 const routes: Routes = [

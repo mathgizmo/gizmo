@@ -70,15 +70,6 @@ export class UserService {
         return this.http.get('/profile/classes');
     }
 
-    public getClassInvitations() {
-        return this.http.get('/profile/classes/invitations')
-            .pipe(
-                map((response: Response) => {
-                    return response['items'];
-                }),
-            );
-    }
-
     public subscribeClass(classId: number|string) {
         const request = {
             class_id: classId,
