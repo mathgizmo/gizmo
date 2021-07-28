@@ -63,7 +63,8 @@ class ClassController extends Controller
                     'name' => request('name'),
                     'class_type' => request('class_type') ?: 'other',
                     'subscription_type' => request('subscription_type') ?: 'open',
-                    'invitations' => request('invitations')
+                    'invitations' => request('invitations'),
+                    'is_researchable' => request('is_researchable')
                 ])
             ]);
         } catch (\Exception $e) {
@@ -93,6 +94,9 @@ class ClassController extends Controller
                 }
                 if (request()->has('invitations')) {
                     $class->invitations = request('invitations');
+                }
+                if (request()->has('is_researchable')) {
+                    $class->is_researchable = request('is_researchable');
                 }
                 $class->save();
                 return $this->success(['item' => $class]);
@@ -509,8 +513,19 @@ class ClassController extends Controller
 
     public function getTeachers(Request $request, $class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
-        if ($class) {
-            $items = $class->teachers()->orderBy('email', 'ASC')->get()->keyBy('id');
+        if (!$class) {
+            return $this->error('Classroom not found!', 404);
+        }
+        $is_researcher = $request->filled('is_researcher') && $request['is_researcher'];
+        $items = $class->teachers()
+            ->whereHas('classTeachers', function ($q) use ($is_researcher) {
+                $q->where('classes_teachers.is_researcher', $is_researcher);
+            })
+            ->orderBy('email', 'ASC')
+            ->get()->keyBy('id');
+        if ($is_researcher) {
+            $teachers = array_values($items->toArray());
+        } else {
             foreach ($items as $item) {
                 $class_data = DB::table('classes_teachers')
                     ->where('class_id', $class_id)
@@ -521,36 +536,45 @@ class ClassController extends Controller
                     $items->forget($item->id);
                 }
             }
-            $available = Student::where('is_teacher', true)
-                ->whereNotIn('id', $items->pluck('id')->toArray())
-                ->where('id', '<>', $this->user->id)
-                ->orderBy('email', 'ASC')->get();
             $main_teacher = $class->teacher;
             $main_teacher->receive_emails_from_students = 1;
-            return $this->success([
-                'teachers' => array_merge([$main_teacher], array_values($items->toArray())),
-                'available_teachers' => array_values($available->toArray())
-            ]);
+            $teachers = array_merge([$main_teacher], array_values($items->toArray()));
         }
-        return $this->error('Error.', 500);
+        $not_available = $class->teachers()->pluck('students.id')->toArray();
+        $available = Student::where('is_teacher', true)
+            ->when($is_researcher, function($query) {
+                return $query->where('is_researcher', true);
+            })
+            ->whereNotIn('students.id', $not_available)
+            ->where('id', '<>', $this->user->id)
+            ->orderBy('email', 'ASC')->get();
+        $available_teachers = array_values($available->toArray());
+        return $this->success([
+            'teachers' => $teachers,
+            'available_teachers' => $available_teachers
+        ]);
     }
 
-    public function addTeacherToClass($class_id, $teacher_id) {
+    public function addTeacherToClass(Request $request, $class_id, $teacher_id) {
         $class = ClassOfStudents::where('id', $class_id)
             ->where('teacher_id', $this->user->id
             )->first();
-        $exists = DB::table('classes_teachers')
-            ->where('class_id', $class_id)
-            ->where('student_id', $teacher_id)
-            ->first();
+        if (!$class) {
+            return $this->error('Classroom not found!', 404);
+        }
         $teacher = Student::where('id', $teacher_id)->where('is_teacher', true)->first();
         if (!$teacher) {
             return $this->error('Teacher not found!', 404);
         }
-        if ($class && !$exists) {
+        $exists = DB::table('classes_teachers')
+            ->where('class_id', $class_id)
+            ->where('student_id', $teacher_id)
+            ->first();
+        if (!$exists) {
             DB::table('classes_teachers')->insert([
                 'class_id' => $class->id,
                 'student_id' => $teacher_id,
+                'is_researcher' => $request->filled('is_researcher') ? $request['is_researcher'] : false
             ]);
             $item = DB::table('classes_teachers')
                 ->where('class_id', $class->id)

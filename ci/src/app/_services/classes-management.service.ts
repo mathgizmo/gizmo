@@ -133,8 +133,8 @@ export class ClassesManagementService {
         return this.http.get(url);
     }
 
-    public addTeacher(class_id, teacher_id) {
-        return this.http.post('/classes/' + class_id + '/teachers/' + teacher_id)
+    public addTeacher(class_id, teacher_id, body = null) {
+        return this.http.post('/classes/' + class_id + '/teachers/' + teacher_id, body)
             .pipe(
                 map((response: Response) => {
                     return response['item'];

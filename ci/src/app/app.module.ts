@@ -57,6 +57,7 @@ import {
 import {
     ClassReportComponent,
     ClassTeachersComponent,
+    ClassResearchersComponent,
     ClassStudentsComponent,
     StudentAssignmentsDialogComponent,
     StudentTestsDialogComponent,
@@ -229,6 +230,7 @@ FullCalendarModule.registerPlugins([
         ClassJoinComponent,
         ClassReportComponent,
         ClassTeachersComponent,
+        ClassResearchersComponent,
         ClassStudentsComponent,
         TeacherClassEmailComponent,
         ClassInvitationSettingsComponent,

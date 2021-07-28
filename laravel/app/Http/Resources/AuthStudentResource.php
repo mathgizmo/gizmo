@@ -14,16 +14,17 @@ class AuthStudentResource extends JsonResource
             $role = 'self_study';
         }
         if ($this->is_teacher) {
-            $role = 'teacher';
+            $role = $this->is_researcher ? 'researcher' : 'teacher';
         }
         $student = [
             'user_id' => $this->id,
-            'username' => $this->name,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+            'email_new' => $this->email_new ?: null,
             'role' => $role,
             'country_id' => $this->country_id,
+            'app_id' => $this->app_id,
             'options' => [
                 'is_test_timer_displayed' => $this->is_test_timer_displayed,
                 'is_test_questions_count_displayed' => $this->is_test_questions_count_displayed

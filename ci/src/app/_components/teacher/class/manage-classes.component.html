@@ -52,9 +52,28 @@
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.name}}</td>
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.class_type.charAt(0).toUpperCase() + item.class_type.slice(1) }}</td>
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
-                        <td class="text-right" style="min-width: 200px;">
-                            <button mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditClass(item)">Edit</button>
-                            <button [disabled]="user.user_id != item.teacher_id" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteClass(item.id)">Remove</button>
+                        <td class="text-right" style="min-width: 320px;">
+                            <button mat-stroked-button
+                                    class="button button-small"
+                                    [class.button-danger]="!+item.is_researchable"
+                                    [disabled]="!+item.is_researchable"
+                                    [class.moving-forward-button]="+item.is_researchable"
+                                    style="margin-right: 8px;"
+                                    (click)="onResearchClass(item)">
+                                Research
+                            </button>
+                            <button mat-stroked-button
+                                    class="button button-small button-outline"
+                                    style="margin-right: 8px;"
+                                    (click)="onEditClass(item)">
+                                Edit
+                            </button>
+                            <button [disabled]="user.user_id != item.teacher_id" mat-stroked-button
+                                    class="button button-small button-danger"
+                                    type="button"
+                                    (click)="onDeleteClass(item.id)">
+                                Remove
+                            </button>
                         </td>
                     </tr>
                     </tbody>

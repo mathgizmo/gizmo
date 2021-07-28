@@ -20,7 +20,8 @@ export class UserService {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
-            country_id: user.country_id
+            country_id: user.country_id,
+            role: user.role
         };
         return this.http.post('/profile', request);
     }

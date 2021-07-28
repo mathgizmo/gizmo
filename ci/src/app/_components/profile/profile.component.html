@@ -50,6 +50,12 @@
          <mat-icon>warning</mat-icon>
          <span class="answer">&nbsp;{{warningMessage}}</span>
       </div>
+      <mat-form-field *ngIf="user.role === 'teacher' || user.role === 'researcher'">
+        <mat-select name="is_researcher" placeholder="Role" class="answer" [(ngModel)]="isResearcher">
+          <mat-option [value]="true">Researcher</mat-option>
+          <mat-option [value]="false">Teacher</mat-option>
+        </mat-select>
+      </mat-form-field>
       <div class="button-container">
         <button
           mat-raised-button

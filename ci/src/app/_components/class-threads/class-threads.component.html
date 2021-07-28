@@ -23,8 +23,8 @@
       <div class="thread-message" [innerHtml]="activeThread.message | safeHtml"></div>
       <div class="thread-info">
         <span class="buttons-container">
-          <button *ngIf="user.user_id == activeThread.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditThread(activeThread)">Edit</button>
-          <button *ngIf="user.user_id == activeThread.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteThread(activeThread)">Remove</button>
+          <button *ngIf="user.user_id == activeThread.student_id || user.role == 'teacher' || user.role === 'researcher'" mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditThread(activeThread)">Edit</button>
+          <button *ngIf="user.user_id == activeThread.student_id || user.role == 'teacher' || user.role === 'researcher'" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteThread(activeThread)">Remove</button>
         </span>
         <span>asked at {{activeThread.created_at}} by <a href="mailto:{{activeThread.student_email}}">{{activeThread.student_name}}</a></span>
       </div>
@@ -35,8 +35,8 @@
             <div class="reply-message" [innerHtml]="reply.message | safeHtml"></div>
             <div class="reply-info">
               <span class="buttons-container">
-                <button *ngIf="user.user_id == reply.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditReply(reply)">Edit</button>
-                <button *ngIf="user.user_id == reply.student_id || user.role == 'teacher'" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteReply(reply)">Remove</button>
+                <button *ngIf="user.user_id == reply.student_id || user.role == 'teacher' || user.role === 'researcher'" mat-stroked-button class="button button-small button-outline" style="margin-right: 8px;" (click)="onEditReply(reply)">Edit</button>
+                <button *ngIf="user.user_id == reply.student_id || user.role == 'teacher' || user.role === 'researcher'" mat-stroked-button class="button button-small button-danger" type="button" (click)="onDeleteReply(reply)">Remove</button>
               </span>
               <span>answered at {{reply.created_at}} by <a href="mailto:{{reply.student_email}}">{{reply.student_name}}</a></span>
             </div>

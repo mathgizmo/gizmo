@@ -5,6 +5,7 @@
     <!-- <a mat-list-item routerLink="/teacher/class/{{classId}}/report">Report</a> -->
     <a mat-list-item routerLink="/teacher/class/{{classId}}/students">Students</a>
     <a mat-list-item routerLink="/teacher/class/{{classId}}/teachers">Teachers</a>
+    <a *ngIf="class && class.is_researchable" mat-list-item routerLink="/teacher/class/{{classId}}/researchers">Researchers</a>
     <a mat-list-item routerLink="/teacher/class/{{classId}}/email">Email</a>
     <a mat-list-item routerLink="/teacher/class/{{classId}}/threads">Discussion</a>
     <a *ngIf="class && class.subscription_type && class.subscription_type === 'invitation'" mat-list-item routerLink="/teacher/class/{{classId}}/invitation-settings">Invitation Settings</a>

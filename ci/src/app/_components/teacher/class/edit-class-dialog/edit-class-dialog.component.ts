@@ -16,7 +16,8 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
         name: '',
         class_type: 'other',
         subscription_type: 'open',
-        invitations: ''
+        invitations: '',
+        is_researchable: 0
     };
     public title = 'Edit Class';
     public file: any;

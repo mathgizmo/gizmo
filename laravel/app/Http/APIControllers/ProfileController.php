@@ -7,7 +7,7 @@ use App\ClassApplication;
 use App\ClassOfStudents;
 use App\Exports\StudentClassAssignmentsReportExport;
 use App\Exports\StudentClassTestsReportExport;
-use App\Progress;
+use App\Http\Resources\AuthStudentResource;
 use App\Student;
 use App\StudentTestAttempt;
 use Carbon\CarbonInterval;
@@ -36,19 +36,12 @@ class ProfileController extends Controller
     
     public function get()
     {
-        $student = $this->user;
         return $this->success([
-            'first_name' => $student->first_name,
-            'last_name' => $student->last_name,
-            'email' => $student->email,
-            'email_new' => $student->email_new ?: null,
-            'app_id' => $student->app_id,
-            'applications' => Application::whereDoesntHave('teacher')->get(),
-            'country_id' => $student->country_id
+            'user' => new AuthStudentResource($this->user),
         ]);
     }
 
-    public function update()
+    public function update(Request $request)
     {
         $student = $this->user;
         $update = [];
@@ -70,12 +63,16 @@ class ProfileController extends Controller
         if (request()->has('country_id')) {
             $update['country_id'] = intval(request('country_id'));
         }
+        if (request()->has('role')) {
+            $update['is_researcher'] = request('role') == 'researcher';
+        }
         $validator = Validator::make(
             $update,
             [
-                'email' => 'email|max:255|unique:students,email,'.$student->id,
+                'email' => 'nullable|email|max:255|unique:students,email,'.$student->id,
                 'email_new' => 'nullable|email|max:255|unique:students,email,'.$student->id,
                 'password' => 'nullable|min:6',
+                'role' => 'nullable|string'
             ]
         );
         if ($validator->fails()) {
@@ -315,7 +312,7 @@ class ProfileController extends Controller
             $teacher = Student::where('id', $item->teacher_id)->first();
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
             $item->teacher_email = $teacher ? $teacher->email : '';
-            $item->teachers = $item->teachers()->get(['students.id', 'students.email', 'students.first_name', 'students.last_name']);
+            $item->teachers = $item->teachersWithoutResearchers()->get(['students.id', 'students.email', 'students.first_name', 'students.last_name']);
         }
         $available_classes = ClassOfStudents::where(function ($q1) use ($student) {
             $q1->where('subscription_type', 'open')->orWhere(function ($q2) use ($student) {
@@ -336,7 +333,7 @@ class ProfileController extends Controller
             $teacher = Student::where('id', $item->teacher_id)->first();
             $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
             $item->teacher_email = $teacher ? $teacher->email : '';
-            $item->teachers = $item->teachers()->get(['students.id', 'students.email', 'students.first_name', 'students.last_name']);
+            $item->teachers = $item->teachersWithoutResearchers()->get(['students.id', 'students.email', 'students.first_name', 'students.last_name']);
         }
         return $this->success([
             'my_classes' => array_values($my_classes->toArray()),

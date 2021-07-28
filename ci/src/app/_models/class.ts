@@ -7,4 +7,5 @@
     invitations: string;
     teacher_id: number;
     teacher: string;
+    is_researchable: number;
 }

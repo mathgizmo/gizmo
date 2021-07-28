@@ -18,6 +18,7 @@ export * from './class/students/student-assignments-dialog/student-assignments-d
 export * from './class/students/student-tests-dialog/student-tests-dialog.component';
 export * from './class/students/add-student-dialog/add-student-dialog.component';
 export * from './class/teachers/class-teachers.component';
+export * from './class/researchers/class-researchers.component';
 export * from './class/assignments/edit-assignment-dialog/edit-class-assignment-dialog.component';
 export * from './class/assignments/assignment-report-dialog/assignment-report-dialog.component';
 export * from './class/tests/edit-test-dialog/edit-class-test-dialog.component';

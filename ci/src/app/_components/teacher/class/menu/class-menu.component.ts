@@ -16,7 +16,8 @@ export class ClassMenuComponent implements OnInit {
         name: '',
         class_type: 'other',
         subscription_type: 'open',
-        invitations: ''
+        invitations: '',
+        is_researchable: 0
     };
 
     constructor(private classService: ClassesManagementService) {

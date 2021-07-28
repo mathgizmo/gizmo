@@ -27,6 +27,7 @@ export class ProfileComponent implements OnInit {
         title: 'Canada',
         code: 'CA'
     };
+    public isResearcher = false;
 
     constructor(
         private userService: UserService,
@@ -42,25 +43,30 @@ export class ProfileComponent implements OnInit {
             this.countries = countries;
             this.userService.getProfile()
                 .subscribe(res => {
-                    localStorage.setItem('app_id', res['app_id']);
-                    this.user.first_name = res['first_name'];
-                    this.user.last_name = res['last_name'];
-                    this.oldEmail = res['email'];
-                    this.user.email = res['email_new'] ? res['email_new'] : res['email'];
+                    const user = res['user'];
+                    localStorage.setItem('app_id', user.app_id);
+                    this.user = user;
+                    this.oldEmail = this.user.email;
+                    this.user.email = user.email_new ? user.email_new : user.email;
                     this.showOldEmail = this.oldEmail !== this.user.email;
-                    this.user.country_id = res['country_id'];
                     const userCountry = this.countries.filter(x => x.id === this.user.country_id);
                     if (userCountry.length > 0) {
                         this.selectedCountry = userCountry[0];
                     } else {
                         this.selectedCountry = this.countries.filter(x => x.code === 'CA')[0];
                     }
+                    this.isResearcher = user.role === 'researcher';
+                }, error => {
+                    // this.authenticationService.user.subscribe(x => this.user = x);
                 });
         });
     }
 
     onChangeProfile() {
         this.user.country_id = this.selectedCountry.id;
+        if (this.user.role === 'researcher' || this.user.role === 'teacher') {
+            this.user.role = this.isResearcher ? 'researcher' : 'teacher';
+        }
         this.userService.changeProfile(this.user)
             .subscribe(res => {
                 this.passwordsMatch = true;

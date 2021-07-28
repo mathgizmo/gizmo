@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
                             this.router.navigate([redirectTo]);
                         } else {
                             /* const isFirstTimeLogin = false;
-                            if (user.role === 'teacher' && isFirstTimeLogin) {
+                            if ((user.role === 'teacher' || user.role === 'researcher') && isFirstTimeLogin) {
                                 this.router.navigate(['teacher/class']);
                             } */
                             user.role === 'self_study'

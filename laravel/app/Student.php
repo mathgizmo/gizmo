@@ -16,8 +16,8 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     protected $fillable = [
         'first_name', 'last_name', 'email', 'email_new', 'password', 'country_id',
-        'is_teacher', 'is_super', 'is_admin', 'is_self_study', 'is_registered', 'email_verified_at',
-        'is_test_timer_displayed', 'is_test_questions_count_displayed'
+        'is_teacher', 'is_super', 'is_admin', 'is_self_study', 'is_researcher',
+        'is_registered', 'email_verified_at', 'is_test_timer_displayed', 'is_test_questions_count_displayed'
     ];
 
     protected $hidden = [
@@ -80,6 +80,14 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->belongsToMany('App\ClassOfStudents', 'classes_students', 'student_id', 'class_id');
     }
 
+    public function classTeachers() {
+        return $this->hasMany('App\ClassTeacher', 'student_id', 'id');
+    }
+
+    public function classStudents() {
+        return $this->hasMany('App\ClassStudent', 'student_id', 'id');
+    }
+
     public function country()
     {
         return $this->belongsTo('App\Country', 'country_id');
@@ -88,6 +96,11 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function isTeacher()
     {
         return $this->is_teacher;
+    }
+
+    public function isResearcher()
+    {
+        return $this->is_researcher && $this->is_teacher;
     }
 
     public function isSuper()

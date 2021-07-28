@@ -19,7 +19,8 @@ import {
     ClassReportComponent, ManageAssignmentsComponent, ManageTestsComponent,
     ManageClassesComponent, ReviewContentComponent, ClassDashboardComponent,
     ClassAssignmentsComponent, ClassTestsComponent, ClassStudentsComponent,
-    ClassTeachersComponent, TeacherClassEmailComponent, ClassInvitationSettingsComponent
+    ClassTeachersComponent, ClassResearchersComponent,
+    TeacherClassEmailComponent, ClassInvitationSettingsComponent
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study';
 
@@ -35,22 +36,23 @@ const authRoutes = [
 ];
 
 const teacherRoutes = [
-    {path: 'teacher/class', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/review-content', component: ReviewContentComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/assignment', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/test', component: ManageTestsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+    {path: 'teacher/class', component: ManageClassesComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/review-content', component: ReviewContentComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/assignment', component: ManageAssignmentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/test', component: ManageTestsComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
     {path: 'teacher/class/:class_id/assignments', component: ClassAssignmentsComponent,
-        canActivate: [AuthGuard], data: {roles: ['teacher']}},
+        canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
     {path: 'teacher/class/:class_id/tests', component: ClassTestsComponent,
-        canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/report', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/threads', component: ClassThreadsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/students', component: ClassStudentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/teachers', component: ClassTeachersComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
-    {path: 'teacher/class/:class_id/email', component: TeacherClassEmailComponent, canActivate: [AuthGuard], data: {roles: ['teacher']}},
+        canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/class/:class_id/report', component: ClassReportComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/class/:class_id/threads', component: ClassThreadsComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/class/:class_id/dashboard', component: ClassDashboardComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/class/:class_id/students', component: ClassStudentsComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/class/:class_id/teachers', component: ClassTeachersComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/class/:class_id/researchers', component: ClassResearchersComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
+    {path: 'teacher/class/:class_id/email', component: TeacherClassEmailComponent, canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
     {path: 'teacher/class/:class_id/invitation-settings', component: ClassInvitationSettingsComponent,
-        canActivate: [AuthGuard], data: {roles: ['teacher']}},
+        canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}},
 ];
 
 const studentRoutes = [
@@ -71,9 +73,9 @@ const routes: Routes = [
     {path: 'assignment/:assignment_id/topic/:topic_id', component: TopicComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:assignment_id/topic/:topic_id/lesson/:lesson_id', component: LessonComponent, canActivate: [AuthGuard]},
     {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
-    {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
-    {path: 'tutorial', component: TutorialComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
-    {path: 'faq', component: FaqComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher']}},
+    {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher', 'researcher']}},
+    {path: 'tutorial', component: TutorialComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher', 'researcher']}},
+    {path: 'faq', component: FaqComponent, canActivate: [AuthGuard], data: {roles: ['student', 'teacher', 'researcher']}},
     ...studentRoutes,
     ...teacherRoutes,
     {path: 'classroom/:class_key/join', component: ClassJoinComponent},

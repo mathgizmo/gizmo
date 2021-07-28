@@ -44,6 +44,14 @@
                   [(ngModel)]="class.invitations" class="form-control"></textarea>
         <input type="file" (change)="fileChanged($event)" class="file-input">
     </div>
+    <div class="form-group">
+        <label for="is_researchable">Is this classroom part of a research study?</label>
+        <select id="is_researchable" class="form-control" name="is_researchable"
+                [(ngModel)]="class.is_researchable">
+            <option [value]="1">Yes</option>
+            <option [value]="0">No</option>
+        </select>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>

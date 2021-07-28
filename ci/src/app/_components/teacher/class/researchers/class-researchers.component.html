@@ -1,0 +1,74 @@
+<a routerLink="/teacher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="teachers">
+  <app-class-menu [classId]="classId" class="class-menu"></app-class-menu>
+  <mat-card *ngIf="!showAvailable" class="teachers-content">
+    <div class="subtitle text-center">Researchers of {{class.name}}</div>
+    <form novalidate #form="ngForm">
+      <div class="table-responsive">
+        <table matSort (matSortChange)="sortData($event)" class="table">
+          <thead>
+          <tr>
+            <th mat-sort-header="email" scope="col">Email</th>
+            <th mat-sort-header="name" scope="col">Name</th>
+            <th *ngIf="user.user_id == class.teacher_id" class="text-right" style="min-width: 154px">
+              <button *ngIf="available_researchers.length > 0" class="button button-small button-outline" mat-button (click)="showAvailable=true">Add Researcher</button>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td *ngIf="user.user_id == class.teacher_id" colspan="4">
+              <input matInput placeholder="Email" class="filter-item"
+                     type="text" name="email" [(ngModel)]="email" [value]="" />
+            </td>
+            <td *ngIf="user.user_id != class.teacher_id" colspan="2">
+              <input matInput placeholder="Email" class="filter-item"
+                     type="text" name="email" [(ngModel)]="email" [value]="" />
+            </td>
+          </tr>
+          <tr *ngFor="let item of researchers | tableFilter: form.value">
+            <td style="max-width: 260px;">{{item.email }}</td>
+            <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
+            <td *ngIf="user.user_id == class.teacher_id" class="text-right" style="min-width: 260px;">
+              <button class="button button-small button-danger" mat-stroked-button type="button" *ngIf="user.user_id != item.id" (click)="deleteResearcher(item.id)">Remove</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </mat-card>
+  <mat-card *ngIf="showAvailable" class="teachers-content">
+    <div class="subtitle text-center">Select Researcher (class {{class.name}})</div>
+    <form novalidate #form="ngForm">
+      <div class="table-responsive">
+        <table matSort (matSortChange)="sortData($event, true)" class="table">
+          <thead>
+          <tr>
+            <th mat-sort-header="email" scope="col">Email</th>
+            <th mat-sort-header="name" scope="col">Name</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td colspan="3">
+              <input matInput placeholder="Email" class="filter-item" type="text" name="email" [(ngModel)]="emailAvailable" [value]="" />
+            </td>
+          </tr>
+          <tr *ngFor="let item of available_researchers | tableFilter: form.value">
+            <td style="max-width: 260px;">{{item.email }}</td>
+            <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
+            <td class="text-right">
+              <button class="button button-outline button-small" mat-stroked-button (click)="addResearcher(item)">Select</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+    <div class="button-container">
+      <button mat-button class="button button-white" (click)="showAvailable=false">Close</button>
+    </div>
+  </mat-card>
+</div>

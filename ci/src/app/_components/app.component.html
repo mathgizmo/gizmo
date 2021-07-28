@@ -3,15 +3,15 @@
         <img src="./assets/images/menu-button-white.svg" class="menu-icon" alt="menu" />
     </button>
     <mat-menu #menu="matMenu" class="menu">
-        <a *ngIf="user.role === 'teacher' || user.role === 'student'" mat-menu-item routerLink="dashboard" class="menu-item">
+        <a *ngIf="user.role === 'teacher' || user.role === 'researcher' || user.role === 'student'" mat-menu-item routerLink="dashboard" class="menu-item">
             <span class="material-icons">home</span>
             Home
         </a>
-        <a *ngIf="user.role !== 'teacher' && user.role !== 'student'" mat-menu-item routerLink="/" class="menu-item">
+        <a *ngIf="user.role !== 'teacher' && user.role !== 'researcher' && user.role !== 'student'" mat-menu-item routerLink="/" class="menu-item">
             <span class="material-icons">home</span>
             Home
         </a>
-        <a *ngIf="user.role !== 'teacher' && user.role !== 'student'" mat-menu-item routerLink="to-do" class="menu-item">
+        <a *ngIf="user.role !== 'teacher' && user.role !== 'researcher' && user.role !== 'student'" mat-menu-item routerLink="to-do" class="menu-item">
             <span class="material-icons">assignment</span>
             To Do
         </a>
@@ -19,27 +19,31 @@
             <span class="material-icons">class</span>
             My Classes
         </a>
-        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/class" class="menu-item">
+        <!-- <a *ngIf="user.role === 'researcher'" mat-menu-item routerLink="teacher/research" class="menu-item">
+            <span class="material-icons">science</span>
+            Research
+        </a> -->
+        <a *ngIf="user.role === 'teacher' || user.role === 'researcher'" mat-menu-item routerLink="teacher/class" class="menu-item">
             <span class="material-icons">class</span>
             Classrooms
         </a>
-        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/assignment" class="menu-item">
+        <a *ngIf="user.role === 'teacher' || user.role === 'researcher'" mat-menu-item routerLink="teacher/assignment" class="menu-item">
             <span class="material-icons">assignment</span>
             Assignments
         </a>
-        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/test" class="menu-item">
+        <a *ngIf="user.role === 'teacher' || user.role === 'researcher'" mat-menu-item routerLink="teacher/test" class="menu-item">
             <span class="material-icons">assignment_turned_in</span>
             Tests
         </a>
-        <a *ngIf="user.role === 'teacher'" mat-menu-item routerLink="teacher/review-content" class="menu-item">
+        <a *ngIf="user.role === 'teacher' || user.role === 'researcher'" mat-menu-item routerLink="teacher/review-content" class="menu-item">
             <span class="material-icons">extension</span>
             Review Content
         </a>
-        <a *ngIf="user.role === 'teacher' || user.role === 'student'" mat-menu-item routerLink="tutorial" class="menu-item">
+        <a *ngIf="user.role === 'teacher' || user.role === 'researcher' || user.role === 'student'" mat-menu-item routerLink="tutorial" class="menu-item">
             <span class="material-icons">topic</span>
             Tutorials
         </a>
-        <a *ngIf="user.role === 'teacher' || user.role === 'student'" mat-menu-item routerLink="faq" class="menu-item">
+        <a *ngIf="user.role === 'teacher' || user.role === 'researcher' || user.role === 'student'" mat-menu-item routerLink="faq" class="menu-item">
             <span class="material-icons">quiz</span>
             FAQs
         </a>

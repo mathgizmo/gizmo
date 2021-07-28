@@ -10,8 +10,7 @@ class ClassOfStudents extends Model
 {
     protected $table = 'classes';
 
-    protected $fillable = ['id', 'teacher_id', 'key', 'name', 'class_type', 'subscription_type',
-        'invitations', 'test_duration_multiply_by'];
+    protected $fillable = ['teacher_id', 'key', 'name', 'class_type', 'subscription_type', 'invitations', 'is_researchable'];
 
     public function teacher() {
         return $this->belongsTo('App\Student', 'teacher_id');
@@ -19,6 +18,12 @@ class ClassOfStudents extends Model
 
     public function teachers() {
         return $this->belongsToMany('App\Student', 'classes_teachers', 'class_id', 'student_id');
+    }
+
+    public function teachersWithoutResearchers() {
+        return $this->belongsToMany('App\Student', 'classes_teachers', 'class_id', 'student_id')
+            ->withPivot(['is_researcher', 'receive_emails_from_students'])
+            ->wherePivot('is_researcher', 0);
     }
 
     public function students() {
