@@ -65,9 +65,11 @@ $api->version('v1', function ($api) {
 
         $api->get('/classes', 'App\Http\APIControllers\ClassController@all');
         $api->post('/classes', 'App\Http\APIControllers\ClassController@store');
+        $api->get('/classes/{class_id}', 'App\Http\APIControllers\ClassController@get');
         $api->put('/classes/{class_id}', 'App\Http\APIControllers\ClassController@update');
         $api->delete('/classes/{class_id}', 'App\Http\APIControllers\ClassController@delete');
 
+        $api->get('/research-classes', 'App\Http\APIControllers\ClassController@getResearchClasses');
         $api->post('/classes/{class_id}/email', 'App\Http\APIControllers\ClassController@emailClass');
 
         $api->get('/classes/{class_id}/threads', 'App\Http\APIControllers\ClassThreadController@index');

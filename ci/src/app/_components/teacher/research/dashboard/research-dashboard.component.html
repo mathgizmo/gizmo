@@ -1,0 +1,18 @@
+<a routerLink="/researcher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="dashboard">
+  <app-research-menu [classId]="classId" class="class-menu"></app-research-menu>
+  <div class="dashboard-content">
+    <mat-card>
+      <app-assignments-students-usage-chart [forResearch]="true" [classId]="classId" [assignments]="assignments"></app-assignments-students-usage-chart>
+    </mat-card>
+    <mat-card>
+      <app-class-assignments-list [classId]="classId" [assignments]="assignments"></app-class-assignments-list>
+    </mat-card>
+    <mat-card>
+      <app-tests-students-usage-chart [forResearch]="true" [classId]="classId" [tests]="tests"></app-tests-students-usage-chart>
+    </mat-card>
+    <mat-card>
+      <app-class-tests-list [classId]="classId" [tests]="tests"></app-class-tests-list>
+    </mat-card>
+  </div>
+</div>

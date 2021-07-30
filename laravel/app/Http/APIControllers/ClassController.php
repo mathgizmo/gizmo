@@ -42,16 +42,44 @@ class ClassController extends Controller
         }
     }
 
-    public function all() {
+    public function all(Request $request) {
         $user_id = $this->user->id;
-        $items = ClassOfStudents::where(function ($q1) use($user_id) {
+        $query = ClassOfStudents::query()->where(function ($q1) use($user_id) {
+            $q1->where('classes.teacher_id', $user_id)
+                ->orWhereHas('teachersWithoutResearchers', function ($q2) use($user_id) {
+                    $q2->where('students.id', $user_id);
+                });
+        });
+        return $this->success([
+            'items' => array_values($query->get()->toArray())
+        ]);
+    }
+
+    public function getResearchClasses(Request $request) {
+        $user_id = $this->user->id;
+        $query = ClassOfStudents::query()->where(function ($q1) use($user_id) {
             $q1->where('classes.teacher_id', $user_id)
                 ->orWhereHas('teachers', function ($q2) use($user_id) {
                     $q2->where('students.id', $user_id);
                 });
-        })->get();
+        })->where('classes.is_researchable', true);
         return $this->success([
-            'items' => array_values($items->toArray())
+            'items' => array_values($query->get()->toArray())
+        ]);
+    }
+
+    public function get(Request $request, $class_id) {
+        $user_id = $this->user->id;
+        $item = ClassOfStudents::where('classes.id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })
+            ->first();
+        return $this->success([
+            'item' => $item
         ]);
     }
 
@@ -146,8 +174,9 @@ class ClassController extends Controller
         return $this->success(['success' => true, 'items' => $emails]);
     }
 
-    public function getStudents($class_id) {
-        $show_extra = request()->filled('extra') && request('extra') == 'true' ? true : false;
+    public function getStudents(Request $request, $class_id) {
+        $show_extra = $request->filled('extra') && $request['extra'] == 'true';
+        $for_research = $request->filled('for_research') && $request['for_research'];
         $user_id = $this->user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
@@ -157,15 +186,27 @@ class ClassController extends Controller
                     });
             })->first();
         if ($class) {
-            $students = $class->students()->orderBy('email')
-                ->get([
-                    'students.id',
-                    'students.first_name',
-                    'students.last_name',
-                    'students.email',
-                    'students.is_registered',
-                    'students.created_at',
-                ]);
+            if ($for_research) {
+                $students = $class->students()->wherePivot('is_element1_accepted', true)->orderBy('email')
+                    ->get([
+                        'students.id',
+                        'students.first_name',
+                        'students.last_name',
+                        'students.email',
+                        'students.is_registered',
+                        'students.created_at',
+                    ]);
+            } else {
+                $students = $class->students()->orderBy('email')
+                    ->get([
+                        'students.id',
+                        'students.first_name',
+                        'students.last_name',
+                        'students.email',
+                        'students.is_registered',
+                        'students.created_at',
+                    ]);
+            }
             if ($show_extra) {
                 $apps = Application::whereHas('classes', function ($q1) use ($class_id) {
                     $q1->where('classes.id', $class_id);
@@ -619,11 +660,14 @@ class ClassController extends Controller
         }
     }
 
-    public function getAssignments($class_id) {
+    public function getAssignments(Request $request, $class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
             $items = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
-            $students = $class->students()->get();
+            $for_research = $request->filled('for_research') && $request['for_research'];
+            $students = $for_research
+                ? $class->students()->wherePivot('is_element1_accepted', true)->get()
+                : $class->students()->get();
             $students_count = $students->count();
             foreach ($items as $item) {
                 $class_data = $item->getClassRelatedData($class->id);
@@ -644,8 +688,18 @@ class ClassController extends Controller
                 $item->color = $class_data && $class_data->color ? $class_data->color : null;
                 $item->is_for_selected_students = $class_data && $class_data->is_for_selected_students;
                 if ($item->is_for_selected_students) {
-                    $item->students = DB::table('classes_applications_students')
-                        ->where('class_app_id', $class_data->id)->pluck('student_id');
+                    if ($for_research) {
+                        $item->students = ClassApplicationStudent::where('class_app_id', $class_data->id)
+                            ->whereHas('student', function ($q1) use ($class_id) {
+                                $q1->whereHas('classStudents', function ($q2) use ($class_id) {
+                                    $q2->where('class_id', $class_id)->where('is_element1_accepted', true);
+                                });
+                            })
+                            ->pluck('student_id');
+                    } else {
+                        $item->students = ClassApplicationStudent::where('class_app_id', $class_data->id)
+                            ->pluck('student_id');
+                    }
                     $app_students_count = count($item->students);
                 } else {
                     $app_students_count = $students_count;
@@ -746,11 +800,14 @@ class ClassController extends Controller
         return $this->success('Ok.');
     }
 
-    public function getTests($class_id) {
+    public function getTests(Request $request, $class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
             $items = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
-            $students = $class->students()->get();
+            $for_research = $request->filled('for_research') && $request['for_research'];
+            $students = $for_research
+                ? $class->students()->wherePivot('is_element1_accepted', true)->get()
+                : $class->students()->get();
             $students_count = $students->count();
             foreach ($items as $item) {
                 $class_data = $item->getClassRelatedData($class->id);
@@ -777,8 +834,18 @@ class ClassController extends Controller
                 $item->class_id = $class_id;
                 $item->app_id = $class_data && $class_data->app_id ? $class_data->app_id : 0;
                 if ($item->is_for_selected_students) {
-                    $item->students = DB::table('classes_applications_students')
-                        ->where('class_app_id', $class_data->id)->pluck('student_id');
+                    if ($for_research) {
+                        $item->students = ClassApplicationStudent::where('class_app_id', $class_data->id)
+                            ->whereHas('student', function ($q1) use ($class_id) {
+                                $q1->whereHas('classStudents', function ($q2) use ($class_id) {
+                                    $q2->where('class_id', $class_id)->where('is_element1_accepted', true);
+                                });
+                            })
+                            ->pluck('student_id');
+                    } else {
+                        $item->students = ClassApplicationStudent::where('class_app_id', $class_data->id)
+                            ->pluck('student_id');
+                    }
                     $app_students_count = count($item->students);
                 } else {
                     $app_students_count = $students_count;
@@ -966,10 +1033,11 @@ class ClassController extends Controller
         return $this->success('Ok.');
     }
 
-    public function getAnswersStatistics($class_id) {
+    public function getAnswersStatistics(Request $request, $class_id) {
         $class = ClassOfStudents::where('id', $class_id)->first();
         if (!$class) { return $this->error('Class not found!', 404); }
-        $type = request()->has('type') ? request('type') : 'assignment';
+        $type = $request->filled('type')  ? $request['type'] : 'assignment';
+        $for_research = $request->filled('for_research') && $request['for_research'];
         $query = StudentsTrackingQuestion::query()->with('application');
         $query->whereHas('classApplication', function ($q1) use ($class_id) {
             $q1->where('class_id', $class_id);
@@ -984,7 +1052,10 @@ class ClassController extends Controller
         if (request()->has('student_id') && request('student_id')) {
             $query->where('student_id', request('student_id'));
         } else {
-            $query->whereIn('student_id', $class->students()->pluck('students.id')->toArray());
+            $student_ids = $for_research
+                ? $class->students()->wherePivot('is_element1_accepted', true)->pluck('students.id')->toArray()
+                : $class->students()->pluck('students.id')->toArray();
+            $query->whereIn('student_id', $student_ids);
         }
         if (request()->has('date_to') && request('date_to')) {
             $endDate = Carbon::parse(request('date_to'))->addDay();

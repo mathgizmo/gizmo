@@ -38,8 +38,10 @@ import {
     ManageAssignmentsComponent,
     ManageTestsComponent,
     ManageClassesComponent,
+    ResearchClassesComponent,
     ReviewContentComponent,
     ClassDashboardComponent,
+    ResearchDashboardComponent,
     ClassAssignmentsComponent,
     ClassTestsComponent,
     ClassStudentsComponent,
@@ -63,12 +65,6 @@ const authRoutes = [
 
 const teacherRoutes = [
     {
-        path: 'teacher/class',
-        component: ManageClassesComponent,
-        canActivate: [AuthGuard],
-        data: {roles: ['teacher', 'researcher']}
-    },
-    {
         path: 'teacher/review-content',
         component: ReviewContentComponent,
         canActivate: [AuthGuard],
@@ -83,6 +79,12 @@ const teacherRoutes = [
     {
         path: 'teacher/test',
         component: ManageTestsComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['teacher', 'researcher']}
+    },
+    {
+        path: 'teacher/class',
+        component: ManageClassesComponent,
         canActivate: [AuthGuard],
         data: {roles: ['teacher', 'researcher']}
     },
@@ -139,6 +141,21 @@ const teacherRoutes = [
     {
         path: 'teacher/class/:class_id/invitation-settings', component: ClassInvitationSettingsComponent,
         canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}
+    },
+];
+
+const researcherRoutes = [
+    {
+        path: 'researcher/class',
+        component: ResearchClassesComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['researcher']}
+    },
+    {
+        path: 'researcher/class/:class_id/dashboard',
+        component: ResearchDashboardComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['researcher']}
     },
 ];
 
@@ -215,6 +232,7 @@ const routes: Routes = [
     },
     ...studentRoutes,
     ...teacherRoutes,
+    ...researcherRoutes,
     {path: 'classroom/:class_key/join', component: ClassJoinComponent},
     {path: 'preview/question', component: QuestionPreviewComponent},
     {path: '**', redirectTo: 'welcome'}

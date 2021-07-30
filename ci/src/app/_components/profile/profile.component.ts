@@ -66,6 +66,7 @@ export class ProfileComponent implements OnInit {
         if (this.user.role === 'researcher' || this.user.role === 'teacher') {
             this.user.role = this.isResearcher ? 'researcher' : 'teacher';
         }
+        this.authenticationService.saveUserValue(this.user);
         this.userService.changeProfile(this.user)
             .subscribe(res => {
                 this.passwordsMatch = true;

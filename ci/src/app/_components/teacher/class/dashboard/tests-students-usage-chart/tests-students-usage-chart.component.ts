@@ -15,8 +15,9 @@ import * as moment from 'moment';
 export class TestsStudentsUsageChartComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Input() classId: number;
-    @Input() forStudent = false;
     @Input() tests = [];
+    @Input() forStudent = false;
+    @Input() forResearch = false;
 
     public studentId = '';
     public appId = '';
@@ -49,7 +50,8 @@ export class TestsStudentsUsageChartComponent implements OnInit, AfterViewInit, 
             const user = this.authenticationService.userValue;
             this.studentId = user.user_id + '';
         } else {
-            this.classService.getStudents(this.classId)
+            const filters = this.forResearch ? { for_research: 1 } : null;
+            this.classService.getStudents(this.classId, false, filters)
                 .subscribe(students => {
                     this.students = students;
                     this.availableStudents = students;
@@ -76,7 +78,8 @@ export class TestsStudentsUsageChartComponent implements OnInit, AfterViewInit, 
     }
 
     public getStatistics() {
-        this.classService.getAnswersStatistics(this.classId, this.studentId, this.appId, this.dateFrom, this.dateTo, 'test')
+        this.classService.getAnswersStatistics(this.classId, this.studentId, this.appId,
+            this.dateFrom, this.dateTo, 'test', this.forResearch)
             .subscribe(response => {
                 // build chart
                 this.browserOnly(() => {

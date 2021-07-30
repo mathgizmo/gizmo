@@ -30,13 +30,40 @@ export class ClassesManagementService {
         }
     }
 
-    public getClasses() {
-        return this.http.get('/classes')
+    public getClasses(filters = null) {
+        let url = '/classes';
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url)
             .pipe(
                 map((response: Response) => {
                     this.classes = response['items'];
                     return response['items'];
                 })
+            );
+    }
+
+    public getResearchClasses(filters = null) {
+        let url = '/research-classes';
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url)
+            .pipe(
+                map((response: Response) => {
+                    this.classes = response['items'];
+                    return response['items'];
+                })
+            );
+    }
+
+    public getClass(classId) {
+        return this.http.get('/classes/' + classId)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
             );
     }
 
@@ -79,8 +106,12 @@ export class ClassesManagementService {
         return this.http.post('/classes/' + class_id + '/email', mail);
     }
 
-    public getStudents(class_id, withExtra = false) {
-        return this.http.get('/classes/' + class_id + '/students?extra=' + withExtra)
+    public getStudents(class_id, withExtra = false, filters = null) {
+        let url = '/classes/' + class_id + '/students?extra=' + withExtra;
+        if (filters) {
+            url += '&' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url)
             .pipe(
                 map((response: Response) => {
                     return response['items'];
@@ -152,8 +183,12 @@ export class ClassesManagementService {
         return this.http.delete('/classes/' + class_id + '/teachers/' + teacher_id);
     }
 
-    public getAssignments(class_id) {
-        return this.http.get('/classes/' + class_id + '/assignments');
+    public getAssignments(class_id, filters = null) {
+        let url = '/classes/' + class_id + '/assignments';
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url);
     }
 
     public changeAssignment(class_id, item) {
@@ -177,8 +212,12 @@ export class ClassesManagementService {
         return this.http.delete('/classes/' + class_id + '/assignments/' + app_id);
     }
 
-    public getTests(class_id) {
-        return this.http.get('/classes/' + class_id + '/tests');
+    public getTests(class_id, filters = null) {
+        let url = '/classes/' + class_id + '/tests';
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url);
     }
 
     public changeTest(class_id, item) {
@@ -236,14 +275,16 @@ export class ClassesManagementService {
         return this.http.get('/classes/' + class_id + '/report');
     }
 
-    getAnswersStatistics(class_id, student_id = null, app_id = null, date_from = null, date_to = null, type = 'assignment') {
+    public getAnswersStatistics(class_id, student_id = null, app_id = null,
+        date_from = null, date_to = null, type = 'assignment', for_research = false) {
         return this.http.get( '/classes/' + class_id + '/answers-statistics',
             true, {
                 student_id: student_id ? student_id : '',
                 app_id: app_id ? app_id : '',
                 date_from: date_from ? date_from : '',
                 date_to: date_to ? date_to : '',
-                type: type
+                type: type,
+                for_research: for_research ? 1 : 0
             })
             .pipe(
                 map((response: Response) => {

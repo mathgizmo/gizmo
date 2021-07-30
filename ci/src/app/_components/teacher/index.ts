@@ -31,3 +31,7 @@ export * from './assignments/edit-assignment-dialog/edit-assignment-dialog.compo
 export * from './tests/manage-tests.component';
 export * from './tests/edit-test-dialog/edit-test-dialog.component';
 export * from './review-content/review-content.component';
+export * from './research/research-classes.component';
+export * from './research/menu/research-menu.component';
+export * from './research/dashboard/research-dashboard.component';
+
