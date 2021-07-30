@@ -7,8 +7,7 @@ import {compare} from '../../../../../_helpers/compare.helper';
 @Component({
     selector: 'app-class-tests-list',
     templateUrl: './tests-list.component.html',
-    styleUrls: ['./tests-list.component.scss'],
-    providers: []
+    styleUrls: ['./tests-list.component.scss']
 })
 export class ClassTestsListComponent implements OnInit {
 

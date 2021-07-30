@@ -5,6 +5,7 @@ namespace App\Http\APIControllers;
 use App\Application;
 use App\ClassApplication;
 use App\ClassOfStudents;
+use App\ClassStudent;
 use App\Exports\StudentClassAssignmentsReportExport;
 use App\Exports\StudentClassTestsReportExport;
 use App\Http\Resources\AuthStudentResource;
@@ -341,6 +342,21 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function getClass(Request $request, $class_id) {
+        $student = $this->user;
+        $item = $student->classes()->where('classes.id', $class_id)->first();
+        if (!$item) {
+            return $this->error('Classroom not found!', 404);
+        }
+        // $teacher = Student::where('id', $item->teacher_id)->first();
+        // $item->teacher = $teacher ? $teacher->first_name.' '.$teacher->last_name : '';
+        // $item->teacher_email = $teacher ? $teacher->email : '';
+        // $item->teachers = $item->teachersWithoutResearchers()->get(['students.id', 'students.email', 'students.first_name', 'students.last_name']);
+        return $this->success([
+            'item' => $item
+        ]);
+    }
+
     public function subscribeClass($class_id) {
         $student = $this->user;
         $class = ClassOfStudents::where('id', $class_id)->orWhere('key', $class_id)->first();
@@ -386,6 +402,20 @@ class ProfileController extends Controller
         return $this->success([
             'item' => $class,
         ]);
+    }
+
+    public function updateClassConsent(Request $request, $class_id) {
+        $model = ClassStudent::where('class_id', $class_id)->where('student_id', $this->user->id)->first();
+        if (!$model) {
+            return $this->error('Not Found!', 404);
+        }
+        $model->is_consent_read = true;
+        $model->is_element1_accepted = (bool)$request['is_element1_accepted'];
+        $model->is_element2_accepted = (bool)$request['is_element2_accepted'];
+        $model->is_element3_accepted = (bool)$request['is_element3_accepted'];
+        $model->is_element4_accepted = (bool)$request['is_element4_accepted'];
+        $model->save();
+        return $this->success('OK.');
     }
 
     public function unsubscribeClass($class_id) {

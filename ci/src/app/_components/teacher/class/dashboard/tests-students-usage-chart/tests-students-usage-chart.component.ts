@@ -10,8 +10,7 @@ import * as moment from 'moment';
 @Component({
     selector: 'app-tests-students-usage-chart',
     templateUrl: './tests-students-usage-chart.component.html',
-    styleUrls: ['./tests-students-usage-chart.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['./tests-students-usage-chart.component.scss']
 })
 export class TestsStudentsUsageChartComponent implements OnInit, AfterViewInit, OnDestroy {
 

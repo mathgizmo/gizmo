@@ -5,12 +5,14 @@ import * as moment from 'moment';
 import {User} from '../../../../_models';
 import {UserService, AuthenticationService} from '../../../../_services/index';
 import {environment} from '../../../../../environments/environment';
+import {MatDialog} from '@angular/material/dialog';
+import {DeviceDetectorService} from 'ngx-device-detector';
+import {ResearchConsentDialogComponent} from '../research-consent-dialog/research-consent-dialog.component';
 
 @Component({
     selector: 'app-my-assignments',
     templateUrl: './assignments.component.html',
-    styleUrls: ['./assignments.component.scss'],
-    providers: [UserService, AuthenticationService]
+    styleUrls: ['./assignments.component.scss']
 })
 export class MyAssignmentsComponent implements OnInit, OnDestroy {
 
@@ -18,7 +20,15 @@ export class MyAssignmentsComponent implements OnInit, OnDestroy {
     public classId: number;
     public myClass = {
         id: 0,
-        name: ''
+        name: '',
+        is_researchable: 0,
+        pivot: {
+            is_consent_read: 0,
+            is_element1_accepted: 0,
+            is_element2_accepted: 0,
+            is_element3_accepted: 0,
+            is_element4_accepted: 0
+        }
     };
 
     public backLinkText = 'Back';
@@ -30,28 +40,42 @@ export class MyAssignmentsComponent implements OnInit, OnDestroy {
     private readonly adminUrl = environment.adminUrl;
     private checkAvailabilityIntervalId = null;
 
-    public myClasses = [];
     private sub: any;
+
+    dialogPosition: any;
+    private isMobile = this.deviceService.isMobile();
+    private isTablet = this.deviceService.isTablet();
+    private isDesktop = this.deviceService.isDesktop();
 
     constructor(
         private authenticationService: AuthenticationService,
         private userService: UserService,
         private sanitizer: DomSanitizer,
         private router: Router,
-        private route: ActivatedRoute
-    ) { }
+        private route: ActivatedRoute,
+        public dialog: MatDialog,
+        private deviceService: DeviceDetectorService
+    ) {
+        this.dialogPosition = {bottom: '18vh'};
+        if (this.isMobile || this.isTablet) {
+            this.dialogPosition = {bottom: '2vh'};
+        }
+    }
 
     ngOnInit() {
         this.user = this.authenticationService.userValue;
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
-            this.userService.getClasses()
+            this.userService.getClass(this.classId)
                 .subscribe(response => {
-                    this.myClasses = response['my_classes'];
-                    this.myClass = this.myClasses.find(obj => {
-                        return obj.id === this.classId;
-                    });
+                    this.myClass = response;
                     this.backLinkText = 'My Classes > ' + (this.myClass ? this.myClass.name : this.classId) + ' > Assignments';
+                    if (this.myClass && this.myClass.is_researchable && this.myClass.pivot && !this.myClass.pivot.is_consent_read) {
+                        this.dialog.open(ResearchConsentDialogComponent, {
+                            data: { 'class_id': this.classId, 'consent': this.myClass.pivot },
+                            position: this.dialogPosition
+                        });
+                    }
                 });
         });
         this.userService.getToDos(this.classId)

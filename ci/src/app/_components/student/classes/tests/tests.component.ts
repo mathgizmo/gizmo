@@ -11,12 +11,12 @@ import {TestReportDialogComponent} from './test-report-dialog/test-report-dialog
 import {User} from '../../../../_models';
 import * as moment from 'moment';
 import {environment} from '../../../../../environments/environment';
+import {ResearchConsentDialogComponent} from '../research-consent-dialog/research-consent-dialog.component';
 
 @Component({
     selector: 'app-my-tests',
     templateUrl: './tests.component.html',
     styleUrls: ['./tests.component.scss'],
-    providers: [UserService, AuthenticationService]
 })
 export class MyTestsComponent implements OnInit, OnDestroy {
 
@@ -24,7 +24,15 @@ export class MyTestsComponent implements OnInit, OnDestroy {
     public classId: number;
     public myClass = {
         id: 0,
-        name: ''
+        name: '',
+        is_researchable: 0,
+        pivot: {
+            is_consent_read: 0,
+            is_element1_accepted: 0,
+            is_element2_accepted: 0,
+            is_element3_accepted: 0,
+            is_element4_accepted: 0
+        }
     };
 
     public backLinkText = 'Back';
@@ -64,13 +72,16 @@ export class MyTestsComponent implements OnInit, OnDestroy {
         this.user = this.authenticationService.userValue;
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
-            this.userService.getClasses()
+            this.userService.getClass(this.classId)
                 .subscribe(response => {
-                    this.myClasses = response['my_classes'];
-                    this.myClass = this.myClasses.find(obj => {
-                        return obj.id === this.classId;
-                    });
+                    this.myClass = response;
                     this.backLinkText = 'My Classes > ' + (this.myClass ? this.myClass.name : this.classId) + ' > Tests';
+                    if (this.myClass && this.myClass.is_researchable && this.myClass.pivot && !this.myClass.pivot.is_consent_read) {
+                        this.dialog.open(ResearchConsentDialogComponent, {
+                            data: { 'class_id': this.classId, 'consent': this.myClass.pivot },
+                            position: this.dialogPosition
+                        });
+                    }
                 });
         });
         this.userService.getTests(this.classId)

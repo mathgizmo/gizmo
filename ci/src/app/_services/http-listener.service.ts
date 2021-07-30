@@ -12,10 +12,9 @@ import {catchError, finalize, map} from 'rxjs/operators';
 
 @Injectable()
 export class HTTPStatus {
-    private requestInFlight$: BehaviorSubject<boolean>;
+    private requestInFlight$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     constructor() {
-        this.requestInFlight$ = new BehaviorSubject(false);
     }
 
     setHttpStatus(inFlight: boolean) {

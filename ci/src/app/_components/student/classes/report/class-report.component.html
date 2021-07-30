@@ -1,6 +1,6 @@
 <a routerLink="/student/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
 <div class="dashboard">
-  <app-my-class-menu [classId]="classId" class="class-menu"></app-my-class-menu>
+  <app-my-class-menu [classId]="classId" [myClass]="myClass" class="class-menu"></app-my-class-menu>
   <div class="dashboard-content">
     <mat-card *ngIf="assignments">
       <i class="arrow" [class.arrow-up]="reportShow[0]" [class.arrow-down]="!reportShow[0]"

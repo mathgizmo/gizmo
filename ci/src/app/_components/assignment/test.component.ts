@@ -9,7 +9,7 @@ import {AuthenticationService, QuestionService, TestService, TrackingService} fr
     selector: 'app-test',
     templateUrl: './test.component.html',
     styleUrls: ['./test.component.scss'],
-    providers: [TestService, TrackingService, QuestionService, AuthenticationService]
+    providers: [TestService, TrackingService, QuestionService]
 })
 export class TestComponent implements OnInit, OnDestroy {
 

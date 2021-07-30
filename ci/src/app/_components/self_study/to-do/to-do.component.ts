@@ -8,8 +8,7 @@ import {environment} from '../../../../environments/environment';
 @Component({
     selector: 'app-to-do',
     templateUrl: './to-do.component.html',
-    styleUrls: ['./to-do.component.scss'],
-    providers: [UserService]
+    styleUrls: ['./to-do.component.scss']
 })
 export class ToDoComponent implements OnInit, OnDestroy {
     public applications = [];

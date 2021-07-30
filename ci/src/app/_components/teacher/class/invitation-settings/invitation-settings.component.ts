@@ -7,8 +7,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 @Component({
     selector: 'app-class-invitation-settings',
     templateUrl: './invitation-settings.component.html',
-    styleUrls: ['./invitation-settings.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['./invitation-settings.component.scss']
 })
 export class ClassInvitationSettingsComponent implements OnInit {
 

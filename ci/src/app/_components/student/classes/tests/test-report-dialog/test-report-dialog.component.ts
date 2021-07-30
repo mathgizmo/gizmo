@@ -7,8 +7,7 @@ import {User} from '../../../../../_models';
 @Component({
     selector: 'app-test-report-dialog',
     templateUrl: 'test-report-dialog.component.html',
-    styleUrls: ['test-report-dialog.component.scss'],
-    providers: [ClassesManagementService, AuthenticationService],
+    styleUrls: ['test-report-dialog.component.scss']
 })
 export class TestReportDialogComponent extends BaseDialogComponent<TestReportDialogComponent> {
     public test = {

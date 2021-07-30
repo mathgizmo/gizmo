@@ -8,8 +8,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
     selector: 'app-email-teacher',
     templateUrl: 'email-teacher.component.html',
-    styleUrls: ['email-teacher.component.scss'],
-    providers: [UserService, ClassesManagementService]
+    styleUrls: ['email-teacher.component.scss']
 })
 export class StudentEmailTeacherComponent implements OnInit {
 
@@ -18,7 +17,8 @@ export class StudentEmailTeacherComponent implements OnInit {
     public myClass = {
         id: 0,
         name: '',
-        teacher_email: ''
+        teacher_email: '',
+        is_researchable: 0
     };
     public mail = {
         subject: '',
@@ -50,12 +50,9 @@ export class StudentEmailTeacherComponent implements OnInit {
             }).subscribe(res => {
                 this.teachers = res['teachers'];
             });
-            this.userService.getClasses()
+            this.userService.getClass(this.classId)
                 .subscribe(response => {
-                    this.myClasses = response['my_classes'];
-                    this.myClass = this.myClasses.find(obj => {
-                        return obj.id === this.classId;
-                    });
+                    this.myClass = response;
                     this.backLinkText = 'My Classes > ' + (this.myClass ? this.myClass.name : this.classId) + ' > Email';
                 });
         });

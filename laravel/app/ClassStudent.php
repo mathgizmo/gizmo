@@ -9,7 +9,8 @@ class ClassStudent extends Model
 {
     protected $table = 'classes_students';
 
-    protected $fillable = ['class_id', 'student_id', 'test_duration_multiply_by', 'is_unsubscribed'];
+    protected $fillable = ['class_id', 'student_id', 'test_duration_multiply_by', 'is_unsubscribed',
+        'is_consent_read', 'is_element1_accepted', 'is_element2_accepted', 'is_element3_accepted', 'is_element4_accepted'];
 
     public function student() {
         return $this->belongsTo('App\Student', 'student_id', 'id');

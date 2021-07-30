@@ -8,8 +8,7 @@ import {ActivatedRoute} from '@angular/router';
 @Component({
     selector: 'app-email-class',
     templateUrl: 'email-class.component.html',
-    styleUrls: ['email-class.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['email-class.component.scss']
 })
 export class TeacherClassEmailComponent implements OnInit {
 

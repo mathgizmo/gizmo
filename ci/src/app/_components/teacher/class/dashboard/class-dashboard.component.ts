@@ -6,8 +6,7 @@ import * as moment from 'moment';
 @Component({
     selector: 'app-class-dashboard',
     templateUrl: './class-dashboard.component.html',
-    styleUrls: ['./class-dashboard.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['./class-dashboard.component.scss']
 })
 export class ClassDashboardComponent implements OnInit {
 

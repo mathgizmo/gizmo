@@ -10,7 +10,6 @@ import {User} from '../../../../../_models';
     selector: 'app-test-options-dialog',
     templateUrl: 'test-options-dialog.component.html',
     styleUrls: ['test-options-dialog.component.scss'],
-    providers: [UserService, AuthenticationService],
 })
 export class TestOptionsDialogComponent extends BaseDialogComponent<TestOptionsDialogComponent> {
 

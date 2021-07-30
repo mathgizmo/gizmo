@@ -3,6 +3,7 @@ import {Router, NavigationEnd, ActivatedRoute} from '@angular/router';
 import {map, filter} from 'rxjs/operators';
 import {HTTPStatus, AuthenticationService} from '../_services/index';
 import {User} from '../_models/user';
+import {Observable} from 'rxjs';
 
 declare var $: any;
 
@@ -15,7 +16,7 @@ declare var $: any;
 })
 
 export class AppComponent implements OnInit {
-    public HTTPActivity = false;
+    public HTTPActivity$: Observable<boolean>;
     public showMenu = this.isLoggedIn();
     public user: User;
 
@@ -30,10 +31,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.httpStatus.getHttpStatus()
-            .subscribe((status: boolean) => {
-                this.HTTPActivity = status;
-            });
+        this.HTTPActivity$ = this.httpStatus.getHttpStatus();
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),

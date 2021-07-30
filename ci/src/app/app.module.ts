@@ -33,26 +33,53 @@ import {CKEditorModule} from '@ckeditor/ckeditor5-angular';
 import {AppRoutingModule} from './app.routing';
 import {AuthGuard} from './_guards/index';
 
-import {AuthenticationService, HttpService, HTTPListener, HTTPStatus, CountryService} from './_services/index';
+import {
+    AuthenticationService,
+    HttpService,
+    HTTPListener,
+    HTTPStatus,
+    CountryService,
+    UserService,
+    ClassesManagementService
+} from './_services/index';
 
 import {AppComponent} from './_components/app.component';
 import {
-    WelcomeComponent, RegisterComponent, LoginComponent, LogoutComponent,
-    ForgotPasswordComponent, ResetPasswordComponent, TryComponent, VerifyEmailComponent
+    WelcomeComponent,
+    RegisterComponent,
+    LoginComponent,
+    LogoutComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    TryComponent,
+    VerifyEmailComponent
 } from './_components/auth/index';
 import {AssignmentComponent, TestComponent} from './_components/assignment/index';
 import {TopicComponent} from './_components/assignment/topic/index';
 import {LessonComponent, ChartComponent} from './_components/assignment/topic/lesson/index';
 import {ProfileComponent} from './_components/profile/profile.component';
 import {
-    GoodDialogComponent, BadDialogComponent, ReportDialogComponent,
-    FeedbackDialogComponent, BadChallengeDialogComponent, YesNoDialogComponent,
-    DeleteConfirmationDialogComponent, InfoDialogComponent
+    GoodDialogComponent,
+    BadDialogComponent,
+    ReportDialogComponent,
+    FeedbackDialogComponent,
+    BadChallengeDialogComponent,
+    YesNoDialogComponent,
+    DeleteConfirmationDialogComponent,
+    InfoDialogComponent
 } from './_components/dialogs/index';
 import {
-    MyAssignmentsComponent, MyTestsComponent, MyClassesComponent, MyClassReportComponent, StudentEmailTeacherComponent,
-    TestOptionsDialogComponent, TestStartDialogComponent, MyClassMenuComponent,
-    TestReportDialogComponent as StudentTestReportDialogComponent
+    MyAssignmentsComponent,
+    MyTestsComponent,
+    MyClassesComponent,
+    MyClassReportComponent,
+    MyClassResearchStatusComponent,
+    StudentEmailTeacherComponent,
+    TestOptionsDialogComponent,
+    TestStartDialogComponent,
+    MyClassMenuComponent,
+    TestReportDialogComponent as StudentTestReportDialogComponent,
+    ResearchConsentDialogComponent
 } from './_components/student/index';
 import {
     ClassReportComponent,
@@ -183,6 +210,8 @@ FullCalendarModule.registerPlugins([
         MyClassesComponent,
         MyClassMenuComponent,
         MyClassReportComponent,
+        MyClassResearchStatusComponent,
+        ResearchConsentDialogComponent,
         StudentEmailTeacherComponent,
         ToDoComponent,
         ManageClassesComponent,
@@ -267,11 +296,14 @@ FullCalendarModule.registerPlugins([
         TestOptionsDialogComponent,
         TestStartDialogComponent,
         StudentTestReportDialogComponent,
-        EditThreadDialogComponent
+        EditThreadDialogComponent,
+        ResearchConsentDialogComponent
     ],
     providers: [
         AuthGuard,
         AuthenticationService,
+        UserService,
+        ClassesManagementService,
         CountryService,
         HttpService,
         HTTPListener,

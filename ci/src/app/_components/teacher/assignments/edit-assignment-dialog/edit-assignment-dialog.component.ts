@@ -6,7 +6,7 @@ import {environment} from '../../../../../environments/environment';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
-    selector: 'edit-assignment-dialog',
+    selector: 'app-edit-assignment-dialog',
     templateUrl: 'edit-assignment-dialog.component.html',
     styleUrls: ['edit-assignment-dialog.component.scss'],
 })

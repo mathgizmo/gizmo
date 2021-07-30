@@ -56,8 +56,10 @@ $api->version('v1', function ($api) {
         $api->post('/profile/tests/{test_id}/reveal', 'App\Http\APIControllers\ProfileController@revealTest');
         $api->post('/profile/options', 'App\Http\APIControllers\ProfileController@changeOptions');
         $api->get('/profile/classes', 'App\Http\APIControllers\ProfileController@getClasses');
+        $api->get('/profile/classes/{class_id}', 'App\Http\APIControllers\ProfileController@getClass');
         $api->post('/profile/classes/{class_id}/subscribe', 'App\Http\APIControllers\ProfileController@subscribeClass');
         $api->post('/profile/classes/{class_id}/unsubscribe', 'App\Http\APIControllers\ProfileController@unsubscribeClass');
+        $api->post('/profile/classes/{class_id}/consent', 'App\Http\APIControllers\ProfileController@updateClassConsent');
         $api->get('/profile/classes/{class_id}/assignments-report.{format}', 'App\Http\APIControllers\ProfileController@downloadAssignmentsReport');
         $api->get('/profile/classes/{class_id}/tests-report.{format}', 'App\Http\APIControllers\ProfileController@downloadTestsReport');
 

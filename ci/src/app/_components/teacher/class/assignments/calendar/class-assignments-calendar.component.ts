@@ -6,8 +6,7 @@ import * as moment from 'moment';
 @Component({
     selector: 'app-class-assignments-calendar',
     templateUrl: './class-assignments-calendar.component.html',
-    styleUrls: ['./class-assignments-calendar.component.scss'],
-    providers: []
+    styleUrls: ['./class-assignments-calendar.component.scss']
 })
 export class ClassAssignmentsCalendarComponent implements OnInit, OnDestroy {
 

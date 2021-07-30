@@ -12,8 +12,7 @@ import {ClassesManagementService} from '../../../../../_services';
 @Component({
     selector: 'app-student-assignments-dialog',
     templateUrl: 'student-assignments-dialog.component.html',
-    styleUrls: ['student-assignments-dialog.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['student-assignments-dialog.component.scss']
 })
 export class StudentAssignmentsDialogComponent extends BaseDialogComponent<StudentAssignmentsDialogComponent> implements OnInit {
 

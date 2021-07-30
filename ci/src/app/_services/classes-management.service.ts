@@ -25,6 +25,8 @@ export class ClassesManagementService {
         private http: HttpService) {
         if (localStorage.hasOwnProperty('classes')) {
             this.classes = JSON.parse(localStorage.getItem('classes'));
+        } else {
+            this.getClasses().subscribe(() => {});
         }
     }
 

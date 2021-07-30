@@ -4,8 +4,7 @@ import {ClassesManagementService} from '../../../../_services';
 @Component({
     selector: 'app-class-menu',
     templateUrl: './class-menu.component.html',
-    styleUrls: ['./class-menu.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['./class-menu.component.scss']
 })
 export class ClassMenuComponent implements OnInit {
 

@@ -5,8 +5,7 @@ import {ClassesManagementService} from '../../../../_services';
 @Component({
     selector: 'app-class-report',
     templateUrl: './class-report.component.html',
-    styleUrls: ['./class-report.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['./class-report.component.scss']
 })
 export class ClassReportComponent implements OnInit {
 

@@ -1299,10 +1299,9 @@ class ClassController extends Controller
 
     private function getReportData(Request $request, $class_id, $with_tests = true) {
         $is_teacher = $this->user->is_teacher;
-        $class_query = ClassOfStudents::query();
-        $class_query->where('id', $class_id);
+        $user_id = $this->user->id;
+        $class_query = ClassOfStudents::query()->where('id', $class_id);
         if ($is_teacher) {
-            $user_id = $this->user->id;
             $class_query->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
                     ->orWhereHas('teachers', function ($q2) use($user_id) {
@@ -1312,6 +1311,12 @@ class ClassController extends Controller
         }
         $class = $class_query->first();
         if ($class) {
+            if (!$is_teacher) {
+                $class->student_data = ClassStudent::where('class_id', $class_id)->where('student_id', $user_id)->first([
+                    'test_duration_multiply_by', 'is_unsubscribed', 'is_consent_read',
+                    'is_element1_accepted', 'is_element2_accepted', 'is_element3_accepted', 'is_element4_accepted'
+                ]);
+            }
             $data = $is_teacher
                 ? DB::table('class_detailed_reports')
                     ->where('class_id', $class->id)

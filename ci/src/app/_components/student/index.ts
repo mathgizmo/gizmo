@@ -7,3 +7,5 @@ export * from './classes/tests/tests.component';
 export * from './classes/tests/test-options-dialog/test-options-dialog.component';
 export * from './classes/tests/test-start-dialog/test-start-dialog.component';
 export * from './classes/tests/test-report-dialog/test-report-dialog.component';
+export * from './classes/research-consent-dialog/research-consent-dialog.component';
+export * from './classes/research-status/class-research-status.component';

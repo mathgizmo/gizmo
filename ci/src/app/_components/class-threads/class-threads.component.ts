@@ -13,7 +13,7 @@ import {User} from '../../_models';
     selector: 'app-class-threads',
     templateUrl: './class-threads.component.html',
     styleUrls: ['./class-threads.component.scss'],
-    providers: [ClassThreadsService, AuthenticationService]
+    providers: [ClassThreadsService]
 })
 export class ClassThreadsComponent implements OnInit {
 

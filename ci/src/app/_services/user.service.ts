@@ -71,6 +71,19 @@ export class UserService {
         return this.http.get('/profile/classes');
     }
 
+    public getClass(classId) {
+        return this.http.get('/profile/classes/' + classId)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+            );
+    }
+
+    public updateClassConsent(classId, data) {
+        return this.http.post('/profile/classes/' + classId + '/consent', data);
+    }
+
     public subscribeClass(classId: number|string) {
         const request = {
             class_id: classId,

@@ -25,6 +25,8 @@ class UpdateClassesStudentsTable2 extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('classes_students', function (Blueprint $table) {
+            $table->dropColumn('is_unsubscribed');
+        });
     }
 }

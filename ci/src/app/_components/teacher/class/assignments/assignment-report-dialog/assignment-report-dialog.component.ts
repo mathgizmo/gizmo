@@ -8,10 +8,9 @@ import {compare} from '../../../../../_helpers/compare.helper';
 @Component({
     selector: 'app-assignment-report-dialog',
     templateUrl: 'assignment-report-dialog.component.html',
-    styleUrls: ['assignment-report-dialog.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['assignment-report-dialog.component.scss']
 })
-export class AssignmentReportDialogComponent extends BaseDialogComponent<AssignmentReportDialogComponent> implements OnInit{
+export class AssignmentReportDialogComponent extends BaseDialogComponent<AssignmentReportDialogComponent> implements OnInit {
 
     public title = 'Assignment Report';
     public assignment = {

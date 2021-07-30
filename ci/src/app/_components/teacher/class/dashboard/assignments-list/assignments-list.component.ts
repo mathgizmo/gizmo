@@ -7,8 +7,7 @@ import {compare} from '../../../../../_helpers/compare.helper';
 @Component({
     selector: 'app-class-assignments-list',
     templateUrl: './assignments-list.component.html',
-    styleUrls: ['./assignments-list.component.scss'],
-    providers: []
+    styleUrls: ['./assignments-list.component.scss']
 })
 export class ClassAssignmentsListComponent implements OnInit {
 

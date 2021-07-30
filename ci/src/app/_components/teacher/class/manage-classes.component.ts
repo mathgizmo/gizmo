@@ -13,8 +13,7 @@ import {compare} from '../../../_helpers/compare.helper';
 @Component({
     selector: 'app-manage-classes',
     templateUrl: './manage-classes.component.html',
-    styleUrls: ['./manage-classes.component.scss'],
-    providers: [ClassesManagementService, AuthenticationService]
+    styleUrls: ['./manage-classes.component.scss']
 })
 export class ManageClassesComponent implements OnInit {
 

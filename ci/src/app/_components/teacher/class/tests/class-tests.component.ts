@@ -19,8 +19,7 @@ import {compare} from '../../../../_helpers/compare.helper';
 @Component({
     selector: 'app-class-tests',
     templateUrl: './class-tests.component.html',
-    styleUrls: ['./class-tests.component.scss'],
-    providers: [ClassesManagementService]
+    styleUrls: ['./class-tests.component.scss']
 })
 export class ClassTestsComponent implements OnInit {
 

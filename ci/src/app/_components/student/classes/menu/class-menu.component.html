@@ -4,4 +4,5 @@
     <a mat-list-item routerLink="/student/class/{{classId}}/tests">Tests</a>
     <a mat-list-item routerLink="/student/class/{{classId}}/email">Email</a>
     <a mat-list-item routerLink="/student/class/{{classId}}/threads">Discussion</a>
+    <a *ngIf="myClass && myClass.is_researchable" mat-list-item routerLink="/student/class/{{classId}}/research-status">Research status</a>
 </mat-nav-list>

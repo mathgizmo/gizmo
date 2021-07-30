@@ -17,7 +17,8 @@ class ClassOfStudents extends Model
     }
 
     public function teachers() {
-        return $this->belongsToMany('App\Student', 'classes_teachers', 'class_id', 'student_id');
+        return $this->belongsToMany('App\Student', 'classes_teachers', 'class_id', 'student_id')
+            ->withPivot(['is_researcher', 'receive_emails_from_students']);
     }
 
     public function teachersWithoutResearchers() {
@@ -27,20 +28,62 @@ class ClassOfStudents extends Model
     }
 
     public function students() {
-        return $this->belongsToMany('App\Student', 'classes_students', 'class_id', 'student_id');
+        return $this->belongsToMany('App\Student', 'classes_students', 'class_id', 'student_id')
+            ->withPivot([
+                'test_duration_multiply_by',
+                'is_unsubscribed',
+                'is_consent_read',
+                'is_element1_accepted',
+                'is_element2_accepted',
+                'is_element3_accepted',
+                'is_element4_accepted'
+            ]);
     }
 
     public function applications() {
-        return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id');
+        return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id')
+            ->withPivot([
+                'start_date',
+                'start_time',
+                'due_date',
+                'due_time',
+                'color',
+                'duration',
+                'password',
+                'attempts',
+                'is_for_selected_students'
+            ]);
     }
 
     public function assignments() {
         return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id')
+            ->withPivot([
+                'start_date',
+                'start_time',
+                'due_date',
+                'due_time',
+                'color',
+                'duration',
+                'password',
+                'attempts',
+                'is_for_selected_students'
+            ])
             ->where('type', 'assignment');
     }
 
     public function tests() {
         return $this->belongsToMany('App\Application', 'classes_applications', 'class_id', 'app_id')
+            ->withPivot([
+                'start_date',
+                'start_time',
+                'due_date',
+                'due_time',
+                'color',
+                'duration',
+                'password',
+                'attempts',
+                'is_for_selected_students'
+            ])
             ->where('type', 'test');
     }
 

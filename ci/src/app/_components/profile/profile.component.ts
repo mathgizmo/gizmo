@@ -8,8 +8,7 @@ import {takeWhile, tap} from 'rxjs/operators';
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.scss'],
-    providers: [UserService]
+    styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
     public user: User;

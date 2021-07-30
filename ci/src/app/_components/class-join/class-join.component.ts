@@ -7,8 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
     selector: 'app-class-join',
     templateUrl: './class-join.component.html',
-    styleUrls: ['./class-join.component.scss'],
-    providers: [AuthenticationService, UserService]
+    styleUrls: ['./class-join.component.scss']
 })
 export class ClassJoinComponent implements OnInit {
 
