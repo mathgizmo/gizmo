@@ -8,24 +8,10 @@ use App\ClassThreadReply;
 use App\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class ClassThreadController extends Controller
 {
-
-    private $user;
-
-    public function __construct()
-    {
-        try {
-            $this->user = JWTAuth::parseToken()->authenticate();
-            if (!$this->user) {
-                abort(401, 'Unauthorized!');
-            }
-        } catch (\Exception $e) {
-            abort(401, 'Unauthorized!');
-        }
-    }
 
     public function index(Request $request, $class_id) {
         $class = $this->getClass($class_id);
@@ -53,12 +39,14 @@ class ClassThreadController extends Controller
     }
 
     public function store(Request $request, $class_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = $this->getClass($class_id);
         if (!$class) { return$this->error('Not Found!', 404); }
         try {
             $item = ClassThread::create([
                 'class_id' => $class_id,
-                'student_id' => $this->user->id,
+                'student_id' => $user_id,
                 'title' => $request['title'],
                 'message' => $request['message']
             ]);
@@ -67,8 +55,8 @@ class ClassThreadController extends Controller
                     'id' => $item->id,
                     'class_id' => $item->class_id,
                     'student_id' => $item->student_id,
-                    'student_email' => $this->user->email,
-                    'student_name' => $this->user->first_name . ' ' . $this->user->last_name,
+                    'student_email' => $user->email,
+                    'student_name' => $user->first_name . ' ' . $user->last_name,
                     'title' => $item->title,
                     'message' => $item->message,
                     'created_at' => Carbon::parse($item->created_at)->format('Y-m-d g:i A'),
@@ -85,7 +73,8 @@ class ClassThreadController extends Controller
         $class = $this->getClass($class_id);
         if (!$class) { return$this->error('Not Found!', 404); }
         try {
-            $user = $this->user;
+            $user = Auth::user();
+            $user_id = $user->id;
             $thread = ClassThread::where('id', $thread_id)->where(function ($q) use ($user) {
                 if (!$user->isTeacher()) {
                     $q->where('student_id', $user->id);
@@ -105,7 +94,8 @@ class ClassThreadController extends Controller
         $class = $this->getClass($class_id);
         if (!$class) { return$this->error('Not Found!', 404); }
         try {
-            $user = $this->user;
+            $user = Auth::user();
+            $user_id = $user->id;
             $thread = ClassThread::where('id', $thread_id)->where(function ($q) use ($user) {
                 if (!$user->isTeacher()) {
                     $q->where('student_id', $user->id);
@@ -147,9 +137,11 @@ class ClassThreadController extends Controller
         $class = $this->getClass($class_id);
         if (!$class) { return$this->error('Not Found!', 404); }
         try {
+            $user = Auth::user();
+            $user_id = $user->id;
             $item = ClassThreadReply::create([
                 'thread_id' => $thread_id,
-                'student_id' => $this->user->id,
+                'student_id' => $user_id,
                 'parent_id' => $request['parent_id'] ?: null,
                 'message' => $request['message']
             ]);
@@ -158,8 +150,8 @@ class ClassThreadController extends Controller
                     'id' => $item->id,
                     'thread_id' => $item->thread_id,
                     'student_id' => $item->student_id,
-                    'student_email' => $this->user->email,
-                    'student_name' => $this->user->first_name . ' ' . $this->user->last_name,
+                    'student_email' => $user->email,
+                    'student_name' => $user->first_name . ' ' . $user->last_name,
                     'message' => $item->message,
                     'created_at' => Carbon::parse($item->created_at)->format('Y-m-d g:i A'),
                     'updated_at' => Carbon::parse($item->updated_at)->format('Y-m-d g:i A'),
@@ -174,7 +166,8 @@ class ClassThreadController extends Controller
         $class = $this->getClass($class_id);
         if (!$class) { return$this->error('Not Found!', 404); }
         try {
-            $user = $this->user;
+            $user = Auth::user();
+            $user_id = $user->id;
             $reply = ClassThreadReply::where('id', $reply_id)->where(function ($q) use ($user) {
                 if (!$user->isTeacher()) {
                     $q->where('student_id', $user->id);
@@ -193,7 +186,8 @@ class ClassThreadController extends Controller
         $class = $this->getClass($class_id);
         if (!$class) { return$this->error('Not Found!', 404);}
         try {
-            $user = $this->user;
+            $user = Auth::user();
+            $user_id = $user->id;
             $reply = ClassThreadReply::where('id', $reply_id)->where(function ($q) use ($user) {
                 if (!$user->isTeacher()) {
                     $q->where('student_id', $user->id);
@@ -208,8 +202,9 @@ class ClassThreadController extends Controller
     }
 
     private function getClass($class_id) {
-        $user_id = $this->user->id;
-        if ($this->user->isTeacher()) {
+        $user = Auth::user();
+        $user_id = $user->id;
+        if ($user->isTeacher()) {
             $class = ClassOfStudents::where('id', $class_id)
                 ->where(function ($q1) use($user_id) {
                     $q1->where('classes.teacher_id', $user_id)

@@ -102,7 +102,7 @@ export class ResearchAssignmentsComponent implements OnInit {
     }
 
     onDownload(format = 'csv') {
-        this.classService.downloadAssignmentsReport(this.class.id, format)
+        this.classService.downloadAssignmentsReport(this.class.id, format, { for_research: 1 })
             .subscribe(file => {
                 let type = 'text/csv;charset=utf-8;';
                 switch (format) {

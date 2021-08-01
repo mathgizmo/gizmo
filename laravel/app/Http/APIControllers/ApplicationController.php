@@ -12,36 +12,26 @@ use App\Topic;
 use App\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ApplicationController extends Controller
 {
 
-	private $user;
-
-    public function __construct()
-    {
-        try {
-            $this->user = JWTAuth::parseToken()->authenticate();
-            if (!$this->user) {
-                abort(401, 'Unauthorized!');
-            }
-        } catch (\Exception $e) {
-            abort(401, 'Unauthorized!');
-        }
-    }
-
     public function getAssignments() {
+        $user = Auth::user();
+        $user_id = $user->id;
         return $this->success([
-            'items' => array_values(Application::where('teacher_id', $this->user->id)
+            'items' => array_values(Application::where('teacher_id', $user_id)
                 ->where('type', 'assignment')->get()->toArray())
         ]);
     }
 
     public function getTests() {
-        $items = Application::where('teacher_id', $this->user->id)->where('type', 'test')->get();
+        $user = Auth::user();
+        $user_id = $user->id;
+        $items = Application::where('teacher_id', $user_id)->where('type', 'test')->get();
         foreach ($items as $item) {
             $item->duration = $item->duration ? round($item->duration / 60) : 0; // seconds to minutes
             $item->total_questions_count = $item->getQuestionsCount();
@@ -53,10 +43,12 @@ class ApplicationController extends Controller
 
     public function startTest(Request $request, $test_id) {
         try {
+            $user = Auth::user();
+            $user_id = $user->id;
             $test = ClassApplication::where('id', $test_id)->first();
             if (!$test) { abort(404, 'Test not found!'); }
             $test_student = ClassApplicationStudent::where('class_app_id', $test->id)
-                ->where('student_id', $this->user->id)->first();
+                ->where('student_id', $user_id)->first();
             if ($test->is_for_selected_students && !$test_student) {
                 return $this->error('The user dont have access to this test!', 400);
             }
@@ -88,7 +80,7 @@ class ApplicationController extends Controller
             if (!$test_student) {
                 $test_student = new ClassApplicationStudent();
                 $test_student->class_app_id = $test->id;
-                $test_student->student_id = $this->user->id;
+                $test_student->student_id = $user_id;
                 $test_student->save();
             }
             if ($test->password && !$test_student->is_revealed) {
@@ -107,7 +99,7 @@ class ApplicationController extends Controller
             ];
             $class_student = DB::table('classes_students')
                 ->where('class_id', $test->class_id)
-                ->where('student_id', $this->user->id)
+                ->where('student_id', $user_id)
                 ->first();
             if ($class_student && $class_student->test_duration_multiply_by != 1) {
                 $duration = $test->duration && $class_student
@@ -127,7 +119,7 @@ class ApplicationController extends Controller
                 $stud_questions = DB::table('students_test_questions')
                     ->where('class_app_id', $test_id)
                     ->where('attempt_id', $current_attempt->id)
-                    ->where('student_id', $this->user->id)
+                    ->where('student_id', $user_id)
                     ->where('is_answered', false)
                     ->orderBy('order_no', 'ASC')
                     ->get();
@@ -170,7 +162,7 @@ class ApplicationController extends Controller
                             DB::table('students_test_questions')->insert([
                                 'attempt_id' => $attempt_id,
                                 'class_app_id' => $test_id,
-                                'student_id' => $this->user->id,
+                                'student_id' => $user_id,
                                 'question_id' => $question->id,
                                 'topic_id' => $lesson ? $lesson->topic_id : null,
                                 'unit_id' => $topic ? $topic->unit_id : null,
@@ -204,10 +196,12 @@ class ApplicationController extends Controller
     }
 
     public function trackTest(Request $request, $test_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $test = ClassApplication::where('id', $test_id)->first();
         if (!$test) { abort(404, 'Test not found!'); }
         $test_student = ClassApplicationStudent::where('class_app_id', $test->id)
-            ->where('student_id', $this->user->id)->first();
+            ->where('student_id', $user_id)->first();
         $current_attempt = $test_student ?
             DB::table('students_test_attempts')
                 ->where('test_student_id', $test_student->id)
@@ -223,12 +217,14 @@ class ApplicationController extends Controller
     }
 
     public function finishTest(Request $request, $test_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $test = ClassApplication::where('id', $test_id)->first();
         if (!$test) {
             abort(404, 'Test not found!');
         }
         $test_student = ClassApplicationStudent::where('class_app_id', $test->id)
-            ->where('student_id', $this->user->id)->first();
+            ->where('student_id', $user_id)->first();
         $current_attempt = $test_student ?
             DB::table('students_test_attempts')
                 ->where('test_student_id', $test_student->id)
@@ -242,7 +238,7 @@ class ApplicationController extends Controller
                 DB::raw("SUM(1) as total"),
                 DB::raw("SUM(IF(is_right_answer, 1, 0)) as complete")
             )
-            ->where('attempt_id', $current_attempt->id) // ->where('class_app_id', $test_id)->where('student_id', $this->user->id)
+            ->where('attempt_id', $current_attempt->id) // ->where('class_app_id', $test_id)->where('student_id', $user_id)
             ->first();
         $correct_question_rate = $answers_statistics->total > 0
             ? $answers_statistics->complete / $answers_statistics->total : 1;
@@ -267,6 +263,8 @@ class ApplicationController extends Controller
 
     private function store(Request $request, $type = 'assignment') {
         try {
+            $user = Auth::user();
+            $user_id = $user->id;
             $validator = Validator::make(request()->all(), [ 'name' => 'required|max:255' ]);
             if ($validator->fails()) {
                 return $this->error($validator->messages());
@@ -276,7 +274,7 @@ class ApplicationController extends Controller
             if (request('icon')) {
                 $app->icon = request('icon');
             }
-            $app->teacher_id = $this->user->id;
+            $app->teacher_id = $user_id;
             $app->allow_any_order = request('allow_any_order') ? true : false;
             $app->allow_back_tracking = request('allow_back_tracking') ? true : false;
             $app->testout_attempts = request('testout_attempts') >= -1 ? intval(request('testout_attempts')) : 0;
@@ -302,11 +300,13 @@ class ApplicationController extends Controller
 
     public function update($app_id) {
         try {
+            $user = Auth::user();
+            $user_id = $user->id;
             $validator = Validator::make(request()->all(), ['name' => 'required|max:255']);
             if ($validator->fails()) {
                 return $this->error($validator->messages());
             }
-            $app = Application::where('id', $app_id)->where('teacher_id', $this->user->id)->first();
+            $app = Application::where('id', $app_id)->where('teacher_id', $user_id)->first();
             if ($app) {
                 if (request()->has('name')) {
                     $app->name = request('name');
@@ -337,7 +337,9 @@ class ApplicationController extends Controller
     }
 
     public function delete($app_id) {
-        $app = Application::where('id', $app_id)->where('teacher_id', $this->user->id)->first();
+        $user = Auth::user();
+        $user_id = $user->id;
+        $app = Application::where('id', $app_id)->where('teacher_id', $user_id)->first();
         if ($app) {
             $app->deleteTree();
             $app->delete();
@@ -348,7 +350,9 @@ class ApplicationController extends Controller
     }
 
     public function copy($app_id) {
-        $app = Application::where('id', $app_id)->where('teacher_id', $this->user->id)->first();
+        $user = Auth::user();
+        $user_id = $user->id;
+        $app = Application::where('id', $app_id)->where('teacher_id', $user_id)->first();
         if ($app) {
             $new_app = $app->replicateWithRelations();
             return $this->success(['item' => $new_app, 'success' => true]);
@@ -357,7 +361,9 @@ class ApplicationController extends Controller
     }
 
     public function getAppTree($app_id) {
-        $app = Application::where('id', $app_id)->where('teacher_id', $this->user->id)->first();
+        $user = Auth::user();
+        $user_id = $user->id;
+        $app = Application::where('id', $app_id)->where('teacher_id', $user_id)->first();
         if (!$app) {
             $app = new Application();
         }
@@ -365,7 +371,9 @@ class ApplicationController extends Controller
     }
 
     public function getAvailableIcons() {
-        if (!$this->user->isTeacher() && !$this->user->isAdmin()) {
+        $user = Auth::user();
+        $user_id = $user->id;
+        if (!$user->isTeacher() && !$user->isAdmin()) {
             abort('403', 'Unauthorized!');
         }
         $icons = array();

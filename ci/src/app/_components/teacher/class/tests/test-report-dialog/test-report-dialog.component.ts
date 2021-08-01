@@ -26,6 +26,7 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
     public students = [];
     public attempts = [0];
     public email: string;
+    public isForResearch = false;
 
     public dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
@@ -55,7 +56,11 @@ export class TestReportDialogComponent extends BaseDialogComponent<TestReportDia
             this.test = this.data.test;
             this.attempts = Array(+this.test.attempts).fill(0).map((x, i) => i);
         }
-        this.classService.getTestReport(this.test.class_id, this.test.app_id).subscribe(response => {
+        if (this.data.for_research) {
+            this.isForResearch = this.data.for_research;
+        }
+        const filters = this.isForResearch ? { for_research: 1 } : null;
+        this.classService.getTestReport(this.test.class_id, this.test.app_id, filters).subscribe(response => {
             this.students = response.students;
             this.students.forEach(stud => {
                 stud.showDetail = false;

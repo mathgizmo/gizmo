@@ -14,37 +14,24 @@ use App\StudentTestAttempt;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ProfileController extends Controller
 {
-
-    private $user;
-
-    public function __construct()
-    {
-        try {
-            $this->user = JWTAuth::parseToken()->authenticate();
-            if (!$this->user) {
-                abort(401, 'Unauthorized!');
-            }
-        } catch (\Exception $e) {
-            abort(401, 'Unauthorized!');
-        }
-    }
     
     public function get()
     {
+        $user = Auth::user();
         return $this->success([
-            'user' => new AuthStudentResource($this->user),
+            'user' => new AuthStudentResource($user),
         ]);
     }
 
     public function update(Request $request)
     {
-        $student = $this->user;
+        $student = Auth::user();
         $update = [];
         if (request()->has('first_name')) {
             $update['first_name'] = request('first_name');
@@ -92,7 +79,7 @@ class ProfileController extends Controller
     }
 
     public function getToDos(Request $request) {
-        $student = $this->user;
+        $student = Auth::user();
         $items = [];
         if ($student->is_self_study) {
             $classObj = (object) [
@@ -168,7 +155,7 @@ class ProfileController extends Controller
     }
 
     public function getTests(Request $request) {
-        $student = $this->user;
+        $student = Auth::user();
         $items = [];
         $class_id = $request->filled('class_id') ? $request['class_id'] : null;
         $student_classes = $student->classes()->get()->pluck('id')->toArray();
@@ -247,7 +234,7 @@ class ProfileController extends Controller
     }
 
     public function revealTest(Request $request, $test_id) {
-        $student = $this->user;
+        $student = Auth::user();
         if (!request()->has('password')) {
             return $this->error('Password is required!', 400);
         }
@@ -293,7 +280,7 @@ class ProfileController extends Controller
     }
 
     public function changeApplication() {
-        $student = $this->user;
+        $student = Auth::user();
         if (request()->has('app_id')) {
             $user = Student::find($student->id);
             $user->app_id = request('app_id');
@@ -305,7 +292,7 @@ class ProfileController extends Controller
     }
 
     public function getClasses() {
-        $student = $this->user;
+        $student = Auth::user();
         $my_classes = ClassOfStudents::whereHas('classStudents', function ($q) use ($student) {
             $q->where('student_id', $student->id)->where('is_unsubscribed', '<>', true);
         })->orderBy('name')->get();
@@ -343,7 +330,7 @@ class ProfileController extends Controller
     }
 
     public function getClass(Request $request, $class_id) {
-        $student = $this->user;
+        $student = Auth::user();
         $item = $student->classes()->where('classes.id', $class_id)->first();
         if (!$item) {
             return $this->error('Classroom not found!', 404);
@@ -358,7 +345,7 @@ class ProfileController extends Controller
     }
 
     public function subscribeClass($class_id) {
-        $student = $this->user;
+        $student = Auth::user();
         $class = ClassOfStudents::where('id', $class_id)->orWhere('key', $class_id)->first();
         if (!$class) {
             return $this->error('Classroom not exists!', 404);
@@ -405,7 +392,8 @@ class ProfileController extends Controller
     }
 
     public function updateClassConsent(Request $request, $class_id) {
-        $model = ClassStudent::where('class_id', $class_id)->where('student_id', $this->user->id)->first();
+        $student = Auth::user();
+        $model = ClassStudent::where('class_id', $class_id)->where('student_id', $student->id)->first();
         if (!$model) {
             return $this->error('Not Found!', 404);
         }
@@ -419,7 +407,7 @@ class ProfileController extends Controller
     }
 
     public function unsubscribeClass($class_id) {
-        $student = $this->user;
+        $student = Auth::user();
         DB::table('classes_students')
             ->where('class_id', $class_id)
             ->where('student_id', $student->id)
@@ -430,7 +418,7 @@ class ProfileController extends Controller
     }
 
     public function changeOptions() {
-        $student = $this->user;
+        $student = Auth::user();
         if (request()->has('is_test_timer_displayed')) {
             $student->is_test_timer_displayed = request('is_test_timer_displayed') ? true : false;
         }
@@ -442,7 +430,8 @@ class ProfileController extends Controller
     }
 
     public function downloadAssignmentsReport(Request $request, $class_id, $format = 'csv') {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $detailed_report = DB::table('class_detailed_reports')
             ->where('class_id', $class_id)
             ->where('student_id', $user_id)
@@ -462,7 +451,7 @@ class ProfileController extends Controller
             if ($class_data->is_for_selected_students) {
                 if (DB::table('classes_applications_students')
                         ->where('class_app_id', $class_data->id)
-                        ->where('student_id', $this->user->id)->count() < 1) {
+                        ->where('student_id', $user_id)->count() < 1) {
                     $assignments->forget($app->id);
                 }
             }
@@ -496,7 +485,8 @@ class ProfileController extends Controller
     }
 
     public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $max_attempts = 1;
         $tests = Application::where('type', 'test')
             ->whereHas('classes', function ($q) use ($class_id) {

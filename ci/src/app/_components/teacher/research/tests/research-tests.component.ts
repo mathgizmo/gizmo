@@ -80,7 +80,8 @@ export class ResearchTestsComponent implements OnInit {
         this.dialog.open(TestReportDialogComponent, {
             data: {
                 title: item.name + ': report',
-                test: item
+                test: item,
+                for_research: true
             },
             position: this.dialogPosition
         });
@@ -98,7 +99,7 @@ export class ResearchTestsComponent implements OnInit {
     }
 
     onDownload(format = 'csv') {
-        this.classService.downloadTestsReport(this.class.id, format)
+        this.classService.downloadTestsReport(this.class.id, format, { for_research: 1 })
             .subscribe(file => {
                 let type = 'text/csv;charset=utf-8;';
                 switch (format) {

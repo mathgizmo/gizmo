@@ -52,7 +52,9 @@
             <td>{{item.start_time || '00:00'}}</td>
             <td>{{item.due_date || 'N/A'}}</td>
             <td>{{item.due_date ? item.due_time || '00:00' : 'N/A'}}</td>
-            <td>{{item.duration}}<span style="font-size: 0.8em; margin: 4px 0 4px 4px;">min.</span></td>
+            <td>
+              <span *ngIf="item.duration">{{item.duration}}<span style="font-size: 0.8em; margin: 4px 0 4px 4px;">min.</span></span>
+            </td>
             <td>{{item.attempts}}</td>
             <td>
               <span *ngIf="item.is_for_selected_students" class="link" (click)="onShowTestStudents(item)">Selected</span>

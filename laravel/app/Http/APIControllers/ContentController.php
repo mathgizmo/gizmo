@@ -4,32 +4,11 @@ namespace App\Http\APIControllers;
 
 use App\Lesson;
 use App\Level;
-use App\Student;
 use App\Topic;
 use App\Unit;
-use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ContentController extends Controller
 {
-
-    private $student;
-
-    public function __construct()
-    {
-        try {
-            $auth_user = JWTAuth::parseToken()->authenticate();
-            if (!$auth_user) {
-                abort(401, 'Unauthorized!');
-            }
-            $this->student = Student::find($auth_user->id);
-            if (!$this->student) {
-                abort(401, 'Unauthorized!');
-            }
-        } catch (\Exception $e) {
-            abort(401, 'Unauthorized!');
-        }
-    }
 
     public function index()
     {

@@ -21,6 +21,7 @@ use App\Topic;
 use App\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -29,22 +30,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ClassController extends Controller
 {
 
-    private $user;
-
-    public function __construct()
-    {
-        try {
-            $this->user = JWTAuth::parseToken()->authenticate();
-            if (!$this->user) {
-                abort(401, 'Unauthorized!');
-            }
-        } catch (\Exception $e) {
-            abort(401, 'Unauthorized!');
-        }
-    }
-
     public function all(Request $request) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $query = ClassOfStudents::query()->where(function ($q1) use($user_id) {
             $q1->where('classes.teacher_id', $user_id)
                 ->orWhereHas('teachersWithoutResearchers', function ($q2) use($user_id) {
@@ -57,7 +45,8 @@ class ClassController extends Controller
     }
 
     public function getResearchClasses(Request $request) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $query = ClassOfStudents::query()->where(function ($q1) use($user_id) {
             $q1->where('classes.teacher_id', $user_id)
                 ->orWhereHas('teachers', function ($q2) use($user_id) {
@@ -70,7 +59,8 @@ class ClassController extends Controller
     }
 
     public function get(Request $request, $class_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $item = ClassOfStudents::where('classes.id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -85,10 +75,11 @@ class ClassController extends Controller
     }
 
     public function store() {
+        $user = Auth::user();
         try {
             return $this->success([
                 'item' => ClassOfStudents::create([
-                    'teacher_id' => $this->user->id,
+                    'teacher_id' => $user->id,
                     'name' => request('name'),
                     'class_type' => request('class_type') ?: 'other',
                     'subscription_type' => request('subscription_type') ?: 'open',
@@ -103,7 +94,8 @@ class ClassController extends Controller
 
     public function update($class_id) {
         try {
-            $user_id = $this->user->id;
+            $user = Auth::user();
+            $user_id = $user->id;
             $class = ClassOfStudents::where('id', $class_id)
                 ->where(function ($q1) use($user_id) {
                     $q1->where('classes.teacher_id', $user_id)
@@ -135,10 +127,11 @@ class ClassController extends Controller
     }
 
     public function delete($class_id) {
+        $user = Auth::user();
         if ($class_id == 1) {
             abort('400', 'Default class can\'t be deleted!');
         }
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $user->id)->first();
         if ($class) {
             $class->delete();
             DB::table('classes_applications')->where('class_id', $class_id)->delete();
@@ -148,7 +141,7 @@ class ClassController extends Controller
     }
 
     public function emailClass(Request $request, $class_id) {
-        $user = $this->user;
+        $user = Auth::user();
         $class = ClassOfStudents::where('id', $class_id)->first();
         if (!$class) { return $this->error('Class not found!', 404); }
         if ($user->isTeacher()) {
@@ -178,7 +171,8 @@ class ClassController extends Controller
     public function getStudents(Request $request, $class_id) {
         $show_extra = $request->filled('extra') && $request['extra'] == 'true';
         $for_research = $request->filled('for_research') && $request['for_research'];
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -292,7 +286,8 @@ class ClassController extends Controller
     }
 
     public function addStudents(Request $request, $class_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $request_emails = request('email');
         if (!$request_emails) {
             return $this->error('Email is required', 400);
@@ -389,7 +384,8 @@ class ClassController extends Controller
     }
 
     public function updateStudent(Request $request, $class_id, $student_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -408,7 +404,8 @@ class ClassController extends Controller
     }
 
     public function deleteStudent($class_id, $student_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $this->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -422,7 +419,8 @@ class ClassController extends Controller
     }
 
     public function addStudent($class_id, $student_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -449,7 +447,8 @@ class ClassController extends Controller
 
     public function getStudentAssignmentsReport(Request $request, $class_id, $student_id)
     {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use ($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -505,7 +504,8 @@ class ClassController extends Controller
 
     public function getStudentTestsReport(Request $request, $class_id, $student_id)
     {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use ($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -554,6 +554,8 @@ class ClassController extends Controller
     }
 
     public function getTeachers(Request $request, $class_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)->first();
         if (!$class) {
             return $this->error('Classroom not found!', 404);
@@ -588,7 +590,7 @@ class ClassController extends Controller
                 return $query->where('is_researcher', true);
             })
             ->whereNotIn('students.id', $not_available)
-            ->where('id', '<>', $this->user->id)
+            ->where('id', '<>', $user_id)
             ->orderBy('email', 'ASC')->get();
         $available_teachers = array_values($available->toArray());
         return $this->success([
@@ -598,8 +600,10 @@ class ClassController extends Controller
     }
 
     public function addTeacherToClass(Request $request, $class_id, $teacher_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
-            ->where('teacher_id', $this->user->id
+            ->where('teacher_id', $user_id
             )->first();
         if (!$class) {
             return $this->error('Classroom not found!', 404);
@@ -628,7 +632,8 @@ class ClassController extends Controller
     }
 
     public function updateTeacher(Request $request, $class_id, $teacher_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $user_id)->first();
         if (!$class) { return $this->error('Class not found.', 404); }
         DB::table('classes_teachers')
@@ -641,7 +646,9 @@ class ClassController extends Controller
     }
 
     public function deleteTeacherFromClass($class_id, $teacher_id) {
-        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $this->user->id)->first();
+        $user = Auth::user();
+        $user_id = $user->id;
+        $class = ClassOfStudents::where('id', $class_id)->where('teacher_id', $user_id)->first();
         if ($class) {
             DB::table('classes_teachers')
                 ->where('class_id', $class->id)
@@ -662,6 +669,8 @@ class ClassController extends Controller
     }
 
     public function getAssignments(Request $request, $class_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
             $items = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
@@ -672,11 +681,11 @@ class ClassController extends Controller
             $students_count = $students->count();
             foreach ($items as $item) {
                 $class_data = $item->getClassRelatedData($class->id);
-                if (!$this->user->is_teacher) {
+                if (!$user->is_teacher) {
                     if ($class_data->is_for_selected_students) {
                         if (DB::table('classes_applications_students')
                                 ->where('class_app_id', $class_data->id)
-                                ->where('student_id', $this->user->id)->count() < 1) {
+                                ->where('student_id', $user_id)->count() < 1) {
                             $items->forget($item->id);
                         }
                     }
@@ -764,7 +773,7 @@ class ClassController extends Controller
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
                 $item->class_error_rate = 1 - ($class_tracking_questions_statistics->total ? $class_tracking_questions_statistics->complete / $class_tracking_questions_statistics->total : 1);
             }
-            $available = Application::where('teacher_id', $this->user->id)
+            $available = Application::where('teacher_id', $user_id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())
                 ->where('type', 'assignment')->orderBy('name', 'ASC')->get();
             foreach ($available as $item) {
@@ -779,7 +788,8 @@ class ClassController extends Controller
     }
 
     public function changeAssignment($class_id, $app_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -802,6 +812,8 @@ class ClassController extends Controller
     }
 
     public function getTests(Request $request, $class_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
             $items = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
@@ -812,11 +824,11 @@ class ClassController extends Controller
             $students_count = $students->count();
             foreach ($items as $item) {
                 $class_data = $item->getClassRelatedData($class->id);
-                if (!$this->user->is_teacher) {
+                if (!$user->is_teacher) {
                     if ($class_data->is_for_selected_students) {
                         if (DB::table('classes_applications_students')
                                 ->where('class_app_id', $class_data->id)
-                                ->where('student_id', $this->user->id)->count() < 1) {
+                                ->where('student_id', $user_id)->count() < 1) {
                             $items->forget($item->id);
                         }
                     }
@@ -881,7 +893,7 @@ class ClassController extends Controller
                 }
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
-            $available = Application::where('teacher_id', $this->user->id)
+            $available = Application::where('teacher_id', $user_id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())
                 ->where('type', 'test')->orderBy('name', 'ASC')->get();
             foreach ($available as $item) {
@@ -896,7 +908,8 @@ class ClassController extends Controller
     }
 
     public function changeTest($class_id, $app_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -924,7 +937,8 @@ class ClassController extends Controller
         if (request()->filled('students') && request('students')) {
             $students = Student::whereIn('id', request('students'))->get();
         }
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -968,7 +982,8 @@ class ClassController extends Controller
     }
 
     public function changeApplicationStudents($class_id, $app_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -1011,7 +1026,8 @@ class ClassController extends Controller
     }
 
     public function deleteApplicationFromClass($class_id, $app_id) {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -1104,8 +1120,9 @@ class ClassController extends Controller
         ]);
     }
 
-    public function getTestReport($class_id, $app_id) {
-        $user_id = $this->user->id;
+    public function getTestReport(Request $request, $class_id, $app_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -1119,7 +1136,7 @@ class ClassController extends Controller
         if (!$class_app) {
             return $this->error('Test not found!', 404);
         }
-        $students = $this->getTestReportData($class, $class_app);
+        $students = $this->getTestReportData($request, $class, $class_app);
         return $this->success([
             'students' => array_values($students),
         ]);
@@ -1127,7 +1144,8 @@ class ClassController extends Controller
 
     public function resetTestProgress(Request $request, $class_id, $app_id, $student_id) {
         $student = Student::where('id', $student_id)->first();
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -1169,11 +1187,12 @@ class ClassController extends Controller
     }
 
     public function getTestDetails(Request $request, $class_id, $app_id, $student_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $student = Student::where('id', $student_id)->first();
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
-        if ($this->user->isTeacher()) {
-            $user_id = $this->user->id;
+        if ($user->isTeacher()) {
             $class_query->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
                     ->orWhereHas('teachers', function ($q2) use($user_id) {
@@ -1181,7 +1200,7 @@ class ClassController extends Controller
                     });
             });
         } else {
-            $student = $this->user;
+            $student = $user;
             $student_id = $student->id;
         }
         $class = $class_query->first();
@@ -1209,11 +1228,12 @@ class ClassController extends Controller
     }
 
     public function downloadTestReportPDF(Request $request, $class_id, $app_id, $student_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
         $student = Student::where('id', $student_id)->first();
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
-        if ($this->user->isTeacher()) {
-            $user_id = $this->user->id;
+        if ($user->isTeacher()) {
             $class_query->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
                     ->orWhereHas('teachers', function ($q2) use($user_id) {
@@ -1221,7 +1241,7 @@ class ClassController extends Controller
                     });
             });
         } else {
-            $student = $this->user;
+            $student = $user;
             $student_id = $student->id;
         }
         $class = $class_query->first();
@@ -1269,7 +1289,8 @@ class ClassController extends Controller
     /* public function downloadTestPoorQuestionsReportPDF(Request $request, $class_id, $app_id) {
         $class_query = ClassOfStudents::query();
         $class_query->where('id', $class_id);
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class_query->where(function ($q1) use($user_id) {
             $q1->where('classes.teacher_id', $user_id)
                 ->orWhereHas('teachers', function ($q2) use($user_id) {
@@ -1291,7 +1312,8 @@ class ClassController extends Controller
     } */
 
     public function downloadTestsReport(Request $request, $class_id, $format = 'csv') {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -1300,12 +1322,14 @@ class ClassController extends Controller
                     });
             })->first();
         if (!$class) { return $this->error('Class not found!', 404); }
-        $students = $class->students()->orderBy('email', 'ASC')->get(['email']);
+        $students = $request->filled('for_research') && $request['for_research']
+            ? $class->students()->wherePivot('is_element1_accepted', true)->orderBy('email', 'ASC')->get(['email'])
+            : $class->students()->orderBy('email', 'ASC')->get(['email']);
         $tests = [];
         foreach ($class->classApplications()->whereHas('test')->orderBy('start_date', 'ASC')->get() as $class_app) {
             $test = $class_app->test()->first('name');
             $test->attempts = $class_app->attempts ?: 1;
-            $test->students = $this->getTestReportData($class, $class_app);
+            $test->students = $this->getTestReportData($request, $class, $class_app);
             array_push($tests, $test);
         }
         switch ($format) {
@@ -1370,8 +1394,9 @@ class ClassController extends Controller
     }
 
     private function getReportData(Request $request, $class_id, $with_tests = true) {
-        $is_teacher = $this->user->is_teacher;
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
+        $is_teacher = $user->is_teacher;
         $class_query = ClassOfStudents::query()->where('id', $class_id);
         if ($is_teacher) {
             $class_query->where(function ($q1) use($user_id) {
@@ -1389,15 +1414,26 @@ class ClassController extends Controller
                     'is_element1_accepted', 'is_element2_accepted', 'is_element3_accepted', 'is_element4_accepted'
                 ]);
             }
-            $data = $is_teacher
-                ? DB::table('class_detailed_reports')
+            if ($is_teacher) {
+                if ($request->filled('for_research') && $request['for_research']) {
+                    $stud_ids = $class->students()->wherePivot('is_element1_accepted', true)->pluck('students.id');
+                    $data = DB::table('class_detailed_reports')
+                        ->where('class_id', $class->id)
+                        ->whereIn('student_id', $stud_ids)
+                        ->orderBy('student_email', 'ASC')
+                        ->get();
+                } else {
+                    $data = DB::table('class_detailed_reports')
+                            ->where('class_id', $class->id)
+                            ->orderBy('student_email', 'ASC')
+                            ->get();
+                }
+            } else {
+                $data = DB::table('class_detailed_reports')
                     ->where('class_id', $class->id)
-                    ->orderBy('student_email', 'ASC')
-                    ->get()
-                : DB::table('class_detailed_reports')
-                    ->where('class_id', $class->id)
-                    ->where('student_id', $this->user->id)
+                    ->where('student_id', $user_id)
                     ->get();
+            }
             foreach ($data as $row) {
                 $row->data = json_decode($row->data);
             }
@@ -1408,7 +1444,7 @@ class ClassController extends Controller
                     if ($class_data->is_for_selected_students) {
                         if (DB::table('classes_applications_students')
                                 ->where('class_app_id', $class_data->id)
-                                ->where('student_id', $this->user->id)->count() < 1) {
+                                ->where('student_id', $user_id)->count() < 1) {
                             $assignments->forget($app->id);
                         }
                     }
@@ -1421,7 +1457,7 @@ class ClassController extends Controller
                     if (!$is_teacher && $class_app->is_for_selected_students) {
                         if (DB::table('classes_applications_students')
                                 ->where('class_app_id', $class_app->id)
-                                ->where('student_id', $this->user->id)->count() < 1) {
+                                ->where('student_id', $user_id)->count() < 1) {
                             continue;
                         }
                     }
@@ -1429,7 +1465,7 @@ class ClassController extends Controller
                     $test->class_id = $class_id;
                     $test->app_id = $class_app && $class_app->app_id ? $class_app->app_id : 0;
                     $test->attempts = $class_app->attempts ?: 1;
-                    $test->students = $this->getTestReportData($class, $class_app);
+                    $test->students = $this->getTestReportData($request, $class, $class_app);
                     if ($class_app->start_date) {
                         $start_at = $class_app->start_time ? $class_app->start_date.' '.$class_app->start_time : $class_app->start_date.' 00:00:00';
                     } else {
@@ -1446,7 +1482,7 @@ class ClassController extends Controller
                 }
                 $class_students = $is_teacher
                     ? array_values($class->students()->orderBy('email', 'ASC')->get(['email'])->toArray())
-                    : [$this->user];
+                    : [$user];
                 return [
                     'class' => $class,
                     'assignments' => array_values($assignments->toArray()),
@@ -1465,8 +1501,11 @@ class ClassController extends Controller
         return null;
     }
 
-    private function getTestReportData($class, $class_app) {
+    private function getTestReportData(Request $request, $class, $class_app) {
         $query = $class->students();
+        if ($request->filled('for_research') && $request['for_research']) {
+            $query->wherePivot('is_element1_accepted', true);
+        }
         $query->leftJoin('classes_applications_students', function ($join) use ($class_app) {
             $join->on('classes_applications_students.student_id', '=', 'students.id')
                 ->where('classes_applications_students.class_app_id', $class_app->id);
@@ -1655,7 +1694,9 @@ class ClassController extends Controller
     }
 
     /* public function getToDos($class_id) {
-        $student = $this->user;
+        $user = Auth::user();
+        $user_id = $user->id;
+        $student = $user;
         $class = ClassOfStudents::where('id', $class_id)->first();
         if (!$class) {
             return $this->error('Class not found.', 404);
@@ -1700,7 +1741,8 @@ class ClassController extends Controller
     } */
 
     public function downloadStudents(Request $request, $class_id, $format = 'csv') {
-        $user_id = $this->user->id;
+        $user = Auth::user();
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
@@ -1711,26 +1753,26 @@ class ClassController extends Controller
         if (!$class) { return $this->error('Class not found!', 404); }
         switch ($format) {
             case 'xls':
-                return (new ClassStudentsExport($class, true, $this->user))
+                return (new ClassStudentsExport($class, true, $user))
                     ->download('students.xls', \Maatwebsite\Excel\Excel::XLS);
             case 'xlsx':
-                return (new ClassStudentsExport($class, true, $this->user))
+                return (new ClassStudentsExport($class, true, $user))
                     ->download('students.xlsx', \Maatwebsite\Excel\Excel::XLSX);
             case 'tsv':
-                return (new ClassStudentsExport($class, true, $this->user))
+                return (new ClassStudentsExport($class, true, $user))
                     ->download('students.tsv', \Maatwebsite\Excel\Excel::TSV);
             case 'ods':
-                return (new ClassStudentsExport($class, true, $this->user))
+                return (new ClassStudentsExport($class, true, $user))
                     ->download('students.ods', \Maatwebsite\Excel\Excel::ODS);
             case 'html':
-                return (new ClassStudentsExport($class, true, $this->user))
+                return (new ClassStudentsExport($class, true, $user))
                     ->download('students.html', \Maatwebsite\Excel\Excel::HTML);
             /** PDF export require extra library: https://phpspreadsheet.readthedocs.io/en/latest/topics/reading-and-writing-to-file/#pdf
             case 'pdf':
-            return (new ClassStudentsExport($class, true, $this->user))
+            return (new ClassStudentsExport($class, true, $user))
             ->download('students.pdf', \Maatwebsite\Excel\Excel::MPDF/DOMPDF/TCPDF); */
             default:
-                return (new ClassStudentsExport($class, true, $this->user))
+                return (new ClassStudentsExport($class, true, $user))
                     ->download('students.csv', \Maatwebsite\Excel\Excel::CSV, [
                         'Content-Type' => 'text/csv',
                     ]);

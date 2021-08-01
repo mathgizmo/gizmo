@@ -4,26 +4,12 @@ namespace App\Http\APIControllers;
 
 use App\PlacementQuestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Unit;
 
 class PlacementController extends Controller
 {
-
-    private $user;
-
-    public function __construct()
-    {
-        try {
-            $this->user = JWTAuth::parseToken()->authenticate();
-            if (!$this->user) {
-                abort(401, 'Unauthorized!');
-            }
-        } catch (\Exception $e) {
-            abort(401, 'Unauthorized!');
-        }
-    }
 
     public function get()
     {
@@ -46,7 +32,7 @@ class PlacementController extends Controller
 
     public function doneHalfUnit(Request $request) {
         $unit_id = $request['unit_id'];
-        $student = $this->user;
+        $student = Auth::user();
         $topics = DB::table('topic')
             ->join('unit', 'topic.unit_id', '=', 'unit.id')
             ->where('unit.id', $unit_id)
@@ -79,7 +65,7 @@ class PlacementController extends Controller
 
     public function doneUnit(Request $request) {
         $unit_id = $request['unit_id'];
-        $student = $this->user;
+        $student = Auth::user();
         // done lessons
         $lessons = DB::table('lesson')
             ->join('topic', 'lesson.topic_id', '=', 'topic.id')

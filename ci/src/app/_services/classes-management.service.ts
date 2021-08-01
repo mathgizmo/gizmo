@@ -241,8 +241,12 @@ export class ClassesManagementService {
         return this.http.delete('/classes/' + class_id + '/tests/' + app_id);
     }
 
-    public getTestReport(class_id, app_id) {
-        return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/report');
+    public getTestReport(class_id, app_id, filters = null) {
+        let url = '/classes/' + class_id + '/tests/' + app_id + '/report';
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url);
     }
 
     public downloadTestReportPDF(class_id, app_id, student_id): Observable<Blob> {
@@ -253,12 +257,20 @@ export class ClassesManagementService {
         return this.http.download('/classes/' + class_id + '/tests/' + app_id + '/poor-questions-report.pdf');
     } */
 
-    public downloadTestsReport(class_id, format = 'csv') {
-        return this.http.download('/classes/' + class_id + '/tests-report.' + format);
+    public downloadTestsReport(class_id, format = 'csv', filters = null) {
+        let url = '/classes/' + class_id + '/tests-report.' + format;
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.download(url);
     }
 
-    public downloadAssignmentsReport(class_id, format = 'csv') {
-        return this.http.download('/classes/' + class_id + '/assignments-report.' + format);
+    public downloadAssignmentsReport(class_id, format = 'csv', filters = null) {
+        let url = '/classes/' + class_id + '/assignments-report.' + format;
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.download(url);
     }
 
     public downloadStudents(class_id, format = 'csv') {

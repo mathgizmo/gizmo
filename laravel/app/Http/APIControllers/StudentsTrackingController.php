@@ -29,40 +29,34 @@ class StudentsTrackingController extends Controller
     {
         try {
             $auth_user = JWTAuth::parseToken()->authenticate();
-            if (!$auth_user) {
-                abort(401, 'Unauthorized!');
-            }
             $this->student = Student::find($auth_user->id);
-            if (!$this->student) {
-                abort(401, 'Unauthorized!');
+            if (request()->has('class_app_id')) {
+                $this->class_app = ClassApplication::where('id', request('class_app_id'))->first();
+                $this->app = $this->class_app ? Application::where('id', $this->class_app->app_id)->first() : null;
+            }
+            if (!$this->app) {
+                if (request()->has('app_id')) {
+                    $app_id = request('app_id');
+                    if ($app_id == 0) {
+                        $this->app = new Application();
+                        $this->app->id = 0;
+                        $this->app->name = 'Content Review';
+                        $this->app->teacher_id = null;
+                        $this->app->question_num = 0;
+                        $this->app->testout_attempts = -1;
+                        $this->app->allow_any_order = true;
+                    } else {
+                        $this->app = Application::where('id', $app_id)->first();
+                        if (!$this->app) {
+                            $this->app = Application::where('id', $this->student->app_id)->first();
+                        }
+                    }
+                } else {
+                    $this->app = Application::where('id', $this->student->app_id)->first();
+                }
             }
         } catch (\Exception $e) {
             abort(401, 'Unauthorized!');
-        }
-        if (request()->has('class_app_id')) {
-            $this->class_app = ClassApplication::where('id', request('class_app_id'))->first();
-            $this->app = $this->class_app ? Application::where('id', $this->class_app->app_id)->first() : null;
-        }
-        if (!$this->app) {
-            if (request()->has('app_id')) {
-                $app_id = request('app_id');
-                if ($app_id == 0) {
-                    $this->app = new Application();
-                    $this->app->id = 0;
-                    $this->app->name = 'Content Review';
-                    $this->app->teacher_id = null;
-                    $this->app->question_num = 0;
-                    $this->app->testout_attempts = -1;
-                    $this->app->allow_any_order = true;
-                } else {
-                    $this->app = Application::where('id', $app_id)->first();
-                    if (!$this->app) {
-                        $this->app = Application::where('id', $this->student->app_id)->first();
-                    }
-                }
-            } else {
-                $this->app = Application::where('id', $this->student->app_id)->first();
-            }
         }
     }
 

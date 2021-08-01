@@ -25,7 +25,7 @@ $api->version('v1', function ($api) {
     $api->post('email-verify', 'App\Http\APIControllers\AuthController@resendVerificationEmail')->name('verification.resend');
     $api->post('email/check', 'App\Http\APIControllers\AuthController@checkEmail');
 
-    $api->group(['middleware' => ['api.auth', 'verified']], function () use ($api) {
+    $api->group(['middleware' => ['jwt.auth', 'api.auth', 'verified']], function () use ($api) {
         $api->get('/lesson/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedLesson');
         $api->get('/topic/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedTopic');
         $api->get('/unit/last-visited/{student_id}' , 'App\Http\APIControllers\TopicController@getLastVisitedUnit');
