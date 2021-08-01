@@ -1,0 +1,70 @@
+<a routerLink="/researcher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="tests">
+  <app-research-menu [classId]="classId" class="class-menu"></app-research-menu>
+  <mat-card class="tests-content">
+    <div class="subtitle text-center">Tests of {{class.name}}</div>
+    <div class="actions-container">
+      <div class="links-group">
+        <strong>Status Report:</strong>
+        <button class="button button-small button-outline" mat-button (click)="onDownload('csv')">CSV</button>
+        <button class="button button-small button-outline" mat-button (click)="onDownload('xls')">XLS</button>
+      </div>
+      <mat-button-toggle-group [(ngModel)]="calendarView" class="toggle-group button button-small button-outline">
+        <mat-button-toggle [value]="true" class="toggle-button">
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+          Calendar
+        </mat-button-toggle>
+        <mat-button-toggle [value]="false" class="toggle-button">
+          <i class="fa fa-list" aria-hidden="true"></i>
+          List
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <app-class-assignments-calendar #calendar *ngIf="calendarView"
+      [assignments]="tests"
+    ></app-class-assignments-calendar>
+    <form *ngIf="!calendarView" novalidate #form="ngForm">
+      <div class="table-responsive">
+        <table matSort (matSortChange)="sortData($event)" class="table">
+          <thead>
+          <tr>
+            <th scope="col">Icon</th>
+            <th mat-sort-header="name" scope="col">Name</th>
+            <th mat-sort-header="password" scope="col">Password</th>
+            <th mat-sort-header="start_date" scope="col">Start Date</th>
+            <th mat-sort-header="start_time" scope="col">Start Time</th>
+            <th mat-sort-header="due_date" scope="col">Due Date</th>
+            <th mat-sort-header="due_time" scope="col">Due Time</th>
+            <th mat-sort-header="duration" scope="col">Duration</th>
+            <th mat-sort-header="attempts" scope="col">Attempts</th>
+            <th scope="col">Students</th>
+            <th class="text-right"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of tests" [class.for-selected-students]="item.is_for_selected_students">
+            <th scope="col" style="width: 40px;">
+              <div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div>
+            </th>
+            <td>{{item.name}}</td>
+            <td>{{item.password}}</td>
+            <td>{{item.start_date || 'N/A'}}</td>
+            <td>{{item.start_time || '00:00'}}</td>
+            <td>{{item.due_date || 'N/A'}}</td>
+            <td>{{item.due_date ? item.due_time || '00:00' : 'N/A'}}</td>
+            <td>{{item.duration}}<span style="font-size: 0.8em; margin: 4px 0 4px 4px;">min.</span></td>
+            <td>{{item.attempts}}</td>
+            <td>
+              <span *ngIf="item.is_for_selected_students" class="link" (click)="onShowTestStudents(item)">Selected</span>
+              <span *ngIf="!item.is_for_selected_students">All</span>
+            </td>
+            <td class="text-right">
+              <button class="button button-small button-outline" mat-stroked-button type="button" (click)="onShowTestReport(item)">Report</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </mat-card>
+</div>

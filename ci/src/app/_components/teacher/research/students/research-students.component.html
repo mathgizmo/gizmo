@@ -1,0 +1,68 @@
+<a routerLink="/researcher/class" routerLinkActive="active" class="back">{{backLinkText}}</a>
+<div class="students">
+  <app-research-menu [classId]="classId" class="class-menu"></app-research-menu>
+  <mat-card class="students-content">
+    <div class="subtitle text-center">Students of {{class.name}}</div>
+    <div class="actions-container">
+      <div class="links-group">
+        <strong>Export:</strong>
+        <button class="button button-small button-outline" mat-button (click)="onDownload('csv')">CSV</button>
+        <button class="button button-small button-outline" mat-button (click)="onDownload('xls')">XLS</button>
+      </div>
+    </div>
+    <form novalidate #form="ngForm">
+      <div class="table-responsive">
+        <table matSort (matSortChange)="sortData($event)" class="table">
+          <thead>
+          <tr>
+            <th mat-sort-header="email" scope="col">Email</th>
+            <th mat-sort-header="name" scope="col">Name</th>
+            <th mat-sort-header="is_element1_accepted" scope="col">Element 1 (tracking)</th>
+            <th mat-sort-header="is_element2_accepted" scope="col">Element 2 (survey)</th>
+            <th mat-sort-header="is_element3_accepted" scope="col">Element 3 (interview)</th>
+            <th mat-sort-header="is_element4_accepted" scope="col">Element 4 (numeracy tasks)</th>
+            <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
+            <th mat-sort-header="tests_finished_count" scope="col">Finished Tests</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td colspan="7">
+              <input matInput placeholder="Email" class="filter-item"
+                     type="text" name="email" [(ngModel)]="email" [value]="" />
+            </td>
+          </tr>
+          <tr *ngFor="let item of students | tableFilter: form.value" [class.not-registered]="!item.is_registered" [class.not-subscribed]="!item.is_subscribed">
+            <td style="max-width: 260px;">{{item.email }}</td>
+            <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
+            <td [class.bg-green]="item.pivot.is_element1_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element1_accepted">
+              {{item.pivot.is_consent_read ? (item.pivot.is_element1_accepted ? 'Yes' : 'No') : 'N/A'}}
+            </td>
+            <td [class.bg-green]="item.pivot.is_element2_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element2_accepted">
+              {{item.pivot.is_consent_read ? (item.pivot.is_element2_accepted ? 'Yes' : 'No') : 'N/A'}}
+            </td>
+            <td [class.bg-green]="item.pivot.is_element3_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element3_accepted">
+              {{item.pivot.is_consent_read ? (item.pivot.is_element3_accepted ? 'Yes' : 'No') : 'N/A'}}
+            </td>
+            <td [class.bg-green]="item.pivot.is_element4_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element4_accepted">
+              {{item.pivot.is_consent_read ? (item.pivot.is_element4_accepted ? 'Yes' : 'No') : 'N/A'}}
+            </td>
+            <td *ngIf="!item.pivot.is_element1_accepted || !item.is_registered || !item.is_subscribed" style="max-width: 60px;">
+              {{!item.pivot.is_element1_accepted ? 'N/A' : item.assignments_finished_count }}
+            </td>
+            <td *ngIf="item.pivot.is_element1_accepted && item.is_registered && item.is_subscribed" (click)="showAssignments(item)" style="max-width: 60px; cursor: pointer">
+              {{item.assignments_finished_count }}
+            </td>
+            <td *ngIf="!item.pivot.is_element1_accepted || !item.is_registered || !item.is_subscribed" style="max-width: 60px;">
+              {{!item.pivot.is_element1_accepted ? 'N/A' : item.tests_finished_count }}
+            </td>
+            <td *ngIf="item.pivot.is_element1_accepted && item.is_registered && item.is_subscribed" (click)="showTests(item)" style="max-width: 60px; cursor: pointer">
+              {{item.tests_finished_count }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </mat-card>
+</div>

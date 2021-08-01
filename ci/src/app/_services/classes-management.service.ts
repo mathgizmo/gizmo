@@ -261,6 +261,10 @@ export class ClassesManagementService {
         return this.http.download('/classes/' + class_id + '/assignments-report.' + format);
     }
 
+    public downloadStudents(class_id, format = 'csv') {
+        return this.http.download('/classes/' + class_id + '/students.' + format);
+    }
+
     public resetTestProgress(class_id, app_id, student_id, attempt_id = null) {
         return this.http.post('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/reset', {
             attempt_id: attempt_id
@@ -271,8 +275,12 @@ export class ClassesManagementService {
         return this.http.get('/classes/' + class_id + '/tests/' + app_id + '/student/' + student_id + '/details?attempt_id=' + attempt_id);
     }
 
-    public getReport(class_id) {
-        return this.http.get('/classes/' + class_id + '/report');
+    public getReport(class_id, filters = null) {
+        let url = '/classes/' + class_id + '/report';
+        if (filters) {
+            url += '?' + new URLSearchParams(filters).toString();
+        }
+        return this.http.get(url);
     }
 
     public getAnswersStatistics(class_id, student_id = null, app_id = null,

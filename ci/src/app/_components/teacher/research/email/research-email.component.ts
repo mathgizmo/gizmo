@@ -6,11 +6,11 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
-    selector: 'app-email-class',
-    templateUrl: 'email-class.component.html',
-    styleUrls: ['email-class.component.scss']
+    selector: 'app-researcher-email-class',
+    templateUrl: 'research-email.component.html',
+    styleUrls: ['research-email.component.scss']
 })
-export class TeacherClassEmailComponent implements OnInit {
+export class ResearcherClassEmailComponent implements OnInit {
 
     public classId: number;
     public class = {
@@ -41,9 +41,10 @@ export class TeacherClassEmailComponent implements OnInit {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
-            const classes = this.classService.classes;
-            this.class = classes.filter(x => x.id === this.classId)[0];
-            this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Email';
+            this.classService.getClass(this.classId).subscribe(res => {
+                this.class = res;
+                this.backLinkText = 'Research > ' + (this.class ? this.class.name : this.classId) + ' > Email';
+            });
             this.classService.getStudents(this.classId)
                 .subscribe(students => {
                     this.students = students;

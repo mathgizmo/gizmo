@@ -88,6 +88,7 @@ $api->version('v1', function ($api) {
         $api->delete('/classes/{class_id}/students/{student_id}', 'App\Http\APIControllers\ClassController@deleteStudent');
         $api->get('/classes/{class_id}/students/{student_id}/report/assignments', 'App\Http\APIControllers\ClassController@getStudentAssignmentsReport');
         $api->get('/classes/{class_id}/students/{student_id}/report/tests', 'App\Http\APIControllers\ClassController@getStudentTestsReport');
+        $api->get('/classes/{class_id}/students.{format}', 'App\Http\APIControllers\ClassController@downloadStudents');
 
         $api->get('/classes/{class_id}/teachers', 'App\Http\APIControllers\ClassController@getTeachers');
         $api->post('/classes/{class_id}/teachers/{teacher_id}', 'App\Http\APIControllers\ClassController@addTeacherToClass');

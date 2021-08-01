@@ -34,4 +34,8 @@ export * from './review-content/review-content.component';
 export * from './research/research-classes.component';
 export * from './research/menu/research-menu.component';
 export * from './research/dashboard/research-dashboard.component';
+export * from './research/assignments/research-assignments.component';
+export * from './research/tests/research-tests.component';
+export * from './research/students/research-students.component';
+export * from './research/email/research-email.component';
 

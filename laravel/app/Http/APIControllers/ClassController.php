@@ -5,6 +5,7 @@ namespace App\Http\APIControllers;
 use App\ClassApplicationStudent;
 use App\ClassStudent;
 use App\Exports\ClassAssignmentsReportExport;
+use App\Exports\ClassStudentsExport;
 use App\Exports\ClassTestsReportExport;
 use App\Mail\ClassMail;
 use App\StudentTestAttempt;
@@ -1697,4 +1698,42 @@ class ClassController extends Controller
             'items' => array_values(collect($items)->sortBy('due_at')->toArray())
         ]);
     } */
+
+    public function downloadStudents(Request $request, $class_id, $format = 'csv') {
+        $user_id = $this->user->id;
+        $class = ClassOfStudents::where('id', $class_id)
+            ->where(function ($q1) use($user_id) {
+                $q1->where('classes.teacher_id', $user_id)
+                    ->orWhereHas('teachers', function ($q2) use($user_id) {
+                        $q2->where('students.id', $user_id);
+                    });
+            })->first();
+        if (!$class) { return $this->error('Class not found!', 404); }
+        switch ($format) {
+            case 'xls':
+                return (new ClassStudentsExport($class, true, $this->user))
+                    ->download('students.xls', \Maatwebsite\Excel\Excel::XLS);
+            case 'xlsx':
+                return (new ClassStudentsExport($class, true, $this->user))
+                    ->download('students.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+            case 'tsv':
+                return (new ClassStudentsExport($class, true, $this->user))
+                    ->download('students.tsv', \Maatwebsite\Excel\Excel::TSV);
+            case 'ods':
+                return (new ClassStudentsExport($class, true, $this->user))
+                    ->download('students.ods', \Maatwebsite\Excel\Excel::ODS);
+            case 'html':
+                return (new ClassStudentsExport($class, true, $this->user))
+                    ->download('students.html', \Maatwebsite\Excel\Excel::HTML);
+            /** PDF export require extra library: https://phpspreadsheet.readthedocs.io/en/latest/topics/reading-and-writing-to-file/#pdf
+            case 'pdf':
+            return (new ClassStudentsExport($class, true, $this->user))
+            ->download('students.pdf', \Maatwebsite\Excel\Excel::MPDF/DOMPDF/TCPDF); */
+            default:
+                return (new ClassStudentsExport($class, true, $this->user))
+                    ->download('students.csv', \Maatwebsite\Excel\Excel::CSV, [
+                        'Content-Type' => 'text/csv',
+                    ]);
+        }
+    }
 }

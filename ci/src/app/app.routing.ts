@@ -38,17 +38,21 @@ import {
     ManageAssignmentsComponent,
     ManageTestsComponent,
     ManageClassesComponent,
-    ResearchClassesComponent,
     ReviewContentComponent,
     ClassDashboardComponent,
-    ResearchDashboardComponent,
     ClassAssignmentsComponent,
     ClassTestsComponent,
     ClassStudentsComponent,
     ClassTeachersComponent,
     ClassResearchersComponent,
     TeacherClassEmailComponent,
-    ClassInvitationSettingsComponent
+    ClassInvitationSettingsComponent,
+    ResearchClassesComponent,
+    ResearchDashboardComponent,
+    ResearchAssignmentsComponent,
+    ResearchTestsComponent,
+    ResearchStudentsComponent,
+    ResearcherClassEmailComponent
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study';
 
@@ -157,6 +161,33 @@ const researcherRoutes = [
         canActivate: [AuthGuard],
         data: {roles: ['researcher']}
     },
+    {
+        path: 'researcher/class/:class_id/assignments', component: ResearchAssignmentsComponent,
+        canActivate: [AuthGuard], data: {roles: ['researcher']}
+    },
+    {
+        path: 'researcher/class/:class_id/tests', component: ResearchTestsComponent,
+        canActivate: [AuthGuard], data: {roles: ['researcher']}
+    },
+    {
+        path: 'researcher/class/:class_id/students',
+        component: ResearchStudentsComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['researcher']}
+    },
+    {
+        path: 'researcher/class/:class_id/email',
+        component: ResearcherClassEmailComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['researcher']}
+    },
+    {
+        path: 'researcher/class/:class_id/threads',
+        component: ClassThreadsComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['researcher']}
+    },
+
 ];
 
 const studentRoutes = [

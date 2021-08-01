@@ -27,6 +27,12 @@ class ClassOfStudents extends Model
             ->wherePivot('is_researcher', 0);
     }
 
+    public function researchers() {
+        return $this->belongsToMany('App\Student', 'classes_teachers', 'class_id', 'student_id')
+            ->withPivot(['is_researcher', 'receive_emails_from_students'])
+            ->wherePivot('is_researcher', 1);
+    }
+
     public function students() {
         return $this->belongsToMany('App\Student', 'classes_students', 'class_id', 'student_id')
             ->withPivot([

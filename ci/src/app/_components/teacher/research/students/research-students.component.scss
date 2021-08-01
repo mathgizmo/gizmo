@@ -1,0 +1,155 @@
+@import '../../../../../colors';
+
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  .toggle-group, .buttons-group, .links-group {
+    display: flex;
+    width: 240px;
+    max-width: 100%;
+    padding: 0 !important;
+    margin: 12px 0;
+  }
+  .links-group {
+    justify-content: flex-start;
+    align-items: center;
+    * {
+      margin: 0 4px 0 0 !important;
+      max-width: unset !important;
+      white-space: nowrap;
+    }
+    .button {
+      max-height: 36px !important;
+      padding: 2px !important;
+    }
+  }
+}
+
+.students {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0;
+  margin: 60px auto 0;
+  width: 90vw;
+  .students-content {
+    margin-left: 220px;
+    width: calc(100% - 240px);
+    max-width: calc(100% - 240px) !important;
+  }
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    ::ng-deep .class-menu {
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px);
+      min-width: calc(100% - 20px);
+    }
+    .students-content {
+      margin-left: 0;
+      width: calc(100% - 20px);
+      max-width: calc(100% - 20px) !important;
+    }
+  }
+}
+
+.bg-green {
+  background: rgba(17, 160, 46, 0.3);
+}
+.bg-red {
+  background: rgba(240, 86, 50, 0.3);
+}
+
+.title {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.mat-card {
+  margin: 10px;
+  padding: 15px;
+  min-width: 250px;
+}
+.mat-card:last-child {
+  margin-bottom: 28px;
+}
+
+@media screen and (max-width: 600px) {
+  .students {
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .students-content {
+    margin-right: 0;
+  }
+}
+
+.filter-item, .filter-item:focus {
+  width: 100%;
+  border: none;
+  outline: none;
+  overflow: visible;
+}
+
+td {
+  word-wrap: break-word !important;
+  min-width: 0;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 0;
+  margin: 0;
+  min-width: 80px;
+  *:first-child {
+    margin-right: 8px;
+  }
+}
+.not-registered {
+  background: #c0c0c0;
+}
+.not-subscribed {
+  background: #c0c0c0;
+}
+.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.button {
+  font-size: 18px !important;
+}
+
+@media screen and (max-width: 1100px) {
+  .button, button {
+    font-size: 14px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .button, button {
+    font-size: 12px !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .students {
+    width: calc(100% - 20px);
+    justify-content: center;
+    align-items: center;
+  }
+  .students-content {
+    margin-right: 0;
+  }
+  .button, button {
+    font-size: 9px !important;
+  }
+}
