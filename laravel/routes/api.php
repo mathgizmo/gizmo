@@ -139,5 +139,6 @@ $api->version('v1', function ($api) {
         $api->get('/faq' , 'App\Http\APIControllers\FaqController@index');
 
         $api->get('/available-icons', 'App\Http\APIControllers\ApplicationController@getAvailableIcons');
+        $api->get('/settings/{key}' , 'App\Http\APIControllers\HomeController@getSetting');
     });
 });

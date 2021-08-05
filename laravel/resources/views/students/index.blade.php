@@ -53,6 +53,9 @@
                         <th>
                             Teacher
                         </th>
+                        <th>
+                            Researcher
+                        </th>
                         <th style="min-width: 160px;"></th>
                     </tr>
                     </thead>
@@ -86,6 +89,13 @@
                                 <option value="no">Not Teacher</option>
                             </select>
                         </td>
+                        <td>
+                            <select id="is-researcher-filter" name="is_researcher" class="form-control" style="min-width: 80px;">
+                                <option value="">Any</option>
+                                <option value="yes">Researcher</option>
+                                <option value="no">Not Researcher</option>
+                            </select>
+                        </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -100,6 +110,7 @@
                             <td style="max-width: 80px;">{{ $student->date != null ? date('H:i d.m.Y', strtotime($student->date)) : 'Never' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_super ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_teacher ? 'Yes' : 'No' }}</td>
+                            <td style="max-width: 40px;">{{ $student->is_researcher ? 'Yes' : 'No' }}</td>
                             <td class="flex flex-row justify-content-end mb-2" style="min-width: 230px">
                                 <a href="{{ route('students.login', $student->id) }}" target="_blank" class="btn btn-outline-dark">Login</a>
                                 <a href="{{ route('students.edit', $student->id) }}" class="btn btn-dark">Edit</a>
@@ -133,6 +144,7 @@
             const email = document.getElementById("email-filter").value;
             const is_super = document.getElementById("is-super-filter").value;
             const is_teacher = document.getElementById("is-teacher-filter").value;
+            const is_researcher = document.getElementById("is-researcher-filter").value;
 
             if (id) {
                 url.searchParams.set('id', id);
@@ -164,6 +176,11 @@
             } else if (url.searchParams.get('is_teacher')) {
                 url.searchParams.delete('is_teacher');
             }
+            if (is_researcher) {
+                url.searchParams.set('is_researcher', is_researcher);
+            } else if (url.searchParams.get('is_researcher')) {
+                url.searchParams.delete('is_researcher');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -176,6 +193,7 @@
             document.getElementById("email-filter").value = url.searchParams.get('email');
             document.getElementById("is-super-filter").value = url.searchParams.get('is_super');
             document.getElementById("is-teacher-filter").value = url.searchParams.get('is_teacher');
+            document.getElementById("is-researcher-filter").value = url.searchParams.get('is_researcher');
         }
 
         window.onload = init;

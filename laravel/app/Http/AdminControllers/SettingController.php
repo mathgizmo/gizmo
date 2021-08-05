@@ -14,16 +14,15 @@ class SettingController extends Controller
     public function index()
     {
         $this->checkAccess(auth()->user()->isSuperAdmin());
-        $settings = Setting::where('key', 'NOT LIKE', 'Home%')->orderBy('id', 'desc')->get();
-        $welcome_texts = Setting::where('key', 'LIKE', 'Home%')->orderBy('id', 'asc')->get();
-        return view('settings.index', compact('settings', 'welcome_texts'));
+        $settings = Setting::orderBy('key', 'ASC')->get();
+        return view('settings.index', compact('settings'));
     }
 
     public function update()
     {
         $this->checkAccess(auth()->user()->isSuperAdmin());
         Setting::find(request('id'))->update([
-            'value' => request('value'),
+            'value' => trim(request('value')),
         ]);
         return back();
     }

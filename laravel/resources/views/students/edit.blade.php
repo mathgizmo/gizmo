@@ -72,19 +72,21 @@
                 <input type="hidden" name="_method" value="PATCH">
                 {{ csrf_field() }}
             </form>
-            <form class="row mb-3" action="{{ route('students.self-study', $student->id) }}" method="POST">
-                <div class="col-md-2 form-control-label ml-3 font-weight-bold">
-                    <label for="is_self_study">Self Study</label>
-                </div>
-                <div class="col-md-8">
-                    <select id="is_self_study" name="is_self_study" class="form-control" onchange="this.parentElement.parentElement.submit();" style="max-width: 300px;">
-                        <option {{ $student->is_self_study ? 'selected="selected"' : '' }} value="1">Yes</option>
-                        <option {{ $student->is_self_study ? '' : 'selected="selected"' }} value="0">No</option>
-                    </select>
-                </div>
-                <input type="hidden" name="_method" value="PATCH">
-                {{ csrf_field() }}
-            </form>
+            @if(!$student->is_teacher)
+                <form class="row mb-3" action="{{ route('students.self-study', $student->id) }}" method="POST">
+                    <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                        <label for="is_self_study">Self Study</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select id="is_self_study" name="is_self_study" class="form-control" onchange="this.parentElement.parentElement.submit();" style="max-width: 300px;">
+                            <option {{ $student->is_self_study ? 'selected="selected"' : '' }} value="1">Yes</option>
+                            <option {{ $student->is_self_study ? '' : 'selected="selected"' }} value="0">No</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="_method" value="PATCH">
+                    {{ csrf_field() }}
+                </form>
+            @endif
             <form class="row mb-3" action="{{ route('students.teacher', $student->id) }}" method="POST">
                 <div class="col-md-2 form-control-label ml-3 font-weight-bold">
                     <label for="is_teacher">Teacher</label>
@@ -98,6 +100,21 @@
                 <input type="hidden" name="_method" value="PATCH">
                 {{ csrf_field() }}
             </form>
+            @if($student->is_teacher)
+                <form class="row mb-3" action="{{ route('students.researcher', $student->id) }}" method="POST">
+                    <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                        <label for="is_researcher">Researcher</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select id="is_researcher" name="is_researcher" class="form-control" onchange="this.parentElement.parentElement.submit();" style="max-width: 300px;">
+                            <option {{ $student->is_researcher ? 'selected="selected"' : '' }} value="1">Yes</option>
+                            <option {{ $student->is_researcher ? '' : 'selected="selected"' }} value="0">No</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="_method" value="PATCH">
+                    {{ csrf_field() }}
+                </form>
+            @endif
             <form class="d-flex flex-row mx-3 mb-3" action="{{ route('students.reset', $student->id) }}"
                   method="POST" style="display: inline;"
                   onsubmit="if(confirm('This will remove all participant progress? Are you sure?')) { return true } else {return false };">

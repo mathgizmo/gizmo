@@ -63,6 +63,15 @@ class StudentController extends Controller
         return back();
     }
 
+    public function researcherUpdate(Request $request, Student $student)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $student->update([
+            'is_researcher' => $request['is_researcher'] ? true : false,
+        ]);
+        return back();
+    }
+
     public function resetProgress(Student $student)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());

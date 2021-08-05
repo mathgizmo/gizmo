@@ -4,9 +4,17 @@ namespace App\Http\APIControllers;
 
 use App\Country;
 use App\Setting;
+use Illuminate\Support\Facades\Request;
 
 class HomeController extends Controller
 {
+
+    public function getSetting(Request $request, $key)
+    {
+        $setting = Setting::where('key', $key)->first();
+        return $this->success($setting);
+    }
+
 
     public function getWelcomeTexts()
     {

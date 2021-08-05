@@ -52,8 +52,8 @@
       </div>
       <mat-form-field *ngIf="user.role === 'teacher' || user.role === 'researcher'">
         <mat-select name="is_researcher" placeholder="Role" class="answer" [(ngModel)]="isResearcher">
-          <mat-option [value]="true">Researcher</mat-option>
-          <mat-option [value]="false">Teacher</mat-option>
+          <mat-option [value]="false">Teacher only</mat-option>
+          <mat-option [value]="true">Teacher/Researcher</mat-option>
         </mat-select>
       </mat-form-field>
       <div class="button-container">

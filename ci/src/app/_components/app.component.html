@@ -20,12 +20,12 @@
             My Classes
         </a>
         <a *ngIf="user.role === 'researcher'" mat-menu-item routerLink="researcher/class" class="menu-item">
-            <span class="material-icons">science</span>
-            Research
+            <span class="material-icons">class</span>
+            Research Classrooms
         </a>
         <a *ngIf="user.role === 'teacher' || user.role === 'researcher'" mat-menu-item routerLink="teacher/class" class="menu-item">
             <span class="material-icons">class</span>
-            Classrooms
+            Teaching Classrooms
         </a>
         <a *ngIf="user.role === 'teacher' || user.role === 'researcher'" mat-menu-item routerLink="teacher/assignment" class="menu-item">
             <span class="material-icons">assignment</span>

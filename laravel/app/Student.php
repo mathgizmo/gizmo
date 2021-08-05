@@ -58,6 +58,10 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
             $query->where('is_teacher', $filters['is_teacher'] == 'yes');
         }
 
+        if (!empty($filters['is_researcher'])) {
+            $query->where('is_researcher', $filters['is_researcher'] == 'yes');
+        }
+
         if (!empty($filters['is_self_study'])) {
             $query->where('is_self_study', $filters['is_self_study'] == 'yes');
         }

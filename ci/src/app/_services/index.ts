@@ -5,7 +5,7 @@ export * from './tracking.service';
 export * from './user.service';
 export * from './placement.service';
 export * from './http-listener.service';
-export * from './welcome.service';
+export * from './settings.service';
 export * from './dashboard.service';
 export * from './tutorial.service';
 export * from './faq.service';

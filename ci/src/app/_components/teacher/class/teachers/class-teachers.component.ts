@@ -106,6 +106,9 @@ export class ClassTeachersComponent implements OnInit {
             if (result) {
                 this.classService.deleteTeacher(this.classId, teacherId)
                     .subscribe(res => {
+                        this.available_teachers.unshift(this.teachers.filter(x => {
+                            return +x.id === +teacherId;
+                        })[0]);
                         this.teachers = this.teachers.filter(x => x.id !== teacherId);
                         this.snackBar.open('Teacher was successfully deleted from the classroom!', '', {
                             duration: 3000,

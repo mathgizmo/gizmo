@@ -9,7 +9,7 @@ class Setting extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'key', 'label', 'value',
+        'key', 'label', 'value', 'type'
     ];
 
     public static function getValueByKey($key) {

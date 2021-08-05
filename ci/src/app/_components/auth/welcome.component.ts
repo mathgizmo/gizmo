@@ -1,13 +1,13 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 
-import {WelcomeService} from '../../_services/index';
+import {SettingsService} from '../../_services/index';
 
 @Component({
     moduleId: module.id,
     templateUrl: 'welcome.component.html',
     styleUrls: ['welcome.component.scss'],
-    providers: [WelcomeService]
+    providers: [SettingsService]
 })
 
 export class WelcomeComponent implements OnInit {
@@ -19,12 +19,11 @@ export class WelcomeComponent implements OnInit {
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private welcomeService: WelcomeService) {
+        private settingsService: SettingsService) {
     }
 
     ngOnInit() {
-        // get texts
-        this.welcomeService.getWelcomeTexts()
+        this.settingsService.getWelcomeTexts()
             .subscribe(result => {
                 for (let i = 0; i < result.length; i++) {
                     switch (result[i].key) {

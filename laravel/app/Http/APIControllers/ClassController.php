@@ -48,10 +48,10 @@ class ClassController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
         $query = ClassOfStudents::query()->where(function ($q1) use($user_id) {
-            $q1->where('classes.teacher_id', $user_id)
-                ->orWhereHas('teachers', function ($q2) use($user_id) {
-                    $q2->where('students.id', $user_id);
-                });
+            $q1->whereHas('researchers', function ($q2) use($user_id) {
+                $q2->where('students.id', $user_id);
+            });
+            // ->orWhere('classes.teacher_id', $user_id);
         })->where('classes.is_researchable', true);
         return $this->success([
             'items' => array_values($query->get()->toArray())

@@ -9,38 +9,24 @@
 @section('content')
     <div class="card mb-3">
         <div class="card-header font-weight-bold d-flex flex-row">Settings</div>
-        <div class="card-body p-0 d-flex flex-wrap justify-content-center">
+        <div class="card-body p-0 d-flex flex-wrap justify-content-center flex-column">
             @foreach($settings as $setting)
-                <form action="{{ route('settings.update') }}" method="POST">
-                    <div class="form-group mx-2" style="min-width: 360px;">
-                        <label class="text-center mb-0 mt-2" style="width: 100%;">{{ $setting->label }}</label>
-                        <input type="text" name="value" class="form-control" style="margin-top: 8px;"
-                               value="{{ $setting->value }}">
-                        <div style="display: flex; flex-direction: row; justify-content: center;">
-                            <button class="btn btn-dark" type="submit" style="margin: 4px;">Save</button>
+                <form id="{{ $setting->key }}" class="d-block m-2" action="{{ route('settings.update') }}" method="POST">
+                    <label class="font-weight-bolder" for="{{$setting->label}}">{{ $setting->label }}</label>
+                    <div class="d-flex flex-row justify-content-between">
+                        @if($setting->type != 'text')
+                            <input id="{{$setting->label}}" name="value" class="form-control mr-1"
+                                   @if($setting->type == 'number') type="number" @endif
+                                   value="{{ $setting->value }}"/>
+                        @else
+                        <textarea id="{{$setting->label}}" name="value" class="form-control mr-1"
+                                  style="min-height: 150px;">{{ $setting->value }}</textarea>
+                        @endif
+                        <div class="button-container d-flex flex-column" style="min-width: 110px">
+                            <button class="btn btn-dark" type="submit" style="">Save</button>
                         </div>
                     </div>
                     <input type="hidden" name="id" value="{{ $setting->id }}">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="_method" value="PATCH">
-                </form>
-            @endforeach
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header font-weight-bold d-flex flex-row">Welcome Page Texts</div>
-        <div class="card-body p-0 d-flex flex-wrap justify-content-center">
-            @foreach($welcome_texts as $welcome_text)
-                <form action="{{ route('settings.update') }}" method="POST">
-                    <div class="form-group mx-2" id="{{ $welcome_text->key }}" style="min-width: 360px;">
-                        <label class="text-center mb-0 mt-2" style="width: 100%;">{{ $welcome_text->label }}</label>
-                        <textarea name="value" class="form-control"
-                                  style="min-height: 150px; margin-top: 8px;">{{ $welcome_text->value }}</textarea>
-                        <div style="display: flex; flex-direction: row; justify-content: center;">
-                            <button class="btn btn-dark" type="submit" style="margin: 4px;">Save</button>
-                        </div>
-                    </div>
-                    <input type="hidden" name="id" value="{{ $welcome_text->id }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="_method" value="PATCH">
                 </form>
@@ -81,10 +67,10 @@
     <script>
         $(document).ready(function () {
             let button = $('#Home2 button')[0];
-            const videoButton = document.createElement("button");
+            const videoButton = document.createElement('button');
             videoButton.classList.add('btn');
-            videoButton.classList.add('btn-dark');
-            videoButton.style.margin = '4px';
+            videoButton.classList.add('btn-outline-dark');
+            videoButton.style.marginBottom = '4px';
             videoButton.setAttribute('type', 'button');
             videoButton.setAttribute('data-toggle', 'modal');
             videoButton.setAttribute('data-target', '#add-video');
