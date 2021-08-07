@@ -2,6 +2,7 @@
 
 namespace App\Http\APIControllers;
 
+use App\Answer;
 use App\Application;
 use App\ClassApplication;
 use App\ClassApplicationStudent;
@@ -396,14 +397,29 @@ class StudentsTrackingController extends Controller
                 if (!$current_attempt) {
                     return $this->error('This test has been reset by the teacher, if you think an error has been made please take a screenshot of your progress!', 404);
                 }
+                $is_right_answer = (bool)request('is_right_answer');
+                $answer = request('answer') ?: null;
+                if ($is_right_answer) {
+                    $correct_answer = $answer;
+                } else {
+                    try {
+                        $answers = Answer::where('question_id', $question_id)
+                            ->where('is_correct', true)
+                            ->orderBy('answer_order', 'ASC')
+                            ->pluck('value')->toArray();
+                        $correct_answer = implode(",", array_values($answers));
+                    } catch (\Exception $e) {
+                        $correct_answer = null;
+                    }
+                }
                 DB::table('students_test_questions')
-                    // ->where('class_app_id', $this->class_app->id)
-                    // ->where('student_id', $this->student->id)
                     ->where('question_id', $question_id)
                     ->where('attempt_id', $current_attempt->id)
                     ->update([
                         'is_answered' => true,
-                        'is_right_answer' => request('is_right_answer')
+                        'is_right_answer' => $is_right_answer,
+                        'answer' => $answer,
+                        'correct_answer' => $correct_answer
                     ]);
             }
         }

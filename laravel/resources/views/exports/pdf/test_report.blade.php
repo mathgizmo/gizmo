@@ -73,10 +73,31 @@
                         @foreach($topic->questions as $question)
                             <div class="questions">
                                 <div class="question @if(!$question->is_answered) not-answered @elseif(!$question->is_right_answer) wrong-answer @else right-answer @endif">
-                                    {{$loop->index + 1}})
-                                    <strong>@if(!$question->is_answered) Not Answered @elseif(!$question->is_right_answer) Wrong @else Right @endif</strong>
-                                    <em>{!! $question->question !!}</em>
-                                    (<strong>{{$question->lesson}}</strong>)
+                                    <div class="question-header">
+                                        {{$loop->index + 1}})
+                                        <strong>@if(!$question->is_answered) Not Answered @elseif(!$question->is_right_answer) Wrong @else Right @endif</strong>
+                                    </div>
+                                    <div class="question-text">
+                                        <em>{!! $question->question !!}</em>
+                                    </div>
+                                    <div class="question-footer">
+                                        @if(!$question->is_right_answer && isset($question->answer))
+                                            <div class="row">
+                                                <em>Student answer:</em>
+                                                <strong>{{$question->answer}}</strong>
+                                            </div>
+                                        @endif
+                                        @if(isset($question->correct_answer))
+                                            <div class="row">
+                                                <em>Correct answer:</em>
+                                                <strong>{{$question->correct_answer}}</strong>
+                                            </div>
+                                        @endif
+                                        <div class="row">
+                                            <em>Lesson:</em>
+                                            <strong>{{$question->lesson}}</strong>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

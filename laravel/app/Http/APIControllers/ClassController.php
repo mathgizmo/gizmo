@@ -1671,7 +1671,9 @@ class ClassController extends Controller
                                 'lesson.id as lesson_id',
                                 'lesson.title as lesson',
                                 'students_test_questions.is_answered',
-                                'students_test_questions.is_right_answer'
+                                'students_test_questions.is_right_answer',
+                                'students_test_questions.answer',
+                                'students_test_questions.correct_answer'
                             ]);
                         $topics[] = (object) [
                             'topic_id' => $topic_id,

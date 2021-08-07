@@ -6,50 +6,9 @@ export class QuestionService {
     public question: any = null;
     public answers: string[] = null;
 
-    isCorrect(question: any, answers: string[]) {
-        this.question = question;
-        this.answers = answers;
-        // sort question answers
-        if (this.question.question_order) {
-            this.question.answers.sort((a, b) => {
-                return a.value - b.value;
-            });
-            // check if all answers are numbers
-            let isNumbers = true;
-            for (let i = 0; i < this.answers.length; i++) {
-                const answer = this.answers[i].replace(',', '.');
-                if (isNaN(+answer)) {
-                    isNumbers = false;
-                    break;
-                }
-            }
-            if (isNumbers) {
-                for (let i = 0; i < this.answers.length; i++) {
-                    this.answers[i] = this.answers[i].replace(',', '.');
-                }
-                this.answers.sort((a, b) => {
-                    return +a - +b;
-                });
-            } else {
-                this.answers.sort();
-            }
-        }
-        // convert percents to float for FB
-        if (this.question.reply_mode === 'FB') {
-            for (let i = 0; i < this.answers.length; i++) {
-                try {
-                    if ((this.answers[i] + '').includes('%')) {
-                        const answer = this.answers[i].replace('%', '');
-                        if (!isNaN(+answer)) {
-                            this.answers[i] = parseFloat(answer) / 100 + '';
-                        }
-                    }
-                } catch (err) {
-                    return false;
-                }
-            }
-        }
-        // check if answer is correct
+    public isCorrect(question: any, answers: string[]) {
+        const isDataReady = this.prepareData(question, answers);
+        if (!isDataReady) { return  false; }
         if (this.question.answer_mode === 'order') {
             for (let i = 0; i < this.question.answers.length; i++) {
                 if (this.question.answers[i].value !== this.answers[i]) {
@@ -164,4 +123,69 @@ export class QuestionService {
         return false;
     }
 
+    public mapStudentAnswersToString(question: any, answers: string[]) {
+        this.prepareData(question, answers);
+        if (this.question.answer_mode === 'radio') {
+            const answer = +this.answers[0];
+            return answer && this.question.answers[answer]
+                ? this.question.answers[answer].value
+                : this.answers.join();
+        } else if (this.question.answer_mode === 'checkbox') {
+            const answersArr = [];
+            for (let i = 0; i < this.question.answers.length; i++) {
+                if (this.answers[i] !== '') {
+                    answersArr.push(this.question.answers[i].value);
+                }
+            }
+            return answersArr.join();
+        } else {
+            return this.answers.join();
+        }
+    }
+
+    private prepareData(question: any, answers: string[]) {
+        this.question = question;
+        this.answers = answers;
+        // sort question answers
+        if (this.question.question_order) {
+            this.question.answers.sort((a, b) => {
+                return a.value - b.value;
+            });
+            // check if all answers are numbers
+            let isNumbers = true;
+            for (let i = 0; i < this.answers.length; i++) {
+                const answer = this.answers[i].replace(',', '.');
+                if (isNaN(+answer)) {
+                    isNumbers = false;
+                    break;
+                }
+            }
+            if (isNumbers) {
+                for (let i = 0; i < this.answers.length; i++) {
+                    this.answers[i] = this.answers[i].replace(',', '.');
+                }
+                this.answers.sort((a, b) => {
+                    return +a - +b;
+                });
+            } else {
+                this.answers.sort();
+            }
+        }
+        // convert percents to float for FB
+        if (this.question.reply_mode === 'FB') {
+            for (let i = 0; i < this.answers.length; i++) {
+                try {
+                    if ((this.answers[i] + '').includes('%')) {
+                        const answer = this.answers[i].replace('%', '');
+                        if (!isNaN(+answer)) {
+                            this.answers[i] = parseFloat(answer) / 100 + '';
+                        }
+                    }
+                } catch (err) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

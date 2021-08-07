@@ -50,7 +50,7 @@ export class TrackingService {
         return this.http.post(url, request);
     }
 
-    trackQuestionAnswer(question_id, is_right_answer, class_app_id = null) {
+    trackQuestionAnswer(question_id, is_right_answer, class_app_id = null, answer = null) {
         let url = '/question/' + question_id + '/tracking';
         if (class_app_id > 0) {
             url += '?class_app_id=' + class_app_id;
@@ -58,7 +58,10 @@ export class TrackingService {
             const appId = (class_app_id === 0 ? 0 : +localStorage.getItem('app_id'));
             url += '?app_id=' + appId;
         }
-        return this.http.post(url, {'is_right_answer': is_right_answer});
+        return this.http.post(url, {
+            is_right_answer: is_right_answer,
+            answer: answer
+        });
     }
 
     getLastVisitedLesson(student_id) {

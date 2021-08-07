@@ -56,12 +56,16 @@
               </span>
             </td>
             <td class="text-right">
-              <button class="button button-small button-danger"
+              <button *ngIf="!item.is_unsubscribed" class="button button-small button-danger"
                       mat-stroked-button type="button"
                       [class.disabled]="!item.is_subscribed"
-                      [class.button-amber]="item.is_unsubscribed"
                       (click)="deleteStudent(item)">
-                {{ item.is_unsubscribed ? 'Unsubscribed' : 'Remove'}}
+                Remove
+              </button>
+              <button *ngIf="item.is_unsubscribed" class="button button-small button-amber"
+                      mat-stroked-button type="button" style="min-width: 150px"
+                      (click)="deleteStudent(item)">
+                Unsubscribed
               </button>
             </td>
           </tr>
