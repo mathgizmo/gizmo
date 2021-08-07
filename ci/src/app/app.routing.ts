@@ -153,39 +153,43 @@ const researcherRoutes = [
         path: 'researcher/class',
         component: ResearchClassesComponent,
         canActivate: [AuthGuard],
-        data: {roles: ['researcher']}
+        data: {roles: ['teacher', 'researcher']}
     },
     {
         path: 'researcher/class/:class_id/dashboard',
         component: ResearchDashboardComponent,
         canActivate: [AuthGuard],
-        data: {roles: ['researcher']}
+        data: {roles: ['teacher', 'researcher']}
     },
     {
-        path: 'researcher/class/:class_id/assignments', component: ResearchAssignmentsComponent,
-        canActivate: [AuthGuard], data: {roles: ['researcher']}
+        path: 'researcher/class/:class_id/assignments',
+        component: ResearchAssignmentsComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['teacher', 'researcher']}
     },
     {
-        path: 'researcher/class/:class_id/tests', component: ResearchTestsComponent,
-        canActivate: [AuthGuard], data: {roles: ['researcher']}
+        path: 'researcher/class/:class_id/tests',
+        component: ResearchTestsComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['teacher', 'researcher']}
     },
     {
         path: 'researcher/class/:class_id/students',
         component: ResearchStudentsComponent,
         canActivate: [AuthGuard],
-        data: {roles: ['researcher']}
+        data: {roles: ['teacher', 'researcher']}
     },
     {
         path: 'researcher/class/:class_id/email',
         component: ResearcherClassEmailComponent,
         canActivate: [AuthGuard],
-        data: {roles: ['researcher']}
+        data: {roles: ['teacher', 'researcher']}
     },
     {
         path: 'researcher/class/:class_id/threads',
         component: ClassThreadsComponent,
         canActivate: [AuthGuard],
-        data: {roles: ['researcher']}
+        data: {roles: ['teacher', 'researcher']}
     },
 
 ];

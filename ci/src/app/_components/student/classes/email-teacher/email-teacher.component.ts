@@ -24,7 +24,8 @@ export class StudentEmailTeacherComponent implements OnInit {
         subject: '',
         body: '',
         teachers: [],
-        for_all_teachers: true
+        for_all_teachers: true,
+        for_researchers: false
     };
     public message: string;
     public teachers = [];
@@ -68,7 +69,8 @@ export class StudentEmailTeacherComponent implements OnInit {
                 subject: '',
                 body: '',
                 teachers: [],
-                for_all_teachers: true
+                for_all_teachers: true,
+                for_researchers: false
             };
             this.message = 'Email has been successfully sent!';
         }, error => {

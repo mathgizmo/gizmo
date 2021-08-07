@@ -23,11 +23,12 @@
             <th mat-sort-header="is_element4_accepted" scope="col">Element 4 (numeracy tasks)</th>
             <th mat-sort-header="assignments_finished_count" scope="col">Finished Assignments</th>
             <th mat-sort-header="tests_finished_count" scope="col">Finished Tests</th>
+            <th scope="col" style="min-width: 136px"></th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td colspan="7">
+            <td colspan="9">
               <input matInput placeholder="Email" class="filter-item"
                      type="text" name="email" [(ngModel)]="email" [value]="" />
             </td>
@@ -36,16 +37,16 @@
             <td style="max-width: 260px;">{{item.email }}</td>
             <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
             <td [class.bg-green]="item.pivot.is_element1_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element1_accepted">
-              {{item.pivot.is_consent_read ? (item.pivot.is_element1_accepted ? 'Yes' : 'No') : 'N/A'}}
+              {{ item.pivot.is_element1_accepted ? 'Yes' : (item.pivot.is_consent_read ? 'No' : 'N/A') }}
             </td>
             <td [class.bg-green]="item.pivot.is_element2_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element2_accepted">
-              {{item.pivot.is_consent_read ? (item.pivot.is_element2_accepted ? 'Yes' : 'No') : 'N/A'}}
+              {{ item.pivot.is_element2_accepted ? 'Yes' : (item.pivot.is_consent_read ? 'No' : 'N/A') }}
             </td>
             <td [class.bg-green]="item.pivot.is_element3_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element3_accepted">
-              {{item.pivot.is_consent_read ? (item.pivot.is_element3_accepted ? 'Yes' : 'No') : 'N/A'}}
+              {{ item.pivot.is_element3_accepted ? 'Yes' : (item.pivot.is_consent_read ? 'No' : 'N/A') }}
             </td>
             <td [class.bg-green]="item.pivot.is_element4_accepted" [class.bg-red]="item.pivot.is_consent_read && !item.pivot.is_element4_accepted">
-              {{item.pivot.is_consent_read ? (item.pivot.is_element4_accepted ? 'Yes' : 'No') : 'N/A'}}
+              {{ item.pivot.is_element4_accepted ? 'Yes' : (item.pivot.is_consent_read ? 'No' : 'N/A') }}
             </td>
             <td *ngIf="!item.pivot.is_element1_accepted || !item.is_registered || !item.is_subscribed" style="max-width: 60px;">
               {{!item.pivot.is_element1_accepted ? 'N/A' : item.assignments_finished_count }}
@@ -58,6 +59,11 @@
             </td>
             <td *ngIf="item.pivot.is_element1_accepted && item.is_registered && item.is_subscribed" (click)="showTests(item)" style="max-width: 60px; cursor: pointer">
               {{item.tests_finished_count }}
+            </td>
+            <td class="text-right">
+              <button (click)="editStatus(item)" class="button button-small button-outline" mat-stroked-button type="button">
+                Edit status
+              </button>
             </td>
           </tr>
           </tbody>

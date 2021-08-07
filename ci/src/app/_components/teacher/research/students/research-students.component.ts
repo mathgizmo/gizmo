@@ -8,6 +8,8 @@ import {StudentTestsDialogComponent} from '../../class/students/student-tests-di
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {compare} from '../../../../_helpers/compare.helper';
+import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from "../../../dialogs";
+import {EditStudentResearchStatusDialogComponent} from "./edit-student-research-status-dialog/edit-student-research-status-dialog.component";
 
 @Component({
     selector: 'app-research-students',
@@ -128,5 +130,38 @@ export class ResearchStudentsComponent implements OnInit {
                     link.remove();
                 }, 100);
             });
+    }
+
+    editStatus(student) {
+        const dialogRef = this.dialog.open(EditStudentResearchStatusDialogComponent, {
+            data: { student: student }, position: this.dialogPosition
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                const item = {
+                    id: student.id,
+                    ...result
+                };
+                this.classService.changeStudent(this.classId, item)
+                    .subscribe(res => {
+                        student.pivot = {
+                            is_consent_read: +result.is_consent_read,
+                            is_element1_accepted: result.is_element1_accepted,
+                            is_element2_accepted: +result.is_element2_accepted,
+                            is_element3_accepted: +result.is_element3_accepted,
+                            is_element4_accepted: +result.is_element4_accepted,
+                        };
+                        this.snackBar.open('Research status was successfully updated!', '', {
+                            duration: 3000,
+                            panelClass: ['success-snackbar']
+                        });
+                    }, error => {
+                        this.snackBar.open('Unable to update research status!', '', {
+                            duration: 3000,
+                            panelClass: ['error-snackbar']
+                        });
+                    });
+            }
+        });
     }
 }

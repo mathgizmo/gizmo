@@ -36,7 +36,7 @@
 		cursor: pointer;
 		color: $navy;
 		.subtitle {
-			font-size: 32px;
+			font-size: 26px;
 			text-align: center;
 		}
 		img {
@@ -126,6 +126,16 @@
 @media (max-width: 600px) {
 	.auth-container, .auth-container > .mat-card {
 		max-width: calc(100% - 16px);
+	}
+}
+
+@media (max-width: 360px) {
+	.role-select-container {
+		.card {
+			.subtitle {
+				font-size: 18px;
+			}
+		}
 	}
 }
 

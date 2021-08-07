@@ -27,6 +27,9 @@
             <div class="form-group">
                 <mat-checkbox name="for_all_students" [(ngModel)]="mail.for_all_teachers">For default teachers</mat-checkbox>
             </div>
+            <div *ngIf="myClass.is_researchable" class="form-group">
+                <mat-checkbox name="for_researchers" [(ngModel)]="mail.for_researchers">For researchers</mat-checkbox>
+            </div>
             <div class="button-container">
                 <button mat-button (click)="onEmail()" class="button moving-forward-button continue-button" [disabled]="!mail.subject || !mail.body">Send</button>
             </div>

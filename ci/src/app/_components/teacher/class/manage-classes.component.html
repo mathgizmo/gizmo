@@ -53,13 +53,18 @@
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.class_type.charAt(0).toUpperCase() + item.class_type.slice(1) }}</td>
                         <td routerLink="./{{item.id}}/dashboard" class="link">{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
                         <td class="text-right" style="min-width: 320px;">
-                            <button mat-stroked-button
-                                    class="button button-small"
-                                    [class.button-danger]="!+item.is_researchable"
-                                    [disabled]="!+item.is_researchable"
-                                    [class.moving-forward-button]="+item.is_researchable"
-                                    style="margin-right: 8px;"
-                                    (click)="onResearchClass(item)">
+                            <a *ngIf="+item.is_researchable"
+                               routerLink="/researcher/class/{{item.id}}/dashboard"
+                               mat-stroked-button
+                               class="button button-small moving-forward-button"
+                               style="margin-right: 8px;">
+                                Research
+                            </a>
+                            <button *ngIf="!+item.is_researchable"
+                                    mat-stroked-button
+                                    class="button button-small button-danger"
+                                    disabled="disabled"
+                                    style="margin-right: 8px;">
                                 Research
                             </button>
                             <button mat-stroked-button

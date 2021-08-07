@@ -1,0 +1,39 @@
+<!-- <h2 mat-dialog-title [draggable] dragHandle=".mat-dialog-container" dragTarget=".mat-dialog-container" class="subtitle hide">Edit Research Status!</h2> -->
+<mat-dialog-content class="dialog-content" id="dialog-content">
+    <div class="subtitle text-center">Edit Research Status for {{student.email}}</div>
+    <div class="form-group">
+        <label for="is_element1_accepted">Element 1 (tracking):</label>
+        <select class="form-control" id="is_element1_accepted" name="is_element1_accepted" [(ngModel)]="student.pivot.is_element1_accepted">
+            <option [value]="0">No</option>
+            <option [value]="1">Yes</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="is_element2_accepted">Element 2 (survey):</label>
+        <select class="form-control" id="is_element2_accepted" name="is_element2_accepted" [(ngModel)]="student.pivot.is_element2_accepted">
+            <option [value]="0">No</option>
+            <option [value]="1">Yes</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="is_element3_accepted">Element 3 (interview):</label>
+        <select class="form-control" id="is_element3_accepted" name="is_element3_accepted" [(ngModel)]="student.pivot.is_element3_accepted">
+            <option [value]="0">No</option>
+            <option [value]="1">Yes</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="is_element4_accepted">Element 4 (numeracy tasks):</label>
+        <select class="form-control" id="is_element4_accepted" name="is_element4_accepted" [(ngModel)]="student.pivot.is_element4_accepted">
+            <option [value]="0">No</option>
+            <option [value]="1">Yes</option>
+        </select>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="buttons-container dialog-buttons-container">
+    <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
+    <div class="buttons-container flex-end">
+        <button mat-button (click)="onSave()" class='button moving-forward-button continue-button' type="button">Save</button>
+    </div>
+</mat-dialog-actions>
+

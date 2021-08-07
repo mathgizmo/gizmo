@@ -152,10 +152,6 @@ export class ManageClassesComponent implements OnInit {
         });
     }
 
-    onResearchClass(item) {
-        // todo: do something
-    }
-
     sortData(sort: Sort) {
         const data = this.classes.slice();
         if (!sort.active || sort.direction === '') {

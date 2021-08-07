@@ -150,12 +150,17 @@ class ClassController extends Controller
                 : request('students');
         } else {
             if (request('for_all_teachers')) {
-                $teachers = $class->teachers()
+                $teachers = $class->teachersWithoutResearchers()
                     ->where('receive_emails_from_students', true)
                     ->pluck('email')->toArray();
                 $emails = array_merge([$class->teacher->email], array_values($teachers));
             } else {
                 $emails = request('teachers');
+            }
+            if (request('for_researchers')) {
+                $researchers = $class->researchers()
+                    ->pluck('email')->toArray();
+                $emails = array_merge($emails, array_values($researchers));
             }
         }
         if (config('app.env') == 'production') {
@@ -394,12 +399,28 @@ class ClassController extends Controller
                     });
             })->first();
         if (!$class) { return $this->error('Class not found.', 404); }
-        DB::table('classes_students')
-            ->where('class_id', $class_id)
-            ->where('student_id', $student_id)
-            ->update([
-                'test_duration_multiply_by' => $request['test_duration_multiply_by'] ?: 1
-            ]);
+        $class_student = ClassStudent::where('class_id', $class_id)
+            ->where('student_id', $student_id)->first();
+        if (!$class_student) { return $this->error('Student not found.', 404); }
+        if ($request->filled('test_duration_multiply_by')) {
+            $class_student->test_duration_multiply_by = $request['test_duration_multiply_by'] ?: 1;
+        }
+        // if ($request->filled('is_consent_read')) {
+        //     $class_student->is_consent_read = (bool)$request['is_consent_read'];
+        // }
+        if ($request->filled('is_element1_accepted')) {
+            $class_student->is_element1_accepted = (bool)$request['is_element1_accepted'];
+        }
+        if ($request->filled('is_element2_accepted')) {
+            $class_student->is_element2_accepted = (bool)$request['is_element2_accepted'];
+        }
+        if ($request->filled('is_element3_accepted')) {
+            $class_student->is_element3_accepted = (bool)$request['is_element3_accepted'];
+        }
+        if ($request->filled('is_element4_accepted')) {
+            $class_student->is_element4_accepted = (bool)$request['is_element4_accepted'];
+        }
+        $class_student->save();
         return $this->success('updated!', 200);
     }
 

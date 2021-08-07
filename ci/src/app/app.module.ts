@@ -121,7 +121,8 @@ import {
     EditClassTestDialogComponent,
     SelectStudentsDialogComponent,
     TeacherClassEmailComponent,
-    ClassInvitationSettingsComponent
+    ClassInvitationSettingsComponent,
+    EditStudentResearchStatusDialogComponent
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
@@ -278,6 +279,7 @@ FullCalendarModule.registerPlugins([
         TeacherClassEmailComponent,
         ClassInvitationSettingsComponent,
         EditThreadDialogComponent,
+        EditStudentResearchStatusDialogComponent,
         // PlacementComponent,
         // QuestionNumDialogComponent,
         DraggableDirective,
@@ -311,7 +313,8 @@ FullCalendarModule.registerPlugins([
         TestStartDialogComponent,
         StudentTestReportDialogComponent,
         EditThreadDialogComponent,
-        ResearchConsentDialogComponent
+        ResearchConsentDialogComponent,
+        EditStudentResearchStatusDialogComponent
     ],
     providers: [
         AuthGuard,
