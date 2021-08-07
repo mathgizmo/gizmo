@@ -426,7 +426,7 @@ class ClassController extends Controller
 
     public function deleteStudent($class_id, $student_id) {
         $user = Auth::user();
-        $user_id = $this->id;
+        $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)

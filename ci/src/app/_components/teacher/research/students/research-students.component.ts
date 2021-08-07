@@ -8,8 +8,8 @@ import {StudentTestsDialogComponent} from '../../class/students/student-tests-di
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {compare} from '../../../../_helpers/compare.helper';
-import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from "../../../dialogs";
-import {EditStudentResearchStatusDialogComponent} from "./edit-student-research-status-dialog/edit-student-research-status-dialog.component";
+// tslint:disable-next-line:max-line-length
+import {EditStudentResearchStatusDialogComponent} from './edit-student-research-status-dialog/edit-student-research-status-dialog.component';
 
 @Component({
     selector: 'app-research-students',
