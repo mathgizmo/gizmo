@@ -537,4 +537,11 @@ class ProfileController extends Controller
                     ]);
         }
     }
+
+    public function clearRedirectTo() {
+        $student = Student::find(Auth::user()->id);
+        $student->redirect_to = null;
+        $student->save();
+        return $this->success('OK.');
+    }
 }

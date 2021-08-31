@@ -2,7 +2,7 @@
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 
-import {AuthenticationService} from '../../../_services/index';
+import {AuthenticationService, UserService} from '../../../_services/index';
 
 @Component({
     moduleId: module.id,
@@ -28,7 +28,9 @@ export class LoginComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService) {
+        private authenticationService: AuthenticationService,
+        private userService: UserService
+    ) {
         const navigation = this.router.getCurrentNavigation();
         const state = navigation && navigation.extras && navigation.extras.state;
         if (state && state.email) {
@@ -49,15 +51,7 @@ export class LoginComponent implements OnInit {
                 this.authenticationService.loginByToken(this.token)
                     .subscribe(user => {
                         if (user && user.user_id) {
-                            const redirectTo = localStorage.getItem('redirect_to');
-                            if (redirectTo) {
-                                localStorage.removeItem('redirect_to');
-                                this.router.navigate([redirectTo]);
-                            } else {
-                                user.role === 'self_study'
-                                    ? this.router.navigate(['/'])
-                                    : this.router.navigate(['dashboard']);
-                            }
+                            this.afterLoginRedirect(user);
                         }
                     }, error => {
                         this.authenticationService.logout();
@@ -73,19 +67,7 @@ export class LoginComponent implements OnInit {
             this.authenticationService.login(this.model.email, this.model.password, this.captchaResponse, this.ignoreCaptcha)
                 .subscribe(user => {
                     if (user && user.user_id) {
-                        const redirectTo = localStorage.getItem('redirect_to');
-                        if (redirectTo) {
-                            localStorage.removeItem('redirect_to');
-                            this.router.navigate([redirectTo]);
-                        } else {
-                            /* const isFirstTimeLogin = false;
-                            if ((user.role === 'teacher' || user.role === 'researcher') && isFirstTimeLogin) {
-                                this.router.navigate(['teacher/class']);
-                            } */
-                            user.role === 'self_study'
-                                ? this.router.navigate(['/'])
-                                : this.router.navigate(['dashboard']);
-                        }
+                        this.afterLoginRedirect(user);
                     } else {
                         this.error = 'Email or password is incorrect!';
                         this.loading = false;
@@ -117,5 +99,26 @@ export class LoginComponent implements OnInit {
     public resolved(captchaResponse: string) {
         this.captchaResponse = captchaResponse;
         this.login();
+    }
+
+    private afterLoginRedirect(user) {
+        const redirectTo = localStorage.getItem('redirect_to');
+        if (redirectTo || user.redirect_to) {
+            if (redirectTo) {
+                localStorage.removeItem('redirect_to');
+                this.router.navigate([redirectTo]);
+            } else {
+                this.router.navigate([user.redirect_to]);
+            }
+            this.userService.clearRedirectTo().subscribe();
+        } else {
+            /* const isFirstTimeLogin = false;
+            if ((user.role === 'teacher' || user.role === 'researcher') && isFirstTimeLogin) {
+                this.router.navigate(['teacher/class']);
+            } */
+            user.role === 'self_study'
+                ? this.router.navigate(['/'])
+                : this.router.navigate(['dashboard']);
+        }
     }
 }

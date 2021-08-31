@@ -141,7 +141,8 @@ class AuthController extends Controller
                 'is_teacher' => request('role') == 'teacher',
                 'is_self_study' => request('role') == 'self_study',
                 'is_super' => request('role') == 'self_study',
-                'is_registered' => true
+                'is_registered' => true,
+                'redirect_to' => request('redirect_to') ?: null
             ]);
         } else {
             if ($request->filled('ignore-captcha-key') && request('ignore-captcha-key') == config('auth.recaptcha.key')) {
@@ -175,7 +176,8 @@ class AuthController extends Controller
                 'is_self_study' => request('role') == 'self_study',
                 'is_super' => request('role') == 'self_study',
                 'is_admin' => false,
-                'is_registered' => true
+                'is_registered' => true,
+                'redirect_to' => request('redirect_to') ?: null
             ]);
         }
         if ($student) {

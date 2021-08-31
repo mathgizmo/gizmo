@@ -34,6 +34,10 @@ export class UserService {
         return this.http.post('/profile', request);
     }
 
+    public clearRedirectTo() {
+        return this.http.post('/profile/clear-redirect-to');
+    }
+
     public changeApplication(appId: number) {
         const request = {
             app_id: appId,

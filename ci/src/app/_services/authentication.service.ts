@@ -103,7 +103,8 @@ export class AuthenticationService {
             role: role,
             country_id: country_id,
             'g-recaptcha-response': captcha_response,
-            'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null
+            'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null,
+            redirect_to: localStorage.getItem('redirect_to') || null
         }, {
             headers: this.headers
         }).pipe(

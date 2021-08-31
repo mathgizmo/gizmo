@@ -62,6 +62,7 @@ $api->version('v1', function ($api) {
         $api->post('/profile/classes/{class_id}/consent', 'App\Http\APIControllers\ProfileController@updateClassConsent');
         $api->get('/profile/classes/{class_id}/assignments-report.{format}', 'App\Http\APIControllers\ProfileController@downloadAssignmentsReport');
         $api->get('/profile/classes/{class_id}/tests-report.{format}', 'App\Http\APIControllers\ProfileController@downloadTestsReport');
+        $api->post('/profile/clear-redirect-to', 'App\Http\APIControllers\ProfileController@clearRedirectTo');
 
         $api->get('/classes', 'App\Http\APIControllers\ClassController@all');
         $api->post('/classes', 'App\Http\APIControllers\ClassController@store');

@@ -28,7 +28,8 @@ class AuthStudentResource extends JsonResource
             'options' => [
                 'is_test_timer_displayed' => $this->is_test_timer_displayed,
                 'is_test_questions_count_displayed' => $this->is_test_questions_count_displayed
-            ]
+            ],
+            'redirect_to' => $this->redirect_to
         ];
         return $student;
     }
