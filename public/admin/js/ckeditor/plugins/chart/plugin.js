@@ -278,7 +278,7 @@ CKEDITOR.plugins.add( 'chart', {
                         elements: [
                             {
                                 type : 'html',
-                                html: 'Main Color: <input class="jscolor" id="main-color" value="8ED8DD">',
+                                html: 'Main Color: <input class="jscolor" id="main-color" value="2EB7C1">',
                                 required : false,
                             },
                             {
@@ -288,7 +288,7 @@ CKEDITOR.plugins.add( 'chart', {
                             },
                             {
                                 type : 'html',
-                                html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="FFFFFF">',
+                                html: 'Stroke Color: <input class="jscolor" id="stroke-color" value="002642">',
                                 required : false,
                             },
                             {

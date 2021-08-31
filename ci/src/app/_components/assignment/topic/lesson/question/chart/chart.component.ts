@@ -1,6 +1,6 @@
 import {
-    Component, Inject, OnInit, OnDestroy, ChangeDetectionStrategy,
-    Input, OnChanges, SimpleChanges, ChangeDetectorRef, NgZone
+    Component, OnInit, OnDestroy, ChangeDetectionStrategy,
+    Input, OnChanges, ChangeDetectorRef, NgZone
 } from '@angular/core';
 
 @Component({
@@ -14,9 +14,9 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     @Input() question: string;
     @Input() chartHeight: number; // dimension of chart area in px
 
-    private mainColor = '#8ED8DD';
+    private mainColor = '#2EB7C1';
     private selectedColor = '#FFB133';
-    private strokeColor = '#FFFFFF';
+    private strokeColor = '#002642';
     private strokeWidth = 1;
     private markDiameter = 3;
     private pointDiameter = 1;
@@ -289,22 +289,16 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 this.mainColor = chart['0']
                     .match(new RegExp(/main-color:([^;]*)(?=(;|$))/g))['0']
                     .replace('main-color:', '');
-            } else {
-                this.mainColor = '#8ED8DD';
             }
             if (chart['0'].indexOf('selected-color:') >= 0) {
                 this.selectedColor = chart['0']
                     .match(new RegExp(/selected-color:([^;]*)(?=(;|$))/g))['0']
                     .replace('selected-color:', '');
-            } else {
-                this.selectedColor = '#FFB133';
             }
             if (chart['0'].indexOf('stroke-color:') >= 0) {
                 this.strokeColor = chart['0']
                     .match(new RegExp(/stroke-color:([^;]*)(?=(;|$))/g))['0']
                     .replace('stroke-color:', '');
-            } else {
-                this.strokeColor = '#FFFFFF';
             }
             if (chart['0'].indexOf('stroke-width:') >= 0) {
                 this.strokeWidth = +chart['0']
