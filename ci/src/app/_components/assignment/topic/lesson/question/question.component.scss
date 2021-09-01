@@ -149,18 +149,25 @@
   color: $navy !important;
 }
 .question-container {
-  background-color: $white !important;
+  background-color: #F6ECD9 !important;
 }
-::ng-deep .white-theme .mat-radio-outer-circle,
-::ng-deep .white-theme .mat-checkbox-frame {
-  border-color: $navy !important;
-}
-::ng-deep .white-theme .mat-radio-inner-circle {
-  background-color: $navy !important;
-}
-:host ::ng-deep .mat-checkbox-checked.mat-checkbox-background,
-:host ::ng-deep .white-theme .mat-checkbox-indeterminate.mat-primary .mat-checkbox-background,
-:host ::ng-deep .white-theme .mat-checkbox-checked.mat-primary .mat-checkbox-background {
-  background-color: $navy !important;
-  color: $navy !important;
+
+:host ::ng-deep {
+  mat-slider.mat-slider.mat-slider-horizontal .mat-slider-ticks {
+    opacity: 1;
+    background-size: 1% 2px !important;
+  }
+  .white-theme .mat-radio-outer-circle,
+  .white-theme .mat-checkbox-frame {
+    border-color: $navy !important;
+  }
+  .white-theme .mat-radio-inner-circle {
+    background-color: $navy !important;
+  }
+  .mat-checkbox-checked.mat-checkbox-background,
+  .white-theme .mat-checkbox-indeterminate.mat-primary .mat-checkbox-background,
+  .white-theme .mat-checkbox-checked.mat-primary .mat-checkbox-background {
+    background-color: $navy !important;
+    color: $navy !important;
+  }
 }
