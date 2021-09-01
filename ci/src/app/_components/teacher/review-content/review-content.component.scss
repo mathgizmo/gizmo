@@ -127,6 +127,16 @@
 	color: $white;
 }
 
+.title, .subtitle {
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-bottom: unset;
+}
+
+.mat-card {
+	min-height: 36px;
+}
+
 a:hover {
 	text-decoration: none;
 }
