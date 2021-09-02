@@ -78,7 +78,7 @@ class QuestionController extends Controller
         if ($request['sort'] &&  $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
         } else {
-            $query->orderBy('question.id', 'DESC');
+            $query->orderBy('question.modified_at', 'DESC');
         }
         $questions = $query->paginate(10)->appends(request()->query());
         return view('questions.index',
@@ -217,6 +217,9 @@ class QuestionController extends Controller
             ->join('level', 'unit.level_id', '=', 'level.id')
             ->select('question.*', 'lesson.title', 'topic.title as ttitle', 'unit.title as utitle', 'level.title as ltitle')
             ->where('question.id', '=', $id)->first();
+        if (!$question) {
+            abort(404, 'Question Not Found!');
+        }
         $answers = DB::select('select * from answer where question_id = ' . $id);
         return view('questions.show', ['question' => $question, 'answers' => $answers]);
     }
@@ -232,6 +235,9 @@ class QuestionController extends Controller
             ->select('question.*', 'lesson.title', 'topic.title as ttitle',
                 'topic.id as tid', 'unit.title as utitle', 'unit.id as uid', 'level.title as ltitle', 'level.id as lid')
             ->where('question.id', '=', $id)->first();
+        if (!$question) {
+            abort(404, 'Question Not Found!');
+        }
         $answers = DB::select('select * from answer where question_id = ' . $id);
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->select('id', 'title')->where('level_id', $question->lid)->get();
