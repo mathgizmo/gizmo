@@ -59,7 +59,7 @@ export class ClassResearchersComponent implements OnInit {
             const classes = this.classService.classes;
             this.class = classes.filter(x => x.id === this.classId)[0];
             this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Researchers';
-            this.classService.getTeachers(this.classId, { is_researcher: true })
+            this.classService.getTeachers(this.classId, { is_researcher: 1 })
                 .subscribe(res => {
                     this.available_researchers = res['available_teachers'];
                     this.researchers = res['teachers'];

@@ -581,13 +581,10 @@ class ClassController extends Controller
         if (!$class) {
             return $this->error('Classroom not found!', 404);
         }
-        $is_researcher = $request->filled('is_researcher') && $request['is_researcher'];
-        $items = $class->teachers()
-            ->whereHas('classTeachers', function ($q) use ($is_researcher) {
-                $q->where('classes_teachers.is_researcher', $is_researcher);
-            })
-            ->orderBy('email', 'ASC')
-            ->get()->keyBy('id');
+        $is_researcher = $request->filled('is_researcher') && $request['is_researcher'] ? 1 : 0;
+        $items = Student::whereHas('classTeachers', function ($q1) use ($is_researcher, $class_id) {
+            $q1->where('class_id', $class_id)->where('classes_teachers.is_researcher', $is_researcher);
+        })->orderBy('email', 'ASC')->get()->keyBy('id');
         if ($is_researcher) {
             $teachers = array_values($items->toArray());
         } else {

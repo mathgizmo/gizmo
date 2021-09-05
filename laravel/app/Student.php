@@ -94,6 +94,14 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
             ]);
     }
 
+    public function teachingClasses() {
+        return $this->belongsToMany('App\ClassOfStudents', 'classes_teachers', 'student_id', 'class_id')
+            ->withPivot([
+                'is_researcher',
+                'receive_emails_from_students'
+            ]);
+    }
+
     public function classTeachers() {
         return $this->hasMany('App\ClassTeacher', 'student_id', 'id');
     }
