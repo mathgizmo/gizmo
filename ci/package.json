@@ -47,7 +47,7 @@
     "rxjs": "~6.6.6",
     "systemjs": "^6.10.2",
     "tslib": "^2.3.0",
-    "url-parse": "^1.5.3",
+    "url-parse": "^1.5.9",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
