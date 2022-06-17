@@ -39,4 +39,5 @@ export * from './research/tests/research-tests.component';
 export * from './research/students/research-students.component';
 export * from './research/email/research-email.component';
 export * from './research/students/edit-student-research-status-dialog/edit-student-research-status-dialog.component';
+export * from './share/share.component';
 

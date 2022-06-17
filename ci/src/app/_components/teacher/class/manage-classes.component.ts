@@ -1,19 +1,26 @@
 import {Component, OnInit} from '@angular/core';
 import {Sort} from '@angular/material/sort';
 import {EditClassDialogComponent} from './edit-class-dialog/edit-class-dialog.component';
-import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
+import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../dialogs/index';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {ClassesManagementService, AuthenticationService} from '../../../_services';
+import {
+    ClassesManagementService,
+    AuthenticationService,
+    ShareService,
+    AssignmentService,
+    TestService
+} from '../../../_services';
 import {User} from '../../../_models';
 import {compare} from '../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-manage-classes',
     templateUrl: './manage-classes.component.html',
-    styleUrls: ['./manage-classes.component.scss']
+    styleUrls: ['./manage-classes.component.scss'],
+    providers: [ShareService]
 })
 export class ManageClassesComponent implements OnInit {
 
@@ -32,6 +39,7 @@ export class ManageClassesComponent implements OnInit {
     private isDesktop = this.deviceService.isDesktop();
 
     constructor(private classService: ClassesManagementService,
+                private shareService: ShareService,
                 private authenticationService: AuthenticationService,
                 public dialog: MatDialog,
                 private router: Router,
@@ -45,15 +53,38 @@ export class ManageClassesComponent implements OnInit {
 
     ngOnInit() {
         this.user = this.authenticationService.userValue;
-        this.classService.getClasses()
-            .subscribe(response => {
-                this.classes = response;
-            });
+
+        this.checkNewShares();
+    }
+
+    checkNewShares() {
+        this.shareService.getNewShare('classroom').subscribe(res => {
+            if (res.item) {
+                const dialogRef = this.dialog.open(YesNoDialogComponent, {
+                    data: { 'message': `You have been sent<br> <b>${res.item.classroom.name}</b><br> by <b>${res.item.sender.email}</b><br>are you willing to accept it into your classrooms list?<br><br><div><small style="font-size: 70%">If you do not accept this classroom it will be removed from your list.</small><br><small style="font-size: 70%">If you accept the classroom, you can use it, remove it or modify it as you wish.</small></div><br>`,
+                        'text_yes': 'Accept',
+                        'text_no': 'Decline'
+                    },
+                    position: this.dialogPosition,
+                    disableClose: true
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                    this.shareService.newShareToggle('classroom', res.item.item_id, result).subscribe(() => {
+                        return this.checkNewShares();
+                    });
+                });
+            } else {
+                this.classService.getClasses()
+                    .subscribe(response => {
+                        this.classes = response;
+                    });
+            }
+        });
     }
 
     onAddClass() {
         const dialogRef = this.dialog.open(EditClassDialogComponent, {
-            data: { 'title': 'Create Classroom' },
+            data: { 'message': 'Create Classroom' },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {

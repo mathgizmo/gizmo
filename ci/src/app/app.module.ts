@@ -122,7 +122,8 @@ import {
     SelectStudentsDialogComponent,
     TeacherClassEmailComponent,
     ClassInvitationSettingsComponent,
-    EditStudentResearchStatusDialogComponent
+    EditStudentResearchStatusDialogComponent,
+    ShareComponent
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
@@ -285,7 +286,8 @@ FullCalendarModule.registerPlugins([
         DraggableDirective,
         TableFilterPipe,
         SafeHtmlPipe,
-        TimeFormatPipe
+        TimeFormatPipe,
+        ShareComponent
     ],
     entryComponents: [
         GoodDialogComponent,

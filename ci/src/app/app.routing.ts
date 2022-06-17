@@ -52,7 +52,8 @@ import {
     ResearchAssignmentsComponent,
     ResearchTestsComponent,
     ResearchStudentsComponent,
-    ResearcherClassEmailComponent
+    ResearcherClassEmailComponent,
+    ShareComponent,
 } from './_components/teacher/index';
 import {ToDoComponent} from './_components/self_study';
 
@@ -145,6 +146,12 @@ const teacherRoutes = [
     {
         path: 'teacher/class/:class_id/invitation-settings', component: ClassInvitationSettingsComponent,
         canActivate: [AuthGuard], data: {roles: ['teacher', 'researcher']}
+    },
+    {
+        path: 'share/:type/:item_id',
+        component: ShareComponent,
+        canActivate: [AuthGuard],
+        data: {roles: ['teacher', 'researcher']}
     },
 ];
 

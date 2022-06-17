@@ -10,6 +10,19 @@ export class TestService {
         private http: HttpService) {
     }
 
+    public getTest(test_id) {
+        return this.http.get('/tests/' + test_id)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
     public getTests() {
         return this.http.get('/tests')
             .pipe(

@@ -10,6 +10,19 @@ export class AssignmentService {
         private http: HttpService) {
     }
 
+    public getAssignment(assigment_id) {
+        return this.http.get('/assignments/' + assigment_id)
+            .pipe(
+                map((response: Response) => {
+                    return response['item'];
+                }),
+                catchError(error => {
+                    console.log(error);
+                    throw Error(error);
+                })
+            );
+    }
+
     public getAssignments() {
         return this.http.get('/assignments')
             .pipe(

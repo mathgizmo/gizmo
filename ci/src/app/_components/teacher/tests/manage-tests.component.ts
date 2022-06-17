@@ -7,17 +7,20 @@ import {MatDialog} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
-import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
+import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../dialogs/index';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {User} from '../../../_models';
+import {AuthenticationService, ShareService} from '../../../_services';
 import {compare} from '../../../_helpers/compare.helper';
 
 @Component({
     selector: 'app-manage-tests',
     templateUrl: './manage-tests.component.html',
     styleUrls: ['./manage-tests.component.scss'],
-    providers: [TestService]
+    providers: [TestService, ShareService]
 })
 export class ManageTestsComponent implements OnInit {
+    public user: User;
 
     public tests = [];
     public icons = [];
@@ -31,6 +34,8 @@ export class ManageTestsComponent implements OnInit {
     private readonly adminUrl = environment.adminUrl;
 
     constructor(private route: ActivatedRoute, private testService: TestService, private sanitizer: DomSanitizer,
+                private authenticationService: AuthenticationService,
+                private shareService: ShareService,
                 public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackBar: MatSnackBar) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
@@ -39,14 +44,37 @@ export class ManageTestsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.testService.getTests()
-            .subscribe(response => {
-                this.tests = response;
-            });
-        this.testService.getAvailableIcons()
-            .subscribe(response => {
-                this.icons = response;
-            });
+        this.user = this.authenticationService.userValue;
+        this.checkNewShares();
+    }
+
+    checkNewShares() {
+        this.shareService.getNewShare('test').subscribe(res => {
+            if (res.item) {
+                const dialogRef = this.dialog.open(YesNoDialogComponent, {
+                    data: { 'message': `You have been sent<br> <b>${res.item.test.name}</b><br> by <b>${res.item.sender.email}</b><br>are you willing to accept it into your tests list?<br><br><div><small style="font-size: 70%">If you do not accept this test it will be removed from your list.</small><br><small style="font-size: 70%">If you accept the test, you can use it, remove it or modify it as you wish.</small></div><br>`,
+                            'text_yes': 'Accept',
+                            'text_no': 'Decline'
+                    },
+                    position: this.dialogPosition,
+                    disableClose: true
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                    this.shareService.newShareToggle('test', res.item.item_id, result).subscribe(() => {
+                        return this.checkNewShares();
+                    });
+                });
+            } else {
+                this.testService.getTests()
+                    .subscribe(response => {
+                        this.tests = response;
+                    });
+                this.testService.getAvailableIcons()
+                    .subscribe(response => {
+                        this.icons = response;
+                    });
+            }
+        });
     }
 
     onAddTest() {

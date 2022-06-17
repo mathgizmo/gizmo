@@ -119,4 +119,39 @@ class ClassOfStudents extends Model
             }
         });
     }
+
+    public function replicateWithRelations($new_teacher_id = false): ClassOfStudents {
+        $copy = $this->replicate();
+        $copy->key = null;
+        if($new_teacher_id) {
+            $copy->teacher_id = $new_teacher_id;
+            $copy->name = 'Copy of - ' . $this->name;
+            $copy->invitations = null;
+        }else{
+            $copy->name = $this->name . ' - Copy';
+        }
+        $copy->push();
+        foreach (ClassApplication::where('class_id', $this->id)->get() as $row) {
+            if($new_teacher_id) {
+                $new_app = $row->application->replicateWithRelations($new_teacher_id);
+                $app_id = $new_app->id;
+            }else{
+                $app_id = $row->app_id;
+            }
+
+            $relation = DB::table('classes_applications')->insert([
+                'class_id' => $copy->id,
+                'app_id' => $app_id,
+                'start_date' => $row->start_date,
+                'start_time' => $row->start_time,
+                'due_date' => $row->due_date,
+                'due_time' => $row->due_time,
+                'duration' => $row->duration,
+                'attempts' => $row->attempts,
+                'color' => $row->color,
+                'is_for_selected_students' => $row->is_for_selected_students
+            ]);
+        }
+        return $copy;
+    }
 }

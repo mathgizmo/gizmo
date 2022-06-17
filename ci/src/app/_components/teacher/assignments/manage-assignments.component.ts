@@ -7,17 +7,20 @@ import {MatDialog} from '@angular/material/dialog';
 import {DomSanitizer} from '@angular/platform-browser';
 import {environment} from '../../../../environments/environment';
 import {ActivatedRoute} from '@angular/router';
-import {DeleteConfirmationDialogComponent} from '../../dialogs/index';
+import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../dialogs/index';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {compare} from '../../../_helpers/compare.helper';
+import {User} from '../../../_models';
+import {AuthenticationService, ShareService} from '../../../_services';
 
 @Component({
     selector: 'app-manage-assignments',
     templateUrl: './manage-assignments.component.html',
     styleUrls: ['./manage-assignments.component.scss'],
-    providers: [AssignmentService]
+    providers: [AssignmentService, ShareService]
 })
 export class ManageAssignmentsComponent implements OnInit {
+    public user: User;
 
     public assignments = [];
     public icons = [];
@@ -31,6 +34,8 @@ export class ManageAssignmentsComponent implements OnInit {
     private readonly adminUrl = environment.adminUrl;
 
     constructor(private route: ActivatedRoute, private assignmentService: AssignmentService, private sanitizer: DomSanitizer,
+                private authenticationService: AuthenticationService,
+                private shareService: ShareService,
                 public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackBar: MatSnackBar) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
@@ -39,14 +44,37 @@ export class ManageAssignmentsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.assignmentService.getAssignments()
-            .subscribe(response => {
-                this.assignments = response;
-            });
-        this.assignmentService.getAvailableIcons()
-            .subscribe(response => {
-                this.icons = response;
-            });
+        this.user = this.authenticationService.userValue;
+        this.checkNewShares();
+    }
+
+    checkNewShares() {
+        this.shareService.getNewShare('assignment').subscribe(res => {
+            if (res.item) {
+                const dialogRef = this.dialog.open(YesNoDialogComponent, {
+                    data: { 'message': `You have been sent<br> <b>${res.item.assignment.name}</b><br> by <b>${res.item.sender.email}</b><br>are you willing to accept it into your assignments list?<br><br><div><small style="font-size: 70%">If you do not accept this assignment it will be removed from your list.</small><br><small style="font-size: 70%">If you accept the assignment, you can use it, remove it or modify it as you wish.</small></div><br>`,
+                        'text_yes': 'Accept',
+                        'text_no': 'Decline'
+                    },
+                    position: this.dialogPosition,
+                    disableClose: true
+                });
+                dialogRef.afterClosed().subscribe(result => {
+                    this.shareService.newShareToggle('assignment', res.item.item_id, result).subscribe(() => {
+                        return this.checkNewShares();
+                    });
+                });
+            } else {
+                this.assignmentService.getAssignments()
+                    .subscribe(response => {
+                        this.assignments = response;
+                    });
+                this.assignmentService.getAvailableIcons()
+                    .subscribe(response => {
+                        this.icons = response;
+                    });
+            }
+        });
     }
 
     onAddAssignment() {

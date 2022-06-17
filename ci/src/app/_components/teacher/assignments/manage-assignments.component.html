@@ -26,6 +26,13 @@
                         <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
                         <td>{{item.name}}</td>
                         <td class="text-right" style="min-width: 160px">
+                            <button *ngIf="user.user_id == item.teacher_id"
+                                    mat-stroked-button
+                                    class="button button-small button-amber"
+                                    style="margin-right: 8px;"
+                                    routerLink="/share/assignment/{{item.id}}">
+                                Sharing
+                            </button>
                             <button mat-stroked-button class="button button-outline button-small" style="margin-right: 8px;" (click)="onCopyAssignment(item)">Copy</button>
                             <button mat-stroked-button class="button button-outline button-small" style="margin-right: 8px;" (click)="onEditAssignment(item)">Edit</button>
                             <button mat-stroked-button class="button button-danger button-small" type="button" (click)="onDeleteAssignment(item.id)">Remove</button>

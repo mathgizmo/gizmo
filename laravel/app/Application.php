@@ -483,9 +483,14 @@ class Application extends Model
             ->where('student_id', $student_id)->count() > 0;
     }
 
-    public function replicateWithRelations(): Application {
+    public function replicateWithRelations($new_teacher_id = false): Application {
         $copy = $this->replicate();
-        $copy->name = $this->name . ' - Copy';
+        if($new_teacher_id) {
+            $copy->teacher_id = $new_teacher_id;
+            $copy->name = 'Copy of - ' . $this->name;
+        }else{
+            $copy->name = $this->name . ' - Copy';
+        }
         $copy->push();
         foreach (DB::table('application_has_models')->where('app_id', $this->id)->get() as $row) {
             $relation = DB::table('application_has_models')->insert([

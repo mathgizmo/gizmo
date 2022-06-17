@@ -116,6 +116,7 @@ $api->version('v1', function ($api) {
         $api->get('/classes/{class_id}/report', 'App\Http\APIControllers\ClassController@getReport');
         $api->get('/classes/{class_id}/answers-statistics', 'App\Http\APIControllers\ClassController@getAnswersStatistics');
 
+        $api->get('/assignments/{assigment_id}', 'App\Http\APIControllers\ApplicationController@getAssignment');
         $api->get('/assignments', 'App\Http\APIControllers\ApplicationController@getAssignments');
         $api->post('/assignments', 'App\Http\APIControllers\ApplicationController@storeAssignment');
         $api->post('/assignments/{app_id}/copy', 'App\Http\APIControllers\ApplicationController@copy');
@@ -127,6 +128,7 @@ $api->version('v1', function ($api) {
         $api->post('/tests/{test_id}/start', 'App\Http\APIControllers\ApplicationController@startTest');
         $api->post('/tests/{test_id}/track', 'App\Http\APIControllers\ApplicationController@trackTest');
         $api->post('/tests/{test_id}/finish', 'App\Http\APIControllers\ApplicationController@finishTest');
+        $api->get('/tests/{test_id}', 'App\Http\APIControllers\ApplicationController@getTest');
         $api->get('/tests', 'App\Http\APIControllers\ApplicationController@getTests');
         $api->post('/tests', 'App\Http\APIControllers\ApplicationController@storeTest');
         $api->post('/tests/{app_id}/copy', 'App\Http\APIControllers\ApplicationController@copy');
@@ -141,5 +143,12 @@ $api->version('v1', function ($api) {
 
         $api->get('/available-icons', 'App\Http\APIControllers\ApplicationController@getAvailableIcons');
         $api->get('/settings/{key}' , 'App\Http\APIControllers\HomeController@getSetting');
+
+        $api->get('/share/{type}/new', 'App\Http\APIControllers\ShareController@getNewShare');
+        $api->post('/share/{type}/{item_id}/decline', 'App\Http\APIControllers\ShareController@declineNewShare');
+        $api->post('/share/{type}/{item_id}/accept', 'App\Http\APIControllers\ShareController@acceptNewShare');
+        $api->get('/share/{type}/{item_id}', 'App\Http\APIControllers\ShareController@getShared');
+        $api->post('/share/{type}/{item_id}', 'App\Http\APIControllers\ShareController@addShared');
+        $api->delete('/share/{type}/{item_id}/{receiver_id}', 'App\Http\APIControllers\ShareController@deleteShared');
     });
 });

@@ -18,6 +18,16 @@ use Illuminate\Support\Facades\Validator;
 
 class ApplicationController extends Controller
 {
+    public function getAssignment($assigment_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
+        $item = Application::where('teacher_id', $user_id)
+            ->where('type', 'assignment')
+            ->where('id', $assigment_id)->first();
+        return $this->success([
+            'item' => $item
+        ]);
+    }
 
     public function getAssignments() {
         $user = Auth::user();
@@ -25,6 +35,17 @@ class ApplicationController extends Controller
         return $this->success([
             'items' => array_values(Application::where('teacher_id', $user_id)
                 ->where('type', 'assignment')->get()->toArray())
+        ]);
+    }
+
+    public function getTest($test_id) {
+        $user = Auth::user();
+        $user_id = $user->id;
+        $item = Application::where('teacher_id', $user_id)
+            ->where('type', 'test')
+            ->where('id', $test_id)->first();
+        return $this->success([
+            'item' => $item
         ]);
     }
 

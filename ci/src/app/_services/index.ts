@@ -16,3 +16,4 @@ export * from './assignment.service';
 export * from './test.service';
 export * from './question.service';
 export * from './class-threads.service';
+export * from './share.service';

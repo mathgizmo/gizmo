@@ -14,6 +14,14 @@ export class YesNoDialogComponent extends BaseDialogComponent<YesNoDialogCompone
         public dialogRef: MatDialogRef<YesNoDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef, data);
+
+        if (!data.text_yes) {
+            data.text_yes = 'yes';
+        }
+
+        if (!data.text_no) {
+            data.text_no = 'no';
+        }
     }
 
     resizeDialog() {
