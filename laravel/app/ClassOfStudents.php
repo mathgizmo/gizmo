@@ -142,10 +142,6 @@ class ClassOfStudents extends Model
             $relation = DB::table('classes_applications')->insert([
                 'class_id' => $copy->id,
                 'app_id' => $app_id,
-                'start_date' => $row->start_date,
-                'start_time' => $row->start_time,
-                'due_date' => $row->due_date,
-                'due_time' => $row->due_time,
                 'duration' => $row->duration,
                 'attempts' => $row->attempts,
                 'color' => $row->color,

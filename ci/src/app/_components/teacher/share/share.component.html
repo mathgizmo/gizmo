@@ -1,17 +1,16 @@
 <a routerLink="{{ backLink }}" routerLinkActive="active" class="back">{{backLinkText}}</a>
 <div class="teachers">
   <mat-card *ngIf="!showAvailable" class="teachers-content">
-    <div class="subtitle text-center">Shares of {{item.name}}</div>
+    <div class="subtitle text-center">Sent history of {{item.name}}</div>
     <form novalidate #form="ngForm">
       <div class="table-responsive">
         <table matSort (matSortChange)="sortData($event)" class="table">
           <thead>
           <tr>
-            <th mat-sort-header="email" scope="col">Email</th>
             <th mat-sort-header="name" scope="col">Name</th>
             <th mat-sort-header="status" scope="col">Status</th>
             <th *ngIf="user.user_id == item.teacher_id" class="text-right" style="min-width: 154px">
-              <button *ngIf="available_teachers.length > 0" class="button button-small button-outline" mat-button (click)="showAvailable=true">Share {{type}}</button>
+              <button *ngIf="available_teachers.length > 0" class="button button-small button-outline" mat-button (click)="showAvailable=true">Send {{type}}</button>
             </th>
           </tr>
           </thead>
@@ -27,7 +26,6 @@
             </td>
           </tr>
           <tr *ngFor="let share of shares | tableFilter: form.value">
-            <td style="max-width: 260px;">{{share.receiver.email }}</td>
             <td style="max-width: 260px;">{{share.receiver.first_name}} {{share.receiver.last_name}}</td>
             <td *ngIf="user.user_id == item.teacher_id">
               <span *ngIf="share.accepted">Accepted</span>
@@ -46,13 +44,12 @@
     </form>
   </mat-card>
   <mat-card *ngIf="showAvailable" class="teachers-content">
-    <div class="subtitle text-center">Select Teacher for share ({{type}} {{item.name}})</div>
+    <div class="subtitle text-center">Select Teachers whom you wish to send class and all class materials to ({{type}} {{item.name}})</div>
     <form novalidate #form="ngForm">
       <div class="table-responsive">
         <table matSort (matSortChange)="sortData($event, true)" class="table">
           <thead>
           <tr>
-            <th mat-sort-header="email" scope="col">Email</th>
             <th mat-sort-header="name" scope="col">Name</th>
             <th class="text-right">
               <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -68,12 +65,12 @@
               <input matInput placeholder="Email" class="filter-share" type="text" name="email" [(ngModel)]="emailAvailable" [value]="" />
             </td>
           </tr>
-          <tr *ngFor="let share of available_teachers | tableFilter: form.value">
-            <td style="max-width: 260px;">{{share.email }}</td>
-            <td style="max-width: 260px;">{{share.first_name}} {{share.last_name}}</td>
+          <tr *ngFor="let teacher of available_teachers | tableFilter: form.value">
+            <td style="max-width: 260px;">{{teacher.first_name}} {{teacher.last_name}}</td>
             <td class="text-right">
+              <span *ngIf="teacher.is_sent">Already sent</span>
               <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleTeacherChecked(share) : null"
-                            [checked]="isTeacherChecked(share)">
+                            [checked]="isTeacherChecked(teacher)">
               </mat-checkbox>
             </td>
           </tr>

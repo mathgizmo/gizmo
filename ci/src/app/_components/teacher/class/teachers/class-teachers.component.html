@@ -8,7 +8,6 @@
         <table matSort (matSortChange)="sortData($event)" class="table">
           <thead>
           <tr>
-            <th mat-sort-header="email" scope="col">Email</th>
             <th mat-sort-header="name" scope="col">Name</th>
             <th *ngIf="user.user_id == class.teacher_id" mat-sort-header="receive_emails_from_students" scope="col">Receive emails from students</th>
             <th *ngIf="user.user_id == class.teacher_id" class="text-right" style="min-width: 154px">
@@ -28,7 +27,6 @@
             </td>
           </tr>
           <tr *ngFor="let item of teachers | tableFilter: form.value">
-            <td style="max-width: 260px;">{{item.email }}</td>
             <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
             <td *ngIf="user.user_id == class.teacher_id">
               <mat-checkbox *ngIf="user.user_id != item.id" name="receive_emails_from_students" [(ngModel)]="item.receive_emails_from_students" (ngModelChange)="onReceiveEmailsChanged(item)"></mat-checkbox>
@@ -49,19 +47,17 @@
         <table matSort (matSortChange)="sortData($event, true)" class="table">
           <thead>
           <tr>
-            <th mat-sort-header="email" scope="col">Email</th>
             <th mat-sort-header="name" scope="col">Name</th>
             <th></th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td colspan="3">
+            <td colspan="2">
               <input matInput placeholder="Email" class="filter-item" type="text" name="email" [(ngModel)]="emailAvailable" [value]="" />
             </td>
           </tr>
           <tr *ngFor="let item of available_teachers | tableFilter: form.value">
-            <td style="max-width: 260px;">{{item.email }}</td>
             <td style="max-width: 260px;">{{item.first_name}} {{item.last_name}}</td>
             <td class="text-right">
               <button class="button button-outline button-small" mat-stroked-button (click)="addTeacher(item)">Select</button>
