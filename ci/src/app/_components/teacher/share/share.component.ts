@@ -131,9 +131,21 @@ export class ShareComponent implements OnInit {
     }
 
     addShared() {
+        let teachers_list = ``;
+        Object.values(this.available_teachers).forEach(teacher => {
+            if (this.selected_teachers.indexOf(teacher.id) >= 0) {
+                teachers_list += `<br>`;
+                if (teacher.first_name) {
+                    teachers_list += ` ${teacher.first_name}`;
+                }
+                if (teacher.last_name) {
+                    teachers_list += ` ${teacher.last_name}`;
+                }
+            }
+        });
         const dialogRef = this.dialog.open(YesNoDialogComponent, {
             data: {
-                'message': 'You will be sending this classroom to the following teachers.  This action cannot be reversed.'
+                'message': `You will be sending this classroom to the following teachers. ${teachers_list}<br> This action cannot be reversed.`
             },
             position: this.dialogPosition
         });

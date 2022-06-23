@@ -129,10 +129,11 @@ class ShareController extends Controller
 
         $not_available = $items->pluck('receiver_id')->toArray();
         $available = Student::where('is_teacher', true)
-            ->whereNotIn('students.id', $not_available)
-            ->where('id', '<>', $user_id)
             ->orderBy('email', 'ASC')->get();
         $available_teachers = array_values($available->toArray());
+        foreach ($available_teachers as &$teacher) {
+            $teacher['is_sent'] = in_array($teacher['id'], $not_available);
+        }
         return $this->success([
             'shares' => $shares,
             'available_teachers' => $available_teachers

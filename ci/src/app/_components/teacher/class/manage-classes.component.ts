@@ -61,7 +61,7 @@ export class ManageClassesComponent implements OnInit {
         this.shareService.getNewShare('classroom').subscribe(res => {
             if (res.item) {
                 const dialogRef = this.dialog.open(YesNoDialogComponent, {
-                    data: { 'message': `You have been sent<br> <b>${res.item.classroom.name}</b><br> by <b>${res.item.sender.email}</b><br>are you willing to accept it into your classrooms list?<br><br><div><small style="font-size: 70%">If you do not accept this classroom it will be removed from your list.</small><br><small style="font-size: 70%">If you accept the classroom, you can use it, remove it or modify it as you wish.</small></div><br>`,
+                    data: { 'message': `You have been sent<br> <b>${res.item.classroom.name}</b><br> by <b>${res.item.sender.first_name} ${res.item.sender.last_name}</b><br>are you willing to accept it into your classrooms list?<br><br><div><small style="font-size: 70%">If you do not accept this classroom it will be removed from your list.</small><br><small style="font-size: 70%">If you accept the classroom, you can use it, remove it or modify it as you wish.</small></div><br>`,
                         'text_yes': 'Accept',
                         'text_no': 'Decline'
                     },
