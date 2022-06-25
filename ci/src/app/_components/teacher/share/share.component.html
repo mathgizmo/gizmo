@@ -69,7 +69,7 @@
             <td style="max-width: 260px;">{{teacher.first_name}} {{teacher.last_name}}</td>
             <td class="text-right">
               <span *ngIf="teacher.is_sent">Already sent</span>
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleTeacherChecked(share) : null"
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleTeacherChecked(teacher) : null"
                             [checked]="isTeacherChecked(teacher)">
               </mat-checkbox>
             </td>
