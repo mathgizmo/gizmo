@@ -6,7 +6,7 @@
     "type": "project",
     "require": {
         "php": "^7.2",
-        "barryvdh/laravel-dompdf": "^1.2.2",
+        "barryvdh/laravel-dompdf": "^2.0.0",
         "ckeditor/ckeditor": "^4.7",
         "dingo/api": "~2.4.7",
         "doctrine/dbal": "^2.10.2",

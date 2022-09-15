@@ -9,7 +9,7 @@ use App\Exports\ClassStudentsExport;
 use App\Exports\ClassTestsReportExport;
 use App\Mail\ClassMail;
 use App\StudentTestAttempt;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use App\Application;
 use App\ClassApplication;
 use App\ClassOfStudents;
