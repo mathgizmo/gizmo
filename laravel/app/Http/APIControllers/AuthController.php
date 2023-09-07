@@ -60,6 +60,9 @@ class AuthController extends Controller
             return $this->error('Could Not Create Token!', 500);
         }
         $student = auth()->user();
+        if(!$student->is_registered){
+            return $this->error('Email or password is incorrect!', 401);
+        }
         if (!$student->hasVerifiedEmail()) {
             return $this->error('Your email address is not verified!', 420);
         }
@@ -202,7 +205,7 @@ class AuthController extends Controller
             return $this->error($validator->messages(), 400);
         }
         $email = $credentials['email'];
-        $student = Student::where('email', '=' , $email)->first();
+        $student = Student::where('email', '=' , $email)->where('is_registered', true)->first();
         if(!$student) {
             return $this->error('We can not find email you provided in our database! You can register a new account with this email.', 404);
         }
@@ -259,7 +262,7 @@ class AuthController extends Controller
 
     public function verifyEmail(Request $request)
     {
-        $student = Student::where('id', $request->route('id'))->first();
+        $student = Student::where('id', $request->route('id'))->where('is_registered', true)->first();
         if (!$student || ($request['hash'] != sha1($student->email) && $request['hash'] != sha1($student->email_new))) {
             return $this->error('User not found!', 404);
         }
@@ -289,7 +292,7 @@ class AuthController extends Controller
         if ($request->filled('email')) {
             $email = trim(strtolower(request('email')));
             $student = Student::where('email', $email)->orWhere('email_new', $email)->first();
-            if ($student) {
+            if ($student && $student->is_registered) {
                 if (!$student->email_new && $student->hasVerifiedEmail()) {
                     return $this->error('User already have verified email!', 422);
                 }
