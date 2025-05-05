@@ -1,0 +1,52 @@
+services:
+  web:
+    build: .
+    container_name: lamp_web
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./bash_history:/root/.bash_history  # Persist Bash history
+    depends_on:
+      - db
+    networks:
+      - lamp_network
+    configs:
+      - source: apache-vhosts
+        target: /etc/apache2/sites-available/000-default.conf
+      - source: laravel-env
+        target: /var/www/html/laravel/.env
+  db:
+    image: mysql:8.0
+    container_name: lamp_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gizmoDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./:/var/www/html
+      - ./bash_history:/root/.bash_history  # Persist Bash history
+    networks:
+      - lamp_network
+    configs:
+      - source: laravel-env
+        target: /var/www/html/laravel/.env
+
+configs:
+  apache-vhosts:
+    file: ./docker_configs/apache/vhosts.conf
+  laravel-env:
+    file: ./docker_configs/laravel/.env
+
+volumes:
+  db_data:
+
+networks:
+  lamp_network:
+
