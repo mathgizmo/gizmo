@@ -1,10 +1,21 @@
 # Math Gizmo
 
-### What is this repository for?
+## What is this repository for?
 
 We try to create the app that allow people to learn math.
 
-### How do I get set up?
+## How do I get set up?
+
+### Using Docker
+- Clone repository to local:
+git clone git@github.com:mathgizmo/gizmo.git
+- Go to cloned directory
+- Build and start Docker containers
+docker-compose up -d --build
+- Restore test DB from dump
+docker exec -w /var/www/html/backup/dev_backup lamp_db ./do_restore_testDB.sh
+
+### Using local LAMP set up
 
 #### Server
 - Install [Composer](https://getcomposer.org/).
