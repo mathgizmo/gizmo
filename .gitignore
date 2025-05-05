@@ -5,3 +5,4 @@ vendor/
 !.htaccess
 
 jwt.php
+gizmo.code-workspace

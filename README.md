@@ -8,12 +8,12 @@ We try to create the app that allow people to learn math.
 
 ### Using Docker
 - Clone repository to local:
-git clone git@github.com:mathgizmo/gizmo.git
+'git clone git@github.com:mathgizmo/gizmo.git'
 - Go to cloned directory
 - Build and start Docker containers
-docker-compose up -d --build
+'docker-compose up -d --build'
 - Restore test DB from dump
-docker exec -w /var/www/html/backup/dev_backup lamp_db ./do_restore_testDB.sh
+'docker exec -w /var/www/html/backup/dev_backup lamp_db ./do_restore_testDB.sh'
 
 ### Using local LAMP set up
 
