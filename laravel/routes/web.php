@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('mails', 'MailController', ['except' => ['show', 'create', 'store', 'destroy']]);
     Route::get('mails/new', 'MailController@newMail')->name('mails.new');
     Route::post('mails/send', 'MailController@sendMail')->name('mails.send');
+    Route::resource('tags', 'TagController');
 });
 
 Route::group(['prefix'=>'job','as'=>'job.'], function() {
