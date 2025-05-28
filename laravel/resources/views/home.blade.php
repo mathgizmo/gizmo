@@ -76,6 +76,9 @@
             <a class="btn btn-outline-dark mr-2" href="{{ route('faqs.index') }}">
                 FAQs
             </a>
+            <a class="btn btn-outline-dark mr-2" href="{{ route('tags.index') }}">
+                Tags
+            </a>
             <a class="btn btn-outline-dark mr-2" href="{{ route('settings.index') }}">
                 Settings
             </a>
