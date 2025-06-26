@@ -20,13 +20,14 @@ class StudentController extends Controller
     public function index()
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $perPage = request('per_page',10); // default to 10 students displayed per page
         $query = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking`
             WHERE students_tracking.student_id = students.id ORDER by id DESC LIMIT 1) as `date`'))
             ->where('email', 'NOT LIKE', '%@somemail.com')
             ->filter(request()->all())
             ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc');
 
-        $students = $query->paginate(10)->appends(request()->query());
+        $students = $query->paginate($perPage)->appends(request()->query()); // replaced hard cap with perPage
         return view('students.index', compact('students'));
     }
 

@@ -9,6 +9,23 @@
 @section('content')
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row">Manage Students</div>
+        <!-- PerPage Dropdown -->
+        <div class="d-flex justify-content-between align-items-center mt-2 mx-3">
+            {{ $students->links() }}
+            <div class="form-inline">
+                <label for="per_page" class="mr-2">Students Per Page:</label>
+                <select class="form-control" id="per_page" onchange="perPage(this.value)">
+                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                    <option value="250" {{ request('per_page') == 250 ? 'selected' : '' }}>250</option>
+                    <option value="500" {{ request('per_page') == 500 ? 'selected' : '' }}>500</option>
+                    <option value="1000" {{ request('per_page') == 1000 ? 'selected' : '' }}>1000</option>
+                </select>
+            </div>
+        </div>
+        <!-- End PerPage Dropdown -->
         <div class="card-body p-0">
             <div class="d-flex justify-content-center mt-2">
                 {{ $students->links() }}
@@ -132,6 +149,24 @@
             </div>
         </div>
     </div>
+    <!-- PerPage Dropdown Bottom of Page -->
+    <!-- Probably a better way to do this... -->
+    <div class="d-flex justify-content-between align-items-center mt-2 mx-3">
+        {{ $students->links() }}
+        <div class="form-inline">
+            <label for="per_page-bottom" class="mr-2">Students Per Page:</label>
+            <select class="form-control" id="per_page_bottom" onchange="perPage(this.value)">
+                <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                <option value="250" {{ request('per_page') == 250 ? 'selected' : '' }}>250</option>
+                <option value="500" {{ request('per_page') == 500 ? 'selected' : '' }}>500</option>
+                <option value="1000" {{ request('per_page') == 1000 ? 'selected' : '' }}>1000</option>
+             </select>
+        </div>
+    </div>
+    <!-- End PerPage Dropdown Bottom of Page-->
 @endsection
 
 @section('scripts')
@@ -185,6 +220,14 @@
             window.location.href = url.toString();
         }
 
+        // PerPage Dropdown Handler
+        function perPage(value) {
+            let url = new URL(window.location.href); // make url obj from current page
+            url.searchParams.set('per_page', value); // set per_page query to selected value
+            url.searchParams.delete('page'); // reset current page number to 1
+            window.location.href = url.toString(); // redirects to new url
+        }
+
         function init() {
             const url = new URL(window.location.href);
             document.getElementById("id-filter").value = url.searchParams.get('id');
@@ -194,6 +237,9 @@
             document.getElementById("is-super-filter").value = url.searchParams.get('is_super');
             document.getElementById("is-teacher-filter").value = url.searchParams.get('is_teacher');
             document.getElementById("is-researcher-filter").value = url.searchParams.get('is_researcher');
+            // PerPage Dropdown Init
+            document.getElementById("per_page_bottom").value = url.searchParams.get('per_page') || '10';
+            document.getElementById("per_page").value = url.searchParams.get('per_page') || '10';
         }
 
         window.onload = init;
