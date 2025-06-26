@@ -27,9 +27,6 @@
         </div>
         <!-- End PerPage Dropdown -->
         <div class="card-body p-0">
-            <div class="d-flex justify-content-center mt-2">
-                {{ $students->links() }}
-            </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -144,9 +141,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="d-flex justify-content-center mt-2">
-                {{ $students->links() }}
-            </div>
         </div>
     </div>
     <!-- PerPage Dropdown Bottom of Page -->
@@ -154,7 +148,7 @@
     <div class="d-flex justify-content-between align-items-center mt-2 mx-3">
         {{ $students->links() }}
         <div class="form-inline">
-            <label for="per_page-bottom" class="mr-2">Students Per Page:</label>
+            <label for="per_page_bottom" class="mr-2">Students Per Page:</label>
             <select class="form-control" id="per_page_bottom" onchange="perPage(this.value)">
                 <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
                 <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
