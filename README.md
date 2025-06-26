@@ -53,3 +53,8 @@ We try to create the app that allow people to learn math.
 - Add `backups/.do_backup.sh` to your daily cron
 
 ### License: [MIT](./LICENSE.MD)
+
+
+
+
+
