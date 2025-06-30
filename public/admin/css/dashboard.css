@@ -4508,6 +4508,11 @@ input[type=button].btn-block {
     width: 100%;
   }
 }
+/* Enable horizontal scrolling across admin dashboards */
+.card-body > .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
 .accordion > .card {
   overflow: hidden;
@@ -9962,6 +9967,13 @@ h3 {
     color: inherit;
     border-color: #dee2e6;
   }
+}
+/* Filter row should stay visible during horizontal scrolling */
+.table thead tr:first-child {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #999999;
 }
 html,
 body {
