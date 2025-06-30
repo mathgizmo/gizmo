@@ -20,7 +20,9 @@ class StudentController extends Controller
     public function index()
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $perPage = request('per_page',10); // default to 10 students displayed per page
+        $allowedPagination = [ 10,25,50,100,250,500,1000 ]; // define allowed values for per_page
+        $perPage = (int) request('per_page',10); // fetch the per_page value from url query, default to 10
+        $perPage = in_array($perPage, $allowedPagination) ? $perPage : 10; // checks if value is valid
         $query = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking`
             WHERE students_tracking.student_id = students.id ORDER by id DESC LIMIT 1) as `date`'))
             ->where('email', 'NOT LIKE', '%@somemail.com')

@@ -231,9 +231,7 @@
             document.getElementById("is-super-filter").value = url.searchParams.get('is_super');
             document.getElementById("is-teacher-filter").value = url.searchParams.get('is_teacher');
             document.getElementById("is-researcher-filter").value = url.searchParams.get('is_researcher');
-            // PerPage Dropdown Init
-            document.getElementById("per_page_bottom").value = url.searchParams.get('per_page') || '10';
-            document.getElementById("per_page").value = url.searchParams.get('per_page') || '10';
+            // Removed pagination dropdown init
         }
 
         window.onload = init;
