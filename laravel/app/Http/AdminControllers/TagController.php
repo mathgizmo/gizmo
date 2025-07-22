@@ -89,7 +89,11 @@ class TagController extends Controller
     public function destroy($id)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        DB::table('tag')->where('id', $id)->delete();
-        return redirect('/tags')->with(array('message'=> 'Deleted successfully'));
+        $tag = Tag::findOrFail($id);
+        if ($tag->units()->count() > 0) {
+            return redirect('/tags')->withErrors(['message' => 'Cannot delete tag: it is assigned to one or more units.']);
+        }
+        $tag->delete();
+        return redirect('/tags')->with(['message'=> 'Deleted successfully']);
     }
 }

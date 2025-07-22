@@ -123,6 +123,22 @@
                         @endif
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 form-control-label ml-3 font-weight-bold">Tags</label>
+                    <div class="col-md-8">
+                        <div id="tag-filter-group" class="d-flex flex-wrap">
+                            @foreach($tags as $tag)
+                                <span class="badge badge-pill tag-filter-badge badge-light m-1"
+                                      data-tag-id="{{ $tag->id }}" style="cursor:pointer;user-select:none;">
+                                    {{ $tag->name }}
+                                </span>
+                            @endforeach
+                        </div>
+                        <input type="hidden" name="tag_id" id="tag_id_hidden" value="">
+                        <small class="form-text text-muted">Click to select or unselect tags. Multiple selection supported.</small>
+                    </div>
+                </div>
             </div>
             <div class="card-footer">
                 <a class="btn btn-secondary" href="{{ route('units.index') }}">Back</a>
@@ -139,7 +155,35 @@
             CKEDITOR.replace('description', {toolbar: [['Bold', 'Italic', 'Font', 'FontSize']]});
             setTimeout(function () {
                 $('#successMessage').fadeOut('fast');
-            }, 4000); // <-- time in milliseconds
+            }, 4000);
+
+            // Tag filter badge click handler
+            $(document).on('click', '.tag-filter-badge', function() {
+                let tagId = $(this).data('tag-id').toString();
+                let selected = $('#tag_id_hidden').val().split(',').filter(Boolean);
+                if ($(this).hasClass('badge-primary')) {
+                    // Deselect
+                    selected = selected.filter(id => id !== tagId);
+                    $(this).removeClass('badge-primary').addClass('badge-light');
+                } else {
+                    // Select
+                    selected.push(tagId);
+                    $(this).removeClass('badge-light').addClass('badge-primary');
+                }
+                // Remove duplicates
+                selected = [...new Set(selected)];
+                $('#tag_id_hidden').val(selected.join(','));
+            });
+
+            // On form submit, convert tag_id_hidden to hidden inputs
+            $('form[role="form"]').on('submit', function(e) {
+                let selected = $('#tag_id_hidden').val().split(',').filter(Boolean);
+                // Remove any previous tag_id[]
+                $(this).find('input[name="tag_id[]"]').remove();
+                selected.forEach(function(id) {
+                    $('<input>').attr({type: 'hidden', name: 'tag_id[]', value: id}).appendTo('form[role="form"]');
+                });
+            });
         });
     </script>
 @endsection
@@ -154,6 +198,21 @@
             .col-md-8 {
                 margin: 0 16px;
             }
+        }
+
+        .tag-filter-badge {
+            border: 1px solid #007bff;
+            color: #007bff;
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .tag-filter-badge.badge-primary {
+            background: #007bff;
+            color: #fff;
+        }
+        .tag-filter-badge.badge-light {
+            background: #fff;
+            color: #007bff;
         }
     </style>
 @endsection

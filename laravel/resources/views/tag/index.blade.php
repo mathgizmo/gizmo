@@ -13,6 +13,21 @@
             <em> {!! session('message') !!}</em>
         </div>
     @endif
+
+    @if(Session::has('error'))
+        <div id="errorMessage" class="alert alert-danger">
+            <span class="glyphicon glyphicon-remove"></span>
+            <em> {!! session('error') !!}</em>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div id="errorMessage" class="alert alert-danger">
+            <span class="glyphicon glyphicon-remove"></span>
+            <em>{{ $errors->first('message') }}</em>
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-header font-weight-bold d-flex flex-row justify-content-between">
             Manage Tags

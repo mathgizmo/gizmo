@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Unit;
 use App\Level;
+use App\Tag;
 
 class UnitController extends Controller
 {
@@ -17,7 +18,7 @@ class UnitController extends Controller
     public function index(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $query = Unit::query();
+        $query = Unit::with('tags');
         if ($request['level_id']) {
             $query->where('level_id', $request['level_id']);
         }
@@ -30,13 +31,26 @@ class UnitController extends Controller
         if ($request['title']) {
             $query->where('title', 'LIKE', '%' . $request['title'] . '%');
         }
+        if ($request['tag_id']) {
+            $tagIds = is_array($request['tag_id']) ? $request['tag_id'] : [$request['tag_id']];
+            if (in_array('none', $tagIds)) {
+                // Filter units with no tags
+                $query->whereDoesntHave('tags');
+            } else {
+                $query->whereHas('tags', function($q) use ($tagIds) {
+                    $q->whereIn('tag.id', $tagIds);
+                });
+            }
+        }
         if ($request['sort'] && $request['order']) {
             $query->orderBy($request['sort'], $request['order']);
         }
         return view('units.index', [
             'levels' => Level::all(),
+            'tags' => Tag::all(),
             'units' => $query->paginate(10)->appends(request()->query()),
-            'level_id' => $request['level_id']
+            'level_id' => $request['level_id'],
+            'selected_tag_ids' => (array) $request['tag_id']
         ]);
     }
 
@@ -47,23 +61,24 @@ class UnitController extends Controller
         $levels = DB::select('select * from level');
         $units = DB::table('unit')->where('level_id', $lid)->get();
         $total_unit = Unit::all()->count();
+        $tags = Tag::all();
         return view('units.create', [
             'levels' => $levels,
             'units' => $units,
             'lid' => $lid,
             'total_unit' => $total_unit,
+            'tags' => $tags,
         ]);
     }
 
     public function store(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        // Store topic title and unit_id into topic table
         $this->validate($request, [
             'level_id' => 'required',
             'unit_title' => 'required',
         ]);
-        DB::table('unit')->insert([
+        $unit = Unit::create([
             'title' => $request['unit_title'],
             'description' => $request['description'],
             'dependency' => $request['dependency'] ?: false,
@@ -73,6 +88,12 @@ class UnitController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
+        if ($request->has('tag_id')) {
+            $tagIds = array_filter((array)$request->input('tag_id'), function($id) {
+                return !empty($id) && $id !== 'none';
+            });
+            $unit->tags()->sync($tagIds);
+        }
         $level_id = $request->input('level_id');
         return redirect('/units?level_id=' . $level_id)->with(array('message' => 'Created successfully'));
     }
@@ -85,16 +106,19 @@ class UnitController extends Controller
     public function edit($id)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $unit = DB::table('unit')
-            ->join('level', 'unit.level_id', '=', 'level.id')
+        $unit = Unit::with('tags')->join('level', 'unit.level_id', '=', 'level.id')
             ->select('unit.*', 'level.title as ltitle', 'level.id as lid')
             ->where('unit.id', '=', $id)->first();
         $levels = DB::select('select * from level');
         $total_unit = Unit::all()->count();
+        $tags = Tag::all();
+        $selected_tag_ids = $unit->tags->pluck('id')->toArray();
         return view('units.edit', [
             'levels' => $levels,
             'unit' => $unit,
             'total_unit' => $total_unit,
+            'tags' => $tags,
+            'selected_tag_ids' => $selected_tag_ids,
         ]);
     }
 
@@ -105,7 +129,8 @@ class UnitController extends Controller
             'level_id' => 'required',
             'unit_title' => 'required'
         ]);
-        DB::table('unit')->where('id', $id)->update([
+        $unit = Unit::findOrFail($id);
+        $unit->update([
             'title' => $request['unit_title'],
             'description' => $request['description'],
             'dependency' => $request['dependency'] ?: false,
@@ -115,6 +140,14 @@ class UnitController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
+        if ($request->has('tag_id')) {
+            $tagIds = array_filter((array)$request->input('tag_id'), function($id) {
+                return !empty($id) && $id !== 'none';
+            });
+            $unit->tags()->sync($tagIds);
+        } else {
+            $unit->tags()->detach();
+        }
         $level_id = $request->input('level_id');
         return redirect('/units?level_id=' . $level_id)->with(array('message' => 'Updated successfully'));
     }

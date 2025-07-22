@@ -49,6 +49,10 @@
                             <a class="nav-link" href="{{ url('/levels') }}">
                                 Manage Modules
                             </a>
+                            {{-- Remove from Content Management --}}
+                            {{-- <a class="nav-link" href="{{ url('/tags') }}">
+                                Manage Tags
+                            </a> --}}
                             {{-- <a class="nav-link" href="{{ url('/placements') }}">
                                 Manage Placements
                             </a> --}}
@@ -114,6 +118,9 @@
                         </a>
                         <a class="nav-link" href="{{ route('settings.index') }}">
                             Settings
+                        </a>
+                        <a class="nav-link" href="{{ url('/tags') }}">
+                            Manage Tags
                         </a>
                     </nav>
                 </div>

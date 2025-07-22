@@ -78,7 +78,8 @@
                                 <i class="fa fa-fw fa-sort{{ (request()->sort == 'dependency' && request()->order == 'asc') ? '-up' : '' }}{{ (request()->sort == 'dependency' && request()->order == 'desc') ? '-down' : '' }}"></i>
                             </a>
                         </th>
-                        <th style="min-width: 170px;"></th>
+                        <th style="min-width: 170px;">Tags</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -93,6 +94,18 @@
                             <input type="text" name="title" id="title-filter" style="width: 100%;">
                         </td>
                         <td></td>
+                        <td>
+                            <div id="tag-filter-group" class="d-flex flex-wrap">
+                                <span class="badge badge-pill tag-filter-badge {{ in_array('none', $selected_tag_ids ?? []) ? 'badge-primary' : 'badge-light' }} m-1" data-tag-id="none" style="cursor:pointer;user-select:none;">None</span>
+                                @foreach($tags as $tag)
+                                    <span class="badge badge-pill tag-filter-badge {{ in_array($tag->id, $selected_tag_ids ?? []) ? 'badge-primary' : 'badge-light' }} m-1"
+                                          data-tag-id="{{ $tag->id }}" style="cursor:pointer;user-select:none;">
+                                        {{ $tag->name }}
+                                    </span>
+                                @endforeach
+                            </div>
+                            <input type="hidden" name="tag_id" id="tag_id_hidden" value="{{ implode(',', $selected_tag_ids ?? []) }}">
+                        </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -103,6 +116,11 @@
                             <td>{{$unit->order_no}}</td>
                             <td>{{$unit->title}}</td>
                             <td>{{($unit->dependency == true) ? 'Yes' : 'No'}}</td>
+                            <td>
+                                @foreach($unit->tags as $tag)
+                                    <span class="badge badge-info">{{ $tag->name }}</span>
+                                @endforeach
+                            </td>
                             <td class="text-right">
                             <!-- <a class="btn btn-dark" href="{{ route('units.show', $unit->id) }}">View</a> -->
                                 <a class="btn btn-dark" href="{{ route('units.edit', $unit->id) }}">Edit</a>
@@ -133,7 +151,46 @@
         $(document).ready(function () {
             setTimeout(function () {
                 $('#successMessage').fadeOut('fast');
-            }, 4000); // <-- time in milliseconds
+            }, 4000);
+
+            // Tag filter badge click handler
+            $(document).on('click', '.tag-filter-badge', function() {
+                let tagId = $(this).data('tag-id').toString();
+                let selected = $('#tag_id_hidden').val().split(',').filter(Boolean);
+                if ($(this).hasClass('badge-primary')) {
+                    // Deselect
+                    selected = selected.filter(id => id !== tagId);
+                    $(this).removeClass('badge-primary').addClass('badge-light');
+                } else {
+                    // Select
+                    if(tagId === 'none') {
+                        // If 'none' is selected, deselect all others
+                        selected = ['none'];
+                        $('.tag-filter-badge').removeClass('badge-primary').addClass('badge-light');
+                        $(this).removeClass('badge-light').addClass('badge-primary');
+                    } else {
+                        // If any tag is selected, remove 'none' if present
+                        selected = selected.filter(id => id !== 'none');
+                        selected.push(tagId);
+                        $(this).removeClass('badge-light').addClass('badge-primary');
+                        // Deselect 'none' badge
+                        $(".tag-filter-badge[data-tag-id='none']").removeClass('badge-primary').addClass('badge-light');
+                    }
+                }
+                // Remove duplicates
+                selected = [...new Set(selected)];
+                $('#tag_id_hidden').val(selected.join(','));
+            });
+
+            // On form submit, convert tag_id_hidden to hidden inputs
+            $('form[role="form"]').on('submit', function(e) {
+                let selected = $('#tag_id_hidden').val().split(',').filter(Boolean);
+                // Remove any previous tag_id[]
+                $(this).find('input[name="tag_id[]"]').remove();
+                selected.forEach(function(id) {
+                    $('<input>').attr({type: 'hidden', name: 'tag_id[]', value: id}).appendTo('form[role="form"]');
+                });
+            });
         });
 
         function filter() {
@@ -181,6 +238,21 @@
 
         .filter {
             width: 380px;
+        }
+
+        .tag-filter-badge {
+            border: 1px solid #007bff;
+            color: #007bff;
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .tag-filter-badge.badge-primary {
+            background: #007bff;
+            color: #fff;
+        }
+        .tag-filter-badge.badge-light {
+            background: #fff;
+            color: #007bff;
         }
 
         @media (max-width: 1280px) {
