@@ -122,6 +122,27 @@
                 {{ csrf_field() }}
                 <button class="btn btn-danger btn-sm" type="submit">Reset Progress</button>
             </form>
+            <div class="row">
+                <label class="col-md-2 form-control-label ml-3 font-weight-bold">Tags</label>
+                <div class="col-md-8">
+                    <form id="tags-form" action="{{ route('students.updateTags', $student->id) }}" method="POST" role="form">
+                        @csrf
+                        <div id="tag-filter-group" class="d-flex flex-wrap">
+                            @foreach($tags as $tag)
+                                <span class="badge badge-pill tag-filter-badge {{ in_array($tag->id, $selected_tag_ids ?? []) ? 'badge-primary' : 'badge-light' }} m-1"
+                                      data-tag-id="{{ $tag->id }}" style="cursor:pointer;user-select:none;">
+                                    {{ $tag->name }}
+                                </span>
+                            @endforeach
+                        </div>
+                        <input type="hidden" name="tag_id" id="tag_id_hidden" value="{{ implode(',', $selected_tag_ids ?? []) }}">
+                        <small class="form-text text-muted">Click to select or unselect tags. Multiple selection supported.</small>
+                        <div class="mt-2">
+                            <button class="btn btn-dark btn-sm" type="submit">Update Tags</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -186,4 +207,36 @@
             }
         }
     </style>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            // Tag filter badge click handler
+            $(document).on('click', '.tag-filter-badge', function() {
+                let tagId = $(this).data('tag-id').toString();
+                let selected = $('#tag_id_hidden').val().split(',').filter(Boolean);
+                if ($(this).hasClass('badge-primary')) {
+                    // Deselect
+                    selected = selected.filter(id => id !== tagId);
+                    $(this).removeClass('badge-primary').addClass('badge-light');
+                } else {
+                    // Select
+                    selected.push(tagId);
+                    $(this).removeClass('badge-light').addClass('badge-primary');
+                }
+                // Remove duplicates
+                selected = [...new Set(selected)];
+                $('#tag_id_hidden').val(selected.join(','));
+            });
+            // On form submit, convert tag_id_hidden to hidden inputs
+            $('#tags-form').on('submit', function(e) {
+                let selected = $('#tag_id_hidden').val().split(',').filter(Boolean);
+                $(this).find('input[name="tag_id[]"]').remove();
+                selected.forEach(function(id) {
+                    $('<input>').attr({type: 'hidden', name: 'tag_id[]', value: id}).appendTo('#tags-form');
+                });
+            });
+        });
+    </script>
 @endsection

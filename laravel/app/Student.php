@@ -159,4 +159,9 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->email_new ? $this->email_new : $this->email;
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag', 'participant_tag', 'participant_id', 'tag_id');
+    }
 }

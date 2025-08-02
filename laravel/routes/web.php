@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::patch('students/researcher/{student}', 'StudentController@researcherUpdate')->name('students.researcher');
     Route::post('students/reset/{student}', 'StudentController@resetProgress')->name('students.reset');
     Route::post('students/delete/{student}', 'StudentController@delete')->name('students.delete');
+    Route::post('students/{student}/tags', 'StudentController@updateTags')->name('students.updateTags');
 
     Route::resource('classes', 'ClassController', ['except' => ['show']]);
     Route::get('classes/search', 'ClassController@find')->name('classes.search');

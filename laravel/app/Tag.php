@@ -14,4 +14,9 @@ class Tag extends Model
     {
         return $this->belongsToMany('App\Unit', 'tag_unit', 'tag_id', 'unit_id');
     }
+
+    public function participants()
+    {
+        return $this->belongsToMany('App\Student', 'participant_tag', 'tag_id', 'participant_id');
+    }
 }

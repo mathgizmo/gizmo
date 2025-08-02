@@ -26,17 +26,29 @@ class StudentController extends Controller
         $query = Student::select(DB::raw('students.*,(SELECT `date` FROM `students_tracking`
             WHERE students_tracking.student_id = students.id ORDER by id DESC LIMIT 1) as `date`'))
             ->where('email', 'NOT LIKE', '%@somemail.com')
-            ->filter(request()->all())
-            ->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc');
-
-        $students = $query->paginate($perPage)->appends(request()->query()); // replaced hard cap with perPage
-        return view('students.index', compact('students'));
+            ->filter(request()->all());
+        // Tag filter logic
+        $tagIds = collect(explode(',', request('tag_id', '')))->filter(fn($id) => is_numeric($id))->unique()->toArray();
+        if (in_array('none', explode(',', request('tag_id', '')))) {
+            $query->whereDoesntHave('tags');
+        } elseif (!empty($tagIds)) {
+            $query->whereHas('tags', function($q) use ($tagIds) {
+                $q->whereIn('tag.id', $tagIds);
+            });
+        }
+        $query->orderBy(request()->sort ? request()->sort : 'id', request()->order ? request()->order : 'desc');
+        $tags = \App\Tag::orderBy('order_no')->get();
+        $selected_tag_ids = request()->has('tag_id') ? (array) request()->input('tag_id') : [];
+        $students = $query->paginate($perPage)->appends(request()->query());
+        return view('students.index', compact('students', 'tags', 'selected_tag_ids'));
     }
 
     public function edit(Student $student)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        return view('students.edit', compact('student'));
+        $tags = \App\Tag::orderBy('order_no')->get();
+        $selected_tag_ids = $student->tags()->pluck('tag_id')->toArray();
+        return view('students.edit', compact('student', 'tags', 'selected_tag_ids'));
     }
 
     public function superUpdate(Request $request, Student $student)
@@ -124,5 +136,15 @@ class StudentController extends Controller
     public function loginAsStudent(Student $student) {
         return Redirect::to(URL::to(Config::get('app.login_as_student_url'))
             .'?token='.JWTAuth::fromUser($student));
+    }
+
+    public function updateTags(Request $request, Student $student)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $tagIds = collect($request->input('tag_id', []))
+            ->filter(fn($id) => !empty($id) && is_numeric($id))
+            ->unique()->toArray();
+        $student->tags()->sync($tagIds);
+        return back()->with('message', 'Tags updated successfully.');
     }
 }

@@ -70,6 +70,7 @@
                         <th>
                             Researcher
                         </th>
+                        <th style="min-width: 170px;">Tags</th>
                         <th style="min-width: 160px;"></th>
                     </tr>
                     </thead>
@@ -110,6 +111,18 @@
                                 <option value="no">Not Researcher</option>
                             </select>
                         </td>
+                        <td>
+                            <div id="tag-filter-group" class="d-flex flex-wrap">
+                                <span class="badge badge-pill tag-filter-badge {{ in_array('none', $selected_tag_ids ?? []) ? 'badge-primary' : 'badge-light' }} m-1" data-tag-id="none" style="cursor:pointer;user-select:none;">None</span>
+                                @foreach($tags as $tag)
+                                    <span class="badge badge-pill tag-filter-badge {{ in_array($tag->id, $selected_tag_ids ?? []) ? 'badge-primary' : 'badge-light' }} m-1"
+                                          data-tag-id="{{ $tag->id }}" style="cursor:pointer;user-select:none;">
+                                        {{ $tag->name }}
+                                    </span>
+                                @endforeach
+                            </div>
+                            <input type="hidden" name="tag_id" id="tag_id_hidden" value="{{ implode(',', $selected_tag_ids ?? []) }}">
+                        </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -125,6 +138,15 @@
                             <td style="max-width: 40px;">{{ $student->is_super ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_teacher ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_researcher ? 'Yes' : 'No' }}</td>
+                            <td style="max-width: 170px;">
+                                @if($student->tags->count())
+                                    @foreach($student->tags as $tag)
+                                        <span class="badge badge-pill badge-light m-1" style="cursor:default;">{{ $tag->name }}</span>
+                                    @endforeach
+                                @else
+                                    <span class="badge badge-pill badge-light m-1" style="cursor:default;">None</span>
+                                @endif
+                            </td>
                             <td class="flex flex-row justify-content-end mb-2" style="min-width: 230px">
                                 <a href="{{ route('students.login', $student->id) }}" target="_blank" class="btn btn-outline-dark">Login</a>
                                 <a href="{{ route('students.edit', $student->id) }}" class="btn btn-dark">Edit</a>
@@ -174,45 +196,45 @@
             const is_super = document.getElementById("is-super-filter").value;
             const is_teacher = document.getElementById("is-teacher-filter").value;
             const is_researcher = document.getElementById("is-researcher-filter").value;
-
-            if (id) {
-                url.searchParams.set('id', id);
-            } else if (url.searchParams.get('id')) {
-                url.searchParams.delete('id');
-            }
-            if (first_name) {
-                url.searchParams.set('first_name', first_name);
-            } else if (url.searchParams.get('first_name')) {
-                url.searchParams.delete('first_name');
-            }
-            if (last_name) {
-                url.searchParams.set('last_name', last_name);
-            } else if (url.searchParams.get('last_name')) {
-                url.searchParams.delete('last_name');
-            }
-            if (email) {
-                url.searchParams.set('email', email);
-            } else if (url.searchParams.get('email')) {
-                url.searchParams.delete('email');
-            }
-            if (is_super) {
-                url.searchParams.set('is_super', is_super);
-            } else if (url.searchParams.get('is_super')) {
-                url.searchParams.delete('is_super');
-            }
-            if (is_teacher) {
-                url.searchParams.set('is_teacher', is_teacher);
-            } else if (url.searchParams.get('is_teacher')) {
-                url.searchParams.delete('is_teacher');
-            }
-            if (is_researcher) {
-                url.searchParams.set('is_researcher', is_researcher);
-            } else if (url.searchParams.get('is_researcher')) {
-                url.searchParams.delete('is_researcher');
+            // Tag filter
+            let tagIds = $('#tag_id_hidden').val();
+            if (tagIds) {
+                url.searchParams.set('tag_id', tagIds);
+            } else if (url.searchParams.get('tag_id')) {
+                url.searchParams.delete('tag_id');
             }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
+        $(document).ready(function () {
+            // Tag filter badge click handler (copied from units page)
+            $(document).on('click', '.tag-filter-badge', function() {
+                let tagId = $(this).data('tag-id').toString();
+                let selected = $('#tag_id_hidden').val().split(',').filter(Boolean);
+                if ($(this).hasClass('badge-primary')) {
+                    // Deselect
+                    selected = selected.filter(id => id !== tagId);
+                    $(this).removeClass('badge-primary').addClass('badge-light');
+                } else {
+                    if(tagId === 'none') {
+                        // If 'none' is selected, deselect all others
+                        selected = ['none'];
+                        $('.tag-filter-badge').removeClass('badge-primary').addClass('badge-light');
+                        $(this).removeClass('badge-light').addClass('badge-primary');
+                    } else {
+                        // If any tag is selected, remove 'none' if present
+                        selected = selected.filter(id => id !== 'none');
+                        selected.push(tagId);
+                        $(this).removeClass('badge-light').addClass('badge-primary');
+                        // Deselect 'none' badge
+                        $(".tag-filter-badge[data-tag-id='none']").removeClass('badge-primary').addClass('badge-light');
+                    }
+                }
+                // Remove duplicates
+                selected = [...new Set(selected)];
+                $('#tag_id_hidden').val(selected.join(','));
+            });
+        });
 
         // PerPage Dropdown Handler
         function perPage(value) {
@@ -262,6 +284,21 @@
                 width: 100% !important;
                 margin-bottom: 8px;
             }
+        }
+
+        .tag-filter-badge {
+            border: 1px solid #007bff;
+            color: #007bff;
+            background: #fff;
+            transition: all 0.2s;
+        }
+        .tag-filter-badge.badge-primary {
+            background: #007bff;
+            color: #fff;
+        }
+        .tag-filter-badge.badge-light {
+            background: #fff;
+            color: #007bff;
         }
     </style>
 @endsection
