@@ -213,6 +213,21 @@
             } else if (url.searchParams.get('title')) {
                 url.searchParams.delete('title');
             }
+            
+            // Handle tag filtering
+            const tagIds = $('#tag_id_hidden').val();
+            if (tagIds) {
+                // Split the tag IDs and add them as separate parameters
+                const selectedTags = tagIds.split(',').filter(Boolean);
+                url.searchParams.delete('tag_id[]'); // Remove any existing tag parameters
+                selectedTags.forEach(tagId => {
+                    url.searchParams.append('tag_id[]', tagId);
+                });
+            } else {
+                // Remove all tag parameters if no tags are selected
+                url.searchParams.delete('tag_id[]');
+            }
+            
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -222,6 +237,19 @@
             document.getElementById("id-filter").value = url.searchParams.get('id');
             document.getElementById("order-filter").value = url.searchParams.get('order_no');
             document.getElementById("title-filter").value = url.searchParams.get('title');
+            
+            // Initialize tag filter badges from URL parameters
+            const tagParams = url.searchParams.getAll('tag_id[]');
+            if (tagParams.length > 0) {
+                // Reset all badges to light first
+                $('.tag-filter-badge').removeClass('badge-primary').addClass('badge-light');
+                // Then set the selected ones to primary
+                tagParams.forEach(tagId => {
+                    $(`.tag-filter-badge[data-tag-id='${tagId}']`).removeClass('badge-light').addClass('badge-primary');
+                });
+                // Update hidden input
+                $('#tag_id_hidden').val(tagParams.join(','));
+            }
         }
 
         window.onload = init;

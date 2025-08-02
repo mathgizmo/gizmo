@@ -253,7 +253,20 @@
             document.getElementById("is-super-filter").value = url.searchParams.get('is_super');
             document.getElementById("is-teacher-filter").value = url.searchParams.get('is_teacher');
             document.getElementById("is-researcher-filter").value = url.searchParams.get('is_researcher');
-            // Removed pagination dropdown init
+            
+            // Initialize tag filter badges
+            const tagIds = url.searchParams.get('tag_id');
+            if (tagIds) {
+                const selectedTags = tagIds.split(',');
+                // Reset all badges to light first
+                $('.tag-filter-badge').removeClass('badge-primary').addClass('badge-light');
+                // Then set the selected ones to primary
+                selectedTags.forEach(tagId => {
+                    $(`.tag-filter-badge[data-tag-id='${tagId}']`).removeClass('badge-light').addClass('badge-primary');
+                });
+                // Update hidden input
+                $('#tag_id_hidden').val(tagIds);
+            }
         }
 
         window.onload = init;

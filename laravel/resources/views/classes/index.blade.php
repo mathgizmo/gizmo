@@ -50,6 +50,9 @@
                         <th style="min-width: 180px;">
                             Subscription Type
                         </th>
+                        <th style="min-width: 180px;">
+                            Tag
+                        </th>
                         <th style="min-width: 160px;"></th>
                     </tr>
                     </thead>
@@ -85,6 +88,17 @@
                                 <option value="closed">Closed</option>
                             </select>
                         </td>
+                        <td>
+                            <select class="form-control" name="tag_id" id="tag-filter">
+                                <option value="">Select Tag</option>
+                                <option value="none" {{ request('tag_id') === 'none' ? 'selected' : '' }}>No tag</option>
+                                @foreach(\App\Tag::orderBy('name')->get() as $tag)
+                                    <option value="{{ $tag->id }}" {{ request('tag_id') == $tag->id ? 'selected' : '' }}>
+                                        {{ $tag->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -96,6 +110,7 @@
                             <td>{{$class->teacher ? $class->teacher->email : ''}}</td>
                             <td>{{ucfirst($class->class_type)}}</td>
                             <td>{{$class->subscription_type == 'closed' ? 'Closed' : ($class->subscription_type == 'assigned' ? 'Assigned' : ($class->subscription_type == 'invitation' ? 'Invitation' : 'Open'))}}</td>
+                            <td>{{$class->tag ? $class->tag->name : ''}}</td>
                             <td class="text-right" style="min-width: 320px;">
                                 <a class="btn btn-outline-dark" href="{{ route('classes.students.index', $class->id) }}">Manage Students</a>
                                 <a class="btn btn-dark" href="{{ route('classes.edit', $class->id) }}">Edit</a>
@@ -159,6 +174,12 @@
             } else if (url.searchParams.get('class_type')) {
                 url.searchParams.delete('class_type');
             }
+            const tagId = document.getElementById("tag-filter").value;
+            if(tagId) {
+                url.searchParams.set('tag_id', tagId);
+            } else if (url.searchParams.get('tag_id')) {
+                url.searchParams.delete('tag_id');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -169,6 +190,7 @@
             document.getElementById("teacher-filter").value = url.searchParams.get('teacher');
             document.getElementById("subscription-type-filter").value = url.searchParams.get('subscription_type');
             document.getElementById("class-type-filter").value = url.searchParams.get('class_type');
+            document.getElementById("tag-filter").value = url.searchParams.get('tag_id');
 
         }
         window.onload = initFilters;

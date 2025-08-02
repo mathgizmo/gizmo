@@ -51,6 +51,27 @@ class StudentController extends Controller
         return view('students.edit', compact('student', 'tags', 'selected_tag_ids'));
     }
 
+    public function update(Request $request, Student $student)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $this->validate($request, [
+            'tag_id' => 'nullable|array',
+            'tag_id.*' => 'exists:tag,id'
+        ]);
+
+        // Sync the tags (handles both attaching and detaching)
+        if ($request->has('tag_id')) {
+            $tagIds = array_filter((array)$request->input('tag_id'), function($id) {
+                return !empty($id) && $id !== 'none';
+            });
+            $student->tags()->sync($tagIds);
+        } else {
+            $student->tags()->detach(); // Remove all tags if none selected
+        }
+
+        return back()->with('message', 'Updated successfully');
+    }
+
     public function superUpdate(Request $request, Student $student)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());

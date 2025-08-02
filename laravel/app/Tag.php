@@ -19,4 +19,14 @@ class Tag extends Model
     {
         return $this->belongsToMany('App\Student', 'participant_tag', 'tag_id', 'participant_id');
     }
+
+    public function applications()
+    {
+        return $this->hasMany('App\Application', 'tag_id');
+    }
+
+    public function classes()
+    {
+        return $this->hasMany('App\Classes', 'tag_id');
+    }
 }

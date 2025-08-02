@@ -10,7 +10,7 @@ class Application extends Model
     protected $table = 'applications';
 
     protected $fillable = ['icon', 'name', 'teacher_id', 'type', 'duration',
-        'allow_any_order', 'allow_back_tracking', 'testout_attempts', 'question_num'];
+        'allow_any_order', 'allow_back_tracking', 'testout_attempts', 'question_num', 'tag_id'];
 
     public function teacher() {
         return $this->belongsTo('App\Student', 'teacher_id');
@@ -18,6 +18,10 @@ class Application extends Model
 
     public function students() {
         return $this->hasMany('App\Student', 'app_id', 'id');
+    }
+
+    public function tag() {
+        return $this->belongsTo('App\Tag', 'tag_id');
     }
 
     public function classes() {

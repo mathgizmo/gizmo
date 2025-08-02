@@ -81,6 +81,25 @@
                         </select>
                     </div>
                 </div>
+                
+                <div class="form-group row mt-3 {{ $errors->has('tag_id') ? ' has-error' : '' }}">
+                    <label for="tag_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Tag</label>
+                    <div class="col-md-8">
+                        <select id="tag_id" name="tag_id" class="form-control" style="max-width: 200px;">
+                            <option value="">Select Tag</option>
+                            @foreach(\App\Tag::orderBy('name')->get() as $tag)
+                                <option value="{{ $tag->id }}" {{ old('tag_id', $class->tag_id) == $tag->id ? 'selected' : '' }}>
+                                    {{ $tag->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('tag_id'))
+                            <span class="form-text">
+                                <strong>{{ $errors->first('tag_id') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
                 <div id="invitations-container" class="form-group row mt-3" style="display: {{ $class->subscription_type == 'assigned' ? 'flex' : 'none' }};">
                     <label for="invitations" class="col-md-2 form-control-label ml-3 font-weight-bold">Invitations</label>
                     <div class="col-md-8">

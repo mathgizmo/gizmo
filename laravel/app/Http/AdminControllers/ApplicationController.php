@@ -27,6 +27,13 @@ class ApplicationController extends Controller
         if ($request['type']) {
             $query->where('type', $request['type']);
         }
+        if ($request['tag_id']) {
+            if ($request['tag_id'] === 'none') {
+                $query->whereNull('tag_id');
+            } else {
+                $query->where('tag_id', $request['tag_id']);
+            }
+        }
         if ($request['teacher']) {
             $teacher = $request['teacher'];
             $query->whereHas('teacher', function ($q) use ($teacher) {
@@ -66,9 +73,11 @@ class ApplicationController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'name' => 'required',
+            'tag_id' => 'nullable|exists:tag,id'
         ]);
         $app = new Application();
         $app->name = $request['name'];
+        $app->tag_id = $request['tag_id'];
         if (isset($request['icon']) && $request['icon']) {
             $app->icon = $request['icon'];
         }
@@ -106,6 +115,7 @@ class ApplicationController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'name' => 'required',
+            'tag_id' => 'nullable|exists:tag,id'
         ]);
         $app = Application::where('id', $id)->first();
         if (!$app) {
@@ -117,6 +127,7 @@ class ApplicationController extends Controller
         if (isset($request['icon']) && $request['icon']) {
             $app->icon = $request['icon'];
         }
+        $app->tag_id = $request['tag_id'] ?: null;
         $app->allow_any_order = $request['allow_any_order'] ? true : false;
         $app->allow_back_tracking = $request['allow_back_tracking'] ? true : false;
         $app->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;

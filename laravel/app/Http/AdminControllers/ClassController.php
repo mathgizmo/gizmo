@@ -25,6 +25,13 @@ class ClassController extends Controller
                 $q->where('email', 'LIKE', '%'.$teacher.'%');
             });
         }
+        if ($request['tag_id']) {
+            if ($request['tag_id'] === 'none') {
+                $query->whereNull('tag_id');
+            } else {
+                $query->where('tag_id', $request['tag_id']);
+            }
+        }
         if ($request['subscription_type']) {
             $query->where('subscription_type', $request['subscription_type']);
         }
@@ -58,8 +65,9 @@ class ClassController extends Controller
             'teacher_id' => [
                 'required', 'exists:students,id'
             ],
+            'tag_id' => 'nullable|exists:tag,id'
         ]);
-        $class = ClassOfStudents::create($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations'));
+        $class = ClassOfStudents::create($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations', 'tag_id'));
         foreach ($request['assignment'] as $key => $value) {
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
@@ -103,7 +111,7 @@ class ClassController extends Controller
         if (!$class) {
             abort('404', 'Class Not Exists!');
         }
-        $class->update($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations'));
+        $class->update($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations', 'tag_id'));
         $old_apps = $class->applications()->get()->keyBy('id');
         if ($request['assignment']) {
             foreach ($request['assignment'] as $key => $value) {

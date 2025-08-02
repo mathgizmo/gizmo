@@ -53,6 +53,9 @@
                         <th style="min-width: 180px;">
                             Type
                         </th>
+                        <th style="min-width: 180px;">
+                            Tag
+                        </th>
                         <th style="min-width: 180px;"></th>
                     </tr>
                     </thead>
@@ -76,6 +79,17 @@
                                 <option value="test">Test</option>
                             </select>
                         </td>
+                        <td>
+                            <select class="form-control" name="tag_id" id="tag-filter">
+                                <option value="">Select Tag</option>
+                                <option value="none" {{ request('tag_id') === 'none' ? 'selected' : '' }}>No tag</option>
+                                @foreach(\App\Tag::orderBy('name')->get() as $tag)
+                                    <option value="{{ $tag->id }}" {{ request('tag_id') == $tag->id ? 'selected' : '' }}>
+                                        {{ $tag->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
                         <td class="text-right">
                             <a href="javascript:void(0);" onclick="filter()" class="btn btn-dark">Filter</a>
                         </td>
@@ -90,6 +104,7 @@
                             <td>{{$application->name}}</td>
                             <td>{{$application->teacher ? $application->teacher->email : ''}}</td>
                             <td>{{ucfirst($application->type)}}</td>
+                            <td>{{$application->tag ? $application->tag->name : ''}}</td>
                             <td class="text-right">
                                 <form action="{{ route('applications.copy', $application->id) }}"
                                       method="POST" style="display: inline;">
@@ -152,6 +167,12 @@
             } else if (url.searchParams.get('type')) {
                 url.searchParams.delete('type');
             }
+            const tagId = document.getElementById("tag-filter").value;
+            if(tagId) {
+                url.searchParams.set('tag_id', tagId);
+            } else if (url.searchParams.get('tag_id')) {
+                url.searchParams.delete('tag_id');
+            }
             url.searchParams.delete('page');
             window.location.href = url.toString();
         }
@@ -160,6 +181,7 @@
             document.getElementById("id-filter").value = url.searchParams.get('id');
             document.getElementById("name-filter").value = url.searchParams.get('name');
             document.getElementById("teacher-filter").value = url.searchParams.get('teacher');
+            document.getElementById("tag-filter").value = url.searchParams.get('tag_id');
             document.getElementById("type-filter").value = url.searchParams.get('type');
         }
         window.onload = initFilters;
