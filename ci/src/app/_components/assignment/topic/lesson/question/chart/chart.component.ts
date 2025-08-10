@@ -34,7 +34,7 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
     public endValue = 1;
     public step = 0.5;
     private marksList: number[] = [0, 0.5, 1];
-    private marksLabelsList: number[] = [0, 0.5, 1];
+    private marksLabelsList: (number | string)[] = [0, 0.5, 1];
 
     public accuracyControl = 2; // number of decimals (0 - integer)
     private accuracyChart = 2; // number of decimals (0 - integer)
@@ -255,19 +255,19 @@ export class ChartComponent implements OnDestroy, OnChanges, OnInit {
                 const endValue = this.endValue;
                 let calc = false;
                 if (chart['0'].match(new RegExp(/calculate:([^;]*)(?=(;|$))/g))['0']
-                    .replace('calculate:', '').split(',') == 'true') {
+                    .replace('calculate:', '').split(',')[0] === 'true') {
                     calc = true;
                 }
                 const calculate = calc;
                 this.marksList = this.marksLabelsList.map(function (elem) {
-                    if (('' + elem).includes('/')) {
-                        const values = ('' + elem).split('/').map(Number);
+                    if (("" + elem).includes('/')) {
+                        const values = ("" + elem).split('/').map(Number);
                         elem = (values[0] / values[1]);
                         if (calculate) {
                             elem = elem * (endValue - startValue) + startValue;
                         }
-                    } else if (('' + elem).includes('%')) {
-                        elem = +('' + elem).replace('%', '') / 100;
+                    } else if (("" + elem).includes('%')) {
+                        elem = +( "" + elem).replace('%', '') / 100;
                         if (calculate) {
                             elem = elem * (endValue - startValue) + startValue;
                         }
