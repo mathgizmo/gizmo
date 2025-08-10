@@ -39,7 +39,7 @@
               "pdfmake/build/pdfmake.js",
               "@ckeditor/ckeditor5-build-classic"
             ],
-            "aot": false,
+            "aot": true,
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -49,6 +49,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/gizmo/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -67,6 +68,7 @@
               "ngswConfigPath": "ngsw-config.json"
             },
             "testing": {
+              "baseHref": "/gizmo/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -157,29 +159,27 @@
   },
   "defaultProject": "ci",
   "schematics": {
-    "@schematics/angular:class": {
-      "spec": false
-    },
+    "@schematics/angular:class": {},
     "@schematics/angular:component": {
-      "spec": false,
       "prefix": "app",
-      "styleext": "scss"
+      "style": "scss",
+      "skipTests": true
     },
     "@schematics/angular:directive": {
-      "spec": false,
-      "prefix": "app"
+      "prefix": "app",
+      "skipTests": true
     },
     "@schematics/angular:guard": {
-      "spec": false
+      "skipTests": true
     },
     "@schematics/angular:module": {
-      "spec": false
+      "skipTests": true
     },
     "@schematics/angular:pipe": {
-      "spec": false
+      "skipTests": true
     },
     "@schematics/angular:service": {
-      "spec": false
+      "skipTests": true
     }
   },
   "cli": {
