@@ -15,14 +15,17 @@ export class UserService {
         return this.http.get('/profile');
     }
 
-    public changeProfile(user: User) {
-        const request = {
+    public changeProfile(user: User, tags: number[] = null) {
+        const request: any = {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
             country_id: user.country_id,
             role: user.role
         };
+        if (tags) {
+            request.tags = tags;
+        }
         return this.http.post('/profile', request);
     }
 

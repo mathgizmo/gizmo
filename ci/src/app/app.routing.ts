@@ -61,6 +61,7 @@ const authRoutes = [
     {path: 'welcome', component: WelcomeComponent},
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
+    {path: 'register/interests', component: RegisterComponent, data: { step: 'interests' }},
     {path: 'logout', component: LogoutComponent},
     {path: 'verify-email', component: VerifyEmailComponent},
     {path: 'forgot-password', component: ForgotPasswordComponent},

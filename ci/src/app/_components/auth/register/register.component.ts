@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AuthenticationService, CountryService} from '../../../_services/index';
+import {TagService} from '../../../_services/tag.service';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -18,6 +19,7 @@ export class RegisterComponent implements OnInit {
     public error: string;
     public message: string;
     public isRoleSelected = false;
+    public isInterestsSelected = false; // new step
     public countries = [];
     public selectedCountry = {
         id: 1,
@@ -27,11 +29,15 @@ export class RegisterComponent implements OnInit {
     public captchaResponse = '';
     public siteKey = environment.captchaKey || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
     public ignoreCaptcha = environment.ignoreCaptcha || false;
+    // tags
+    public tags: any[] = [];
+    public selectedTagIds: number[] = [];
 
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService,
-        private countryService: CountryService) {
+        private countryService: CountryService,
+        private tagService: TagService) { // new
         const navigation = this.router.getCurrentNavigation();
         const state = navigation && navigation.extras && navigation.extras.state;
         if (state && state.email) {
@@ -54,14 +60,31 @@ export class RegisterComponent implements OnInit {
             this.countries = countries;
             this.selectedCountry = countries.filter(x => x.code === 'CA')[0];
         });
+        // load tags early
+        this.tagService.getTags().subscribe(tags => { this.tags = tags; });
+    }
+
+    // proceed from interests step to personal info
+    proceedInterests() {
+        this.isInterestsSelected = true;
+    }
+
+    toggleTag(tagId: number) {
+        const idx = this.selectedTagIds.indexOf(tagId);
+        if (idx >= 0) {
+            this.selectedTagIds.splice(idx, 1);
+        } else {
+            this.selectedTagIds.push(tagId);
+        }
     }
 
     register() {
         if (this.model.email && this.model.password && (this.captchaResponse || this.ignoreCaptcha)) {
             this.loading = true;
+            const tags = this.selectedTagIds; // gather tags
             this.authenticationService.register(this.model.email,
                 this.model.password, this.model.first_name, this.model.last_name,
-                this.model.role, this.selectedCountry.id, this.captchaResponse, this.ignoreCaptcha)
+                this.model.role, this.selectedCountry.id, this.captchaResponse, this.ignoreCaptcha, tags)
                 .subscribe(() => {
                     this.router.navigate(['verify-email'], {
                         state: {
@@ -93,6 +116,8 @@ export class RegisterComponent implements OnInit {
     onRoleSelected(role) {
         this.model.role = role;
         this.isRoleSelected = true;
+        // always show interests selection for any role
+        this.isInterestsSelected = false;
     }
 
     public resolved(captchaResponse: string) {

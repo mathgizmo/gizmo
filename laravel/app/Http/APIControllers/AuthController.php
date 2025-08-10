@@ -184,6 +184,11 @@ class AuthController extends Controller
             ]);
         }
         if ($student) {
+            // attach tags if provided
+            $tags = $request->input('tags', []);
+            if (is_array($tags) && count($tags)) {
+                try { $student->tags()->sync($tags); } catch (\Exception $e) { }
+            }
             try {
                 $this->resendVerificationEmail($request);
             } catch (\Exception $e) { }

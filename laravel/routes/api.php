@@ -15,6 +15,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
     $api->get('/welcome' , 'App\Http\APIControllers\HomeController@getWelcomeTexts');
     $api->get('/countries' , 'App\Http\APIControllers\HomeController@getCountries');
+    $api->get('/tags' , 'App\Http\APIControllers\TagController@index');
     $api->post('/login/by-token' , 'App\Http\APIControllers\AuthController@loginByToken');
     $api->post('/login' , 'App\Http\APIControllers\AuthController@login');
     $api->post('/register' , 'App\Http\APIControllers\AuthController@register');
@@ -63,6 +64,7 @@ $api->version('v1', function ($api) {
         $api->get('/profile/classes/{class_id}/assignments-report.{format}', 'App\Http\APIControllers\ProfileController@downloadAssignmentsReport');
         $api->get('/profile/classes/{class_id}/tests-report.{format}', 'App\Http\APIControllers\ProfileController@downloadTestsReport');
         $api->post('/profile/clear-redirect-to', 'App\Http\APIControllers\ProfileController@clearRedirectTo');
+        $api->post('/profile/tags', 'App\Http\APIControllers\ProfileController@updateUserTags');
 
         $api->get('/classes', 'App\Http\APIControllers\ClassController@all');
         $api->post('/classes', 'App\Http\APIControllers\ClassController@store');

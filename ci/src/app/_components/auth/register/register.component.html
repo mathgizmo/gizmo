@@ -1,5 +1,5 @@
 <div class="back-button-container"><a routerLink="/welcome" routerLinkActive="active" class="back-button"><-Back Home</a></div>
-<mat-card class="auth-container" *ngIf="isRoleSelected">
+<mat-card class="auth-container" *ngIf="isRoleSelected && isInterestsSelected">
     <mat-card>
         <h2 class="title">Register</h2>
         <div *ngIf="message" class="alert alert-info">
@@ -105,4 +105,27 @@
             <img mat-card-image src="assets/images/self_study.png" alt="Self Study"/>
         </mat-card>
     </div>
+</mat-card>
+<mat-card class="auth-container" *ngIf="isRoleSelected && !isInterestsSelected">
+    <mat-card>
+        <h2 class="title">Select Your Areas of Interest</h2>
+        <div class="tags-container">
+            <button mat-button type="button"
+                    class="tag-button"
+                    *ngFor="let tag of tags"
+                    [class.selected]="selectedTagIds.indexOf(tag.id) >= 0"
+                    (click)="toggleTag(tag.id)">
+                {{tag.name}}
+            </button>
+        </div>
+        <div class="form-group center-block buttons-container">
+            <button mat-button (click)="proceedInterests()" class="button register-button moving-forward-button" [disabled]="loading">
+                Continue
+            </button>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="text-center">
+            <a (click)="proceedInterests()" style="cursor:pointer">Skip</a>
+        </div>
+    </mat-card>
 </mat-card>

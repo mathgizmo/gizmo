@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../_models/user';
 import {AuthenticationService, CountryService, UserService} from '../../_services/index';
+import { TagService, Tag } from '../../_services/tag.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {timer} from 'rxjs';
 import {takeWhile, tap} from 'rxjs/operators';
@@ -27,12 +28,16 @@ export class ProfileComponent implements OnInit {
         code: 'CA'
     };
     public isResearcher = false;
+    public allTags: Tag[] = [];
+    public selectedTagIds: number[] = [];
+    public tagsLoading = false;
 
     constructor(
         private userService: UserService,
         private authenticationService: AuthenticationService,
         private countryService: CountryService,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar,
+        private tagService: TagService
     ) {
         this.user = new User();
     }
@@ -43,6 +48,8 @@ export class ProfileComponent implements OnInit {
             this.userService.getProfile()
                 .subscribe(res => {
                     const user = res['user'];
+                    const tags = res['tags'] || [];
+                    this.selectedTagIds = tags.map(t => t.id);
                     localStorage.setItem('app_id', user.app_id);
                     this.user = user;
                     this.oldEmail = this.user.email;
@@ -56,9 +63,23 @@ export class ProfileComponent implements OnInit {
                     }
                     this.isResearcher = user.role === 'researcher';
                 }, error => {
-                    // this.authenticationService.user.subscribe(x => this.user = x);
+                    this.loadTags();
                 });
         });
+        this.loadTags();
+    }
+
+    loadTags() {
+        this.tagsLoading = true;
+        this.tagService.getTags().subscribe(tags => {
+            this.allTags = tags;
+            this.tagsLoading = false;
+        }, _ => this.tagsLoading = false);
+    }
+
+    toggleTag(tagId: number) {
+        const idx = this.selectedTagIds.indexOf(tagId);
+        if (idx >= 0) { this.selectedTagIds.splice(idx, 1); } else { this.selectedTagIds.push(tagId); }
     }
 
     onChangeProfile() {
@@ -67,7 +88,7 @@ export class ProfileComponent implements OnInit {
             this.user.role = this.isResearcher ? 'researcher' : 'teacher';
         }
         this.authenticationService.saveUserValue(this.user);
-        this.userService.changeProfile(this.user)
+        this.userService.changeProfile(this.user, this.selectedTagIds)
             .subscribe(res => {
                 this.passwordsMatch = true;
                 if (Array.isArray(res['email'])) {

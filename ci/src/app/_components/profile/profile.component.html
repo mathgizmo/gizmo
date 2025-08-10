@@ -56,6 +56,16 @@
           <mat-option [value]="true">Teacher/Researcher</mat-option>
         </mat-select>
       </mat-form-field>
+      <div class="tags-section">
+        <span class="subtitle">Areas of Interest</span>
+        <div class="tags-container">
+          <button mat-button type="button"
+                  class="tag-button"
+                  *ngFor="let tag of allTags"
+                  [class.selected]="selectedTagIds.indexOf(tag.id) >= 0"
+                  (click)="toggleTag(tag.id)">{{tag.name}}</button>
+        </div>
+      </div>
       <div class="button-container">
         <button
           mat-raised-button

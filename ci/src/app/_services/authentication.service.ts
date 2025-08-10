@@ -94,7 +94,7 @@ export class AuthenticationService {
     register(email: string, password: string,
              first_name: string = null, last_name: string = null,
              role: string = 'student', country_id: number = 1,
-             captcha_response = null, ignoreCaptcha = false): Observable<any> {
+             captcha_response = null, ignoreCaptcha = false, tags: number[] = []): Observable<any> {
         return this.http.post(this.apiUrl + '/register', {
             email: email,
             password: password,
@@ -104,7 +104,8 @@ export class AuthenticationService {
             country_id: country_id,
             'g-recaptcha-response': captcha_response,
             'ignore-captcha-key': ignoreCaptcha ? environment.captchaKey : null,
-            redirect_to: localStorage.getItem('redirect_to') || null
+            redirect_to: localStorage.getItem('redirect_to') || null,
+            tags: tags && tags.length ? tags : []
         }, {
             headers: this.headers
         }).pipe(

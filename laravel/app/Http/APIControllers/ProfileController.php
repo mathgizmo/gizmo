@@ -26,6 +26,7 @@ class ProfileController extends Controller
         $user = Auth::user();
         return $this->success([
             'user' => new AuthStudentResource($user),
+            'tags' => $user->tags()->get(['id','name','order_no']) // include current tags
         ]);
     }
 
@@ -70,6 +71,13 @@ class ProfileController extends Controller
             $update['password'] = bcrypt(request('password'));
         }
         Student::find($student->id)->update($update);
+        // sync tags if provided
+        if ($request->has('tags')) {
+            $tags = $request->input('tags');
+            if (is_array($tags)) {
+                try { $student->tags()->sync($tags); } catch (\Exception $e) { }
+            }
+        }
         if ($send_email_verification) {
             try {
                 (new AuthController())->resendVerificationEmail(request());
@@ -543,5 +551,20 @@ class ProfileController extends Controller
         $student->redirect_to = null;
         $student->save();
         return $this->success('OK.');
+    }
+
+    public function updateUserTags(Request $request)
+    {
+        $student = Auth::user();
+        $tags = $request->input('tags', []);
+        if (!is_array($tags)) {
+            return $this->error('Tags must be an array', 400);
+        }
+        try {
+            $student->tags()->sync($tags);
+        } catch (\Exception $e) {
+            return $this->error('Failed to update tags', 500);
+        }
+        return $this->success('OK');
     }
 }
