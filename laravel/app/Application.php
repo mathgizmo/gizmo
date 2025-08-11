@@ -245,6 +245,8 @@ class Application extends Model
             foreach ($units_list as $unit) {
                 $topic_items = [];
                 $unit_is_collapsed = true;
+                // collect tag ids for this unit
+                $unit_tag_ids = $unit->tags()->pluck('tag.id')->toArray();
                 if ($hide_dev) {
                     $topics_list = $unit->topics()->where('dev_mode', false)->orderBy('order_no', 'ASC')->get();
                 } else {
@@ -291,7 +293,8 @@ class Application extends Model
                     'text' => trim($unit->title),
                     'children' => $topic_items,
                     'checked' => $unit_checked,
-                    'collapsed' => $unit_is_collapsed
+                    'collapsed' => $unit_is_collapsed,
+                    'tag_ids' => $unit_tag_ids
                 ]);
             }
             array_push($tree, (object) [

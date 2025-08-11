@@ -12,6 +12,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {compare} from '../../../_helpers/compare.helper';
 import {User} from '../../../_models';
 import {AuthenticationService, ShareService} from '../../../_services';
+import {UserService} from '../../../_services/user.service';
 
 @Component({
     selector: 'app-manage-assignments',
@@ -25,6 +26,7 @@ export class ManageAssignmentsComponent implements OnInit {
     public assignments = [];
     public icons = [];
     public name: string;
+    public teacherTags: any[] = [];
 
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
@@ -36,7 +38,8 @@ export class ManageAssignmentsComponent implements OnInit {
     constructor(private route: ActivatedRoute, private assignmentService: AssignmentService, private sanitizer: DomSanitizer,
                 private authenticationService: AuthenticationService,
                 private shareService: ShareService,
-                public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackBar: MatSnackBar) {
+                public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackBar: MatSnackBar,
+                private userService: UserService) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -45,6 +48,12 @@ export class ManageAssignmentsComponent implements OnInit {
 
     ngOnInit() {
         this.user = this.authenticationService.userValue;
+        // load teacher tags
+        this.userService.getProfile().subscribe((res: any) => {
+            if (res && res.tags) {
+                this.teacherTags = res.tags;
+            }
+        });
         this.checkNewShares();
     }
 
@@ -78,10 +87,15 @@ export class ManageAssignmentsComponent implements OnInit {
     }
 
     onAddAssignment() {
+        // ensure tags present
+        if (!this.teacherTags || this.teacherTags.length === 0) {
+            this.snackBar.open('Please add at least one area of interest in Profile first.', '', { duration: 3000, panelClass: ['error-snackbar'] });
+            return;
+        }
         this.assignmentService.getAppTree()
             .subscribe(tree => {
                 const dialogRef = this.dialog.open(EditAssignmentDialogComponent, {
-                    data: { 'title': 'Create Assignment', 'icons': this.icons, 'tree': tree },
+                    data: { 'title': 'Create Assignment', 'icons': this.icons, 'tree': tree, 'tags': this.teacherTags },
                     position: this.dialogPosition
                 });
                 dialogRef.afterClosed().subscribe(result => {
@@ -118,7 +132,7 @@ export class ManageAssignmentsComponent implements OnInit {
         this.assignmentService.getAppTree(item.id)
             .subscribe(tree => {
                 const dialogRef = this.dialog.open(EditAssignmentDialogComponent, {
-                    data: { 'title': 'Edit Assignment', 'assignment': item, 'icons': this.icons, 'tree': tree },
+                    data: { 'title': 'Edit Assignment', 'assignment': item, 'icons': this.icons, 'tree': tree, 'tags': this.teacherTags },
                     position: this.dialogPosition
                 });
                 dialogRef.afterClosed().subscribe(result => {

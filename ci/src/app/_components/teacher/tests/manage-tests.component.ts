@@ -10,7 +10,7 @@ import {ActivatedRoute} from '@angular/router';
 import {DeleteConfirmationDialogComponent, YesNoDialogComponent} from '../../dialogs/index';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {User} from '../../../_models';
-import {AuthenticationService, ShareService} from '../../../_services';
+import {AuthenticationService, ShareService, UserService} from '../../../_services';
 import {compare} from '../../../_helpers/compare.helper';
 
 @Component({
@@ -25,6 +25,7 @@ export class ManageTestsComponent implements OnInit {
     public tests = [];
     public icons = [];
     public name: string;
+    public teacherTags: any[] = [];
 
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
@@ -36,7 +37,8 @@ export class ManageTestsComponent implements OnInit {
     constructor(private route: ActivatedRoute, private testService: TestService, private sanitizer: DomSanitizer,
                 private authenticationService: AuthenticationService,
                 private shareService: ShareService,
-                public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackBar: MatSnackBar) {
+                public dialog: MatDialog, private deviceService: DeviceDetectorService, public snackBar: MatSnackBar,
+                private userService: UserService) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -45,6 +47,9 @@ export class ManageTestsComponent implements OnInit {
 
     ngOnInit() {
         this.user = this.authenticationService.userValue;
+        this.userService.getProfile().subscribe((res: any) => {
+            if (res && res.tags) { this.teacherTags = res.tags; }
+        });
         this.checkNewShares();
     }
 
@@ -78,10 +83,14 @@ export class ManageTestsComponent implements OnInit {
     }
 
     onAddTest() {
+        if (!this.teacherTags || this.teacherTags.length === 0) {
+            this.snackBar.open('Please add at least one area of interest in Profile first.', '', { duration: 3000, panelClass: ['error-snackbar'] });
+            return;
+        }
         this.testService.getAppTree()
             .subscribe(tree => {
                 const dialogRef = this.dialog.open(EditTestDialogComponent, {
-                    data: { 'title': 'Create Test', 'icons': this.icons, 'tree': tree },
+                    data: { 'title': 'Create Test', 'icons': this.icons, 'tree': tree, 'tags': this.teacherTags },
                     position: this.dialogPosition
                 });
                 dialogRef.afterClosed().subscribe(result => {
@@ -98,12 +107,8 @@ export class ManageTestsComponent implements OnInit {
                             }, error => {
                                 let message = '';
                                 if (typeof error === 'object') {
-                                    Object.values(error).forEach(x => {
-                                        message += x + ' ';
-                                    });
-                                } else {
-                                    message = error;
-                                }
+                                    Object.values(error).forEach(x => { message += x + ' '; });
+                                } else { message = error; }
                                 this.snackBar.open(message ? message : 'Error occurred while creating test!', '', {
                                     duration: 3000,
                                     panelClass: ['error-snackbar']
@@ -118,7 +123,7 @@ export class ManageTestsComponent implements OnInit {
         this.testService.getAppTree(item.id)
             .subscribe(tree => {
                 const dialogRef = this.dialog.open(EditTestDialogComponent, {
-                    data: { 'title': 'Edit Test', 'test': item, 'icons': this.icons, 'tree': tree },
+                    data: { 'title': 'Edit Test', 'test': item, 'icons': this.icons, 'tree': tree, 'tags': this.teacherTags },
                     position: this.dialogPosition
                 });
                 dialogRef.afterClosed().subscribe(result => {
@@ -131,12 +136,8 @@ export class ManageTestsComponent implements OnInit {
                         }, error => {
                             let message = '';
                             if (typeof error === 'object') {
-                                Object.values(error).forEach(x => {
-                                    message += x + ' ';
-                                });
-                            } else {
-                                message = error;
-                            }
+                                Object.values(error).forEach(x => { message += x + ' '; });
+                            } else { message = error; }
                             this.snackBar.open(message ? message : 'Error occurred while updating test!', '', {
                                 duration: 3000,
                                 panelClass: ['error-snackbar']

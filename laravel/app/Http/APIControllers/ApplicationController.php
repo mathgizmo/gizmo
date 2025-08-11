@@ -286,6 +286,14 @@ class ApplicationController extends Controller
         try {
             $user = Auth::user();
             $user_id = $user->id;
+            // --- Tag validation (required) ---
+            $tag_id = $request->input('tag_id');
+            if (!$tag_id) {
+                return $this->error('Tag is required.', 400);
+            }
+            if (!$user->tags()->where('tag.id', $tag_id)->exists()) {
+                return $this->error('Invalid tag selected.', 400);
+            }
             $validator = Validator::make(request()->all(), [ 'name' => 'required|max:255' ]);
             if ($validator->fails()) {
                 return $this->error($validator->messages());
@@ -296,6 +304,7 @@ class ApplicationController extends Controller
                 $app->icon = request('icon');
             }
             $app->teacher_id = $user_id;
+            $app->tag_id = $tag_id; // assign selected tag
             $app->allow_any_order = request('allow_any_order') ? true : false;
             $app->allow_back_tracking = request('allow_back_tracking') ? true : false;
             $app->testout_attempts = request('testout_attempts') >= -1 ? intval(request('testout_attempts')) : 0;
@@ -329,6 +338,19 @@ class ApplicationController extends Controller
             }
             $app = Application::where('id', $app_id)->where('teacher_id', $user_id)->first();
             if ($app) {
+                // --- Tag validation/update ---
+                if (request()->has('tag_id')) {
+                    $tag_id = request('tag_id');
+                    if (!$tag_id) {
+                        return $this->error('Tag is required.', 400);
+                    }
+                    if (!$user->tags()->where('tag.id', $tag_id)->exists()) {
+                        return $this->error('Invalid tag selected.', 400);
+                    }
+                    $app->tag_id = $tag_id;
+                } elseif(!$app->tag_id) { // ensure existing apps have tag
+                    return $this->error('Tag is required.', 400);
+                }
                 if (request()->has('name')) {
                     $app->name = request('name');
                 }
@@ -388,7 +410,36 @@ class ApplicationController extends Controller
         if (!$app) {
             $app = new Application();
         }
-        return $this->success(['items' => $app->getTree(true)]);
+        $tree = $app->getTree(true);
+        $tag_id = request('tag_id');
+        if ($tag_id) {
+            // ensure tag belongs to teacher
+            if ($user->tags()->where('tag.id', $tag_id)->exists()) {
+                $unitIds = \DB::table('tag_unit')->where('tag_id', $tag_id)->pluck('unit_id')->toArray();
+                if ($unitIds) {
+                    foreach ($tree as $lIndex => $level) {
+                        if (isset($level['children']) && is_array($level['children'])) {
+                            $filteredUnits = [];
+                            foreach ($level['children'] as $unit) {
+                                if (in_array($unit['id'], $unitIds)) {
+                                    $filteredUnits[] = $unit;
+                                }
+                            }
+                            $tree[$lIndex]['children'] = $filteredUnits;
+                        }
+                    }
+                    // prune empty levels
+                    $tree = array_values(array_filter($tree, function($lvl) { return isset($lvl['children']) && count($lvl['children']) > 0; }));
+                } else {
+                    // no units for this tag => empty tree
+                    $tree = [];
+                }
+            } else {
+                // invalid tag for user => empty tree
+                $tree = [];
+            }
+        }
+        return $this->success(['items' => $tree]);
     }
 
     public function getAvailableIcons() {

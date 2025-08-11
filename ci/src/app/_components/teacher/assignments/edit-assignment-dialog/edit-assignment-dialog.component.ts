@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnInit, AfterViewInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
@@ -10,7 +10,7 @@ import {DomSanitizer} from '@angular/platform-browser';
     templateUrl: 'edit-assignment-dialog.component.html',
     styleUrls: ['edit-assignment-dialog.component.scss'],
 })
-export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssignmentDialogComponent> implements OnInit {
+export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssignmentDialogComponent> implements OnInit, AfterViewInit {
 
     assignment = {
         'name': '',
@@ -18,7 +18,8 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
         'tree': null,
         'allow_any_order': false,
         'testout_attempts': 0,
-        'question_num': 3
+        'question_num': 3,
+        'tag_id': null
     };
     tree = [];
     title = 'Edit Assignment';
@@ -27,6 +28,11 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
     public showImages = false;
 
     private readonly adminUrl = environment.adminUrl;
+
+    public teacherTags: any[] = [];
+
+    public selectedTagId: number = null;
+    private originalTree: any[] = [];
 
     constructor(
         private sanitizer: DomSanitizer,
@@ -38,21 +44,56 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
     public ngOnInit() {
         if (this.data.assignment) {
             this.assignment = this.data.assignment;
+            if (this.assignment && (this.assignment as any).tag_id) {
+                this.selectedTagId = (this.assignment as any).tag_id;
+            }
         }
         if (this.data.title) {
             this.title = this.data.title;
         }
         if (this.data.tree) {
             this.tree = this.data.tree;
+            // store pristine copy
+            this.originalTree = JSON.parse(JSON.stringify(this.tree));
         }
         if (this.data.icons) {
             this.icons = this.data.icons;
         }
+        if (this.data.tags) {
+            this.teacherTags = this.data.tags;
+            if (this.teacherTags.length === 1) {
+                this.selectedTagId = this.teacherTags[0].id;
+            }
+        }
         this.resizeDialog();
+    }
+
+    ngAfterViewInit() {
+        if (this.selectedTagId) {
+            setTimeout(() => this.onTagChange(), 0);
+        }
+    }
+
+    filterTreeByTag() {
+        if (!this.selectedTagId) { return; }
+        this.tree.forEach(level => {
+            level.children = level.children.filter(u => u.tag_ids && u.tag_ids.indexOf(this.selectedTagId) !== -1);
+        });
+        // remove levels that ended up with zero children
+        this.tree = this.tree.filter(level => level.children && level.children.length > 0);
+    }
+
+    onTagChange() {
+        // restore from original pristine tree instead of possibly already filtered data.tree
+        if (this.originalTree && this.originalTree.length) {
+            this.tree = JSON.parse(JSON.stringify(this.originalTree));
+        }
+        this.filterTreeByTag();
     }
 
     onSave() {
         this.assignment.tree = $('#tree-form').serialize();
+        this.assignment['tag_id'] = this.selectedTagId;
         this.dialogRef.close(this.assignment);
     }
 

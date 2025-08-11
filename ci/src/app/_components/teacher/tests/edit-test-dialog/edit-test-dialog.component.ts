@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnInit, AfterViewInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 import {BaseDialogComponent} from '../../../dialogs/base-dialog.component';
@@ -11,7 +11,7 @@ import {TestService} from '../../../../_services';
     styleUrls: ['edit-test-dialog.component.scss'],
     providers: [TestService]
 })
-export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogComponent> implements OnInit {
+export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogComponent> implements OnInit, AfterViewInit {
 
     public test = {
         'name': '',
@@ -21,7 +21,8 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         'allow_back_tracking': 0,
         'duration': 0,
         'question_num': 1,
-        'total_questions_count': 0
+        'total_questions_count': 0,
+        'tag_id': null
     };
     public questionsCount = 0;
     public tree = [];
@@ -31,6 +32,10 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
     public showImages = false;
 
     private readonly adminUrl = environment.adminUrl;
+
+    public teacherTags: any[] = [];
+    public selectedTagId: number = null;
+    private originalTree: any[] = [];
 
     constructor(
         private testService: TestService,
@@ -44,21 +49,27 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         if (this.data.test) {
             this.test = this.data.test;
             this.questionsCount = this.test.total_questions_count || 0;
+            if ((this.test as any).tag_id) { this.selectedTagId = (this.test as any).tag_id; }
         }
-        if (this.data.title) {
-            this.title = this.data.title;
-        }
-        if (this.data.tree) {
-            this.tree = this.data.tree;
-        }
-        if (this.data.icons) {
-            this.icons = this.data.icons;
+        if (this.data.title) { this.title = this.data.title; }
+        if (this.data.tree) { this.tree = this.data.tree; this.originalTree = JSON.parse(JSON.stringify(this.tree)); }
+        if (this.data.icons) { this.icons = this.data.icons; }
+        if (this.data.tags) {
+            this.teacherTags = this.data.tags;
+            if (this.teacherTags.length === 1) { this.selectedTagId = this.teacherTags[0].id; }
         }
         this.resizeDialog();
     }
 
+    ngAfterViewInit() {
+        if (this.selectedTagId) {
+            setTimeout(() => this.onTagChange(), 0);
+        }
+    }
+
     onSave() {
         this.test.tree = $('#tree-form').serialize();
+        this.test['tag_id'] = this.selectedTagId;
         this.dialogRef.close(this.test);
     }
 
@@ -165,4 +176,17 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         } */
     }
 
+    filterTreeByTag() {
+        if (!this.selectedTagId) { return; }
+        this.tree.forEach(level => {
+            level.children = level.children.filter(u => u.tag_ids && u.tag_ids.indexOf(this.selectedTagId) !== -1);
+        });
+        this.tree = this.tree.filter(level => level.children && level.children.length > 0);
+    }
+
+    onTagChange() {
+        if (this.originalTree && this.originalTree.length) { this.tree = JSON.parse(JSON.stringify(this.originalTree)); }
+        this.filterTreeByTag();
+        this.getQuestionsCount();
+    }
 }

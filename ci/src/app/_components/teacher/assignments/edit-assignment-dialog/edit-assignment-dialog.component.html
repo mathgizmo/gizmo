@@ -5,6 +5,18 @@
         <label for="name">Name:</label>
         <input id="name" name="name" placeholder="Name" [(ngModel)]="assignment.name" #name="ngModel" required class="form-control"/>
     </div>
+    <!-- Tag selection -->
+    <div class="form-group" *ngIf="teacherTags && teacherTags.length > 1">
+        <label for="tag">Area of Interest:</label>
+        <select id="tag" name="tag" class="form-control" [(ngModel)]="selectedTagId" (change)="onTagChange()" required>
+            <option [ngValue]="null">-- select --</option>
+            <option *ngFor="let t of teacherTags" [ngValue]="t.id">{{t.name}}</option>
+        </select>
+    </div>
+    <div class="form-group" *ngIf="teacherTags && teacherTags.length === 1">
+        <label>Area of Interest:</label>
+        <div><b>{{teacherTags[0].name}}</b></div>
+    </div>
     <div *ngIf="name.invalid && (name.dirty || name.touched)"
          class="alert alert-danger">
         <div *ngIf="name.errors.required">
@@ -21,7 +33,7 @@
             </div>
         </div>
     </div>
-    <form novalidate #form="ngForm" id="tree-form" class="tree m-0 p-0 ml-2 mb-3">
+    <form *ngIf="selectedTagId" novalidate #form="ngForm" id="tree-form" class="tree m-0 p-0 ml-2 mb-3">
         <ul>
             <li *ngFor="let level of tree">
                 <i class="expand-icon fa" [ngClass]="hasCheckedChildrenLevel(level) ? 'fa-plus' : 'fa-minus'" (click)="onExpandTree(levelLabel)"></i>
@@ -54,6 +66,7 @@
             </li>
         </ul>
     </form>
+    <div *ngIf="!selectedTagId" class="alert alert-info">Select an area of interest to choose content.</div>
     <mat-radio-group [(ngModel)]="assignment.allow_any_order" class="radio-group form-group">
         <mat-radio-button [value]="0">Topics/Lessons need to be completed in linear order</mat-radio-button>
         <mat-radio-button [value]="1">Topics/Lessons can be completed in any order</mat-radio-button>
@@ -69,10 +82,10 @@
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
-    <button *ngIf="name.invalid" mat-button class='button moving-forward-button continue-button' disabled
+    <button *ngIf="name.invalid || !selectedTagId" mat-button class='button moving-forward-button continue-button' disabled
             type="button">Save
     </button>
-    <button *ngIf="!name.invalid" mat-button class='button moving-forward-button continue-button'
+    <button *ngIf="!name.invalid && selectedTagId" mat-button class='button moving-forward-button continue-button'
             type="button" (click)="onSave()">Save
     </button>
 </mat-dialog-actions>
