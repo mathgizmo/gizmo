@@ -72,6 +72,11 @@ export class ClassTestsComponent implements OnInit {
                     this.class = classes.filter(x => +x.id === +this.classId)[0];
                     this.available_tests = res['available_tests'];
                     this.tests = res['tests'];
+                    if (this.class && (this.class as any).tag_id) {
+                        const tagId = (this.class as any).tag_id;
+                        this.available_tests = this.available_tests.filter(t => t.tag_id === tagId);
+                        this.tests = this.tests.filter(t => t.tag_id === tagId);
+                    }
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Tests';
                 });
             this.classService.getStudents(this.classId).subscribe(students => {

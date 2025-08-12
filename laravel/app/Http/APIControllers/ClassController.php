@@ -84,7 +84,9 @@ class ClassController extends Controller
                     'class_type' => request('class_type') ?: 'other',
                     'subscription_type' => request('subscription_type') ?: 'open',
                     'invitations' => request('invitations'),
-                    'is_researchable' => request('is_researchable')
+                    'is_researchable' => request('is_researchable'),
+                    // Persist tag_id if provided
+                    'tag_id' => request()->has('tag_id') ? request('tag_id') : null,
                 ])
             ]);
         } catch (\Exception $e) {
@@ -118,6 +120,10 @@ class ClassController extends Controller
                 }
                 if (request()->has('is_researchable')) {
                     $class->is_researchable = request('is_researchable');
+                }
+                // Update tag_id if provided
+                if (request()->has('tag_id')) {
+                    $class->tag_id = request('tag_id');
                 }
                 $class->save();
                 return $this->success(['item' => $class]);

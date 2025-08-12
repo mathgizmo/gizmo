@@ -8,4 +8,6 @@
     teacher_id: number;
     teacher: string;
     is_researchable: number;
+    // added to support area of interest filtering
+    tag_id?: number;
 }

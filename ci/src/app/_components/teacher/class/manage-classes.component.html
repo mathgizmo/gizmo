@@ -10,6 +10,8 @@
                         <th mat-sort-header="name" scope="col">Name</th>
                         <th mat-sort-header="class_type" scope="col">Type of classroom</th>
                         <th mat-sort-header="subscription_type" scope="col">Subscription Type</th>
+                        <!-- Added: Tag column header with sort by tag_name -->
+                        <th mat-sort-header="tag_name" scope="col">Tag</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -43,16 +45,26 @@
                                 <option value="closed">Closed</option>
                             </select>
                         </td>
+                        <!-- Added: Tag filter dropdown -->
+                        <td>
+                            <select class="form-control" name="tag_id" [(ngModel)]="tag_id">
+                                <option [ngValue]="''"></option>
+                                <option *ngFor="let t of teacherTags" [ngValue]="t.id">{{t.name}}</option>
+                            </select>
+                        </td>
                         <td class="text-right" style="min-width: 180px">
                             <button mat-button class="button button-small button-outline" (click)="onAddClass()">Create Classroom</button>
                         </td>
                     </tr>
-                    <tr *ngFor="let item of classes | tableFilter: form.value">
-                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.id}}</td>
-                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.name}}</td>
-                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.class_type.charAt(0).toUpperCase() + item.class_type.slice(1) }}</td>
-                        <td routerLink="./{{item.id}}/dashboard" class="link">{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
-                        <td class="text-right" style="min-width: 320px;">
+                    <!-- Apply both existing tableFilter and tag filter via ngIf -->
+                    <tr *ngFor="let item of classes | tableFilter: form.value" [ngClass]="{'link': true}" [style.cursor]="'pointer'">
+                        <td routerLink="./{{item.id}}/dashboard">{{item.id}}</td>
+                        <td routerLink="./{{item.id}}/dashboard">{{item.name}}</td>
+                        <td routerLink="./{{item.id}}/dashboard">{{item.class_type.charAt(0).toUpperCase() + item.class_type.slice(1) }}</td>
+                        <td routerLink="./{{item.id}}/dashboard">{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
+                        <!-- Show tag name; hide row if tag filter set and doesn't match -->
+                        <td routerLink="./{{item.id}}/dashboard" *ngIf="!tag_id || +item.tag_id === +tag_id">{{ getTagName(item) }}</td>
+                        <td class="text-right" style="min-width: 320px;" *ngIf="!tag_id || +item.tag_id === +tag_id">
                             <button *ngIf="user.user_id == item.teacher_id"
                                     mat-stroked-button
                                     class="button button-small button-amber"

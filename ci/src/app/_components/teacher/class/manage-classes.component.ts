@@ -11,7 +11,8 @@ import {
     AuthenticationService,
     ShareService,
     AssignmentService,
-    TestService
+    TestService,
+    UserService
 } from '../../../_services';
 import {User} from '../../../_models';
 import {compare} from '../../../_helpers/compare.helper';
@@ -32,6 +33,10 @@ export class ManageClassesComponent implements OnInit {
     public name: string;
     public subscription_type: string;
     public class_type: string;
+    // Added: filter model for tag
+    public tag_id: number | '' = '';
+
+    public teacherTags: any[] = [];
 
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
@@ -44,7 +49,8 @@ export class ManageClassesComponent implements OnInit {
                 public dialog: MatDialog,
                 private router: Router,
                 private deviceService: DeviceDetectorService,
-                public snackBar: MatSnackBar) {
+                public snackBar: MatSnackBar,
+                private userService: UserService) {
         this.dialogPosition = {bottom: '18vh'};
         if (this.isMobile || this.isTablet) {
             this.dialogPosition = {bottom: '2vh'};
@@ -53,8 +59,17 @@ export class ManageClassesComponent implements OnInit {
 
     ngOnInit() {
         this.user = this.authenticationService.userValue;
-
+        this.userService.getProfile().subscribe((res: any) => {
+            if (res && res.tags) { this.teacherTags = res.tags; }
+        });
         this.checkNewShares();
+    }
+
+    // Added: resolve tag name for display
+    getTagName(item: any): string {
+        if (!item || !item.tag_id) { return ''; }
+        const t = this.teacherTags?.find(x => +x.id === +item.tag_id);
+        return t ? t.name : '';
     }
 
     checkNewShares() {
@@ -83,8 +98,12 @@ export class ManageClassesComponent implements OnInit {
     }
 
     onAddClass() {
+        if (!this.teacherTags || this.teacherTags.length === 0) {
+            this.snackBar.open('Please add at least one area of interest in Profile first.', '', { duration: 3000, panelClass: ['error-snackbar'] });
+            return;
+        }
         const dialogRef = this.dialog.open(EditClassDialogComponent, {
-            data: { 'message': 'Create Classroom' },
+            data: { 'message': 'Create Classroom', 'tags': this.teacherTags },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -119,7 +138,7 @@ export class ManageClassesComponent implements OnInit {
 
     onEditClass(item) {
         const dialogRef = this.dialog.open(EditClassDialogComponent, {
-            data: { 'title': 'Edit Classroom', 'class': item},
+            data: { 'title': 'Edit Classroom', 'class': item, 'tags': this.teacherTags },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -196,6 +215,8 @@ export class ManageClassesComponent implements OnInit {
                 case 'name': return compare(a.name, b.name, isAsc);
                 case 'class_type': return compare(a.class_type, b.class_type, isAsc);
                 case 'subscription_type': return compare(a.subscription_type, b.subscription_type, isAsc);
+                // Added: sort by tag name for user-friendly ordering
+                case 'tag_name': return compare(this.getTagName(a), this.getTagName(b), isAsc);
                 default: return 0;
             }
         });

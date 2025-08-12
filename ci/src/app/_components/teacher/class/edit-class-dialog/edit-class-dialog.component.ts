@@ -17,10 +17,16 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
         class_type: 'other',
         subscription_type: 'open',
         invitations: '',
-        is_researchable: 0
+        is_researchable: 0,
+        tag_id: null // new
     };
     public title = 'Edit Class';
     public file: any;
+
+    // teacher available tags passed from parent
+    public teacherTags: any[] = [];
+
+    public selectedTagId: number = null;
 
     constructor(
         public dialogRef: MatDialogRef<EditClassDialogComponent>,
@@ -31,9 +37,16 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
     public ngOnInit() {
         if (this.data.class) {
             this.class = this.data.class;
+            if ((this.class as any).tag_id) { this.selectedTagId = (this.class as any).tag_id; }
         }
         if (this.data.title) {
             this.title = this.data.title;
+        }
+        if (this.data.tags) {
+            this.teacherTags = this.data.tags;
+            if (this.teacherTags.length === 1) {
+                this.selectedTagId = this.teacherTags[0].id;
+            }
         }
         this.resizeDialog();
     }
@@ -47,6 +60,11 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
             };
             fileReader.readAsText(this.file);
         }
+    }
+
+    onSave() {
+        (this.class as any).tag_id = this.selectedTagId;
+        this.dialogRef.close(this.class);
     }
 
     resizeDialog() {

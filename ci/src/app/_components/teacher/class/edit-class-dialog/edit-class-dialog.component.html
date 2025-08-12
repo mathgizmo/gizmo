@@ -16,6 +16,18 @@
             Name is required.
         </div>
     </div>
+    <!-- Tag selection -->
+    <div class="form-group" *ngIf="teacherTags && teacherTags.length > 1">
+        <label for="tag_id" class="required">Area of Interest:</label>
+        <select id="tag_id" class="form-control" name="tag_id" [(ngModel)]="selectedTagId" required>
+            <option [ngValue]="null" disabled>Select Area of Interest</option>
+            <option *ngFor="let t of teacherTags" [ngValue]="t.id">{{t.name}}</option>
+        </select>
+    </div>
+    <div class="form-group" *ngIf="teacherTags && teacherTags.length === 1">
+        <label>Area of Interest:</label>
+        <div><b>{{teacherTags[0].name}}</b></div>
+    </div>
     <div class="form-group">
         <label for="class_type">Type of Classroom:</label>
         <select id="class_type" class="form-control" name="class_type" [(ngModel)]="class.class_type">
@@ -55,10 +67,10 @@
 </mat-dialog-content>
 <mat-dialog-actions class="buttons-container dialog-buttons-container">
     <button mat-button [mat-dialog-close]="false" class='button' type="button">Close</button>
-    <button *ngIf="name.invalid" mat-button class='button moving-forward-button continue-button' type="button" disabled>
+    <button *ngIf="name.invalid || (!selectedTagId && teacherTags && teacherTags.length > 0)" mat-button class='button moving-forward-button continue-button' type="button" disabled>
         Save
     </button>
-    <button *ngIf="!name.invalid" mat-button [mat-dialog-close]="class"
+    <button *ngIf="!name.invalid && (selectedTagId || (teacherTags && teacherTags.length === 1))" mat-button (click)="onSave()"
             class='button moving-forward-button continue-button' type="button">Save
     </button>
 </mat-dialog-actions>

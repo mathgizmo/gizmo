@@ -71,6 +71,12 @@ export class ClassAssignmentsComponent implements OnInit {
                     this.class = classes.filter(x => +x.id === +this.classId)[0];
                     this.available_assignments = res['available_assignments'];
                     this.assignments = res['assignments'];
+                    // filter by class tag if present
+                    if (this.class && (this.class as any).tag_id) {
+                        const tagId = (this.class as any).tag_id;
+                        this.available_assignments = this.available_assignments.filter(a => a.tag_id === tagId);
+                        this.assignments = this.assignments.filter(a => a.tag_id === tagId);
+                    }
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Assignments';
                 });
             this.classService.getStudents(this.classId).subscribe(students => {
