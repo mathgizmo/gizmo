@@ -1,3 +1,20 @@
+/* Tag toggle group styles */
+.tags-toggle-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 8px 0 16px;
+}
+
+.tags-toggle-group button.active {
+	background: #1976d2;
+	color: #fff;
+	border-color: #1976d2;
+}
+
+.tags-toggle-group .clear-btn {
+	margin-left: auto;
+}
 @import '../../../../colors';
 
 .content {

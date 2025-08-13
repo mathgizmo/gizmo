@@ -14,7 +14,11 @@ class ContentController extends Controller
     {
         $levels = Level::where('dev_mode', 0)->orderBy('order_no', 'ASC')->get();
         foreach ($levels as $level) {
-            $units = Unit::where('level_id', $level->id)->where('dev_mode', 0)->orderBy('order_no', 'ASC')->get();
+            // Eager-load units for the level
+            $units = Unit::where('level_id', $level->id)
+                ->where('dev_mode', 0)
+                ->orderBy('order_no', 'ASC')
+                ->get();
             foreach ($units as $unit) {
                 $topics = Topic::where('unit_id', $unit->id)->where('dev_mode', 0)->orderBy('order_no', 'ASC')->get();
                 foreach ($topics as $topic) {
@@ -28,6 +32,13 @@ class ContentController extends Controller
                     $topic->lessons = Lesson::where('topic_id', $topic->id)->where('dev_mode', 0)->orderBy('order_no', 'ASC')->get();
                 }
                 $unit->topics = $topics;
+                // Attach tag IDs for frontend filtering
+                try {
+                    // Using relation to fetch tag IDs associated with the unit (Tag table is 'tag')
+                    $unit->tag_ids = $unit->tags()->pluck('tag.id')->values();
+                } catch (\Exception $e) {
+                    $unit->tag_ids = [];
+                }
             }
             $level->units = $units;
         }
