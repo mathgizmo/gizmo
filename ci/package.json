@@ -6,8 +6,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/ --build-optimizer=false",
-    "prod-build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/",
-    "test-build": "ng build --output-path=test-build/ --configuration=testing --base-href /gizmo/",
+    "prod-build": "ng build --output-path=last-build/ --configuration=production --base-href /gizmo/  --verbose",
+    "test-build": "ng build --output-path=test-build/ --configuration=testing --base-href /gizmo/ --verbose",
     "cordova-build": "ng build --output-path=www/ --configuration=cordova --base-href ./"
   },
   "dependencies": {
