@@ -5,18 +5,20 @@
   </div>
 
   <!-- Tag filter: multi-select button toggles (only when tags exist) -->
-  <div class="form-group" *ngIf="teacherTags && teacherTags.length > 0">
-    <label>Filter by Areas of Interest:</label>
-    <div class="tags-toggle-group">
-      <button mat-stroked-button color="primary"
+  <ng-container *ngIf="teacherTags && teacherTags.length > 0">
+    <h3 class="level-title title">Filter by Areas of Interest</h3>
+    <mat-card class="level">
+      <div class="tags-toggle-group">
+      <button class="tag-btn"
               *ngFor="let t of teacherTags"
               [class.active]="selectedTagIds.indexOf(+t.id) !== -1"
               (click)="toggleTag(t.id)">
         {{t.name}}
       </button>
-      <button mat-button color="warn" class="clear-btn" (click)="clearTagSelection()" *ngIf="selectedTagIds.length">Clear</button>
-    </div>
-  </div>
+      <button class="clear-btn" (click)="clearTagSelection()" *ngIf="selectedTagIds.length">Clear</button>
+      </div>
+    </mat-card>
+  </ng-container>
 
   <!-- Prompt to select at least one tag -->
   <div class="alert alert-info" *ngIf="teacherTags && teacherTags.length > 0 && !selectedTagIds.length">
