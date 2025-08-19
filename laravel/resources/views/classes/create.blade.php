@@ -75,12 +75,12 @@
                 </div>
 
                 <div class="form-group row mt-3 {{ $errors->has('tag_id') ? ' has-error' : '' }}">
-                    <label for="tag_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Tag</label>
+                    <label for="tag_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Tags</label>
                     <div class="col-md-8">
-                        <select id="tag_id" name="tag_id" class="form-control" style="max-width: 200px;">
-                            <option value="">Select Tag</option>
+                        <select id="tag_id" name="tag_id[]" class="form-control" style="max-width: 260px;" multiple>
+                            @php($oldTagIds = old('tag_id', []))
                             @foreach(\App\Tag::orderBy('name')->get() as $tag)
-                                <option value="{{ $tag->id }}" {{ old('tag_id') == $tag->id ? 'selected' : '' }}>
+                                <option value="{{ $tag->id }}" {{ in_array($tag->id, $oldTagIds) ? 'selected' : '' }}>
                                     {{ $tag->name }}
                                 </option>
                             @endforeach
@@ -90,6 +90,7 @@
                                 <strong>{{ $errors->first('tag_id') }}</strong>
                             </span>
                         @endif
+                        <small class="form-text text-muted">Hold Cmd/Ctrl to select multiple.</small>
                     </div>
                 </div>
                 <div id="invitations-container" class="form-group row mt-3" style="display: none;">

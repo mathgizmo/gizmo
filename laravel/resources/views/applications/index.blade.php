@@ -104,7 +104,9 @@
                             <td>{{$application->name}}</td>
                             <td>{{$application->teacher ? $application->teacher->email : ''}}</td>
                             <td>{{ucfirst($application->type)}}</td>
-                            <td>{{$application->tag ? $application->tag->name : ''}}</td>
+                            <td>
+                                {{ implode(', ', $application->tags->pluck('name')->toArray()) }}
+                            </td>
                             <td class="text-right">
                                 <form action="{{ route('applications.copy', $application->id) }}"
                                       method="POST" style="display: inline;">

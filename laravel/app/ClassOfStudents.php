@@ -10,10 +10,11 @@ class ClassOfStudents extends Model
 {
     protected $table = 'classes';
 
-    protected $fillable = ['teacher_id', 'key', 'name', 'class_type', 'subscription_type', 'invitations', 'is_researchable', 'tag_id'];
+    protected $fillable = ['teacher_id', 'key', 'name', 'class_type', 'subscription_type', 'invitations', 'is_researchable'];
 
-    public function tag() {
-        return $this->belongsTo('App\Tag', 'tag_id');
+    // New many-to-many tags relationship (pivot: class_tag)
+    public function tags() {
+        return $this->belongsToMany('App\Tag', 'class_tag', 'class_id', 'tag_id');
     }
 
     public function teacher() {

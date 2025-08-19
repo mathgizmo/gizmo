@@ -27,9 +27,12 @@ class ClassController extends Controller
         }
         if ($request['tag_id']) {
             if ($request['tag_id'] === 'none') {
-                $query->whereNull('tag_id');
+                $query->whereDoesntHave('tags');
             } else {
-                $query->where('tag_id', $request['tag_id']);
+                $tagId = $request['tag_id'];
+                $query->whereHas('tags', function($qq) use ($tagId) {
+                    $qq->where('tag.id', $tagId);
+                });
             }
         }
         if ($request['subscription_type']) {
@@ -65,9 +68,13 @@ class ClassController extends Controller
             'teacher_id' => [
                 'required', 'exists:students,id'
             ],
-            'tag_id' => 'nullable|exists:tag,id'
+            'tag_id' => 'nullable|array',
+            'tag_id.*' => 'exists:tag,id'
         ]);
-        $class = ClassOfStudents::create($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations', 'tag_id'));
+    $tagIds = collect((array)($request['tag_id'] ?? []))->filter()->unique()->values()->all();
+    $payload = $request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations');
+    $class = ClassOfStudents::create($payload);
+    $class->tags()->sync($tagIds);
         foreach ($request['assignment'] as $key => $value) {
             DB::table('classes_applications')->insert([
                 'class_id' => $class->id,
@@ -111,7 +118,10 @@ class ClassController extends Controller
         if (!$class) {
             abort('404', 'Class Not Exists!');
         }
-        $class->update($request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations', 'tag_id'));
+    $tagIds = collect((array)($request['tag_id'] ?? []))->filter()->unique()->values()->all();
+    $payload = $request->only('name', 'teacher_id', 'class_type', 'subscription_type', 'invitations');
+    $class->update($payload);
+    $class->tags()->sync($tagIds);
         $old_apps = $class->applications()->get()->keyBy('id');
         if ($request['assignment']) {
             foreach ($request['assignment'] as $key => $value) {

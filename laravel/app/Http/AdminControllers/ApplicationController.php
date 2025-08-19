@@ -29,9 +29,12 @@ class ApplicationController extends Controller
         }
         if ($request['tag_id']) {
             if ($request['tag_id'] === 'none') {
-                $query->whereNull('tag_id');
+                $query->whereDoesntHave('tags');
             } else {
-                $query->where('tag_id', $request['tag_id']);
+                $tagId = $request['tag_id'];
+                $query->whereHas('tags', function($qq) use ($tagId) {
+                    $qq->where('tag.id', $tagId);
+                });
             }
         }
         if ($request['teacher']) {
@@ -64,20 +67,22 @@ class ApplicationController extends Controller
         return view('applications.create', array(
             'icons' => $icons,
             'tree' => $tree,
-            'type' => $request->input('type')
+            'type' => $request->input('type'),
+            'selected_tag_ids' => []
         ));
     }
 
     public function store(Request $request)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
-        $this->validate($request, [
+    $this->validate($request, [
             'name' => 'required',
-            'tag_id' => 'nullable|exists:tag,id'
+            'tag_id' => 'nullable|array',
+            'tag_id.*' => 'exists:tag,id'
         ]);
         $app = new Application();
         $app->name = $request['name'];
-        $app->tag_id = $request['tag_id'];
+    $tagIds = collect((array)($request['tag_id'] ?? []))->filter()->unique()->values()->all();
         if (isset($request['icon']) && $request['icon']) {
             $app->icon = $request['icon'];
         }
@@ -88,6 +93,11 @@ class ApplicationController extends Controller
         $app->type = $request['type'] ?: 'assignment';
         $app->duration = $request['duration'] ?: null;
         $app->save();
+        if (!empty($tagIds)) {
+            $app->tags()->sync($tagIds);
+        } else {
+            $app->tags()->sync([]);
+        }
         $app->updateTree($request);
         return redirect('/applications')->with(array('message' => 'Created successfully'));
     }
@@ -103,10 +113,12 @@ class ApplicationController extends Controller
             $icons[] = $file;
         }
         $tree = $application->getTree();
+    $selected_tag_ids = $application->tags->pluck('id')->toArray();
         return view('applications.edit', [
             'application' => $application,
             'icons' => $icons,
-            'tree' => $tree
+            'tree' => $tree,
+            'selected_tag_ids' => $selected_tag_ids
         ]);
     }
 
@@ -115,7 +127,8 @@ class ApplicationController extends Controller
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
         $this->validate($request, [
             'name' => 'required',
-            'tag_id' => 'nullable|exists:tag,id'
+            'tag_id' => 'nullable|array',
+            'tag_id.*' => 'exists:tag,id'
         ]);
         $app = Application::where('id', $id)->first();
         if (!$app) {
@@ -127,13 +140,14 @@ class ApplicationController extends Controller
         if (isset($request['icon']) && $request['icon']) {
             $app->icon = $request['icon'];
         }
-        $app->tag_id = $request['tag_id'] ?: null;
+    $tagIds = collect((array)($request['tag_id'] ?? []))->filter()->unique()->values()->all();
         $app->allow_any_order = $request['allow_any_order'] ? true : false;
         $app->allow_back_tracking = $request['allow_back_tracking'] ? true : false;
         $app->testout_attempts = $request['testout_attempts'] >= -1 ? intval($request['testout_attempts']) : 0;
         $app->question_num = $request['question_num'] ?: 3;
         $app->duration = $request['duration'] ?: null;
-        $app->save();
+    $app->save();
+    $app->tags()->sync($tagIds);
         $app->updateTree($request);
         return redirect('/applications')->with(array('message' => 'Updated successfully'));
     }

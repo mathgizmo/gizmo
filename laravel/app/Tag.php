@@ -22,11 +22,24 @@ class Tag extends Model
 
     public function applications()
     {
+        // legacy one-to-one column
         return $this->hasMany('App\Application', 'tag_id');
     }
 
     public function classes()
     {
+        // legacy one-to-one column
         return $this->hasMany('App\Classes', 'tag_id');
+    }
+
+    // New many-to-many relations
+    public function applicationMany()
+    {
+        return $this->belongsToMany('App\Application', 'application_tag', 'tag_id', 'app_id');
+    }
+
+    public function classMany()
+    {
+        return $this->belongsToMany('App\ClassOfStudents', 'class_tag', 'tag_id', 'class_id');
     }
 }
