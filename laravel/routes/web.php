@@ -25,6 +25,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('applications', 'ApplicationController', ['except' => ['show']]);
     Route::post('applications/{application}/copy', 'ApplicationController@copy')->name('applications.copy');
     Route::get('applications/search', 'ApplicationController@find')->name('applications.search');
+    // Alias path to support /admin prefix when app is hosted under /admin
+    Route::get('admin/applications/search', 'ApplicationController@find');
     Route::resource('levels', 'LevelController');
     Route::resource('units', 'UnitController');
     Route::resource('topics', 'TopicController');

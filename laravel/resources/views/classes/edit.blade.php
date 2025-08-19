@@ -211,8 +211,9 @@
             $('#assignment-input').keyup(function() {
                 const pattern = $('#assignment-input').val();
                 if(pattern) {
+                    const selectedTags = ($('#tag_id').val() || []).map(function(id){return 'tag_id[]='+encodeURIComponent(id)}).join('&');
                     $.ajax({
-                        url: "{{route('applications.search')}}?pattern="+pattern+'&type=assignment&limit=5',
+                        url: "{{route('applications.search')}}?pattern="+encodeURIComponent(pattern)+'&type=assignment&limit=5'+(selectedTags ? '&'+selectedTags : ''),
                         type: "GET",
                         success: function(data, textStatus, jqXHR) {
                             const dl = document.getElementById('assignments-datalist');
@@ -221,6 +222,7 @@
                                 const option = document.createElement('option');
                                 option.setAttribute('key', item.id);
                                 option.value = item.name;
+                                option.setAttribute('data-tags', (item.tags || []).map(t => t.name).join(', '));
                                 dl.appendChild(option);
                             });
                         }
@@ -245,6 +247,13 @@
                         name.setAttribute('target', '_blank');
                         name.innerHTML = option.value;
                         li.appendChild(name);
+                        const tags = document.createElement('div');
+                        tags.classList.add('text-muted');
+                        tags.style.fontSize = '0.9em';
+                        tags.innerHTML = (option.getAttribute('data-tags') || '').trim();
+                        if (tags.innerHTML) {
+                            li.appendChild(tags);
+                        }
                         const container = document.createElement('div');
                         container.classList.add('d-flex');
                         container.classList.add('flex-row');
@@ -276,8 +285,9 @@
             $('#test-input').keyup(function() {
                 const pattern = $('#test-input').val();
                 if(pattern) {
+                    const selectedTags = ($('#tag_id').val() || []).map(function(id){return 'tag_id[]='+encodeURIComponent(id)}).join('&');
                     $.ajax({
-                        url: "{{route('applications.search')}}?pattern="+pattern+'&type=test&limit=5',
+                        url: "{{route('applications.search')}}?pattern="+encodeURIComponent(pattern)+'&type=test&limit=5'+(selectedTags ? '&'+selectedTags : ''),
                         type: "GET",
                         success: function(data, textStatus, jqXHR) {
                             const dl = document.getElementById('tests-datalist');
@@ -286,6 +296,7 @@
                                 const option = document.createElement('option');
                                 option.setAttribute('key', item.id);
                                 option.value = item.name;
+                                option.setAttribute('data-tags', (item.tags || []).map(t => t.name).join(', '));
                                 dl.appendChild(option);
                             });
                         }
@@ -310,6 +321,13 @@
                         name.setAttribute('target', '_blank');
                         name.innerHTML = option.value;
                         li.appendChild(name);
+                        const tags = document.createElement('div');
+                        tags.classList.add('text-muted');
+                        tags.style.fontSize = '0.9em';
+                        tags.innerHTML = (option.getAttribute('data-tags') || '').trim();
+                        if (tags.innerHTML) {
+                            li.appendChild(tags);
+                        }
                         const container = document.createElement('div');
                         container.classList.add('d-flex');
                         container.classList.add('flex-row');

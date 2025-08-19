@@ -4,6 +4,7 @@ namespace App\Http\AdminControllers;
 
 use Illuminate\Http\Request;
 use App\Application;
+use App\ClassOfStudents;
 use Illuminate\Support\Facades\DB;
 
 class ApplicationController extends Controller
@@ -178,11 +179,40 @@ class ApplicationController extends Controller
             }
         }
         $limit = $request['limit'] == 'all' ? null : ((int)$request['limit'] > 0 ? (int)$request['limit'] : 5);
-        $pattern = $request['pattern'];
-        $query = Application::query();
-        $query->where('name', 'LIKE', '%'.$pattern.'%');
+        $pattern = trim((string)$request->input('pattern', ''));
+        $query = Application::query()->with(['tags:id,name']);
+        if ($pattern !== '') {
+            $terms = array_values(array_filter(array_map('trim', preg_split('/\s+/', $pattern))));
+            $query->where(function($q) use ($pattern, $terms) {
+                // match full phrase
+                $q->where('name', 'LIKE', '%'.$pattern.'%');
+                // or match all terms
+                if (!empty($terms)) {
+                    $q->orWhere(function($qq) use ($terms) {
+                        foreach ($terms as $term) {
+                            $qq->where('name', 'LIKE', '%'.$term.'%');
+                        }
+                    });
+                }
+            });
+        }
         if ($request['type']) {
             $query->where('type', $request['type']);
+        }
+        // If tag_id[] is provided directly (from UI), filter by those; otherwise, if class_id is provided, filter by class tags
+        $filterTagIds = collect((array)$request->input('tag_id', []))->filter()->map(function($v){ return (int)$v; })->values()->all();
+        if (!empty($filterTagIds)) {
+            $query->whereHas('tags', function($q) use ($filterTagIds) {
+                $q->whereIn('tag.id', $filterTagIds);
+            });
+        } elseif ($request->filled('class_id')) {
+            $class = ClassOfStudents::with('tags:id')->find($request->input('class_id'));
+            if ($class && $class->tags && $class->tags->count() > 0) {
+                $tagIds = $class->tags->pluck('id')->toArray();
+                $query->whereHas('tags', function($q) use ($tagIds) {
+                    $q->whereIn('tag.id', $tagIds);
+                });
+            }
         }
         if ($limit) $query->limit($limit);
         return $query->get();
