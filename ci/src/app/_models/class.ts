@@ -8,6 +8,6 @@
     teacher_id: number;
     teacher: string;
     is_researchable: number;
-    // added to support area of interest filtering
-    tag_id?: number;
+    // tags assigned to the class (from backend)
+    tags?: Array<{ id: number; name: string }>;
 }

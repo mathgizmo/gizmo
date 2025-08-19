@@ -37,7 +37,7 @@ export class AssignmentService {
     }
 
     public addAssignment(item) {
-        // include tag_id
+        // include tag_ids (array) for tags
         return this.http.post('/assignments/', item)
             .pipe(
                 map((response: Response) => {

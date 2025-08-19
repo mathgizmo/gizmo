@@ -1,4 +1,5 @@
 <div class="profile-classes">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <mat-card>
         <div class="title">Classrooms</div>
         <form *ngIf="classes.length > 0" novalidate #form="ngForm">
@@ -45,9 +46,9 @@
                                 <option value="closed">Closed</option>
                             </select>
                         </td>
-                        <!-- Added: Tag filter dropdown -->
+                        <!-- Tag filter dropdown -->
                         <td>
-                            <select class="form-control" name="tag_id" [(ngModel)]="tag_id">
+                            <select class="form-control" name="tag_filter" [(ngModel)]="tag_id">
                                 <option [ngValue]="''"></option>
                                 <option *ngFor="let t of teacherTags" [ngValue]="t.id">{{t.name}}</option>
                             </select>
@@ -62,9 +63,9 @@
                         <td routerLink="./{{item.id}}/dashboard">{{item.name}}</td>
                         <td routerLink="./{{item.id}}/dashboard">{{item.class_type.charAt(0).toUpperCase() + item.class_type.slice(1) }}</td>
                         <td routerLink="./{{item.id}}/dashboard">{{item.subscription_type.charAt(0).toUpperCase() + item.subscription_type.slice(1) }}</td>
-                        <!-- Show tag name; hide row if tag filter set and doesn't match -->
-                        <td routerLink="./{{item.id}}/dashboard" *ngIf="!tag_id || +item.tag_id === +tag_id">{{ getTagName(item) }}</td>
-                        <td class="text-right" style="min-width: 320px;" *ngIf="!tag_id || +item.tag_id === +tag_id">
+                        <!-- Show tags and apply tag filter if set (overlap) -->
+                        <td routerLink="./{{item.id}}/dashboard" *ngIf="hasTag(item, tag_id)">{{ getTagNames(item) }}</td>
+                        <td class="text-right" style="min-width: 320px;" *ngIf="hasTag(item, tag_id)">
                             <button *ngIf="user.user_id == item.teacher_id"
                                     mat-stroked-button
                                     class="button button-small button-amber"

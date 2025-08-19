@@ -82,17 +82,12 @@ export class ClassesManagementService {
     }
 
     public updateClass(class_id, item) {
-        this.classes = this.classes.map(x => {
-            if (x.id === class_id) {
-                return item;
-            } else {
-                return x;
-            }
-        });
         return this.http.put('/classes/' + class_id, item)
             .pipe(
                 map((response: Response) => {
-                    return response['item'];
+                    const classItem = response['item'];
+                    this.classes = this.classes.map(x => x.id === class_id ? classItem : x);
+                    return classItem;
                 })
             );
     }

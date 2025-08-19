@@ -71,11 +71,15 @@ export class ClassAssignmentsComponent implements OnInit {
                     this.class = classes.filter(x => +x.id === +this.classId)[0];
                     this.available_assignments = res['available_assignments'];
                     this.assignments = res['assignments'];
-                    // filter by class tag if present
-                    if (this.class && (this.class as any).tag_id) {
-                        const tagId = (this.class as any).tag_id;
-                        this.available_assignments = this.available_assignments.filter(a => a.tag_id === tagId);
-                        this.assignments = this.assignments.filter(a => a.tag_id === tagId);
+                    // filter by class tags overlap if present
+                    const classTagIds: number[] = (this.class as any)?.tags ? ((this.class as any).tags as any[]).map(t => +t.id) : [];
+                    if (classTagIds.length) {
+                        const hasOverlap = (app) => {
+                            const appTagIds = (app as any)?.tags ? ((app as any).tags as any[]).map(t => +t.id) : [];
+                            return appTagIds.some(id => classTagIds.indexOf(+id) !== -1);
+                        };
+                        this.available_assignments = this.available_assignments.filter(a => hasOverlap(a));
+                        this.assignments = this.assignments.filter(a => hasOverlap(a));
                     }
                     this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Assignments';
                 });

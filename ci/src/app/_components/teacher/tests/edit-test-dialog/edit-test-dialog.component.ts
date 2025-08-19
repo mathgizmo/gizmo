@@ -20,9 +20,8 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         'allow_any_order': 0,
         'allow_back_tracking': 0,
         'duration': 0,
-        'question_num': 1,
-        'total_questions_count': 0,
-        'tag_id': null
+    'question_num': 1,
+    'total_questions_count': 0
     };
     public questionsCount = 0;
     public tree = [];
@@ -34,7 +33,7 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
     private readonly adminUrl = environment.adminUrl;
 
     public teacherTags: any[] = [];
-    public selectedTagId: number = null;
+    public selectedTagIds: number[] = [];
     private originalTree: any[] = [];
 
     constructor(
@@ -49,28 +48,33 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
         if (this.data.test) {
             this.test = this.data.test;
             this.questionsCount = this.test.total_questions_count || 0;
-            if ((this.test as any).tag_id) { this.selectedTagId = (this.test as any).tag_id; }
+            // try to infer from tags array
+            const tags = (this.test as any)?.tags ? ((this.test as any).tags as any[]).map(t => +t.id) : [];
+            if (tags.length) { this.selectedTagIds = [...tags]; }
         }
         if (this.data.title) { this.title = this.data.title; }
         if (this.data.tree) { this.tree = this.data.tree; this.originalTree = JSON.parse(JSON.stringify(this.tree)); }
         if (this.data.icons) { this.icons = this.data.icons; }
         if (this.data.tags) {
             this.teacherTags = this.data.tags;
-            if (this.teacherTags.length === 1) { this.selectedTagId = this.teacherTags[0].id; }
+            if ((!this.selectedTagIds || !this.selectedTagIds.length) && this.teacherTags.length === 1) {
+                this.selectedTagIds = [this.teacherTags[0].id];
+            }
         }
         this.resizeDialog();
     }
 
     ngAfterViewInit() {
-        if (this.selectedTagId) {
+        if (this.selectedTagIds && this.selectedTagIds.length) {
             setTimeout(() => this.onTagChange(), 0);
         }
     }
 
     onSave() {
-        this.test.tree = $('#tree-form').serialize();
-        this.test['tag_id'] = this.selectedTagId;
-        this.dialogRef.close(this.test);
+    this.test.tree = $('#tree-form').serialize();
+    const payload = { ...this.test } as any;
+    payload.tag_ids = this.selectedTagIds || [];
+    this.dialogRef.close(payload);
     }
 
     getQuestionsCount() {
@@ -177,9 +181,12 @@ export class EditTestDialogComponent extends BaseDialogComponent<EditTestDialogC
     }
 
     filterTreeByTag() {
-        if (!this.selectedTagId) { return; }
+        if (!this.selectedTagIds || !this.selectedTagIds.length) { return; }
         this.tree.forEach(level => {
-            level.children = level.children.filter(u => u.tag_ids && u.tag_ids.indexOf(this.selectedTagId) !== -1);
+            level.children = level.children.filter(u => {
+                const uTags = (u as any).tag_ids || [];
+                return Array.isArray(uTags) && uTags.some((tid: number) => this.selectedTagIds.indexOf(+tid) !== -1);
+            });
         });
         this.tree = this.tree.filter(level => level.children && level.children.length > 0);
     }

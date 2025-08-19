@@ -18,8 +18,7 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
         'tree': null,
         'allow_any_order': false,
         'testout_attempts': 0,
-        'question_num': 3,
-        'tag_id': null
+        'question_num': 3
     };
     tree = [];
     title = 'Edit Assignment';
@@ -31,7 +30,7 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
 
     public teacherTags: any[] = [];
 
-    public selectedTagId: number = null;
+    public selectedTagIds: number[] = [];
     private originalTree: any[] = [];
 
     constructor(
@@ -44,9 +43,8 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
     public ngOnInit() {
         if (this.data.assignment) {
             this.assignment = this.data.assignment;
-            if (this.assignment && (this.assignment as any).tag_id) {
-                this.selectedTagId = (this.assignment as any).tag_id;
-            }
+            const tags = (this.assignment as any)?.tags ? ((this.assignment as any).tags as any[]).map(t => +t.id) : [];
+            if (tags.length) { this.selectedTagIds = [...tags]; }
         }
         if (this.data.title) {
             this.title = this.data.title;
@@ -61,23 +59,26 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
         }
         if (this.data.tags) {
             this.teacherTags = this.data.tags;
-            if (this.teacherTags.length === 1) {
-                this.selectedTagId = this.teacherTags[0].id;
+            if ((!this.selectedTagIds || !this.selectedTagIds.length) && this.teacherTags.length === 1) {
+                this.selectedTagIds = [this.teacherTags[0].id];
             }
         }
         this.resizeDialog();
     }
 
     ngAfterViewInit() {
-        if (this.selectedTagId) {
+        if (this.selectedTagIds && this.selectedTagIds.length) {
             setTimeout(() => this.onTagChange(), 0);
         }
     }
 
     filterTreeByTag() {
-        if (!this.selectedTagId) { return; }
+        if (!this.selectedTagIds || !this.selectedTagIds.length) { return; }
         this.tree.forEach(level => {
-            level.children = level.children.filter(u => u.tag_ids && u.tag_ids.indexOf(this.selectedTagId) !== -1);
+            level.children = level.children.filter(u => {
+                const uTags = (u as any).tag_ids || [];
+                return Array.isArray(uTags) && uTags.some((tid: number) => this.selectedTagIds.indexOf(+tid) !== -1);
+            });
         });
         // remove levels that ended up with zero children
         this.tree = this.tree.filter(level => level.children && level.children.length > 0);
@@ -93,8 +94,9 @@ export class EditAssignmentDialogComponent extends BaseDialogComponent<EditAssig
 
     onSave() {
         this.assignment.tree = $('#tree-form').serialize();
-        this.assignment['tag_id'] = this.selectedTagId;
-        this.dialogRef.close(this.assignment);
+        const payload = { ...this.assignment } as any;
+        payload.tag_ids = this.selectedTagIds || [];
+        this.dialogRef.close(payload);
     }
 
     hasCheckedChildrenLevel(level) {

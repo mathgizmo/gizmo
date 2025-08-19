@@ -18,15 +18,14 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
         subscription_type: 'open',
         invitations: '',
         is_researchable: 0,
-        tag_id: null // new
+    tags: [] as Array<{id:number,name:string}>
     };
     public title = 'Edit Class';
     public file: any;
 
     // teacher available tags passed from parent
     public teacherTags: any[] = [];
-
-    public selectedTagId: number = null;
+    public selectedTagIds: number[] = [];
 
     constructor(
         public dialogRef: MatDialogRef<EditClassDialogComponent>,
@@ -37,17 +36,13 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
     public ngOnInit() {
         if (this.data.class) {
             this.class = this.data.class;
-            if ((this.class as any).tag_id) { this.selectedTagId = (this.class as any).tag_id; }
+            const current = (this.class as any)?.tags ? ((this.class as any).tags as any[]).map(t => +t.id) : [];
+            this.selectedTagIds = [...current];
         }
         if (this.data.title) {
             this.title = this.data.title;
         }
-        if (this.data.tags) {
-            this.teacherTags = this.data.tags;
-            if (this.teacherTags.length === 1) {
-                this.selectedTagId = this.teacherTags[0].id;
-            }
-        }
+    if (this.data.tags) { this.teacherTags = this.data.tags; }
         this.resizeDialog();
     }
 
@@ -63,8 +58,9 @@ export class EditClassDialogComponent extends BaseDialogComponent<EditClassDialo
     }
 
     onSave() {
-        (this.class as any).tag_id = this.selectedTagId;
-        this.dialogRef.close(this.class);
+        const payload = { ...this.class } as any;
+        payload.tag_ids = this.selectedTagIds;
+        this.dialogRef.close(payload);
     }
 
     resizeDialog() {

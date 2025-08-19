@@ -33,10 +33,11 @@ export class ManageClassesComponent implements OnInit {
     public name: string;
     public subscription_type: string;
     public class_type: string;
-    // Added: filter model for tag
-    public tag_id: number | '' = '';
-
     public teacherTags: any[] = [];
+    // Tag filter bound from template
+    public tag_id: number | '' = '';
+    public loading = false;
+    private _pendingLoads = 0;
 
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
@@ -59,20 +60,29 @@ export class ManageClassesComponent implements OnInit {
 
     ngOnInit() {
         this.user = this.authenticationService.userValue;
+        this.beginLoad();
         this.userService.getProfile().subscribe((res: any) => {
             if (res && res.tags) { this.teacherTags = res.tags; }
-        });
+            this.endLoad();
+        }, _ => this.endLoad());
         this.checkNewShares();
     }
 
-    // Added: resolve tag name for display
-    getTagName(item: any): string {
-        if (!item || !item.tag_id) { return ''; }
-        const t = this.teacherTags?.find(x => +x.id === +item.tag_id);
-        return t ? t.name : '';
+    // Resolve tag names for display (join)
+    getTagNames(item: any): string {
+        const tags = (item && (item as any).tags) ? (item as any).tags : [];
+        return tags && tags.length ? tags.map(t => t.name).join(', ') : '';
+    }
+
+    // Check if class item has selected tag (used in template to avoid arrow functions in bindings)
+    hasTag(item: any, tagId: number | ''): boolean {
+        if (!tagId) { return true; }
+        const tags = (item && (item as any).tags) ? (item as any).tags : [];
+        return tags.some(t => +t.id === +tagId);
     }
 
     checkNewShares() {
+        this.beginLoad();
         this.shareService.getNewShare('classroom').subscribe(res => {
             if (res.item) {
                 const dialogRef = this.dialog.open(YesNoDialogComponent, {
@@ -89,12 +99,15 @@ export class ManageClassesComponent implements OnInit {
                     });
                 });
             } else {
+                this.beginLoad();
                 this.classService.getClasses()
                     .subscribe(response => {
                         this.classes = response;
-                    });
+                        this.endLoad();
+                    }, _ => this.endLoad());
             }
-        });
+            this.endLoad();
+        }, _ => this.endLoad());
     }
 
     onAddClass() {
@@ -108,7 +121,8 @@ export class ManageClassesComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.classService.addClass(result)
+        this.beginLoad();
+        this.classService.addClass(result)
                     .subscribe(item => {
                         this.classes.unshift(item);
                         this.snackBar.open('Classroom has been successfully created!', '', {
@@ -118,6 +132,7 @@ export class ManageClassesComponent implements OnInit {
                         if (item.subscription_type === 'invitation') {
                             this.router.navigate(['teacher/class/' + item.id + '/invitation-settings']);
                         }
+            this.endLoad();
                     }, error => {
                         let message = '';
                         if (typeof error === 'object') {
@@ -131,6 +146,7 @@ export class ManageClassesComponent implements OnInit {
                             duration: 3000,
                             panelClass: ['error-snackbar']
                         });
+            this.endLoad();
                     });
             }
         });
@@ -143,11 +159,16 @@ export class ManageClassesComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                this.beginLoad();
                 this.classService.updateClass(item.id, result).subscribe(res => {
                     this.snackBar.open('Classroom has been successfully updated!', '', {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
+                    // replace local item so new tags are visible immediately
+                    const idx = this.classes.findIndex((c: any) => c.id === res.id);
+                    if (idx >= 0) { this.classes[idx] = res; }
+                    this.endLoad();
                 }, error => {
                     let message = '';
                     if (typeof error === 'object') {
@@ -161,6 +182,7 @@ export class ManageClassesComponent implements OnInit {
                         duration: 3000,
                         panelClass: ['error-snackbar']
                     });
+                    this.endLoad();
                 });
             }
         });
@@ -175,7 +197,8 @@ export class ManageClassesComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.classService.deleteClass(class_id)
+        this.beginLoad();
+        this.classService.deleteClass(class_id)
                     .subscribe(response => {
                         this.classes = this.classes.filter( (item) => {
                             return item.id !== class_id;
@@ -184,6 +207,7 @@ export class ManageClassesComponent implements OnInit {
                             duration: 3000,
                             panelClass: ['success-snackbar']
                         });
+            this.endLoad();
                     }, error => {
                         let message = '';
                         if (typeof error === 'object') {
@@ -197,6 +221,7 @@ export class ManageClassesComponent implements OnInit {
                             duration: 3000,
                             panelClass: ['error-snackbar']
                         });
+            this.endLoad();
                     });
             }
         });
@@ -216,10 +241,20 @@ export class ManageClassesComponent implements OnInit {
                 case 'class_type': return compare(a.class_type, b.class_type, isAsc);
                 case 'subscription_type': return compare(a.subscription_type, b.subscription_type, isAsc);
                 // Added: sort by tag name for user-friendly ordering
-                case 'tag_name': return compare(this.getTagName(a), this.getTagName(b), isAsc);
+                case 'tag_name': return compare(this.getTagNames(a), this.getTagNames(b), isAsc);
                 default: return 0;
             }
         });
+    }
+
+    private beginLoad() {
+        this._pendingLoads++;
+        if (this._pendingLoads === 1) { this.loading = true; }
+    }
+
+    private endLoad() {
+        this._pendingLoads = Math.max(0, this._pendingLoads - 1);
+        if (this._pendingLoads === 0) { this.loading = false; }
     }
 
 }

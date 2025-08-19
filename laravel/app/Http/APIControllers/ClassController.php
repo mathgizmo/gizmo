@@ -33,7 +33,7 @@ class ClassController extends Controller
     public function all(Request $request) {
         $user = Auth::user();
         $user_id = $user->id;
-        $query = ClassOfStudents::query()->where(function ($q1) use($user_id) {
+        $query = ClassOfStudents::query()->with(['tags:id,name'])->where(function ($q1) use($user_id) {
             $q1->where('classes.teacher_id', $user_id)
                 ->orWhereHas('teachersWithoutResearchers', function ($q2) use($user_id) {
                     $q2->where('students.id', $user_id);
@@ -47,7 +47,7 @@ class ClassController extends Controller
     public function getResearchClasses(Request $request) {
         $user = Auth::user();
         $user_id = $user->id;
-        $query = ClassOfStudents::query()->where(function ($q1) use($user_id) {
+        $query = ClassOfStudents::query()->with(['tags:id,name'])->where(function ($q1) use($user_id) {
             $q1->whereHas('researchers', function ($q2) use($user_id) {
                 $q2->where('students.id', $user_id);
             });
@@ -61,7 +61,7 @@ class ClassController extends Controller
     public function get(Request $request, $class_id) {
         $user = Auth::user();
         $user_id = $user->id;
-        $item = ClassOfStudents::where('classes.id', $class_id)
+        $item = ClassOfStudents::with(['tags:id,name'])->where('classes.id', $class_id)
             ->where(function ($q1) use($user_id) {
                 $q1->where('classes.teacher_id', $user_id)
                     ->orWhereHas('teachers', function ($q2) use($user_id) {
@@ -77,18 +77,24 @@ class ClassController extends Controller
     public function store() {
         $user = Auth::user();
         try {
-            return $this->success([
-                'item' => ClassOfStudents::create([
-                    'teacher_id' => $user->id,
-                    'name' => request('name'),
-                    'class_type' => request('class_type') ?: 'other',
-                    'subscription_type' => request('subscription_type') ?: 'open',
-                    'invitations' => request('invitations'),
-                    'is_researchable' => request('is_researchable'),
-                    // Persist tag_id if provided
-                    'tag_id' => request()->has('tag_id') ? request('tag_id') : null,
-                ])
+            $class = ClassOfStudents::create([
+                'teacher_id' => $user->id,
+                'name' => request('name'),
+                'class_type' => request('class_type') ?: 'other',
+                'subscription_type' => request('subscription_type') ?: 'open',
+                'invitations' => request('invitations'),
+                'is_researchable' => request('is_researchable'),
             ]);
+            // Sync tags if provided (accept: tag_ids, tags, tag_id)
+            $tagIds = [];
+            if (request()->has('tag_ids')) { $tagIds = (array) request('tag_ids'); }
+            elseif (request()->has('tags')) { $tagIds = (array) request('tags'); }
+            elseif (request()->has('tag_id') && request('tag_id')) { $tagIds = [ request('tag_id') ]; }
+            if (!empty($tagIds)) {
+                try { $class->tags()->sync($tagIds); } catch (\Exception $e) {}
+            }
+            $class->load(['tags:id,name']);
+            return $this->success(['item' => $class]);
         } catch (\Exception $e) {
             return $this->error('Error.', 404);
         }
@@ -121,11 +127,16 @@ class ClassController extends Controller
                 if (request()->has('is_researchable')) {
                     $class->is_researchable = request('is_researchable');
                 }
-                // Update tag_id if provided
-                if (request()->has('tag_id')) {
-                    $class->tag_id = request('tag_id');
-                }
                 $class->save();
+                // Sync tags if provided (accept: tag_ids, tags, tag_id)
+                $tagIds = null;
+                if (request()->has('tag_ids')) { $tagIds = (array) request('tag_ids'); }
+                elseif (request()->has('tags')) { $tagIds = (array) request('tags'); }
+                elseif (request()->has('tag_id') && request('tag_id')) { $tagIds = [ request('tag_id') ]; }
+                if (is_array($tagIds)) {
+                    try { $class->tags()->sync($tagIds); } catch (\Exception $e) {}
+                }
+                $class->load(['tags:id,name']);
                 return $this->success(['item' => $class]);
             }
         } catch (\Exception $e) {}
@@ -697,7 +708,7 @@ class ClassController extends Controller
         $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
-            $items = $class->assignments()->orderBy('name', 'ASC')->get()->keyBy('id');
+            $items = $class->assignments()->with(['tags:id,name'])->orderBy('name', 'ASC')->get()->keyBy('id');
             $for_research = $request->filled('for_research') && $request['for_research'];
             $students = $for_research
                 ? $class->students()->wherePivot('is_element1_accepted', true)->get()
@@ -799,7 +810,7 @@ class ClassController extends Controller
             }
             $available = Application::where('teacher_id', $user_id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())
-                ->where('type', 'assignment')->orderBy('name', 'ASC')->get();
+                ->where('type', 'assignment')->with(['tags:id,name'])->orderBy('name', 'ASC')->get();
             foreach ($available as $item) {
                 $item->icon = $item->icon();
             }
@@ -840,7 +851,27 @@ class ClassController extends Controller
         $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)->first();
         if ($class) {
-            $items = $class->tests()->orderBy('name', 'ASC')->get()->keyBy('id');
+            // Optional tag filter (OR logic across provided tags)
+            $filterTagIds = [];
+            if ($request->has('tag_ids')) { $filterTagIds = (array) $request->input('tag_ids'); }
+            elseif ($request->has('tags')) { $filterTagIds = (array) $request->input('tags'); }
+            elseif ($request->has('tag_id')) { $filterTagIds = $request->input('tag_id') ? [ $request->input('tag_id') ] : []; }
+
+            // Normalize tag ids: allow comma-separated string or array
+            if ($filterTagIds && is_array($filterTagIds) && count($filterTagIds) === 1 && is_string($filterTagIds[0]) && strpos($filterTagIds[0], ',') !== false) {
+                $filterTagIds = explode(',', $filterTagIds[0]);
+            }
+            if ($filterTagIds) {
+                $filterTagIds = array_values(array_filter(array_map(function($v){ return intval($v); }, (array) $filterTagIds), function($v){ return $v > 0; }));
+            }
+
+            $testsQuery = $class->tests()->with(['tags:id,name'])->orderBy('name', 'ASC');
+            if ($filterTagIds && count($filterTagIds) > 0) {
+                $testsQuery->whereHas('tags', function ($q) use ($filterTagIds) {
+                    $q->whereIn('tag.id', $filterTagIds);
+                });
+            }
+            $items = $testsQuery->get()->keyBy('id');
             $for_research = $request->filled('for_research') && $request['for_research'];
             $students = $for_research
                 ? $class->students()->wherePivot('is_element1_accepted', true)->get()
@@ -917,9 +948,17 @@ class ClassController extends Controller
                 }
                 $item->error_rate = 1 - ($tracking_questions_statistics->total ? $tracking_questions_statistics->complete / $tracking_questions_statistics->total : 1);
             }
-            $available = Application::where('teacher_id', $user_id)
+            $availableQuery = Application::where('teacher_id', $user_id)
                 ->whereNotIn('id', $items->pluck('id')->toArray())
-                ->where('type', 'test')->orderBy('name', 'ASC')->get();
+                ->where('type', 'test')
+                ->with(['tags:id,name'])
+                ->orderBy('name', 'ASC');
+            if ($filterTagIds && count($filterTagIds) > 0) {
+                $availableQuery->whereHas('tags', function ($q) use ($filterTagIds) {
+                    $q->whereIn('tag.id', $filterTagIds);
+                });
+            }
+            $available = $availableQuery->get();
             foreach ($available as $item) {
                 $item->icon = $item->icon();
             }

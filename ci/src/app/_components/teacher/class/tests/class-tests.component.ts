@@ -27,12 +27,14 @@ export class ClassTestsComponent implements OnInit {
 
     tests = [];
     available_tests = [];
-    class = {
+    currentClass = {
         id: 0,
         name: ''
     };
     addTest = false;
     nameFilter;
+    // optional tag filter (IDs) to pass to API with OR logic
+    selectedTagIds: number[] = [];
     students = [];
 
     private readonly adminUrl = environment.adminUrl;
@@ -66,23 +68,59 @@ export class ClassTestsComponent implements OnInit {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.classId = +params['class_id'];
-            this.classService.getTests(this.classId)
+            // Preselect all class tags by default (if any)
+            const existingClasses = this.classService.classes || [];
+            this.currentClass = existingClasses.filter(x => +x.id === +this.classId)[0] || this.currentClass;
+            const defaultClassTagIds: number[] = (this.currentClass as any)?.tags ? ((this.currentClass as any).tags as any[]).map(t => +t.id) : [];
+            if ((!this.selectedTagIds || this.selectedTagIds.length === 0) && defaultClassTagIds.length) {
+                this.selectedTagIds = [...defaultClassTagIds];
+            }
+            const filters: any = {};
+            if (this.selectedTagIds && this.selectedTagIds.length) { filters.tag_ids = this.selectedTagIds; }
+            this.classService.getTests(this.classId, filters)
                 .subscribe(res => {
                     const classes = this.classService.classes;
-                    this.class = classes.filter(x => +x.id === +this.classId)[0];
+                    this.currentClass = classes.filter(x => +x.id === +this.classId)[0];
                     this.available_tests = res['available_tests'];
                     this.tests = res['tests'];
-                    if (this.class && (this.class as any).tag_id) {
-                        const tagId = (this.class as any).tag_id;
-                        this.available_tests = this.available_tests.filter(t => t.tag_id === tagId);
-                        this.tests = this.tests.filter(t => t.tag_id === tagId);
+                    // Keep only tests whose tags overlap with class tags (OR logic)
+                    const classTagIds: number[] = (this.currentClass as any)?.tags ? ((this.currentClass as any).tags as any[]).map(t => +t.id) : [];
+                    if (classTagIds.length) {
+                        const hasOverlap = (app) => {
+                            const appTagIds = (app as any)?.tags ? ((app as any).tags as any[]).map(t => +t.id) : [];
+                            return appTagIds.some(id => classTagIds.indexOf(+id) !== -1);
+                        };
+                        this.available_tests = (this.available_tests || []).filter(a => hasOverlap(a));
+                        this.tests = (this.tests || []).filter(a => hasOverlap(a));
                     }
-                    this.backLinkText = 'Classrooms > ' + (this.class ? this.class.name : this.classId) + ' > Tests';
+                    this.backLinkText = 'Classrooms > ' + (this.currentClass ? this.currentClass.name : this.classId) + ' > Tests';
                 });
             this.classService.getStudents(this.classId).subscribe(students => {
                 this.students = students;
             });
         });
+    }
+
+    // called when user changes tag filter (UI to be added)
+    onTagFilterChange() {
+        const filters: any = {};
+        if (this.selectedTagIds && this.selectedTagIds.length) { filters.tag_ids = this.selectedTagIds; }
+        this.classService.getTests(this.classId, filters)
+            .subscribe(res => {
+                const classes = this.classService.classes;
+                this.currentClass = classes.filter(x => +x.id === +this.classId)[0];
+                this.available_tests = res['available_tests'];
+                this.tests = res['tests'];
+                const classTagIds: number[] = (this.currentClass as any)?.tags ? ((this.currentClass as any).tags as any[]).map(t => +t.id) : [];
+                if (classTagIds.length) {
+                    const hasOverlap = (app) => {
+                        const appTagIds = (app as any)?.tags ? ((app as any).tags as any[]).map(t => +t.id) : [];
+                        return appTagIds.some(id => classTagIds.indexOf(+id) !== -1);
+                    };
+                    this.available_tests = (this.available_tests || []).filter(a => hasOverlap(a));
+                    this.tests = (this.tests || []).filter(a => hasOverlap(a));
+                }
+            });
     }
 
     onTestDateChanged(event) {
@@ -524,7 +562,7 @@ export class ClassTestsComponent implements OnInit {
     }
 
     onDownload(format = 'csv') {
-        this.classService.downloadTestsReport(this.class.id, format)
+    this.classService.downloadTestsReport(this.currentClass.id, format)
             .subscribe(file => {
                 let type = 'text/csv;charset=utf-8;';
                 switch (format) {
@@ -543,7 +581,7 @@ export class ClassTestsComponent implements OnInit {
                 const data = window.URL.createObjectURL(newBlob);
                 const link = document.createElement('a');
                 link.href = data;
-                link.download = this.class.name + ' - Tests Report.' + format;
+        link.download = this.currentClass.name + ' - Tests Report.' + format;
                 link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
                 setTimeout(function () {
                     window.URL.revokeObjectURL(data);

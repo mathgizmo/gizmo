@@ -21,7 +21,7 @@ class ApplicationController extends Controller
     public function getAssignment($assigment_id) {
         $user = Auth::user();
         $user_id = $user->id;
-        $item = Application::where('teacher_id', $user_id)
+        $item = Application::with(['tags:id,name'])->where('teacher_id', $user_id)
             ->where('type', 'assignment')
             ->where('id', $assigment_id)->first();
         return $this->success([
@@ -33,7 +33,7 @@ class ApplicationController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
         return $this->success([
-            'items' => array_values(Application::where('teacher_id', $user_id)
+            'items' => array_values(Application::with(['tags:id,name'])->where('teacher_id', $user_id)
                 ->where('type', 'assignment')->get()->toArray())
         ]);
     }
@@ -41,7 +41,7 @@ class ApplicationController extends Controller
     public function getTest($test_id) {
         $user = Auth::user();
         $user_id = $user->id;
-        $item = Application::where('teacher_id', $user_id)
+        $item = Application::with(['tags:id,name'])->where('teacher_id', $user_id)
             ->where('type', 'test')
             ->where('id', $test_id)->first();
         return $this->success([
@@ -52,7 +52,7 @@ class ApplicationController extends Controller
     public function getTests() {
         $user = Auth::user();
         $user_id = $user->id;
-        $items = Application::where('teacher_id', $user_id)->where('type', 'test')->get();
+        $items = Application::with(['tags:id,name'])->where('teacher_id', $user_id)->where('type', 'test')->get();
         foreach ($items as $item) {
             $item->duration = $item->duration ? round($item->duration / 60) : 0; // seconds to minutes
             $item->total_questions_count = $item->getQuestionsCount();
@@ -286,14 +286,15 @@ class ApplicationController extends Controller
         try {
             $user = Auth::user();
             $user_id = $user->id;
-            // --- Tag validation (required) ---
-            $tag_id = $request->input('tag_id');
-            if (!$tag_id) {
-                return $this->error('Tag is required.', 400);
-            }
-            if (!$user->tags()->where('tag.id', $tag_id)->exists()) {
-                return $this->error('Invalid tag selected.', 400);
-            }
+            // --- Tags validation (at least one required) ---
+            $tagIds = [];
+            if ($request->has('tag_ids')) { $tagIds = (array) $request->input('tag_ids'); }
+            elseif ($request->has('tags')) { $tagIds = (array) $request->input('tags'); }
+            elseif ($request->has('tag_id')) { $tagIds = $request->input('tag_id') ? [ $request->input('tag_id') ] : []; }
+            if (count($tagIds) < 1) { return $this->error('Tag is required.', 400); }
+            // ensure provided tags belong to user
+            $userTagIds = $user->tags()->pluck('tag.id')->toArray();
+            foreach ($tagIds as $tid) { if (!in_array($tid, $userTagIds)) { return $this->error('Invalid tag selected.', 400); } }
             $validator = Validator::make(request()->all(), [ 'name' => 'required|max:255' ]);
             if ($validator->fails()) {
                 return $this->error($validator->messages());
@@ -304,7 +305,6 @@ class ApplicationController extends Controller
                 $app->icon = request('icon');
             }
             $app->teacher_id = $user_id;
-            $app->tag_id = $tag_id; // assign selected tag
             $app->allow_any_order = request('allow_any_order') ? true : false;
             $app->allow_back_tracking = request('allow_back_tracking') ? true : false;
             $app->testout_attempts = request('testout_attempts') >= -1 ? intval(request('testout_attempts')) : 0;
@@ -320,8 +320,10 @@ class ApplicationController extends Controller
             $app->duration = request('duration') ? request('duration') * 60 : null; // minutes to seconds
             $app->type = $type;
             $app->save();
+            try { $app->tags()->sync($tagIds); } catch (\Exception $e) {}
             parse_str(request('tree'), $tree);
             $app->updateTree($tree);
+            $app->load(['tags:id,name']);
             return $this->success(['item' => $app]);
         } catch (\Exception $e) {
             return $this->error('Error.');
@@ -338,18 +340,16 @@ class ApplicationController extends Controller
             }
             $app = Application::where('id', $app_id)->where('teacher_id', $user_id)->first();
             if ($app) {
-                // --- Tag validation/update ---
-                if (request()->has('tag_id')) {
-                    $tag_id = request('tag_id');
-                    if (!$tag_id) {
-                        return $this->error('Tag is required.', 400);
-                    }
-                    if (!$user->tags()->where('tag.id', $tag_id)->exists()) {
-                        return $this->error('Invalid tag selected.', 400);
-                    }
-                    $app->tag_id = $tag_id;
-                } elseif(!$app->tag_id) { // ensure existing apps have tag
-                    return $this->error('Tag is required.', 400);
+                // --- Tags validation/update ---
+                if (request()->has('tag_ids') || request()->has('tags') || request()->has('tag_id')) {
+                    $tagIds = [];
+                    if (request()->has('tag_ids')) { $tagIds = (array) request('tag_ids'); }
+                    elseif (request()->has('tags')) { $tagIds = (array) request('tags'); }
+                    elseif (request()->has('tag_id')) { $tagIds = request('tag_id') ? [ request('tag_id') ] : []; }
+                    if (count($tagIds) < 1) { return $this->error('Tag is required.', 400); }
+                    $userTagIds = $user->tags()->pluck('tag.id')->toArray();
+                    foreach ($tagIds as $tid) { if (!in_array($tid, $userTagIds)) { return $this->error('Invalid tag selected.', 400); } }
+                    try { $app->tags()->sync($tagIds); } catch (\Exception $e) {}
                 }
                 if (request()->has('name')) {
                     $app->name = request('name');
@@ -373,6 +373,7 @@ class ApplicationController extends Controller
                 $app->save();
                 parse_str(request('tree'), $tree);
                 $success = $app->updateTree($tree);
+                $app->load(['tags:id,name']);
                 return $this->success(['item' => $app, 'success' => $success]);
             }
         } catch (\Exception $e) {}
