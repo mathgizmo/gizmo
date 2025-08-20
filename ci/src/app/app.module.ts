@@ -16,6 +16,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatCardModule} from '@angular/material/card';
@@ -176,6 +177,7 @@ FullCalendarModule.registerPlugins([
         MatRadioModule,
         MatDialogModule,
         MatProgressBarModule,
+    MatProgressSpinnerModule,
         MatSliderModule,
         MatToolbarModule,
         MatCardModule,

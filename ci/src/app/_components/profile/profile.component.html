@@ -1,4 +1,7 @@
 <div class="profile">
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
   <mat-card id="profile-container">
   	<span class="title">Change Profile Info</span>
     <form #changeProfile="ngForm" (ngSubmit)="changeProfile.form.valid && onChangeProfile()">

@@ -246,6 +246,7 @@ const studentRoutes = [
 const routes: Routes = [
     ...authRoutes,
     {path: '', component: AssignmentComponent, canActivate: [AuthGuard]},
+    {path: 'self-study', component: AssignmentComponent, canActivate: [AuthGuard], data: {roles: ['student']}},
     {path: 'to-do', component: ToDoComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:assignment_id', component: AssignmentComponent, canActivate: [AuthGuard]},
     {path: 'assignment/:assignment_id/topic/:topic_id', component: TopicComponent, canActivate: [AuthGuard]},

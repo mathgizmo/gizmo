@@ -64,6 +64,22 @@ class TopicController extends Controller
         $student = $this->student;
         $app_id = $this->app->id;
         $any_order = $this->app->allow_any_order ?: false;
+        // When viewing self-study content (no class_app_id) and student has tags, filter by those tags
+        $filter_by_tags = $this->class_app ? false : true;
+        $user_tag_ids = [];
+        $allowed_unit_ids_by_tags = [];
+        if ($filter_by_tags) {
+            try {
+                $user_tag_ids = $student->tags()->pluck('id')->toArray();
+                if (count($user_tag_ids) === 0) {
+                    $filter_by_tags = false;
+                } else {
+                    $allowed_unit_ids_by_tags = DB::table('tag_unit')->whereIn('tag_id', $user_tag_ids)->pluck('unit_id')->toArray();
+                }
+            } catch (\Exception $e) {
+                $filter_by_tags = false;
+            }
+        }
         $lessons_done = [];
         $topics_done = [];
         $units_done = [];
@@ -111,6 +127,8 @@ class TopicController extends Controller
             $response[] = $level;
         }
         foreach ($this->app->getUnits() as $unit) {
+            // Filter out units that do not match student's tags in self-study view
+            if ($filter_by_tags && !in_array($unit->id, $allowed_unit_ids_by_tags)) { continue; }
             if (!isset($levels[$unit->level_id])) continue;
             $unit->topics = [];
             $l_element_id = $levels[$unit->level_id];
@@ -133,7 +151,7 @@ class TopicController extends Controller
             }
             $response[$l_element_id]->units[] = $unit;
         }
-        foreach ($this->app->getTopics() as $topic) {
+    foreach ($this->app->getTopics() as $topic) {
             try {
                 $lessons_query = DB::table('lesson')->whereIn('id', function($q) use($app_id) {
                     $q->select('model_id')->from('application_has_models')->where('model_type', 'lesson')->where('app_id', $app_id);
@@ -199,6 +217,10 @@ class TopicController extends Controller
             }
             $response[$l_element_id]->units[$u_element_id]->topics[] = $topic;
         }
+        // Prune levels without any units after filtering
+        $response = array_values(array_filter($response, function($level) {
+            return isset($level->units) && count($level->units) > 0;
+        }));
         return $this->success($response);
     }
 

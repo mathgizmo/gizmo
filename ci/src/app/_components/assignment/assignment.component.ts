@@ -5,6 +5,7 @@ import {flatMap} from 'rxjs/operators';
 import {Observable, Subscriber} from 'rxjs';
 
 import {AuthenticationService, TopicService, TrackingService} from '../../_services';
+import {UserService} from '../../_services/user.service';
 import {environment} from '../../../environments/environment';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
@@ -18,28 +19,56 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 export class AssignmentComponent implements OnInit, OnDestroy {
     public topicsTree: any = [];
     public assignmentId: number;
+    public requireTags = false; // gate: show prompt if user has no tags
     private readonly adminUrl = environment.adminUrl;
     private routerEvent;
     private sub: any;
+    private profileChecked = false;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 private topicService: TopicService,
                 private trackingService: TrackingService,
                 private sanitizer: DomSanitizer,
-                private authenticationService: AuthenticationService) {
+                private authenticationService: AuthenticationService,
+                private userService: UserService) {
     }
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.assignmentId = +params['assignment_id'] || -1;
         });
+        const isSelfStudy = this.assignmentId === -1; // In self-study route, there is no assignment_id param; component will use app_id from localStorage
         this.routerEvent = this.router.events.subscribe((evt) => {
             if (evt instanceof NavigationEnd) {
-                this.initData();
+                if (!isSelfStudy) {
+                    this.initData();
+                } else if (this.profileChecked && !this.requireTags) {
+                    this.initData();
+                }
             }
         });
-        this.initData();
+
+        if (isSelfStudy) {
+            // Load profile to check if user has selected any interest tags
+            this.userService.getProfile().subscribe(profile => {
+                const tags = (profile && profile['tags']) || [];
+                this.requireTags = !tags || tags.length === 0;
+                this.profileChecked = true;
+                if (!this.requireTags) {
+                    this.initData();
+                }
+            }, _ => {
+                // On error, default to requiring tags to avoid showing content prematurely
+                this.requireTags = true;
+                this.profileChecked = true;
+            });
+        } else {
+            // Class route: don't gate by tags
+            this.profileChecked = true;
+            this.requireTags = false;
+            this.initData();
+        }
     }
 
     ngOnDestroy() {

@@ -89,7 +89,10 @@ class ProfileController extends Controller
     public function getToDos(Request $request) {
         $student = Auth::user();
         $items = [];
-        if ($student->is_self_study) {
+        $forceSelfStudy = $request->has('self_study') && (intval($request->get('self_study')) === 1 || $request->get('self_study') === 'true');
+        if ($student->is_self_study || $forceSelfStudy) {
+            // Filter self-study assignments by student's selected tags (if any)
+            $userTagIds = $student->tags()->pluck('tag.id')->toArray();
             $classObj = (object) [
                 'teacher_id' => null,
                 'name' => 'Gizmo',
@@ -97,7 +100,13 @@ class ProfileController extends Controller
                 'subscription_type' => 'open',
                 'invitations' => null
             ];
-            foreach (Application::whereDoesntHave('teacher')->where('type', 'assignment')->get() as $item) {
+            $appsQuery = Application::whereDoesntHave('teacher')->where('type', 'assignment');
+            if (!empty($userTagIds)) {
+                $appsQuery->whereHas('tags', function($q) use ($userTagIds) {
+                    $q->whereIn('tags.id', $userTagIds);
+                });
+            }
+            foreach ($appsQuery->get() as $item) {
                 $item->class = $classObj;
                 $item->icon = $item->icon();
                 $item->is_completed = $item->isFinished($student->id);

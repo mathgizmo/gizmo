@@ -19,6 +19,14 @@
             <span class="material-icons">class</span>
             My Classes
         </a>
+        <a *ngIf="user.role === 'student'" mat-menu-item routerLink="to-do" class="menu-item">
+            <span class="material-icons">assignment</span>
+            Self-Study To Do
+        </a>
+        <a *ngIf="user.role === 'student'" mat-menu-item routerLink="self-study" class="menu-item">
+            <span class="material-icons">menu_book</span>
+            Self-Study Content
+        </a>
         <a *ngIf="user.role === 'researcher'" mat-menu-item routerLink="researcher/class" class="menu-item">
             <span class="material-icons">class</span>
             Research Classrooms

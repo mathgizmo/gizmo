@@ -52,8 +52,15 @@ export class UserService {
         return this.http.post('/profile/options', options);
     }
 
-    public getToDos(classId = null) {
-        return this.http.get('/profile/todo?class_id=' + classId)
+    public getToDos(classId: number | string = null, selfStudy: boolean = false) {
+        const params: any = {};
+        if (classId !== null && classId !== undefined) {
+            params.class_id = classId;
+        }
+        if (selfStudy) {
+            params.self_study = 1;
+        }
+        return this.http.get('/profile/todo', true, params)
             .pipe(
                 map((response: Response) => {
                     return response['items'];

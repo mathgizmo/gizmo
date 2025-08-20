@@ -1,4 +1,11 @@
 <div class="applications">
+  <mat-card *ngIf="requireTags" class="text-center" style="padding: 24px;">
+    <span class="subtitle">
+      Please select your areas of interest in your
+      <a routerLink="/profile">profile</a>.
+    </span>
+  </mat-card>
+  <ng-container *ngIf="!requireTags">
   <mat-card *ngIf="!showCompletedApplications">
     <span class="title">Assignments To Do</span>
     <div class="applications-list" *ngIf="applications.length > 0">
@@ -31,7 +38,7 @@
           <div *ngIf="completedApplications.length > 0" class="toggle-button" (click)="this.showCompletedApplications = !this.showCompletedApplications">
             See Completed Assignments
           </div>
-          <a *ngIf="completedApplications.length < 1" mat-button class="button button-outline" routerLink="../my-classes" >Search for Class</a>
+          <a *ngIf="completedApplications.length < 1" mat-button class="button button-outline" routerLink="/dashboard" >Search for Class</a>
       </div>
     </div>
   </mat-card>
@@ -63,4 +70,5 @@
       </div>
     </div>
   </mat-card>
+  </ng-container>
 </div>

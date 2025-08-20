@@ -3,8 +3,8 @@ import {User} from '../../_models/user';
 import {AuthenticationService, CountryService, UserService} from '../../_services/index';
 import { TagService, Tag } from '../../_services/tag.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {timer} from 'rxjs';
-import {takeWhile, tap} from 'rxjs/operators';
+import {forkJoin, of, timer} from 'rxjs';
+import {catchError, finalize, takeWhile, tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-profile',
@@ -31,6 +31,7 @@ export class ProfileComponent implements OnInit {
     public allTags: Tag[] = [];
     public selectedTagIds: number[] = [];
     public tagsLoading = false;
+    public isLoading = true; // block UI interactions until initial data loads
 
     constructor(
         private userService: UserService,
@@ -43,13 +44,17 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.countryService.getCountries().subscribe(countries => {
-            this.countries = countries;
-            this.userService.getProfile()
-                .subscribe(res => {
-                    const user = res['user'];
-                    const tags = res['tags'] || [];
-                    this.selectedTagIds = tags.map(t => t.id);
+        // Load countries, profile, and tags in parallel; keep spinner until all complete
+        const countries$ = this.countryService.getCountries().pipe(
+            tap(countries => { this.countries = countries || []; }),
+            catchError(_ => of([]))
+        );
+        const profile$ = this.userService.getProfile().pipe(
+            tap(res => {
+                const user = res && res['user'] ? res['user'] : null;
+                const tags = (res && res['tags']) || [];
+                this.selectedTagIds = tags.map(t => t.id);
+                if (user) {
                     localStorage.setItem('app_id', user.app_id);
                     this.user = user;
                     this.oldEmail = this.user.email;
@@ -58,15 +63,23 @@ export class ProfileComponent implements OnInit {
                     const userCountry = this.countries.filter(x => x.id === this.user.country_id);
                     if (userCountry.length > 0) {
                         this.selectedCountry = userCountry[0];
-                    } else {
-                        this.selectedCountry = this.countries.filter(x => x.code === 'CA')[0];
+                    } else if (this.countries.length > 0) {
+                        const ca = this.countries.filter(x => x.code === 'CA')[0];
+                        this.selectedCountry = ca || this.countries[0];
                     }
                     this.isResearcher = user.role === 'researcher';
-                }, error => {
-                    this.loadTags();
-                });
-        });
-        this.loadTags();
+                }
+            }),
+            catchError(_ => of(null))
+        );
+        const tags$ = this.tagService.getTags().pipe(
+            tap(tags => { this.allTags = tags || []; }),
+            catchError(_ => of([]))
+        );
+
+        forkJoin([countries$, profile$, tags$])
+            .pipe(finalize(() => { this.isLoading = false; }))
+            .subscribe(_ => {}, _ => { this.isLoading = false; });
     }
 
     loadTags() {

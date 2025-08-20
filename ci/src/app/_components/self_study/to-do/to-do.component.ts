@@ -15,6 +15,8 @@ export class ToDoComponent implements OnInit, OnDestroy {
     public completedApplications = [];
     public selectedAppId = null;
     public showCompletedApplications = false;
+    public requireTags = false;
+    private userTagIds: number[] = [];
     private readonly adminUrl = environment.adminUrl;
     private checkAvailabilityIntervalId = null;
 
@@ -25,11 +27,41 @@ export class ToDoComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-        this.userService.getToDos()
+        // Load profile to check if user has selected any interest tags.
+        this.userService.getProfile().subscribe(profile => {
+            const tags = (profile && profile['tags']) || [];
+            if (!tags || tags.length === 0) {
+                this.requireTags = true;
+                return;
+            }
+            this.userTagIds = tags.map(t => +t.id);
+            this.loadToDos();
+        }, _ => {
+            // On error, default to requiring tags to avoid showing content prematurely
+            this.requireTags = true;
+        });
+    }
+
+    private loadToDos() {
+        this.userService.getToDos(null, true)
             .subscribe(response => {
-                this.applications = response.filter(app => !app.is_completed);
-                this.completedApplications = response.filter(app => app.is_completed);
+                const filterByTags = (list: any[]) => {
+                    if (!this.userTagIds || this.userTagIds.length === 0) { return list; }
+                    return list.filter(app => {
+                        const tags = (app.tags || []).map(t => +t.id);
+                        // keep if overlap
+                        return tags.some(id => this.userTagIds.indexOf(id) !== -1);
+                    });
+                };
+                this.applications = filterByTags(response.filter(app => !app.is_completed));
+                this.completedApplications = filterByTags(response.filter(app => app.is_completed));
+                // Start availability checker only after data loaded
+                this.startAvailabilityChecker();
             });
+    }
+
+    private startAvailabilityChecker() {
+        if (this.checkAvailabilityIntervalId) { return; }
         this.checkAvailabilityIntervalId = setInterval(() => {
             const now = moment();
             this.applications.forEach(app => {

@@ -1,4 +1,12 @@
-﻿<div *ngIf="topicsTree.length" class="topics">
+﻿<div class="topics">
+  <mat-card *ngIf="requireTags" class="text-center" style="padding: 24px;">
+    <span class="subtitle">
+      Please select your areas of interest in your
+      <a routerLink="/profile">profile</a>.
+    </span>
+  </mat-card>
+  <ng-container *ngIf="!requireTags">
+  <div *ngIf="topicsTree.length">
   <div *ngFor="let level of topicsTree; let levelIndex = 'index'" >
     <h3 class="level-title title">{{level.title}}</h3>
     <mat-card *ngIf="level.units.length" class="level">
@@ -31,4 +39,6 @@
       </mat-card>
     </mat-card>
   </div>
+  </div>
+  </ng-container>
 </div>
