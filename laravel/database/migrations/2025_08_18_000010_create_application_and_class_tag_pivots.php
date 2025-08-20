@@ -12,9 +12,16 @@ class CreateApplicationAndClassTagPivots extends Migration
 	 */
 	public function up(): void
 	{
+		// Ensure referenced tables use InnoDB so foreign keys can be created
+		try { DB::statement('ALTER TABLE applications ENGINE=InnoDB'); } catch (\Throwable $e) {}
+		try { DB::statement('ALTER TABLE classes ENGINE=InnoDB'); } catch (\Throwable $e) {}
+		try { DB::statement('ALTER TABLE tag ENGINE=InnoDB'); } catch (\Throwable $e) {}
+
 		// applications <-> tag
 		if (!Schema::hasTable('application_tag')) {
 			Schema::create('application_tag', function (Blueprint $table) {
+				// Ensure pivot table is InnoDB for FK support
+				$table->engine = 'InnoDB';
 				$table->unsignedInteger('app_id');
 				$table->unsignedInteger('tag_id');
 				$table->primary(['app_id', 'tag_id']);
@@ -26,6 +33,8 @@ class CreateApplicationAndClassTagPivots extends Migration
 		// classes <-> tag
 		if (!Schema::hasTable('class_tag')) {
 			Schema::create('class_tag', function (Blueprint $table) {
+				// Ensure pivot table is InnoDB for FK support
+				$table->engine = 'InnoDB';
 				$table->unsignedInteger('class_id');
 				$table->unsignedInteger('tag_id');
 				$table->primary(['class_id', 'tag_id']);

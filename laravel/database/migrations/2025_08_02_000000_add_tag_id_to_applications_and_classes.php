@@ -14,13 +14,15 @@ class AddTagIdToApplicationsAndClasses extends Migration
     public function up()
     {
         Schema::table('applications', function (Blueprint $table) {
-            $table->unsignedBigInteger('tag_id')->nullable();
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('set null');
+            // Match 'tag' PK type (unsigned integer) to avoid FK mismatch
+            $table->unsignedInteger('tag_id')->nullable();
+            $table->foreign('tag_id')->references('id')->on('tag')->onDelete('set null');
         });
 
         Schema::table('classes', function (Blueprint $table) {
-            $table->unsignedBigInteger('tag_id')->nullable();
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('set null');
+            // Match 'tag' PK type (unsigned integer) to avoid FK mismatch
+            $table->unsignedInteger('tag_id')->nullable();
+            $table->foreign('tag_id')->references('id')->on('tag')->onDelete('set null');
         });
     }
 
