@@ -30,9 +30,23 @@ class DropTagIdFromApplicationsAndClasses extends Migration
                 }
             }
 
+            // Drop FK on applications.tag_id if it exists (avoid exceptions inside Schema::table)
+            $constraints = DB::select(<<<SQL
+                SELECT CONSTRAINT_NAME
+                FROM information_schema.KEY_COLUMN_USAGE
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'applications'
+                  AND COLUMN_NAME = 'tag_id'
+                  AND REFERENCED_TABLE_NAME IS NOT NULL
+            SQL);
+            foreach ($constraints as $row) {
+                $name = $row->CONSTRAINT_NAME ?? $row->constraint_name ?? null;
+                if ($name) {
+                    DB::statement('ALTER TABLE `applications` DROP FOREIGN KEY `'.str_replace('`','',$name).'`');
+                }
+            }
+
             Schema::table('applications', function (Blueprint $table) {
-                try { $table->dropForeign(['tag_id']); } catch (\Throwable $e) {}
-                try { $table->dropIndex(['tag_id']); } catch (\Throwable $e) {}
                 if (Schema::hasColumn('applications', 'tag_id')) {
                     $table->dropColumn('tag_id');
                 }
@@ -57,9 +71,23 @@ class DropTagIdFromApplicationsAndClasses extends Migration
                 }
             }
 
+            // Drop FK on classes.tag_id if it exists
+            $constraints = DB::select(<<<SQL
+                SELECT CONSTRAINT_NAME
+                FROM information_schema.KEY_COLUMN_USAGE
+                WHERE TABLE_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'classes'
+                  AND COLUMN_NAME = 'tag_id'
+                  AND REFERENCED_TABLE_NAME IS NOT NULL
+            SQL);
+            foreach ($constraints as $row) {
+                $name = $row->CONSTRAINT_NAME ?? $row->constraint_name ?? null;
+                if ($name) {
+                    DB::statement('ALTER TABLE `classes` DROP FOREIGN KEY `'.str_replace('`','',$name).'`');
+                }
+            }
+
             Schema::table('classes', function (Blueprint $table) {
-                try { $table->dropForeign(['tag_id']); } catch (\Throwable $e) {}
-                try { $table->dropIndex(['tag_id']); } catch (\Throwable $e) {}
                 if (Schema::hasColumn('classes', 'tag_id')) {
                     $table->dropColumn('tag_id');
                 }
