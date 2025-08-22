@@ -196,6 +196,29 @@
             const is_super = document.getElementById("is-super-filter").value;
             const is_teacher = document.getElementById("is-teacher-filter").value;
             const is_researcher = document.getElementById("is-researcher-filter").value;
+
+            // Set all filter parameters
+            if (id) url.searchParams.set('id', id);
+            else url.searchParams.delete('id');
+            
+            if (first_name) url.searchParams.set('first_name', first_name);
+            else url.searchParams.delete('first_name');
+            
+            if (last_name) url.searchParams.set('last_name', last_name);
+            else url.searchParams.delete('last_name');
+            
+            if (email) url.searchParams.set('email', email);
+            else url.searchParams.delete('email');
+            
+            if (is_super) url.searchParams.set('is_super', is_super);
+            else url.searchParams.delete('is_super');
+            
+            if (is_teacher) url.searchParams.set('is_teacher', is_teacher);
+            else url.searchParams.delete('is_teacher');
+            
+            if (is_researcher) url.searchParams.set('is_researcher', is_researcher);
+            else url.searchParams.delete('is_researcher');
+
             // Tag filter
             let tagIds = $('#tag_id_hidden').val();
             if (tagIds) {
@@ -246,13 +269,13 @@
 
         function init() {
             const url = new URL(window.location.href);
-            document.getElementById("id-filter").value = url.searchParams.get('id');
-            document.getElementById("first-name-filter").value = url.searchParams.get('first_name');
-            document.getElementById("last-name-filter").value = url.searchParams.get('last_name');
-            document.getElementById("email-filter").value = url.searchParams.get('email');
-            document.getElementById("is-super-filter").value = url.searchParams.get('is_super');
-            document.getElementById("is-teacher-filter").value = url.searchParams.get('is_teacher');
-            document.getElementById("is-researcher-filter").value = url.searchParams.get('is_researcher');
+            document.getElementById("id-filter").value = url.searchParams.get('id') || '';
+            document.getElementById("first-name-filter").value = url.searchParams.get('first_name') || '';
+            document.getElementById("last-name-filter").value = url.searchParams.get('last_name') || '';
+            document.getElementById("email-filter").value = url.searchParams.get('email') || '';
+            document.getElementById("is-super-filter").value = url.searchParams.get('is_super') || '';
+            document.getElementById("is-teacher-filter").value = url.searchParams.get('is_teacher') || '';
+            document.getElementById("is-researcher-filter").value = url.searchParams.get('is_researcher') || '';
             
             // Initialize tag filter badges
             const tagIds = url.searchParams.get('tag_id');
