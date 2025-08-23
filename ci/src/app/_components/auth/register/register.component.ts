@@ -116,8 +116,12 @@ export class RegisterComponent implements OnInit {
     onRoleSelected(role) {
         this.model.role = role;
         this.isRoleSelected = true;
-        // always show interests selection for any role
-        this.isInterestsSelected = false;
+        // Skip interests step for students; keep it for teachers/researchers
+        if (role === 'student') {
+            this.isInterestsSelected = true; // go straight to registration form
+        } else {
+            this.isInterestsSelected = false; // show interests step first
+        }
     }
 
     public resolved(captchaResponse: string) {

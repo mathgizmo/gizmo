@@ -102,7 +102,7 @@
         </mat-card>
     </div>
 </mat-card>
-<mat-card class="auth-container" *ngIf="isRoleSelected && !isInterestsSelected">
+<mat-card class="auth-container" *ngIf="isRoleSelected && model.role === 'teacher' && !isInterestsSelected">
     <mat-card>
         <h2 class="title">Select Your Areas of Interest</h2>
         <div class="tags-container">
