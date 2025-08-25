@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1756164134846,
+  "timestamp": 1756165475228,
   "index": "/gizmo/index.html",
   "assetGroups": [
     {
@@ -11,17 +11,17 @@
         "ignoreVary": true
       },
       "urls": [
-        "/gizmo/canvg.cf926e44def2590e.js",
+        "/gizmo/canvg.2e806a8386a05648.js",
         "/gizmo/favicon.ico",
         "/gizmo/index.html",
-        "/gizmo/main.a7e1cf84148b6076.js",
+        "/gizmo/main.1b352c96b3091d51.js",
         "/gizmo/manifest.webmanifest",
-        "/gizmo/pdfmake.fc99ed9ca06e4dcc.js",
-        "/gizmo/polyfills.5be749b0511c16ad.js",
-        "/gizmo/runtime.62fd44d3ddee9936.js",
+        "/gizmo/pdfmake.de97ee7c1d67d960.js",
+        "/gizmo/polyfills.0de09ec79fa393a0.js",
+        "/gizmo/runtime.a38b0cb46fc465d8.js",
         "/gizmo/scripts.39129e36e9910771.js",
         "/gizmo/styles.7104ed98e20cfccf.css",
-        "/gizmo/xlsx.593dc97299711a63.js"
+        "/gizmo/xlsx.da6f21e9d79dd756.js"
       ],
       "patterns": []
     },
@@ -594,22 +594,22 @@
     "/gizmo/assets/images/welcome-bg.png": "3d7f7b3852a9d748f9632c3d8d8255c9a5b4c524",
     "/gizmo/assets/js/jquery.jslatex.packed.js": "789c1f2f980b28a0b5be94c06f03e3582ce41df8",
     "/gizmo/assets/spinner.css": "d9fadab67f7ae88118201c343c40ce031c2e068c",
-    "/gizmo/canvg.cf926e44def2590e.js": "94a94424e1bee96b6f44a2f8c94a14ed81529199",
+    "/gizmo/canvg.2e806a8386a05648.js": "fb287838ed8c3aca29d613cab4a439e504f4fa1e",
     "/gizmo/favicon.ico": "576603399e50a3ecdc43db7b7b4b2ba83a0cc9e9",
     "/gizmo/fontawesome-webfont.2b13baa7dd4f54c9.eot": "d980c2ce873dc43af460d4d572d441304499f400",
     "/gizmo/fontawesome-webfont.8a7cb27d142e3e19.ttf": "13b1eab65a983c7a73bc7997c479d66943f7c6cb",
     "/gizmo/fontawesome-webfont.cf011583fb81df9f.woff": "28b782240b3e76db824e12c02754a9731a167527",
     "/gizmo/fontawesome-webfont.da909aa098b0ee2d.svg": "98a8aa5cf7d62c2eff5f07ede8d844b874ef06ed",
     "/gizmo/fontawesome-webfont.e9955780856cf8aa.woff2": "d6f48cba7d076fb6f2fd6ba993a75b9dc1ecbf0c",
-    "/gizmo/index.html": "2b7dc679a854b67d04fcf351062f69eb788f07a7",
-    "/gizmo/main.a7e1cf84148b6076.js": "e6a2c2d6412781fc2bc41f50861881d91b31037e",
+    "/gizmo/index.html": "359b84f118cea19d2f743d55ae8877158b95baea",
+    "/gizmo/main.1b352c96b3091d51.js": "4457ff98b58a4be2174540a30b68151e070128bc",
     "/gizmo/manifest.webmanifest": "76f0bd83fcb2ac568f286de2089dd5220fb6f464",
-    "/gizmo/pdfmake.fc99ed9ca06e4dcc.js": "82629651673958f5090d1fd2abbd3fa4be98acc5",
-    "/gizmo/polyfills.5be749b0511c16ad.js": "223dfaa8b5148367288787a66899081d7b15e596",
-    "/gizmo/runtime.62fd44d3ddee9936.js": "acb4a3a484998d9a1701a45668489d1f83dcce6c",
-    "/gizmo/scripts.39129e36e9910771.js": "33067d505b4cab44bb0727735a6d3b669f483696",
+    "/gizmo/pdfmake.de97ee7c1d67d960.js": "588154e99bc557a6f91e840be010aa8486e7fd73",
+    "/gizmo/polyfills.0de09ec79fa393a0.js": "d633f062ee024124ea18507788c71e963fac15ab",
+    "/gizmo/runtime.a38b0cb46fc465d8.js": "7ab9120a5e2c3197f420c02ad6ddb1a1cfe24152",
+    "/gizmo/scripts.39129e36e9910771.js": "bba559102a28e5f55d14dbe0ff552c4050e28ad9",
     "/gizmo/styles.7104ed98e20cfccf.css": "591c79b1cd9e781f27502d889d08037f87aee9c6",
-    "/gizmo/xlsx.593dc97299711a63.js": "a65d908748523b8ab6bd63db1a8f021ccc2f4bc2"
+    "/gizmo/xlsx.da6f21e9d79dd756.js": "484b6214cd9c274e4b4eeafdf0b40d238cb27435"
   },
   "navigationUrls": [
     {
