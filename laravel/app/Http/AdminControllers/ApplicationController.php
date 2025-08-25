@@ -81,6 +81,36 @@ class ApplicationController extends Controller
             'tag_id' => 'nullable|array',
             'tag_id.*' => 'exists:tag,id'
         ]);
+        // Additional server-side validation: if tags chosen, ensure all selected content belongs to units with at least one of those tags
+        $selectedTagIds = collect((array)$request->input('tag_id', []))->filter()->map(fn($v)=> (int)$v)->unique();
+        if ($selectedTagIds->isNotEmpty()) {
+            $allowedUnitIds = collect(\DB::table('tag_unit')->whereIn('tag_id', $selectedTagIds)->pluck('unit_id'))->unique();
+            // Gather units explicitly selected
+            $selectedUnitIds = collect(array_keys((array)$request->input('unit', [])))->map(fn($v)=>(int)$v);
+            // Units implied by selected levels
+            $levelIds = collect(array_keys((array)$request->input('level', [])))->map(fn($v)=>(int)$v);
+            if ($levelIds->isNotEmpty()) {
+                $selectedUnitIds = $selectedUnitIds->merge(\DB::table('unit')->whereIn('level_id', $levelIds)->pluck('id'));
+            }
+            // Units implied by selected topics
+            $topicIds = collect(array_keys((array)$request->input('topic', [])))->map(fn($v)=>(int)$v);
+            if ($topicIds->isNotEmpty()) {
+                $selectedUnitIds = $selectedUnitIds->merge(\DB::table('topic')->whereIn('id', $topicIds)->pluck('unit_id'));
+            }
+            // Units implied by selected lessons
+            $lessonIds = collect(array_keys((array)$request->input('lesson', [])))->map(fn($v)=>(int)$v);
+            if ($lessonIds->isNotEmpty()) {
+                $selectedUnitIds = $selectedUnitIds->merge(\DB::table('lesson')->whereIn('id', $lessonIds)->pluck('topic_id'));
+                $topicUnitIds = \DB::table('topic')->whereIn('id', function($q) use($lessonIds) { $q->select('topic_id')->from('lesson')->whereIn('id', $lessonIds); })->pluck('unit_id');
+                $selectedUnitIds = $selectedUnitIds->merge($topicUnitIds);
+            }
+            $selectedUnitIds = $selectedUnitIds->map(fn($v)=>(int)$v)->filter()->unique();
+            $invalidUnitIds = $selectedUnitIds->reject(function($id) use($allowedUnitIds) { return $allowedUnitIds->contains($id); })->values();
+            if ($invalidUnitIds->isNotEmpty()) {
+                $invalidTitles = \DB::table('unit')->whereIn('id', $invalidUnitIds)->pluck('title')->toArray();
+                return back()->withErrors(['tag_mismatch' => 'Selected content includes units without a matching tag: '.implode(', ', $invalidTitles)])->withInput();
+            }
+        }
         $app = new Application();
         $app->name = $request['name'];
     $tagIds = collect((array)($request['tag_id'] ?? []))->filter()->unique()->values()->all();
@@ -131,6 +161,30 @@ class ApplicationController extends Controller
             'tag_id' => 'nullable|array',
             'tag_id.*' => 'exists:tag,id'
         ]);
+        $selectedTagIds = collect((array)$request->input('tag_id', []))->filter()->map(fn($v)=> (int)$v)->unique();
+        if ($selectedTagIds->isNotEmpty()) {
+            $allowedUnitIds = collect(\DB::table('tag_unit')->whereIn('tag_id', $selectedTagIds)->pluck('unit_id'))->unique();
+            $selectedUnitIds = collect(array_keys((array)$request->input('unit', [])))->map(fn($v)=>(int)$v);
+            $levelIds = collect(array_keys((array)$request->input('level', [])))->map(fn($v)=>(int)$v);
+            if ($levelIds->isNotEmpty()) {
+                $selectedUnitIds = $selectedUnitIds->merge(\DB::table('unit')->whereIn('level_id', $levelIds)->pluck('id'));
+            }
+            $topicIds = collect(array_keys((array)$request->input('topic', [])))->map(fn($v)=>(int)$v);
+            if ($topicIds->isNotEmpty()) {
+                $selectedUnitIds = $selectedUnitIds->merge(\DB::table('topic')->whereIn('id', $topicIds)->pluck('unit_id'));
+            }
+            $lessonIds = collect(array_keys((array)$request->input('lesson', [])))->map(fn($v)=>(int)$v);
+            if ($lessonIds->isNotEmpty()) {
+                $topicUnitIds = \DB::table('topic')->whereIn('id', function($q) use($lessonIds) { $q->select('topic_id')->from('lesson')->whereIn('id', $lessonIds); })->pluck('unit_id');
+                $selectedUnitIds = $selectedUnitIds->merge($topicUnitIds);
+            }
+            $selectedUnitIds = $selectedUnitIds->map(fn($v)=>(int)$v)->filter()->unique();
+            $invalidUnitIds = $selectedUnitIds->reject(function($id) use($allowedUnitIds) { return $allowedUnitIds->contains($id); })->values();
+            if ($invalidUnitIds->isNotEmpty()) {
+                $invalidTitles = \DB::table('unit')->whereIn('id', $invalidUnitIds)->pluck('title')->toArray();
+                return back()->withErrors(['tag_mismatch' => 'Selected content includes units without a matching tag: '.implode(', ', $invalidTitles)])->withInput();
+            }
+        }
         $app = Application::where('id', $id)->first();
         if (!$app) {
             return redirect('/applications')->with(array('message' => 'Can\'t update'));

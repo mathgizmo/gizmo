@@ -1,24 +1,31 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest
-} from '@angular/common/http';
-
-import {BehaviorSubject, throwError} from 'rxjs';
-import {catchError, finalize, map} from 'rxjs/operators';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {BehaviorSubject} from 'rxjs';
+import {finalize} from 'rxjs/operators';
 
 @Injectable()
 export class HTTPStatus {
-    private requestInFlight$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    private activeRequests = 0;
+    private requestInFlight$ = new BehaviorSubject<boolean>(false);
 
-    constructor() {
+    startRequest() {
+        this.activeRequests++;
+        if (this.activeRequests === 1) {
+            this.requestInFlight$.next(true);
+        }
     }
 
-    setHttpStatus(inFlight: boolean) {
-        this.requestInFlight$.next(inFlight);
+    endRequest() {
+        if (this.activeRequests > 0) {
+            this.activeRequests--;
+            if (this.activeRequests === 0) {
+                this.requestInFlight$.next(false);
+            }
+        } else {
+            // Safety: ensure spinner not stuck on due to imbalance
+            this.requestInFlight$.next(false);
+        }
     }
 
     getHttpStatus(): Observable<boolean> {
@@ -35,20 +42,11 @@ export class HTTPListener implements HttpInterceptor {
         req: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
-        const hideLoader = req.params.get('hideLoader') || false;
-        if (hideLoader) {
-            return next.handle(req);
-        }
-        this.status.setHttpStatus(true);
+    // Always show spinner for any outgoing HTTP request
+    this.status.startRequest();
         return next.handle(req).pipe(
-            /* map(event => {
-                return event;
-            }),
-            catchError(error => {
-                return throwError(error);
-            }), */
             finalize(() => {
-                this.status.setHttpStatus(false);
+        this.status.endRequest();
             })
         );
     }

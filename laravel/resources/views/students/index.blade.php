@@ -198,6 +198,17 @@
             const is_researcher = document.getElementById("is-researcher-filter").value;
             // Tag filter
             let tagIds = $('#tag_id_hidden').val();
+            // Apply (set or delete) generic helper
+            function applyParam(key, val) {
+                if (val && val !== '') { url.searchParams.set(key, val); } else { url.searchParams.delete(key); }
+            }
+            applyParam('id', id);
+            applyParam('first_name', first_name);
+            applyParam('last_name', last_name);
+            applyParam('email', email);
+            applyParam('is_super', is_super);
+            applyParam('is_teacher', is_teacher);
+            applyParam('is_researcher', is_researcher);
             if (tagIds) {
                 url.searchParams.set('tag_id', tagIds);
             } else if (url.searchParams.get('tag_id')) {

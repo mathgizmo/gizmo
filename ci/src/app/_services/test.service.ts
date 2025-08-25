@@ -86,9 +86,8 @@ export class TestService {
     }
 
     public trackTest(app_id) {
-        return this.http.post('/tests/' + app_id + '/track', null, true, {
-            hideLoader: true
-        }).pipe(
+        return this.http.post('/tests/' + app_id + '/track')
+            .pipe(
                 catchError(error => {
                     console.log(error);
                     throw Error(error);

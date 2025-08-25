@@ -40,47 +40,6 @@
                         <input type="hidden" name="icon" value="">
                     </div>
                 </div>
-                <div class="tree m-0 p-0 ml-2 mb-3">
-                    <ul>
-                        @foreach($tree as $level)
-                            <li>
-                                <i class="expand-icon can-expand fas fa-{{empty(array_filter($level->children, function($unit){return $unit->checked || array_filter($unit->children, function($topic){return $topic->checked || array_filter($topic->children, function($lesson){return $lesson->checked;});});})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
-                                <input type="checkbox"
-                                       name="level[{{$level->id}}]" {{$level->checked ? 'checked="checked"' : '' }} />
-                                <label class="can-expand">{{$level->text}}</label>
-                                <ul class="{{$level->collapsed ? 'collapse' : ''}}">
-                                    @foreach($level->children as $unit)
-                                        <li>
-                                            <i class="expand-icon can-expand fas fa-{{empty(array_filter($unit->children, function($topic){return $topic->checked || array_filter($topic->children, function($lesson){return $lesson->checked;});})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
-                                            <input type="checkbox"
-                                                   name="unit[{{$unit->id}}]" {{$unit->checked ? 'checked="checked"' : '' }} />
-                                            <label class="can-expand">{{$unit->text}}</label>
-                                            <ul class="{{$unit->collapsed ? 'collapse' : ''}}">
-                                                @foreach($unit->children as $topic)
-                                                    <li>
-                                                        <i class="expand-icon can-expand fas fa-{{empty(array_filter($topic->children, function($lesson){return $lesson->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
-                                                        <input type="checkbox"
-                                                               name="topic[{{$topic->id}}]" {{$topic->checked ? 'checked="checked"' : '' }} />
-                                                        <label class="can-expand">{{$topic->text}}</label>
-                                                        <ul class="{{$topic->collapsed ? 'collapse' : ''}}">
-                                                            @foreach($topic->children as $lesson)
-                                                                <li>
-                                                                    <input type="checkbox"
-                                                                           name="lesson[{{$lesson->id}}]" {{$lesson->checked ? 'checked="checked"' : '' }} />
-                                                                    <label>{{$lesson->text}}</label>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
                 <div class="form-group row mt-3 {{ $errors->has('tag_id') ? ' has-error' : '' }}">
                     <label for="tag_id" class="col-md-2 form-control-label ml-3 font-weight-bold">Tags</label>
                     <div class="col-md-8">
@@ -97,8 +56,56 @@
                                 <strong>{{ $errors->first('tag_id') }}</strong>
                             </span>
                         @endif
+                        @if ($errors->has('tag_mismatch'))
+                            <span class="form-text text-danger">
+                                <strong>{{ $errors->first('tag_mismatch') }}</strong>
+                            </span>
+                        @endif
                         <small class="form-text text-muted">Hold Cmd/Ctrl to select multiple.</small>
+                        <small class="form-text text-muted">Filtering: only Units with at least one selected Tag remain enabled.</small>
                     </div>
+                </div>
+                <div class="tree m-0 p-0 ml-2 mb-3" id="content-tree">
+                    <ul>
+                        @foreach($tree as $level)
+                            <li class="tree-level">
+                                <i class="expand-icon can-expand fas fa-{{empty(array_filter($level->children, function($unit){return $unit->checked || array_filter($unit->children, function($topic){return $topic->checked || array_filter($topic->children, function($lesson){return $lesson->checked;});});})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
+                                <input type="checkbox"
+                                       name="level[{{$level->id}}]" {{$level->checked ? 'checked=\"checked\"' : '' }} />
+                                <label class="can-expand">{{$level->text}}</label>
+                                <ul class="{{$level->collapsed ? 'collapse' : ''}}">
+                                    @foreach($level->children as $unit)
+                                        @php($tagIdsString = implode(',', $unit->tag_ids ?? []))
+                                        <li class="tree-unit" data-tag-ids="{{$tagIdsString}}">
+                                            <i class="expand-icon can-expand fas fa-{{empty(array_filter($unit->children, function($topic){return $topic->checked || array_filter($topic->children, function($lesson){return $lesson->checked;});})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
+                                            <input type="checkbox"
+                                                   name="unit[{{$unit->id}}]" {{$unit->checked ? 'checked=\"checked\"' : '' }} />
+                                            <label class="can-expand">{{$unit->text}}</label>
+                                            <ul class="{{$unit->collapsed ? 'collapse' : ''}}">
+                                                @foreach($unit->children as $topic)
+                                                    <li class="tree-topic">
+                                                        <i class="expand-icon can-expand fas fa-{{empty(array_filter($topic->children, function($lesson){return $lesson->checked;})) ? 'plus' : 'minus'}}" onclick="expand(this)"></i>
+                                                        <input type="checkbox"
+                                                               name="topic[{{$topic->id}}]" {{$topic->checked ? 'checked=\"checked\"' : '' }} />
+                                                        <label class="can-expand">{{$topic->text}}</label>
+                                                        <ul class="{{$topic->collapsed ? 'collapse' : ''}}">
+                                                            @foreach($topic->children as $lesson)
+                                                                <li class="tree-lesson">
+                                                                    <input type="checkbox"
+                                                                           name="lesson[{{$lesson->id}}]" {{$lesson->checked ? 'checked=\"checked\"' : '' }} />
+                                                                    <label>{{$lesson->text}}</label>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
 
                 <div class="form-group row mt-3 {{ $errors->has('allow_any_order') ? ' has-error' : '' }}">
@@ -356,6 +363,64 @@
     </script>
     <script>
         $(document).ready(function () {
+            function applyTagFiltering() {
+                const selected = $('#tag_id').val() || [];
+                const selectedSet = new Set((selected).map(String));
+                $('#content-tree li.tree-unit').each(function() {
+                    const tagIdsAttr = $(this).attr('data-tag-ids') || '';
+                    const tagIds = tagIdsAttr ? tagIdsAttr.split(',').filter(x=>x) : [];
+                    const hasMatch = selectedSet.size === 0 ? true : tagIds.some(id => selectedSet.has(id));
+                    const unitLi = $(this);
+                    const allCheckboxes = unitLi.find('input[type="checkbox"]');
+                    if (!hasMatch) {
+                        unitLi.addClass('filtered-out');
+                        allCheckboxes.prop('checked', false).prop('disabled', true);
+                    } else {
+                        unitLi.removeClass('filtered-out');
+                        allCheckboxes.prop('disabled', false);
+                    }
+                });
+                $('#content-tree li.tree-level').each(function(){
+                    const levelLi = $(this);
+                    const levelCheckbox = levelLi.children('input[type="checkbox"]').first();
+                    if (selectedSet.size === 0) {
+                        levelLi.removeClass('filtered-out');
+                        levelCheckbox.prop('disabled', false);
+                        return;
+                    }
+                    const visibleUnits = levelLi.find('> ul > li.tree-unit').filter(function(){ return !$(this).hasClass('filtered-out'); });
+                    if (visibleUnits.length === 0) {
+                        levelLi.addClass('filtered-out');
+                        levelCheckbox.prop('checked', false).prop('disabled', true);
+                    } else {
+                        levelLi.removeClass('filtered-out');
+                        levelCheckbox.prop('disabled', false);
+                    }
+                });
+            }
+            $('#tag_id').on('change', applyTagFiltering);
+            applyTagFiltering();
+            $('#application').on('submit', function(e){
+                const selectedTags = $('#tag_id').val() || [];
+                if (selectedTags.length === 0) return;
+                const selectedSet = new Set(selectedTags.map(String));
+                const invalidUnits = [];
+                $('#content-tree li.tree-unit').each(function(){
+                    const unitLi = $(this);
+                    const tagIdsAttr = unitLi.attr('data-tag-ids') || '';
+                    const tagIds = tagIdsAttr ? tagIdsAttr.split(',').filter(x=>x) : [];
+                    const hasMatch = tagIds.some(id => selectedSet.has(id));
+                    if (!hasMatch) {
+                        if (unitLi.find('input[type="checkbox"]').filter(function(){return this.checked;}).length>0) {
+                            invalidUnits.push(unitLi.children('label').first().text().trim());
+                        }
+                    }
+                });
+                if (invalidUnits.length > 0) {
+                    e.preventDefault();
+                    alert('Cannot submit: Selected content includes units without matching tags: '+ invalidUnits.join(', '));
+                }
+            });
             $('#upload-icon').change(function () {
                 if (this.files && this.files[0]) {
                     var reader = new FileReader();
@@ -421,6 +486,7 @@
         .can-expand {
             cursor: pointer;
         }
+    .filtered-out { opacity: .4; pointer-events: none; }
         .tree, .tree ul {
             list-style: none;
             margin: 0;

@@ -43,7 +43,8 @@ export class HttpService {
                     }
                     if (response['status_code'] === 453 || response['error']['status_code'] === 453) {
                         localStorage.setItem('redirect_to', this.router.url + '');
-                        this.router.navigate(['to-do']);
+                        // Redirect previously pointing to self-study To Do now goes to self-study content
+                        this.router.navigate(['self-study']);
                     }
                     return throwError(response['error'] && response['error']['message'] || 'Unknown error!');
                 })
