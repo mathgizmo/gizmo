@@ -1,4 +1,5 @@
 <div class="tests">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <mat-card class="tests-content">
         <span class="title">Manage Tests</span>
         <form novalidate #form="ngForm">
@@ -8,6 +9,7 @@
                     <tr>
                         <th scope="col">Icon</th>
                         <th mat-sort-header="name" scope="col">Name</th>
+                        <th scope="col">Tags</th>
                         <th scope="col"></th>
                     </tr>
                     </thead>
@@ -25,6 +27,7 @@
                     <tr *ngFor="let item of tests | tableFilter: form.value">
                         <th scope="col" style="width: 40px;"><div class="app-img" style="width: 38px; height: 38px;" [style.background-image]="setIcon(item.icon)"></div></th>
                         <td>{{item.name}}</td>
+                        <td>{{ getTagNames(item) }}</td>
                         <td class="text-right" style="min-width: 160px">
                             <button *ngIf="user.user_id == item.teacher_id"
                                     mat-stroked-button
