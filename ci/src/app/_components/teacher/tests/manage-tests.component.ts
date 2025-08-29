@@ -26,6 +26,8 @@ export class ManageTestsComponent implements OnInit {
     public icons = [];
     public name: string;
     public teacherTags: any[] = [];
+    public loading = false;
+    private _pendingLoads = 0;
 
     dialogPosition: any;
     private isMobile = this.deviceService.isMobile();
@@ -47,14 +49,17 @@ export class ManageTestsComponent implements OnInit {
 
     ngOnInit() {
         this.user = this.authenticationService.userValue;
+        this.beginLoad();
         this.userService.getProfile().subscribe((res: any) => {
             if (res && res.tags) { this.teacherTags = res.tags; }
-        });
+            this.endLoad();
+        }, _ => this.endLoad());
         this.checkNewShares();
     }
 
     checkNewShares() {
-        this.shareService.getNewShare('test').subscribe(res => {
+    this.beginLoad();
+    this.shareService.getNewShare('test').subscribe(res => {
             if (res.item) {
                 const dialogRef = this.dialog.open(YesNoDialogComponent, {
                     data: { 'message': `You have been sent<br> <b>${res.item.test.name}</b><br> by <b>${res.item.sender.email}</b><br>are you willing to accept it into your tests list?<br><br><div><small style="font-size: 70%">If you do not accept this test it will be removed from your list.</small><br><small style="font-size: 70%">If you accept the test, you can use it, remove it or modify it as you wish.</small></div><br>`,
@@ -70,17 +75,30 @@ export class ManageTestsComponent implements OnInit {
                     });
                 });
             } else {
+                this.beginLoad();
                 this.testService.getTests()
                     .subscribe(response => {
                         this.tests = response;
-                    });
+                        this.endLoad();
+                    }, _ => this.endLoad());
+                this.beginLoad();
                 this.testService.getAvailableIcons()
                     .subscribe(response => {
                         this.icons = response;
-                    });
+                        this.endLoad();
+                    }, _ => this.endLoad());
             }
-        });
+            this.endLoad();
+        }, _ => this.endLoad());
     }
+
+    getTagNames(item: any): string {
+        const tags = (item as any)?.tags as any[];
+        return tags && tags.length ? tags.map(t => t.name).join(', ') : '';
+    }
+
+    private beginLoad() { this._pendingLoads++; this.loading = true; }
+    private endLoad() { if (this._pendingLoads > 0) { this._pendingLoads--; } this.loading = this._pendingLoads > 0; }
 
     onAddTest() {
         if (!this.teacherTags || this.teacherTags.length === 0) {
