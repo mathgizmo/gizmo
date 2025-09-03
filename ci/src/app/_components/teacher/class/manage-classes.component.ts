@@ -153,8 +153,31 @@ export class ManageClassesComponent implements OnInit {
     }
 
     onEditClass(item) {
+        // For 'assigned' subscription type fetch existing students so we can display a read-only list
+        if (item && item.subscription_type === 'assigned') {
+            this.beginLoad();
+            // withExtra=true to include not registered / not subscribed students
+            this.classService.getStudents(item.id, true).subscribe(students => {
+                const emailsSet = new Set<string>();
+                (students || []).forEach((s: any) => {
+                    const email = s?.email || s?.student_email || s?.user?.email || '';
+                    if (email) { emailsSet.add(email); }
+                });
+                const emails = Array.from(emailsSet.values());
+                this.endLoad();
+                this.openEditDialog(item, emails);
+            }, _ => {
+                this.endLoad();
+                this.openEditDialog(item, []);
+            });
+        } else {
+            this.openEditDialog(item, []);
+        }
+    }
+
+    private openEditDialog(item: any, studentsEmails: string[]) {
         const dialogRef = this.dialog.open(EditClassDialogComponent, {
-            data: { 'title': 'Edit Classroom', 'class': item, 'tags': this.teacherTags },
+            data: { 'title': 'Edit Classroom', 'class': item, 'tags': this.teacherTags, 'studentsEmails': studentsEmails },
             position: this.dialogPosition
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -165,19 +188,14 @@ export class ManageClassesComponent implements OnInit {
                         duration: 3000,
                         panelClass: ['success-snackbar']
                     });
-                    // replace local item so new tags are visible immediately
                     const idx = this.classes.findIndex((c: any) => c.id === res.id);
                     if (idx >= 0) { this.classes[idx] = res; }
                     this.endLoad();
                 }, error => {
                     let message = '';
                     if (typeof error === 'object') {
-                        Object.values(error).forEach(x => {
-                            message += x + ' ';
-                        });
-                    } else {
-                        message = error;
-                    }
+                        Object.values(error).forEach(x => { message += x + ' '; });
+                    } else { message = error; }
                     this.snackBar.open(message ? message : 'Error occurred while updating classroom!', '', {
                         duration: 3000,
                         panelClass: ['error-snackbar']

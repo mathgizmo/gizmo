@@ -127,7 +127,10 @@ export class ClassesManagementService {
         return this.http.put('/classes/' + class_id + '/students/' + item.id, item);
     }
 
-    public deleteStudent(class_id, student_id) {
+    public deleteStudent(class_id, student_id, email: string = null) {
+        if ((!student_id || student_id === 0) && email) {
+            return this.http.delete('/classes/' + class_id + '/students/0?email=' + encodeURIComponent(email));
+        }
         return this.http.delete('/classes/' + class_id + '/students/' + student_id);
     }
 

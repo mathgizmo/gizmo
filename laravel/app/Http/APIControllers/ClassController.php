@@ -441,7 +441,7 @@ class ClassController extends Controller
         return $this->success('updated!', 200);
     }
 
-    public function deleteStudent($class_id, $student_id) {
+    public function deleteStudent(Request $request, $class_id, $student_id) {
         $user = Auth::user();
         $user_id = $user->id;
         $class = ClassOfStudents::where('id', $class_id)
@@ -452,6 +452,23 @@ class ClassController extends Controller
                     });
             })->first();
         if (!$class) { return $this->error('Class not found.', 404); }
+        // If an email is provided and student_id is null/0, treat as removal of an invitation-only (unregistered) entry
+        if ($request->filled('email') && ($student_id === '0' || $student_id === 0 || $student_id === 'null')) {
+            $email = strtolower(trim($request->get('email')));
+            if ($class->subscription_type === 'assigned' && $class->invitations) {
+                $emails = explode(',', strtolower(str_replace(' ', '', preg_replace( "/;|\n/", ',', $class->invitations))));
+                $filtered = [];
+                foreach ($emails as $em) {
+                    $em = trim($em);
+                    if (!$em) { continue; }
+                    if ($em === $email) { continue; } // skip (remove) target email
+                    $filtered[] = $em;
+                }
+                $class->invitations = implode(',', array_unique($filtered));
+                $class->save();
+            }
+            return $this->success(['success' => true]);
+        }
         ClassStudent::where('class_id', $class_id)->where('student_id', $student_id)->delete();
         return $this->success(['success' => true]);
     }

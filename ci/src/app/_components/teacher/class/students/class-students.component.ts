@@ -63,6 +63,7 @@ export class ClassStudentsComponent implements OnInit {
 
     deleteStudent(student) {
         const studentId = student.id;
+        const studentEmail = student.email;
         const dialogRef = student.is_unsubscribed
             ? this.dialog.open(YesNoDialogComponent, {
                 data: {
@@ -76,9 +77,32 @@ export class ClassStudentsComponent implements OnInit {
             });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.classService.deleteStudent(this.classId, studentId)
+                this.classService.deleteStudent(this.classId, studentId, !studentId ? studentEmail : null)
                     .subscribe(res => {
-                        this.students = this.students.filter(x => x.id !== studentId);
+                        if (studentId) {
+                            this.students = this.students.filter(x => x.id !== studentId);
+                        } else {
+                            // Remove invitation-only email entry (id null)
+                            let removed = false;
+                            const newList = [];
+                            for (const s of this.students) {
+                                if (!removed && (!s.id) && s.email === studentEmail) { removed = true; continue; }
+                                newList.push(s);
+                            }
+                            this.students = newList;
+                            // Also purge from pending invitations store used by edit dialog
+                            const pendingKey = 'class_pending_invites_' + this.classId;
+                            try {
+                                const raw = localStorage.getItem(pendingKey);
+                                if (raw) {
+                                    let arr = JSON.parse(raw);
+                                    if (Array.isArray(arr)) {
+                                        arr = arr.filter(e => e !== studentEmail);
+                                        localStorage.setItem(pendingKey, JSON.stringify(arr));
+                                    }
+                                }
+                            } catch (_) { /* ignore */ }
+                        }
                         this.snackBar.open('Student was successfully deleted from the classroom!', '', {
                             duration: 3000,
                             panelClass: ['success-snackbar']

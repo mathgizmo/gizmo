@@ -45,10 +45,24 @@
             <option value="closed">Closed</option>
         </select>
     </div>
+    <!-- Read-only list of already assigned students -->
+    <div *ngIf="class.subscription_type === 'assigned' && (existingStudentEmails.length || pendingInvitations.length)" class="form-group assigned-wrapper">
+        <div class="assigned-header">
+            <label class="assigned-label">Assigned Students ({{existingStudentEmails.length + pendingInvitations.length}})</label>
+            <button type="button" class="assigned-toggle" (click)="toggleAssignedList()">
+                {{ showAssignedStudents ? 'Show less' : 'Show more' }}
+            </button>
+        </div>
+        <div class="assigned-students-list form-control" [class.collapsed]="!showAssignedStudents">
+            <div *ngFor="let email of existingStudentEmails" class="assigned-student-item">{{email}}</div>
+            <div *ngFor="let p of pendingInvitations" class="assigned-student-item text-muted">{{p}} <span style="font-size: 85%; font-style: italic;">(pending)</span></div>
+        </div>
+        <small class="text-muted helper-text">Existing students cannot be removed here. Pending invites will disappear once students are created.</small>
+    </div>
     <div *ngIf="class.subscription_type === 'assigned'" class="form-group">
-        <label for="invitations">Invitations:</label>
+        <label for="invitations">Add Students (comma separated emails):</label>
         <textarea id="invitations" cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6"
-                  cdkAutosizeMaxRows="12" name="invitations" placeholder="Please enter comma separated email list"
+                  cdkAutosizeMaxRows="12" name="invitations" placeholder="email1@example.com, email2@example.com"
                   [(ngModel)]="class.invitations" class="form-control"></textarea>
         <input type="file" (change)="fileChanged($event)" class="file-input">
     </div>
