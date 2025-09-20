@@ -28,6 +28,14 @@ export class QuestionService {
                 return true;
             }
         } else {
+            // Normalize checkbox answers: mat-checkbox binds booleans; unify to string markers
+            if (this.question.answer_mode === 'checkbox') {
+                for (let i = 0; i < this.answers.length; i++) {
+                    if (typeof this.answers[i] === 'boolean') {
+                        this.answers[i] = this.answers[i] ? '1' : '';
+                    }
+                }
+            }
             if (this.answers.length < this.question.answers.length) {
                 return false;
             }
@@ -146,6 +154,12 @@ export class QuestionService {
     private prepareData(question: any, answers: string[]) {
         this.question = question;
         this.answers = answers;
+        // Normalize boolean values (e.g., from mat-checkbox) into string markers for uniform comparisons
+        for (let i = 0; i < this.answers.length; i++) {
+            if (typeof this.answers[i] === 'boolean') {
+                this.answers[i] = this.answers[i] ? '1' : '';
+            }
+        }
         // sort question answers
         if (this.question.question_order) {
             this.question.answers.sort((a, b) => {

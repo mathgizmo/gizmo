@@ -26,14 +26,14 @@
             </mat-radio-group>
         </div>
         <div *ngIf="question.answer_mode=='checkbox'">
-            <div *ngFor="let answer of question.answers; let answerIndex = 'index'">
+            <div *ngFor="let answer of question.answers; let answerIndex = index">
                 <mat-checkbox [(ngModel)]="answers[answerIndex]" color="primary">
                     {{answer.value}}
                 </mat-checkbox>
             </div>
         </div>
         <div  *ngIf="question.answer_mode=='input'">
-            <input *ngFor="let answer of question.answers; let answerIndex = 'index'" [(ngModel)]="answers[answerIndex]" name="'answers[{{answerIndex}}]'"
+            <input *ngFor="let answer of question.answers; let answerIndex = index" [(ngModel)]="answers[answerIndex]" name="'answers[{{answerIndex}}]'"
             class="input form-control">
         </div>
     </span>
