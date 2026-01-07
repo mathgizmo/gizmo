@@ -12,4 +12,8 @@ export class DashboardService {
         return this.http.get('/dashboard');
     }
 
+    getDonationStatus() {
+        return this.http.get('/dashboard/donation-status');
+    }
+    
 }

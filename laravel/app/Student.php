@@ -18,7 +18,7 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
         'first_name', 'last_name', 'email', 'email_new', 'password', 'country_id',
         'is_teacher', 'is_super', 'is_admin', 'is_self_study', 'is_researcher',
         'is_registered', 'email_verified_at', 'is_test_timer_displayed', 'is_test_questions_count_displayed',
-        'redirect_to'
+        'redirect_to', 'has_donated'
     ];
 
     protected $hidden = [
@@ -73,6 +73,10 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
 
         if (!empty($filters['is_registered'])) {
             $query->where('is_registered', $filters['is_registered'] == 'yes');
+        }
+
+        if (!empty($filters['has_donated'])) {
+            $query->where('has_donated', $filters['has_donated'] == 'yes');
         }
     }
 
@@ -138,6 +142,11 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function isAdmin()
     {
         return $this->is_admin;
+    }
+
+    public function hasDonated()
+    {
+        return $this->has_donated;
     }
 
     public function getJWTIdentifier()
