@@ -110,7 +110,7 @@ class StudentController extends Controller
 
     public function donationUpdate(Request $request, Student $student)
     {
-        $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());
+        $this->checkAccess(auth()->user()->isSuperAdmin());
         $student->update([
             'has_donated' => $request['has_donated'] ? true : false,
         ]);

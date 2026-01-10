@@ -70,6 +70,9 @@
                         <th>
                             Researcher
                         </th>
+                        <th>
+                            Donated
+                        </th>
                         <th style="min-width: 170px;">Tags</th>
                         <th style="min-width: 160px;"></th>
                     </tr>
@@ -112,6 +115,13 @@
                             </select>
                         </td>
                         <td>
+                            <select id="has-donated-filter" name="has_donated" class="form-control" style="min-width: 80px;">
+                                <option value="">Any</option>
+                                <option value="yes">Donated</option>
+                                <option value="no">Not Donated</option>
+                            </select>
+                        </td>
+                        <td>
                             <div id="tag-filter-group" class="d-flex flex-wrap">
                                 <span class="badge badge-pill tag-filter-badge {{ in_array('none', $selected_tag_ids ?? []) ? 'badge-primary' : 'badge-light' }} m-1" data-tag-id="none" style="cursor:pointer;user-select:none;">None</span>
                                 @foreach($tags as $tag)
@@ -131,6 +141,7 @@
                         <tr>
                             <td>{{ $student->id }}</td>
                             <td style="max-width: 120px;">{{ $student->first_name }}</td>
+                            <td style="max-width: 40px;">{{ $student->has_donated ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 120px;">{{ $student->last_name }}</td>
                             <td style="max-width: 160px;">{{ $student->email }}</td>
                             <td style="max-width: 80px;">{{ $student->created_at? $student->created_at->format('Y/m/d H:i') : '' }}</td>
@@ -196,6 +207,7 @@
             const is_super = document.getElementById("is-super-filter").value;
             const is_teacher = document.getElementById("is-teacher-filter").value;
             const is_researcher = document.getElementById("is-researcher-filter").value;
+            const has_donated = document.getElementById("has-donated-filter").value;
 
             // Set all filter parameters
             if (id) url.searchParams.set('id', id);
@@ -231,6 +243,7 @@
             applyParam('email', email);
             applyParam('is_super', is_super);
             applyParam('is_teacher', is_teacher);
+            applyParam('has_donated', has_donated);
             applyParam('is_researcher', is_researcher);
             if (tagIds) {
                 url.searchParams.set('tag_id', tagIds);
@@ -286,6 +299,7 @@
             document.getElementById("email-filter").value = url.searchParams.get('email') || '';
             document.getElementById("is-super-filter").value = url.searchParams.get('is_super') || '';
             document.getElementById("is-teacher-filter").value = url.searchParams.get('is_teacher') || '';
+            document.getElementById("has-donated-filter").value = url.searchParams.get('has_donated') || '';
             document.getElementById("is-researcher-filter").value = url.searchParams.get('is_researcher') || '';
             
             // Initialize tag filter badges

@@ -115,6 +115,21 @@
                     {{ csrf_field() }}
                 </form>
             @endif
+            @if($student->is_teacher)
+                <form class="row mb-3" action="{{ route('students.donation', $student->id) }}" method="POST">
+                    <div class="col-md-2 form-control-label ml-3 font-weight-bold">
+                        <label for="has_donated">Has Donated (Ad-Free)</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select id="has_donated" name="has_donated" class="form-control" onchange="this.parentElement.parentElement.submit();" style="max-width: 300px;">
+                            <option {{ $student->has_donated ? 'selected="selected"' : '' }} value="1">Yes</option>
+                            <option {{ $student->has_donated ? '' : 'selected="selected"' }} value="0">No</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="_method" value="PATCH">
+                    {{ csrf_field() }}
+                </form>
+            @endif
             <form class="d-flex flex-row mx-3 mb-3" action="{{ route('students.reset', $student->id) }}"
                   method="POST" style="display: inline;"
                   onsubmit="if(confirm('This will remove all participant progress? Are you sure?')) { return true } else {return false };">
