@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectorRef} from '@angular/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {DashboardService} from '../../../_services/dashboard.service';
 
 @Component({
@@ -12,10 +13,14 @@ export class AdBannerComponent implements OnInit {
     @Input() assignmentId: number;
 
     public showAd = false;
-    public adCode = '';
-    public adMessage = '';
+    public adCode: SafeHtml = '';
+    public adMessage: SafeHtml = '';
 
-    constructor(private dashboardService: DashboardService) {}
+    constructor(
+        private dashboardService: DashboardService,
+        private sanitizer: DomSanitizer,
+        private cdRef: ChangeDetectorRef
+    ) {}
 
     ngOnInit() {
         this.loadAdSettings();
@@ -25,22 +30,47 @@ export class AdBannerComponent implements OnInit {
         this.dashboardService.getAdSettings(this.classId, this.assignmentId)
             .subscribe(settings => {
                 const hasDonated = settings.has_donated;
-                this.adCode = settings.ad_code;
-                this.adMessage = settings.ad_message;
+                this.adCode = this.sanitizer.bypassSecurityTrustHtml(settings.ad_code);
+                this.adMessage = this.sanitizer.bypassSecurityTrustHtml(settings.ad_message);
 
                 // Show ad only if user hasn't donated and ad code exists
-                this.showAd = !hasDonated && !!this.adCode;
+                this.showAd = !hasDonated && !!settings.ad_code;
 
                 if (this.showAd) {
-                    setTimeout(() => this.loadAdSense(), 100);
+                    this.cdRef.detectChanges(); // Force DOM update
+                    this.injectAdSenseScript();
+                    setTimeout(() => this.loadAdSense(), 500); // Increased timeout
                 }
             });
     }
 
-    loadAdSense() {
-        if (window['adsbygoogle']) {
-            window['adsbygoogle'] = window['adsbygoogle'] || [];
+    injectAdSenseScript() {
+        // Prevent double injection
+        const scriptId = 'adsense-script-loader';
+        if (document.getElementById(scriptId)) {
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.async = true;
+        // Using the Publisher ID provided
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5903342696681021';
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+    }
+
+    loadAdSense(retryCount = 0) {
+        window['adsbygoogle'] = window['adsbygoogle'] || [];
+        try {
             window['adsbygoogle'].push({});
+        } catch (e) {
+            console.error('AdSense push error:', e);
+            if (retryCount < 3) {
+                 // Retry if width was 0 or other transient error
+                 console.log(`Retrying AdSense push (Attempt ${retryCount + 1})...`);
+                 setTimeout(() => this.loadAdSense(retryCount + 1), 500);
+            }
         }
     }
 }
