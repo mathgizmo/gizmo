@@ -34,8 +34,12 @@ RUN chown -R www-data:www-data /var/www/html
 
 #composer install
 WORKDIR /var/www/html/laravel
-RUN composer install
-RUN php artisan config:clear | php artisan view:clear |  php artisan route:clear | php artisan cache:clear
+# Ensure bootstrap/cache directory exists
+RUN mkdir -p bootstrap/cache && chmod -R 775 bootstrap/cache storage
+# Install composer dependencies without running post-install scripts (requires .env to be mounted)
+RUN composer install --no-scripts
+# Generate optimized autoload files without running discovery scripts
+RUN composer dump-autoload --no-scripts --optimize
 
 # Expose Apache port
 EXPOSE 80
