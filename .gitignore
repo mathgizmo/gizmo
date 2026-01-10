@@ -6,3 +6,12 @@ vendor/
 
 jwt.php
 gizmo.code-workspace
+
+# Temporary files
+temp/
+
+# Laravel caching
+laravel/bootstrap/cache/packages.php
+laravel/bootstrap/cache/services.php
+laravel/storage/framework/cache/
+
