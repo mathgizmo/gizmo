@@ -141,7 +141,6 @@
                         <tr>
                             <td>{{ $student->id }}</td>
                             <td style="max-width: 120px;">{{ $student->first_name }}</td>
-                            <td style="max-width: 40px;">{{ $student->has_donated ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 120px;">{{ $student->last_name }}</td>
                             <td style="max-width: 160px;">{{ $student->email }}</td>
                             <td style="max-width: 80px;">{{ $student->created_at? $student->created_at->format('Y/m/d H:i') : '' }}</td>
@@ -149,6 +148,7 @@
                             <td style="max-width: 40px;">{{ $student->is_super ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_teacher ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 40px;">{{ $student->is_researcher ? 'Yes' : 'No' }}</td>
+                            <td style="max-width: 40px;">{{ $student->has_donated ? 'Yes' : 'No' }}</td>
                             <td style="max-width: 170px;">
                                 @if($student->tags->count())
                                     @foreach($student->tags as $tag)

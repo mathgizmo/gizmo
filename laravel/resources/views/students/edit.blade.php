@@ -115,7 +115,7 @@
                     {{ csrf_field() }}
                 </form>
             @endif
-            @if($student->is_teacher)
+            @if(auth()->user()->isSuperAdmin())
                 <form class="row mb-3" action="{{ route('students.donation', $student->id) }}" method="POST">
                     <div class="col-md-2 form-control-label ml-3 font-weight-bold">
                         <label for="has_donated">Has Donated (Ad-Free)</label>

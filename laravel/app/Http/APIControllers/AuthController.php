@@ -87,7 +87,8 @@ class AuthController extends Controller
         if ($request->filled('token')) {
             try {
                 $token = request('token');
-                $student = JWTAuth::parseToken()->authenticate();
+                JWTAuth::setToken($token);
+                $student = JWTAuth::authenticate();
             } catch (\Exception $e) {
                 return $this->error($e->getMessage(), 401);
             }

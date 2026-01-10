@@ -2,6 +2,8 @@
 <div class="dashboard">
   <app-my-class-menu [classId]="classId" [myClass]="myClass" class="class-menu"></app-my-class-menu>
   <div class="dashboard-content">
+    <app-ad-banner [classId]="classId"></app-ad-banner>
+    
     <mat-card>
       <div class="subtitle text-center">
         {{ showCompletedApplications ? 'Finished Tests' : 'My Tests' }}

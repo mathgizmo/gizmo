@@ -10,8 +10,6 @@ import {DashboardService} from '../../_services/dashboard.service';
 export class DashboardComponent implements OnInit {
 
     public dashboards = [];
-    
-    public hasDonated = false;
 
     constructor(private dashboardService: DashboardService) {}
 
@@ -19,27 +17,7 @@ export class DashboardComponent implements OnInit {
         this.dashboardService.getDashboards()
             .subscribe(res => {
                 this.dashboards = res;
-
-                this.checkDonationStatus();
             });
-    }
-
-    checkDonationStatus() {
-        this.dashboardService.getDonationStatus()
-            .subscribe(status => {
-                this.hasDonated = status.has_donated;
-
-                if (!this.hasDonated) {
-                    setTimeout(() => this.loadAdSense(), 100);
-                }
-            });
-    }
-
-    loadAdSense() {
-        if (window['adsbygoogle']) {
-            window['adsbygoogle'] = window['adsbygoogle'] || [];
-            window['adsbygoogle'].push({});
-        }
     }
 
 }

@@ -12,8 +12,11 @@ export class DashboardService {
         return this.http.get('/dashboard');
     }
 
-    getDonationStatus() {
-        return this.http.get('/dashboard/donation-status');
+    getAdSettings(classId?: number, assignmentId?: number) {
+        const params: any = {};
+        if (classId) params.class_id = classId;
+        if (assignmentId) params.assignment_id = assignmentId;
+        return this.http.get('/ad-settings', true, params);
     }
     
 }

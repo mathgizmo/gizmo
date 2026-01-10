@@ -149,6 +149,24 @@ class Student extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->has_donated;
     }
 
+    public function isAdFree($classId = null)
+    {
+        // User is ad-free if they donated
+        if ($this->has_donated) {
+            return true;
+        }
+
+        // If a specific class context is provided, check only that class's teacher
+        if ($classId) {
+            $class = $this->classes()->where('classes.id', $classId)->first();
+            if ($class && $class->teacher && $class->teacher->has_donated) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

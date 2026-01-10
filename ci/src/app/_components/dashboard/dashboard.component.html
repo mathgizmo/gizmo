@@ -1,14 +1,4 @@
 <div class="dashboard">
-  <!-- Show Ad if user hasn't donated -->
-  <div *ngIf="!hasDonated" class="simple-ad-banner">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-5903342696681021"
-         data-ad-slot="1"
-         data-ad-format="auto"
-         data-full-width-responsive="true">
-    </ins>
-  </div>
   <mat-card *ngFor="let dashboard of dashboards">
     <div class="title">{{dashboard.title}}</div>
     <div class="data" [innerHtml]="dashboard.data | safeHtml"></div>

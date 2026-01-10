@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1758337747798,
+  "timestamp": 1768020331430,
   "index": "/gizmo/index.html",
   "assetGroups": [
     {
@@ -14,11 +14,11 @@
         "/gizmo/canvg.2e806a8386a05648.js",
         "/gizmo/favicon.ico",
         "/gizmo/index.html",
-        "/gizmo/main.c5a00fa2d11f45d3.js",
+        "/gizmo/main.31b62eb70f7d74bb.js",
         "/gizmo/manifest.webmanifest",
-        "/gizmo/pdfmake.de97ee7c1d67d960.js",
+        "/gizmo/pdfmake.7b1d34ed15ead411.js",
         "/gizmo/polyfills.0de09ec79fa393a0.js",
-        "/gizmo/runtime.a38b0cb46fc465d8.js",
+        "/gizmo/runtime.4d8ad3c9938673cc.js",
         "/gizmo/scripts.39129e36e9910771.js",
         "/gizmo/styles.7104ed98e20cfccf.css",
         "/gizmo/xlsx.da6f21e9d79dd756.js"
@@ -601,12 +601,12 @@
     "/gizmo/fontawesome-webfont.cf011583fb81df9f.woff": "28b782240b3e76db824e12c02754a9731a167527",
     "/gizmo/fontawesome-webfont.da909aa098b0ee2d.svg": "98a8aa5cf7d62c2eff5f07ede8d844b874ef06ed",
     "/gizmo/fontawesome-webfont.e9955780856cf8aa.woff2": "d6f48cba7d076fb6f2fd6ba993a75b9dc1ecbf0c",
-    "/gizmo/index.html": "830aa56c2b1911a2d42c8add435f7141f9b83c2f",
-    "/gizmo/main.c5a00fa2d11f45d3.js": "04ee0d74b47ba58468f0bb8ade798b776d3ad816",
+    "/gizmo/index.html": "11811ddc6fcd3e20dd98a538be5b4bc50507830d",
+    "/gizmo/main.31b62eb70f7d74bb.js": "ef4af142f1f462fbdfc779e6c306ce5d8209cad7",
     "/gizmo/manifest.webmanifest": "76f0bd83fcb2ac568f286de2089dd5220fb6f464",
-    "/gizmo/pdfmake.de97ee7c1d67d960.js": "588154e99bc557a6f91e840be010aa8486e7fd73",
+    "/gizmo/pdfmake.7b1d34ed15ead411.js": "b2c0589df37b62b87c86899a2360f3e6eee05457",
     "/gizmo/polyfills.0de09ec79fa393a0.js": "d633f062ee024124ea18507788c71e963fac15ab",
-    "/gizmo/runtime.a38b0cb46fc465d8.js": "7ab9120a5e2c3197f420c02ad6ddb1a1cfe24152",
+    "/gizmo/runtime.4d8ad3c9938673cc.js": "76924ab2813892e771556a785468e23189fd0a5d",
     "/gizmo/scripts.39129e36e9910771.js": "bba559102a28e5f55d14dbe0ff552c4050e28ad9",
     "/gizmo/styles.7104ed98e20cfccf.css": "591c79b1cd9e781f27502d889d08037f87aee9c6",
     "/gizmo/xlsx.da6f21e9d79dd756.js": "484b6214cd9c274e4b4eeafdf0b40d238cb27435"
