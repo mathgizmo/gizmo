@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.30, for macos12 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.44, for Linux (aarch64)
 --
 -- Host: localhost    Database: gizmoDB
 -- ------------------------------------------------------
--- Server version	8.0.42
+-- Server version	8.0.44
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -31,7 +31,7 @@ CREATE TABLE `answer` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48592 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49000 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,12 +44,29 @@ DROP TABLE IF EXISTS `application_has_models`;
 CREATE TABLE `application_has_models` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int unsigned NOT NULL,
-  `model_type` enum('level','unit','topic','lesson') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'lesson',
+  `model_type` enum('level','unit','topic','lesson') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'lesson',
   `model_id` int unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `application_has_models_app_id_foreign` (`app_id`),
   KEY `application_has_models_id_index` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9037 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=9041 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `application_tag`
+--
+
+DROP TABLE IF EXISTS `application_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `application_tag` (
+  `app_id` int unsigned NOT NULL,
+  `tag_id` int unsigned NOT NULL,
+  PRIMARY KEY (`app_id`,`tag_id`),
+  KEY `application_tag_tag_id_foreign` (`tag_id`),
+  CONSTRAINT `application_tag_app_id_foreign` FOREIGN KEY (`app_id`) REFERENCES `applications` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `application_tag_tag_id_foreign` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,10 +78,10 @@ DROP TABLE IF EXISTS `applications`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `applications` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `icon` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `icon` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `teacher_id` int unsigned DEFAULT NULL,
-  `type` enum('assignment','test') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'assignment',
+  `type` enum('assignment','test') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'assignment',
   `duration` bigint unsigned DEFAULT NULL,
   `due_date` date DEFAULT NULL,
   `allow_any_order` tinyint(1) DEFAULT '0',
@@ -73,7 +90,7 @@ CREATE TABLE `applications` (
   `question_num` int NOT NULL DEFAULT '3',
   PRIMARY KEY (`id`),
   KEY `applications_id_index` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=465 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=467 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,14 +104,31 @@ CREATE TABLE `class_detailed_reports` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `class_id` int unsigned NOT NULL,
   `student_id` int unsigned NOT NULL,
-  `student_email` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `data` text COLLATE utf8mb3_unicode_ci,
+  `student_email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `data` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `class_detailed_reports_class_id_foreign` (`class_id`),
   KEY `class_detailed_reports_student_id_foreign` (`student_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3195 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `class_tag`
+--
+
+DROP TABLE IF EXISTS `class_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `class_tag` (
+  `class_id` int unsigned NOT NULL,
+  `tag_id` int unsigned NOT NULL,
+  PRIMARY KEY (`class_id`,`tag_id`),
+  KEY `class_tag_tag_id_foreign` (`tag_id`),
+  CONSTRAINT `class_tag_class_id_foreign` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `class_tag_tag_id_foreign` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +143,7 @@ CREATE TABLE `class_thread_replies` (
   `thread_id` int unsigned NOT NULL,
   `student_id` int unsigned NOT NULL,
   `parent_id` int unsigned DEFAULT NULL,
-  `message` text COLLATE utf8mb3_unicode_ci,
+  `message` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -130,8 +164,8 @@ CREATE TABLE `class_threads` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `class_id` int unsigned NOT NULL,
   `student_id` int unsigned NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `message` text COLLATE utf8mb3_unicode_ci,
+  `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `message` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -150,17 +184,17 @@ DROP TABLE IF EXISTS `classes`;
 CREATE TABLE `classes` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `teacher_id` int unsigned DEFAULT NULL,
-  `key` char(36) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `class_type` enum('elementary','secondary','college','university','professional','other') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'other',
-  `subscription_type` enum('open','assigned','invitation','closed') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'open',
-  `invitations` text COLLATE utf8mb3_unicode_ci,
+  `key` char(36) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `class_type` enum('elementary','secondary','college','university','professional','other') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'other',
+  `subscription_type` enum('open','assigned','invitation','closed') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'open',
+  `invitations` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `is_researchable` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `classes_key_unique` (`key`),
   KEY `classes_teacher_id_foreign` (`teacher_id`),
   KEY `classes_id_index` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,14 +214,14 @@ CREATE TABLE `classes_applications` (
   `due_time` time DEFAULT NULL,
   `duration` bigint unsigned DEFAULT NULL,
   `attempts` int unsigned NOT NULL DEFAULT '1',
-  `password` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `color` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `color` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `is_for_selected_students` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `classes_applications_class_id_foreign` (`class_id`),
   KEY `classes_applications_app_id_foreign` (`app_id`),
   KEY `classes_applications_id_index` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=664 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=666 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -233,7 +267,7 @@ CREATE TABLE `classes_students` (
   KEY `classes_students_class_id_foreign` (`class_id`),
   KEY `classes_students_student_id_foreign` (`student_id`),
   KEY `classes_students_id_index` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3946 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3954 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +287,7 @@ CREATE TABLE `classes_teachers` (
   KEY `classes_teachers_class_id_foreign` (`class_id`),
   KEY `classes_teachers_student_id_foreign` (`student_id`),
   KEY `classes_teachers_id_index` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,8 +299,8 @@ DROP TABLE IF EXISTS `countries`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `countries` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `code` varchar(2) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `code` varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=247 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -281,8 +315,8 @@ DROP TABLE IF EXISTS `dashboards`;
 CREATE TABLE `dashboards` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `order_no` int unsigned NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `data` text COLLATE utf8mb3_unicode_ci,
+  `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `data` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `is_for_student` tinyint(1) NOT NULL DEFAULT '0',
   `is_for_teacher` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -299,8 +333,8 @@ DROP TABLE IF EXISTS `faqs`;
 CREATE TABLE `faqs` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `order_no` int unsigned NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `data` text COLLATE utf8mb3_unicode_ci,
+  `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `data` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `is_for_student` tinyint(1) NOT NULL DEFAULT '0',
   `is_for_teacher` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -328,7 +362,7 @@ CREATE TABLE `lesson` (
   `randomisation` tinyint(1) NOT NULL DEFAULT '1',
   `challenge` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=998 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1020 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,7 +382,7 @@ CREATE TABLE `level` (
   `dependency` tinyint(1) NOT NULL DEFAULT '1',
   `dev_mode` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,9 +394,9 @@ DROP TABLE IF EXISTS `mail_templates`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mail_templates` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `mail_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `body` text COLLATE utf8mb4_unicode_ci,
+  `mail_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `mail_templates_mail_type_unique` (`mail_type`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -377,7 +411,7 @@ DROP TABLE IF EXISTS `mails_history`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `mails_history` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `mail_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mail_type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `student_id` int unsigned DEFAULT NULL,
   `class_id` int unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -396,8 +430,25 @@ DROP TABLE IF EXISTS `migrations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `migrations` (
-  `migration` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `batch` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `participant_tag`
+--
+
+DROP TABLE IF EXISTS `participant_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `participant_tag` (
+  `participant_id` int unsigned NOT NULL,
+  `tag_id` int unsigned NOT NULL,
+  PRIMARY KEY (`participant_id`,`tag_id`),
+  KEY `participant_tag_tag_id_foreign` (`tag_id`),
+  CONSTRAINT `participant_tag_participant_id_foreign` FOREIGN KEY (`participant_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `participant_tag_tag_id_foreign` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -409,8 +460,8 @@ DROP TABLE IF EXISTS `password_resets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -425,7 +476,7 @@ DROP TABLE IF EXISTS `placement_questions`;
 CREATE TABLE `placement_questions` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `order` int NOT NULL,
-  `question` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `question` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `unit_id` int unsigned NOT NULL,
   `is_active` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
@@ -444,7 +495,7 @@ DROP TABLE IF EXISTS `progresses`;
 CREATE TABLE `progresses` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `student_id` int NOT NULL,
-  `entity_type` enum('lesson','topic','unit','level','application') COLLATE utf8mb3_unicode_ci NOT NULL,
+  `entity_type` enum('lesson','topic','unit','level','application') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `entity_id` int NOT NULL,
   `completed_at` timestamp NULL DEFAULT NULL,
   `app_id` int unsigned DEFAULT NULL,
@@ -480,7 +531,7 @@ CREATE TABLE `question` (
   `question_order` tinyint(1) NOT NULL DEFAULT '0',
   `answers_round` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4987 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5089 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -528,12 +579,12 @@ CREATE TABLE `report_errors` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `student_id` int NOT NULL,
   `question_id` int NOT NULL,
-  `options` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `options` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `declined` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `comment` text COLLATE utf8mb3_unicode_ci NOT NULL,
-  `answers` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `comment` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `answers` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `is_feedback` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2064 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
@@ -548,13 +599,13 @@ DROP TABLE IF EXISTS `settings`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `settings` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `label` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb3_unicode_ci NOT NULL,
-  `type` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'text',
+  `key` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `label` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `value` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `type` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'text',
   PRIMARY KEY (`id`),
   UNIQUE KEY `settings_key_unique` (`key`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -566,7 +617,7 @@ DROP TABLE IF EXISTS `shares`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `shares` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `type` enum('test','assignment','classroom') COLLATE utf8mb3_unicode_ci NOT NULL,
+  `type` enum('test','assignment','classroom') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `item_id` int NOT NULL,
   `sender_id` int NOT NULL,
   `receiver_id` int NOT NULL,
@@ -591,11 +642,11 @@ DROP TABLE IF EXISTS `students`;
 CREATE TABLE `students` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `app_id` int unsigned DEFAULT NULL,
-  `first_name` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `email_new` varchar(255) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `first_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `last_name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `email_new` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `country_id` int unsigned NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -608,9 +659,25 @@ CREATE TABLE `students` (
   `is_registered` tinyint(1) NOT NULL DEFAULT '1',
   `is_test_timer_displayed` tinyint(1) NOT NULL DEFAULT '1',
   `is_test_questions_count_displayed` tinyint(1) NOT NULL DEFAULT '1',
-  `redirect_to` varchar(1000) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3628 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+  `redirect_to` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `has_donated` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `students_first_name_index` (`first_name`),
+  KEY `students_last_name_index` (`last_name`),
+  KEY `students_email_index` (`email`),
+  KEY `students_is_super_index` (`is_super`),
+  KEY `students_is_teacher_index` (`is_teacher`),
+  KEY `students_is_researcher_index` (`is_researcher`),
+  KEY `students_is_self_study_index` (`is_self_study`),
+  KEY `students_is_admin_index` (`is_admin`),
+  KEY `students_is_registered_index` (`is_registered`),
+  KEY `students_country_id_index` (`country_id`),
+  KEY `students_created_at_index` (`created_at`),
+  KEY `students_id_index` (`id`),
+  KEY `students_first_name_last_name_index` (`first_name`,`last_name`),
+  KEY `students_email_is_teacher_index` (`email`,`is_teacher`),
+  KEY `students_country_id_is_teacher_index` (`country_id`,`is_teacher`)
+) ENGINE=InnoDB AUTO_INCREMENT=3634 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -670,8 +737,8 @@ CREATE TABLE `students_test_questions` (
   `attempt_id` int unsigned NOT NULL,
   `is_answered` tinyint(1) NOT NULL DEFAULT '0',
   `is_right_answer` tinyint(1) NOT NULL DEFAULT '0',
-  `answer` varchar(1000) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `correct_answer` varchar(1000) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `answer` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `correct_answer` varchar(1000) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `order_no` int unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -717,14 +784,15 @@ CREATE TABLE `students_tracking` (
   `student_id` int NOT NULL,
   `lesson_id` int NOT NULL,
   `app_id` int unsigned DEFAULT NULL,
-  `action` enum('start','done') COLLATE utf8mb3_unicode_ci NOT NULL,
+  `action` enum('start','done') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `date` datetime NOT NULL,
   `start_datetime` datetime NOT NULL,
-  `weak_questions` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `ip` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `user_agent` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `weak_questions` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `ip` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `user_agent` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `is_testout` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `students_tracking_student_id_id_index` (`student_id`,`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=380052 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -752,6 +820,40 @@ CREATE TABLE `students_tracking_questions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tag`
+--
+
+DROP TABLE IF EXISTS `tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tag` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `order_no` int unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tag_unit`
+--
+
+DROP TABLE IF EXISTS `tag_unit`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tag_unit` (
+  `unit_id` int unsigned NOT NULL,
+  `tag_id` int unsigned NOT NULL,
+  PRIMARY KEY (`unit_id`,`tag_id`),
+  KEY `tag_unit_tag_id_foreign` (`tag_id`),
+  CONSTRAINT `tag_unit_tag_id_foreign` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `tag_unit_unit_id_foreign` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `topic`
 --
 
@@ -771,7 +873,7 @@ CREATE TABLE `topic` (
   `modified_at` timestamp NULL DEFAULT NULL,
   `dev_mode` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=203 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -784,8 +886,8 @@ DROP TABLE IF EXISTS `tutorials`;
 CREATE TABLE `tutorials` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `order_no` int unsigned NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `data` text COLLATE utf8mb3_unicode_ci,
+  `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `data` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
   `is_for_student` tinyint(1) NOT NULL DEFAULT '0',
   `is_for_teacher` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -812,7 +914,7 @@ CREATE TABLE `unit` (
   `modified_at` timestamp NULL DEFAULT NULL,
   `dev_mode` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -824,15 +926,15 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `role` enum('questions_editor','admin','superadmin') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'questions_editor',
-  `name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `role` enum('questions_editor','admin','superadmin') CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'questions_editor',
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -844,4 +946,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-04 19:56:21
+-- Dump completed on 2026-01-10  4:52:57
