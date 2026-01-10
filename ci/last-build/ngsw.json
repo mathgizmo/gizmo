@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1768020331430,
+  "timestamp": 1768025860995,
   "index": "/gizmo/index.html",
   "assetGroups": [
     {
@@ -601,7 +601,7 @@
     "/gizmo/fontawesome-webfont.cf011583fb81df9f.woff": "28b782240b3e76db824e12c02754a9731a167527",
     "/gizmo/fontawesome-webfont.da909aa098b0ee2d.svg": "98a8aa5cf7d62c2eff5f07ede8d844b874ef06ed",
     "/gizmo/fontawesome-webfont.e9955780856cf8aa.woff2": "d6f48cba7d076fb6f2fd6ba993a75b9dc1ecbf0c",
-    "/gizmo/index.html": "11811ddc6fcd3e20dd98a538be5b4bc50507830d",
+    "/gizmo/index.html": "d0dd816989c7577d7d0d909a5b000b08ca4a7c01",
     "/gizmo/main.31b62eb70f7d74bb.js": "ef4af142f1f462fbdfc779e6c306ce5d8209cad7",
     "/gizmo/manifest.webmanifest": "76f0bd83fcb2ac568f286de2089dd5220fb6f464",
     "/gizmo/pdfmake.7b1d34ed15ead411.js": "b2c0589df37b62b87c86899a2360f3e6eee05457",
