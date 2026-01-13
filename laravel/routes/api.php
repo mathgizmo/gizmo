@@ -15,6 +15,7 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
     $api->get('/welcome' , 'App\Http\APIControllers\HomeController@getWelcomeTexts');
     $api->get('/countries' , 'App\Http\APIControllers\HomeController@getCountries');
+    $api->get('/ad-settings' , 'App\Http\APIControllers\HomeController@getAdSettings');
     $api->get('/tags' , 'App\Http\APIControllers\TagController@index');
     $api->post('/login/by-token' , 'App\Http\APIControllers\AuthController@loginByToken');
     $api->post('/login' , 'App\Http\APIControllers\AuthController@login');

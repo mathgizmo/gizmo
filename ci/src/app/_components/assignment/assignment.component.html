@@ -1,4 +1,6 @@
 ﻿<div class="topics">
+  <app-ad-banner [assignmentId]="assignmentId > 0 ? assignmentId : null"></app-ad-banner>
+  
   <mat-card *ngIf="requireTags" class="text-center" style="padding: 24px;">
     <span class="subtitle">
       Please select your areas of interest in your

@@ -1,6 +1,6 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {Router, NavigationEnd, ActivatedRoute} from '@angular/router';
-import {map, filter} from 'rxjs/operators';
+import {map, filter, delay} from 'rxjs/operators';
 import {HTTPStatus, AuthenticationService} from '../_services/index';
 import {User} from '../_models/user';
 import {Observable} from 'rxjs';
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.HTTPActivity$ = this.httpStatus.getHttpStatus();
+        this.HTTPActivity$ = this.httpStatus.getHttpStatus().pipe(delay(0));
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),

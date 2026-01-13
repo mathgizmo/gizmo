@@ -26,6 +26,11 @@ class ClassOfStudents extends Model
             ->withPivot(['is_researcher', 'receive_emails_from_students']);
     }
 
+    public function teacherHasDonated()
+    {
+        return $this->teacher->hasDonated();
+    }
+
     public function teachersWithoutResearchers() {
         return $this->belongsToMany('App\Student', 'classes_teachers', 'class_id', 'student_id')
             ->withPivot(['is_researcher', 'receive_emails_from_students'])

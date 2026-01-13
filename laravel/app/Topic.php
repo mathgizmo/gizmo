@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
 {
+    const UPDATED_AT = 'modified_at';
+    protected $guarded = [];
     protected $table = 'topic';
 
     public function lessons()

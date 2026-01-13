@@ -17,6 +17,12 @@ class DashboardController extends Controller
         } else {
             $query->where('is_for_student', true);
         }
-        return $this->success($query->orderBy('order_no', 'ASC')->get());
+        $dashboards = $query->orderBy('order_no', 'ASC')->get();
+        
+        return $this->success([
+            'dashboards' => $dashboards,
+            'has_donated' => $user->has_donated ?? false
+        ]);
     }
+
 }

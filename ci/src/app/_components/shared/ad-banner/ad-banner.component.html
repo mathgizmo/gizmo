@@ -1,0 +1,4 @@
+<div *ngIf="showAd" class="ad-container">
+  <div *ngIf="adMessage" class="ad-message" [innerHTML]="adMessage"></div>
+  <div class="ad-banner" [innerHTML]="adCode"></div>
+</div>

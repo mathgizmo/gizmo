@@ -10,10 +10,15 @@ We try to create the app that allow people to learn math.
 - Clone repository to local:
 `git clone git@github.com:mathgizmo/gizmo.git`
 - Go to cloned directory
-- Build and start Docker containers
+- Build and start Docker containers:
 `docker-compose up -d --build`
-- Restore test DB from dump
+- Restore test DB from dump:
 `docker exec -w /var/www/html/backup/dev_backup lamp_db ./do_restore_testDB.sh`
+- Run database migrations:
+`docker-compose exec web php artisan migrate`
+- Access the application at `http://localhost:8080`
+
+**Note:** The `.env` file is configured via `docker_configs/laravel/.env` and mounted automatically.
 
 ### Using local LAMP set up
 

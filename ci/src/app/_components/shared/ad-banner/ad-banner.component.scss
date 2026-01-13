@@ -1,0 +1,22 @@
+.ad-container {
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  
+  .ad-message {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #fff;
+    border-left: 4px solid #007bff;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .ad-banner {
+    min-height: 90px;
+    display: block;
+    text-align: center;
+  }
+}

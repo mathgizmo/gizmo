@@ -108,6 +108,15 @@ class StudentController extends Controller
         return back();
     }
 
+    public function donationUpdate(Request $request, Student $student)
+    {
+        $this->checkAccess(auth()->user()->isSuperAdmin());
+        $student->update([
+            'has_donated' => $request['has_donated'] ? true : false,
+        ]);
+        return back();
+    }
+
     public function resetProgress(Student $student)
     {
         $this->checkAccess(auth()->user()->isSuperAdmin() || auth()->user()->isAdmin());

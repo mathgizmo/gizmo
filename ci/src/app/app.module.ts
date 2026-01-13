@@ -129,6 +129,7 @@ import {
 import {ToDoComponent} from './_components/self_study/index';
 import {ClassThreadsComponent, EditThreadDialogComponent} from './_components/class-threads/index';
 import {DashboardComponent} from './_components/dashboard/dashboard.component';
+import {AdBannerComponent} from './_components/shared/ad-banner/ad-banner.component';
 import {TutorialComponent} from './_components/tutorial/tutorial.component';
 import {FaqComponent} from './_components/faq/faq.component';
 import {QuestionComponent} from './_components/assignment/topic/lesson/question/question.component';
@@ -272,6 +273,7 @@ FullCalendarModule.registerPlugins([
         QuestionPreviewComponent,
         ClassThreadsComponent,
         DashboardComponent,
+        AdBannerComponent,
         TutorialComponent,
         FaqComponent,
         ClassJoinComponent,
