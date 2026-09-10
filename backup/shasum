@@ -1,15 +1,54 @@
 #!/bin/sh
-# Local shasum shim using openssl; produces output compatible with shasum
-if [ $# -eq 0 ]; then
+# Local shasum shim using openssl.
+# Supports: shasum [files...], shasum -a 256 file, and reading from stdin.
+
+ALGO=sha1
+files=()
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -a|--algorithm)
+      shift
+      case "$1" in
+        1) ALGO=sha1 ;;
+        224) ALGO=sha224 ;;
+        256) ALGO=sha256 ;;
+        384) ALGO=sha384 ;;
+        512) ALGO=sha512 ;;
+        sha1|sha224|sha256|sha384|sha512) ALGO="$1" ;;
+        *) echo "Unsupported algorithm: $1" >&2; exit 2 ;;
+      esac
+      shift
+      ;;
+    -) files+=("-"); shift ;;
+    --) shift; while [ $# -gt 0 ]; do files+=("$1"); shift; done ;;
+    -*) # unknown flag, ignore
+      shift ;;
+    *) files+=("$1"); shift ;;
+  esac
+done
+
+do_digest() {
+  local file="$1"
+  if [ "$file" = "-" ]; then
+    openssl dgst -$ALGO -r -
+    return $?
+  fi
+  if [ ! -e "$file" ]; then
+    echo "$file: No such file or directory" >&2
+    return 1
+  fi
+  openssl dgst -$ALGO -r "$file"
+}
+
+if [ ${#files[@]} -eq 0 ]; then
   # read from stdin
-  openssl dgst -sha1 -r - | awk '{print $1"  -"}'
-  exit
+  openssl dgst -$ALGO -r -
+  exit $?
 fi
 
-for f in "$@"; do
-  if [ "$f" = "-" ]; then
-    openssl dgst -sha1 -r - | awk '{print $1"  -"}'
-  else
-    openssl dgst -sha1 -r "$f"
-  fi
+status=0
+for f in "${files[@]}"; do
+  do_digest "$f" || status=$?
 done
+exit $status
