@@ -54,32 +54,44 @@ to_epoch() {
 	fi
 }
 
-# list files in remote dropbox folder and iterate
-"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" | while read -r line; do
-	# take the last whitespace-separated token as filename (our backups have no spaces)
-	fname=$(echo "$line" | awk '{print $NF}')
-	# only target db sql.gz files that include a date like 01-Sep-2026
-	if [[ "$fname" =~ [0-9]{2}-[A-Za-z]{3}-[0-9]{4} ]]; then
-		datestr=${BASH_REMATCH[0]}
-		day=${datestr%%-*}
-		file_epoch=$(to_epoch "$datestr")
-		if [ -z "$file_epoch" ]; then
-			continue
-		fi
-		# approximate months difference by 30-day months
-		age_months=$(( (now_epoch - file_epoch) / (30*24*3600) ))
+# list files in remote dropbox folder and iterate (robust JSON parsing)
+LIST_OUT=$(mktemp)
+"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > "$LIST_OUT" 2>/dev/null || true
 
-		if [ "$day" = "01" ] || [ "$day" = "15" ]; then
-			if [ "$age_months" -gt 4 ]; then
-				"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
-			fi
-		else
-			if [ "$age_months" -gt 1 ]; then
-				"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
-			fi
+# extract path_display fields from the JSON response
+sed -n 's/.*"path_display": *"\([^"]*\)".*/\1/p' "$LIST_OUT" | while read -r path_display; do
+	fname=$(basename "$path_display")
+	# only consider .sql.gz DB backups
+	if [[ "$fname" != *.sql.gz ]]; then
+		continue
+	fi
+
+	if [[ "$fname" =~ ([0-9]{2}-[A-Za-z]{3}-[0-9]{4}) ]]; then
+		datestr="${BASH_REMATCH[1]}"
+	else
+		continue
+	fi
+
+	day=${datestr%%-*}
+	file_epoch=$(to_epoch "$datestr")
+	if [ -z "$file_epoch" ]; then
+		continue
+	fi
+	# approximate months difference by 30-day months
+	age_months=$(( (now_epoch - file_epoch) / (30*24*3600) ))
+
+	if [ "$day" = "01" ] || [ "$day" = "15" ]; then
+		if [ "$age_months" -gt 4 ]; then
+			"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
+		fi
+	else
+		if [ "$age_months" -gt 1 ]; then
+			"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
 		fi
 	fi
 done
+
+rm -f "$LIST_OUT"
 
 # Delete local files older than 30 days (approx. 1 month)
 find "$SCRIPT_DIR" -maxdepth 1 -name "*.sql.gz" -mtime +30 -exec rm {} \;
