@@ -78,7 +78,8 @@ else
 fi
 
 CLEAN_LIST=$(mktemp)
-sed -n 's/.*"path_display": *"\([^"]*\)".*/\1/p' "$LIST_OUT" \
+# Use awk to extract every "path_display" occurrence (handles single-line JSON)
+awk -F'"path_display"' '{ for(i=2;i<=NF;i++){ if(match($i,/"([^"]+)"/,m)) print m[1] } }' "$LIST_OUT" \
     | tr -d '\r' \
     | perl -pe 's/\e\[?.*?[@-~]//g' \
     | sed 's/[^[:print:]\t]//g' > "$CLEAN_LIST"
