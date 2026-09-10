@@ -99,15 +99,29 @@ while read -r path_display; do
         continue
     fi
     age_months=$(( (now_epoch - file_epoch) / (30*24*3600) ))
-    if [ "$day" = "01" ] || [ "$day" = "15" ]; then
-        if [ "$age_months" -gt 4 ]; then
-            db_delete_remote "/$DROP_BOX_FOLDER/$fname" || echo "delete failed: $fname" >&2
+        # Decide retention policy
+        delete_candidate=0
+        if [ "$day" = "01" ] || [ "$day" = "15" ]; then
+            if [ "$age_months" -gt 4 ]; then
+                delete_candidate=1
+            fi
+        else
+            if [ "$age_months" -gt 1 ]; then
+                delete_candidate=1
+            fi
         fi
-    else
-        if [ "$age_months" -gt 1 ]; then
-            db_delete_remote "/$DROP_BOX_FOLDER/$fname" || echo "delete failed: $fname" >&2
+
+        if [ "$delete_candidate" -eq 1 ]; then
+            echo "> Candidate for delete: $path_display  (age_months=$age_months, day=$day)"
+            # attempt delete and report result
+            if db_delete_remote "/$DROP_BOX_FOLDER/$fname"; then
+                echo "> OK deleted or already absent: $fname"
+            else
+                echo "> FAIL deleting: $fname -- see /tmp/du_resp_debug for response" >&2
+                # show a short snippet of the response for debugging
+                sed -n '1,200p' /tmp/du_resp_debug 2>/dev/null || true
+            fi
         fi
-    fi
 done < "$CLEAN_LIST"
 
 rm -f "$LIST_OUT" "$CLEAN_LIST"
