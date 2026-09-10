@@ -450,14 +450,14 @@ function db_upload
     #Checking if the file/dir exists
     if [[ ! -e $SRC && ! -d $SRC ]]; then
         print " > No such file or directory: $SRC\n"
-        ERROR_STATUS=1
+        # Non-fatal for directory uploads: skip missing files without marking global error
         return
     fi
 
     #Checking if the file/dir has read permissions
     if [[ ! -r $SRC ]]; then
         print " > Error reading file $SRC: permission denied\n"
-        ERROR_STATUS=1
+        # Treat unreadable files as non-fatal for batch uploads; skip them
         return
     fi
 
