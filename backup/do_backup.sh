@@ -55,11 +55,29 @@ to_epoch() {
 }
 
 # list files in remote dropbox folder and iterate (robust JSON parsing)
-LIST_OUT=$(mktemp)
-"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > "$LIST_OUT" 2>/dev/null || true
+# Run dropbox_uploader in debug mode so the raw Dropbox JSON response
+# is written to /tmp/du_resp_debug. We copy that file to a safe temp,
+# clean control characters, then extract `path_display` values.
+"$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > /dev/null 2>/dev/null || true
 
-# extract path_display fields from the JSON response
-sed -n 's/.*"path_display": *"\([^"]*\)".*/\1/p' "$LIST_OUT" | while read -r path_display; do
+# Copy uploader debug JSON to a local temp file (if present)
+DBG_FILE="/tmp/du_resp_debug"
+LIST_OUT=$(mktemp)
+if [ -f "$DBG_FILE" ]; then
+		cp "$DBG_FILE" "$LIST_OUT" || true
+else
+		# fallback: attempt to capture stdout listing if debug file missing
+		"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > "$LIST_OUT" 2>/dev/null || true
+fi
+
+# Clean and extract path_display fields (strip CR/ANSI/non-printables)
+CLEAN_LIST=$(mktemp)
+sed -n 's/.*"path_display": *"\([^\"]*\)".*/\1/p' "$LIST_OUT" \
+	| tr -d '\r' \
+	| perl -pe 's/\e\[?.*?[@-~]//g' \
+	| sed 's/[^[:print:]\t]//g' > "$CLEAN_LIST"
+
+while read -r path_display; do
 	fname=$(basename "$path_display")
 	# only consider .sql.gz DB backups
 	if [[ "$fname" != *.sql.gz ]]; then
@@ -89,9 +107,10 @@ sed -n 's/.*"path_display": *"\([^"]*\)".*/\1/p' "$LIST_OUT" | while read -r pat
 			"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
 		fi
 	fi
-done
+done < "$CLEAN_LIST"
 
-rm -f "$LIST_OUT"
+# cleanup temp files
+rm -f "$LIST_OUT" "$CLEAN_LIST"
 
 # Delete local files older than 30 days (approx. 1 month)
 find "$SCRIPT_DIR" -maxdepth 1 -name "*.sql.gz" -mtime +30 -exec rm {} \;
