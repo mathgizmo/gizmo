@@ -16,6 +16,17 @@ echo "password=$DB_PASSWORD" >> $credentialsFile
 echo "host=$DB_HOST" >> $credentialsFile
 # Set default file permissions
 umask 177
+# Ensure a local `shasum` is available (hosting may not allow installing packages).
+# We create a small shim in this folder and prepend it to PATH so dropbox_uploader
+# can use it for chunked uploads.
+if [ -x "./shasum" ]; then
+	PATH="$PWD:$PATH"
+else
+	if [ -f "./shasum" ]; then
+		chmod +x ./shasum || true
+		PATH="$PWD:$PATH"
+	fi
+fi
 # Dump database into SQL file
 mysqldump --defaults-extra-file=$credentialsFile $DB_DATABASE | gzip> $DB_DATABASE-$date.sql.gz
 

@@ -1,0 +1,15 @@
+#!/bin/sh
+# Local shasum shim using openssl; produces output compatible with shasum
+if [ $# -eq 0 ]; then
+  # read from stdin
+  openssl dgst -sha1 -r - | awk '{print $1"  -"}'
+  exit
+fi
+
+for f in "$@"; do
+  if [ "$f" = "-" ]; then
+    openssl dgst -sha1 -r - | awk '{print $1"  -"}'
+  else
+    openssl dgst -sha1 -r "$f"
+  fi
+done
