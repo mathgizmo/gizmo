@@ -1,38 +1,42 @@
 #! /bin/bash
-#cd to script folder
-cd "${0%/*}"
+#!/bin/bash
+# Resolve script directory so cron (or other CWD) won't break paths
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 #define constants
 DB_HOST=localhost
 DB_PORT=3306
-. ../laravel/.env
-. .dropbox_uploader
+. "$SCRIPT_DIR/../laravel/.env"
+. "$SCRIPT_DIR/.dropbox_uploader"
 date=$(date +"%d-%b-%Y")
 
-credentialsFile=./.mysql-credentials.cnf
-echo "[client]" > $credentialsFile
-echo "user=$DB_USERNAME" >> $credentialsFile
-echo "password=$DB_PASSWORD" >> $credentialsFile
-echo "host=$DB_HOST" >> $credentialsFile
+credentialsFile="$SCRIPT_DIR/.mysql-credentials.cnf"
+# create credentials file
+echo "[client]" > "$credentialsFile"
+echo "user=$DB_USERNAME" >> "$credentialsFile"
+echo "password=$DB_PASSWORD" >> "$credentialsFile"
+echo "host=$DB_HOST" >> "$credentialsFile"
 # Set default file permissions
 umask 177
 # Ensure a local `shasum` is available (hosting may not allow installing packages).
 # We create a small shim in this folder and prepend it to PATH so dropbox_uploader
 # can use it for chunked uploads.
-if [ -x "./shasum" ]; then
-	PATH="$PWD:$PATH"
+shasum_local="$SCRIPT_DIR/shasum"
+if [ -x "$shasum_local" ]; then
+	PATH="$SCRIPT_DIR:$PATH"
 else
-	if [ -f "./shasum" ]; then
-		chmod +x ./shasum || true
-		PATH="$PWD:$PATH"
+	if [ -f "$shasum_local" ]; then
+		chmod +x "$shasum_local" || true
+		PATH="$SCRIPT_DIR:$PATH"
 	fi
 fi
+
 # Dump database into SQL file
-mysqldump --defaults-extra-file=$credentialsFile $DB_DATABASE | gzip> $DB_DATABASE-$date.sql.gz
+mysqldump --defaults-extra-file="$credentialsFile" "$DB_DATABASE" | gzip > "$SCRIPT_DIR/$DB_DATABASE-$date.sql.gz"
 
 #upload to dropbox
-./dropbox_uploader.sh -f .dropbox_uploader upload ./$DB_DATABASE-$date.sql.gz /$DROP_BOX_FOLDER/
-./dropbox_uploader.sh -f .dropbox_uploader upload ../laravel/storage/app/public/uploads/* /$DROP_BOX_FOLDER/uploads/
+"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" upload "$SCRIPT_DIR/$DB_DATABASE-$date.sql.gz" "/$DROP_BOX_FOLDER/"
+"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" upload "$SCRIPT_DIR/../laravel/storage/app/public/uploads/"* "/$DROP_BOX_FOLDER/uploads/"
 
 # Cleanup old DB backups on DropBox:
 # - Backups created on day 01 or 15: remove if older than 4 months
@@ -51,7 +55,7 @@ to_epoch() {
 }
 
 # list files in remote dropbox folder and iterate
-./dropbox_uploader.sh -f .dropbox_uploader list /$DROP_BOX_FOLDER | while read -r line; do
+"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" | while read -r line; do
 	# take the last whitespace-separated token as filename (our backups have no spaces)
 	fname=$(echo "$line" | awk '{print $NF}')
 	# only target db sql.gz files that include a date like 01-Sep-2026
@@ -67,15 +71,15 @@ to_epoch() {
 
 		if [ "$day" = "01" ] || [ "$day" = "15" ]; then
 			if [ "$age_months" -gt 4 ]; then
-				./dropbox_uploader.sh -f .dropbox_uploader delete /$DROP_BOX_FOLDER/"$fname"
+				"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
 			fi
 		else
 			if [ "$age_months" -gt 1 ]; then
-				./dropbox_uploader.sh -f .dropbox_uploader delete /$DROP_BOX_FOLDER/"$fname"
+				"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
 			fi
 		fi
 	fi
 done
 
 # Delete local files older than 30 days (approx. 1 month)
-find ./*.sql.gz -mtime +30 -exec rm {} \;
+find "$SCRIPT_DIR" -maxdepth 1 -name "*.sql.gz" -mtime +30 -exec rm {} \;
