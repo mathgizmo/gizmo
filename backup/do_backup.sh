@@ -54,6 +54,23 @@ to_epoch() {
 	fi
 }
 
+# Delete remote file via dropbox_uploader.sh (debug mode) and treat
+# path_lookup/not_found as non-fatal (file already absent).
+db_delete_remote() {
+	local remote_path="$1"
+	# run delete in debug so /tmp/du_resp_debug contains JSON response
+	"$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" delete "$remote_path" > /dev/null 2>/dev/null || true
+	# success if HTTP/2 200
+	if grep -q '^HTTP/2 200' /tmp/du_resp_debug 2>/dev/null; then
+		return 0
+	fi
+	# treat not_found as success (already deleted)
+	if grep -q 'path_lookup/not_found' /tmp/du_resp_debug 2>/dev/null; then
+		return 0
+	fi
+	return 1
+}
+
 # list files in remote dropbox folder and iterate (robust JSON parsing)
 # Run dropbox_uploader in debug mode so the raw Dropbox JSON response
 # is written to /tmp/du_resp_debug. We copy that file to a safe temp,
@@ -100,11 +117,11 @@ while read -r path_display; do
 
 	if [ "$day" = "01" ] || [ "$day" = "15" ]; then
 		if [ "$age_months" -gt 4 ]; then
-			"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
+			db_delete_remote "/$DROP_BOX_FOLDER/$fname" || echo "delete failed: $fname" >&2
 		fi
 	else
 		if [ "$age_months" -gt 1 ]; then
-			"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" delete "/$DROP_BOX_FOLDER/$fname"
+			db_delete_remote "/$DROP_BOX_FOLDER/$fname" || echo "delete failed: $fname" >&2
 		fi
 	fi
 done < "$CLEAN_LIST"
