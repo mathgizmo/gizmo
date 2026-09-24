@@ -159,7 +159,8 @@ short "Backup uploaded: $DB_DATABASE-$date.sql.gz"
 
 DBG_FILE="/tmp/du_resp_debug"
 # get listing (debug) and extract JSON payload to /tmp/du_json
-"${DU_CMD[@]}" list "/$DROP_BOX_FOLDER" > "$DBG_FILE" 2>&1 || true
+# Request debug output for listing so we capture HTTP headers + JSON payload into $DBG_FILE
+"$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > "$DBG_FILE" 2>&1 || true
 if [ -s "$DBG_FILE" ]; then
     python3 - <<PY
 import sys
