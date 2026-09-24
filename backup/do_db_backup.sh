@@ -23,6 +23,11 @@ trap 'rm -rf "$LOCKDIR"' EXIT
 # DRY_RUN=1 will only print actions without performing deletes
 DRY_RUN=${DRY_RUN:-0}
 
+# Verbose mode: when VERBOSE=1 print full logs, otherwise print concise messages
+VERBOSE=${VERBOSE:-0}
+info() { if [ "$VERBOSE" = "1" ]; then echo "$@"; fi }
+short() { if [ "$VERBOSE" != "1" ]; then echo "$@"; fi }
+
 credentialsFile="$SCRIPT_DIR/.mysql-credentials.cnf"
 # create credentials file
 echo "[client]" > "$credentialsFile"
@@ -130,12 +135,14 @@ PY
 }
 
 # Dump database into SQL file
-echo "> Dumping database $DB_DATABASE to $SCRIPT_DIR/$DB_DATABASE-$date.sql.gz"
+info "> Dumping database $DB_DATABASE to $SCRIPT_DIR/$DB_DATABASE-$date.sql.gz"
+short "Preparing backup: $DB_DATABASE-$date.sql.gz"
 mysqldump --defaults-extra-file="$credentialsFile" "$DB_DATABASE" | gzip > "$SCRIPT_DIR/$DB_DATABASE-$date.sql.gz"
 
 # upload DB backup
-echo "> Uploading DB backup to Dropbox"
+info "> Uploading DB backup to Dropbox"
 "$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" upload "$SCRIPT_DIR/$DB_DATABASE-$date.sql.gz" "/$DROP_BOX_FOLDER/"
+short "Backup uploaded: $DB_DATABASE-$date.sql.gz"
 
 # Cleanup old DB backups on DropBox:
 # Retention policy (day-based):
@@ -185,6 +192,12 @@ else
     mapfile -t sql_paths < "$TMP_PATHS"
     rm -f "$LIST_OUT" "$TMP_PATHS"
 fi
+
+# Summary of found files
+num_paths=${#sql_paths[@]:-0}
+short "Found $num_paths files on Dropbox"
+
+found_count=0
 
 for path_display in "${sql_paths[@]}"; do
     fname=$(basename "$path_display")
@@ -236,14 +249,18 @@ PY
         fi
 
         if [ "$delete_candidate" -eq 1 ]; then
-            echo "> Candidate for delete: $path_display  (age_months=$age_months, day=$day)"
+            info "> Candidate for delete: $path_display  (age_days=$age_days, day=$day)"
+            found_count=$((found_count+1))
             if [ "$DRY_RUN" = "1" ]; then
-                echo "> DRY_RUN: would delete $fname"
+                short "> DRY_RUN: would delete $fname"
             else
+                short "Deleting $fname"
                 if db_delete_remote "/$DROP_BOX_FOLDER/$fname"; then
-                    echo "> OK deleted or already absent: $fname"
+                    info "> OK deleted or already absent: $fname"
+                    short "Deleted: $fname"
                 else
-                    echo "> FAIL deleting: $fname -- see /tmp/du_resp_debug for response" >&2
+                    info "> FAIL deleting: $fname -- see /tmp/du_resp_debug for response"
+                    short "Failed to delete: $fname"
                     sed -n '1,200p' /tmp/du_resp_debug 2>/dev/null || true
                 fi
             fi
@@ -252,6 +269,14 @@ PY
 done
 
 rm -f /tmp/du_json 2>/dev/null || true
+
+if [ "$VERBOSE" != "1" ]; then
+    if [ "$DRY_RUN" = "1" ]; then
+        short "DRY_RUN: would delete $found_count files"
+    else
+        short "Done: deleted $found_count files"
+    fi
+fi
 
 # Delete local DB dumps older than 30 days
 find "$SCRIPT_DIR" -maxdepth 1 -name "*.sql.gz" -mtime +30 -print -exec rm {} \;
