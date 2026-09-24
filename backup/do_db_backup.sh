@@ -28,6 +28,14 @@ VERBOSE=${VERBOSE:-0}
 info() { if [ "$VERBOSE" = "1" ]; then echo "$@"; fi }
 short() { if [ "$VERBOSE" != "1" ]; then echo "$@"; fi }
 
+# Choose dropbox_uploader invocation based on verbosity. Use -d (debug) only in verbose mode,
+# otherwise request quiet output from the uploader to avoid noisy traces.
+if [ "$VERBOSE" = "1" ]; then
+    DU_CMD=("$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader")
+else
+    DU_CMD=("$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" -q)
+fi
+
 credentialsFile="$SCRIPT_DIR/.mysql-credentials.cnf"
 # create credentials file
 echo "[client]" > "$credentialsFile"
@@ -87,7 +95,7 @@ db_delete_remote() {
     local max=3
     while [ $tries -lt $max ]; do
         tries=$((tries+1))
-        "$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" delete "$remote_path" > /tmp/du_resp_debug 2>&1 || true
+        "${DU_CMD[@]}" delete "$remote_path" > /tmp/du_resp_debug 2>&1 || true
         # extract JSON payload if present
         if [ -s /tmp/du_resp_debug ]; then
             python3 - <<PY
@@ -141,7 +149,7 @@ mysqldump --defaults-extra-file="$credentialsFile" "$DB_DATABASE" | gzip > "$SCR
 
 # upload DB backup
 info "> Uploading DB backup to Dropbox"
-"$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" upload "$SCRIPT_DIR/$DB_DATABASE-$date.sql.gz" "/$DROP_BOX_FOLDER/"
+"${DU_CMD[@]}" upload "$SCRIPT_DIR/$DB_DATABASE-$date.sql.gz" "/$DROP_BOX_FOLDER/"
 short "Backup uploaded: $DB_DATABASE-$date.sql.gz"
 
 # Cleanup old DB backups on DropBox:
@@ -151,7 +159,7 @@ short "Backup uploaded: $DB_DATABASE-$date.sql.gz"
 
 DBG_FILE="/tmp/du_resp_debug"
 # get listing (debug) and extract JSON payload to /tmp/du_json
-"$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > "$DBG_FILE" 2>&1 || true
+"${DU_CMD[@]}" list "/$DROP_BOX_FOLDER" > "$DBG_FILE" 2>&1 || true
 if [ -s "$DBG_FILE" ]; then
     python3 - <<PY
 import sys
@@ -194,7 +202,7 @@ else
 fi
 
 # Summary of found files
-num_paths=${#sql_paths[@]:-0}
+num_paths=${#sql_paths[@]}
 short "Found $num_paths files on Dropbox"
 
 found_count=0
@@ -223,7 +231,8 @@ for path_display in "${sql_paths[@]}"; do
     day=${datestr%%-*}
     # compute age in days (difference between now and datestr)
     age_days=0
-    age_days=$(python3 - <<PY
+    # compute age in days; pass the datestr as argv to Python to avoid heredoc argv issues
+    age_days=$(python3 - "$datestr" <<PY
 import sys,datetime
 try:
     d=sys.argv[1]
