@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 # DB-only backup script extracted from do_backup.sh
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
@@ -8,6 +7,21 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 . "$SCRIPT_DIR/.dropbox_uploader"
 
 date=$(date +"%d-%b-%Y")
+
+# Make cron environment deterministic and pick up local shasum shim
+LANG=C
+PATH="$SCRIPT_DIR:$PATH"
+
+# Simple lock to avoid concurrent runs
+LOCKDIR="$SCRIPT_DIR/.do_db_backup.lock"
+if ! mkdir "$LOCKDIR" 2>/dev/null; then
+    echo "Another do_db_backup.sh is running; exiting." >&2
+    exit 0
+fi
+trap 'rm -rf "$LOCKDIR"' EXIT
+
+# DRY_RUN=1 will only print actions without performing deletes
+DRY_RUN=${DRY_RUN:-0}
 
 credentialsFile="$SCRIPT_DIR/.mysql-credentials.cnf"
 # create credentials file
@@ -33,26 +47,86 @@ fi
 now_epoch=$(date +%s)
 
 to_epoch() {
-    local d="$1"
-    if date --version >/dev/null 2>&1; then
-        date -d "$d" +%s 2>/dev/null || return 1
-    else
-        date -j -f "%d-%b-%Y" "$d" +%s 2>/dev/null || return 1
-    fi
+    # Accept date like 01-May-2026 and return epoch seconds (UTC)
+    python3 - <<PY
+import sys,datetime
+try:
+    d=sys.argv[1]
+    dt=datetime.datetime.strptime(d, "%d-%b-%Y")
+    print(int(dt.replace(tzinfo=datetime.timezone.utc).timestamp()))
+except Exception:
+    sys.exit(1)
+PY
+}
+
+months_diff() {
+    # months difference between given date (DD-Mon-YYYY) and today
+    python3 - <<PY
+import sys,datetime
+try:
+    d=sys.argv[1]
+    dt=datetime.datetime.strptime(d, "%d-%b-%Y")
+    now=datetime.datetime.utcnow()
+    months=(now.year*12+now.month)-(dt.year*12+dt.month)
+    print(months)
+except Exception:
+    sys.exit(1)
+PY
 }
 
 # Delete remote file via dropbox_uploader.sh (debug mode) and treat
 # path_lookup/not_found as non-fatal (file already absent).
 db_delete_remote() {
     local remote_path="$1"
-    "$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" delete "$remote_path" > /dev/null 2>/dev/null || true
-    if grep -q '^HTTP/2 200' /tmp/du_resp_debug 2>/dev/null; then
-        return 0
-    fi
-    if grep -q 'path_lookup/not_found' /tmp/du_resp_debug 2>/dev/null; then
-        return 0
-    fi
-    return 1
+    local tries=0
+    local max=3
+    while [ $tries -lt $max ]; do
+        tries=$((tries+1))
+        "$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" delete "$remote_path" > /tmp/du_resp_debug 2>&1 || true
+        # extract JSON payload if present
+        if [ -s /tmp/du_resp_debug ]; then
+            python3 - <<PY
+import sys
+b=open('/tmp/du_resp_debug','rb').read()
+s=b.find(b'{')
+if s!=-1:
+    cnt=0
+    for i in range(s,len(b)):
+        if b[i]==123: cnt+=1
+        elif b[i]==125: cnt-=1
+        if cnt==0:
+            open('/tmp/du_json','wb').write(b[s:i+1])
+            break
+PY
+        fi
+
+        # Treat HTTP 200 or path_lookup/not_found as success
+        if grep -q '^HTTP/2 200' /tmp/du_resp_debug 2>/dev/null; then
+            # if JSON contains an error of type path_lookup/not_found treat as success
+            if command -v jq >/dev/null 2>&1 && [ -f /tmp/du_json ]; then
+                if jq -e '.error?.path_lookup? | .".tag" == "not_found"' /tmp/du_json >/dev/null 2>&1; then
+                    return 0
+                fi
+            else
+                # no jq; still accept HTTP 200
+                return 0
+            fi
+            return 0
+        fi
+
+        # If JSON shows a not_found error, treat as success
+        if command -v jq >/dev/null 2>&1 && [ -f /tmp/du_json ]; then
+            if jq -e '.error?.path_lookup? | .".tag" == "not_found"' /tmp/du_json >/dev/null 2>&1; then
+                return 0
+            fi
+        fi
+
+        # If this was the last try, fail
+        if [ $tries -ge $max ]; then
+            return 1
+        fi
+        sleep $((tries*2))
+    done
 }
 
 # Dump database into SQL file
@@ -67,24 +141,46 @@ echo "> Uploading DB backup to Dropbox"
 # - Backups created on day 01 or 15: remove if older than 4 months
 # - All other DB backups: remove if older than 1 month
 
-# get listing (debug JSON)
-"$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > /dev/null 2>/dev/null || true
 DBG_FILE="/tmp/du_resp_debug"
-LIST_OUT=$(mktemp)
-if [ -f "$DBG_FILE" ]; then
-    cp "$DBG_FILE" "$LIST_OUT" || true
-else
-    "$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > "$LIST_OUT" 2>/dev/null || true
+# get listing (debug) and extract JSON payload to /tmp/du_json
+"$SCRIPT_DIR/dropbox_uploader.sh" -d -f "$SCRIPT_DIR/.dropbox_uploader" list "/$DROP_BOX_FOLDER" > "$DBG_FILE" 2>&1 || true
+if [ -s "$DBG_FILE" ]; then
+    python3 - <<PY
+import sys
+b=open('$DBG_FILE','rb').read()
+s=b.find(b'{')
+if s==-1:
+    sys.exit(0)
+cnt=0
+for i in range(s,len(b)):
+    if b[i]==123: cnt+=1
+    elif b[i]==125: cnt-=1
+    if cnt==0:
+        open('/tmp/du_json','wb').write(b[s:i+1])
+        print('wrote',i+1-s)
+        break
+PY
 fi
 
-CLEAN_LIST=$(mktemp)
-# Use awk to extract every "path_display" occurrence (handles single-line JSON)
-awk -F'"path_display"' '{ for(i=2;i<=NF;i++){ if(match($i,/"([^"]+)"/,m)) print m[1] } }' "$LIST_OUT" \
-    | tr -d '\r' \
-    | perl -pe 's/\e\[?.*?[@-~]//g' \
-    | sed 's/[^[:print:]\t]//g' > "$CLEAN_LIST"
+if ! command -v jq >/dev/null 2>&1; then
+    echo "Warning: jq not found. Listing will try to fall back to text parsing." >&2
+fi
 
-while read -r path_display; do
+# Build list of .sql.gz path_display entries using jq where available
+if command -v jq >/dev/null 2>&1 && [ -f /tmp/du_json ]; then
+    mapfile -t sql_paths < <(jq -r '.entries[]? | .path_display // empty | select(test("\\.sql\\.gz$"))' /tmp/du_json)
+else
+    # fallback to previous awk/perl/sed pipeline on raw debug output
+    LIST_OUT=$(mktemp)
+    cp "$DBG_FILE" "$LIST_OUT" || true
+    mapfile -t sql_paths < <(awk -F'"path_display"' '{ for(i=2;i<=NF;i++){ if(match($i,/"([^\"]+)"/,m)) print m[1] } }' "$LIST_OUT" \
+        | tr -d '\r' \
+        | perl -pe 's/\e\[?.*?[@-~]//g' \
+        | sed 's/[^[:print:]\t]//g' | grep -E '\.sql\.gz$' || true)
+    rm -f "$LIST_OUT"
+fi
+
+for path_display in "${sql_paths[@]}"; do
     fname=$(basename "$path_display")
     if [[ "$fname" != *.sql.gz ]]; then
         continue
@@ -92,14 +188,22 @@ while read -r path_display; do
     if [[ "$fname" =~ ([0-9]{2}-[A-Za-z]{3}-[0-9]{4}) ]]; then
         datestr="${BASH_REMATCH[1]}"
     else
-        continue
+        # try to extract from server_modified via jq if available
+        if command -v jq >/dev/null 2>&1 && [ -f /tmp/du_json ]; then
+            # find matching entry and extract server_modified
+            sv=$(jq -r --arg p "$path_display" '.entries[]? | select(.path_display == $p) | .server_modified // empty' /tmp/du_json)
+            if [ -n "$sv" ]; then
+                # server_modified is ISO8601, convert to DD-Mon-YYYY
+                datestr=$(date -u -d "$sv" +"%d-%b-%Y" 2>/dev/null || true)
+            fi
+        fi
+        if [ -z "$datestr" ]; then
+            continue
+        fi
     fi
     day=${datestr%%-*}
-    file_epoch=$(to_epoch "$datestr")
-    if [ -z "$file_epoch" ]; then
-        continue
-    fi
-    age_months=$(( (now_epoch - file_epoch) / (30*24*3600) ))
+    # compute months difference
+    age_months=$(months_diff "$datestr") || continue
         # Decide retention policy
         delete_candidate=0
         if [ "$day" = "01" ] || [ "$day" = "15" ]; then
@@ -114,21 +218,24 @@ while read -r path_display; do
 
         if [ "$delete_candidate" -eq 1 ]; then
             echo "> Candidate for delete: $path_display  (age_months=$age_months, day=$day)"
-            # attempt delete and report result
-            if db_delete_remote "/$DROP_BOX_FOLDER/$fname"; then
-                echo "> OK deleted or already absent: $fname"
+            if [ "$DRY_RUN" = "1" ]; then
+                echo "> DRY_RUN: would delete $fname"
             else
-                echo "> FAIL deleting: $fname -- see /tmp/du_resp_debug for response" >&2
-                # show a short snippet of the response for debugging
-                sed -n '1,200p' /tmp/du_resp_debug 2>/dev/null || true
+                if db_delete_remote "/$DROP_BOX_FOLDER/$fname"; then
+                    echo "> OK deleted or already absent: $fname"
+                else
+                    echo "> FAIL deleting: $fname -- see /tmp/du_resp_debug for response" >&2
+                    sed -n '1,200p' /tmp/du_resp_debug 2>/dev/null || true
+                fi
             fi
         fi
-done < "$CLEAN_LIST"
 
-rm -f "$LIST_OUT" "$CLEAN_LIST"
+done
+
+rm -f /tmp/du_json 2>/dev/null || true
 
 # Delete local DB dumps older than 30 days
-find "$SCRIPT_DIR" -maxdepth 1 -name "*.sql.gz" -mtime +30 -exec rm {} \;
+find "$SCRIPT_DIR" -maxdepth 1 -name "*.sql.gz" -mtime +30 -print -exec rm {} \;
 
 echo "> DB backup finished"
 
