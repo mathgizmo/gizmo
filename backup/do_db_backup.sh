@@ -168,16 +168,21 @@ fi
 
 # Build list of .sql.gz path_display entries using jq where available
 if command -v jq >/dev/null 2>&1 && [ -f /tmp/du_json ]; then
-    mapfile -t sql_paths < <(jq -r '.entries[]? | .path_display // empty | select(test("\\.sql\\.gz$"))' /tmp/du_json)
+    TMP_PATHS=$(mktemp)
+    jq -r '.entries[]? | .path_display // empty | select(test("\\.sql\\.gz$"))' /tmp/du_json > "$TMP_PATHS" 2>/dev/null || true
+    mapfile -t sql_paths < "$TMP_PATHS"
+    rm -f "$TMP_PATHS"
 else
     # fallback to previous awk/perl/sed pipeline on raw debug output
     LIST_OUT=$(mktemp)
+    TMP_PATHS=$(mktemp)
     cp "$DBG_FILE" "$LIST_OUT" || true
-    mapfile -t sql_paths < <(awk -F'"path_display"' '{ for(i=2;i<=NF;i++){ if(match($i,/"([^\"]+)"/,m)) print m[1] } }' "$LIST_OUT" \
+    awk -F'"path_display"' '{ for(i=2;i<=NF;i++){ if(match($i,/"([^\\\"]+)"/,m)) print m[1] } }' "$LIST_OUT" \
         | tr -d '\r' \
         | perl -pe 's/\e\[?.*?[@-~]//g' \
-        | sed 's/[^[:print:]\t]//g' | grep -E '\.sql\.gz$' || true)
-    rm -f "$LIST_OUT"
+        | sed 's/[^[:print:]\t]//g' | grep -E '\.sql\.gz$' > "$TMP_PATHS" 2>/dev/null || true
+    mapfile -t sql_paths < "$TMP_PATHS"
+    rm -f "$LIST_OUT" "$TMP_PATHS"
 fi
 
 for path_display in "${sql_paths[@]}"; do
