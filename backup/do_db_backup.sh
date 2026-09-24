@@ -138,8 +138,9 @@ echo "> Uploading DB backup to Dropbox"
 "$SCRIPT_DIR/dropbox_uploader.sh" -f "$SCRIPT_DIR/.dropbox_uploader" upload "$SCRIPT_DIR/$DB_DATABASE-$date.sql.gz" "/$DROP_BOX_FOLDER/"
 
 # Cleanup old DB backups on DropBox:
-# - Backups created on day 01 or 15: remove if older than 4 months
-# - All other DB backups: remove if older than 1 month
+# Retention policy (day-based):
+# - Backups created on day 01 or 15: remove if older than 120 days
+# - All other DB backups: remove if older than 30 days
 
 DBG_FILE="/tmp/du_resp_debug"
 # get listing (debug) and extract JSON payload to /tmp/du_json
@@ -207,16 +208,29 @@ for path_display in "${sql_paths[@]}"; do
         fi
     fi
     day=${datestr%%-*}
-    # compute months difference
-    age_months=$(months_diff "$datestr") || continue
-        # Decide retention policy
+    # compute age in days (difference between now and datestr)
+    age_days=0
+    age_days=$(python3 - <<PY
+import sys,datetime
+try:
+    d=sys.argv[1]
+    dt=datetime.datetime.strptime(d, "%d-%b-%Y")
+    now=datetime.datetime.utcnow()
+    delta=(now - dt).days
+    print(int(delta))
+except Exception:
+    sys.exit(1)
+PY
+    ) || continue
+
+        # Decide retention policy (days)
         delete_candidate=0
         if [ "$day" = "01" ] || [ "$day" = "15" ]; then
-            if [ "$age_months" -gt 4 ]; then
+            if [ "$age_days" -gt 120 ]; then
                 delete_candidate=1
             fi
         else
-            if [ "$age_months" -gt 1 ]; then
+            if [ "$age_days" -gt 30 ]; then
                 delete_candidate=1
             fi
         fi
