@@ -33,7 +33,8 @@ CHUNK_SIZE=50
 
 #Default values
 TMP_DIR="/tmp"
-DEBUG=1
+# Default to non-debug unless explicitly requested
+DEBUG=0
 QUIET=0
 SHOW_PROGRESSBAR=0
 SKIP_EXISTING_FILES=0
@@ -135,7 +136,7 @@ while getopts ":qpskdhf:x:" opt; do
   esac
 done
 
-if [[ $DEBUG != 0 ]]; then
+    if [[ $DEBUG != 0 ]]; then
     echo $VERSION
     uname -a 2> /dev/null
     cat /etc/issue 2> /dev/null
@@ -1003,12 +1004,49 @@ function db_delete
     check_http_response
 
     #Check
+    # Treat HTTP 200 as success. Also treat Dropbox API path_lookup/path/not_found as success
     if grep -q "^HTTP/2 200" "$RESPONSE_FILE"; then
         print "DONE\n"
-    else
-        print "FAILED\n"
-        ERROR_STATUS=1
+        return
     fi
+
+    # attempt to extract JSON payload and look for not_found tags
+    if [ -s "$RESPONSE_FILE" ]; then
+        # extract JSON payload (first balanced-brace object)
+        python3 - <<PY 2>/dev/null
+import sys
+b=open('$RESPONSE_FILE','rb').read()
+s=b.find(b'{')
+if s!=-1:
+    cnt=0
+    for i in range(s,len(b)):
+        if b[i]==123: cnt+=1
+        elif b[i]==125: cnt-=1
+        if cnt==0:
+            open('/tmp/du_json','wb').write(b[s:i+1])
+            break
+PY
+        if [ -f /tmp/du_json ]; then
+            if command -v jq >/dev/null 2>&1; then
+                if jq -e '.error?.path_lookup? | .".tag" == "not_found"' /tmp/du_json >/dev/null 2>&1 || jq -e '.error?.path? | .".tag" == "not_found"' /tmp/du_json >/dev/null 2>&1; then
+                    print "DONE\n"
+                    rm -f /tmp/du_json
+                    return
+                fi
+            else
+                # if no jq, do a simple text search for not_found
+                if grep -q 'not_found' /tmp/du_json 2>/dev/null; then
+                    print "DONE\n"
+                    rm -f /tmp/du_json
+                    return
+                fi
+            fi
+            rm -f /tmp/du_json
+        fi
+    fi
+
+    print "FAILED\n"
+    ERROR_STATUS=1
 }
 
 #Move/Rename a remote file
